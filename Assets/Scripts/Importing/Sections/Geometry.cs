@@ -152,7 +152,7 @@ namespace SanAndreasUnity.Importing.Sections
             Materials = Section<MaterialList>.ReadData(stream).Materials;
 
             var extHeader = SectionHeader.Read(stream);
-            var msplits = Section<MaterialSplit>.ReadData(stream);
+            var msplits = Section<MaterialSplitList>.ReadData(stream);
 
             MaterialSplits = msplits.MaterialSplits;
             FaceCount = msplits.FaceCount;
