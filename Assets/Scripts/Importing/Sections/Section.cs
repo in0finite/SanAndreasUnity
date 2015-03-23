@@ -8,36 +8,21 @@ using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Sections
 {
-    internal enum SectionType
-    {
-        Null = 0,
-        Data = 1,
-        String = 2,
-        Extension = 3,
-        Texture = 6,
-        Material = 7,
-        MaterialList = 8,
-        FrameList = 14,
-        Geometry = 15,
-        Clump = 16,
-        Atomic = 20,
-        TextureNative = 21,
-        TextureDictionary = 22,
-        GeometryList = 26,
-        MaterialSplit = 1294,
-        Frame = 39056126
-    }
-
     internal struct SectionHeader
     {
-        public readonly SectionType Type;
+        public static SectionHeader Read(Stream stream)
+        {
+            return new SectionHeader(stream);
+        }
+
+        public readonly UInt32 Type;
         public readonly UInt32 Size;
         public readonly UInt16 Version;
 
-        public SectionHeader(Stream stream)
+        private SectionHeader(Stream stream)
         {
             var reader = new BinaryReader(stream);
-            Type = (SectionType) reader.ReadUInt32();
+            Type = reader.ReadUInt32();
             Size = reader.ReadUInt32();
             reader.ReadUInt16(); // Unknown
             Version = reader.ReadUInt16();
@@ -45,15 +30,15 @@ namespace SanAndreasUnity.Importing.Sections
 
         public override string ToString()
         {
-            return String.Format("{0}, Size: {1}, Vers: {2}", Type, Size, Version);
+            return string.Format("{0}, Size: {1}, Vers: {2}", Type, Size, Version);
         }
     }
 
     internal class SectionTypeAttribute : Attribute
     {
-        public readonly SectionType Value;
+        public readonly UInt32 Value;
 
-        public SectionTypeAttribute(SectionType value)
+        public SectionTypeAttribute(UInt32 value)
         {
             Value = value;
         }
@@ -63,15 +48,15 @@ namespace SanAndreasUnity.Importing.Sections
     {
         private delegate SectionData CtorDelegate(SectionHeader header, Stream stream);
 
-        private static readonly Dictionary<SectionType, CtorDelegate> _sDataCtors
-            = new Dictionary<SectionType, CtorDelegate>();
+        private static readonly Dictionary<UInt32, CtorDelegate> _sDataCtors
+            = new Dictionary<UInt32, CtorDelegate>();
 
         private static CtorDelegate CreateDelegate(Type type)
         {
             var ctor = type.GetConstructor(new [] { typeof(SectionHeader), typeof(Stream) });
 
             if (ctor == null) {
-                throw new Exception(String.Format("Type {0} ") );
+                throw new Exception(string.Format("Type {0} ") );
             }
 
             var header = Expression.Parameter(typeof(SectionHeader), "header");
@@ -98,12 +83,12 @@ namespace SanAndreasUnity.Importing.Sections
             }
         }
 
-        public static SectionData FromStream(SectionHeader header, Stream stream)
+        public static SectionData Read(SectionHeader header, Stream stream)
         {
-            return FromStream<SectionData>(header, stream);
+            return Read<SectionData>(header, stream);
         }
 
-        public static T FromStream<T>(SectionHeader header, Stream stream)
+        public static T Read<T>(SectionHeader header, Stream stream)
             where T : SectionData
         {
             if (_sDataCtors.Count == 0) FindTypes();
@@ -112,17 +97,28 @@ namespace SanAndreasUnity.Importing.Sections
         }
     }
 
-    internal struct Section
+    internal struct Section<TData>
+        where TData : SectionData
     {
-        public readonly SectionHeader Header;
-        public readonly SectionData Data;
-
-        public SectionType Type { get { return Header.Type; } }
-
-        public Section(Stream stream)
+        public static Section<TData> Read(Stream stream)
         {
-            Header = new SectionHeader(stream);
-            Data = SectionData.FromStream(Header, new FrameStream(stream, stream.Position, Header.Size));
+            return new Section<TData>(stream);
+        }
+
+        public static TData ReadData(Stream stream)
+        {
+            return new Section<TData>(stream).Data;
+        }
+
+        public readonly SectionHeader Header;
+        public readonly TData Data;
+
+        public UInt32 Type { get { return Header.Type; } }
+
+        private Section(Stream stream)
+        {
+            Header = SectionHeader.Read(stream);
+            Data = SectionData.Read<TData>(Header, new FrameStream(stream, stream.Position, Header.Size));
         }
 
         public override string ToString()

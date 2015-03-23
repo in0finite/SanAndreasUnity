@@ -152,15 +152,6 @@ namespace SanAndreasUnity.Utilities
             };
         }
 
-        internal static Vector3 ReadVector3(this BinaryReader reader)
-        {
-            return new Vector3 {
-                x = -reader.ReadSingle(),
-                z = reader.ReadSingle(),
-                y = reader.ReadSingle()
-            };
-        }
-
         internal static String ReadString(this BinaryReader reader, int length)
         {
             var bytes = reader.ReadBytes(length);
