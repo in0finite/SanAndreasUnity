@@ -55,11 +55,11 @@ namespace SanAndreasUnity.Importing.Sections
 
         public Texture(SectionHeader header, Stream stream)
         {
-            var dataHeader = SectionHeader.Read(stream);
+            SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
 
             FilterMode = (Filter) reader.ReadUInt16();
-            var unk = reader.ReadUInt16(); // Unknown
+            reader.ReadUInt16(); // Unknown
 
             TextureName = Section<String>.ReadData(stream).Value;
             MaskName = Section<String>.ReadData(stream).Value;

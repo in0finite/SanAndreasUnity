@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Importing.Sections
 
         public TextureDictionary(SectionHeader header, Stream stream)
         {
-            var dataHeader = SectionHeader.Read(stream);
+            SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
 
             TextureCount = reader.ReadUInt16();

@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Importing.Sections
 
         public TextureNative(SectionHeader header, Stream stream)
         {
-            var dataHeader = SectionHeader.Read(stream);
+            SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
 
             PlatformID = reader.ReadUInt32();

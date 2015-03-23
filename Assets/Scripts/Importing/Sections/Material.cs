@@ -28,7 +28,7 @@ namespace SanAndreasUnity.Importing.Sections
 
         public Material(SectionHeader header, Stream stream)
         {
-            var dataHeader = SectionHeader.Read(stream);
+            SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
 
             reader.ReadUInt32(); // Unknown
