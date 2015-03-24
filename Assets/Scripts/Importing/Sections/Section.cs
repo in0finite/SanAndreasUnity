@@ -118,7 +118,12 @@ namespace SanAndreasUnity.Importing.Sections
         private Section(Stream stream)
         {
             Header = SectionHeader.Read(stream);
+            
+            var end = stream.Position + Header.Size;
+
             Data = SectionData.Read<TData>(Header, new FrameStream(stream, stream.Position, Header.Size));
+            
+            stream.Seek(end, SeekOrigin.Begin);
         }
 
         public override string ToString()

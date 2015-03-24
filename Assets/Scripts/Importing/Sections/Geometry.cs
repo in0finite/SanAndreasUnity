@@ -30,9 +30,9 @@ namespace SanAndreasUnity.Importing.Sections
 
         public Vector3(BinaryReader reader)
         {
-            X = -reader.ReadSingle();
-            Z = reader.ReadSingle();
+            X = reader.ReadSingle();
             Y = reader.ReadSingle();
+            Z = reader.ReadSingle();
         }
     }
 
@@ -42,6 +42,8 @@ namespace SanAndreasUnity.Importing.Sections
         public readonly UInt16 Vertex0;
         public readonly UInt16 Vertex1;
         public readonly UInt16 Vertex2;
+
+        public int[] Indices { get { return new int[] { Vertex0, Vertex1, Vertex2 }; } }
 
         public FaceInfo(BinaryReader reader)
         {
@@ -90,7 +92,6 @@ namespace SanAndreasUnity.Importing.Sections
 
         public readonly Material[] Materials;
         public readonly MaterialSplit[] MaterialSplits;
-        public readonly UInt16 IndexCount;
 
         public Geometry(SectionHeader header, Stream stream)
         {
@@ -145,7 +146,7 @@ namespace SanAndreasUnity.Importing.Sections
             if ((Flags & GeometryFlag.Normals) != 0) {
                 Normals = new Vector3[VertexCount];
                 for (var i = 0; i < VertexCount; ++i) {
-                    Normals[ i ] = new Vector3(reader);
+                    Normals[i] = new Vector3(reader);
                 }
             }
 
@@ -156,11 +157,6 @@ namespace SanAndreasUnity.Importing.Sections
 
             MaterialSplits = msplits.MaterialSplits;
             FaceCount = msplits.FaceCount;
-            IndexCount = msplits.IndexCount;
-
-            foreach (var mat in MaterialSplits) {
-                mat.Material = Materials[mat.MaterialIndex];
-            }
         }
     }
 }

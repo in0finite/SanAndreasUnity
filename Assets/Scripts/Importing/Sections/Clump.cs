@@ -3,9 +3,11 @@ using System.IO;
 
 namespace SanAndreasUnity.Importing.Sections
 {
-    [SectionType(16)]
+    [SectionType(TypeId)]
     internal class Clump : SectionData
     {
+        public const Int32 TypeId = 16;
+
         public readonly UInt32 ObjectCount;
         public readonly GeometryList GeometryList;
 
@@ -15,8 +17,9 @@ namespace SanAndreasUnity.Importing.Sections
             if (dat == null) return;
 
             ObjectCount = BitConverter.ToUInt32(dat.Value, 0);
-            Section<SectionData>.Read(stream); // frame list
-            GeometryList = Section<GeometryList>.ReadData(stream);
+            var frameList = Section<SectionData>.Read(stream); // frame list
+            var geomList = Section<SectionData>.Read(stream);
+            GeometryList = (GeometryList) geomList.Data;
         }
     }
 }
