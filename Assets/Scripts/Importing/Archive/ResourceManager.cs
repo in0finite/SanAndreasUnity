@@ -33,7 +33,8 @@ namespace SanAndreasUnity.Importing.Archive
         public static Stream ReadFile(string name)
         {
             var arch = _sLoadedArchives.FirstOrDefault(x => x.ContainsFile(name));
-            return arch != null ? arch.ReadFile(name) : null;
+            if (arch == null) throw new FileNotFoundException(name);
+            return arch.ReadFile(name);
         }
 
         internal static TSection ReadFile<TSection>(string name)

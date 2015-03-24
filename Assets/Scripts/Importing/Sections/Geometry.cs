@@ -120,13 +120,13 @@ namespace SanAndreasUnity.Importing.Sections
             if ((Flags & GeometryFlag.TexCoords) != 0) {
                 TexCoords = new Vector2[VertexCount];
                 for (var i = 0; i < VertexCount; ++i) {
-                    TexCoords[ i ] = new Vector2(reader);
+                    TexCoords[i] = new Vector2(reader);
                 }
             }
 
             Faces = new FaceInfo[FaceCount];
             for (var i = 0; i < FaceCount; ++i) {
-                Faces[ i ] = new FaceInfo(reader);
+                Faces[i] = new FaceInfo(reader);
             }
 
             BoundingSphere = new BoundingSphere(reader);
@@ -156,7 +156,6 @@ namespace SanAndreasUnity.Importing.Sections
             var msplits = Section<MaterialSplitList>.ReadData(stream);
 
             MaterialSplits = msplits.MaterialSplits;
-            FaceCount = msplits.FaceCount;
         }
     }
 }

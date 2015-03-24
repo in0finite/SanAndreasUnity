@@ -108,10 +108,18 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             _natives = txd.Textures;
             _diffuse = new Dictionary<string, Texture2D>();
+            _alpha = new Dictionary<string, Texture2D>();
 
             foreach (var native in _natives) {
-                if (native.DiffuseName != null) {
+                if (!string.IsNullOrEmpty(native.DiffuseName)) {
                     _diffuse.Add(native.DiffuseName, null);
+                }
+                if (!string.IsNullOrEmpty(native.AlphaName)) {
+                    if (_alpha.ContainsKey(native.AlphaName)) {
+                        Debug.LogFormat("Tried to re-add: {0}", native.AlphaName);
+                        continue;
+                    }
+                    _alpha.Add(native.AlphaName, null);
                 }
             }
         }
@@ -122,6 +130,16 @@ namespace SanAndreasUnity.Importing.Conversion
             if (_diffuse[name] != null) return _diffuse[name];
 
             var tex = _diffuse[name] = Convert(_natives.First(x => x.DiffuseName.Equals(name)));
+
+            return tex;
+        }
+
+        public Texture2D GetAlpha(string name)
+        {
+            if (!_alpha.ContainsKey(name)) return null;
+            if (_alpha[name] != null) return _alpha[name];
+
+            var tex = _alpha[name] = Convert(_natives.First(x => x.AlphaName.Equals(name)));
 
             return tex;
         }

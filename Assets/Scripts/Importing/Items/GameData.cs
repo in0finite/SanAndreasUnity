@@ -73,8 +73,8 @@ namespace SanAndreasUnity.Importing.Items
                 _instances.Add(name, new List<Instance>());
             }
 
-            var list = _instances[name];
-            //list.AddRange(insts);
+            var list = new List<Instance>();
+            list.AddRange(insts);
 
             var streamFormat = Path.GetFileNameWithoutExtension(path).ToLower() + "_stream{0}.ipl";
             var missed = 0;
@@ -90,6 +90,10 @@ namespace SanAndreasUnity.Importing.Items
                 file = new ItemFile(ResourceManager.ReadFile(streamPath));
                 list.AddRange(file.GetSection<Instance>("inst"));
             }
+
+            list.ResolveLod();
+            
+            _instances[name].AddRange(list.Where(x => !x.IsLod));
         }
 
         public Object GetObject(int id)
@@ -97,13 +101,22 @@ namespace SanAndreasUnity.Importing.Items
             return !_objects.ContainsKey(id) ? null : _objects[id];
         }
 
+        public IEnumerable<string> GetGroups()
+        {
+            return _instances.Keys;
+        }
+
+        public IEnumerable<string> GetGroups(string folder)
+        {
+            return _instances.Keys.Where(x => x.StartsWith(folder + "/"));
+        }
+
         public IEnumerable<Instance> GetInstances(params string[] group)
         {
             return @group.Length == 0
                 ? _instances.Values.SelectMany(x => x)
-                : group.Select(x => x.ToLower()).SelectMany(x => x.Contains("/")
-                    ? new[] { x } : _instances.Keys.Where(y => y.StartsWith(x + "/")))
-                    .SelectMany(x => _instances.ContainsKey(x) ? _instances[x] : Enumerable.Empty<Instance>());
+                : group.Select(x => x.ToLower()).SelectMany(x => _instances.ContainsKey(x)
+                    ? _instances[x] : Enumerable.Empty<Instance>());
         }
     }
 }

@@ -26,32 +26,72 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static int[] FromTriangleStrip(IList<int> indices)
         {
-            var arr = new int[(indices.Count - 2) * 3];
+            var dst = new List<int>();
 
-            var j = 0;
             for (var i = 0; i < indices.Count - 2; ++i) {
-                arr[j++] = indices[i];
-                arr[j++] = indices[i + 2 - (i & 1)];
-                arr[j++] = indices[i + 1 + (i & 1)];
+                var a = indices[i];
+                var b = indices[i + 2 - (i & 1)];
+                var c = indices[i + 1 + (i & 1)];
+
+                if (a == b || b == c || a == c) continue;
+
+                dst.Add(a);
+                dst.Add(b);
+                dst.Add(c);
             }
 
-            return arr;
+            return dst.ToArray();
+        }
+
+        private static UnityEngine.Vector3[] CalculateNormals(Sections.Geometry src, UnityEngine.Vector3[] verts)
+        {
+            var norms = new UnityEngine.Vector3[src.VertexCount];
+
+            //for (var i = 0; i < src.FaceCount; ++i) {
+            //    var face = src.Faces[i];
+
+            //    var a = verts[face.Vertex0];
+            //    var b = verts[face.Vertex1];
+            //    var c = verts[face.Vertex2];
+
+            //    var v = b - a;
+            //    var w = c - b;
+
+            //    var norm = new UnityEngine.Vector3(
+            //        v.y * w.z - v.z * w.y,
+            //        v.z * w.x - v.x * w.z,
+            //        v.x * w.y - v.y * w.x).normalized;
+
+            //    norms[face.Vertex0] -= norm;
+            //    norms[face.Vertex1] -= norm;
+            //    norms[face.Vertex2] -= norm;
+            //}
+
+            for (var i = 0; i < src.VertexCount; ++i) {
+                norms[i] = new UnityEngine.Vector3(0f, 1f, 0f); // norms[i].normalized;
+            }
+
+            return norms;
         }
 
         private static Shader _sStandardShader;
 
         private static UnityEngine.Material Convert(Sections.Material src, TextureDictionary txd)
         {
-            var shader = _sStandardShader ?? (_sStandardShader = Shader.Find("Standard"));
+            var shader = _sStandardShader ?? (_sStandardShader = Shader.Find("SanAndreasUnity/Default"));
 
             var mat = new UnityEngine.Material(shader);
 
             mat.color = Convert(src.Colour);
 
             if (src.TextureCount > 0) {
-                var texName = src.Textures[0].TextureName;
+                var tex = src.Textures[0];
 
-                mat.mainTexture = txd.GetDiffuse(texName);
+                mat.mainTexture = txd.GetDiffuse(tex.TextureName);
+
+                if (!string.IsNullOrEmpty(tex.MaskName)) {
+                    mat.SetTexture("_MaskTex", txd.GetAlpha(tex.MaskName));
+                }
             }
 
             return mat;
@@ -77,15 +117,15 @@ namespace SanAndreasUnity.Importing.Conversion
                 mesh.uv = src.TexCoords.Select(x => Convert(x)).ToArray();
             }
 
+            if (src.Normals == null) {
+                mesh.normals = CalculateNormals(src, mesh.vertices);
+            }
+            
             mesh.subMeshCount = src.MaterialSplits.Length;
 
             var subMesh = 0;
             foreach (var split in src.MaterialSplits) {
                 mesh.SetIndices(FromTriangleStrip(split.FaceIndices), MeshTopology.Triangles, subMesh++);
-            }
-
-            if (src.Normals == null) {
-                mesh.RecalculateNormals();
             }
 
             mesh.RecalculateBounds();

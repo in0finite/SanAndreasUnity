@@ -1,8 +1,23 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items
 {
+    internal static class InstanceExtensions
+    {
+        public static void ResolveLod(this IList<Instance> insts)
+        {
+            foreach (var inst in insts) {
+                if (inst.LodIndex != -1) {
+                    var lod = inst.LodInstance = insts[inst.LodIndex];
+                    lod.IsLod = true;
+                }
+            }
+        }
+    }
+
     [Section("inst")]
     internal class Instance : Item
     {
@@ -12,6 +27,9 @@ namespace SanAndreasUnity.Importing.Items
         public readonly Vector3 Position;
         public readonly Quaternion Rotation;
         public readonly int LodIndex;
+
+        public Instance LodInstance { get; internal set; }
+        public bool IsLod { get; internal set; }
 
         public Instance(string line) : base(line)
         {
@@ -31,7 +49,7 @@ namespace SanAndreasUnity.Importing.Items
 
             Position = new Vector3(posX, posY, posZ);
 
-            var rotX = -reader.ReadSingle();
+            var rotX = reader.ReadSingle();
             var rotZ = reader.ReadSingle();
             var rotY = reader.ReadSingle();
             var rotW = reader.ReadSingle();
