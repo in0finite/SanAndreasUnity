@@ -61,6 +61,8 @@ namespace SanAndreasUnity.Importing.Archive
             var entry = _fileDict[name];
             var stream = new FrameStream(_stream, entry.Offset, entry.Size);
 
+            stream.Seek(0, SeekOrigin.Begin);
+
             return stream;
         }
 

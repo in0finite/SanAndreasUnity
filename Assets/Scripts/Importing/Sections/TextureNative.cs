@@ -21,8 +21,9 @@ namespace SanAndreasUnity.Importing.Sections
         public readonly byte BPP;
         public readonly byte MipMapCount;
         public readonly byte RasterType;
-        public readonly UInt32 ImageDataSize;
-        public readonly byte[][] ImageLevelData;
+        public readonly Int32 ImageDataSize;
+        public readonly byte[] ImageData;
+        public readonly byte[] ImageLevelData;
 
         public TextureNative(SectionHeader header, Stream stream)
         {
@@ -58,7 +59,7 @@ namespace SanAndreasUnity.Importing.Sections
             RasterType = reader.ReadByte();
 
             if (RasterType != 0x4) {
-                throw new Exception( "Unexpected RasterType, expected 0x04." );
+                throw new Exception("Unexpected RasterType, expected 0x04.");
             }
 
             if (PlatformID == 9) {
@@ -67,16 +68,19 @@ namespace SanAndreasUnity.Importing.Sections
                 Compression = (CompressionMode) reader.ReadByte();
             }
 
-            ImageDataSize = reader.ReadUInt32();
-            if ((Format & RasterFormat.ExtMipMap) != 0) {
-                ImageLevelData = new byte[MipMapCount][];
+            ImageDataSize = reader.ReadInt32();
 
+            ImageData = reader.ReadBytes(ImageDataSize);
+
+            if ((Format & RasterFormat.ExtMipMap) != 0) {
+                var tot = ImageDataSize;
                 for (var i = 0; i < MipMapCount; ++i) {
-                    ImageLevelData[i] = reader.ReadBytes((int) ImageDataSize >> (2 * i));
+                    tot += ImageDataSize >> (2 * i);
                 }
+
+                ImageLevelData = reader.ReadBytes(tot);
             } else {
-                ImageLevelData = new byte[1][];
-                ImageLevelData[0] = reader.ReadBytes((int) ImageDataSize);
+                ImageLevelData = ImageData;
             }
         }
     }

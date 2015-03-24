@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace SanAndreasUnity.Importing.Sections
 {
@@ -29,6 +30,7 @@ namespace SanAndreasUnity.Importing.Sections
         DXT3 = 3
     }
 
+    [Flags]
     public enum RasterFormat : uint
     {
         Default = 0x0000,
@@ -39,6 +41,8 @@ namespace SanAndreasUnity.Importing.Sections
         B8G8R8A8 = 0x0500,
         B8G8R8 = 0x0600,
         R5G5B5 = 0x0a00,
+
+        NoExt = 0x0fff,
 
         ExtAutoMipMap = 0x1000,
         ExtPal8 = 0x2000,

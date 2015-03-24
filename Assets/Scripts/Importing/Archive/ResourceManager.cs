@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SanAndreasUnity.Importing.Sections;
 
 namespace SanAndreasUnity.Importing.Archive
 {
@@ -32,6 +34,19 @@ namespace SanAndreasUnity.Importing.Archive
         {
             var arch = _sLoadedArchives.FirstOrDefault(x => x.ContainsFile(name));
             return arch != null ? arch.ReadFile(name) : null;
+        }
+
+        internal static TSection ReadFile<TSection>(string name)
+            where TSection : SectionData
+        {
+            using (var stream = ReadFile(name)) {
+                var section = Section<SectionData>.ReadData(stream) as TSection;
+                if (section == null) {
+                    throw new ArgumentException(string.Format("File \"{0}\" is not a {1}!", name, typeof(TSection).Name), "name");
+                }
+
+                return section;
+            }
         }
     }
 }
