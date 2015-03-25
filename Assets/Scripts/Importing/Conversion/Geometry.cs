@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Importing.Archive;
+using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Sections;
 using UnityEngine;
 
@@ -74,11 +75,30 @@ namespace SanAndreasUnity.Importing.Conversion
             return norms;
         }
 
-        private static Shader _sStandardShader;
+        private static readonly Dictionary<ObjectFlag, Shader> _sShaders
+            = new Dictionary<ObjectFlag,Shader>();
 
-        private static UnityEngine.Material Convert(Sections.Material src, TextureDictionary txd)
+        private static Shader GetShaderNoCache(ObjectFlag flags)
         {
-            var shader = _sStandardShader ?? (_sStandardShader = Shader.Find("SanAndreasUnity/Default"));
+            if ((flags & ObjectFlag.NoBackCull) == ObjectFlag.NoBackCull) {
+                return Shader.Find("SanAndreasUnity/NoBackCull");
+            }
+
+            return Shader.Find("SanAndreasUnity/Default");
+        }
+
+        private static Shader GetShader(ObjectFlag flags)
+        {
+            if (_sShaders.ContainsKey(flags)) return _sShaders[flags];
+
+            var shader = GetShaderNoCache(flags);
+            _sShaders.Add(flags, shader);
+            return shader;
+        }
+
+        private static UnityEngine.Material Convert(Sections.Material src, TextureDictionary txd, ObjectFlag flags)
+        {
+            var shader = GetShader(flags);
 
             var mat = new UnityEngine.Material(shader);
 
@@ -97,11 +117,9 @@ namespace SanAndreasUnity.Importing.Conversion
             return mat;
         }
 
-        private static Mesh Convert(Sections.Geometry src, TextureDictionary txd, out UnityEngine.Material[] materials)
+        private static Mesh Convert(Sections.Geometry src)
         {
             var mesh = new Mesh();
-
-            materials = src.Materials.Select(x => Convert(x, txd)).ToArray();
 
             mesh.vertices = src.Vertices.Select(x => Convert(x)).ToArray();
 
@@ -133,16 +151,19 @@ namespace SanAndreasUnity.Importing.Conversion
             return mesh;
         }
 
-        private static readonly Dictionary<string, Geometry> _sLoaded = new Dictionary<string, Geometry>();
+        private static readonly Dictionary<string, Geometry> _sLoaded
+            = new Dictionary<string, Geometry>();
 
-        public static void Load(string modelName, string texDictName, out Mesh mesh, out UnityEngine.Material[] materials)
+        public static void Load(string modelName, string texDictName, ObjectFlag flags, out Mesh mesh, out UnityEngine.Material[] materials)
         {
             modelName = modelName.ToLower();
 
+            Geometry loaded;
+
             if (_sLoaded.ContainsKey(modelName)) {
-                var loaded = _sLoaded[modelName];
+                loaded = _sLoaded[modelName];
                 mesh = loaded.Mesh;
-                materials = loaded.Materials;
+                materials = loaded.GetMaterials(flags);
                 return;
             }
 
@@ -153,19 +174,47 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             var txd = TextureDictionary.Load(texDictName);
+            var geom = clump.GeometryList.Geometry[0];
+            var mats = geom.Materials;
 
-            mesh = Convert(clump.GeometryList.Geometry[0], txd, out materials);
+            mesh = Convert(geom);
 
-            _sLoaded.Add(modelName, new Geometry(mesh, materials));
+            loaded = new Geometry(mesh, mats, txd);
+
+            materials = loaded.GetMaterials(flags);
+
+            _sLoaded.Add(modelName, loaded);
         }
 
         public readonly Mesh Mesh;
-        public readonly UnityEngine.Material[] Materials;
 
-        private Geometry(Mesh mesh, UnityEngine.Material[] materials)
+        private readonly Sections.Material[] _materialSources;
+        public readonly TextureDictionary _textureDictionary;
+        private readonly Dictionary<ObjectFlag, UnityEngine.Material[]> _materials;
+
+        private Geometry(Mesh mesh, Sections.Material[] materialSources, TextureDictionary textureDictionary)
         {
             Mesh = mesh;
-            Materials = materials;
+
+            _materialSources = materialSources;
+            _textureDictionary = textureDictionary;
+            _materials = new Dictionary<ObjectFlag,UnityEngine.Material[]>();
+        }
+
+        private UnityEngine.Material[] GetMaterials(ObjectFlag flags)
+        {
+            var distinguishing = flags &
+                ( ObjectFlag.Alpha1 | ObjectFlag.Alpha2
+                | ObjectFlag.NoBackCull | ObjectFlag.NoCull);
+
+            if (_materials.ContainsKey(distinguishing)) {
+                return _materials[distinguishing];
+            }
+
+            var mats = _materialSources.Select(x => Convert(x, _textureDictionary, distinguishing)).ToArray();
+            _materials.Add(distinguishing, mats);
+
+            return mats;
         }
     }
 }

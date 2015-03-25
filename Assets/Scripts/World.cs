@@ -70,7 +70,7 @@ namespace SanAndreasUnity
                                 continue;
                             }
 
-                            if (obj.DrawDist < 500) break;
+                            if ((obj.Flags & ObjectFlag.DisableDrawDist) != ObjectFlag.DisableDrawDist) break;
                         }
 
                         toLoad.Add(new ToLoad(inst, parent.transform, obj, dist));
@@ -102,7 +102,8 @@ namespace SanAndreasUnity
                 Material[] materials;
 
                 try {
-                    Geometry.Load(next.Object.Geometry, next.Object.TextureDictionary, out mesh, out materials);
+                    Geometry.Load(next.Object.Geometry, next.Object.TextureDictionary,
+                        next.Object.Flags, out mesh, out materials);
                 } catch (NotImplementedException) {
                     Destroy(gobj);
                     continue;
