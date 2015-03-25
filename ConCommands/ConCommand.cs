@@ -3,18 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Facepunch.Networking;
 
 namespace Facepunch.ConCommands
 {
-    [Flags]
-    public enum Domain
-    {
-        None = 0,
-        Client = 1,
-        Server = 2,
-        Shared = Client | Server
-    }
-
     public static class ConCommand
     {
         private delegate void ConCommandSilentDelegate(ConCommandArgs args);
