@@ -18,31 +18,10 @@
         #pragma surface surf Standard addshadow alphatest:_AlphaCutoff
         #pragma target 3.0
 
-        sampler2D _MainTex;
-        sampler2D _MaskTex;
-
-        struct Input
-        {
-            float2 uv_MainTex;
-        };
-
-        half _Glossiness;
-        half _Metallic;
-        fixed4 _Color;
-
-        void surf(Input IN, inout SurfaceOutputStandard o)
-        {
-            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
-            o.Albedo = c.rgb;
-
-            float alpha = tex2D(_MaskTex, IN.uv_MainTex).a;
-
-            o.Metallic = 0;
-            o.Smoothness = 0;
-            o.Alpha = alpha;
-        }
+        #include "Shared.cginc"
 
         ENDCG
     } 
+
     FallBack "Diffuse"
 }
