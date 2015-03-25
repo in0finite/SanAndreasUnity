@@ -203,9 +203,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private UnityEngine.Material[] GetMaterials(ObjectFlag flags)
         {
-            var distinguishing = flags &
-                ( ObjectFlag.Alpha1 | ObjectFlag.Alpha2
-                | ObjectFlag.NoBackCull | ObjectFlag.NoCull);
+            var distinguishing = flags & (ObjectFlag.Alpha1 | ObjectFlag.Alpha2 | ObjectFlag.NoBackCull);
 
             if (_materials.ContainsKey(distinguishing)) {
                 return _materials[distinguishing];
