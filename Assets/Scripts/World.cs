@@ -64,7 +64,7 @@ namespace SanAndreasUnity
                             break;
                         }
 
-                        if (dist > obj.DrawDist) {
+                        if (obj.DrawDist > 0 && dist > obj.DrawDist) {
                             if (inst.LodInstance != null) {
                                 inst = inst.LodInstance;
                                 continue;

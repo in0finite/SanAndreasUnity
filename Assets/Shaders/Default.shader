@@ -10,12 +10,12 @@
 
     SubShader
     {
-        Tags { "RenderType" = "AlphaTest" }
+        Tags { "RenderType" = "Opaque" }
         LOD 200
         
         CGPROGRAM
 
-        #pragma surface surf Standard fullforwardshadows alphatest:_AlphaCutoff
+        #pragma surface surf Standard addshadow alphatest:_AlphaCutoff
         #pragma target 3.0
 
         sampler2D _MainTex;
