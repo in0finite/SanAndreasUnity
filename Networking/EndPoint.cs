@@ -122,9 +122,13 @@ namespace Facepunch.Networking
         // ReSharper disable once UnusedMember.Local
         private void OnDestroy()
         {
+            OnDestroyed();
+
             if (Net != null) {
                 Net.Dispose();
             }
         }
+
+        protected virtual void OnDestroyed() { }
     }
 }

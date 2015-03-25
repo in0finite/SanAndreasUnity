@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
+using Facepunch.RemoteConsole;
 using ProtoBuf;
 using UnityEngine;
 using System.Collections.Generic;
+using WebSocketSharp.Net;
 using Debug = UnityEngine.Debug;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -39,6 +42,8 @@ namespace Facepunch.Networking
         }
 
 #endif
+
+        private RemoteConsoleServer _rcon;
 
         private readonly IdentifierSet _identifiers;
 
@@ -140,6 +145,15 @@ namespace Facepunch.Networking
 #endif
 
             Net.RegisterHandler<ConnectRequest>(OnReceiveMessage);
+
+            _rcon = new RemoteConsoleServer(NetConfig.RconPort);
+            _rcon.ResolveCredentials += ResolveRconCredentials;
+            _rcon.Start();
+        }
+
+        public virtual NetworkCredential ResolveRconCredentials(IIdentity ident)
+        {
+            return new NetworkCredential(ident.Name, NetConfig.RconPassword);
         }
 
         protected override void OnUpdate()
@@ -249,6 +263,13 @@ namespace Facepunch.Networking
         public override Networkable GetNetworkable(uint id)
         {
             return _networkables.ContainsKey(id) ? _networkables[id] : null;
+        }
+
+        protected override void OnDestroyed()
+        {
+            base.OnDestroyed();
+
+            if (_rcon != null) _rcon.Stop();
         }
     }
 }

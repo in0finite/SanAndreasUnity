@@ -5,6 +5,7 @@ namespace Facepunch
     public static class Application
     {
         public const int DefaultPort = 14242;
+        public const int DefaultRconPort = DefaultPort;
 
         public static bool IsQuitting { get; private set; }
 
