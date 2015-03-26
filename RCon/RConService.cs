@@ -16,7 +16,7 @@ namespace Facepunch.RCon
         private void BroadcastLog(String condition, String stackTrace, LogType type)
         {
             Send("log", new JObject {
-                { "type", type.ToString() },
+                { "type", type.ToString().ToLower() },
                 { "message", condition }
             });
         }
