@@ -22,6 +22,8 @@ namespace Facepunch.RCon
         public delegate String ExecuteCommandDelegate(RConCredentials creds, String command);
         public event ExecuteCommandDelegate ExecuteCommand;
 
+        internal event UnityEngine.Application.LogCallback BroadcastedLog;
+
         public bool IsListening { get { return _socketServer.IsListening; } }
 
         public Logger Log { get { return _socketServer.Log; } }
@@ -33,6 +35,13 @@ namespace Facepunch.RCon
             _socketServer = new WebSocketServer(port);
             _socketServer.AddWebSocketService("/rcon", () => new RConService(this));
             SessionTimeout = TimeSpan.FromDays(1d);
+        }
+
+        public void BroadcastLog(String condition, String stackTrace, LogType type)
+        {
+            if (BroadcastedLog != null) {
+                BroadcastedLog(condition, stackTrace, type);
+            }
         }
 
         internal RConSession TryCreateSession(RConCredentials creds)

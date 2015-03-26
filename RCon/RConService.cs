@@ -1,12 +1,25 @@
 ﻿using System;
 using System.Security.Authentication;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
+using WebSocketSharp;
 
 namespace Facepunch.RCon
 {
     internal class RConService : ServiceBase
     {
-        public RConService(RConServer server) : base(server) { }
+        public RConService(RConServer server) : base(server)
+        {
+            Server.BroadcastedLog += BroadcastLog;
+        }
+
+        private void BroadcastLog(String condition, String stackTrace, LogType type)
+        {
+            Send("log", new JObject {
+                { "type", type.ToString() },
+                { "message", condition }
+            });
+        }
 
         protected override void OnMessage(String action, JToken data)
         {
@@ -31,6 +44,12 @@ namespace Facepunch.RCon
                     return;
                 }
             }
+        }
+
+        protected override void OnClose(CloseEventArgs e)
+        {
+            Server.BroadcastedLog -= BroadcastLog;
+            base.OnClose(e);
         }
     }
 }

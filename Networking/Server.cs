@@ -150,6 +150,9 @@ namespace Facepunch.Networking
             _rcon = new RConServer(NetConfig.RconPort);
             _rcon.VerifyCredentials += OnVerifyRconCredentials;
             _rcon.ExecuteCommand += (creds, command) => ConCommand.RunServer(command);
+
+            UnityEngine.Application.logMessageReceived += _rcon.BroadcastLog;
+
             _rcon.Start();
         }
 
@@ -271,7 +274,10 @@ namespace Facepunch.Networking
         {
             base.OnDestroyed();
 
-            if (_rcon != null) _rcon.Stop();
+            if (_rcon != null) {
+                UnityEngine.Application.logMessageReceived -= _rcon.BroadcastLog;
+                _rcon.Stop();
+            }
         }
     }
 }

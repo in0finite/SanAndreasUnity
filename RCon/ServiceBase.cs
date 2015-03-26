@@ -24,7 +24,7 @@ namespace Facepunch.RCon
         public JObject FormatError(Exception e)
         {
             return new JObject {
-                { "type", e.GetType().FullName },
+                { "type", e.GetType().Name },
                 { "message", e.Message }
             };
         }
