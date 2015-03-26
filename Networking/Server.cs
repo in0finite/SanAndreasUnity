@@ -147,6 +147,8 @@ namespace Facepunch.Networking
 
             Net.RegisterHandler<ConnectRequest>(OnReceiveMessage);
 
+            if (!NetConfig.RconEnabled) return;
+
             _rcon = new RConServer(NetConfig.RconPort);
             _rcon.VerifyCredentials += OnVerifyRconCredentials;
             _rcon.ExecuteCommand += (creds, command) => ConCommand.RunServer(command);

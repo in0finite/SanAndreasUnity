@@ -18,6 +18,8 @@ namespace Facepunch.Networking
 
         public static int RconPort { get; set; }
 
+        public static bool RconEnabled { get { return RconPort > 0; } }
+
         public static String RconPassword { get; set; }
 
         public static int MaxConnections { get; set; }
@@ -64,6 +66,8 @@ namespace Facepunch.Networking
             RconPort = rconPort;
             MaxConnections = maxConnections;
 
+            RconEnabled = RconPort > 0;
+
             Hostname = "localhost";
         }
 
@@ -75,6 +79,8 @@ namespace Facepunch.Networking
             Port = port;
             RconPort = rconPort;
             MaxConnections = maxConnections;
+
+            RconEnabled = RconPort > 0;
         }
 
         public static void Client(String hostname, int port)
@@ -88,12 +94,12 @@ namespace Facepunch.Networking
 
         static NetConfig()
         {
-#if UNITY_EDITOR
+#if !UNITY_EDITOR
             RconPassword = "IDGKGRGdkKqZuBdv";
             ListenServer(Application.DefaultPort, Application.DefaultRconPort, 8);
 #else
             Port = Application.DefaultPort;
-            RconPort = Application.DefaultRconPort;
+            RconPort = 0;
             Hostname = "localhost";
             MaxConnections = 8;
 
@@ -129,6 +135,7 @@ namespace Facepunch.Networking
                             break;
                         }
 
+                        RconPort = 0;
                         Debug.LogErrorFormat("Invalid rcon port '{0}'.", args[i]);
                         break;
                     case "--rcon-password":
