@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Principal;
+using Facepunch.ConCommands;
 using Facepunch.RCon;
 using ProtoBuf;
 using UnityEngine;
@@ -148,6 +149,7 @@ namespace Facepunch.Networking
 
             _rcon = new RConServer(NetConfig.RconPort);
             _rcon.VerifyCredentials += OnVerifyRconCredentials;
+            _rcon.ExecuteCommand += (creds, command) => ConCommand.RunServer(command);
             _rcon.Start();
         }
 

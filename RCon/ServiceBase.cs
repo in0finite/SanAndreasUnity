@@ -7,18 +7,18 @@ using WebSocketSharp.Server;
 
 namespace Facepunch.RCon
 {
-    public abstract class BehaviorBase : WebSocketBehavior
+    internal abstract class ServiceBase : WebSocketBehavior
     {
         protected RConServer Server { get; private set; }
 
-        protected BehaviorBase(RConServer server)
+        protected ServiceBase(RConServer server)
         {
             Server = server;
         }
 
-        public void Send(String type, JObject obj)
+        public void Send(String type, JToken data)
         {
-            Send(new JObject { { "type", type }, { "data", obj } }.ToString(Formatting.None));
+            Send(new JObject {{"type", type}, {"data", data}}.ToString(Formatting.None));
         }
 
         public JObject FormatError(Exception e)
@@ -41,27 +41,18 @@ namespace Facepunch.RCon
             Debug.LogFormat("[rcon] {0}", e.Exception);
         }
 
-        protected override void OnClose(CloseEventArgs e)
-        {
-            Debug.LogFormat("[rcon] Closed connection: {0}", Context.UserEndPoint);
-
-            base.OnOpen();
-        }
-
         protected override void OnMessage(MessageEventArgs e)
         {
-            Debug.LogFormat("[rcon] {0}", e.Type);
-
             if (e.Type != Opcode.Text) return;
 
             try {
                 var obj = JObject.Parse(e.Data);
-                OnMessage(obj);
+                OnMessage((String) obj["type"], obj["data"]);
             } catch (Exception ex) {
                 Send("error", FormatError(ex));
             }
         }
 
-        protected virtual void OnMessage(JObject msg) { }
+        protected virtual void OnMessage(String type, JToken data) { }
     }
 }

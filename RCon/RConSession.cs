@@ -20,16 +20,18 @@ namespace Facepunch.RCon
         public RConCredentials Credentials { get; private set; }
         public DateTime StartedTime { get; private set; }
         public DateTime LastMessageTime { get; private set; }
+        public TimeSpan Timeout { get; private set; }
 
-        public IPEndPoint EndPoint { get { return Credentials.EndPoint; } }
+        public IPAddress Address { get { return Credentials.Address; } }
         public TimeSpan SinceLastMessage { get { return DateTime.UtcNow - LastMessageTime; } }
 
         public String Secret { get; private set; }
 
-        internal RConSession(RConCredentials creds)
+        internal RConSession(RConCredentials creds, TimeSpan timeout)
         {
             Credentials = creds;
             StartedTime = LastMessageTime = DateTime.UtcNow;
+            Timeout = timeout;
 
             var bytes = new byte[32];
             _sRng.GetBytes(bytes);
@@ -37,11 +39,30 @@ namespace Facepunch.RCon
             Secret = Convert.ToBase64String(bytes);
         }
 
+        public bool Verify(IPAddress ip, JObject session)
+        {
+            if (session == null) return false;
+
+            var name = (String) session["name"];
+            var secret = (String) session["secret"];
+
+            if (name == null || secret == null) return false;
+            if (!ip.Equals(Address)) return false;
+
+            if (!name.Equals(Credentials.Name)) return false;
+            if (!secret.Equals(Secret)) return false;
+
+            if (SinceLastMessage >= Timeout) return false;
+
+            LastMessageTime = DateTime.UtcNow;
+            return true;
+        }
+
         public JObject ToJObject()
         {
             return new JObject {
                 {"name", Credentials.Name},
-                {"ip", EndPoint.Address.ToString()},
+                {"ip", Address.ToString()},
                 {"time", StartedTime.ToUnixTimestamp()},
                 {"secret", Secret}
             };
