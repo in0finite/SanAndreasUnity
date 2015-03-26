@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Principal;
-using Facepunch.RemoteConsole;
+using Facepunch.RCon;
 using ProtoBuf;
 using UnityEngine;
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace Facepunch.Networking
 
 #endif
 
-        private RemoteConsoleServer _rcon;
+        private RConServer _rcon;
 
         private readonly IdentifierSet _identifiers;
 
@@ -146,14 +146,14 @@ namespace Facepunch.Networking
 
             Net.RegisterHandler<ConnectRequest>(OnReceiveMessage);
 
-            _rcon = new RemoteConsoleServer(NetConfig.RconPort);
-            _rcon.ResolveCredentials += ResolveRconCredentials;
+            _rcon = new RConServer(NetConfig.RconPort);
+            _rcon.VerifyCredentials += OnVerifyRconCredentials;
             _rcon.Start();
         }
 
-        public virtual NetworkCredential ResolveRconCredentials(IIdentity ident)
+        protected virtual bool OnVerifyRconCredentials(RConCredentials creds)
         {
-            return new NetworkCredential(ident.Name, NetConfig.RconPassword);
+            return creds.Password.Equals(NetConfig.RconPassword);
         }
 
         protected override void OnUpdate()

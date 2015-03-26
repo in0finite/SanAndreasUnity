@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 
@@ -10,12 +11,10 @@ namespace Facepunch.RCon
     {
         protected RConServer Server { get; private set; }
 
-        public void Initialize(RConServer server)
+        protected BehaviorBase(RConServer server)
         {
             Server = server;
         }
-
-        protected virtual void OnInitialize() { }
 
         public void Send(String type, JObject obj)
         {
@@ -30,8 +29,29 @@ namespace Facepunch.RCon
             };
         }
 
+        protected override void OnOpen()
+        {
+            Debug.LogFormat("[rcon] New connection: {0}", Context.UserEndPoint);
+
+            base.OnOpen();
+        }
+
+        protected override void OnError(ErrorEventArgs e)
+        {
+            Debug.LogFormat("[rcon] {0}", e.Exception);
+        }
+
+        protected override void OnClose(CloseEventArgs e)
+        {
+            Debug.LogFormat("[rcon] Closed connection: {0}", Context.UserEndPoint);
+
+            base.OnOpen();
+        }
+
         protected override void OnMessage(MessageEventArgs e)
         {
+            Debug.LogFormat("[rcon] {0}", e.Type);
+
             if (e.Type != Opcode.Text) return;
 
             try {

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Security.Authentication;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 
@@ -18,7 +20,16 @@ namespace Facepunch.RCon
         public RConServer(int port)
         {
             _socketServer = new WebSocketServer(port);
-            _socketServer.AddWebSocketService<RConAuth>("/auth", x => x.Init(this));
+            _socketServer.AddWebSocketService("/auth", () => new RConAuth(this));
+        }
+
+        internal RConSession TryCreateSession(RConCredentials creds)
+        {
+            if (VerifyCredentials == null || !VerifyCredentials(creds)) {
+                throw new AuthenticationException("Invalid credentials");
+            }
+
+            return new RConSession(creds);
         }
 
         public void Start()
