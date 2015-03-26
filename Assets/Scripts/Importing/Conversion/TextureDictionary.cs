@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Sections;
@@ -9,19 +10,6 @@ namespace SanAndreasUnity.Importing.Conversion
 {
     internal class TextureDictionary
     {
-        private static void ConvertDXT3ToDXT5(IList<byte> data)
-        {
-            var a = new byte[16];
-            for (var i = 0; i < data.Count; i += 8) {
-                for (var j = 0; j < 8; ++j) {
-                    a[j << 1] = (byte) (data[i + j] & 0xf);
-                    a[(j << 1) + 1] = (byte) ((data[i + j] >> 4) & 0xf);
-
-                    data[i + j] = 0xff;
-                }
-            }
-        }
-
         private static Texture2D Convert(TextureNative src)
         {
             TextureFormat format;
@@ -46,6 +34,8 @@ namespace SanAndreasUnity.Importing.Conversion
                     throw new NotImplementedException(string.Format("RasterFormat.{0}", src.Format & RasterFormat.NoExt));
             }
 
+            var data = src.ImageData;
+
             switch (src.Compression) {
                 case CompressionMode.None:
                     break;
@@ -53,7 +43,6 @@ namespace SanAndreasUnity.Importing.Conversion
                     format = TextureFormat.DXT1;
                     break;
                 case CompressionMode.DXT3:
-                    //ConvertDXT3ToDXT5(src.ImageLevelData);
                     format = TextureFormat.DXT5;
                     break;
                 default:
@@ -79,7 +68,7 @@ namespace SanAndreasUnity.Importing.Conversion
                     break;
             }
 
-            tex.LoadRawTextureData(src.ImageData);
+            tex.LoadRawTextureData(data);
             tex.Apply(precMips || autoMips, true);
 
             return tex;

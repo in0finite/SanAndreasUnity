@@ -1,19 +1,22 @@
-﻿Shader "SanAndreasUnity/Default"
+﻿Shader "SanAndreasUnity/TransparentNoBackCull"
 {
     Properties
     {
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
         _MaskTex ("Mask (A)", 2D) = "white" {}
-        _AlphaCutoff ("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
     }
 
     SubShader
     {
+        Tags { "Queue" = "Transparent" }
         LOD 200
+        
+        Cull Off
+        Blend SrcAlpha OneMinusSrcAlpha
         
         CGPROGRAM
 
-        #pragma surface surf Lambert addshadow alphatest:_AlphaCutoff
+        #pragma surface surf Lambert
         #pragma target 3.0
 
         #include "Shared.cginc"

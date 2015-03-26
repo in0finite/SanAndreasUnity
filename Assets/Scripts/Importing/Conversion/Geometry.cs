@@ -69,7 +69,7 @@ namespace SanAndreasUnity.Importing.Conversion
             //}
 
             for (var i = 0; i < src.VertexCount; ++i) {
-                norms[i] = new UnityEngine.Vector3(0f, 1f, 0f); // norms[i].normalized;
+                norms[i] = UnityEngine.Vector3.up; // norms[i].normalized;
             }
 
             return norms;
@@ -80,8 +80,19 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static Shader GetShaderNoCache(ObjectFlag flags)
         {
-            if ((flags & ObjectFlag.NoBackCull) == ObjectFlag.NoBackCull) {
+            var noBackCull = (flags & ObjectFlag.NoBackCull) == ObjectFlag.NoBackCull;
+            var alpha1 = false; // (flags & ObjectFlag.Alpha1) == ObjectFlag.Alpha1;
+
+            if (noBackCull && alpha1) {
+                return Shader.Find("SanAndreasUnity/TransparentNoBackCull");
+            }
+
+            if (noBackCull) {
                 return Shader.Find("SanAndreasUnity/NoBackCull");
+            }
+
+            if (alpha1) {
+                return Shader.Find("SanAndreasUnity/Transparent");
             }
 
             return Shader.Find("SanAndreasUnity/Default");
@@ -106,11 +117,10 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (src.TextureCount > 0) {
                 var tex = src.Textures[0];
-
-                mat.mainTexture = txd.GetDiffuse(tex.TextureName);
+                var diffuse = mat.mainTexture = txd.GetDiffuse(tex.TextureName);
 
                 if (!string.IsNullOrEmpty(tex.MaskName)) {
-                    mat.SetTexture("_MaskTex", txd.GetAlpha(tex.MaskName));
+                    mat.SetTexture("_MaskTex", txd.GetAlpha(tex.MaskName) ?? diffuse);
                 }
             }
 
@@ -203,7 +213,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private UnityEngine.Material[] GetMaterials(ObjectFlag flags)
         {
-            var distinguishing = flags & (ObjectFlag.Alpha1 | ObjectFlag.Alpha2 | ObjectFlag.NoBackCull);
+            var distinguishing = flags & (ObjectFlag.Alpha1 | ObjectFlag.NoBackCull);
 
             if (_materials.ContainsKey(distinguishing)) {
                 return _materials[distinguishing];

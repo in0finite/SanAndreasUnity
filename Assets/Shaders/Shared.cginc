@@ -7,16 +7,11 @@ struct Input
     float4 color : COLOR;
 };
 
-half _Glossiness;
-half _Metallic;
-fixed4 _Color;
-
-void surf(Input IN, inout SurfaceOutputStandard o)
+void surf(Input IN, inout SurfaceOutput o)
 {
-    fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color * IN.color;
-    o.Albedo = c.rgb;
-
-    o.Metallic = 0;
-    o.Smoothness = 0;
+    o.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb * IN.color.rgb;
     o.Alpha = tex2D(_MaskTex, IN.uv_MainTex).a * IN.color.a;
+
+    o.Specular = 0;
+    o.Gloss = 0;
 }
