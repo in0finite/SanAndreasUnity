@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Principal;
 using Facepunch.ConCommands;
 using Facepunch.RCon;
 using ProtoBuf;
 using UnityEngine;
 using System.Collections.Generic;
-using WebSocketSharp.Net;
 using Debug = UnityEngine.Debug;
 #if UNITY_EDITOR
 using UnityEditor;
