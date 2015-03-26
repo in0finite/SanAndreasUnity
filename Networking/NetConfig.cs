@@ -66,8 +66,6 @@ namespace Facepunch.Networking
             RconPort = rconPort;
             MaxConnections = maxConnections;
 
-            RconEnabled = RconPort > 0;
-
             Hostname = "localhost";
         }
 
@@ -79,8 +77,6 @@ namespace Facepunch.Networking
             Port = port;
             RconPort = rconPort;
             MaxConnections = maxConnections;
-
-            RconEnabled = RconPort > 0;
         }
 
         public static void Client(String hostname, int port)
