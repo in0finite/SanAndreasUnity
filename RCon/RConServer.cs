@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Authentication;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 
@@ -67,11 +68,20 @@ namespace Facepunch.RCon
 
         public void Start()
         {
-            _socketServer.Start();
+            Debug.LogFormat("[rcon] Starting rcon listener on port {0}", _socketServer.Port);
+
+            try {
+                _socketServer.Start();
+            } catch (Exception e) {
+                Debug.LogErrorFormat("[rcon] Unable to start listener: {0}", e);
+            }
         }
 
         public void Stop()
         {
+            if (!_socketServer.IsListening) return;
+
+            Debug.Log("[rcon] Stopping rcon listener");
             _socketServer.Stop();
         }
 
