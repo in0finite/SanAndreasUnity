@@ -90,7 +90,7 @@ namespace Facepunch.Networking
 
         static NetConfig()
         {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR
             RconPassword = "IDGKGRGdkKqZuBdv";
             ListenServer(Application.DefaultPort, Application.DefaultRconPort, 8);
 #else
