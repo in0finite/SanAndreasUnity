@@ -50,7 +50,7 @@ namespace Facepunch.Networking
 
         public void AddSubscriber(IRemote client)
         {
-            _subscribers.Add(client);
+            if (!_subscribers.Add(client)) return;
 
             var arr = new [] { client };
             foreach (var networkable in _networkables.Values) {
