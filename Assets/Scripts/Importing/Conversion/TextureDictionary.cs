@@ -88,49 +88,80 @@ namespace SanAndreasUnity.Importing.Conversion
             return txd;
         }
 
-        private readonly TextureNative[] _natives;
+        private class Texture
+        {
+            private readonly TextureNative _native;
+            private Texture2D _converted;
+            private bool _attemptedConversion;
 
-        private readonly Dictionary<string, Texture2D> _diffuse;
-        private readonly Dictionary<string, Texture2D> _alpha;
+            public string DiffuseName { get { return _native.DiffuseName; } }
+            public string AlphaName { get { return _native.AlphaName; } }
+
+            public bool IsDiffuse { get { return !string.IsNullOrEmpty(DiffuseName); } }
+            public bool IsAlpha { get { return !string.IsNullOrEmpty(AlphaName); } }
+
+            public Texture2D Converted
+            {
+                get
+                {
+                    if (_attemptedConversion) return _converted;
+                    _attemptedConversion = true;
+                    _converted = Convert(_native);
+                    return _converted;
+                }
+            }
+
+            public Texture(TextureNative native)
+            {
+                _native = native;
+            }
+        }
+
+        private readonly Dictionary<string, Texture> _diffuse;
+        private readonly Dictionary<string, Texture> _alpha;
 
         private TextureDictionary(Sections.TextureDictionary txd)
         {
-            _natives = txd.Textures;
-            _diffuse = new Dictionary<string, Texture2D>();
-            _alpha = new Dictionary<string, Texture2D>();
+            _diffuse = new Dictionary<string, Texture>();
+            _alpha = new Dictionary<string, Texture>();
 
-            foreach (var native in _natives) {
-                if (!string.IsNullOrEmpty(native.DiffuseName)) {
-                    _diffuse.Add(native.DiffuseName, null);
+            foreach (var native in txd.Textures) {
+                var tex = new Texture(native);
+
+                if (tex.IsDiffuse) {
+                    _diffuse.Add(tex.DiffuseName, tex);
                 }
-                if (!string.IsNullOrEmpty(native.AlphaName)) {
-                    if (_alpha.ContainsKey(native.AlphaName)) {
-                        Debug.LogFormat("Tried to re-add: {0}", native.AlphaName);
+
+                if (tex.IsAlpha) {
+                    if (_alpha.ContainsKey(tex.AlphaName)) {
+                        Debug.LogWarningFormat("Tried to re-add {0} (diffuse {1} vs {2})",
+                            tex.AlphaName, tex.DiffuseName, _alpha[tex.AlphaName].DiffuseName);
                         continue;
                     }
-                    _alpha.Add(native.AlphaName, null);
+
+                    _alpha.Add(tex.AlphaName, tex);
                 }
             }
         }
 
         public Texture2D GetDiffuse(string name)
         {
+            name = name.ToLower();
+
             if (!_diffuse.ContainsKey(name)) return null;
-            if (_diffuse[name] != null) return _diffuse[name];
-
-            var tex = _diffuse[name] = Convert(_natives.First(x => x.DiffuseName.Equals(name)));
-
-            return tex;
+            return _diffuse[name].Converted;
         }
 
         public Texture2D GetAlpha(string name)
         {
-            if (!_alpha.ContainsKey(name)) return null;
-            if (_alpha[name] != null) return _alpha[name];
+            name = name.ToLower();
 
-            var tex = _alpha[name] = Convert(_natives.First(x => x.AlphaName.Equals(name)));
+            if (!_alpha.ContainsKey(name)) {
+                Debug.LogWarningFormat("Couldn't find alpha texture {0}", name);
+                return null;
+            }
 
-            return tex;
+            return _alpha[name].Converted;
         }
     }
 }
