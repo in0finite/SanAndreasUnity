@@ -76,9 +76,11 @@ namespace Facepunch.Networking
         {
             _subscribers.Remove(client);
 
+            if (_networkables.Count == 0) return;
+
             Server.Net.SendMessage(new NetworkablesRemoved {
                 Networkables = _networkables.Select(x => x.Value.Info).ToList()
-            }, Subscribers, DeliveryMethod.ReliableOrdered, 0);
+            }, client, DeliveryMethod.ReliableOrdered, 0);
         }
 
         private bool RemoveInternal(Networkable networkable)
