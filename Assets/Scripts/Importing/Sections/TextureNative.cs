@@ -6,7 +6,7 @@ using SanAndreasUnity.Utilities;
 namespace SanAndreasUnity.Importing.Sections
 {
     [SectionType(21)]
-    internal class TextureNative : SectionData
+    public class TextureNative : SectionData
     {
         private static void ConvertDXT3ToDXT5(IList<byte> data)
         {

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items
 {
-    internal static class InstanceExtensions
+    public static class InstanceExtensions
     {
         public static void ResolveLod(this IList<Instance> insts)
         {
@@ -19,7 +18,7 @@ namespace SanAndreasUnity.Importing.Items
     }
 
     [Section("inst")]
-    internal class Instance : Item
+    public class Instance : Item
     {
         public readonly int ObjectId;
         public readonly string LodGeometry;

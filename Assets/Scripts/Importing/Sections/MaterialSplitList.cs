@@ -3,7 +3,7 @@ using System.IO;
 
 namespace SanAndreasUnity.Importing.Sections
 {
-    internal class MaterialSplit
+    public class MaterialSplit
     {
         public readonly UInt32 VertexCount;
         public readonly UInt32 MaterialIndex;
@@ -23,7 +23,7 @@ namespace SanAndreasUnity.Importing.Sections
     }
 
     [SectionType(1294)]
-    internal class MaterialSplitList : SectionData
+    public class MaterialSplitList : SectionData
     {
         public readonly bool TriangleStrip;
         public readonly UInt32 SplitCount;

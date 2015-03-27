@@ -20,7 +20,7 @@ namespace SanAndreasUnity.Importing.Sections
     }
 
     [SectionType(7)]
-    internal class Material : SectionData
+    public class Material : SectionData
     {
         public readonly Color4 Colour;
         public readonly UInt32 TextureCount;

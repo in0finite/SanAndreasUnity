@@ -1,6 +1,6 @@
 ﻿namespace SanAndreasUnity.Importing.Items
 {
-    internal enum ObjectFlag : uint
+    public enum ObjectFlag : uint
     {
         WetEffect = 1,
         RenderAtNight = 2,
@@ -22,7 +22,7 @@
     }
 
     [Section("objs")]
-    internal class Object : Item
+    public class Object : Item
     {
         public readonly int Id;
 

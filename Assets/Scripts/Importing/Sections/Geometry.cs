@@ -3,14 +3,14 @@ using System.IO;
 
 namespace SanAndreasUnity.Importing.Sections
 {
-    internal enum GeometryFlag : ushort
+    public enum GeometryFlag : ushort
     {
         TexCoords = 4,
         Colors = 8,
         Normals = 16
     }
 
-    internal struct Vector2
+    public struct Vector2
     {
         public readonly Single X;
         public readonly Single Y;
@@ -22,7 +22,7 @@ namespace SanAndreasUnity.Importing.Sections
         }
     }
 
-    internal struct Vector3
+    public struct Vector3
     {
         public readonly Single X;
         public readonly Single Y;
@@ -36,7 +36,7 @@ namespace SanAndreasUnity.Importing.Sections
         }
     }
 
-    internal struct FaceInfo
+    public struct FaceInfo
     {
         public readonly GeometryFlag Flags;
         public readonly UInt16 Vertex0;
@@ -54,7 +54,7 @@ namespace SanAndreasUnity.Importing.Sections
         }
     }
 
-    internal struct BoundingSphere
+    public struct BoundingSphere
     {
         public readonly Vector3 Offset;
         public readonly float Radius;
@@ -67,7 +67,7 @@ namespace SanAndreasUnity.Importing.Sections
     }
 
     [SectionType(15)]
-    internal class Geometry : SectionData
+    public class Geometry : SectionData
     {
         public readonly GeometryFlag Flags;
         public readonly UInt32 FaceCount;

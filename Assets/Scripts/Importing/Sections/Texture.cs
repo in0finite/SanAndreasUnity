@@ -51,7 +51,7 @@ namespace SanAndreasUnity.Importing.Sections
     }
 
     [SectionType(6)]
-    internal class Texture : SectionData
+    public class Texture : SectionData
     {
         public readonly Filter FilterMode;
         public readonly string TextureName;

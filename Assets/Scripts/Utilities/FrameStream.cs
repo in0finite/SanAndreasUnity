@@ -46,7 +46,7 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
-        internal FrameStream(Stream baseStream, long offset, long length)
+        public FrameStream(Stream baseStream, long offset, long length)
         {
             _baseStream = baseStream;
 

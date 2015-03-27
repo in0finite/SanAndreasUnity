@@ -4,7 +4,7 @@ using System.IO;
 namespace SanAndreasUnity.Importing.Sections
 {
     [SectionType(22)]
-    internal class TextureDictionary : SectionData
+    public class TextureDictionary : SectionData
     {
         public UInt16 TextureCount;
         public TextureNative[] Textures;

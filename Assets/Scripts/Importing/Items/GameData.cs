@@ -2,11 +2,10 @@
 using System.IO;
 using System.Linq;
 using SanAndreasUnity.Importing.Archive;
-using SanAndreasUnity.Importing.Sections;
 
 namespace SanAndreasUnity.Importing.Items
 {
-    internal class GameData
+    public class GameData
     {
         private readonly List<Zone> _zones;
 
