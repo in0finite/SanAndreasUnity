@@ -82,6 +82,7 @@ namespace Facepunch.Networking
             base.OnNetworkingAwake();
 
             Net.RegisterHandler<ConnectResponse>(OnReceiveMessage);
+            Net.RegisterHandler<NetworkablesRemoved>(OnReceiveMessage);
 
             StartCoroutine(SendConnectionRequest());
         }
@@ -126,6 +127,15 @@ namespace Facepunch.Networking
             _timeDiff = SystemTime - message.ServerTime;
 
             Net.LoadMessageTableFromSchema(message.MessageTable);
+        }
+
+        private void OnReceiveMessage(IRemote sender, NetworkablesRemoved message)
+        {
+            foreach (var info in message.Networkables) {
+                var networkable = GetNetworkable(info.Ident);
+                if (networkable == null) continue;
+                Destroy(networkable);
+            }
         }
 
         internal void RegisterNetworkable(Networkable networkable)

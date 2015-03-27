@@ -1,11 +1,25 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using ProtoBuf;
 
 namespace Facepunch.Networking
 {
     public sealed class Group : IDisposable
     {
+
+#if PROTOBUF
+
+        package ProtoBuf;
+
+        //:baseclass = INetworkMessage
+        message NetworkablesRemoved
+        {
+            repeated NetworkableInfo Networkables = 1;
+        }
+
+#endif
+
         private readonly Dictionary<uint, Networkable> _networkables;
         private readonly HashSet<IRemote> _subscribers;
 
@@ -61,6 +75,10 @@ namespace Facepunch.Networking
         public void RemoveSubscriber(IRemote client)
         {
             _subscribers.Remove(client);
+
+            Server.Net.SendMessage(new NetworkablesRemoved {
+                Networkables = _networkables.Select(x => x.Value.Info).ToList()
+            }, Subscribers, DeliveryMethod.ReliableOrdered, 0);
         }
 
         private bool RemoveInternal(Networkable networkable)
@@ -81,8 +99,8 @@ namespace Facepunch.Networking
         {
             if (!RemoveInternal(networkable)) return;
 
-            Server.Net.SendMessage(new ProtoBuf.NetworkableRemoved {
-                Networkable = networkable.Info
+            Server.Net.SendMessage(new NetworkablesRemoved {
+                Networkables = new List<NetworkableInfo> { networkable.Info }
             }, Subscribers, DeliveryMethod.ReliableOrdered, 0);
         }
 

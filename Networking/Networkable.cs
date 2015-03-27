@@ -35,12 +35,6 @@ namespace ProtoBuf
         required uint32 Ident = 1;
     }
 
-    //:baseclass = INetworkableMessage
-    message NetworkableRemoved
-    {
-        required NetworkableInfo Networkable = 1;
-    }
-
     message Transform
     {
         optional UnityEngine.Vector3 Position = 1;
@@ -51,7 +45,6 @@ namespace ProtoBuf
     message NetworkableSave
     {
         required MessageTableSchema Schema = 1;
-        
         repeated bytes Entries = 2;
     }
 
@@ -282,20 +275,10 @@ namespace Facepunch.Networking
         {
 #if CLIENT
             _clientHandlers = new MessageHandlerCollection<INetworkableMessage>();
-
-            RegisterClientHandler<NetworkableRemoved>(ReceiveRemovedMessage);
 #endif
 
             _serverHandlers = new MessageHandlerCollection<INetworkableMessage>();
         }
-
-#if CLIENT
-        private void ReceiveRemovedMessage(IRemote sender, NetworkableRemoved message)
-        {
-            if (IsServer) return;
-            Destroy(gameObject);
-        }
-#endif
 
         internal void SetGroupInternal(Group group)
         {
