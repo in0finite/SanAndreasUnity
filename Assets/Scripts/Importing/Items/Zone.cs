@@ -3,7 +3,7 @@
 namespace SanAndreasUnity.Importing.Items
 {
     [Section("zone")]
-    internal class Zone : Item
+    public class Zone : Item
     {
         public readonly string Name;
 

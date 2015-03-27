@@ -4,7 +4,7 @@ using System.IO;
 namespace SanAndreasUnity.Importing.Sections
 {
     [SectionType(8)]
-    internal class MaterialList : SectionData
+    public class MaterialList : SectionData
     {
         public readonly UInt32 MaterialCount;
         public readonly Material[] Materials;

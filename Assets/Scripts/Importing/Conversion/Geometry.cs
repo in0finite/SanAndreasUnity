@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Conversion
 {
-    internal class Geometry
+    public class Geometry
     {
         private static UnityEngine.Vector2 Convert(Sections.Vector2 vec)
         {

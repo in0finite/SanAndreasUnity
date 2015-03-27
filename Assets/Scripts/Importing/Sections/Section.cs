@@ -8,7 +8,7 @@ using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Sections
 {
-    internal struct SectionHeader
+    public struct SectionHeader
     {
         public static SectionHeader Read(Stream stream)
         {
@@ -34,7 +34,7 @@ namespace SanAndreasUnity.Importing.Sections
         }
     }
 
-    internal class SectionTypeAttribute : Attribute
+    public class SectionTypeAttribute : Attribute
     {
         public readonly UInt32 Value;
 
@@ -44,7 +44,7 @@ namespace SanAndreasUnity.Importing.Sections
         }
     }
 
-    internal abstract class SectionData
+    public abstract class SectionData
     {
         private delegate SectionData CtorDelegate(SectionHeader header, Stream stream);
 
@@ -97,7 +97,7 @@ namespace SanAndreasUnity.Importing.Sections
         }
     }
 
-    internal struct Section<TData>
+    public struct Section<TData>
         where TData : SectionData
     {
         public static Section<TData> Read(Stream stream)

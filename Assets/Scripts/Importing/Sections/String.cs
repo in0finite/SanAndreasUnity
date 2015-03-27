@@ -5,7 +5,7 @@ using SanAndreasUnity.Utilities;
 namespace SanAndreasUnity.Importing.Sections
 {
     [SectionType(2)]
-    internal class String : SectionData
+    public class String : SectionData
     {
         public readonly string Value;
 

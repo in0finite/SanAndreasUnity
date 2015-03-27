@@ -6,7 +6,7 @@ using Random = System.Random;
 
 namespace SanAndreasUnity.Utilities
 {
-    internal static class Tools
+    public static class Tools
     {
         public static bool DoesExtend(this Type self, Type type)
         {
@@ -144,7 +144,7 @@ namespace SanAndreasUnity.Utilities
             return prefix + rand.Next(min, max).ToString("X").ToLower();
         }
 
-        internal static Vector2 ReadVector2(this BinaryReader reader)
+        public static Vector2 ReadVector2(this BinaryReader reader)
         {
             return new Vector2 {
                 x = reader.ReadSingle(),
@@ -152,13 +152,13 @@ namespace SanAndreasUnity.Utilities
             };
         }
 
-        internal static String ReadString(this BinaryReader reader, int length)
+        public static String ReadString(this BinaryReader reader, int length)
         {
             var bytes = reader.ReadBytes(length);
             return Encoding.UTF8.GetString(bytes).TrimNullChars();
         }
 
-        internal static String TrimNullChars(this String str)
+        public static String TrimNullChars(this String str)
         {
             for (var i = 0; i < str.Length; ++i) if (str[i] == '\0') return str.Substring(0, i);
 

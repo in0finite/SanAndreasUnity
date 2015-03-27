@@ -4,7 +4,7 @@ using System.IO;
 namespace SanAndreasUnity.Importing.Sections
 {
     [SectionType(TypeId)]
-    internal class Clump : SectionData
+    public class Clump : SectionData
     {
         public const Int32 TypeId = 16;
 

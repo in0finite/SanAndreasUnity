@@ -255,9 +255,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1327530087}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52f69aeb3ee6d6b45ac8a0df1bc6f09b, type: 3}
+  m_Script: {fileID: 11500000, guid: ab4bb5a944a1ef14eb459335cf691bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CellId: 0
 --- !u!4 &1327530089
 Transform:
   m_ObjectHideFlags: 0

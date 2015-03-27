@@ -8,7 +8,7 @@ using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Items
 {
-    internal class SectionAttribute : Attribute
+    public class SectionAttribute : Attribute
     {
         public readonly string Section;
 
@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Importing.Items
         }
     }
 
-    internal abstract class Item
+    public abstract class Item
     {
         private readonly string[] _parts;
 
@@ -54,7 +54,7 @@ namespace SanAndreasUnity.Importing.Items
         }
     }
 
-    internal class ItemFile
+    public class ItemFile
     {
         private delegate Item ItemCtor(string line);
 

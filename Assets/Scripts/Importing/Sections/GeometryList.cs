@@ -4,7 +4,7 @@ using System.IO;
 namespace SanAndreasUnity.Importing.Sections
 {
     [SectionType(26)]
-    internal class GeometryList : SectionData
+    public class GeometryList : SectionData
     {
         public readonly UInt32 GeometryCount;
         public readonly Geometry[] Geometry;

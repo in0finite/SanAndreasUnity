@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Sections;
@@ -8,7 +7,7 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Conversion
 {
-    internal class TextureDictionary
+    public class TextureDictionary
     {
         private static Texture2D Convert(TextureNative src)
         {

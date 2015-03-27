@@ -37,7 +37,7 @@ namespace SanAndreasUnity.Importing.Archive
             return arch.ReadFile(name);
         }
 
-        internal static TSection ReadFile<TSection>(string name)
+        public static TSection ReadFile<TSection>(string name)
             where TSection : SectionData
         {
             using (var stream = ReadFile(name)) {
