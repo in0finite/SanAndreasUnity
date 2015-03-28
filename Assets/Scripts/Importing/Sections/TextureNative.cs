@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Sections
@@ -8,9 +9,9 @@ namespace SanAndreasUnity.Importing.Sections
     [SectionType(21)]
     public class TextureNative : SectionData
     {
-        private static void ConvertDXT3ToDXT5(IList<byte> data)
+        private static byte[] ConvertDXT3ToDXT5(byte[] data)
         {
-            for (var i = 0; i < data.Count; i += 16) {
+            for (var i = 0; i < data.Length; i += 16) {
                 ulong packed = 0;
 
                 for (var j = 0; j < 16; ++j) {
@@ -33,10 +34,44 @@ namespace SanAndreasUnity.Importing.Sections
                     data[i + 2 + j] = (byte) ((packed >> (j << 3)) & 0xff);
                 }
             }
+
+            return data;
         }
 
-        private readonly byte[] _imageData;
-        private readonly byte[] _imageLevelData;
+        private static byte[] ConvertB8G8R8ToRGB24(byte[] data)
+        {
+            for (var i = 0; i < data.Length - 2; i += 3) {
+                var t = data[i];
+                data[i] = data[i + 2];
+                data[i + 2] = t;
+            }
+
+            return data;
+        }
+
+        private static readonly byte[] _sR5G5B5Lookup = Enumerable.Range(0, 0x20)
+            .Select(x => (byte) Math.Round(((double) x / 0x1f) * 0xff))
+            .ToArray();
+
+        private static byte[] ConvertA1R5G5B5ToARGB32(byte[] data)
+        {
+            var dest = new byte[data.Length << 1];
+
+            for (var i = 0; i < data.Length - 1; i += 2) {
+                var val = data[i] | (data[i + 1] << 8);
+                var d = i << 1;
+
+                dest[d + 0] = (byte) ((val & 1) == 1 ? 0xff : 0);
+                dest[d + 1] = _sR5G5B5Lookup[(val >> 1) & 0x1f];
+                dest[d + 2] = _sR5G5B5Lookup[(val >> 6) & 0x1f];
+                dest[d + 3] = _sR5G5B5Lookup[(val >> 11) & 0x1f];
+            }
+
+            return dest;
+        }
+
+        private byte[] _imageData;
+        private byte[] _imageLevelData;
 
         private bool _convertedImageData;
         private bool _convertedImageLevelData;
@@ -66,8 +101,12 @@ namespace SanAndreasUnity.Importing.Sections
                 _convertedImageData = true;
                 _convertedImageLevelData = _imageData == _imageLevelData;
 
-                if (Compression == CompressionMode.DXT3) {
-                    ConvertDXT3ToDXT5(_imageData);
+                if (Format == RasterFormat.B8G8R8) {
+                    _imageData = ConvertB8G8R8ToRGB24(_imageData);
+                } else if (Format == RasterFormat.A1R5G5B5) {
+                    _imageData = ConvertA1R5G5B5ToARGB32(_imageData);
+                } else if (Compression == CompressionMode.DXT3) {
+                    _imageData = ConvertDXT3ToDXT5(_imageData);
                 }
 
                 return _imageData;
@@ -82,9 +121,13 @@ namespace SanAndreasUnity.Importing.Sections
 
                 _convertedImageLevelData = true;
                 _convertedImageData = _imageData == _imageLevelData;
-
-                if (Compression == CompressionMode.DXT3) {
-                    ConvertDXT3ToDXT5(_imageLevelData);
+                
+                if (Format == RasterFormat.B8G8R8) {
+                    _imageLevelData = ConvertB8G8R8ToRGB24(_imageLevelData);
+                } else if (Format == RasterFormat.A1R5G5B5) {
+                    _imageLevelData = ConvertA1R5G5B5ToARGB32(_imageLevelData);
+                } else if (Compression == CompressionMode.DXT3) {
+                    _imageLevelData = ConvertDXT3ToDXT5(_imageLevelData);
                 }
 
                 return _imageLevelData;

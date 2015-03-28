@@ -26,8 +26,14 @@ namespace SanAndreasUnity.Importing.Conversion
                 case RasterFormat.R4G4B4A4:
                     format = TextureFormat.RGBA4444;
                     break;
+                case RasterFormat.A1R5G5B5:
+                    format = TextureFormat.ARGB32;
+                    break;
                 case RasterFormat.R5G6B5:
                     format = TextureFormat.RGB565;
+                    break;
+                case RasterFormat.B8G8R8:
+                    format = TextureFormat.RGB24;
                     break;
                 default:
                     throw new NotImplementedException(string.Format("RasterFormat.{0}", src.Format & RasterFormat.NoExt));
@@ -73,18 +79,32 @@ namespace SanAndreasUnity.Importing.Conversion
             return tex;
         }
 
+        private static readonly Dictionary<string, string> _sParents = new Dictionary<string,string>();
         private static readonly Dictionary<string, TextureDictionary> _sLoaded = new Dictionary<string, TextureDictionary>();
 
         public static TextureDictionary Load(string name)
         {
             name = name.ToLower();
-
             if (_sLoaded.ContainsKey(name)) return _sLoaded[name];
 
             var txd = new TextureDictionary(ResourceManager.ReadFile<Sections.TextureDictionary>(name + ".txd"));
             _sLoaded.Add(name, txd);
 
             return txd;
+        }
+
+        public static void AddParent(string dictName, string parentName)
+        {
+            dictName = dictName.ToLower();
+            parentName = parentName.ToLower();
+
+            if (_sParents.ContainsKey(dictName)) return;
+
+            _sParents.Add(dictName, parentName);
+
+            if (_sLoaded.ContainsKey(dictName)) {
+                _sLoaded[dictName].ParentName = parentName;
+            }
         }
 
         private class Texture
@@ -118,6 +138,14 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private readonly Dictionary<string, Texture> _diffuse;
         private readonly Dictionary<string, Texture> _alpha;
+        private TextureDictionary _parent;
+
+        public string ParentName { get; set; }
+
+        public TextureDictionary Parent
+        {
+            get { return _parent ?? (_parent = Load(ParentName)); }
+        }
 
         private TextureDictionary(Sections.TextureDictionary txd)
         {
@@ -145,19 +173,17 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public Texture2D GetDiffuse(string name)
         {
-            name = name.ToLower();
+            if (!_diffuse.ContainsKey(name)) {
+                return ParentName != null ? Parent.GetDiffuse(name) : null;
+            }
 
-            if (!_diffuse.ContainsKey(name)) return null;
             return _diffuse[name].Converted;
         }
 
         public Texture2D GetAlpha(string name)
         {
-            name = name.ToLower();
-
             if (!_alpha.ContainsKey(name)) {
-                Debug.LogWarningFormat("Couldn't find alpha texture {0}", name);
-                return null;
+                return ParentName != null ? Parent.GetAlpha(name) : null;
             }
 
             return _alpha[name].Converted;

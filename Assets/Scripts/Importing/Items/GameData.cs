@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using SanAndreasUnity.Importing.Archive;
+using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items
 {
@@ -10,13 +11,13 @@ namespace SanAndreasUnity.Importing.Items
         private readonly List<Zone> _zones;
 
         private readonly Dictionary<int, Object> _objects;
-        private readonly Dictionary<string, List<Instance>> _instances;
+        private readonly Dictionary<int, List<Instance>> _cells;
 
         public GameData(string path)
         {
             _zones = new List<Zone>();
             _objects = new Dictionary<int, Object>();
-            _instances = new Dictionary<string, List<Instance>>();
+            _cells = new Dictionary<int, List<Instance>>();
 
             var ws = new[] {' ', '\t'};
 
@@ -64,14 +65,6 @@ namespace SanAndreasUnity.Importing.Items
             var insts = file.GetSection<Instance>("inst");
             if (!insts.Any()) return;
 
-            var name = string.Format("{0}/{1}",
-                Path.GetFileName(Path.GetDirectoryName(path)),
-                Path.GetFileNameWithoutExtension(path)).ToLower();
-
-            if (!_instances.ContainsKey(name)) {
-                _instances.Add(name, new List<Instance>());
-            }
-
             var list = new List<Instance>();
             list.AddRange(insts);
 
@@ -91,8 +84,16 @@ namespace SanAndreasUnity.Importing.Items
             }
 
             list.ResolveLod();
-            
-            _instances[name].AddRange(list.Where(x => !x.IsLod));
+
+            var lastCell = -1;
+            foreach (var inst in list) {
+                var cell = inst.CellId;
+                if (lastCell != cell && !_cells.ContainsKey(lastCell = cell)) {
+                    _cells.Add(cell, new List<Instance>());
+                }
+
+                _cells[cell].Add(inst);
+            }
         }
 
         public Object GetObject(int id)
@@ -100,22 +101,9 @@ namespace SanAndreasUnity.Importing.Items
             return !_objects.ContainsKey(id) ? null : _objects[id];
         }
 
-        public IEnumerable<string> GetGroups()
+        public IEnumerable<Instance> GetInstances(int cellId)
         {
-            return _instances.Keys;
-        }
-
-        public IEnumerable<string> GetGroups(string folder)
-        {
-            return _instances.Keys.Where(x => x.StartsWith(folder + "/"));
-        }
-
-        public IEnumerable<Instance> GetInstances(params string[] group)
-        {
-            return @group.Length == 0
-                ? _instances.Values.SelectMany(x => x)
-                : group.Select(x => x.ToLower()).SelectMany(x => _instances.ContainsKey(x)
-                    ? _instances[x] : Enumerable.Empty<Instance>());
+            return _cells[cellId];
         }
     }
 }
