@@ -87,7 +87,7 @@ namespace SanAndreasUnity.Importing.Items
 
             var lastCell = -1;
             foreach (var inst in list) {
-                var cell = inst.CellId;
+                var cell = 0; //inst.CellId;
                 if (lastCell != cell && !_cells.ContainsKey(lastCell = cell)) {
                     _cells.Add(cell, new List<Instance>());
                 }

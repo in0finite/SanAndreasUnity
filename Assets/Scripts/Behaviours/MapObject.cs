@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public class MapObject : MonoBehaviour
+    public class MapObject : MonoBehaviour, IComparable<MapObject>
     {
         private static readonly System.Random _sRandom = new System.Random();
 
@@ -24,12 +24,25 @@ namespace SanAndreasUnity.Behaviours
 
         private bool _loaded;
         private bool _canLoad;
+        private bool _isVisible;
 
         public Vector2 CellPos { get; private set; }
 
         public int RandomInt { get; private set; }
 
         internal float LoadOrder { get; private set; }
+
+        public bool IsVisible
+        {
+            get { return _isVisible; }
+            private set
+            {
+                if (_isVisible == value) return;
+
+                _isVisible = value;
+                gameObject.SetActive(value);
+            }
+        }
 
         public MapObject LodParent;
         public MapObject LodChild;
@@ -53,7 +66,8 @@ namespace SanAndreasUnity.Behaviours
 
             name = _canLoad ? Instance.Object.Geometry : string.Format("Unknown ({0})", Instance.ObjectId);
 
-            gameObject.SetActive(false);
+            IsVisible = false;
+            gameObject.isStatic = true;
         }
 
         internal void FindLodChild()
@@ -66,22 +80,25 @@ namespace SanAndreasUnity.Behaviours
             LodChild.LodParent = this;
         }
 
-        public bool IsVisible(Vector3 from)
-        {
-            var obj = Instance.Object;
-            return (obj.DrawDist <= 0 || obj.HasFlag(ObjectFlag.DisableDrawDist) ||
-                LoadOrder <= obj.DrawDist) && (LodParent == null || !LodParent.IsVisible(from));
-        }
-
-        public bool ShouldShow(Vector3 from)
+        public bool ShouldBeVisible(Vector3 from)
         {
             if (!_canLoad) return false;
-            
-            LoadOrder = Vector3.Distance(from, transform.position);
 
-            var visible = IsVisible(from);
+            var obj = Instance.Object;
+            return (Vector3.Distance(from, transform.position) <= obj.DrawDist)
+                && (LodParent == null || !LodParent.IsVisible);
+        }
 
-            if (!isActiveAndEnabled) return visible;
+        public bool RefreshLoadOrder(Vector3 from)
+        {
+            var visible = ShouldBeVisible(from);
+            LoadOrder = float.PositiveInfinity;
+
+            if (!IsVisible) {
+                if (visible) LoadOrder = Vector3.Distance(from, transform.position);
+                return visible;
+            }
+
             if (!visible) Hide();
 
             return false;
@@ -107,18 +124,26 @@ namespace SanAndreasUnity.Behaviours
                     mf.mesh = mesh;
                     mr.materials = materials;
                 } catch (Exception e) {
+                    _canLoad = false;
+
                     Debug.LogWarningFormat("Failed to load {0} ({1})", Instance.ObjectId, e.Message);
                     name = string.Format("Failed ({0})", Instance.ObjectId);
                     return;
                 }
             }
 
-            gameObject.SetActive(true);
+            IsVisible = true;
+            LoadOrder = float.PositiveInfinity;
         }
 
         public void Hide()
         {
-            gameObject.SetActive(false);
+            IsVisible = false;
+        }
+
+        public int CompareTo(MapObject other)
+        {
+            return LoadOrder > other.LoadOrder ? 1 : LoadOrder == other.LoadOrder ? 0 : -1;
         }
     }
 }

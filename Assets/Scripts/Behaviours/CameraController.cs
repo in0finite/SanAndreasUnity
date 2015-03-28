@@ -18,7 +18,9 @@ namespace SanAndreasUnity.Behaviours
         private float _pitch;
         private float _yaw;
 
-        public Vector2 CursorSensitivity = new Vector2(1, 1);
+        private bool _lockedCursor;
+
+        public Vector2 CursorSensitivity = new Vector2(2f, 2f);
 
         public Vector2 PitchClamp = new Vector2(-89f, 89f);
         public Vector2 YawClamp = new Vector2(-180f, 180f);
@@ -49,6 +51,26 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
+        void Update()
+        {
+            if (!_lockedCursor && Input.GetMouseButtonDown(0)) {
+                _lockedCursor = true;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            } else if (_lockedCursor && Input.GetKeyDown(KeyCode.Escape)) {
+                _lockedCursor = false;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+
+            if (_lockedCursor) {
+                var cursorDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+
+                Yaw += cursorDelta.x * CursorSensitivity.x;
+                Pitch -= cursorDelta.y * CursorSensitivity.y;
+            }
+        }
+
         void FixedUpdate()
         {
             var move = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
@@ -57,11 +79,6 @@ namespace SanAndreasUnity.Behaviours
                 move.Normalize();
                 move = transform.forward * move.z + transform.right * move.x;
             }
-
-            var cursorDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-
-            Yaw += cursorDelta.x * CursorSensitivity.x;
-            Pitch -= cursorDelta.y * CursorSensitivity.y;
 
             _velocity += (move - _velocity) * .5f;
             transform.position += _velocity;

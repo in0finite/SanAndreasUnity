@@ -4,6 +4,8 @@ using SanAndreasUnity.Importing.Archive;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections;
+using System.Collections.Generic;
+using System;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -55,18 +57,24 @@ namespace SanAndreasUnity.Behaviours
         IEnumerator LoadAsync()
         {
             var timer = new Stopwatch();
+            var leaves = RootDivision.ToList();
 
             while (true) {
                 var pos = Camera.main.transform.position;
-                var order = RootDivision
-                    .Where(x => x.RefreshLoadOrder(pos))
-                    .OrderBy(x => x.LoadOrder)
-                    .ToArray();
+
+                var toLoad = false;
+
+                foreach (var leaf in leaves) {
+                    toLoad |= leaf.RefreshLoadOrder(pos);
+                }
+
+                if (toLoad) leaves.Sort();
 
                 timer.Reset();
                 timer.Start();
 
-                foreach (var div in order) {
+                foreach (var div in leaves) {
+                    if (float.IsPositiveInfinity(div.LoadOrder)) break;
                     if (!div.LoadWhile(() => timer.Elapsed.TotalSeconds < 1d / 60d)) break;
                 }
 

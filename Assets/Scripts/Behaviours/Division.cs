@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public class Division : MonoBehaviour, IEnumerable<Division>
+    public class Division : MonoBehaviour, IEnumerable<Division>, IComparable<Division>
     {
         private static readonly Comparison<MapObject> _sHorzSort =
             (a, b) => Math.Sign(a.CellPos.x - b.CellPos.x);
@@ -36,7 +36,7 @@ namespace SanAndreasUnity.Behaviours
         private bool _isVertSplit;
         private float _splitVal;
 
-        private List<MapObject> _toLoad;
+        private Vector3 _lastRefreshPos;
 
         public Vector2 Min { get; private set; }
         public Vector2 Max { get; private set; }
@@ -65,7 +65,6 @@ namespace SanAndreasUnity.Behaviours
             name = String.Format("Split {0}, {1}", min, max);
 
             _objects = _objects ?? new List<MapObject>();
-            _toLoad = new List<MapObject>();
         }
 
         private void Subdivide()
@@ -167,6 +166,11 @@ namespace SanAndreasUnity.Behaviours
             return Contains(obj.CellPos);
         }
 
+        public bool Contains(Vector3 pos)
+        {
+            return pos.x >= Min.x && pos.z >= Min.y && pos.x < Max.x && pos.z < Max.y;
+        }
+
         public bool Contains(Vector2 pos)
         {
             return pos.x >= Min.x && pos.y >= Min.y && pos.x < Max.x && pos.y < Max.y;
@@ -188,26 +192,46 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
+        public float GetDistance(Vector3 pos)
+        {
+            if (Contains(pos)) return 0f;
+
+            var dx = Mathf.Max(Min.x - pos.x, pos.x - Max.x);
+            var dz = Mathf.Max(Min.y - pos.z, pos.z - Max.y);
+
+            return new Vector2(dx, dz).magnitude;
+        }
+
         public bool RefreshLoadOrder(Vector3 from)
         {
-            _toLoad.Clear();
-            _toLoad.AddRange(_objects.Where(x => x.ShouldShow(from)));
-            _toLoad.Sort((a, b) => Math.Sign(a.LoadOrder - b.LoadOrder));
+            var toLoad = false;
 
-            LoadOrder = _toLoad.Count == 0 ? float.PositiveInfinity : _toLoad[0].LoadOrder;
-        
-            return !float.IsInfinity(LoadOrder);
+            if (Vector3.Distance(from, _lastRefreshPos) > GetDistance(from) / 64f) {
+                _lastRefreshPos = from;
+                foreach (var obj in _objects) {
+                    toLoad |= obj.RefreshLoadOrder(from);
+                }
+            } else {
+                toLoad = _objects.Any(x => !float.IsPositiveInfinity(x.LoadOrder));
+            }
+
+            if (toLoad) {
+                _objects.Sort();
+                LoadOrder = _objects[0].LoadOrder;
+            } else {
+                LoadOrder = float.PositiveInfinity;
+            }
+
+            return toLoad;
         }
 
         public bool LoadWhile(Func<bool> predicate)
         {
-            var loaded = 0;
-            foreach (var toLoad in _toLoad) {
-                toLoad.Show(); ++loaded;
+            foreach (var toLoad in _objects) {
+                if (float.IsPositiveInfinity(toLoad.LoadOrder)) break;
+                toLoad.Show();
                 if (!predicate()) break;
             }
-
-            _toLoad.RemoveRange(0, loaded);
 
             return predicate();
         }
@@ -224,6 +248,11 @@ namespace SanAndreasUnity.Behaviours
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public int CompareTo(Division other)
+        {
+            return LoadOrder > other.LoadOrder ? 1 : LoadOrder == other.LoadOrder ? 0 : -1;
         }
     }
 }

@@ -243,7 +243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8cbb9a1a155bc64ab6d0808bc16e07f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CursorSensitivity: {x: 1, y: 1}
+  CursorSensitivity: {x: 2, y: 2}
   PitchClamp: {x: -89, y: 89}
   YawClamp: {x: -180, y: 180}
 --- !u!1 &1327530087
