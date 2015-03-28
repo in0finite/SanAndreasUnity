@@ -164,7 +164,8 @@ namespace SanAndreasUnity.Importing.Conversion
         private static readonly Dictionary<string, Geometry> _sLoaded
             = new Dictionary<string, Geometry>();
 
-        public static void Load(string modelName, string texDictName, ObjectFlag flags, out Mesh mesh, out UnityEngine.Material[] materials)
+        public static void Load(string modelName, string texDictName, ObjectFlag flags,
+            out Mesh mesh, out UnityEngine.Material[] materials)
         {
             modelName = modelName.ToLower();
 
@@ -185,12 +186,10 @@ namespace SanAndreasUnity.Importing.Conversion
 
             var txd = TextureDictionary.Load(texDictName);
             var geom = clump.GeometryList.Geometry[0];
-            var mats = geom.Materials;
 
             mesh = Convert(geom);
 
-            loaded = new Geometry(mesh, mats, txd);
-
+            loaded = new Geometry(geom, mesh, txd);
             materials = loaded.GetMaterials(flags);
 
             _sLoaded.Add(modelName, loaded);
@@ -198,15 +197,15 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public readonly Mesh Mesh;
 
-        private readonly Sections.Material[] _materialSources;
+        private readonly Sections.Geometry _geom;
         public readonly TextureDictionary _textureDictionary;
         private readonly Dictionary<ObjectFlag, UnityEngine.Material[]> _materials;
 
-        private Geometry(Mesh mesh, Sections.Material[] materialSources, TextureDictionary textureDictionary)
+        private Geometry(Sections.Geometry geom, Mesh mesh, TextureDictionary textureDictionary)
         {
             Mesh = mesh;
 
-            _materialSources = materialSources;
+            _geom = geom;
             _textureDictionary = textureDictionary;
             _materials = new Dictionary<ObjectFlag,UnityEngine.Material[]>();
         }
@@ -219,7 +218,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 return _materials[distinguishing];
             }
 
-            var mats = _materialSources.Select(x => Convert(x, _textureDictionary, distinguishing)).ToArray();
+            var mats = _geom.Materials.Select(x => Convert(x, _textureDictionary, distinguishing)).ToArray();
             _materials.Add(distinguishing, mats);
 
             return mats;

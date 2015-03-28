@@ -38,8 +38,8 @@ namespace SanAndreasUnity.Importing.Sections
         R5G6B5 = 0x0200,
         R4G4B4A4 = 0x0300,
         LUM8 = 0x0400,
-        B8G8R8A8 = 0x0500,
-        B8G8R8 = 0x0600,
+        BGRA8 = 0x0500,
+        BGR8 = 0x0600,
         R5G5B5 = 0x0a00,
 
         NoExt = 0x0fff,

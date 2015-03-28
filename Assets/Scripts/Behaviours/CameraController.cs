@@ -1,0 +1,70 @@
+﻿using UnityEngine;
+using System.Collections;
+
+namespace SanAndreasUnity.Behaviours
+{
+    public static class MathEx
+    {
+        public static float NormalizeAngle(this float ang)
+        {
+            return ang - Mathf.Floor((ang + 180f) / 360f) * 360f;
+        }
+    }
+
+    public class CameraController : MonoBehaviour
+    {
+        private Vector3 _velocity;
+
+        private float _pitch;
+        private float _yaw;
+
+        public Vector2 CursorSensitivity = new Vector2(1, 1);
+
+        public Vector2 PitchClamp = new Vector2(-89f, 89f);
+        public Vector2 YawClamp = new Vector2(-180f, 180f);
+
+        public float Pitch
+        {
+            get { return _pitch; }
+            set
+            {
+                _pitch = Mathf.Clamp(value, PitchClamp.x, PitchClamp.y);
+
+                var angles = transform.localEulerAngles;
+                angles.x = _pitch;
+                transform.localEulerAngles = angles;
+            }
+        }
+
+        public float Yaw
+        {
+            get { return _yaw; }
+            set
+            {
+                _yaw = Mathf.Clamp(value.NormalizeAngle(), YawClamp.x, YawClamp.y);
+
+                var angles = transform.localEulerAngles;
+                angles.y = _yaw;
+                transform.localEulerAngles = angles;
+            }
+        }
+
+        void FixedUpdate()
+        {
+            var move = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+
+            if (move.sqrMagnitude > 0f) {
+                move.Normalize();
+                move = transform.forward * move.z + transform.right * move.x;
+            }
+
+            var cursorDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+
+            Yaw += cursorDelta.x * CursorSensitivity.x;
+            Pitch -= cursorDelta.y * CursorSensitivity.y;
+
+            _velocity += (move - _velocity) * .5f;
+            transform.position += _velocity;
+        }
+    }
+}

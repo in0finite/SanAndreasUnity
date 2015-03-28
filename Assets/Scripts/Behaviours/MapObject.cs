@@ -1,4 +1,7 @@
-﻿using SanAndreasUnity.Importing.Conversion;
+﻿using System;
+using System.Collections.Generic;
+using SanAndreasUnity.Importing.Archive;
+using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using UnityEngine;
 
@@ -12,16 +15,12 @@ namespace SanAndreasUnity.Behaviours
         {
             var obj = new GameObject();
             var mapObj = obj.AddComponent<MapObject>();
-            mapObj.Initialize(cell, inst);
+            mapObj.Initialize(inst);
 
             return mapObj;
         }
 
-        protected Cell Cell { get; private set; }
         protected Instance Instance { get; private set; }
-        protected Importing.Items.Object Object { get; private set; }
-
-        protected MapObject Lod { get; private set; }
 
         private bool _loaded;
         private bool _canLoad;
@@ -30,49 +29,96 @@ namespace SanAndreasUnity.Behaviours
 
         public int RandomInt { get; private set; }
 
-        public void Initialize(Cell cell, Instance inst)
+        internal float LoadOrder { get; private set; }
+
+        public MapObject LodParent;
+        public MapObject LodChild;
+
+        public void Initialize(Instance inst)
         {
-            Cell = cell;
+            inst.MapObject = this;
+
             Instance = inst;
-            Object = Cell.GameData.GetObject(Instance.ObjectId);
+            Instance.Object = Instance.Object ?? Cell.GameData.GetObject(inst.ObjectId);
 
             transform.position = inst.Position;
             transform.localRotation = inst.Rotation;
 
             CellPos = new Vector2(inst.Position.x, inst.Position.z);
 
-            _canLoad = Object != null;
+            _canLoad = Instance.Object != null;
             _loaded = false;
 
             RandomInt = _sRandom.Next();
 
-            name = _canLoad ? Object.Geometry : string.Format("Unknown ({0})", Instance.ObjectId);
+            name = _canLoad ? Instance.Object.Geometry : string.Format("Unknown ({0})", Instance.ObjectId);
 
             gameObject.SetActive(false);
         }
 
-        public void Load()
+        internal void FindLodChild()
         {
-            if (_loaded || !_canLoad) return;
+            if (Instance.LodInstance == null)  return;
+
+            LodChild = Instance.LodInstance.MapObject;
+            if (LodChild == null) return;
+
+            LodChild.LodParent = this;
+        }
+
+        public bool IsVisible(Vector3 from)
+        {
+            var obj = Instance.Object;
+            return (obj.DrawDist <= 0 || obj.HasFlag(ObjectFlag.DisableDrawDist) ||
+                LoadOrder <= obj.DrawDist) && (LodParent == null || !LodParent.IsVisible(from));
+        }
+
+        public bool ShouldShow(Vector3 from)
+        {
+            if (!_canLoad) return false;
             
-            Mesh mesh;
-            Material[] materials;
+            LoadOrder = Vector3.Distance(from, transform.position);
 
-            try {
-                _loaded = true;
+            var visible = IsVisible(from);
 
-                Geometry.Load(Object.Geometry, Object.TextureDictionary, Object.Flags, out mesh, out materials);
+            if (!isActiveAndEnabled) return visible;
+            if (!visible) Hide();
 
-                var mf = gameObject.AddComponent<MeshFilter>();
-                var mr = gameObject.AddComponent<MeshRenderer>();
+            return false;
+        }
 
-                mf.mesh = mesh;
-                mr.materials = materials;
+        public void Show()
+        {
+            if (!_canLoad) return;
 
-                gameObject.SetActive(true);
-            } catch {
-                name = string.Format("Failed ({0})", Instance.ObjectId);
+            if (!_loaded) {
+                try {
+                    _loaded = true;
+
+                    Mesh mesh;
+                    Material[] materials;
+
+                    Geometry.Load(Instance.Object.Geometry, Instance.Object.TextureDictionary,
+                        Instance.Object.Flags, out mesh, out materials);
+
+                    var mf = gameObject.AddComponent<MeshFilter>();
+                    var mr = gameObject.AddComponent<MeshRenderer>();
+
+                    mf.mesh = mesh;
+                    mr.materials = materials;
+                } catch (Exception e) {
+                    Debug.LogWarningFormat("Failed to load {0} ({1})", Instance.ObjectId, e.Message);
+                    name = string.Format("Failed ({0})", Instance.ObjectId);
+                    return;
+                }
             }
+
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

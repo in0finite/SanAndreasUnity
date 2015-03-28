@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public class Division : MonoBehaviour
+    public class Division : MonoBehaviour, IEnumerable<Division>
     {
         private static readonly Comparison<MapObject> _sHorzSort =
             (a, b) => Math.Sign(a.CellPos.x - b.CellPos.x);
@@ -35,10 +36,14 @@ namespace SanAndreasUnity.Behaviours
         private bool _isVertSplit;
         private float _splitVal;
 
+        private List<MapObject> _toLoad;
+
         public Vector2 Min { get; private set; }
         public Vector2 Max { get; private set; }
 
         public bool IsSubdivided { get { return _objects == null; } }
+
+        internal float LoadOrder { get; private set; }
 
         public void SetBounds(Vector2 min, Vector2 max)
         {
@@ -60,6 +65,7 @@ namespace SanAndreasUnity.Behaviours
             name = String.Format("Split {0}, {1}", min, max);
 
             _objects = _objects ?? new List<MapObject>();
+            _toLoad = new List<MapObject>();
         }
 
         private void Subdivide()
@@ -151,6 +157,7 @@ namespace SanAndreasUnity.Behaviours
 
                 foreach (var obj in _objects) {
                     obj.transform.SetParent(transform, true);
+                    obj.FindLodChild();
                 }
             }
         }
@@ -181,37 +188,42 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        private IEnumerator LoadAsyncInternal()
+        public bool RefreshLoadOrder(Vector3 from)
         {
-            if (IsSubdivided) {
-                yield return _childA.LoadAsyncInternal();
-                yield return _childB.LoadAsyncInternal();
-            } else {
-                foreach (var obj in _objects) {
-                    obj.Load();
-                }
-                yield return null;
-            }
+            _toLoad.Clear();
+            _toLoad.AddRange(_objects.Where(x => x.ShouldShow(from)));
+            _toLoad.Sort((a, b) => Math.Sign(a.LoadOrder - b.LoadOrder));
+
+            LoadOrder = _toLoad.Count == 0 ? float.PositiveInfinity : _toLoad[0].LoadOrder;
+        
+            return !float.IsInfinity(LoadOrder);
         }
 
-        public IEnumerator LoadAsync()
+        public bool LoadWhile(Func<bool> predicate)
         {
-            var stack = new Stack<IEnumerator>();
-            stack.Push(LoadAsyncInternal());
-
-            while (stack.Count > 0) {
-                if (!stack.Peek().MoveNext()) {
-                    stack.Pop();
-                    continue;
-                }
-
-                var iter = stack.Peek().Current as IEnumerator;
-                if (iter is IEnumerator) {
-                    stack.Push(iter);
-                }
-
-                yield return null;
+            var loaded = 0;
+            foreach (var toLoad in _toLoad) {
+                toLoad.Show(); ++loaded;
+                if (!predicate()) break;
             }
+
+            _toLoad.RemoveRange(0, loaded);
+
+            return predicate();
+        }
+
+        public IEnumerator<Division> GetEnumerator()
+        {
+            if (IsSubdivided) {
+                return _childA.Concat(_childB).GetEnumerator();
+            }
+
+            return new[] { this }.AsEnumerable().GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

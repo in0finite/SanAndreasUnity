@@ -159,6 +159,7 @@ GameObject:
   - 92: {fileID: 412119315}
   - 124: {fileID: 412119314}
   - 81: {fileID: 412119313}
+  - 114: {fileID: 412119318}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -203,8 +204,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .300000012
-  far clip plane: 1000
+  near clip plane: .25
+  far clip plane: 1024
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -225,12 +226,26 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 412119312}
-  m_LocalRotation: {x: -.234795585, y: .735378385, z: -.311639458, w: -.554049253}
-  m_LocalPosition: {x: -1777.89001, y: 329.059662, z: -646.798767}
+  m_LocalRotation: {x: -.0351225995, y: .964825153, z: -.189411506, w: -.17889142}
+  m_LocalPosition: {x: 2492.36157, y: 16.7083435, z: -1676.62085}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &412119318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 412119312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8cbb9a1a155bc64ab6d0808bc16e07f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CursorSensitivity: {x: 1, y: 1}
+  PitchClamp: {x: -89, y: 89}
+  YawClamp: {x: -180, y: 180}
 --- !u!1 &1327530087
 GameObject:
   m_ObjectHideFlags: 0

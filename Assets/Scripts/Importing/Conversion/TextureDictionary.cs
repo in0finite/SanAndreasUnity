@@ -9,6 +9,67 @@ namespace SanAndreasUnity.Importing.Conversion
 {
     public class TextureDictionary
     {
+        private static byte[] ConvertDXT3ToDXT5(byte[] data)
+        {
+            for (var i = 0; i < data.Length; i += 16) {
+                ulong packed = 0;
+
+                for (var j = 0; j < 16; ++j) {
+                    var s = 1 | ((j & 1) << 2);
+                    var c = (data[i + (j >> 1)] >> s) & 0x7;
+
+                    switch (c) {
+                        case 0: c = 1; break;
+                        case 7: c = 0; break;
+                        default: c = 8 - c; break;
+                    }
+
+                    packed |= ((ulong) c << (3 * j));
+                }
+
+                data[i + 0] = 0xff;
+                data[i + 1] = 0x00;
+
+                for (var j = 0; j < 6; ++j) {
+                    data[i + 2 + j] = (byte) ((packed >> (j << 3)) & 0xff);
+                }
+            }
+
+            return data;
+        }
+
+        private static byte[] ConvertBGRToRGB(byte[] data)
+        {
+            for (var i = 0; i < data.Length; i += 4) {
+                var t = data[i];
+                data[i] = data[i + 2];
+                data[i + 2] = t;
+            }
+
+            return data;
+        }
+
+        private static readonly byte[] _sR5G5B5Lookup = Enumerable.Range(0, 0x20)
+            .Select(x => (byte) Math.Round(((double) x / 0x1f) * 0xff))
+            .ToArray();
+
+        private static byte[] ConvertA1R5G5B5ToARGB32(byte[] data)
+        {
+            var dest = new byte[data.Length << 1];
+
+            for (var i = 0; i < data.Length - 1; i += 2) {
+                var val = data[i] | (data[i + 1] << 8);
+                var d = i << 1;
+
+                dest[d + 0] = (byte) ((val & 1) == 1 ? 0xff : 0);
+                dest[d + 1] = _sR5G5B5Lookup[(val >> 1) & 0x1f];
+                dest[d + 2] = _sR5G5B5Lookup[(val >> 6) & 0x1f];
+                dest[d + 3] = _sR5G5B5Lookup[(val >> 11) & 0x1f];
+            }
+
+            return dest;
+        }
+
         private static Texture2D Convert(TextureNative src)
         {
             TextureFormat format;
@@ -17,8 +78,9 @@ namespace SanAndreasUnity.Importing.Conversion
             var autoMips = (src.Format & RasterFormat.ExtAutoMipMap) == RasterFormat.ExtAutoMipMap;
 
             switch (src.Format & RasterFormat.NoExt) {
-                case RasterFormat.B8G8R8A8:
-                    format = TextureFormat.BGRA32;
+                case RasterFormat.BGRA8:
+                case RasterFormat.BGR8:
+                    format = TextureFormat.RGBA32;
                     break;
                 case RasterFormat.LUM8:
                     format = TextureFormat.Alpha8;
@@ -32,14 +94,9 @@ namespace SanAndreasUnity.Importing.Conversion
                 case RasterFormat.R5G6B5:
                     format = TextureFormat.RGB565;
                     break;
-                case RasterFormat.B8G8R8:
-                    format = TextureFormat.RGB24;
-                    break;
                 default:
                     throw new NotImplementedException(string.Format("RasterFormat.{0}", src.Format & RasterFormat.NoExt));
             }
-
-            var data = src.ImageData;
 
             switch (src.Compression) {
                 case CompressionMode.None:
@@ -70,6 +127,15 @@ namespace SanAndreasUnity.Importing.Conversion
                 case Filter.LinearMipLinear:
                 case Filter.Unknown:
                     tex.filterMode = FilterMode.Trilinear;
+                    break;
+            }
+
+            var data = src.ImageData;
+            
+            switch (src.Format & RasterFormat.NoExt) {
+                case RasterFormat.BGR8:
+                case RasterFormat.BGRA8:
+                    data = ConvertBGRToRGB(data);
                     break;
             }
 
@@ -109,12 +175,11 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private class Texture
         {
-            private readonly TextureNative _native;
             private Texture2D _converted;
             private bool _attemptedConversion;
 
-            public string DiffuseName { get { return _native.DiffuseName; } }
-            public string AlphaName { get { return _native.AlphaName; } }
+            public string DiffuseName { get { return Native.DiffuseName; } }
+            public string AlphaName { get { return Native.AlphaName; } }
 
             public bool IsDiffuse { get { return !string.IsNullOrEmpty(DiffuseName); } }
             public bool IsAlpha { get { return !string.IsNullOrEmpty(AlphaName); } }
@@ -125,14 +190,16 @@ namespace SanAndreasUnity.Importing.Conversion
                 {
                     if (_attemptedConversion) return _converted;
                     _attemptedConversion = true;
-                    _converted = Convert(_native);
+                    _converted = Convert(Native);
                     return _converted;
                 }
             }
 
+            public readonly TextureNative Native;
+
             public Texture(TextureNative native)
             {
-                _native = native;
+                Native = native;
             }
         }
 
@@ -169,6 +236,15 @@ namespace SanAndreasUnity.Importing.Conversion
                     _alpha.Add(tex.AlphaName, tex);
                 }
             }
+        }
+
+        public TextureNative GetDiffuseNative(string name)
+        {
+            if (!_diffuse.ContainsKey(name)) {
+                return ParentName != null ? Parent.GetDiffuseNative(name) : null;
+            }
+
+            return _diffuse[name].Native;
         }
 
         public Texture2D GetDiffuse(string name)

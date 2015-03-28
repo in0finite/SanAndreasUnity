@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using SanAndreasUnity.Behaviours;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items
@@ -28,7 +29,11 @@ namespace SanAndreasUnity.Importing.Items
         public readonly int LodIndex;
 
         public Instance LodInstance { get; internal set; }
+        public Object Object { get; internal set; }
+
         public bool IsLod { get; internal set; }
+
+        internal MapObject MapObject { get; set; }
 
         public Instance(string line) : base(line)
         {

@@ -40,5 +40,10 @@
             DrawDist = GetSingle(3);
             Flags = (ObjectFlag) GetInt(4);
         }
+
+        public bool HasFlag(ObjectFlag flag)
+        {
+            return (Flags & flag) == flag;
+        }
     }
 }
