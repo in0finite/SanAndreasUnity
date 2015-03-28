@@ -85,8 +85,10 @@ namespace SanAndreasUnity.Behaviours
             if (!_canLoad) return false;
 
             var obj = Instance.Object;
-            return (Vector3.Distance(from, transform.position) <= obj.DrawDist)
-                && (LodParent == null || !LodParent.IsVisible);
+            var dist = Vector3.Distance(from, transform.position);
+
+            return (dist <= obj.DrawDist || (obj.DrawDist >= 300 && dist < 1500))
+                && (!_loaded || LodParent == null || !LodParent.IsVisible || !LodParent.ShouldBeVisible(from));
         }
 
         public bool RefreshLoadOrder(Vector3 from)
@@ -132,8 +134,12 @@ namespace SanAndreasUnity.Behaviours
                 }
             }
 
-            IsVisible = true;
+            IsVisible = LodParent == null || !LodParent.IsVisible;
             LoadOrder = float.PositiveInfinity;
+
+            if (IsVisible && LodChild != null) {
+                LodChild.Hide();
+            }
         }
 
         public void Hide()

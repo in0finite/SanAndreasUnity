@@ -139,6 +139,12 @@ namespace SanAndreasUnity.Importing.Conversion
                     break;
             }
 
+            switch (src.Compression) {
+                case CompressionMode.DXT3:
+                    data = ConvertDXT3ToDXT5(data);
+                    break;
+            }
+
             tex.LoadRawTextureData(data);
             tex.Apply(precMips || autoMips, true);
 
