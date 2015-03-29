@@ -33,8 +33,6 @@ namespace SanAndreasUnity.Importing.Items
 
         public bool IsLod { get; internal set; }
 
-        internal MapObject MapObject { get; set; }
-
         public Instance(string line) : base(line)
         {
             ObjectId = GetInt(0);

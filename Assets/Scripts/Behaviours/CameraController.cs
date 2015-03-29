@@ -1,16 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public static class MathEx
-    {
-        public static float NormalizeAngle(this float ang)
-        {
-            return ang - Mathf.Floor((ang + 180f) / 360f) * 360f;
-        }
-    }
-
     public class CameraController : MonoBehaviour
     {
         private Vector3 _velocity;

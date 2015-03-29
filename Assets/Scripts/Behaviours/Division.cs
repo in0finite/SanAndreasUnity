@@ -156,7 +156,6 @@ namespace SanAndreasUnity.Behaviours
 
                 foreach (var obj in _objects) {
                     obj.transform.SetParent(transform, true);
-                    obj.FindLodChild();
                 }
             }
         }

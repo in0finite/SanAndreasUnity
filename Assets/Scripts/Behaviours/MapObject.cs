@@ -62,13 +62,9 @@ namespace SanAndreasUnity.Behaviours
 
         private static readonly System.Random _sRandom = new System.Random();
 
-        public static MapObject Create(Cell cell, Instance inst)
+        public static MapObject Create()
         {
-            var obj = new GameObject();
-            var mapObj = obj.AddComponent<MapObject>();
-            mapObj.Initialize(inst);
-
-            return mapObj;
+            return new GameObject().AddComponent<MapObject>();
         }
 
         protected Instance Instance { get; private set; }
@@ -104,15 +100,11 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        public MapObject LodParent;
-        public MapObject LodChild;
+        public MapObject LodParent { get; private set; }
+        public MapObject LodChild { get; private set; }
 
-        public int Interior;
-
-        public void Initialize(Instance inst)
+        public void Initialize(Instance inst, Dictionary<Instance, MapObject> dict)
         {
-            inst.MapObject = this;
-
             Instance = inst;
             Instance.Object = Instance.Object ?? Cell.GameData.GetObject(inst.ObjectId);
 
@@ -128,18 +120,14 @@ namespace SanAndreasUnity.Behaviours
 
             name = _canLoad ? Instance.Object.Geometry : string.Format("Unknown ({0})", Instance.ObjectId);
 
-            IsVisible = false;
+            if (_canLoad && Instance.LodInstance != null) {
+                LodChild = dict[Instance.LodInstance];
+                LodChild.LodParent = this;
+            }
+
+            _isVisible = false;
+            gameObject.SetActive(false);
             gameObject.isStatic = true;
-        }
-
-        internal void FindLodChild()
-        {
-            if (Instance.LodInstance == null)  return;
-
-            LodChild = Instance.LodInstance.MapObject;
-            if (LodChild == null) return;
-
-            LodChild.LodParent = this;
         }
 
         public bool ShouldBeVisible(Vector3 from)
@@ -194,8 +182,6 @@ namespace SanAndreasUnity.Behaviours
 
                     mf.mesh = mesh;
                     mr.materials = materials;
-
-                    Interior = Instance.CellId;
                 } catch (Exception e) {
                     _canLoad = false;
 
@@ -215,6 +201,8 @@ namespace SanAndreasUnity.Behaviours
 
             _isFading = true;
 
+            const float fadeRate = 2f;
+
             var mr = GetComponent<MeshRenderer>();
             var pb = new MaterialPropertyBlock();
 
@@ -223,7 +211,7 @@ namespace SanAndreasUnity.Behaviours
             for (;;) {
                 var dest = IsVisible ? 1f : 0f;
                 var sign = Math.Sign(dest - val);
-                val += sign * 4f * Time.deltaTime;
+                val += sign * fadeRate * Time.deltaTime;
 
                 if (sign == 0 || sign == 1 && val >= dest || sign == -1 && val <= dest) break;
 
