@@ -206,7 +206,7 @@ namespace SanAndreasUnity.Behaviours
         {
             var toLoad = false;
 
-            if (Vector3.Distance(from, _lastRefreshPos) > GetDistance(from) / 64f) {
+            if (Vector3.Distance(from, _lastRefreshPos) > GetDistance(from) / 16f) {
                 _lastRefreshPos = from;
                 foreach (var obj in _objects) {
                     toLoad |= obj.RefreshLoadOrder(from);

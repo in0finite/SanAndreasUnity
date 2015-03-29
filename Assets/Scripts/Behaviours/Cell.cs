@@ -45,7 +45,7 @@ namespace SanAndreasUnity.Behaviours
                 new Vector2(+3000f, +3000f));
 
             timer.Start();
-            RootDivision.AddRange(GameData.GetInstances(0).Select(x => MapObject.Create(this, x)));
+            RootDivision.AddRange(GameData.GetInstances(0, 13, 1024).Select(x => MapObject.Create(this, x)));
             timer.Stop();
 
             UnityEngine.Debug.LogFormat("Cell partitioning time: {0} ms", timer.Elapsed.TotalMilliseconds);

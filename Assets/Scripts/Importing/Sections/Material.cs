@@ -26,25 +26,24 @@ namespace SanAndreasUnity.Importing.Sections
         public readonly UInt32 TextureCount;
         public readonly Texture[] Textures;
 
-        public readonly UInt32 Unknown1;
-        public readonly UInt32 Unknown2;
-        public readonly Single Unknown3;
-        public readonly Single Unknown4;
-        public readonly Single Unknown5;
+        public readonly UInt32 Flags;
+        public readonly Single Ambient;
+        public readonly Single Specular;
+        public readonly Single Diffuse;
 
         public Material(SectionHeader header, Stream stream)
         {
             SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
 
-            Unknown1 = reader.ReadUInt32(); // Unknown
+            Flags = reader.ReadUInt32();
             Colour = new Color4(reader);
-            Unknown2 = reader.ReadUInt32(); // Unknown
+            reader.ReadUInt32();
             TextureCount = reader.ReadUInt32();
             Textures = new Texture[TextureCount];
-            Unknown3 = reader.ReadSingle(); // Unknown
-            Unknown4 = reader.ReadSingle(); // Unknown
-            Unknown5 = reader.ReadSingle(); // Unknown
+            Ambient = reader.ReadSingle();
+            Specular = reader.ReadSingle();
+            Diffuse = reader.ReadSingle();
 
             for (var i = 0; i < TextureCount; ++i) {
                 Textures[i] = Section<Texture>.ReadData(stream);

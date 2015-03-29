@@ -78,6 +78,10 @@ namespace SanAndreasUnity.Behaviours
             if (move.sqrMagnitude > 0f) {
                 move.Normalize();
                 move = transform.forward * move.z + transform.right * move.x;
+
+                if (Input.GetKey(KeyCode.LeftShift)) {
+                    move *= 4f;
+                }
             }
 
             _velocity += (move - _velocity) * .5f;

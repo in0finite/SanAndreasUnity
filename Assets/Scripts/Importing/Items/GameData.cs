@@ -87,7 +87,7 @@ namespace SanAndreasUnity.Importing.Items
 
             var lastCell = -1;
             foreach (var inst in list) {
-                var cell = 0; //inst.CellId;
+                var cell = inst.CellId & 0xff;
                 if (lastCell != cell && !_cells.ContainsKey(lastCell = cell)) {
                     _cells.Add(cell, new List<Instance>());
                 }
@@ -101,9 +101,10 @@ namespace SanAndreasUnity.Importing.Items
             return !_objects.ContainsKey(id) ? null : _objects[id];
         }
 
-        public IEnumerable<Instance> GetInstances(int cellId)
+        public IEnumerable<Instance> GetInstances(params int[] cellIds)
         {
-            return _cells[cellId];
+            return cellIds.SelectMany(x => _cells.ContainsKey(x)
+                ? _cells[x] : Enumerable.Empty<Instance>());
         }
     }
 }
