@@ -10,32 +10,6 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         Normals = 16
     }
 
-    public struct Vector2
-    {
-        public readonly Single X;
-        public readonly Single Y;
-
-        public Vector2(BinaryReader reader)
-        {
-            X = reader.ReadSingle();
-            Y = reader.ReadSingle();
-        }
-    }
-
-    public struct Vector3
-    {
-        public readonly Single X;
-        public readonly Single Y;
-        public readonly Single Z;
-
-        public Vector3(BinaryReader reader)
-        {
-            X = reader.ReadSingle();
-            Y = reader.ReadSingle();
-            Z = reader.ReadSingle();
-        }
-    }
-
     public struct FaceInfo
     {
         public readonly GeometryFlag Flags;

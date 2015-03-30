@@ -66,18 +66,19 @@ namespace SanAndreasUnity.Behaviours
             var leaves = RootDivision.ToList();
 
             while (true) {
-                timer.Reset();
-                timer.Start();
-
                 var pos = Camera.main.transform.position;
 
                 var toLoad = leaves.Aggregate(false, (current, leaf) => current | leaf.RefreshLoadOrder(pos));
 
                 if (toLoad) {
                     leaves.Sort();
+
+                    timer.Reset();
+                    timer.Start();
+
                     foreach (var div in leaves) {
                         if (float.IsPositiveInfinity(div.LoadOrder)) break;
-                        if (!div.LoadWhile(() => timer.Elapsed.TotalSeconds < 1d / 90d)) break;
+                        if (!div.LoadWhile(() => timer.Elapsed.TotalSeconds < 1d / 60d)) break;
                     }
                 }
 

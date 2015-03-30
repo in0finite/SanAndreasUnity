@@ -22,12 +22,12 @@ namespace SanAndreasUnity.Importing.Conversion
             get { return _sMaskTexId == -1 ? _sMaskTexId = Shader.PropertyToID("_MaskTex") : _sMaskTexId; }
         }
 
-        private static UnityEngine.Vector2 Convert(RenderWareStream.Vector2 vec)
+        private static UnityEngine.Vector2 Convert(Vector2 vec)
         {
             return new UnityEngine.Vector2(vec.X, vec.Y);
         }
 
-        private static UnityEngine.Vector3 Convert(RenderWareStream.Vector3 vec)
+        private static UnityEngine.Vector3 Convert(Vector3 vec)
         {
             return new UnityEngine.Vector3(vec.X, vec.Z, vec.Y);
         }
