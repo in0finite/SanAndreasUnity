@@ -111,7 +111,7 @@ namespace Facepunch.Networking.Lidgren
             _lastClientCheck = DateTime.Now;
 
             var disconnected = _clients.Keys
-                .Where(x => x.Status == NetConnectionStatus.Disconnected)
+                .Where(x => x.Status == NetConnectionStatus.Disconnected || !Peer.Connections.Contains(x))
                 .ToList();
 
             foreach (var client in disconnected) {
