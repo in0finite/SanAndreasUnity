@@ -1,5 +1,4 @@
 ﻿using System;
-using Arcade;
 using Facepunch.Steam;
 using ProtoBuf;
 // ReSharper disable once RedundantUsingDirective
