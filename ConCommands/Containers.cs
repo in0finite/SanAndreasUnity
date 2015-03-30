@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Facepunch.Networking;
+using JetBrains.Annotations;
 
 namespace Facepunch.ConCommands
 {
+    [MeansImplicitUse]
     public sealed class ConCommandAttribute : Attribute
     {
         public Domain Domain { get; set; }
