@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using UnityEngine;
@@ -36,6 +35,9 @@ namespace SanAndreasUnity.Behaviours
             var width = Screen.width;
             var height = Screen.height;
 
+            var timer = new Stopwatch();
+            timer.Start();
+
             if (_sNoiseTex == null) {
                 _sNoiseTex = new Texture2D(width, height, TextureFormat.Alpha8, false);
                 _sNoiseTex.filterMode = FilterMode.Bilinear;
@@ -49,6 +51,8 @@ namespace SanAndreasUnity.Behaviours
 
             _sNoiseTex.LoadRawTextureData(buffer);
             _sNoiseTex.Apply(false, true);
+
+            UnityEngine.Debug.LogFormat("Noise gen time: {0:F2} ms", timer.Elapsed.TotalMilliseconds);
         }
 
         protected static Texture2D NoiseTex
@@ -60,7 +64,7 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        private static readonly System.Random _sRandom = new System.Random();
+        private static readonly System.Random _sRandom = new System.Random(0x54e03b19);
 
         public static MapObject Create()
         {

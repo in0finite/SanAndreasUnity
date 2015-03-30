@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using SanAndreasUnity.Behaviours;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items
