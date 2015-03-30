@@ -36,7 +36,6 @@ namespace Facepunch.Networking
             }
         }
 
-        //
         private static IEnumerable<Type> GetHandlableTypesCacheMiss(Type type)
         {
             return Assembly.GetExecutingAssembly().GetTypes().Where(type.IsAssignableFrom);
