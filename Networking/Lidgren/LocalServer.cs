@@ -14,7 +14,7 @@ namespace Facepunch.Networking.Lidgren
     public class LocalServerImpl : LocalServer
     {
         public const String AppIdentifier = "Arcade";
-        
+
         public const double ClientCheckPeriod = 1d;
 
         private static Peer CreatePeer(int port, int maxConnections)
