@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
-using UnityEngine;
 using ProtoBuf;
 
 namespace Facepunch.Networking
 {
     public class MessageHandlerCollection<TBaseMessage>
-        where TBaseMessage : INetworkMessage
+        where TBaseMessage : class, INetworkMessage
     {
+// ReSharper disable once StaticFieldInGenericType
         private static readonly Dictionary<Type, Type[]> _sHandlableTypeCache = new Dictionary<Type,Type[]>();
 
         private readonly Dictionary<Type, List<MessageHandler<TBaseMessage>>> _messageHandlers;
@@ -36,16 +36,12 @@ namespace Facepunch.Networking
             }
         }
 
-        private IEnumerable<Type> GetHandlableTypesCacheMiss(Type type)
+        private static IEnumerable<Type> GetHandlableTypesCacheMiss(Type type)
         {
-            foreach (var t in Assembly.GetExecutingAssembly().GetTypes()) {
-                if (type.IsAssignableFrom(t)) {
-                    yield return t;
-                }
-            }
+            return Assembly.GetExecutingAssembly().GetTypes().Where(type.IsAssignableFrom);
         }
 
-        private IEnumerable<Type> GetHandlableTypes(Type type)
+        private static IEnumerable<Type> GetHandlableTypes(Type type)
         {
             if (!_sHandlableTypeCache.ContainsKey(type)) {
                 _sHandlableTypeCache.Add(type, GetHandlableTypesCacheMiss(type).ToArray());
