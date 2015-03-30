@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace SanAndreasUnity.Importing.Sections
+namespace SanAndreasUnity.Importing.RenderWareStream
 {
     [SectionType(TypeId)]
     public class Clump : SectionData

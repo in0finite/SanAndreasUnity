@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace SanAndreasUnity.Importing.Sections
+namespace SanAndreasUnity.Importing.RenderWareStream
 {
     [SectionType(22)]
     public class TextureDictionary : SectionData

@@ -2,7 +2,7 @@
 using System.Text;
 using SanAndreasUnity.Utilities;
 
-namespace SanAndreasUnity.Importing.Sections
+namespace SanAndreasUnity.Importing.RenderWareStream
 {
     [SectionType(2)]
     public class String : SectionData

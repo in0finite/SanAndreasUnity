@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace SanAndreasUnity.Importing.Sections
+namespace SanAndreasUnity.Importing.RenderWareStream
 {
     [SectionType(1)]
     public class Data : SectionData

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SanAndreasUnity.Importing.Sections;
+using SanAndreasUnity.Importing.RenderWareStream;
 
 namespace SanAndreasUnity.Importing.Archive
 {

@@ -1,11 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using SanAndreasUnity.Importing.Items;
-using SanAndreasUnity.Importing.Archive;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections;
-using System.Collections.Generic;
-using System;
+using ResourceManager = SanAndreasUnity.Importing.Archive.ResourceManager;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -15,7 +14,7 @@ namespace SanAndreasUnity.Behaviours
 
         public Division RootDivision { get; private set; }
 
-        public int CellId;
+        public List<int> CellIds = new List<int> { 0, 13 };
 
         void Awake()
         {
@@ -46,7 +45,7 @@ namespace SanAndreasUnity.Behaviours
 
             timer.Start();
 
-            var objs = GameData.GetInstances(0, 13, 1024).ToDictionary(x => x , x => MapObject.Create());
+            var objs = GameData.GetInstances(CellIds.ToArray()).ToDictionary(x => x, x => MapObject.Create());
 
             foreach (var obj in objs) {
                 obj.Value.Initialize(obj.Key, objs);

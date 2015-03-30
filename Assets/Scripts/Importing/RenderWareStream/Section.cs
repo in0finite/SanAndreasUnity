@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using SanAndreasUnity.Utilities;
 
-namespace SanAndreasUnity.Importing.Sections
+namespace SanAndreasUnity.Importing.RenderWareStream
 {
     public struct SectionHeader
     {

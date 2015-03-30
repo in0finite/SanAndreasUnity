@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Items;
-using SanAndreasUnity.Importing.Sections;
+using SanAndreasUnity.Importing.RenderWareStream;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Conversion
@@ -22,12 +22,12 @@ namespace SanAndreasUnity.Importing.Conversion
             get { return _sMaskTexId == -1 ? _sMaskTexId = Shader.PropertyToID("_MaskTex") : _sMaskTexId; }
         }
 
-        private static UnityEngine.Vector2 Convert(Sections.Vector2 vec)
+        private static UnityEngine.Vector2 Convert(RenderWareStream.Vector2 vec)
         {
             return new UnityEngine.Vector2(vec.X, vec.Y);
         }
 
-        private static UnityEngine.Vector3 Convert(Sections.Vector3 vec)
+        private static UnityEngine.Vector3 Convert(RenderWareStream.Vector3 vec)
         {
             return new UnityEngine.Vector3(vec.X, vec.Z, vec.Y);
         }
@@ -56,7 +56,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return dst.ToArray();
         }
 
-        private static UnityEngine.Vector3[] CalculateNormals(Sections.Geometry src, UnityEngine.Vector3[] verts)
+        private static UnityEngine.Vector3[] CalculateNormals(RenderWareStream.Geometry src, UnityEngine.Vector3[] verts)
         {
             var norms = new UnityEngine.Vector3[src.VertexCount];
 
@@ -120,7 +120,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return shader;
         }
 
-        private static UnityEngine.Material Convert(Sections.Material src, TextureDictionary txd, ObjectFlag flags)
+        private static UnityEngine.Material Convert(RenderWareStream.Material src, TextureDictionary txd, ObjectFlag flags)
         {
             var shader = GetShader(flags);
 
@@ -146,7 +146,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return mat;
         }
 
-        private static Mesh Convert(Sections.Geometry src)
+        private static Mesh Convert(RenderWareStream.Geometry src)
         {
             var mesh = new Mesh();
 
@@ -222,11 +222,11 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public readonly Mesh Mesh;
 
-        private readonly Sections.Geometry _geom;
+        private readonly RenderWareStream.Geometry _geom;
         public readonly TextureDictionary _textureDictionary;
         private readonly Dictionary<ObjectFlag, UnityEngine.Material[]> _materials;
 
-        private Geometry(Sections.Geometry geom, Mesh mesh, TextureDictionary textureDictionary)
+        private Geometry(RenderWareStream.Geometry geom, Mesh mesh, TextureDictionary textureDictionary)
         {
             Mesh = mesh;
 

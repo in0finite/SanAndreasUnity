@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Importing.Archive;
-using SanAndreasUnity.Importing.Sections;
+using SanAndreasUnity.Importing.RenderWareStream;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Conversion
@@ -74,7 +74,7 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             TextureFormat format;
 
-            var precMips = (src.Format & RasterFormat.ExtMipMap) == RasterFormat.ExtMipMap;
+            var loadMips = (src.Format & RasterFormat.ExtMipMap) == RasterFormat.ExtMipMap;
             var autoMips = (src.Format & RasterFormat.ExtAutoMipMap) == RasterFormat.ExtAutoMipMap;
 
             switch (src.Format & RasterFormat.NoExt) {
@@ -111,7 +111,7 @@ namespace SanAndreasUnity.Importing.Conversion
                     throw new NotImplementedException(string.Format("CompressionMode.{0}", src.Compression));
             }
 
-            var tex = new Texture2D(src.Width, src.Height, format, false /*precMips*/);
+            var tex = new Texture2D(src.Width, src.Height, format, false /*loadMips*/);
 
             switch (src.FilterFlags) {
                 case Filter.None:
@@ -146,7 +146,7 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             tex.LoadRawTextureData(data);
-            tex.Apply(precMips || autoMips, true);
+            tex.Apply(loadMips || autoMips, true);
 
             return tex;
         }
@@ -159,7 +159,7 @@ namespace SanAndreasUnity.Importing.Conversion
             name = name.ToLower();
             if (_sLoaded.ContainsKey(name)) return _sLoaded[name];
 
-            var txd = new TextureDictionary(ResourceManager.ReadFile<Sections.TextureDictionary>(name + ".txd"));
+            var txd = new TextureDictionary(ResourceManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd"));
             _sLoaded.Add(name, txd);
 
             return txd;
@@ -220,7 +220,7 @@ namespace SanAndreasUnity.Importing.Conversion
             get { return _parent ?? (_parent = Load(ParentName)); }
         }
 
-        private TextureDictionary(Sections.TextureDictionary txd)
+        private TextureDictionary(RenderWareStream.TextureDictionary txd)
         {
             _diffuse = new Dictionary<string, Texture>();
             _alpha = new Dictionary<string, Texture>();

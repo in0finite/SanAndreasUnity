@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using SanAndreasUnity.Utilities;
 
-namespace SanAndreasUnity.Importing.Sections
+namespace SanAndreasUnity.Importing.RenderWareStream
 {
     [SectionType(21)]
     public class TextureNative : SectionData
