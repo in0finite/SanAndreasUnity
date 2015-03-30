@@ -472,6 +472,25 @@ namespace Facepunch.Networking
         }
 
         protected virtual void OnClientNetworkingUpdate() { }
+
+        internal void DestroyClientSide(bool clearId)
+        {
+            OnDestroyClientSide();
+
+            Client.ForgetNetworkable(this);
+            if (clearId) UniqueId = 0;
+        }
+
+        /// <summary>
+        /// Called when the game object leaves the players' PVS,
+        /// or the server calls for the object to be destroyed.
+        /// 
+        /// Base implementation destroys the game object.
+        /// </summary>
+        protected virtual void OnDestroyClientSide()
+        {
+            Destroy(gameObject);
+        }
 #endif
 
         internal void ServerNetworkingUpdate(IEnumerable<IRemote> subscribers)
@@ -491,7 +510,7 @@ namespace Facepunch.Networking
 
 #if CLIENT
             if (IsClient) {
-                Client.ForgetNetworkable(this);
+                DestroyClientSide(false);
             }
 #endif
 

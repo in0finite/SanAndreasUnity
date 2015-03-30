@@ -133,7 +133,7 @@ namespace Facepunch.Networking
             foreach (var info in message.Networkables) {
                 var networkable = GetNetworkable(info.Ident);
                 if (networkable == null) continue;
-                Destroy(networkable.gameObject);
+                networkable.DestroyClientSide(true);
             }
         }
 
