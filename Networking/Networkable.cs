@@ -479,6 +479,8 @@ namespace Facepunch.Networking
 
             Client.ForgetNetworkable(this);
             if (clearId) UniqueId = 0;
+
+            _client = null;
         }
 
         /// <summary>
