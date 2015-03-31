@@ -4,6 +4,8 @@ namespace SanAndreasUnity.Importing.Collision
 {
     public struct Surface
     {
+        public const int Size = 4 * sizeof(byte); //lol
+
         public readonly byte Material;
         public readonly Flags Flags;
         public readonly byte Brightness;

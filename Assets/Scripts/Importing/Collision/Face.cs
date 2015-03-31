@@ -4,6 +4,9 @@ namespace SanAndreasUnity.Importing.Collision
 {
     public class Face
     {
+        public const int SizeV1 = 3 * sizeof(int) + Surface.Size;
+        public const int Size = 3 * sizeof(ushort) + Surface.Size;
+
         public readonly int A;
         public readonly int B;
         public readonly int C;

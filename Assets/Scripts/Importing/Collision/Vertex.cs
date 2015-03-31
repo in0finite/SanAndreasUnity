@@ -4,6 +4,9 @@ namespace SanAndreasUnity.Importing.Collision
 {
     public class Vertex
     {
+        public const int SizeV1 = Vector3.Size;
+        public const int Size = Vector3.SizeCompressed;
+
         public readonly Vector3 Position;
 
         public Vertex(BinaryReader reader, Version version)

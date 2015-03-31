@@ -4,6 +4,8 @@ namespace SanAndreasUnity.Importing.Collision
 {
     public class FaceGroup
     {
+        public const int Size = 2 * Vector3.Size + 2 * sizeof(ushort);
+
         public readonly Vector3 Min;
         public readonly Vector3 Max;
         public readonly int StartFace;

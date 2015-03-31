@@ -4,6 +4,8 @@ namespace SanAndreasUnity.Importing.Collision
 {
     public class Bounds
     {
+        public const int Size = sizeof(float) + 3 * Vector3.Size;
+
         public readonly float Radius;
         public readonly Vector3 Center;
         public readonly Vector3 Min;

@@ -17,6 +17,9 @@ namespace SanAndreasUnity.Importing
 
     public struct Vector3
     {
+        public const int Size = 3 * sizeof(float);
+        public const int SizeCompressed = 3 * sizeof(short);
+
         public readonly Single X;
         public readonly Single Y;
         public readonly Single Z;

@@ -4,6 +4,8 @@ namespace SanAndreasUnity.Importing.Collision
 {
     public class Sphere
     {
+        public const int Size = sizeof(float) + Vector3.Size + Surface.Size;
+
         public readonly float Radius;
         public readonly Vector3 Center;
         public readonly Surface Surface;
