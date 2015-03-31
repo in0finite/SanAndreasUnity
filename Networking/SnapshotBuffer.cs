@@ -231,9 +231,8 @@ namespace Facepunch.Networking
             IdealBufferedTime = idealBufferedTime;
 
             _current = new TSnapshot();
-            _last = new TSnapshot();
 
-            _playbackTime = -1;
+            Reset();
         }
 
         /// <summary>
@@ -283,6 +282,16 @@ namespace Facepunch.Networking
             foreach (var action in _sLerpActions) {
                 action(_current, _last, next, t, dt);
             }
+        }
+
+        public void Reset()
+        {
+            _snapshots.Clear();
+
+            _last = new TSnapshot();
+            LerpCurrent(_last, 0f, float.PositiveInfinity);
+
+            _playbackTime = -1;
         }
 
         /// <summary>
