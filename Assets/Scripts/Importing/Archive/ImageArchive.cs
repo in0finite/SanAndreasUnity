@@ -31,6 +31,7 @@ namespace SanAndreasUnity.Importing.Archive
 
         private readonly Stream _stream;
         private readonly Dictionary<String, ImageArchiveEntry> _fileDict;
+        private readonly Dictionary<String, List<String>> _extDict;
 
         public readonly String Version;
         public readonly UInt32 Length;
@@ -43,12 +44,27 @@ namespace SanAndreasUnity.Importing.Archive
             Version = new String(reader.ReadChars(4));
             Length = reader.ReadUInt32();
 
-            _fileDict = new Dictionary<string, ImageArchiveEntry>();
+            _fileDict = new Dictionary<string, ImageArchiveEntry>(StringComparer.InvariantCultureIgnoreCase);
+            _extDict = new Dictionary<string, List<string>>(StringComparer.InvariantCultureIgnoreCase);
 
             for (var i = 0; i < Length; ++i) {
                 var entry = new ImageArchiveEntry(reader);
                 _fileDict.Add(entry.Name, entry);
+
+                var ext = Path.GetExtension(entry.Name);
+                if (ext == null) continue;
+
+                if (!_extDict.ContainsKey(ext)) {
+                    _extDict.Add(ext, new List<string>());
+                }
+
+                _extDict[ext].Add(entry.Name);
             }
+        }
+
+        public IEnumerable<String> GetFileNamesWithExtension(String ext)
+        {
+            return _extDict.ContainsKey(ext) ? _extDict[ext] : Enumerable.Empty<String>();
         }
 
         public bool ContainsFile(String name)

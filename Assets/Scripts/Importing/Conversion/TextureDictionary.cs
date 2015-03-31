@@ -151,8 +151,8 @@ namespace SanAndreasUnity.Importing.Conversion
             return tex;
         }
 
-        private static readonly Dictionary<string, string> _sParents = new Dictionary<string,string>();
-        private static readonly Dictionary<string, TextureDictionary> _sLoaded = new Dictionary<string, TextureDictionary>();
+        private static readonly Dictionary<string, string> _sParents = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+        private static readonly Dictionary<string, TextureDictionary> _sLoaded = new Dictionary<string, TextureDictionary>(StringComparer.InvariantCultureIgnoreCase);
 
         public static TextureDictionary Load(string name)
         {
@@ -222,8 +222,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private TextureDictionary(RenderWareStream.TextureDictionary txd)
         {
-            _diffuse = new Dictionary<string, Texture>();
-            _alpha = new Dictionary<string, Texture>();
+            _diffuse = new Dictionary<string, Texture>(StringComparer.InvariantCultureIgnoreCase);
+            _alpha = new Dictionary<string, Texture>(StringComparer.InvariantCultureIgnoreCase);
 
             foreach (var native in txd.Textures) {
                 var tex = new Texture(native);
