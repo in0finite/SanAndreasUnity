@@ -20,9 +20,11 @@ namespace SanAndreasUnity.Importing.Archive
 
         private static readonly List<ImageArchive> _sLoadedArchives = new List<ImageArchive>();
 
-        public static void LoadArchive(string filePath)
+        public static ImageArchive LoadArchive(string filePath)
         {
-            _sLoadedArchives.Add(ImageArchive.Load(filePath));
+            var arch = ImageArchive.Load(filePath);
+            _sLoadedArchives.Add(arch);
+            return arch;
         }
 
         public static bool FileExists(string name)

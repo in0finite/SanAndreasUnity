@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Utilities;
+using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Collision
 {
@@ -30,6 +32,8 @@ namespace SanAndreasUnity.Importing.Collision
                 Length = reader.ReadUInt32() + 4;
                 Name = reader.ReadString(22);
                 ModelId = reader.ReadInt16();
+
+                reader.BaseStream.Seek(Offset + Length, SeekOrigin.Begin);
             }
 
             private CollisionFile Load()
@@ -40,19 +44,31 @@ namespace SanAndreasUnity.Importing.Collision
 
         private static readonly Dictionary<String, CollisionFileInfo> _sModelNameDict
             = new Dictionary<string, CollisionFileInfo>(StringComparer.InvariantCultureIgnoreCase);
-        private static readonly Dictionary<int, CollisionFileInfo> _sModelIdDict
-            = new Dictionary<int, CollisionFileInfo>();
 
         public static void Load(string fileName)
         {
+            var thisFile = new List<CollisionFileInfo>();
+
             using (var stream = ResourceManager.ReadFile(fileName)) {
                 var versBuffer = new byte[4];
                 var reader = new BinaryReader(stream);
-                while (stream.Read(versBuffer, 0, 4) == 4) {
-                    var version = (Version) Enum.Parse(typeof (Version), Encoding.ASCII.GetString(versBuffer));
+                while (stream.Position < stream.Length && stream.Read(versBuffer, 0, 4) == 4) {
+                    if (versBuffer.All(x => x == 0)) break;
+
+                    Version version;
+
+                    try {
+                        var versString = Encoding.ASCII.GetString(versBuffer);
+                        version = (Version) Enum.Parse(typeof (Version), versString);
+                    } catch {
+                        Debug.LogWarningFormat("Error while reading {0} at 0x{1:x} ({2}%)",
+                            fileName, stream.Position - 4, (stream.Position - 4) * 100 / stream.Length);
+                        break;
+                    }
+
                     var modelInfo = new CollisionFileInfo(reader, fileName, version);
+                    thisFile.Add(modelInfo);
                     _sModelNameDict.Add(modelInfo.Name, modelInfo);
-                    _sModelIdDict.Add(modelInfo.ModelId, modelInfo);
                 }
             }
         }
@@ -60,11 +76,6 @@ namespace SanAndreasUnity.Importing.Collision
         public static CollisionFile FromName(String name)
         {
             return _sModelNameDict.ContainsKey(name) ? _sModelNameDict[name].Value : null;
-        }
-
-        public static CollisionFile FromId(int id)
-        {
-            return _sModelIdDict.ContainsKey(id) ? _sModelIdDict[id].Value : null;
         }
 
         private CollisionFileInfo _info;

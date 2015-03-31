@@ -5,6 +5,8 @@ using System.Linq;
 using System.Diagnostics;
 using System.Collections;
 using ResourceManager = SanAndreasUnity.Importing.Archive.ResourceManager;
+using SanAndreasUnity.Importing.Archive;
+using SanAndreasUnity.Importing.Collision;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -21,13 +23,28 @@ namespace SanAndreasUnity.Behaviours
             var timer = new Stopwatch();
 
             if (GameData == null) {
+                var archivePaths = new[] {
+                    ResourceManager.GetPath("models", "gta3.img"),
+                    ResourceManager.GetPath("models", "gta_int.img"),
+                    ResourceManager.GetPath("models", "player.img")
+                };
+
                 timer.Start();
-                ResourceManager.LoadArchive(ResourceManager.GetPath("models", "gta3.img"));
-                ResourceManager.LoadArchive(ResourceManager.GetPath("models", "gta_int.img"));
-                ResourceManager.LoadArchive(ResourceManager.GetPath("models", "player.img"));
+                var archives = archivePaths.Select(x => ResourceManager.LoadArchive(x)).ToArray();
                 timer.Stop();
 
                 UnityEngine.Debug.LogFormat("Archive load time: {0} ms", timer.Elapsed.TotalMilliseconds);
+                timer.Reset();
+
+                timer.Start();
+                foreach (var archive in archives) {
+                    foreach (var colFile in archive.GetFileNamesWithExtension(".col")) {
+                        CollisionFile.Load(colFile);
+                    }
+                }
+                timer.Stop();
+
+                UnityEngine.Debug.LogFormat("Collision load time: {0} ms", timer.Elapsed.TotalMilliseconds);
                 timer.Reset();
 
                 timer.Start();
