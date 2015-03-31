@@ -11,6 +11,9 @@ namespace Facepunch.Networking.Lidgren
 {
     using Peer = NetServer;
 
+    /// <remarks>
+    /// This class is super not thread safe
+    /// </remarks>
     public class LocalServerImpl : LocalServer
     {
         public const String AppIdentifier = "Arcade";
@@ -169,6 +172,8 @@ namespace Facepunch.Networking.Lidgren
 
         public override bool CheckForMessages()
         {
+            CheckClients();
+
             var received = new List<NetIncomingMessage>();
             Peer.ReadMessages(received);
 
