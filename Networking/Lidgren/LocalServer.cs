@@ -195,8 +195,7 @@ namespace Facepunch.Networking.Lidgren
                         var status = (NetConnectionStatus) msg.ReadByte();
                         var reason = msg.ReadString();
 
-                        if (status == NetConnectionStatus.Disconnected)
-                        {
+                        if (status == NetConnectionStatus.Disconnected) {
                             client.DisconnectMessage = reason;
                         }
 
