@@ -218,6 +218,13 @@ namespace ProtoBuf
             return name.StartsWith("Arcade.") ? name.Substring(7) : name;
         }
 
+        // HACK
+        private String InjectPackage(String name, String package)
+        {
+            var dot = name.LastIndexOf('.');
+            return String.Format("{0}.{1}{2}", name.Substring(0, dot), package, name.Substring(dot));
+        }
+
         /// <summary>
         /// Load identifier assignments from a schema object.
         /// </summary>
@@ -226,7 +233,13 @@ namespace ProtoBuf
             var asm = Assembly.GetExecutingAssembly();
 
             var entries = schema.Entries
-                .Select(x => new { type = asm.GetType(TranslateTypeName(x.TypeName)), ident = x.Ident })
+                .Select(x => {
+                    var name = TranslateTypeName(x.TypeName);
+                    var type = asm.GetType(TranslateTypeName(x.TypeName))
+                        ?? asm.GetType(InjectPackage(name, "Cabinet"))
+                        ?? asm.GetType(InjectPackage(name, "Player"));
+                    return new {type = type, ident = x.Ident};
+                })
                 .Select(x => new Entry(x.type, x.ident))
                 .ToArray();
 
