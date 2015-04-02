@@ -119,6 +119,12 @@ namespace Facepunch.Networking
             return (TNetworkable) GetNetworkable(id);
         }
 
+        public TNetworkable GetNetworkable<TNetworkable>(NetworkableInfo info)
+            where TNetworkable : Networkable
+        {
+            return info == null ? null : GetNetworkable<TNetworkable>(info.Ident);
+        }
+
         // ReSharper disable once UnusedMember.Local
         private void OnDestroy()
         {
