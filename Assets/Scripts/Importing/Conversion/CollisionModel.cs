@@ -103,12 +103,11 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (file.FaceGroups.Length > 0) {
                 foreach (var group in file.FaceGroups) {
-                    if (group.EndFace == group.StartFace) continue;
                     Add<MeshCollider>(x => {
                         x.sharedMesh = Convert(group, file.Faces, file.Vertices);
                     });
                 }
-            } else if (file.Vertices.Length > 0) {
+            } else if (file.Faces.Length > 0) {
                 Add<MeshCollider>(x => {
                     x.sharedMesh = Convert(file.Faces, file.Vertices);
                 });

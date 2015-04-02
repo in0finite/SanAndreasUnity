@@ -150,13 +150,12 @@ namespace SanAndreasUnity.Importing.Collision
                             stream.Seek(facesOffset - 4, SeekOrigin.Begin);
                             faceGroups = reader.ReadInt32();
                             faceGroupsOffset = facesOffset - 4 - FaceGroup.Size * faceGroups;
-
-                            verts = (int) (faceGroupsOffset - vertsOffset) / Vertex.Size;
                         } else {
-                            verts = 0;
                             faceGroups = 0;
                             faceGroupsOffset = 0;
                         }
+
+                        verts = -1;
 
                         break;
                     }
@@ -164,7 +163,6 @@ namespace SanAndreasUnity.Importing.Collision
 
                 Spheres = new Sphere[spheres];
                 Boxes = new Box[boxes];
-                Vertices = new Vertex[verts];
                 Faces = new Face[faces];
                 FaceGroups = new FaceGroup[faceGroups];
 
@@ -182,25 +180,31 @@ namespace SanAndreasUnity.Importing.Collision
                     }
                 }
 
-                if (verts > 0) {
-                    stream.Seek(vertsOffset, SeekOrigin.Begin);
-                    for (var i = 0; i < verts; ++i) {
-                        Vertices[i] = new Vertex(reader, version);
-                    }
-                }
-
                 if (faces > 0) {
                     stream.Seek(facesOffset, SeekOrigin.Begin);
                     for (var i = 0; i < faces; ++i) {
                         Faces[i] = new Face(reader, version);
                     }
-                }
 
-                if (faceGroups > 0) {
-                    stream.Seek(faceGroupsOffset, SeekOrigin.Begin);
-                    for (var i = 0; i < faceGroups; ++i) {
-                        FaceGroups[i] = new FaceGroup(reader);
+                    if (verts == -1) {
+                        verts = Faces.Max(x => x.GetIndices().Max()) + 1;
                     }
+
+                    Vertices = new Vertex[verts];
+
+                    stream.Seek(vertsOffset, SeekOrigin.Begin);
+                    for (var i = 0; i < verts; ++i) {
+                        Vertices[i] = new Vertex(reader, version);
+                    }
+
+                    if (faceGroups > 0) {
+                        stream.Seek(faceGroupsOffset, SeekOrigin.Begin);
+                        for (var i = 0; i < faceGroups; ++i) {
+                            FaceGroups[i] = new FaceGroup(reader);
+                        }
+                    }
+                } else {
+                    Vertices = new Vertex[0];
                 }
             }
         }
