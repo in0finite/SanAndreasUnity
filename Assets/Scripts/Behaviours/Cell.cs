@@ -18,6 +18,8 @@ namespace SanAndreasUnity.Behaviours
 
         public List<int> CellIds = new List<int> { 0, 13 };
 
+        public PlayerController Player;
+
         void Awake()
         {
             var timer = new Stopwatch();
@@ -83,8 +85,7 @@ namespace SanAndreasUnity.Behaviours
             var leaves = RootDivision.ToList();
 
             while (true) {
-                var pos = Camera.main.transform.position;
-
+                var pos = Player.transform.position;
                 var toLoad = leaves.Aggregate(false, (current, leaf) => current | leaf.RefreshLoadOrder(pos));
 
                 if (toLoad) {

@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public class CameraController : MonoBehaviour
+    [RequireComponent(typeof(CharacterController))]
+    public class PlayerController : MonoBehaviour
     {
         private Vector3 _velocity;
 
@@ -13,10 +13,14 @@ namespace SanAndreasUnity.Behaviours
 
         private bool _lockedCursor;
 
+        private CharacterController _controller;
+
         public Vector2 CursorSensitivity = new Vector2(2f, 2f);
 
         public Vector2 PitchClamp = new Vector2(-89f, 89f);
         public Vector2 YawClamp = new Vector2(-180f, 180f);
+
+        public Camera Camera;
 
         public float Pitch
         {
@@ -25,9 +29,9 @@ namespace SanAndreasUnity.Behaviours
             {
                 _pitch = Mathf.Clamp(value, PitchClamp.x, PitchClamp.y);
 
-                var angles = transform.localEulerAngles;
+                var angles = Camera.transform.localEulerAngles;
                 angles.x = _pitch;
-                transform.localEulerAngles = angles;
+                Camera.transform.localEulerAngles = angles;
             }
         }
 
@@ -42,6 +46,11 @@ namespace SanAndreasUnity.Behaviours
                 angles.y = _yaw;
                 transform.localEulerAngles = angles;
             }
+        }
+
+        void Awake()
+        {
+            _controller = GetComponent<CharacterController>();
         }
 
         void Update()
@@ -73,12 +82,21 @@ namespace SanAndreasUnity.Behaviours
                 move = transform.forward * move.z + transform.right * move.x;
 
                 if (Input.GetKey(KeyCode.LeftShift)) {
+                    move *= 12f;
+                } else {
                     move *= 4f;
                 }
             }
 
-            _velocity += (move - _velocity) * .5f;
-            transform.position += _velocity;
+            _velocity += (move - new Vector3(_velocity.x, 0f, _velocity.z)) * .5f;
+
+            if (_controller.isGrounded) {
+                _velocity.y = 0f;
+            } else {
+                _velocity.y -= 9.81f * Time.fixedDeltaTime;
+            }
+
+            _controller.Move(_velocity * Time.fixedDeltaTime);
         }
     }
 }
