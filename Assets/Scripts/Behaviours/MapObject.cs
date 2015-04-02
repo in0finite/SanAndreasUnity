@@ -165,7 +165,7 @@ namespace SanAndreasUnity.Behaviours
             if (!_canLoad) return;
 
             if (!_loaded) {
-                try {
+                //try {
                     _loaded = true;
 
                     Mesh mesh;
@@ -186,13 +186,15 @@ namespace SanAndreasUnity.Behaviours
 
                     mf.mesh = mesh;
                     mr.materials = materials;
-                } catch (Exception e) {
-                    _canLoad = false;
 
-                    UnityEngine.Debug.LogWarningFormat("Failed to load {0} ({1})", Instance.ObjectId, e.Message);
-                    name = string.Format("Failed ({0})", Instance.ObjectId);
-                    return;
-                }
+                    CollisionModel.Load(Instance.Object.Geometry, transform);
+                //} catch (Exception e) {
+                //    _canLoad = false;
+
+                //    UnityEngine.Debug.LogWarningFormat("Failed to load {0} ({1})", Instance.ObjectId, e.Message);
+                //    name = string.Format("Failed ({0})", Instance.ObjectId);
+                //    return;
+                //}
             }
 
             IsVisible = LodParent == null || !LodParent.IsVisible;

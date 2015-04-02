@@ -28,10 +28,10 @@ namespace SanAndreasUnity.Importing.Collision
             {
                 FileName = fileName;
                 Version = version;
-                Offset = reader.BaseStream.Position;
                 Length = reader.ReadUInt32() + 4;
                 Name = reader.ReadString(22);
                 ModelId = reader.ReadInt16();
+                Offset = reader.BaseStream.Position - 28;
 
                 reader.BaseStream.Seek(Offset + Length, SeekOrigin.Begin);
             }
@@ -78,7 +78,7 @@ namespace SanAndreasUnity.Importing.Collision
             return _sModelNameDict.ContainsKey(name) ? _sModelNameDict[name].Value : null;
         }
 
-        private CollisionFileInfo _info;
+        private readonly CollisionFileInfo _info;
 
         public string Name { get { return _info.Name; } }
         public int ModelId { get { return _info.ModelId; } }
@@ -100,7 +100,7 @@ namespace SanAndreasUnity.Importing.Collision
 
             using (var stream = ResourceManager.ReadFile(info.FileName))
             using (var reader = new BinaryReader(stream)) {
-                stream.Seek(info.Offset + 20, SeekOrigin.Begin);
+                stream.Seek(info.Offset + 28, SeekOrigin.Begin);
 
                 Bounds = new Bounds(reader, version);
 
@@ -146,11 +146,17 @@ namespace SanAndreasUnity.Importing.Collision
                         vertsOffset = reader.ReadUInt32() + info.Offset;
                         facesOffset = reader.ReadUInt32() + info.Offset;
 
-                        stream.Seek(facesOffset - 4, SeekOrigin.Current);
-                        faceGroups = reader.ReadInt32();
-                        faceGroupsOffset = facesOffset - 4 - FaceGroup.Size * faceGroups;
+                        if (faces > 0 && (Flags & Flags.HasFaceGroups) == Flags.HasFaceGroups) {
+                            stream.Seek(facesOffset - 4, SeekOrigin.Begin);
+                            faceGroups = reader.ReadInt32();
+                            faceGroupsOffset = facesOffset - 4 - FaceGroup.Size * faceGroups;
 
-                        verts = (int) (faceGroupsOffset - vertsOffset) / Vertex.Size;
+                            verts = (int) (faceGroupsOffset - vertsOffset) / Vertex.Size;
+                        } else {
+                            verts = 0;
+                            faceGroups = 0;
+                            faceGroupsOffset = 0;
+                        }
 
                         break;
                     }
