@@ -13,12 +13,16 @@ namespace SanAndreasUnity.Behaviours
 
         private bool _lockedCursor;
 
+        private Vector3 _move;
+
         private CharacterController _controller;
 
         public Vector2 CursorSensitivity = new Vector2(2f, 2f);
 
         public Vector2 PitchClamp = new Vector2(-89f, 89f);
         public Vector2 YawClamp = new Vector2(-180f, 180f);
+
+        public float VelocitySmoothing = 0.05f;
 
         public Camera Camera;
 
@@ -70,30 +74,32 @@ namespace SanAndreasUnity.Behaviours
 
                 Yaw += cursorDelta.x * CursorSensitivity.x;
                 Pitch -= cursorDelta.y * CursorSensitivity.y;
+
+                _move = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+
+                if (_move.sqrMagnitude > 0f) {
+                    _move.Normalize();
+                    _move = transform.forward * _move.z + transform.right * _move.x;
+
+                    if (Input.GetKey(KeyCode.LeftShift)) {
+                        _move *= 12f;
+                    } else {
+                        _move *= 4f;
+                    }
+                }
             }
         }
 
         void FixedUpdate()
         {
-            var move = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+            var vDiff = _move - new Vector3(_velocity.x, 0f, _velocity.z);
 
-            if (move.sqrMagnitude > 0f) {
-                move.Normalize();
-                move = transform.forward * move.z + transform.right * move.x;
-
-                if (Input.GetKey(KeyCode.LeftShift)) {
-                    move *= 12f;
-                } else {
-                    move *= 4f;
-                }
-            }
-
-            _velocity += (move - new Vector3(_velocity.x, 0f, _velocity.z)) * .5f;
+            _velocity += vDiff * (1f - Mathf.Pow(VelocitySmoothing, 4f * Time.fixedDeltaTime));
 
             if (_controller.isGrounded) {
                 _velocity.y = 0f;
             } else {
-                _velocity.y -= 9.81f * Time.fixedDeltaTime;
+                _velocity.y -= 9.81f * 2f * Time.fixedDeltaTime;
             }
 
             _controller.Move(_velocity * Time.fixedDeltaTime);

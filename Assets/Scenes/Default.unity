@@ -191,6 +191,7 @@ MonoBehaviour:
   CursorSensitivity: {x: 2, y: 2}
   PitchClamp: {x: -89, y: 89}
   YawClamp: {x: -180, y: 180}
+  VelocitySmoothing: .100000001
   Camera: {fileID: 1521428848}
 --- !u!143 &412119319
 CharacterController:
