@@ -30,7 +30,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static Mesh Convert(FaceGroup group, IEnumerable<Face> faces, IEnumerable<Vertex> vertices)
         {
-            return Convert(faces.Skip(group.StartFace).Take(group.EndFace - group.StartFace), vertices);
+            return Convert(faces.Skip(group.StartFace).Take(1 + group.EndFace - group.StartFace), vertices);
         }
 
         private static GameObject _sTemplateParent;
