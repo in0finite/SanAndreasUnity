@@ -69,8 +69,6 @@ namespace Facepunch.Steam
             LocalName = SteamFriends.GetPersonaName();
 
             CallbackP2PSessionRequest = Callback<P2PSessionRequest_t>.Create(CBACK_P2PSessionRequest);
-
-
         }
 
         private void CBACK_P2PSessionRequest(P2PSessionRequest_t rq)
