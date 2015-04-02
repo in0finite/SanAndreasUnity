@@ -184,8 +184,8 @@ namespace SanAndreasUnity.Behaviours
                     var mf = gameObject.AddComponent<MeshFilter>();
                     var mr = gameObject.AddComponent<MeshRenderer>();
 
-                    mf.mesh = mesh;
-                    mr.materials = materials;
+                    mf.sharedMesh = mesh;
+                    mr.sharedMaterials = materials;
 
                     CollisionModel.Load(Instance.Object.Geometry, transform);
                 //} catch (Exception e) {

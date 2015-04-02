@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 
 namespace SanAndreasUnity.Importing.Collision
 {
@@ -11,6 +13,13 @@ namespace SanAndreasUnity.Importing.Collision
         public readonly int B;
         public readonly int C;
         public readonly Surface Surface;
+
+        public IEnumerable<int> GetIndices()
+        {
+            yield return A;
+            yield return B;
+            yield return C;
+        }
 
         public Face(BinaryReader reader, Version version)
         {

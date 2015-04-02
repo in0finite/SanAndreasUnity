@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SanAndreasUnity.Importing.Collision;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -11,6 +12,25 @@ namespace SanAndreasUnity.Importing.Conversion
         private static UnityEngine.Vector3 Convert(Vector3 vec)
         {
             return new UnityEngine.Vector3(vec.X, vec.Z, vec.Y);
+        }
+
+        private static Mesh Convert(IEnumerable<Face> faces, IEnumerable<Vertex> vertices)
+        {
+            var mesh = new Mesh {
+                vertices = vertices.Select(x => Convert(x.Position)).ToArray(),
+                subMeshCount = 1
+            };
+
+            var indices = faces.SelectMany(x => x.GetIndices()).ToArray();
+
+            mesh.SetIndices(indices, MeshTopology.Triangles, 0);
+
+            return mesh;
+        }
+
+        private static Mesh Convert(FaceGroup group, IEnumerable<Face> faces, IEnumerable<Vertex> vertices)
+        {
+            return Convert(faces.Skip(group.StartFace).Take(group.EndFace - group.StartFace), vertices);
         }
 
         private static GameObject _sTemplateParent;
@@ -47,7 +67,8 @@ namespace SanAndreasUnity.Importing.Conversion
         private void Add<TCollider>(Action<TCollider> setup)
             where TCollider : Collider
         {
-            var obj = new GameObject("Part", typeof(TCollider));
+            var type = typeof (TCollider);
+            var obj = new GameObject(type.Name, type);
             obj.transform.SetParent(_template.transform);
 
             setup(obj.GetComponent<TCollider>());
@@ -77,6 +98,19 @@ namespace SanAndreasUnity.Importing.Conversion
                 Add<SphereCollider>(x => {
                     x.center = Convert(sphere.Center);
                     x.radius = sphere.Radius;
+                });
+            }
+
+            if (file.FaceGroups.Length > 0) {
+                foreach (var group in file.FaceGroups) {
+                    if (group.EndFace == group.StartFace) continue;
+                    Add<MeshCollider>(x => {
+                        x.sharedMesh = Convert(group, file.Faces, file.Vertices);
+                    });
+                }
+            } else if (file.Vertices.Length > 0) {
+                Add<MeshCollider>(x => {
+                    x.sharedMesh = Convert(file.Faces, file.Vertices);
                 });
             }
 
