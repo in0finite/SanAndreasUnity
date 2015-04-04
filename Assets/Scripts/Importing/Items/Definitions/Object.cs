@@ -25,7 +25,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     }
 
     [Section("objs")]
-    public class Object : Item
+    public class Object : Definition
     {
         public readonly int Id;
 

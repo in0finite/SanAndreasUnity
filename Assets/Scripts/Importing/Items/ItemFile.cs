@@ -71,9 +71,25 @@ namespace SanAndreasUnity.Importing.Items
         }
     }
 
-    public class ItemFile
+    public abstract class Definition : Item
     {
-        private delegate Item ItemCtor(string line);
+        protected Definition(string line, bool commaSeparated = true)
+            : base(line, commaSeparated) { }
+    }
+
+    public abstract class Placement : Item
+    {
+        protected Placement(string line, bool commaSeparated = true)
+            : base(line, commaSeparated) { }
+
+        protected Placement(BinaryReader reader)
+            : base(reader) { }
+    }
+
+    public class ItemFile<TType>
+        where TType : Item
+    {
+        private delegate TType ItemCtor(string line);
 
         private static readonly Dictionary<string, ItemCtor> _sCtors;
 
@@ -85,23 +101,25 @@ namespace SanAndreasUnity.Importing.Items
                 var attrib = (SectionAttribute) type.GetCustomAttributes(typeof(SectionAttribute), false).FirstOrDefault();
                 if (attrib == null) continue;
 
+                if (!typeof(TType).IsAssignableFrom(type)) continue;
+
                 var ctor = type.GetConstructor(new[] {typeof (string)});
 
                 var line = Expression.Parameter(typeof (string), "line");
                 var call = Expression.New(ctor, line);
-                var cast = Expression.Convert(call, typeof (Item));
+                var cast = Expression.Convert(call, typeof(TType));
                 var lamb = Expression.Lambda<ItemCtor>(cast, line);
 
                 _sCtors.Add(attrib.Section, lamb.Compile());
             }
         }
 
-        private readonly Dictionary<string, List<Item>> _sections
-            = new Dictionary<string, List<Item>>();
+        private readonly Dictionary<string, List<TType>> _sections
+            = new Dictionary<string, List<TType>>();
 
         public ItemFile(string path)
         {
-            List<Item> curSection = null;
+            List<TType> curSection = null;
             ItemCtor curCtor = null;
 
             using (var reader = File.OpenText(path)) {
@@ -118,7 +136,7 @@ namespace SanAndreasUnity.Importing.Items
                         if (_sections.ContainsKey(line)) {
                             curSection = _sections[line];
                         } else {
-                            curSection = new List<Item>();
+                            curSection = new List<TType>();
                             _sections.Add(line, curSection);
                         }
 
@@ -156,17 +174,17 @@ namespace SanAndreasUnity.Importing.Items
             stream.Seek(28, SeekOrigin.Current);
             reader.ReadInt32(); // cars offset
 
-            var insts = new List<Item>();
+            var insts = new List<TType>();
             _sections.Add("inst", insts);
 
             stream.Seek(instOffset, SeekOrigin.Begin);
             for (var j = 0; j < instCount; ++j) {
-                insts.Add(new Instance(reader));
+                insts.Add((TType) (Item) new Instance(reader));
             }
         }
 
         public IEnumerable<TItem> GetSection<TItem>(string name)
-            where TItem : Item
+            where TItem : TType
         {
             name = name.ToLower();
 
@@ -176,7 +194,7 @@ namespace SanAndreasUnity.Importing.Items
         }
 
         public IEnumerable<TItem> GetItems<TItem>()
-            where TItem : Item
+            where TItem : TType
         {
             return _sections.SelectMany(x => x.Value.OfType<TItem>());
         }

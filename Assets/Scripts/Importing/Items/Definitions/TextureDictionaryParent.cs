@@ -4,7 +4,7 @@ using UnityEngine;
 namespace SanAndreasUnity.Importing.Items.Definitions
 {
     [Section("txdp")]
-    public class TextureDictionaryParent : Item
+    public class TextureDictionaryParent : Definition
     {
         public TextureDictionaryParent(string line)
             : base(line)

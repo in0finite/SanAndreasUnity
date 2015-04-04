@@ -21,7 +21,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     }
 
     [Section("cars")]
-    public class Vehicle : Item
+    public class Vehicle : Definition
     {
         public readonly int Id;
 

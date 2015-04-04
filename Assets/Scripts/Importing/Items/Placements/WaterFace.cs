@@ -10,7 +10,7 @@ namespace SanAndreasUnity.Importing.Items.Placements
         Shallow = 2
     }
 
-    public class WaterFace : Item
+    public class WaterFace : Placement
     {
         public class Vertex
         {

@@ -51,7 +51,7 @@ namespace SanAndreasUnity.Importing.Items
 
         public void ReadIde(string path)
         {
-            var file = new ItemFile(ArchiveManager.GetPath(path));
+            var file = new ItemFile<Definition>(ArchiveManager.GetPath(path));
             foreach (var obj in file.GetSection<Definitions.Object>("objs")) {
                 _objects.Add(obj.Id, obj);
             }
@@ -59,7 +59,7 @@ namespace SanAndreasUnity.Importing.Items
 
         public void ReadIpl(string path)
         {
-            var file = new ItemFile(ArchiveManager.GetPath(path));
+            var file = new ItemFile<Placement>(ArchiveManager.GetPath(path));
             foreach (var zone in file.GetSection<Zone>("zone")) {
                 _zones.Add(zone);
             }
@@ -81,7 +81,7 @@ namespace SanAndreasUnity.Importing.Items
                     continue;
                 }
 
-                file = new ItemFile(ArchiveManager.ReadFile(streamPath));
+                file = new ItemFile<Placement>(ArchiveManager.ReadFile(streamPath));
                 list.AddRange(file.GetSection<Instance>("inst"));
             }
 

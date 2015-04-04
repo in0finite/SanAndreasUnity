@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Importing.Items.Placements
     }
 
     [Section("inst")]
-    public class Instance : Item
+    public class Instance : Placement
     {
         public readonly int ObjectId;
         public readonly string LodGeometry;

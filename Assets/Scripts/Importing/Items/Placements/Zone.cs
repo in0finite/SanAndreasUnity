@@ -1,7 +1,7 @@
 ﻿namespace SanAndreasUnity.Importing.Items.Placements
 {
     [Section("zone")]
-    public class Zone : Item
+    public class Zone : Placement
     {
         public readonly string Name;
 
