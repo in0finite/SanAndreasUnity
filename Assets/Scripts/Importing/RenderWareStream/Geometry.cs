@@ -5,9 +5,14 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 {
     public enum GeometryFlag : ushort
     {
+        TriangleStrips = 1,
+        VertexTranslation = 2,
         TexCoords = 4,
         Colors = 8,
-        Normals = 16
+        Normals = 16,
+        DynamicVertexLighting = 32,
+        ModulateMaterialColor = 64,
+        TexCoords2 = 128,
     }
 
     public struct FaceInfo
@@ -71,9 +76,10 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         {
             var dataHeader = SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
-            
+
             Flags = (GeometryFlag) reader.ReadUInt16();
-            reader.ReadUInt16(); // Unknown
+            reader.ReadByte(); // uv count
+            reader.ReadByte(); // native flags
             FaceCount = reader.ReadUInt32();
             VertexCount = reader.ReadUInt32();
             FrameCount = reader.ReadUInt32();
@@ -98,6 +104,14 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                 }
             }
 
+            if ((Flags & GeometryFlag.TexCoords2) != 0)
+            {
+                for (var i = 0; i < VertexCount; ++i)
+                {
+                    var coord = new Vector2(reader);
+                }
+            }
+
             Faces = new FaceInfo[FaceCount];
             for (var i = 0; i < FaceCount; ++i) {
                 Faces[i] = new FaceInfo(reader);
@@ -112,14 +126,20 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                 throw new Exception("Well there you go");
             }
 
-            Vertices = new Vector3[VertexCount];
-            for (var i = 0; i < VertexCount; ++i) {
-                Vertices[i] = new Vector3(reader);
+            if ((Flags & GeometryFlag.VertexTranslation) != 0)
+            {
+                Vertices = new Vector3[VertexCount];
+                for (var i = 0; i < VertexCount; ++i)
+                {
+                    Vertices[i] = new Vector3(reader);
+                }
             }
 
-            if ((Flags & GeometryFlag.Normals) != 0) {
+            if ((Flags & GeometryFlag.Normals) != 0)
+            {
                 Normals = new Vector3[VertexCount];
-                for (var i = 0; i < VertexCount; ++i) {
+                for (var i = 0; i < VertexCount; ++i)
+                {
                     Normals[i] = new Vector3(reader);
                 }
             }
