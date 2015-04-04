@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -10,7 +6,12 @@ namespace SanAndreasUnity.Utilities
 {
     public static class Config
     {
-        public static string ConfigPath
+        public static string FileName
+        {
+            get { return "config.json"; }
+        }
+
+        public static string FilePath
         {
             get { return Path.Combine(Application.dataPath, Path.Combine("..", "config.json")); }
         }
@@ -19,7 +20,7 @@ namespace SanAndreasUnity.Utilities
 
         static Config()
         {
-            _root = JObject.Parse(File.ReadAllText(ConfigPath));
+            _root = JObject.Parse(File.ReadAllText(FilePath));
         }
 
         public static JToken Get(string key)
