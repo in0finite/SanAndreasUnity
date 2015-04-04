@@ -58,7 +58,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly float Specular;
 
         public readonly Color4[] Colours;
-        public readonly Vector2[] TexCoords;
+        public readonly Vector2[][] TexCoords;
         public readonly FaceInfo[] Faces;
 
         public readonly BoundingSphere BoundingSphere;
@@ -78,7 +78,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             var reader = new BinaryReader(stream);
 
             Flags = (GeometryFlag) reader.ReadUInt16();
-            reader.ReadByte(); // uv count
+            var uvCount = reader.ReadByte(); // uv count
             reader.ReadByte(); // native flags
             FaceCount = reader.ReadUInt32();
             VertexCount = reader.ReadUInt32();
@@ -97,21 +97,16 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                 }
             }
 
-            if ((Flags & GeometryFlag.TexCoords) != 0) {
-                TexCoords = new Vector2[VertexCount];
-                for (var i = 0; i < VertexCount; ++i) {
-                    TexCoords[i] = new Vector2(reader);
+            if ((Flags & (GeometryFlag.TexCoords | GeometryFlag.TexCoords2)) != 0) {
+                TexCoords = new Vector2[uvCount][];
+                for (var j = 0; j < uvCount; ++j) {
+                    var uvs =  TexCoords[j] = new Vector2[VertexCount];
+                    for (var i = 0; i < VertexCount; ++i) {
+                        uvs[i] = new Vector2(reader);
+                    }
                 }
             }
-
-            if ((Flags & GeometryFlag.TexCoords2) != 0)
-            {
-                for (var i = 0; i < VertexCount; ++i)
-                {
-                    var coord = new Vector2(reader);
-                }
-            }
-
+            
             Faces = new FaceInfo[FaceCount];
             for (var i = 0; i < FaceCount; ++i) {
                 Faces[i] = new FaceInfo(reader);

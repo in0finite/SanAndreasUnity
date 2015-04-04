@@ -161,8 +161,8 @@ namespace SanAndreasUnity.Importing.Conversion
                 mesh.colors32 = src.Colours.Select(x => Convert(x)).ToArray();
             }
 
-            if (src.TexCoords != null) {
-                mesh.uv = src.TexCoords.Select(x => Convert(x)).ToArray();
+            if (src.TexCoords.Length > 0) {
+                mesh.uv = src.TexCoords[0].Select(x => Convert(x)).ToArray();
             }
 
             if (src.Normals == null) {
