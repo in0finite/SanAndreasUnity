@@ -181,39 +181,17 @@ namespace SanAndreasUnity.Importing.Conversion
             return mesh;
         }
 
-        private static readonly Dictionary<string, Geometry> _sLoaded
-            = new Dictionary<string, Geometry>();
+        private static readonly Dictionary<string, Geometry[]> _sLoaded
+            = new Dictionary<string, Geometry[]>();
 
-        public static void Load(string modelName, string texDictName,
-            out Mesh mesh, out UnityEngine.Material[] materials)
-        {
-            Load(modelName, texDictName, ObjectFlag.None, mat => { }, out mesh, out materials);
-        }
-
-        public static void Load(string modelName, string texDictName, ObjectFlag flags,
-            out Mesh mesh, out UnityEngine.Material[] materials)
-        {
-            Load(modelName, texDictName, flags, mat => {}, out mesh, out materials);
-        }
-
-        public static void Load(string modelName, string texDictName,
-            Action<UnityEngine.Material> setupMaterial, out Mesh mesh, out UnityEngine.Material[] materials)
-        {
-            Load(modelName, texDictName, ObjectFlag.None, setupMaterial, out mesh, out materials);
-        }
-
-        public static void Load(string modelName, string texDictName, ObjectFlag flags,
-            Action<UnityEngine.Material> setupMaterial, out Mesh mesh, out UnityEngine.Material[] materials)
+        public static Geometry[] Load(string modelName, string texDictName)
         {
             modelName = modelName.ToLower();
 
-            Geometry loaded;
+            Geometry[] loaded;
 
             if (_sLoaded.ContainsKey(modelName)) {
-                loaded = _sLoaded[modelName];
-                mesh = loaded.Mesh;
-                materials = loaded.GetMaterials(flags, setupMaterial);
-                return;
+                return _sLoaded[modelName];
             }
 
             var clump = ArchiveManager.ReadFile<Clump>(modelName + ".dff");
@@ -223,14 +201,14 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             var txd = TextureDictionary.Load(texDictName);
-            var geom = clump.GeometryList.Geometry[0];
 
-            mesh = Convert(geom);
-
-            loaded = new Geometry(geom, mesh, txd);
-            materials = loaded.GetMaterials(flags, setupMaterial);
+            loaded = clump.GeometryList.Geometry
+                .Select(x => new Geometry(x, Convert(x), txd))
+                .ToArray();
 
             _sLoaded.Add(modelName, loaded);
+
+            return loaded;
         }
 
         public readonly Mesh Mesh;
@@ -248,7 +226,12 @@ namespace SanAndreasUnity.Importing.Conversion
             _materials = new Dictionary<ObjectFlag,UnityEngine.Material[]>();
         }
 
-        private UnityEngine.Material[] GetMaterials(ObjectFlag flags,
+        public UnityEngine.Material[] GetMaterials(ObjectFlag flags = ObjectFlag.None)
+        {
+            return GetMaterials(flags, x => {});
+        }
+
+        public UnityEngine.Material[] GetMaterials(ObjectFlag flags,
             Action<UnityEngine.Material> setupMaterial)
         {
             var distinguishing = flags &

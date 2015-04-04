@@ -32,16 +32,21 @@ namespace SanAndreasUnity.Behaviours
 
             name = def.GameName;
 
-            Mesh mesh;
-            Material[] materials;
+            var geoms = Geometry.Load(def.ModelName, def.TextureDictionaryName);
 
-            Geometry.Load(def.ModelName, def.TextureDictionaryName, out mesh, out materials);
+            var i = 0;
+            foreach (var geom in geoms) {
+                var child = new GameObject();
 
-            var mf = gameObject.AddComponent<MeshFilter>();
-            var mr = gameObject.AddComponent<MeshRenderer>();
+                child.name = string.Format("Part {0}", i);
+                child.transform.SetParent(transform, false);
 
-            mf.sharedMesh = mesh;
-            mr.sharedMaterials = materials;
+                var mf = child.AddComponent<MeshFilter>();
+                var mr = child.AddComponent<MeshRenderer>();
+
+                mf.sharedMesh = geom.Mesh;
+                mr.sharedMaterials = geom.GetMaterials();
+            }
         }
     }
 }

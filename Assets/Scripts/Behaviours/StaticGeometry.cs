@@ -92,12 +92,7 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!_canLoad) return;
 
-            Mesh mesh;
-            Material[] materials;
-
-            Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName,
-                Instance.Object.Flags, mat => mat.SetTexture(NoiseTexId, NoiseTex),
-                out mesh, out materials);
+            var geoms = Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName);
 
             Flags = Enum.GetValues(typeof(ObjectFlag))
                 .Cast<ObjectFlag>()
@@ -108,8 +103,9 @@ namespace SanAndreasUnity.Behaviours
             var mf = gameObject.AddComponent<MeshFilter>();
             var mr = gameObject.AddComponent<MeshRenderer>();
 
-            mf.sharedMesh = mesh;
-            mr.sharedMaterials = materials;
+            mf.sharedMesh = geoms[0].Mesh;
+            mr.sharedMaterials = geoms[0].GetMaterials(Instance.Object.Flags,
+                mat => mat.SetTexture(NoiseTexId, NoiseTex));
 
             CollisionModel.Load(Instance.Object.ModelName, transform);
         }
