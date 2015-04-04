@@ -1,7 +1,7 @@
 ﻿using SanAndreasUnity.Importing.Conversion;
 using UnityEngine;
 
-namespace SanAndreasUnity.Importing.Items
+namespace SanAndreasUnity.Importing.Items.Definitions
 {
     [Section("txdp")]
     public class TextureDictionaryParent : Item

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using UnityEngine;
+using SanAndreasUnity.Importing.Items.Definitions;
+using SanAndreasUnity.Importing.Items.Placements;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -122,7 +124,7 @@ namespace SanAndreasUnity.Behaviours
 
             RandomInt = _sRandom.Next();
 
-            name = _canLoad ? Instance.Object.Geometry : string.Format("Unknown ({0})", Instance.ObjectId);
+            name = _canLoad ? Instance.Object.ModelName : string.Format("Unknown ({0})", Instance.ObjectId);
 
             if (_canLoad && Instance.LodInstance != null) {
                 LodChild = dict[Instance.LodInstance];
@@ -171,7 +173,7 @@ namespace SanAndreasUnity.Behaviours
                     Mesh mesh;
                     Material[] materials;
 
-                    Geometry.Load(Instance.Object.Geometry, Instance.Object.TextureDictionary,
+                    Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName,
                         Instance.Object.Flags, mat => mat.SetTexture(NoiseTexId, NoiseTex),
                         out mesh, out materials);
 
@@ -187,7 +189,7 @@ namespace SanAndreasUnity.Behaviours
                     mf.sharedMesh = mesh;
                     mr.sharedMaterials = materials;
 
-                    CollisionModel.Load(Instance.Object.Geometry, transform);
+                    CollisionModel.Load(Instance.Object.ModelName, transform);
                 //} catch (Exception e) {
                 //    _canLoad = false;
 

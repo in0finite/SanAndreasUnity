@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using SanAndreasUnity.Importing.Archive;
+using SanAndreasUnity.Importing.Items.Placements;
+using SanAndreasUnity.Importing.Items.Definitions;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items
@@ -10,13 +12,13 @@ namespace SanAndreasUnity.Importing.Items
     {
         private readonly List<Zone> _zones;
 
-        private readonly Dictionary<int, Object> _objects;
+        private readonly Dictionary<int, Definitions.Object> _objects;
         private readonly Dictionary<int, List<Instance>> _cells;
 
         public GameData(string path)
         {
             _zones = new List<Zone>();
-            _objects = new Dictionary<int, Object>();
+            _objects = new Dictionary<int, Definitions.Object>();
             _cells = new Dictionary<int, List<Instance>>();
 
             var ws = new[] {' ', '\t'};
@@ -50,7 +52,7 @@ namespace SanAndreasUnity.Importing.Items
         private void ReadIde(string path)
         {
             var file = new ItemFile(ArchiveManager.GetPath(path));
-            foreach (var obj in file.GetSection<Object>("objs")) {
+            foreach (var obj in file.GetSection<Definitions.Object>("objs")) {
                 _objects.Add(obj.Id, obj);
             }
         }
@@ -96,7 +98,7 @@ namespace SanAndreasUnity.Importing.Items
             }
         }
 
-        public Object GetObject(int id)
+        public Definitions.Object GetObject(int id)
         {
             return !_objects.ContainsKey(id) ? null : _objects[id];
         }

@@ -1,4 +1,4 @@
-﻿namespace SanAndreasUnity.Importing.Items
+﻿namespace SanAndreasUnity.Importing.Items.Placements
 {
     [Section("zone")]
     public class Zone : Item

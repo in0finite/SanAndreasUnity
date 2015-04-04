@@ -1,5 +1,8 @@
-﻿namespace SanAndreasUnity.Importing.Items
+﻿using System;
+
+namespace SanAndreasUnity.Importing.Items.Placements
 {
+    [Flags]
     public enum WaterFlags
     {
         None = 0,

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using SanAndreasUnity.Importing.Items.Placements;
 using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Items
@@ -48,6 +50,11 @@ namespace SanAndreasUnity.Importing.Items
         public int GetInt(int index)
         {
             return int.Parse(_parts[index]);
+        }
+
+        public int GetInt(int index, NumberStyles numberStyles)
+        {
+            return int.Parse(_parts[index], numberStyles);
         }
 
         public float GetSingle(int index)

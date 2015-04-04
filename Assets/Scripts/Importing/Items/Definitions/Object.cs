@@ -1,5 +1,8 @@
-﻿namespace SanAndreasUnity.Importing.Items
+﻿using System;
+
+namespace SanAndreasUnity.Importing.Items.Definitions
 {
+    [Flags]
     public enum ObjectFlag : uint
     {
         WetEffect = 1,
@@ -26,8 +29,8 @@
     {
         public readonly int Id;
 
-        public readonly string Geometry;
-        public readonly string TextureDictionary;
+        public readonly string ModelName;
+        public readonly string TextureDictionaryName;
 
         public readonly float DrawDist;
         public readonly ObjectFlag Flags;
@@ -35,8 +38,8 @@
         public Object(string line) : base(line)
         {
             Id = GetInt(0);
-            Geometry = GetString(1);
-            TextureDictionary = GetString(2);
+            ModelName = GetString(1);
+            TextureDictionaryName = GetString(2);
             DrawDist = GetSingle(3);
             Flags = (ObjectFlag) GetInt(4);
         }

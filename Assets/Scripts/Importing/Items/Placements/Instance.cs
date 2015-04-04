@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace SanAndreasUnity.Importing.Items
+namespace SanAndreasUnity.Importing.Items.Placements
 {
     public static class InstanceExtensions
     {
@@ -28,7 +28,7 @@ namespace SanAndreasUnity.Importing.Items
         public readonly int LodIndex;
 
         public Instance LodInstance { get; internal set; }
-        public Object Object { get; internal set; }
+        public Definitions.Object Object { get; internal set; }
 
         public bool IsLod { get; internal set; }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Items;
+using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.RenderWareStream;
 using UnityEngine;
 
