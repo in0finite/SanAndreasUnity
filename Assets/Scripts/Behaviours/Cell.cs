@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Collections;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Collision;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours
 {

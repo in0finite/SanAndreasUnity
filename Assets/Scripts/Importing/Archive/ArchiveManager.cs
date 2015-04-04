@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SanAndreasUnity.Importing.RenderWareStream;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Archive
 {
     public static class ArchiveManager
     {
-        public const string GameDir = @"C:\Program Files (x86)\Steam\SteamApps\common\Grand Theft Auto San Andreas";
+        public static string GameDir
+        {
+            get { return (string) Config.Get("game_dir"); }
+        }
 
         public static string ModelsDir { get { return Path.Combine(GameDir, "models"); } }
         public static string DataDir { get { return Path.Combine(GameDir, "data"); } }
