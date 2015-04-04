@@ -13,14 +13,11 @@ namespace SanAndreasUnity.Behaviours
             return vs;
         }
 
-        private ParkedVehicle _info;
-        private Vehicle _vehicle;
-
-        public string CarName;
+        public ParkedVehicle Info { get; private set; }
 
         public void Initialize(ParkedVehicle info)
         {
-            _info = info;
+            Info = info;
 
             name = string.Format("Vehicle Spawner ({0})", info.CarId);
 
@@ -45,14 +42,7 @@ namespace SanAndreasUnity.Behaviours
 
         protected override void OnLoad()
         {
-            // TODO
-            if (_info.CarId == -1) return;
-
-            _vehicle = Cell.GameData.GetDefinition<Vehicle>(_info.CarId);
-
-            CarName = _vehicle.ModelName;
-
-            gameObject.SetActive(true);
+            Vehicle.Create(this);
         }
     }
 }

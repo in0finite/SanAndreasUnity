@@ -184,10 +184,22 @@ namespace SanAndreasUnity.Importing.Conversion
         private static readonly Dictionary<string, Geometry> _sLoaded
             = new Dictionary<string, Geometry>();
 
+        public static void Load(string modelName, string texDictName,
+            out Mesh mesh, out UnityEngine.Material[] materials)
+        {
+            Load(modelName, texDictName, ObjectFlag.None, mat => { }, out mesh, out materials);
+        }
+
         public static void Load(string modelName, string texDictName, ObjectFlag flags,
             out Mesh mesh, out UnityEngine.Material[] materials)
         {
             Load(modelName, texDictName, flags, mat => {}, out mesh, out materials);
+        }
+
+        public static void Load(string modelName, string texDictName,
+            Action<UnityEngine.Material> setupMaterial, out Mesh mesh, out UnityEngine.Material[] materials)
+        {
+            Load(modelName, texDictName, ObjectFlag.None, setupMaterial, out mesh, out materials);
         }
 
         public static void Load(string modelName, string texDictName, ObjectFlag flags,

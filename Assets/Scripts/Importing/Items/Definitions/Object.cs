@@ -5,6 +5,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     [Flags]
     public enum ObjectFlag : uint
     {
+        None = 0,
         WetEffect = 1,
         RenderAtNight = 2,
         Alpha1 = 4,
