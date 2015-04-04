@@ -49,7 +49,7 @@ namespace SanAndreasUnity.Importing.Collision
         {
             var thisFile = new List<CollisionFileInfo>();
 
-            using (var stream = ResourceManager.ReadFile(fileName)) {
+            using (var stream = ArchiveManager.ReadFile(fileName)) {
                 var versBuffer = new byte[4];
                 var reader = new BinaryReader(stream);
                 while (stream.Position < stream.Length && stream.Read(versBuffer, 0, 4) == 4) {
@@ -98,7 +98,7 @@ namespace SanAndreasUnity.Importing.Collision
 
             var version = info.Version;
 
-            using (var stream = ResourceManager.ReadFile(info.FileName))
+            using (var stream = ArchiveManager.ReadFile(info.FileName))
             using (var reader = new BinaryReader(stream)) {
                 stream.Seek(info.Offset + 28, SeekOrigin.Begin);
 

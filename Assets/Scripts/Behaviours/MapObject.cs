@@ -50,7 +50,7 @@ namespace SanAndreasUnity.Behaviours
             rand.NextBytes(buffer);
 
             _sNoiseTex.LoadRawTextureData(buffer);
-            _sNoiseTex.Apply(false, true);
+            _sNoiseTex.Apply(false, false);
 
             UnityEngine.Debug.LogFormat("Noise gen time: {0:F2} ms", timer.Elapsed.TotalMilliseconds);
         }

@@ -4,7 +4,6 @@ using SanAndreasUnity.Importing.Items;
 using System.Linq;
 using System.Diagnostics;
 using System.Collections;
-using ResourceManager = SanAndreasUnity.Importing.Archive.ResourceManager;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Collision;
 
@@ -19,6 +18,7 @@ namespace SanAndreasUnity.Behaviours
         public List<int> CellIds = new List<int> { 0, 13 };
 
         public PlayerController Player;
+        public Water Water;
 
         void Awake()
         {
@@ -26,13 +26,13 @@ namespace SanAndreasUnity.Behaviours
 
             if (GameData == null) {
                 var archivePaths = new[] {
-                    ResourceManager.GetPath("models", "gta3.img"),
-                    ResourceManager.GetPath("models", "gta_int.img"),
-                    ResourceManager.GetPath("models", "player.img")
+                    ArchiveManager.GetPath("models", "gta3.img"),
+                    ArchiveManager.GetPath("models", "gta_int.img"),
+                    ArchiveManager.GetPath("models", "player.img")
                 };
 
                 timer.Start();
-                var archives = archivePaths.Select(x => ResourceManager.LoadArchive(x)).ToArray();
+                var archives = archivePaths.Select(x => ArchiveManager.LoadArchive(x)).ToArray();
                 timer.Stop();
 
                 UnityEngine.Debug.LogFormat("Archive load time: {0} ms", timer.Elapsed.TotalMilliseconds);
@@ -50,10 +50,13 @@ namespace SanAndreasUnity.Behaviours
                 timer.Reset();
 
                 timer.Start();
-                GameData = new GameData(ResourceManager.GetPath("data", "gta.dat"));
+                GameData = new GameData(ArchiveManager.GetPath("data", "gta.dat"));
                 timer.Stop();
 
                 UnityEngine.Debug.LogFormat("Game Data load time: {0} ms", timer.Elapsed.TotalMilliseconds);
+                timer.Reset();
+
+                UnityEngine.Debug.LogFormat("Water Data load time: {0} ms", timer.Elapsed.TotalMilliseconds);
                 timer.Reset();
             }
 
@@ -75,6 +78,10 @@ namespace SanAndreasUnity.Behaviours
 
             UnityEngine.Debug.LogFormat("Cell partitioning time: {0} ms", timer.Elapsed.TotalMilliseconds);
             timer.Reset();
+
+            if (Water != null) {
+                Water.Initialize(new WaterFile(ArchiveManager.GetPath("data", "water.dat")));
+            }
 
             StartCoroutine(LoadAsync());
         }

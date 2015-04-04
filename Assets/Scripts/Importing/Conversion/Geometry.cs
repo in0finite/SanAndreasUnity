@@ -203,7 +203,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 return;
             }
 
-            var clump = ResourceManager.ReadFile<Clump>(modelName + ".dff");
+            var clump = ArchiveManager.ReadFile<Clump>(modelName + ".dff");
 
             if (clump.GeometryList == null) {
                 throw new Exception("Invalid mesh");

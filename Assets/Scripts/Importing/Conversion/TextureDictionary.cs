@@ -159,7 +159,7 @@ namespace SanAndreasUnity.Importing.Conversion
             name = name.ToLower();
             if (_sLoaded.ContainsKey(name)) return _sLoaded[name];
 
-            var txd = new TextureDictionary(ResourceManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd"));
+            var txd = new TextureDictionary(ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd"));
             _sLoaded.Add(name, txd);
 
             return txd;

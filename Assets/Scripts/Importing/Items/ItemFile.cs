@@ -22,33 +22,40 @@ namespace SanAndreasUnity.Importing.Items
     {
         private readonly string[] _parts;
 
-        protected int Parts { get { return _parts.Length; } }
+        public int Parts { get { return _parts.Length; } }
 
-        protected Item(string line)
+        protected Item(string line, bool commaSeparated = true)
         {
-            _parts = line.Split(',')
-                .Select(x => x.Trim())
-                .ToArray();
+            if (commaSeparated) {
+                _parts = line.Split(',')
+                    .Select(x => x.Trim())
+                    .ToArray();
+            } else {
+                _parts = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim())
+                    .Where(x => x.Length > 0)
+                    .ToArray();
+            }
         }
 
         protected Item(BinaryReader reader) { }
 
-        protected string GetString(int index)
+        public string GetString(int index)
         {
             return _parts[index];
         }
 
-        protected int GetInt(int index)
+        public int GetInt(int index)
         {
             return int.Parse(_parts[index]);
         }
 
-        protected float GetSingle(int index)
+        public float GetSingle(int index)
         {
             return float.Parse(_parts[index]);
         }
 
-        protected double GetDouble(int index)
+        public double GetDouble(int index)
         {
             return double.Parse(_parts[index]);
         }

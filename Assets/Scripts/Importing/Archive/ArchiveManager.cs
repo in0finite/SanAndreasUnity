@@ -6,7 +6,7 @@ using SanAndreasUnity.Importing.RenderWareStream;
 
 namespace SanAndreasUnity.Importing.Archive
 {
-    public static class ResourceManager
+    public static class ArchiveManager
     {
         public const string GameDir = @"C:\Program Files (x86)\Steam\SteamApps\common\Grand Theft Auto San Andreas";
 
