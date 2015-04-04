@@ -92,7 +92,10 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             where T : SectionData
         {
             if (_sDataCtors.Count == 0) FindTypes();
-            if (!_sDataCtors.ContainsKey(header.Type)) return null;
+            if (!_sDataCtors.ContainsKey(header.Type)) {
+                if (typeof(T) == typeof(SectionData)) return null;
+                throw new Exception(string.Format("Unexpected section header {0}.", header.Type));
+            }
             return (T) _sDataCtors[header.Type](header, stream);
         }
     }
