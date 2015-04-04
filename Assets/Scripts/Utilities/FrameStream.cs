@@ -48,6 +48,24 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
+        public long AbsoluteOffset
+        {
+            get
+            {
+                var frameStream = _baseStream as FrameStream;
+                if (frameStream == null) return _offset;
+                return _offset + frameStream.AbsolutePosition;
+            }
+        }
+
+        public long AbsolutePosition
+        {
+            get
+            {
+                return _position + AbsoluteOffset;
+            }
+        }
+
         public FrameStream(Stream baseStream, long offset, long length)
         {
             _baseStream = baseStream;
