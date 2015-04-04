@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
-using SanAndreasUnity.Importing.Conversion;
-using SanAndreasUnity.Importing.Items;
 using UnityEngine;
-using SanAndreasUnity.Importing.Items.Definitions;
-using SanAndreasUnity.Importing.Items.Placements;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public class MapObject : MonoBehaviour, IComparable<MapObject>
+    public abstract class MapObject : MonoBehaviour, IComparable<MapObject>
     {
         private static Texture2D _sNoiseTex;
 
@@ -68,17 +62,9 @@ namespace SanAndreasUnity.Behaviours
 
         private static readonly System.Random _sRandom = new System.Random(0x54e03b19);
 
-        public static MapObject Create()
-        {
-            return new GameObject().AddComponent<MapObject>();
-        }
-
-        protected Instance Instance { get; private set; }
-
         private bool _loaded;
-        private bool _canLoad;
-        private bool _isVisible;
-        private bool _isFading;
+
+        public bool HasLoaded { get { return _loaded; } }
 
         public List<String> Flags;
 
@@ -88,159 +74,40 @@ namespace SanAndreasUnity.Behaviours
 
         internal float LoadOrder { get; private set; }
 
-        public bool IsVisible
+        protected void Initialize(Vector3 pos, Quaternion rot)
         {
-            get { return _isVisible; }
-            private set
-            {
-                if (_isVisible == value) return;
+            transform.position = pos;
+            transform.localRotation = rot;
 
-                _isVisible = value;
-
-                gameObject.SetActive(true);
-                StartCoroutine(Fade());
-
-                if (value && LodChild != null) {
-                    LodChild.Hide();
-                }
-            }
-        }
-
-        public MapObject LodParent { get; private set; }
-        public MapObject LodChild { get; private set; }
-
-        public void Initialize(Instance inst, Dictionary<Instance, MapObject> dict)
-        {
-            Instance = inst;
-            Instance.Object = Instance.Object ?? Cell.GameData.GetObject(inst.ObjectId);
-
-            transform.position = inst.Position;
-            transform.localRotation = inst.Rotation;
-
-            CellPos = new Vector2(inst.Position.x, inst.Position.z);
-
-            _canLoad = Instance.Object != null;
-            _loaded = false;
+            CellPos = new Vector2(pos.x, pos.z);
 
             RandomInt = _sRandom.Next();
 
-            name = _canLoad ? Instance.Object.ModelName : string.Format("Unknown ({0})", Instance.ObjectId);
-
-            if (_canLoad && Instance.LodInstance != null) {
-                LodChild = dict[Instance.LodInstance];
-                LodChild.LodParent = this;
-            }
-
-            _isVisible = false;
-            gameObject.SetActive(false);
-            gameObject.isStatic = true;
-        }
-
-        public bool ShouldBeVisible(Vector3 from)
-        {
-            if (!_canLoad) return false;
-
-            var obj = Instance.Object;
-            var dist = Vector3.Distance(from, transform.position);
-
-            return (dist <= obj.DrawDist || (obj.DrawDist >= 300 && dist < 2560))
-                && (!_loaded || LodParent == null || !LodParent.IsVisible || !LodParent.ShouldBeVisible(from));
+            _loaded = false;
         }
 
         public bool RefreshLoadOrder(Vector3 from)
         {
-            var visible = ShouldBeVisible(from);
-            LoadOrder = float.PositiveInfinity;
-
-            if (!IsVisible) {
-                if (visible) LoadOrder = Vector3.Distance(from, transform.position);
-                return visible;
-            }
-
-            if (!visible) Hide();
-
-            return false;
+            LoadOrder = OnRefreshLoadOrder(from);
+            return !float.IsPositiveInfinity(LoadOrder);
         }
+
+        protected abstract float OnRefreshLoadOrder(Vector3 from);
 
         public void Show()
         {
-            if (!_canLoad) return;
-
             if (!_loaded) {
-                //try {
-                    _loaded = true;
-
-                    Mesh mesh;
-                    Material[] materials;
-
-                    Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName,
-                        Instance.Object.Flags, mat => mat.SetTexture(NoiseTexId, NoiseTex),
-                        out mesh, out materials);
-
-                    Flags = Enum.GetValues(typeof(ObjectFlag))
-                        .Cast<ObjectFlag>()
-                        .Where(x => (Instance.Object.Flags & x) == x)
-                        .Select(x => x.ToString())
-                        .ToList();
-
-                    var mf = gameObject.AddComponent<MeshFilter>();
-                    var mr = gameObject.AddComponent<MeshRenderer>();
-
-                    mf.sharedMesh = mesh;
-                    mr.sharedMaterials = materials;
-
-                    CollisionModel.Load(Instance.Object.ModelName, transform);
-                //} catch (Exception e) {
-                //    _canLoad = false;
-
-                //    UnityEngine.Debug.LogWarningFormat("Failed to load {0} ({1})", Instance.ObjectId, e.Message);
-                //    name = string.Format("Failed ({0})", Instance.ObjectId);
-                //    return;
-                //}
+                _loaded = true;
+                OnLoad();
             }
 
-            IsVisible = LodParent == null || !LodParent.IsVisible;
+            OnShow();
             LoadOrder = float.PositiveInfinity;
         }
 
-        private IEnumerator Fade()
-        {
-            if (_isFading) yield break;
+        protected virtual void OnLoad() { }
 
-            _isFading = true;
-
-            const float fadeRate = 2f;
-
-            var mr = GetComponent<MeshRenderer>();
-            var pb = new MaterialPropertyBlock();
-
-            var val = IsVisible ? 0f : -1f;
-
-            for (;;) {
-                var dest = IsVisible ? 1f : 0f;
-                var sign = Math.Sign(dest - val);
-                val += sign * fadeRate * Time.deltaTime;
-
-                if (sign == 0 || sign == 1 && val >= dest || sign == -1 && val <= dest) break;
-
-                pb.SetFloat(FadeId, (float) val);
-                mr.SetPropertyBlock(pb);
-                yield return new WaitForEndOfFrame();
-            }
-
-            mr.SetPropertyBlock(null);
-
-            if (!IsVisible) {
-                gameObject.SetActive(false);
-            }
-
-            _isFading = false;
-        }
-
-        public void Hide()
-        {
-            IsVisible = false;
-        }
+        protected virtual void OnShow() { }
 
         public int CompareTo(MapObject other)
         {

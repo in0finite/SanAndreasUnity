@@ -21,9 +21,14 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     }
 
     [Section("cars")]
-    public class Vehicle : Definition
+    public class Vehicle : Definition, IObjectDefinition
     {
         public readonly int Id;
+
+        int IObjectDefinition.Id
+        {
+            get { return Id; }
+        }
 
         public readonly string ModelName;
         public readonly string TextureDictionaryName;

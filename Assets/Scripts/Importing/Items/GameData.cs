@@ -12,14 +12,14 @@ namespace SanAndreasUnity.Importing.Items
     {
         private readonly List<Zone> _zones;
 
-        private readonly Dictionary<int, Definitions.Object> _objects;
-        private readonly Dictionary<int, List<Instance>> _cells;
+        private readonly Dictionary<int, IObjectDefinition> _definitions;
+        private readonly Dictionary<int, List<Placement>> _placements;
 
         public GameData(string path)
         {
             _zones = new List<Zone>();
-            _objects = new Dictionary<int, Definitions.Object>();
-            _cells = new Dictionary<int, List<Instance>>();
+            _definitions = new Dictionary<int, IObjectDefinition>();
+            _placements = new Dictionary<int, List<Placement>>();
 
             var ws = new[] {' ', '\t'};
 
@@ -52,8 +52,8 @@ namespace SanAndreasUnity.Importing.Items
         public void ReadIde(string path)
         {
             var file = new ItemFile<Definition>(ArchiveManager.GetPath(path));
-            foreach (var obj in file.GetSection<Definitions.Object>("objs")) {
-                _objects.Add(obj.Id, obj);
+            foreach (var obj in file.GetItems<Definition>().OfType<IObjectDefinition>()) {
+                _definitions.Add(obj.Id, obj);
             }
         }
 
@@ -65,10 +65,11 @@ namespace SanAndreasUnity.Importing.Items
             }
 
             var insts = file.GetSection<Instance>("inst");
-            if (!insts.Any()) return;
 
             var list = new List<Instance>();
             list.AddRange(insts);
+
+            var cars = new List<ParkedVehicle>(file.GetSection<ParkedVehicle>("cars"));
 
             var streamFormat = Path.GetFileNameWithoutExtension(path).ToLower() + "_stream{0}.ipl";
             var missed = 0;
@@ -83,6 +84,7 @@ namespace SanAndreasUnity.Importing.Items
 
                 file = new ItemFile<Placement>(ArchiveManager.ReadFile(streamPath));
                 list.AddRange(file.GetSection<Instance>("inst"));
+                cars.AddRange(file.GetSection<ParkedVehicle>("cars"));
             }
 
             list.ResolveLod();
@@ -90,23 +92,31 @@ namespace SanAndreasUnity.Importing.Items
             var lastCell = -1;
             foreach (var inst in list) {
                 var cell = inst.CellId & 0xff;
-                if (lastCell != cell && !_cells.ContainsKey(lastCell = cell)) {
-                    _cells.Add(cell, new List<Instance>());
+                if (lastCell != cell && !_placements.ContainsKey(lastCell = cell)) {
+                    _placements.Add(cell, new List<Placement>());
                 }
 
-                _cells[cell].Add(inst);
+                _placements[cell].Add(inst);
             }
+
+            if (!_placements.ContainsKey(0)) {
+                _placements.Add(0, new List<Placement>());
+            }
+
+            _placements[0].AddRange(cars.Cast<Placement>());
         }
 
-        public Definitions.Object GetObject(int id)
+        public TDefinition GetDefinition<TDefinition>(int id)
+            where TDefinition : Definition, IObjectDefinition
         {
-            return !_objects.ContainsKey(id) ? null : _objects[id];
+            return !_definitions.ContainsKey(id) ? null : (TDefinition) _definitions[id];
         }
 
-        public IEnumerable<Instance> GetInstances(params int[] cellIds)
+        public IEnumerable<TPlacement> GetPlacements<TPlacement>(params int[] cellIds)
+            where TPlacement : Placement
         {
-            return cellIds.SelectMany(x => _cells.ContainsKey(x)
-                ? _cells[x] : Enumerable.Empty<Instance>());
+            return cellIds.SelectMany(x => _placements.ContainsKey(x)
+                ? _placements[x].OfType<TPlacement>() : Enumerable.Empty<TPlacement>());
         }
     }
 }

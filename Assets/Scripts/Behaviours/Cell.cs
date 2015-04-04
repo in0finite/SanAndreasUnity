@@ -7,6 +7,7 @@ using System.Collections;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Collision;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Importing.Items.Placements;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -66,13 +67,19 @@ namespace SanAndreasUnity.Behaviours
 
             timer.Start();
 
-            var objs = GameData.GetInstances(CellIds.ToArray()).ToDictionary(x => x, x => MapObject.Create());
+            var insts = GameData.GetPlacements<Instance>(CellIds.ToArray())
+                .ToDictionary(x => x, x => StaticGeometry.Create());
 
-            foreach (var obj in objs) {
-                obj.Value.Initialize(obj.Key, objs);
+            foreach (var inst in insts) {
+                inst.Value.Initialize(inst.Key, insts);
             }
 
-            RootDivision.AddRange(objs.Values);
+            var cars = GameData.GetPlacements<ParkedVehicle>(CellIds.ToArray())
+                .Select(x => VehicleSpawner.Create(x))
+                .Cast<MapObject>()
+                .ToArray();
+
+            RootDivision.AddRange(insts.Values.Cast<MapObject>().Concat(cars));
             timer.Stop();
 
             UnityEngine.Debug.LogFormat("Cell partitioning time: {0} ms", timer.Elapsed.TotalMilliseconds);

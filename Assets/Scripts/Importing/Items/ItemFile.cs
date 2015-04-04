@@ -77,6 +77,11 @@ namespace SanAndreasUnity.Importing.Items
             : base(line, commaSeparated) { }
     }
 
+    public interface IObjectDefinition
+    {
+        int Id { get; }
+    }
+
     public abstract class Placement : Item
     {
         protected Placement(string line, bool commaSeparated = true)
@@ -168,11 +173,11 @@ namespace SanAndreasUnity.Importing.Items
 
             var instCount = reader.ReadInt32();
             stream.Seek(12, SeekOrigin.Current);
-            reader.ReadInt32(); // cars count
+            var carsCount = reader.ReadInt32();
             stream.Seek(4, SeekOrigin.Current);
             var instOffset = reader.ReadInt32();
             stream.Seek(28, SeekOrigin.Current);
-            reader.ReadInt32(); // cars offset
+            var carsOffset = reader.ReadInt32();
 
             var insts = new List<TType>();
             _sections.Add("inst", insts);
@@ -180,6 +185,14 @@ namespace SanAndreasUnity.Importing.Items
             stream.Seek(instOffset, SeekOrigin.Begin);
             for (var j = 0; j < instCount; ++j) {
                 insts.Add((TType) (Item) new Instance(reader));
+            }
+
+            var cars = new List<TType>();
+            _sections.Add("cars", cars);
+
+            stream.Seek(carsOffset, SeekOrigin.Begin);
+            for (var j = 0; j < carsCount; ++j) {
+                cars.Add((TType) (Item) new ParkedVehicle(reader));
             }
         }
 
@@ -190,7 +203,7 @@ namespace SanAndreasUnity.Importing.Items
 
             return !_sections.ContainsKey(name)
                 ? Enumerable.Empty<TItem>()
-                : _sections[name].OfType<TItem>();
+                : _sections[name].Cast<TItem>();
         }
 
         public IEnumerable<TItem> GetItems<TItem>()

@@ -25,9 +25,14 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     }
 
     [Section("objs")]
-    public class Object : Definition
+    public class Object : Definition, IObjectDefinition
     {
         public readonly int Id;
+
+        int IObjectDefinition.Id
+        {
+            get { return Id; }
+        }
 
         public readonly string ModelName;
         public readonly string TextureDictionaryName;

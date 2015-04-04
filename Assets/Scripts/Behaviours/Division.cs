@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Behaviours
             return split;
         }
 
-        private const int LeafObjectLimit = 255;
+        private const int LeafObjectLimit = 127;
 
         private Division _childA;
         private Division _childB;
