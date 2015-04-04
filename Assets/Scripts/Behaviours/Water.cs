@@ -40,6 +40,8 @@ namespace SanAndreasUnity.Behaviours
 
         public void Initialize(WaterFile file)
         {
+            if (WaterPrefab == null) return;
+
             foreach (var face in file.Faces) {
                 AddFace(face);
             }
