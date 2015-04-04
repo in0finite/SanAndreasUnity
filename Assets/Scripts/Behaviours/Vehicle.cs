@@ -38,7 +38,7 @@ namespace SanAndreasUnity.Behaviours
             foreach (var geom in geoms) {
                 var child = new GameObject();
 
-                child.name = string.Format("Part {0}", i);
+                child.name = string.Format("Part {0}", i++);
                 child.transform.SetParent(transform, false);
 
                 var mf = child.AddComponent<MeshFilter>();
