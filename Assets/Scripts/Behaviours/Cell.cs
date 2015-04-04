@@ -51,12 +51,10 @@ namespace SanAndreasUnity.Behaviours
 
                 timer.Start();
                 GameData = new GameData(ArchiveManager.GetPath("data", "gta.dat"));
+                GameData.ReadIde("data/vehicles.ide");
                 timer.Stop();
 
                 UnityEngine.Debug.LogFormat("Game Data load time: {0} ms", timer.Elapsed.TotalMilliseconds);
-                timer.Reset();
-
-                UnityEngine.Debug.LogFormat("Water Data load time: {0} ms", timer.Elapsed.TotalMilliseconds);
                 timer.Reset();
             }
 

@@ -39,6 +39,8 @@ namespace SanAndreasUnity.Importing.Items.Definitions
         public readonly int Flags;
         public readonly int CompRules;
 
+        public readonly bool HasWheels;
+
         public readonly int WheelId;
         public readonly float WheelScaleFront;
         public readonly float WheelScaleRear;
@@ -63,15 +65,13 @@ namespace SanAndreasUnity.Importing.Items.Definitions
             Flags = GetInt(9);
             CompRules = GetInt(10, NumberStyles.HexNumber);
 
-            switch (VehicleType) {
-                case Definitions.VehicleType.Boat:
-                    break;
-                default:
-                    WheelId = GetInt(11);
-                    WheelScaleFront = GetSingle(12);
-                    WheelScaleRear = GetSingle(13);
-                    UpgradeId = GetInt(14);
-                    break;
+            HasWheels = Parts >= 15;
+
+            if (HasWheels) {
+                WheelId = GetInt(11);
+                WheelScaleFront = GetSingle(12);
+                WheelScaleRear = GetSingle(13);
+                UpgradeId = GetInt(14);
             }
         }
     }

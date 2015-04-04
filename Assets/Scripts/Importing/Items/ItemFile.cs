@@ -28,12 +28,15 @@ namespace SanAndreasUnity.Importing.Items
 
         protected Item(string line, bool commaSeparated = true)
         {
+            var ws = new[] { ' ', '\t' };
+
             if (commaSeparated) {
                 _parts = line.Split(',')
+                    .SelectMany(x => x.Split(ws, StringSplitOptions.RemoveEmptyEntries))
                     .Select(x => x.Trim())
                     .ToArray();
             } else {
-                _parts = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries)
+                _parts = line.Split(ws, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim())
                     .Where(x => x.Length > 0)
                     .ToArray();
