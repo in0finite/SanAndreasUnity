@@ -14,6 +14,8 @@ namespace SanAndreasUnity.Utilities
         private readonly long _offset;
         private readonly long _length;
 
+        private long _position;
+
         public override bool CanRead
         {
             get { return true; }
@@ -38,11 +40,11 @@ namespace SanAndreasUnity.Utilities
         {
             get
             {
-                return Math.Min(Math.Max(_baseStream.Position - _offset, 0), _length);
+                return _position;
             }
             set
             {
-                _baseStream.Seek(value + _offset, SeekOrigin.Begin);
+                Seek(value, SeekOrigin.Begin);
             }
         }
 
@@ -56,33 +58,41 @@ namespace SanAndreasUnity.Utilities
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (_baseStream.Position < _offset) {
-                _baseStream.Seek(_offset, SeekOrigin.Begin);
-            }
-
-            if (_baseStream.Position > _offset + _length) {
+            if (_position > _length) {
                 return 0;
             }
 
-            return _baseStream.Read(buffer, offset, (int) Math.Min(_length - Position, count));
+            var basePos = _offset + _position;
+
+            if (_baseStream.Position != basePos) {
+                _baseStream.Seek(basePos, SeekOrigin.Begin);
+            }
+
+            var read = _baseStream.Read(buffer, offset, (int) Math.Min(_length - _position, count));
+            _position += read;
+
+            return read;
         }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
             switch (origin) {
                 case SeekOrigin.Begin:
-                    offset += _offset; break;
+                    _position = offset;
+                    break;
                 case SeekOrigin.Current:
-                    offset += _baseStream.Position; break;
+                    _position += offset;
+                    break;
                 case SeekOrigin.End:
-                    offset += _offset + _length; break;
+                    _position = _length - offset;
+                    break;
             }
 
-            if (offset < _offset || offset > _offset + _length) {
+            if (_position < 0 || _position > _length) {
                 throw new ArgumentOutOfRangeException("offset");
             }
 
-            return _baseStream.Seek(offset, SeekOrigin.Begin) - _offset;
+            return _baseStream.Seek(_position + _offset, SeekOrigin.Begin) - _offset;
         }
 
         public override void Flush()
