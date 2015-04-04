@@ -49,7 +49,7 @@ namespace SanAndreasUnity.Importing.Items
             }
         }
 
-        private void ReadIde(string path)
+        public void ReadIde(string path)
         {
             var file = new ItemFile(ArchiveManager.GetPath(path));
             foreach (var obj in file.GetSection<Definitions.Object>("objs")) {
@@ -57,7 +57,7 @@ namespace SanAndreasUnity.Importing.Items
             }
         }
 
-        private void ReadIpl(string path)
+        public void ReadIpl(string path)
         {
             var file = new ItemFile(ArchiveManager.GetPath(path));
             foreach (var zone in file.GetSection<Zone>("zone")) {
