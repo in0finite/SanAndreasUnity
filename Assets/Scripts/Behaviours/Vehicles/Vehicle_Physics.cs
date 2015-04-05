@@ -11,6 +11,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [Range(-1, 1)]
         public float Accelerator;
 
+        [Range(-1, 1)]
+        public float Steering;
+
         public Handling.Car HandlingData { get; private set; }
 
         private void InitializePhysics()
@@ -48,6 +51,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             foreach (var wheel in _wheels)
             {
+                if (wheel.Alignment == WheelAlignment.RightFront ||
+                    wheel.Alignment == WheelAlignment.LeftFront)
+                {
+                    wheel.Collider.steerAngle = HandlingData.SteeringLock * Steering;
+                }
+
+               
                 wheel.Collider.motorTorque = Accelerator
                     * HandlingData.TransmissionEngineAccel
                     * VConsts.Instance.AccelerationScale;
