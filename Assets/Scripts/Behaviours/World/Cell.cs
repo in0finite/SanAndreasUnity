@@ -97,9 +97,6 @@ namespace SanAndreasUnity.Behaviours.World
                 Water.Initialize(new WaterFile(ArchiveManager.GetPath("data", "water.dat")));
             }
 
-            RootDivision.Add(VehicleSpawner.Create(new ParkedVehicle(
-                new UnityEngine.Vector3(2490f, 13f, -1675f), 60f, 411)));
-
             _timer = new Stopwatch();
             _leaves = RootDivision.ToList();
         }
