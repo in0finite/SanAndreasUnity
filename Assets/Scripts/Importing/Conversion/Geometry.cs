@@ -186,7 +186,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return mesh;
         }
 
-        private static GeometryFrame Convert(RenderWareStream.FrameList.Frame src, RenderWareStream.Atomic[] atomics)
+        private static GeometryFrame Convert(RenderWareStream.Frame src, RenderWareStream.Atomic[] atomics)
         {
             var atomic = atomics.FirstOrDefault(x => x.FrameIndex == src.Index);
 
@@ -194,7 +194,7 @@ namespace SanAndreasUnity.Importing.Conversion
             {
                 Name = src.Name.Value,
                 Position = Convert(src.Position),
-                Rotation = Quaternion.identity,
+                Rotation = Quaternion.LookRotation(Convert(src.MatrixForward), Convert(src.MatrixUp)),
                 ParentIndex = src.ParentIndex,
                 GeometryIndex = atomic == null ? -1 : (int)atomic.GeometryIndex,
             };

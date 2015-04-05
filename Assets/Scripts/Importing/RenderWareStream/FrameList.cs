@@ -3,25 +3,37 @@ using System.IO;
 
 namespace SanAndreasUnity.Importing.RenderWareStream
 {
+    public class Frame
+    {
+        public Frame(int index, BinaryReader reader)
+        {
+            Index = index;
+            MatrixRight = new Vector3(reader);
+            MatrixForward = new Vector3(reader);
+            MatrixUp = new Vector3(reader);
+            Position = new Vector3(reader);
+            ParentIndex = reader.ReadInt32();
+            MatrixFlags = reader.ReadUInt32();
+        }
+
+        public String Name;
+
+        public readonly Int32 Index;
+        public readonly Int32 ParentIndex;
+
+        public readonly Vector3 Position;
+
+        public readonly Vector3 MatrixRight;
+        public readonly Vector3 MatrixUp;
+        public readonly Vector3 MatrixForward;
+
+        public readonly UInt32 MatrixFlags;
+    }
+
     [SectionType(14)]
     public class FrameList : SectionData
     {
         public readonly UInt32 FrameCount;
-
-        public struct Frame
-        {
-            public Vector3 Right;
-            public Vector3 Up;
-            public Vector3 Forward;
-
-            public Vector3 Position;
-
-            public Int32 Index;
-            public Int32 ParentIndex;
-            public UInt32 MatrixFlags;
-
-            public String Name;
-        }
 
         public readonly Frame[] Frames;
 
@@ -36,16 +48,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             for (var i = 0; i < FrameCount; ++i)
             {
-                Frames[i] = new Frame()
-                {
-                    Index = i,
-                    Right = new Vector3(reader),
-                    Up = new Vector3(reader),
-                    Forward = new Vector3(reader),
-                    Position = new Vector3(reader),
-                    ParentIndex = reader.ReadInt32(),
-                    MatrixFlags = reader.ReadUInt32(),
-                };
+                Frames[i] = new Frame(i, reader);
             }
 
             for (var i = 0; i < FrameCount; ++i)
