@@ -102,7 +102,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Initialize(VehicleSpawner spawner)
         {
-            transform.position = spawner.transform.position;
+            transform.position = spawner.transform.position + Vector3.up * 1f;
             transform.localRotation = spawner.transform.localRotation;
 
             var def = Cell.GameData.GetDefinition<VehicleDef>(spawner.Info.CarId);
@@ -166,7 +166,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 }
             }
 
-            _geometryParts.AttachCollisionModel(transform);
+            _geometryParts.AttachCollisionModel(transform, true);
+
+            gameObject.AddComponent<Rigidbody>();
         }
     }
 }

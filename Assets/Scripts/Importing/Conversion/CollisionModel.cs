@@ -38,17 +38,17 @@ namespace SanAndreasUnity.Importing.Conversion
         private static readonly Dictionary<string, CollisionModel> _sLoaded
             = new Dictionary<string, CollisionModel>();
 
-        public static void Load(string name, Transform destParent)
+        public static void Load(string name, Transform destParent, bool forceConvex = false)
         {
-            Load(name, null, destParent);
+            Load(name, null, destParent, forceConvex);
         }
 
-        public static void Load(CollisionFile file, Transform destParent)
+        public static void Load(CollisionFile file, Transform destParent, bool forceConvex = false)
         {
-            Load(file.Name, file, destParent);
+            Load(file.Name, file, destParent, forceConvex);
         }
 
-        private static void Load(string name, CollisionFile file, Transform destParent)
+        private static void Load(string name, CollisionFile file, Transform destParent, bool forceConvex)
         {
             CollisionModel col;
 
@@ -56,7 +56,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 col = _sLoaded[name];
                 if (col == null) return;
 
-                col.Spawn(destParent);
+                col.Spawn(destParent, forceConvex);
                 return;
             }
 
@@ -69,7 +69,7 @@ namespace SanAndreasUnity.Importing.Conversion
             col = new CollisionModel(file);
             _sLoaded.Add(name, col);
 
-            col.Spawn(destParent);
+            col.Spawn(destParent, forceConvex);
         }
 
         private readonly GameObject _template;
@@ -126,12 +126,18 @@ namespace SanAndreasUnity.Importing.Conversion
             // TODO: MeshCollider
         }
 
-        public void Spawn(Transform destParent)
+        public void Spawn(Transform destParent, bool forceConvex)
         {
             var clone = Object.Instantiate(_template.gameObject);
 
             clone.name = "Collision";
             clone.transform.SetParent(destParent, false);
+
+            if (!forceConvex) return;
+
+            foreach (var mc in clone.GetComponentsInChildren<MeshCollider>()) {
+                mc.convex = true;
+            }
         }
     }
 }

@@ -37,7 +37,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             if (HasLoaded) return float.PositiveInfinity;
             var dist = Vector3.Distance(from, transform.position);
-            return dist > 300f ? float.PositiveInfinity : dist;
+            return dist > 100f ? float.PositiveInfinity : dist;
         }
 
         protected override void OnLoad()

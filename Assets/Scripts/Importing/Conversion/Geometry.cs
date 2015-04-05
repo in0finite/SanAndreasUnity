@@ -275,12 +275,12 @@ namespace SanAndreasUnity.Importing.Conversion
                 _collisions = clump.Collision;
             }
 
-            public void AttachCollisionModel(Transform destParent)
+            public void AttachCollisionModel(Transform destParent, bool forceConvex = false)
             {
                 if (_collisions != null) {
-                    CollisionModel.Load(_collisions, destParent);
+                    CollisionModel.Load(_collisions, destParent, forceConvex);
                 } else {
-                    CollisionModel.Load(Name, destParent);
+                    CollisionModel.Load(Name, destParent, forceConvex);
                 }
             }
         }
