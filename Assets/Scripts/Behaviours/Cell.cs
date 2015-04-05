@@ -8,6 +8,7 @@ using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Collision;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Importing.Items.Placements;
+using System.IO;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -28,13 +29,17 @@ namespace SanAndreasUnity.Behaviours
 
             if (GameData == null) {
                 var archivePaths = new[] {
+                    ArchiveManager.GameDir,
                     ArchiveManager.GetPath("models", "gta3.img"),
                     ArchiveManager.GetPath("models", "gta_int.img"),
                     ArchiveManager.GetPath("models", "player.img")
                 };
 
                 timer.Start();
-                var archives = archivePaths.Select(x => ArchiveManager.LoadArchive(x)).ToArray();
+                var archives = archivePaths.Select(x => 
+                    File.Exists(x) ? (IArchive) ArchiveManager.LoadImageArchive(x)
+                    : Directory.Exists(x) ? ArchiveManager.LoadLooseArchive(x)
+                    : null).Where(x => x != null).ToArray();
                 timer.Stop();
 
                 UnityEngine.Debug.LogFormat("Archive load time: {0} ms", timer.Elapsed.TotalMilliseconds);

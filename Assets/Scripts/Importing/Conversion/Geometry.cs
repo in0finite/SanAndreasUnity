@@ -9,6 +9,14 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Conversion
 {
+    public enum MaterialFlags
+    {
+        Default = 0,
+        NoBackCull = 1,
+        Alpha = 2,
+        Vehicle = 4
+    }
+
     public class Geometry
     {
         private static int _sMainTexId = -1;
@@ -88,16 +96,20 @@ namespace SanAndreasUnity.Importing.Conversion
             return norms;
         }
 
-        private static readonly Dictionary<ObjectFlag, Shader> _sShaders
-            = new Dictionary<ObjectFlag,Shader>();
+        private static readonly Dictionary<MaterialFlags, Shader> _sShaders
+            = new Dictionary<MaterialFlags, Shader>();
 
-        private static Shader GetShaderNoCache(ObjectFlag flags)
+        private static Shader GetShaderNoCache(MaterialFlags flags)
         {
-            var noBackCull = (flags & ObjectFlag.NoBackCull) == ObjectFlag.NoBackCull;
-            var alpha = (flags & (ObjectFlag.Alpha1 | ObjectFlag.Alpha2)) != 0;
-            var noShadow = (flags & ObjectFlag.DisableShadowMesh) == ObjectFlag.DisableShadowMesh;
+            var noBackCull = (flags & MaterialFlags.NoBackCull) == MaterialFlags.NoBackCull;
+            var alpha = (flags & MaterialFlags.Alpha) == MaterialFlags.Alpha;
+            var vehicle = (flags & MaterialFlags.Vehicle) == MaterialFlags.Vehicle;
 
-            if (noBackCull && alpha && noShadow) {
+            if (vehicle) {
+                return Shader.Find("SanAndreasUnity/Vehicle");
+            }
+
+            if (noBackCull && alpha) {
                 return Shader.Find("SanAndreasUnity/TransparentNoBackCull");
             }
 
@@ -105,14 +117,14 @@ namespace SanAndreasUnity.Importing.Conversion
                 return Shader.Find("SanAndreasUnity/NoBackCull");
             }
 
-            if (alpha && noShadow) {
+            if (alpha) {
                 return Shader.Find("SanAndreasUnity/Transparent");
             }
 
             return Shader.Find("SanAndreasUnity/Default");
         }
 
-        private static Shader GetShader(ObjectFlag flags)
+        private static Shader GetShader(MaterialFlags flags)
         {
             if (_sShaders.ContainsKey(flags)) return _sShaders[flags];
 
@@ -121,17 +133,16 @@ namespace SanAndreasUnity.Importing.Conversion
             return shader;
         }
 
-        private static UnityEngine.Material Convert(RenderWareStream.Material src, TextureDictionary txd, ObjectFlag flags)
+        private static UnityEngine.Material Convert(RenderWareStream.Material src, TextureDictionary[] txds, MaterialFlags flags)
         {
             var shader = GetShader(flags);
-
             var mat = new UnityEngine.Material(shader);
 
             mat.color = Convert(src.Colour);
 
             if (src.TextureCount > 0) {
                 var tex = src.Textures[0];
-                var diffuse = txd.GetDiffuse(tex.TextureName);
+                var diffuse = txds.GetDiffuse(tex.TextureName);
 
                 if (src.TextureCount > 1) {
                     Debug.LogFormat("Something has {0} textures!", src.TextureCount);
@@ -139,10 +150,12 @@ namespace SanAndreasUnity.Importing.Conversion
 
                 if (diffuse != null) {
                     mat.SetTexture(MainTexId, diffuse);
+                } else {
+                    Debug.LogWarningFormat("Unable to find texture {0}", tex.TextureName);
                 }
 
                 if (!string.IsNullOrEmpty(tex.MaskName)) {
-                    mat.SetTexture(MaskTexId, txd.GetAlpha(tex.MaskName) ?? diffuse);
+                    mat.SetTexture(MaskTexId, txds.GetAlpha(tex.MaskName) ?? diffuse);
                 }
             }
 
@@ -215,8 +228,13 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static readonly Dictionary<string, GeometryParts> _sLoaded
             = new Dictionary<string, GeometryParts>();
-
+        
         public static GeometryParts Load(string modelName, string texDictName)
+        {
+            return Load(modelName, TextureDictionary.Load(texDictName));
+        }
+
+        public static GeometryParts Load(string modelName, params TextureDictionary[] txds)
         {
             modelName = modelName.ToLower();
 
@@ -232,12 +250,10 @@ namespace SanAndreasUnity.Importing.Conversion
                 throw new Exception("Invalid mesh");
             }
 
-            var txd = TextureDictionary.Load(texDictName);
-
             loaded = new GeometryParts
             {
                 Geometry = clump.GeometryList.Geometry
-                .Select(x => new Geometry(x, Convert(x), txd))
+                .Select(x => new Geometry(x, Convert(x), txds))
                 .ToArray(),
 
                 Frames = clump.FrameList.Frames
@@ -253,19 +269,19 @@ namespace SanAndreasUnity.Importing.Conversion
         public readonly Mesh Mesh;
 
         private readonly RenderWareStream.Geometry _geom;
-        public readonly TextureDictionary _textureDictionary;
-        private readonly Dictionary<ObjectFlag, UnityEngine.Material[]> _materials;
+        public readonly TextureDictionary[] _textureDictionaries;
+        private readonly Dictionary<MaterialFlags, UnityEngine.Material[]> _materials;
 
-        private Geometry(RenderWareStream.Geometry geom, Mesh mesh, TextureDictionary textureDictionary)
+        private Geometry(RenderWareStream.Geometry geom, Mesh mesh, TextureDictionary[] textureDictionaries)
         {
             Mesh = mesh;
 
             _geom = geom;
-            _textureDictionary = textureDictionary;
-            _materials = new Dictionary<ObjectFlag,UnityEngine.Material[]>();
+            _textureDictionaries = textureDictionaries;
+            _materials = new Dictionary<MaterialFlags, UnityEngine.Material[]>();
         }
 
-        public UnityEngine.Material[] GetMaterials(ObjectFlag flags = ObjectFlag.None)
+        public UnityEngine.Material[] GetMaterials(ObjectFlag flags)
         {
             return GetMaterials(flags, x => {});
         }
@@ -273,23 +289,41 @@ namespace SanAndreasUnity.Importing.Conversion
         public UnityEngine.Material[] GetMaterials(ObjectFlag flags,
             Action<UnityEngine.Material> setupMaterial)
         {
-            var distinguishing = flags &
-                (ObjectFlag.Alpha1 | ObjectFlag.Alpha2
-                | ObjectFlag.DisableShadowMesh | ObjectFlag.NoBackCull);
+            var matFlags = MaterialFlags.Default;
 
-            if (_materials.ContainsKey(distinguishing)) {
-                return _materials[distinguishing];
+            if ((flags & ObjectFlag.NoBackCull) == ObjectFlag.NoBackCull) {
+                matFlags |= MaterialFlags.NoBackCull;
+            }
+
+            if ((flags & (ObjectFlag.Alpha1 | ObjectFlag.Alpha2)) != 0
+                && (flags & ObjectFlag.DisableShadowMesh) == ObjectFlag.DisableShadowMesh) {
+                matFlags |= MaterialFlags.Alpha;
+            }
+
+            return GetMaterials(matFlags, setupMaterial);
+        }
+
+        public UnityEngine.Material[] GetMaterials(MaterialFlags flags)
+        {
+            return GetMaterials(flags, x => {});
+        }
+
+        public UnityEngine.Material[] GetMaterials(MaterialFlags flags,
+            Action<UnityEngine.Material> setupMaterial)
+        {
+            if (_materials.ContainsKey(flags)) {
+                return _materials[flags];
             }
 
             var mats = _geom.Materials.Select(x => {
-                var mat = Convert(x, _textureDictionary, distinguishing);
+                var mat = Convert(x, _textureDictionaries, flags);
                 setupMaterial(mat);
                 return mat;
             }).ToArray();
 
             mats = _geom.MaterialSplits.Select(x => mats[x.MaterialIndex]).ToArray();
 
-            _materials.Add(distinguishing, mats);
+            _materials.Add(flags, mats);
 
             return mats;
         }

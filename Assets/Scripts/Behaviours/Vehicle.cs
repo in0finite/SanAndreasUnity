@@ -90,7 +90,7 @@ namespace SanAndreasUnity.Behaviours
                 var geometry = _geometryParts.Geometry[frame.GeometryIndex];
 
                 mf.sharedMesh = geometry.Mesh;
-                mr.sharedMaterials = geometry.GetMaterials();
+                mr.sharedMaterials = geometry.GetMaterials(MaterialFlags.Vehicle);
 
                 // filter these out for now
                 if (frame.Name.EndsWith("_vlo") ||
@@ -112,7 +112,10 @@ namespace SanAndreasUnity.Behaviours
 
             name = def.GameName;
 
-            _geometryParts = Geometry.Load(def.ModelName, def.TextureDictionaryName);
+            _geometryParts = Geometry.Load(def.ModelName, 
+                TextureDictionary.Load(def.TextureDictionaryName),
+                TextureDictionary.Load("vehicle"),
+                TextureDictionary.Load("misc"));
 
             for (int i = 0; i < _geometryParts.Frames.Length; ++i)
             {

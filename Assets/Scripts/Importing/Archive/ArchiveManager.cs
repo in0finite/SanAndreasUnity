@@ -7,6 +7,13 @@ using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Archive
 {
+    public interface IArchive
+    {
+        IEnumerable<string> GetFileNamesWithExtension(string ext);
+        bool ContainsFile(string name);
+        Stream ReadFile(string name);
+    }
+
     public static class ArchiveManager
     {
         public static string GameDir
@@ -22,9 +29,16 @@ namespace SanAndreasUnity.Importing.Archive
             return relative.Aggregate(GameDir, Path.Combine);
         }
 
-        private static readonly List<ImageArchive> _sLoadedArchives = new List<ImageArchive>();
+        private static readonly List<IArchive> _sLoadedArchives = new List<IArchive>();
 
-        public static ImageArchive LoadArchive(string filePath)
+        public static LooseArchive LoadLooseArchive(string dirPath)
+        {
+            var arch = LooseArchive.Load(dirPath);
+            _sLoadedArchives.Add(arch);
+            return arch;
+        }
+
+        public static ImageArchive LoadImageArchive(string filePath)
         {
             var arch = ImageArchive.Load(filePath);
             _sLoadedArchives.Add(arch);

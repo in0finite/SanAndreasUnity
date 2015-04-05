@@ -7,6 +7,29 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Conversion
 {
+    public static class TextureDictionaryExtensions
+    {
+        public static Texture2D GetDiffuse(this TextureDictionary[] txds, string name)
+        {
+            foreach (var txd in txds) {
+                var tex = txd.GetDiffuse(name);
+                if (tex != null) return tex;
+            }
+
+            return null;
+        }
+
+        public static Texture2D GetAlpha(this TextureDictionary[] txds, string name)
+        {
+            foreach (var txd in txds) {
+                var tex = txd.GetAlpha(name);
+                if (tex != null) return tex;
+            }
+
+            return null;
+        }
+    }
+
     public class TextureDictionary
     {
         private static byte[] ConvertDXT3ToDXT5(byte[] data)

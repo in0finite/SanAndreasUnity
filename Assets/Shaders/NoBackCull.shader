@@ -23,8 +23,10 @@
         
         CGPROGRAM
 
-        #pragma surface surf Lambert addshadow alphatest:_AlphaCutoff
+        #pragma surface surf StandardSpecular addshadow alphatest:_AlphaCutoff
         #pragma target 3.0
+        
+        #define FADE
 
         #include "Shared.cginc"
 

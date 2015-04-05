@@ -6,7 +6,7 @@ using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Archive
 {
-    public class ImageArchive : IDisposable
+    public class ImageArchive : IArchive, IDisposable
     {
         private struct ImageArchiveEntry
         {
@@ -66,12 +66,12 @@ namespace SanAndreasUnity.Importing.Archive
             }
         }
 
-        public IEnumerable<String> GetFileNamesWithExtension(String ext)
+        public IEnumerable<string> GetFileNamesWithExtension(string ext)
         {
-            return _extDict.ContainsKey(ext) ? _extDict[ext] : Enumerable.Empty<String>();
+            return _extDict.ContainsKey(ext) ? _extDict[ext] : Enumerable.Empty<string>();
         }
 
-        public bool ContainsFile(String name)
+        public bool ContainsFile(string name)
         {
             return _fileDict.ContainsKey(name);
         }
@@ -84,7 +84,7 @@ namespace SanAndreasUnity.Importing.Archive
             return _entries.FirstOrDefault(x => x.Offset <= offset && x.End > offset).Name;
         }
 
-        public FrameStream ReadFile(String name)
+        public Stream ReadFile(String name)
         {
             var entry = _fileDict[name];
             var stream = new FrameStream(_stream, entry.Offset, entry.Size);

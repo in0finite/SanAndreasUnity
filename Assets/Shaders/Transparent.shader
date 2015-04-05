@@ -21,8 +21,10 @@
                 
         CGPROGRAM
 
-        #pragma surface surf Lambert alpha:fade noshadow
+        #pragma surface surf StandardSpecular alpha:fade noshadow
         #pragma target 3.0
+        
+        #define FADE
 
         #include "Shared.cginc"
 
