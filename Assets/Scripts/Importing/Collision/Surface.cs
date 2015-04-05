@@ -1,13 +1,20 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace SanAndreasUnity.Importing.Collision
 {
+    [Flags]
+    public enum SurfaceFlags : byte
+    {
+        None = 0
+    }
+
     public struct Surface
     {
         public const int Size = 4 * sizeof(byte); //lol
 
         public readonly byte Material;
-        public readonly Flags Flags;
+        public readonly SurfaceFlags Flags;
         public readonly byte Brightness;
         public readonly byte Light;
 
@@ -15,12 +22,12 @@ namespace SanAndreasUnity.Importing.Collision
         {
             if (!simple) {
                 Material = reader.ReadByte();
-                Flags = (Flags) reader.ReadByte();
+                Flags = (SurfaceFlags) reader.ReadByte();
                 Brightness = reader.ReadByte();
                 Light = reader.ReadByte();
             } else {
                 Material = reader.ReadByte();
-                Flags = Flags.None;
+                Flags = SurfaceFlags.None;
                 Brightness = 0;
                 Light = reader.ReadByte();
             }

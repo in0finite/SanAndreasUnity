@@ -74,11 +74,11 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private readonly GameObject _template;
 
-        private void Add<TCollider>(Action<TCollider> setup)
+        private void Add<TCollider>(Surface surface, Action<TCollider> setup)
             where TCollider : Collider
         {
             var type = typeof (TCollider);
-            var obj = new GameObject(type.Name, type);
+            var obj = new GameObject(string.Format("{0} ({1:x2})", type.Name, (byte) surface.Flags), type);
             obj.transform.SetParent(_template.transform);
 
             setup(obj.GetComponent<TCollider>());
@@ -95,7 +95,7 @@ namespace SanAndreasUnity.Importing.Conversion
             _template.transform.SetParent(_sTemplateParent.transform);
 
             foreach (var box in file.Boxes) {
-                Add<BoxCollider>(x => {
+                Add<BoxCollider>(box.Surface, x => {
                     var min = Convert(box.Min);
                     var max = Convert(box.Max);
 
@@ -105,7 +105,7 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             foreach (var sphere in file.Spheres) {
-                Add<SphereCollider>(x => {
+                Add<SphereCollider>(sphere.Surface, x => {
                     x.center = Convert(sphere.Center);
                     x.radius = sphere.Radius;
                 });
@@ -113,12 +113,12 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (file.FaceGroups.Length > 0) {
                 foreach (var group in file.FaceGroups) {
-                    Add<MeshCollider>(x => {
+                    Add<MeshCollider>(file.Faces[group.StartFace].Surface, x => {
                         x.sharedMesh = Convert(group, file.Faces, file.Vertices);
                     });
                 }
             } else if (file.Faces.Length > 0) {
-                Add<MeshCollider>(x => {
+                Add<MeshCollider>(file.Faces[0].Surface, x => {
                     x.sharedMesh = Convert(file.Faces, file.Vertices);
                 });
             }
