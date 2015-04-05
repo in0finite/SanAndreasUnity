@@ -19,6 +19,22 @@ namespace SanAndreasUnity.Importing.Conversion
 
     public class Geometry
     {
+        private static Texture2D _sBlackTex;
+
+        protected static Texture2D BlackTex
+        {
+            get
+            {
+                if (_sBlackTex != null) return _sBlackTex;
+
+                _sBlackTex = new Texture2D(1, 1);
+                _sBlackTex.SetPixel(0, 0, Color.black);
+                _sBlackTex.Apply();
+
+                return _sBlackTex;
+            }
+        }
+
         private static int _sMainTexId = -1;
         protected static int MainTexId
         {
@@ -169,6 +185,8 @@ namespace SanAndreasUnity.Importing.Conversion
                 if (!string.IsNullOrEmpty(tex.MaskName)) {
                     mat.SetTexture(MaskTexId, txds.GetAlpha(tex.MaskName) ?? diffuse);
                 }
+            } else {
+                mat.SetTexture(MainTexId, BlackTex);
             }
 
 

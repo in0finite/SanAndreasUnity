@@ -112,6 +112,8 @@ namespace SanAndreasUnity.Behaviours
 
             name = def.GameName;
 
+            Debug.LogFormat("Loading vehicle {0}", name);
+
             _geometryParts = Geometry.Load(def.ModelName, 
                 TextureDictionary.Load(def.TextureDictionaryName),
                 TextureDictionary.Load("vehicle"),
