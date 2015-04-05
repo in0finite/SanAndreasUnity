@@ -137,12 +137,9 @@ namespace SanAndreasUnity.Importing.Conversion
                     Debug.LogFormat("Something has {0} textures!", src.TextureCount);
                 }
 
-                if (diffuse == null)
-                {
-                    Debug.LogWarning(tex.TextureName + " diffuse texture not found");
+                if (diffuse != null) {
+                    mat.SetTexture(MainTexId, diffuse);
                 }
-
-                mat.SetTexture(MainTexId, diffuse);
 
                 if (!string.IsNullOrEmpty(tex.MaskName)) {
                     mat.SetTexture(MaskTexId, txd.GetAlpha(tex.MaskName) ?? diffuse);

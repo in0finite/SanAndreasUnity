@@ -12,6 +12,7 @@ namespace SanAndreasUnity.Importing.Archive
         {
             public readonly UInt32 Offset;
             public readonly UInt32 Size;
+            public UInt32 End { get { return Offset + Size; } }
             public readonly String Name;
 
             public ImageArchiveEntry(BinaryReader reader)
@@ -30,11 +31,12 @@ namespace SanAndreasUnity.Importing.Archive
         }
 
         private readonly Stream _stream;
+        private readonly List<ImageArchiveEntry> _entries;
         private readonly Dictionary<String, ImageArchiveEntry> _fileDict;
         private readonly Dictionary<String, List<String>> _extDict;
 
         public readonly String Version;
-        public readonly UInt32 Length;
+        public readonly UInt32 EntryCount;
 
         private ImageArchive(Stream stream)
         {
@@ -42,13 +44,15 @@ namespace SanAndreasUnity.Importing.Archive
 
             var reader = new BinaryReader(stream);
             Version = new String(reader.ReadChars(4));
-            Length = reader.ReadUInt32();
+            EntryCount = reader.ReadUInt32();
 
+            _entries = new List<ImageArchiveEntry>();
             _fileDict = new Dictionary<string, ImageArchiveEntry>(StringComparer.InvariantCultureIgnoreCase);
             _extDict = new Dictionary<string, List<string>>(StringComparer.InvariantCultureIgnoreCase);
 
-            for (var i = 0; i < Length; ++i) {
+            for (var i = 0; i < EntryCount; ++i) {
                 var entry = new ImageArchiveEntry(reader);
+                _entries.Add(entry);
                 _fileDict.Add(entry.Name, entry);
 
                 var ext = Path.GetExtension(entry.Name);
@@ -70,6 +74,14 @@ namespace SanAndreasUnity.Importing.Archive
         public bool ContainsFile(String name)
         {
             return _fileDict.ContainsKey(name);
+        }
+
+        public string GetFileName(long offset)
+        {
+            if (_fileDict.Count == 0) return null;
+            if (offset < _entries.First().Offset) return null;
+            if (offset >= _entries.Last().End) return null;
+            return _entries.FirstOrDefault(x => x.Offset <= offset && x.End > offset).Name;
         }
 
         public FrameStream ReadFile(String name)
