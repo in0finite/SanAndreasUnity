@@ -137,6 +137,11 @@ namespace SanAndreasUnity.Importing.Conversion
                     Debug.LogFormat("Something has {0} textures!", src.TextureCount);
                 }
 
+                if (diffuse == null)
+                {
+                    Debug.LogWarning(tex.TextureName + " diffuse texture not found");
+                }
+
                 mat.SetTexture(MainTexId, diffuse);
 
                 if (!string.IsNullOrEmpty(tex.MaskName)) {
@@ -181,14 +186,44 @@ namespace SanAndreasUnity.Importing.Conversion
             return mesh;
         }
 
-        private static readonly Dictionary<string, Geometry[]> _sLoaded
-            = new Dictionary<string, Geometry[]>();
+        private static GeometryFrame Convert(RenderWareStream.FrameList.Frame src, RenderWareStream.Atomic[] atomics)
+        {
+            var atomic = atomics.FirstOrDefault(x => x.FrameIndex == src.Index);
 
-        public static Geometry[] Load(string modelName, string texDictName)
+            return new GeometryFrame
+            {
+                Name = src.Name.Value,
+                Position = Convert(src.Position),
+                Rotation = Quaternion.identity,
+                ParentIndex = src.ParentIndex,
+                GeometryIndex = atomic == null ? -1 : (int)atomic.GeometryIndex,
+            };
+        }
+
+        public class GeometryFrame
+        {
+            public string Name;
+            public UnityEngine.Vector3 Position;
+            public UnityEngine.Quaternion Rotation;
+
+            public int ParentIndex;
+            public int GeometryIndex;
+        }
+
+        public class GeometryParts
+        {
+            public Geometry[] Geometry;
+            public GeometryFrame[] Frames;
+        }
+
+        private static readonly Dictionary<string, GeometryParts> _sLoaded
+            = new Dictionary<string, GeometryParts>();
+
+        public static GeometryParts Load(string modelName, string texDictName)
         {
             modelName = modelName.ToLower();
 
-            Geometry[] loaded;
+            GeometryParts loaded;
 
             if (_sLoaded.ContainsKey(modelName)) {
                 return _sLoaded[modelName];
@@ -202,9 +237,16 @@ namespace SanAndreasUnity.Importing.Conversion
 
             var txd = TextureDictionary.Load(texDictName);
 
-            loaded = clump.GeometryList.Geometry
+            loaded = new GeometryParts
+            {
+                Geometry = clump.GeometryList.Geometry
                 .Select(x => new Geometry(x, Convert(x), txd))
-                .ToArray();
+                .ToArray(),
+
+                Frames = clump.FrameList.Frames
+                .Select(x => Convert(x, clump.Atomics))
+                .ToArray(),
+            };
 
             _sLoaded.Add(modelName, loaded);
 

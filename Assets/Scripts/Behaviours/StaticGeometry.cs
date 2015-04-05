@@ -103,8 +103,8 @@ namespace SanAndreasUnity.Behaviours
             var mf = gameObject.AddComponent<MeshFilter>();
             var mr = gameObject.AddComponent<MeshRenderer>();
 
-            mf.sharedMesh = geoms[0].Mesh;
-            mr.sharedMaterials = geoms[0].GetMaterials(Instance.Object.Flags,
+            mf.sharedMesh = geoms.Geometry[0].Mesh;
+            mr.sharedMaterials = geoms.Geometry[0].GetMaterials(Instance.Object.Flags,
                 mat => mat.SetTexture(NoiseTexId, NoiseTex));
 
             CollisionModel.Load(Instance.Object.ModelName, transform);
