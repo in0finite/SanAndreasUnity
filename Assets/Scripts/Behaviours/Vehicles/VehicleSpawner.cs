@@ -37,7 +37,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             if (HasLoaded) return float.PositiveInfinity;
             var dist = Vector3.Distance(from, transform.position);
-            return dist > 100f ? float.PositiveInfinity : dist;
+            if (dist > 100f) return float.PositiveInfinity;
+
+            var ray = new Ray(transform.position, Vector3.down);
+            if (!Physics.Raycast(ray, 2f)) return float.PositiveInfinity;
+
+            return dist;
         }
 
         protected override void OnLoad()
