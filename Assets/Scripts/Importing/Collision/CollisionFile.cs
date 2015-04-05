@@ -38,7 +38,9 @@ namespace SanAndreasUnity.Importing.Collision
 
             private CollisionFile Load()
             {
-                return new CollisionFile(this);
+                using (var stream = ArchiveManager.ReadFile(FileName)) {
+                    return new CollisionFile(this, stream);
+                }
             }
         }
 
@@ -73,15 +75,22 @@ namespace SanAndreasUnity.Importing.Collision
             }
         }
 
+        public static CollisionFile Load(Stream stream)
+        {
+            var reader = new BinaryReader(stream);
+            var version = (Version) Enum.Parse(typeof(Version), reader.ReadString(4));
+            var info = new CollisionFileInfo(reader, null, version);
+
+            return new CollisionFile(info, stream);
+        }
+
         public static CollisionFile FromName(String name)
         {
             return _sModelNameDict.ContainsKey(name) ? _sModelNameDict[name].Value : null;
         }
 
-        private readonly CollisionFileInfo _info;
-
-        public string Name { get { return _info.Name; } }
-        public int ModelId { get { return _info.ModelId; } }
+        public readonly string Name;
+        public readonly int ModelId;
 
         public readonly Bounds Bounds;
         public readonly Flags Flags;
@@ -92,120 +101,120 @@ namespace SanAndreasUnity.Importing.Collision
         public readonly FaceGroup[] FaceGroups;
         public readonly Face[] Faces;
 
-        private CollisionFile(CollisionFileInfo info)
+        private CollisionFile(CollisionFileInfo info, Stream stream)
         {
-            _info = info;
+            Name = info.Name;
+            ModelId = info.ModelId;
 
             var version = info.Version;
 
-            using (var stream = ArchiveManager.ReadFile(info.FileName))
-            using (var reader = new BinaryReader(stream)) {
-                stream.Seek(info.Offset + 28, SeekOrigin.Begin);
+            var reader = new BinaryReader(stream);
 
-                Bounds = new Bounds(reader, version);
+            stream.Seek(info.Offset + 28, SeekOrigin.Begin);
 
-                int spheres, boxes, verts, faces, faceGroups;
-                long spheresOffset, boxesOffset, vertsOffset,
-                    facesOffset, faceGroupsOffset;
+            Bounds = new Bounds(reader, version);
 
-                switch (version) {
-                    case Version.COLL: {
-                        spheres = reader.ReadInt32();
-                        spheresOffset = stream.Position;
-                        stream.Seek(spheres * Sphere.Size, SeekOrigin.Current);
+            int spheres, boxes, verts, faces, faceGroups;
+            long spheresOffset, boxesOffset, vertsOffset,
+                facesOffset, faceGroupsOffset;
 
-                        reader.ReadInt32();
+            switch (version) {
+                case Version.COLL: {
+                    spheres = reader.ReadInt32();
+                    spheresOffset = stream.Position;
+                    stream.Seek(spheres * Sphere.Size, SeekOrigin.Current);
 
-                        boxes = reader.ReadInt32();
-                        boxesOffset = stream.Position;
-                        stream.Seek(boxes * Box.Size, SeekOrigin.Current);
+                    reader.ReadInt32();
 
-                        verts = reader.ReadInt32();
-                        vertsOffset = stream.Position;
-                        stream.Seek(verts * Vertex.SizeV1, SeekOrigin.Current);
+                    boxes = reader.ReadInt32();
+                    boxesOffset = stream.Position;
+                    stream.Seek(boxes * Box.Size, SeekOrigin.Current);
 
-                        faces = reader.ReadInt32();
-                        facesOffset = stream.Position;
+                    verts = reader.ReadInt32();
+                    vertsOffset = stream.Position;
+                    stream.Seek(verts * Vertex.SizeV1, SeekOrigin.Current);
 
+                    faces = reader.ReadInt32();
+                    facesOffset = stream.Position;
+
+                    faceGroups = 0;
+                    faceGroupsOffset = 0;
+
+                    break;
+                }
+                default: {
+                    spheres = reader.ReadUInt16();
+                    boxes = reader.ReadUInt16();
+                    faces = reader.ReadUInt16();
+                    reader.ReadInt16();
+
+                    Flags = (Flags) reader.ReadInt32();
+
+                    spheresOffset = reader.ReadUInt32() + info.Offset;
+                    boxesOffset = reader.ReadUInt32() + info.Offset;
+                    reader.ReadUInt32();
+                    vertsOffset = reader.ReadUInt32() + info.Offset;
+                    facesOffset = reader.ReadUInt32() + info.Offset;
+
+                    if (faces > 0 && (Flags & Flags.HasFaceGroups) == Flags.HasFaceGroups) {
+                        stream.Seek(facesOffset - 4, SeekOrigin.Begin);
+                        faceGroups = reader.ReadInt32();
+                        faceGroupsOffset = facesOffset - 4 - FaceGroup.Size * faceGroups;
+                    } else {
                         faceGroups = 0;
                         faceGroupsOffset = 0;
-
-                        break;
                     }
-                    default: {
-                        spheres = reader.ReadUInt16();
-                        boxes = reader.ReadUInt16();
-                        faces = reader.ReadUInt16();
-                        reader.ReadInt16();
 
-                        Flags = (Flags) reader.ReadInt32();
+                    verts = -1;
 
-                        spheresOffset = reader.ReadUInt32() + info.Offset;
-                        boxesOffset = reader.ReadUInt32() + info.Offset;
-                        reader.ReadUInt32();
-                        vertsOffset = reader.ReadUInt32() + info.Offset;
-                        facesOffset = reader.ReadUInt32() + info.Offset;
+                    break;
+                }
+            }
 
-                        if (faces > 0 && (Flags & Flags.HasFaceGroups) == Flags.HasFaceGroups) {
-                            stream.Seek(facesOffset - 4, SeekOrigin.Begin);
-                            faceGroups = reader.ReadInt32();
-                            faceGroupsOffset = facesOffset - 4 - FaceGroup.Size * faceGroups;
-                        } else {
-                            faceGroups = 0;
-                            faceGroupsOffset = 0;
-                        }
+            Spheres = new Sphere[spheres];
+            Boxes = new Box[boxes];
+            Faces = new Face[faces];
+            FaceGroups = new FaceGroup[faceGroups];
 
-                        verts = -1;
+            if (spheres > 0) {
+                stream.Seek(spheresOffset, SeekOrigin.Begin);
+                for (var i = 0; i < spheres; ++i) {
+                    Spheres[i] = new Sphere(reader, version);
+                }
+            }
 
-                        break;
-                    }
+            if (boxes > 0) {
+                stream.Seek(boxesOffset, SeekOrigin.Begin);
+                for (var i = 0; i < boxes; ++i) {
+                    Boxes[i] = new Box(reader, version);
+                }
+            }
+
+            if (faces > 0) {
+                stream.Seek(facesOffset, SeekOrigin.Begin);
+                for (var i = 0; i < faces; ++i) {
+                    Faces[i] = new Face(reader, version);
                 }
 
-                Spheres = new Sphere[spheres];
-                Boxes = new Box[boxes];
-                Faces = new Face[faces];
-                FaceGroups = new FaceGroup[faceGroups];
-
-                if (spheres > 0) {
-                    stream.Seek(spheresOffset, SeekOrigin.Begin);
-                    for (var i = 0; i < spheres; ++i) {
-                        Spheres[i] = new Sphere(reader, version);
-                    }
+                if (verts == -1) {
+                    verts = Faces.Max(x => x.GetIndices().Max()) + 1;
                 }
 
-                if (boxes > 0) {
-                    stream.Seek(boxesOffset, SeekOrigin.Begin);
-                    for (var i = 0; i < boxes; ++i) {
-                        Boxes[i] = new Box(reader, version);
-                    }
+                Vertices = new Vertex[verts];
+
+                stream.Seek(vertsOffset, SeekOrigin.Begin);
+                for (var i = 0; i < verts; ++i) {
+                    Vertices[i] = new Vertex(reader, version);
                 }
 
-                if (faces > 0) {
-                    stream.Seek(facesOffset, SeekOrigin.Begin);
-                    for (var i = 0; i < faces; ++i) {
-                        Faces[i] = new Face(reader, version);
+                if (faceGroups > 0) {
+                    stream.Seek(faceGroupsOffset, SeekOrigin.Begin);
+                    for (var i = 0; i < faceGroups; ++i) {
+                        FaceGroups[i] = new FaceGroup(reader);
                     }
-
-                    if (verts == -1) {
-                        verts = Faces.Max(x => x.GetIndices().Max()) + 1;
-                    }
-
-                    Vertices = new Vertex[verts];
-
-                    stream.Seek(vertsOffset, SeekOrigin.Begin);
-                    for (var i = 0; i < verts; ++i) {
-                        Vertices[i] = new Vertex(reader, version);
-                    }
-
-                    if (faceGroups > 0) {
-                        stream.Seek(faceGroupsOffset, SeekOrigin.Begin);
-                        for (var i = 0; i < faceGroups; ++i) {
-                            FaceGroups[i] = new FaceGroup(reader);
-                        }
-                    }
-                } else {
-                    Vertices = new Vertex[0];
                 }
+            } else {
+                Vertices = new Vertex[0];
             }
         }
     }

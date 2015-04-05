@@ -16,6 +16,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly GeometryList GeometryList;
         public readonly Atomic[] Atomics;
 
+        public readonly Collision.CollisionFile Collision;
+
         public Clump(SectionHeader header, Stream stream)
         {
             var data = Section<Data>.ReadData(stream); // Struct
@@ -37,6 +39,15 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                 Atomics[i] = Section<Atomic>.ReadData(stream); // Atomic
             }
 
+            var section = Section<SectionData>.ReadData(stream);
+            var extension = section as Extension;
+
+            if (extension != null) {
+                var collision = extension.FirstOrDefault<CollisionModel>();
+                if (collision != null) {
+                    Collision = collision.Collision;
+                }
+            }
         }
     }
 }
