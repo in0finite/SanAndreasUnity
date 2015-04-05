@@ -36,7 +36,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Collider.suspensionDistance = 0.2f;
 
                 var spring = wheel.Collider.suspensionSpring;
-                spring.targetPosition = 1.0f;
+                spring.targetPosition = 0.5f;
                 spring.damper = HandlingData.SuspensionDampingLevel;
                 wheel.Collider.suspensionSpring = spring;
             }
