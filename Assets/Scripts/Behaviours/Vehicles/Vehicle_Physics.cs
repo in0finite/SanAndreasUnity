@@ -1,13 +1,11 @@
 ﻿using SanAndreasUnity.Importing.Vehicles;
 using UnityEngine;
+using VConsts = SanAndreasUnity.Behaviours.Vehicles.VehiclePhysicsConstants;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
     public partial class Vehicle
     {
-        public float DragScale = 1 / 100f;
-        public float AccelScale = 10f;
-
         private Rigidbody _rigidBody;
 
         [Range(-1, 1)]
@@ -23,8 +21,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             HandlingData = Handling.Get<Handling.Car>(Definition.HandlingName);
 
+            VConsts.Changed += UpdateValues;
+
             _rigidBody.mass = HandlingData.Mass;
-            _rigidBody.drag = HandlingData.Drag * DragScale;
             _rigidBody.centerOfMass = HandlingData.CentreOfMass;
 
             foreach (var wheel in _wheels)
@@ -40,13 +39,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
+        private void UpdateValues(VConsts vals)
+        {
+            _rigidBody.drag = HandlingData.Drag * vals.DragScale;
+        }
+
         private void FixedUpdate()
         {
-            _rigidBody.drag = HandlingData.Drag * DragScale;
-
             foreach (var wheel in _wheels)
             {
-                wheel.Collider.motorTorque = Accelerator * HandlingData.TransmissionEngineAccel * AccelScale;
+                wheel.Collider.motorTorque = Accelerator
+                    * HandlingData.TransmissionEngineAccel
+                    * VConsts.Instance.AccelerationScale;
             }
         }
     }

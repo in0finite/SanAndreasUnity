@@ -32,6 +32,7 @@ namespace SanAndreasUnity.Importing.Vehicles
             HexNumber = 1
         }
 
+        [AttributeUsage(AttributeTargets.Property)]
         private class ColumnAttribute : Attribute
         {
             public readonly int Value;
@@ -49,6 +50,7 @@ namespace SanAndreasUnity.Importing.Vehicles
             }
         }
 
+        [AttributeUsage(AttributeTargets.Class)]
         private class PrefixAttribute : Attribute
         {
             public readonly char Value;
