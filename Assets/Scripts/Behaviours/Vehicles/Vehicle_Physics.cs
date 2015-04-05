@@ -4,6 +4,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 {
     public partial class Vehicle
     {
+        [Range(-500, 500)]
         public float MotorTorque;
 
         private void InitializePhysics()
