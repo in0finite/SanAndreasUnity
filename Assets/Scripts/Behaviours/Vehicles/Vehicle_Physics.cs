@@ -13,8 +13,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [Range(-1, 1)]
         public float Accelerator;
 
-        [Range(-45, 45)]
-        public float SteerAngle;
+        [Range(-1, 1)]
+        public float Steering;
 
         public Handling.Car HandlingData { get; private set; }
 
@@ -52,7 +52,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (wheel.Alignment == WheelAlignment.RightFront ||
                     wheel.Alignment == WheelAlignment.LeftFront)
                 {
-                    wheel.Collider.steerAngle = SteerAngle;
+                    wheel.Collider.steerAngle = HandlingData.SteeringLock * Steering;
                 }
 
                 wheel.Collider.motorTorque = Accelerator * HandlingData.TransmissionEngineAccel * AccelScale;
