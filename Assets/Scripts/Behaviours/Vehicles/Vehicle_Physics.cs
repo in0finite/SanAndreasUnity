@@ -5,8 +5,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 {
     public partial class Vehicle
     {
-        [Range(-500, 500)]
-        public float MotorTorque;
+        public float DragScale = 1 / 100f;
+        public float AccelScale = 10f;
+
+        private Rigidbody _rigidBody;
+
+        [Range(-1, 1)]
+        public float Accelerator;
 
         public Handling.Car HandlingData { get; private set; }
 
@@ -14,11 +19,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             _geometryParts.AttachCollisionModel(transform, true);
 
-            var rb = gameObject.AddComponent<Rigidbody>();
+            _rigidBody = gameObject.AddComponent<Rigidbody>();
 
             HandlingData = Handling.Get<Handling.Car>(Definition.HandlingName);
 
-            rb.mass = HandlingData.Mass;
+            _rigidBody.mass = HandlingData.Mass;
+            _rigidBody.drag = HandlingData.Drag * DragScale;
+            _rigidBody.centerOfMass = HandlingData.CentreOfMass;
 
             foreach (var wheel in _wheels)
             {
@@ -28,15 +35,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 var spring = wheel.Collider.suspensionSpring;
                 spring.targetPosition = 1.0f;
+                spring.damper = HandlingData.SuspensionDampingLevel;
                 wheel.Collider.suspensionSpring = spring;
             }
         }
 
         private void FixedUpdate()
         {
+            _rigidBody.drag = HandlingData.Drag * DragScale;
+
             foreach (var wheel in _wheels)
             {
-                wheel.Collider.motorTorque = MotorTorque;
+                wheel.Collider.motorTorque = Accelerator * HandlingData.TransmissionEngineAccel * AccelScale;
             }
         }
     }
