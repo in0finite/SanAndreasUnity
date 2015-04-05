@@ -94,12 +94,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             transform.position = spawner.transform.position + Vector3.up * 1f;
             transform.localRotation = spawner.transform.localRotation;
 
-            var def = Cell.GameData.GetDefinition<VehicleDef>(spawner.Info.CarId);
+            Definition = Cell.GameData.GetDefinition<VehicleDef>(spawner.Info.CarId);
 
-            name = def.GameName;
+            name = Definition.GameName;
 
-            _geometryParts = Geometry.Load(def.ModelName,
-                TextureDictionary.Load(def.TextureDictionaryName),
+            _geometryParts = Geometry.Load(Definition.ModelName,
+                TextureDictionary.Load(Definition.TextureDictionaryName),
                 TextureDictionary.Load("vehicle"),
                 TextureDictionary.Load("misc"));
 

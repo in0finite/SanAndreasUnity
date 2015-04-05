@@ -9,6 +9,7 @@ using SanAndreasUnity.Importing.Items.Placements;
 using System.IO;
 using SanAndreasUnity.Behaviours.Player;
 using SanAndreasUnity.Behaviours.Vehicles;
+using SanAndreasUnity.Importing.Vehicles;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -62,6 +63,8 @@ namespace SanAndreasUnity.Behaviours.World
                 timer.Start();
                 GameData = new GameData(ArchiveManager.GetPath("data", "gta.dat"));
                 GameData.ReadIde("data/vehicles.ide");
+
+                Handling.Load(ArchiveManager.GetPath("data", "handling.cfg"));
                 timer.Stop();
 
                 UnityEngine.Debug.LogFormat("Game Data load time: {0} ms", timer.Elapsed.TotalMilliseconds);

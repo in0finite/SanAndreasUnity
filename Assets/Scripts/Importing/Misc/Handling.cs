@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 
 namespace SanAndreasUnity.Importing.Vehicles
@@ -23,10 +25,28 @@ namespace SanAndreasUnity.Importing.Vehicles
 
     public static class Handling
     {
+        [Flags]
+        private enum ColumnFlags
+        {
+            Default = 0,
+            HexNumber = 1
+        }
+
         private class ColumnAttribute : Attribute
         {
             public readonly int Value;
-            public ColumnAttribute(int value) { Value = value; }
+            public readonly ColumnFlags Flags;
+
+            public bool IsHexNumber
+            {
+                get {  return (Flags & ColumnFlags.HexNumber) == ColumnFlags.HexNumber; }
+            }
+
+            public ColumnAttribute(int value, ColumnFlags flags = ColumnFlags.Default)
+            {
+                Value = value;
+                Flags = flags;
+            }
         }
 
         private class PrefixAttribute : Attribute
@@ -54,9 +74,10 @@ namespace SanAndreasUnity.Importing.Vehicles
                 var type = typeof(TEntry);
 
                 var selfParam = Expression.Parameter(type, "self");
+                var hexNumConst = Expression.Constant(NumberStyles.HexNumber);
                 var valParam = Expression.Parameter(typeof(String), "val");
 
-                foreach (var prop in type.GetProperties()) {
+                foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
                     var attrib = (ColumnAttribute) prop.GetCustomAttributes(typeof(ColumnAttribute), true).FirstOrDefault();
                     if (attrib == null) continue;
 
@@ -65,15 +86,27 @@ namespace SanAndreasUnity.Importing.Vehicles
                         throw new Exception("Set method is inaccessible");
                     }
 
-                    var convert = typeof(Convert).GetMethod("To" + prop.PropertyType.Name,
-                        System.Reflection.BindingFlags.Static, null, new Type[] { typeof(String) }, null);
+                    Expression input = valParam;
 
-                    if (convert == null) {
-                        throw new Exception(String.Format("Cannot convert a string to {0}", prop.PropertyType));
+                    if (prop.PropertyType != typeof(string)) {
+                        var argTypes = attrib.IsHexNumber
+                            ? new [] { typeof(string), typeof(NumberStyles) }
+                            : new [] { typeof(string) };
+                        
+                        var convert = prop.PropertyType.GetMethod("Parse",
+                            BindingFlags.Static | BindingFlags.Public,
+                            null, argTypes, null);
+
+                        if (convert == null) {
+                            throw new Exception(String.Format("Cannot convert a string to {0}", prop.PropertyType));
+                        }
+
+                        input = attrib.IsHexNumber
+                            ? Expression.Call(convert, input, hexNumConst)
+                            : Expression.Call(convert, input);
                     }
 
-                    var convertCall = Expression.Call(convert, valParam);
-                    var setCall = Expression.Call(selfParam, set, convertCall);
+                    var setCall = Expression.Call(selfParam, set, input);
                     var lambda = Expression.Lambda<Action<TEntry, string>>(
                         setCall, selfParam, valParam).Compile();
 
@@ -136,8 +169,8 @@ namespace SanAndreasUnity.Importing.Vehicles
             [Column(29)] public float CollisionDamageMult { get; set; }
             [Column(30)] public int MonetaryValue { get; set; }
 
-            [Column(31)] private uint _ModelFlags { get; set; }
-            [Column(32)] private uint _HandlingFlags { get; set; }
+            [Column(31, ColumnFlags.HexNumber)] private ulong _ModelFlags { get; set; }
+            [Column(32, ColumnFlags.HexNumber)] private ulong _HandlingFlags { get; set; }
 
             [Column(33)] private int _FrontLights { get; set; }
             [Column(34)] private int _RearLights { get; set; }
@@ -191,6 +224,8 @@ namespace SanAndreasUnity.Importing.Vehicles
             var param = Expression.Parameter(typeof(String), "line");
 
             foreach (var type in typeof(Handling).GetNestedTypes()) {
+                if (type.IsAbstract) continue;
+                if (type.IsInterface) continue;
                 if (!typeof(IEntry).IsAssignableFrom(type)) continue;
                 var attrib = (PrefixAttribute) type.GetCustomAttributes(typeof(PrefixAttribute), true).FirstOrDefault();
                 var prefix = attrib != null ? attrib.Value : '\0';
@@ -206,6 +241,10 @@ namespace SanAndreasUnity.Importing.Vehicles
 
         public static void Load(string path)
         {
+            if (_sCtors == null) {
+                GenerateCtors();
+            }
+
             using (var reader = File.OpenText(path)) {
                 string line;
                 while ((line = reader.ReadLine()) != null) {
