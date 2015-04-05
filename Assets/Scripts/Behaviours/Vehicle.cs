@@ -38,21 +38,12 @@ namespace SanAndreasUnity.Behaviours
             return inst;
         }
 
-        private void AddPart(Geometry.GeometryFrame frame)
+        private void AddPart(Geometry.GeometryFrame frame, Transform parent)
         {
             var child = new GameObject();
             child.name = frame.Name;
 
-            var parentIndex = frame.ParentIndex;
-
-            if (parentIndex < 0)
-            {
-                child.transform.SetParent(transform, false);
-            }
-            else
-            {
-                child.transform.SetParent(_children[parentIndex], false);
-            }
+            child.transform.SetParent(parent, false);
 
             child.transform.localPosition = frame.Position;
             child.transform.localRotation = frame.Rotation;
@@ -100,7 +91,32 @@ namespace SanAndreasUnity.Behaviours
                     _wheelFrameIndex = i;
                 }
 
-                AddPart(frame);
+                Transform parent;
+                var parentIndex = frame.ParentIndex;
+
+                if (parentIndex < 0)
+                {
+                    parent = transform;
+                }
+                else
+                {
+                   parent = _children[parentIndex];
+                }
+
+                AddPart(frame, parent);
+            }
+
+            for (int i = 0; i < _geometryParts.Frames.Length; ++i)
+            {
+                var frame = _geometryParts.Frames[i];
+
+                if (frame.Name.EndsWith("_dummy"))
+                {
+                    if (frame.Name.StartsWith("wheel_") && !frame.Name.StartsWith("wheel_rf_"))
+                    {
+                        AddPart(_geometryParts.Frames[_wheelFrameIndex], _children[i]);
+                    }
+                }
             }
         }
     }
