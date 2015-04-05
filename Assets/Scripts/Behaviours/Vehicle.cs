@@ -27,6 +27,8 @@ namespace SanAndreasUnity.Behaviours
         private List<Transform> _children = new List<Transform>();
         private Geometry.GeometryParts _geometryParts;
 
+        private List<GameObject> _wheels = new List<GameObject>();
+
         private WheelAlignment GetWheelAlignment(string frameName)
         {
             switch (frameName)
@@ -35,12 +37,24 @@ namespace SanAndreasUnity.Behaviours
                     return WheelAlignment.RightFront;
                 case "wheel_lf_dummy":
                     return WheelAlignment.LeftFront;
+                case "wheel_rm_dummy":
+                    return WheelAlignment.RightMid;
+                case "wheel_lm_dummy":
+                    return WheelAlignment.LeftMid;
                 case "wheel_rb_dummy":
                     return WheelAlignment.RightBack;
                 case "wheel_lb_dummy":
                     return WheelAlignment.LeftBack;
                 default :
                     return WheelAlignment.None;
+            }
+        }
+
+        private void Update()
+        {
+            foreach (var wheel in _wheels)
+            {
+                wheel.transform.Rotate(Vector3.left, Time.deltaTime * 500.0f);
             }
         }
 
@@ -56,7 +70,7 @@ namespace SanAndreasUnity.Behaviours
             return inst;
         }
 
-        private void AddPart(Geometry.GeometryFrame frame, Transform parent)
+        private GameObject AddPart(Geometry.GeometryFrame frame, Transform parent)
         {
             var child = new GameObject();
             child.name = frame.Name;
@@ -68,25 +82,25 @@ namespace SanAndreasUnity.Behaviours
 
             _children.Add(child.transform);
 
-            if (frame.GeometryIndex < 0)
+            if (frame.GeometryIndex != -1)
             {
-                return;
+                var mf = child.AddComponent<MeshFilter>();
+                var mr = child.AddComponent<MeshRenderer>();
+
+                var geometry = _geometryParts.Geometry[frame.GeometryIndex];
+
+                mf.sharedMesh = geometry.Mesh;
+                mr.sharedMaterials = geometry.GetMaterials();
+
+                // filter these out for now
+                if (frame.Name.EndsWith("_vlo") ||
+                    frame.Name.EndsWith("_dam"))
+                {
+                    child.SetActive(false);
+                }
             }
 
-            var mf = child.AddComponent<MeshFilter>();
-            var mr = child.AddComponent<MeshRenderer>();
-
-            var geometry = _geometryParts.Geometry[frame.GeometryIndex];
-
-            mf.sharedMesh = geometry.Mesh;
-            mr.sharedMaterials = geometry.GetMaterials();
-
-            // filter these out for now
-            if (frame.Name.EndsWith("_vlo") ||
-                frame.Name.EndsWith("_dam"))
-            {
-                child.SetActive(false);
-            }
+            return child;
         }
 
         private void Initialize(VehicleSpawner spawner)
@@ -134,7 +148,13 @@ namespace SanAndreasUnity.Behaviours
 
                     if (wheelAlignment != WheelAlignment.RightFront)
                     {
-                        AddPart(_geometryParts.Frames[_wheelFrameIndex], _children[i]);
+                        var child = AddPart(_geometryParts.Frames[_wheelFrameIndex], _children[i]);
+
+                        _wheels.Add(child);
+                    }
+                    else
+                    {
+                        _wheels.Add(_children[_wheelFrameIndex].gameObject);
                     }
 
                     if (wheelAlignment == WheelAlignment.LeftFront ||
