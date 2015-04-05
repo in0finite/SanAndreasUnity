@@ -73,13 +73,21 @@ namespace SanAndreasUnity.Importing.Conversion
         }
 
         private readonly GameObject _template;
+        private readonly Dictionary<SurfaceFlags, Transform> _flagGroups;
 
         private void Add<TCollider>(Surface surface, Action<TCollider> setup)
             where TCollider : Collider
         {
+            if (!_flagGroups.ContainsKey(surface.Flags)) {
+                var group = new GameObject(string.Format("Group {0}", (int) surface.Flags));
+                group.transform.SetParent(_template.transform);
+
+                _flagGroups.Add(surface.Flags, group.transform);
+            }
+
             var type = typeof (TCollider);
-            var obj = new GameObject(string.Format("{0} ({1:x2})", type.Name, (byte) surface.Flags), type);
-            obj.transform.SetParent(_template.transform);
+            var obj = new GameObject(type.Name, type);
+            obj.transform.SetParent(_flagGroups[surface.Flags]);
 
             setup(obj.GetComponent<TCollider>());
         }
@@ -93,6 +101,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
             _template = new GameObject(file.Name);
             _template.transform.SetParent(_sTemplateParent.transform);
+
+            _flagGroups = new Dictionary<SurfaceFlags,Transform>();
 
             foreach (var box in file.Boxes) {
                 Add<BoxCollider>(box.Surface, x => {
