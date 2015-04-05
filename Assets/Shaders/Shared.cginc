@@ -1,9 +1,13 @@
 ﻿sampler2D _MainTex;
 sampler2D _MaskTex;
 
-#ifdef ENV_MAP
+#ifdef SPECULAR
 float _Specular;
 float _Smoothness;
+#endif
+
+#ifdef ALPHA
+float _Alpha;
 #endif
 
 #ifdef FADE
@@ -32,9 +36,14 @@ void surf(Input IN, inout SurfaceOutputStandardSpecular o)
     half mask = tex2D(_MaskTex, IN.uv_MainTex).a;
 
     o.Albedo = clr * IN.color.rgb;
+
+#ifdef ALPHA
+    o.Alpha = fade * mask * IN.color.a * _Alpha;
+#else
     o.Alpha = fade * mask * IN.color.a;
-    
-#ifdef ENV_MAP
+#endif
+
+#ifdef SPECULAR
     o.Specular = _Specular;
     o.Smoothness = _Smoothness;
 #else

@@ -31,6 +31,18 @@ namespace SanAndreasUnity.Importing.Conversion
             get { return _sMaskTexId == -1 ? _sMaskTexId = Shader.PropertyToID("_MaskTex") : _sMaskTexId; }
         }
 
+        private static int _sSpecularId = -1;
+        protected static int SpecularId
+        {
+            get { return _sSpecularId == -1 ? _sSpecularId = Shader.PropertyToID("_Specular") : _sSpecularId; }
+        }
+
+        private static int _sSmoothnessId = -1;
+        protected static int SmoothnessId
+        {
+            get { return _sSmoothnessId == -1 ? _sSmoothnessId = Shader.PropertyToID("_Smoothness") : _sSmoothnessId; }
+        }
+
         private static UnityEngine.Vector2 Convert(Vector2 vec)
         {
             return new UnityEngine.Vector2(vec.X, vec.Y);
@@ -158,6 +170,7 @@ namespace SanAndreasUnity.Importing.Conversion
                     mat.SetTexture(MaskTexId, txds.GetAlpha(tex.MaskName) ?? diffuse);
                 }
             }
+
 
             return mat;
         }

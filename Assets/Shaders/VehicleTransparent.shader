@@ -1,4 +1,4 @@
-﻿Shader "SanAndreasUnity/Vehicle"
+﻿Shader "SanAndreasUnity/VehicleTransparent"
 {
     Properties
     {
@@ -9,24 +9,25 @@
         _Specular ("Specular", Range(0.0, 1.0)) = 0.5
         _Smoothness ("Smoothness", Range(0.0, 1.0)) = 0.5
 
-        _AlphaCutoff ("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
+        _Alpha ("Alpha", Range(0.0, 1.0)) = 0.5
     }
 
     SubShader
     {
         Tags {
-            "RenderType" = "Opaque"
-            "Queue" = "Geometry"
+            "RenderType" = "Transparent"
+            "Queue" = "Transparent"
         }
 
         LOD 200
         
         CGPROGRAM
 
-        #pragma surface surf StandardSpecular addshadow alphatest:_AlphaCutoff
+        #pragma surface surf StandardSpecular addshadow alpha
         #pragma target 3.0
 
         #define SPECULAR
+        #define ALPHA
 
         #include "Shared.cginc"
 
