@@ -49,17 +49,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             foreach (var wheel in _wheels)
             {
-<<<<<<< HEAD
-                wheel.Collider.motorTorque = MotorTorque;
-
                 if (wheel.Alignment == WheelAlignment.RightFront ||
                     wheel.Alignment == WheelAlignment.LeftFront)
                 {
                     wheel.Collider.steerAngle = SteerAngle;
                 }
-=======
+
                 wheel.Collider.motorTorque = Accelerator * HandlingData.TransmissionEngineAccel * AccelScale;
->>>>>>> 1c8c37b8b39669b3b50276c2f273f124bc2aeb93
             }
         }
     }
