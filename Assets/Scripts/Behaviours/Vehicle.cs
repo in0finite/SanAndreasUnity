@@ -13,6 +13,7 @@ namespace SanAndreasUnity.Behaviours
     {
         public enum WheelAlignment
         {
+            None,
             RightFront,
             LeftFront,
             RightMid,
@@ -25,6 +26,23 @@ namespace SanAndreasUnity.Behaviours
 
         private List<Transform> _children = new List<Transform>();
         private Geometry.GeometryParts _geometryParts;
+
+        private WheelAlignment GetWheelAlignment(string frameName)
+        {
+            switch (frameName)
+            {
+                case "wheel_rf_dummy" :
+                    return WheelAlignment.RightFront;
+                case "wheel_lf_dummy":
+                    return WheelAlignment.LeftFront;
+                case "wheel_rb_dummy":
+                    return WheelAlignment.RightBack;
+                case "wheel_lb_dummy":
+                    return WheelAlignment.LeftBack;
+                default :
+                    return WheelAlignment.None;
+            }
+        }
 
         public static Vehicle Create(VehicleSpawner spawner)
         {
@@ -110,9 +128,11 @@ namespace SanAndreasUnity.Behaviours
             {
                 var frame = _geometryParts.Frames[i];
 
-                if (frame.Name.EndsWith("_dummy"))
+                if (frame.Name.StartsWith("wheel_"))
                 {
-                    if (frame.Name.StartsWith("wheel_") && !frame.Name.StartsWith("wheel_rf_"))
+                    var wheelAlignment = GetWheelAlignment(frame.Name);
+
+                    if (wheelAlignment != WheelAlignment.RightFront)
                     {
                         AddPart(_geometryParts.Frames[_wheelFrameIndex], _children[i]);
                     }
