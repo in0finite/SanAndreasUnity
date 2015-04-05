@@ -404,7 +404,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DragScale: .00999999978
-  AccelerationScale: 10
+  AccelerationScale: 50
 --- !u!4 &1843689728
 Transform:
   m_ObjectHideFlags: 0

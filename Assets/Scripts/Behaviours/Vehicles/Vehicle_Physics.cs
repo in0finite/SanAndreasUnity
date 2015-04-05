@@ -56,7 +56,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 {
                     wheel.Collider.steerAngle = HandlingData.SteeringLock * Steering;
                 }
-
                
                 wheel.Collider.motorTorque = Accelerator
                     * HandlingData.TransmissionEngineAccel

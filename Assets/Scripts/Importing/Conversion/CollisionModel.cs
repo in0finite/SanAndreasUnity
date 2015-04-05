@@ -150,8 +150,6 @@ namespace SanAndreasUnity.Importing.Conversion
 
                 if (meshCollider != null) {
                     meshCollider.convex = true;
-                } else {
-                    collider.gameObject.SetActive(false);
                 }
             }
         }
