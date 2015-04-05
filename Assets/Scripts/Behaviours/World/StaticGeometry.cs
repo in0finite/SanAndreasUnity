@@ -107,7 +107,7 @@ namespace SanAndreasUnity.Behaviours.World
             mr.sharedMaterials = geoms.Geometry[0].GetMaterials(Instance.Object.Flags,
                 mat => mat.SetTexture(NoiseTexId, NoiseTex));
 
-            CollisionModel.Load(Instance.Object.ModelName, transform);
+            geoms.AttachCollisionModel(transform);
         }
 
         protected override void OnShow()

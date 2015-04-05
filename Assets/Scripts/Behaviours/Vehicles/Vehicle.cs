@@ -165,6 +165,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     }
                 }
             }
+
+            _geometryParts.AttachCollisionModel(transform);
         }
     }
 }

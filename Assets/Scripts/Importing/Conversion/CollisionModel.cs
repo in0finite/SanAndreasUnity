@@ -40,6 +40,16 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public static void Load(string name, Transform destParent)
         {
+            Load(name, null, destParent);
+        }
+
+        public static void Load(CollisionFile file, Transform destParent)
+        {
+            Load(file.Name, file, destParent);
+        }
+
+        private static void Load(string name, CollisionFile file, Transform destParent)
+        {
             CollisionModel col;
 
             if (_sLoaded.ContainsKey(name)) {
@@ -50,7 +60,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 return;
             }
 
-            var file = CollisionFile.FromName(name);
+            file = file ?? CollisionFile.FromName(name);
             if (file == null || (file.Flags & Flags.NotEmpty) != Flags.NotEmpty) {
                 _sLoaded.Add(name, null);
                 return;

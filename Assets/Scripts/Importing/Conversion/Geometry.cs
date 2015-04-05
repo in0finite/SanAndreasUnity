@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Importing.Archive;
+using SanAndreasUnity.Importing.Collision;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.RenderWareStream;
@@ -253,8 +254,35 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public class GeometryParts
         {
-            public Geometry[] Geometry;
-            public GeometryFrame[] Frames;
+            private readonly CollisionFile _collisions;
+
+            public readonly string Name;
+            public readonly Geometry[] Geometry;
+            public readonly GeometryFrame[] Frames;
+
+            public GeometryParts(string name, Clump clump, TextureDictionary[] txds)
+            {
+                Name = name;
+
+                Geometry = clump.GeometryList.Geometry
+                    .Select(x => new Geometry(x, Convert(x), txds))
+                    .ToArray();
+
+                Frames = clump.FrameList.Frames
+                    .Select(x => Convert(x, clump.Atomics))
+                    .ToArray();
+
+                _collisions = clump.Collision;
+            }
+
+            public void AttachCollisionModel(Transform destParent)
+            {
+                if (_collisions != null) {
+                    CollisionModel.Load(_collisions, destParent);
+                } else {
+                    CollisionModel.Load(Name, destParent);
+                }
+            }
         }
 
         private static readonly Dictionary<string, GeometryParts> _sLoaded
@@ -269,8 +297,6 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             modelName = modelName.ToLower();
 
-            GeometryParts loaded;
-
             if (_sLoaded.ContainsKey(modelName)) {
                 return _sLoaded[modelName];
             }
@@ -281,16 +307,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 throw new Exception("Invalid mesh");
             }
 
-            loaded = new GeometryParts
-            {
-                Geometry = clump.GeometryList.Geometry
-                .Select(x => new Geometry(x, Convert(x), txds))
-                .ToArray(),
-
-                Frames = clump.FrameList.Frames
-                .Select(x => Convert(x, clump.Atomics))
-                .ToArray(),
-            };
+            var loaded = new GeometryParts(modelName, clump, txds);
 
             _sLoaded.Add(modelName, loaded);
 
