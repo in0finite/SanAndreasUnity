@@ -46,15 +46,13 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             Frames = new Frame[FrameCount];
 
-            for (var i = 0; i < FrameCount; ++i)
-            {
+            for (var i = 0; i < FrameCount; ++i) {
                 Frames[i] = new Frame(i, reader);
             }
 
-            for (var i = 0; i < FrameCount; ++i)
-            {
-                SectionHeader.Read(stream); // Extension
-                Frames[i].Name = Section<FrameName>.ReadData(stream).Name;
+            for (var i = 0; i < FrameCount; ++i) {
+                var extension = Section<Extension>.ReadData(stream);
+                Frames[i].Name = extension.FirstOrDefault<FrameName>().Name;
             }
         }
     }

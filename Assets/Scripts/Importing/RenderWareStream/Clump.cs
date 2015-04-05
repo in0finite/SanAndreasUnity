@@ -37,7 +37,6 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                 Atomics[i] = Section<Atomic>.ReadData(stream); // Atomic
             }
 
-            Section<SectionData>.ReadData(stream); // Extension
         }
     }
 }

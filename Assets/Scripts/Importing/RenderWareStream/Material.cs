@@ -50,24 +50,16 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                 Textures[i] = Section<Texture>.ReadData(stream);
             }
 
-            var extHeader = SectionHeader.Read(stream);
-            if (extHeader.Size == 0) return;
+            var extensions = Section<Extension>.ReadData(stream);
 
-            while (stream.Position < stream.Length) {
-                var section = Section<SectionData>.ReadData(stream);
+            var smoothness = Smoothness;
+            var specular = Specular;
 
-                var reflection = section as ReflectionMaterial;
-                if (reflection != null) {
-                    Smoothness = reflection.Intensity;
-                    continue;
-                }
+            extensions.ForEach<ReflectionMaterial>(x => smoothness = x.Intensity);
+            extensions.ForEach<SpecularMaterial>(x => specular = x.SpecularLevel);
 
-                var specular = section as SpecularMaterial;
-                if (specular != null) {
-                    Specular = specular.SpecularLevel;
-                    continue;
-                }
-            }
+            Smoothness = smoothness;
+            Specular = specular;
         }
     }
 

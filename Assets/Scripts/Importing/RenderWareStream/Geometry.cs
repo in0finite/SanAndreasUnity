@@ -141,10 +141,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             Materials = Section<MaterialList>.ReadData(stream).Materials;
 
-            SectionHeader.Read(stream);
-            var msplits = Section<MaterialSplitList>.ReadData(stream);
-
-            MaterialSplits = msplits.MaterialSplits;
+            var extensions = Section<Extension>.ReadData(stream);
+            MaterialSplits = extensions.FirstOrDefault<MaterialSplitList>().MaterialSplits;
         }
     }
 }
