@@ -3,7 +3,7 @@ using SanAndreasUnity.Importing.Items.Placements;
 using UnityEngine;
 using System.Linq;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.Behaviours.World
 {
     public class Water : MonoBehaviour
     {

@@ -7,7 +7,7 @@ using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Items.Placements;
 using UnityEngine;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.Behaviours.World
 {
     public class StaticGeometry : MapObject
     {

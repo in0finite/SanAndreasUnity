@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Conversion;
-using SanAndreasUnity.Importing.Items.Definitions;
 using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.Vehicle;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.Behaviours.Vehicles
 {
     public class Vehicle : MonoBehaviour
     {

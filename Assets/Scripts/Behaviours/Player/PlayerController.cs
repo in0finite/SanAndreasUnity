@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using SanAndreasUnity.Utilities;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.Behaviours.Player
 {
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour

@@ -2,7 +2,7 @@
 using SanAndreasUnity.Importing.Items.Placements;
 using UnityEngine;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.Behaviours.Vehicles
 {
     public class VehicleSpawner : MapObject
     {
@@ -37,7 +37,7 @@ namespace SanAndreasUnity.Behaviours
         {
             if (HasLoaded) return float.PositiveInfinity;
             var dist = Vector3.Distance(from, transform.position);
-            return dist > 1000f ? float.PositiveInfinity : dist;
+            return dist > 300f ? float.PositiveInfinity : dist;
         }
 
         protected override void OnLoad()

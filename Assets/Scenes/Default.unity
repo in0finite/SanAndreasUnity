@@ -185,13 +185,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 412119312}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8cbb9a1a155bc64ab6d0808bc16e07f, type: 3}
+  m_Script: {fileID: 11500000, guid: 57e796a954503384dbd1282729710af5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CursorSensitivity: {x: 2, y: 2}
   PitchClamp: {x: -89, y: 89}
   YawClamp: {x: -180, y: 180}
-  VelocitySmoothing: .100000001
+  VelocitySmoothing: .0500000007
   Camera: {fileID: 1521428848}
 --- !u!143 &412119319
 CharacterController:
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 951521991}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4322662e6af08a243bf0da73c6b6249e, type: 3}
+  m_Script: {fileID: 11500000, guid: 57ea334de36794f45af24c665b00e893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WaterPrefab: {fileID: 100000, guid: 9485b0c79d11e2e4d0007da98d76c639, type: 2}
@@ -274,7 +274,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1327530087}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab4bb5a944a1ef14eb459335cf691bfd, type: 3}
+  m_Script: {fileID: 11500000, guid: df6efcfa667fce549bcc3deb68a7e8d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CellIds: 000000000d000000

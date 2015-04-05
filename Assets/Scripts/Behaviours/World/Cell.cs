@@ -3,14 +3,14 @@ using UnityEngine;
 using SanAndreasUnity.Importing.Items;
 using System.Linq;
 using System.Diagnostics;
-using System.Collections;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Collision;
-using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Importing.Items.Placements;
 using System.IO;
+using SanAndreasUnity.Behaviours.Player;
+using SanAndreasUnity.Behaviours.Vehicles;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.Behaviours.World
 {
     public class Cell : MonoBehaviour
     {

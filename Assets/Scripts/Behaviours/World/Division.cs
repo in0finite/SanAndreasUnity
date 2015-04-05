@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.Behaviours.World
 {
     public class Division : MonoBehaviour, IEnumerable<Division>, IComparable<Division>
     {
