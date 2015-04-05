@@ -8,6 +8,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [Range(-500, 500)]
         public float MotorTorque;
 
+        [Range(-45, 45)]
+        public float SteerAngle;
+
         public Handling.Car HandlingData { get; private set; }
 
         private void InitializePhysics()
@@ -37,6 +40,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             foreach (var wheel in _wheels)
             {
                 wheel.Collider.motorTorque = MotorTorque;
+
+                if (wheel.Alignment == WheelAlignment.RightFront ||
+                    wheel.Alignment == WheelAlignment.LeftFront)
+                {
+                    wheel.Collider.steerAngle = SteerAngle;
+                }
             }
         }
     }

@@ -38,9 +38,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public class Wheel
         {
+            public WheelAlignment Alignment { get; set; }
+
             public Transform Parent { get; set; }
             public Transform Child { get; set; }
             public WheelCollider Collider { get; set; }
+
+            public Quaternion Roll { get; set; }
         }
 
         private List<Wheel> _wheels = new List<Wheel>();
@@ -149,11 +153,21 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     {
                         var child = AddPart(_geometryParts.Frames[_wheelFrameIndex], _children[i]);
 
-                        _wheels.Add(new Wheel { Parent = _children[i], Child = child.transform });
+                        _wheels.Add(new Wheel
+                        {
+                            Alignment = wheelAlignment,
+                            Parent = _children[i],
+                            Child = child.transform,
+                        });
                     }
                     else
                     {
-                        _wheels.Add(new Wheel { Parent = _children[i], Child = _children[_wheelFrameIndex] });
+                        _wheels.Add(new Wheel
+                        {
+                            Alignment = wheelAlignment,
+                            Parent = _children[i],
+                            Child = _children[_wheelFrameIndex],
+                        });
                     }
 
                     if (wheelAlignment == WheelAlignment.LeftFront ||
