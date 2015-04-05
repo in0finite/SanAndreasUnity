@@ -11,8 +11,8 @@ namespace SanAndreasUnity.Editor
         public static void CopyConfig(BuildTarget target, string pathToBuiltProject)
         {
             var destDir = Path.GetDirectoryName(pathToBuiltProject);
-            var dest = Path.Combine(destDir, Utilities.Config.FileName);
-            File.Copy(Utilities.Config.FilePath, dest, true);
+            var dest = Path.Combine(destDir, Utilities.Config.TemplateFileName);
+            File.Copy(Utilities.Config.TemplateFilePath, dest, true);
         }
     }
 }

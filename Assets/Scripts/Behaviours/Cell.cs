@@ -16,6 +16,9 @@ namespace SanAndreasUnity.Behaviours
     {
         public static GameData GameData { get; private set; }
 
+        private Stopwatch _timer;
+        private List<Division> _leaves;
+
         public Division RootDivision { get; private set; }
 
         public List<int> CellIds = new List<int> { 0, 13 };
@@ -94,31 +97,27 @@ namespace SanAndreasUnity.Behaviours
                 Water.Initialize(new WaterFile(ArchiveManager.GetPath("data", "water.dat")));
             }
 
-            StartCoroutine(LoadAsync());
+            _timer = new Stopwatch();
+            _leaves = RootDivision.ToList();
         }
 
-        IEnumerator LoadAsync()
+        void Update()
         {
-            var timer = new Stopwatch();
-            var leaves = RootDivision.ToList();
+            if (_leaves == null) return;
 
-            while (true) {
-                var pos = Player.transform.position;
-                var toLoad = leaves.Aggregate(false, (current, leaf) => current | leaf.RefreshLoadOrder(pos));
+            var pos = Player.transform.position;
+            var toLoad = _leaves.Aggregate(false, (current, leaf) => current | leaf.RefreshLoadOrder(pos));
 
-                if (toLoad) {
-                    leaves.Sort();
+            if (!toLoad) return;
 
-                    timer.Reset();
-                    timer.Start();
+            _leaves.Sort();
 
-                    foreach (var div in leaves) {
-                        if (float.IsPositiveInfinity(div.LoadOrder)) break;
-                        if (!div.LoadWhile(() => timer.Elapsed.TotalSeconds < 1d / 60d)) break;
-                    }
-                }
+            _timer.Reset();
+            _timer.Start();
 
-                yield return new WaitForEndOfFrame();
+            foreach (var div in _leaves) {
+                if (float.IsPositiveInfinity(div.LoadOrder)) break;
+                if (!div.LoadWhile(() => _timer.Elapsed.TotalSeconds < 1d / 60d)) break;
             }
         }
     }
