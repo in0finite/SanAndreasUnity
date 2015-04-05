@@ -145,8 +145,14 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (!forceConvex) return;
 
-            foreach (var mc in clone.GetComponentsInChildren<MeshCollider>()) {
-                mc.convex = true;
+            foreach (var collider in clone.GetComponentsInChildren<Collider>()) {
+                var meshCollider = collider as MeshCollider;
+
+                if (meshCollider != null) {
+                    meshCollider.convex = true;
+                } else {
+                    collider.gameObject.SetActive(false);
+                }
             }
         }
     }
