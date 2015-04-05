@@ -17,7 +17,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             if (dat == null) return;
 
             ObjectCount = BitConverter.ToUInt32(dat.Value, 0);
-            Section<SectionData>.Read(stream); // frame list
+
+            Section<FrameList>.Read(stream); // frame list
             GeometryList = Section<GeometryList>.ReadData(stream);
         }
     }
