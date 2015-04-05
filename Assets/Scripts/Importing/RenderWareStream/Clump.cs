@@ -9,6 +9,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public const Int32 TypeId = 16;
 
         public readonly UInt32 AtomicCount;
+        public readonly UInt32 LightCount;
+        public readonly UInt32 CameraCount;
 
         public readonly FrameList FrameList;
         public readonly GeometryList GeometryList;
@@ -22,10 +24,13 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             var reader = new BinaryReader(new MemoryStream(data.Value));
 
             AtomicCount = reader.ReadUInt32();
-            Atomics = new Atomic[AtomicCount];
+            LightCount = reader.ReadUInt32();
+            CameraCount = reader.ReadUInt32();
 
             FrameList = Section<FrameList>.ReadData(stream); // Frame List
             GeometryList = Section<GeometryList>.ReadData(stream); // Geometry List
+
+            Atomics = new Atomic[AtomicCount];
 
             for (int i = 0; i < AtomicCount; ++i)
             {
