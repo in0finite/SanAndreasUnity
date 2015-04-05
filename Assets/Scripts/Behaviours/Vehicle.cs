@@ -136,6 +136,13 @@ namespace SanAndreasUnity.Behaviours
                     {
                         AddPart(_geometryParts.Frames[_wheelFrameIndex], _children[i]);
                     }
+
+                    if (wheelAlignment == WheelAlignment.LeftFront ||
+                        wheelAlignment == WheelAlignment.LeftMid ||
+                        wheelAlignment == WheelAlignment.LeftBack)
+                    {
+                        _children[i].Rotate(Vector3.up, 180.0f);
+                    }
                 }
             }
         }
