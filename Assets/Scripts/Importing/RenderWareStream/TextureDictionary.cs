@@ -12,6 +12,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public TextureNative[] Textures;
 
         public TextureDictionary(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
@@ -21,7 +22,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             reader.ReadUInt16(); // Unknown
 
             for (var i = 0; i < TextureCount; ++i) {
-                Textures[i] = Section<TextureNative>.ReadData(stream);
+                Textures[i] = ReadSection<TextureNative>();
             }
         }
     }

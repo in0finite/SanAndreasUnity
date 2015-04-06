@@ -8,6 +8,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly byte[] Value;
 
         public Data(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             Value = new byte[header.Size];
             stream.Read(Value, 0, (int) header.Size);

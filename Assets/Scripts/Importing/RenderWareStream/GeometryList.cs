@@ -10,14 +10,15 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly Geometry[] Geometry;
 
         public GeometryList(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
-            var data = Section<Data>.ReadData(stream);
+            var data = ReadSection<Data>();
 
             GeometryCount = BitConverter.ToUInt32(data.Value, 0);
             Geometry = new Geometry[GeometryCount];
 
             for (var i = 0; i < GeometryCount; ++i) {
-                Geometry[i] = Section<Geometry>.ReadData(stream);
+                Geometry[i] = ReadSection<Geometry>();
             }
         }
     }

@@ -73,7 +73,6 @@ namespace SanAndreasUnity.Behaviours
             UnityEngine.Debug.LogFormat("Item info load time: {0} ms", timer.Elapsed.TotalMilliseconds);
             timer.Reset();
 
-
             timer.Start();
 
             foreach (var path in Config.Get("item_paths").Select(x => FormatPath((string) x))) {

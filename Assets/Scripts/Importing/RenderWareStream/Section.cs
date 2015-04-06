@@ -113,6 +113,21 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             }
             return (T) _sDataCtors[header.Type](header, stream);
         }
+
+        private readonly SectionHeader _header;
+        private readonly Stream _stream;
+
+        protected SectionData(SectionHeader header, Stream stream)
+        {
+            _header = header;
+            _stream = stream;
+        }
+
+        protected TSection ReadSection<TSection>(SectionData parent = null)
+            where TSection : SectionData
+        {
+            return Section<TSection>.ReadData(_stream, parent ?? this);
+        }
     }
 
     public struct Section<TData>

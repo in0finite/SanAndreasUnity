@@ -29,6 +29,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly byte[] ImageLevelData;
 
         public TextureNative(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);

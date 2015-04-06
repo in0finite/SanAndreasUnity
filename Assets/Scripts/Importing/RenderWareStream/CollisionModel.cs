@@ -9,6 +9,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly CollisionFile Collision;
 
         public CollisionModel(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             Collision = CollisionFile.Load(stream);
         }

@@ -10,14 +10,15 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly Material[] Materials;
 
         public MaterialList(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
-            var data = Section<Data>.ReadData(stream);
+            var data = ReadSection<Data>();
             MaterialCount = BitConverter.ToUInt32(data.Value, 0);
 
             Materials = new Material[MaterialCount];
 
             for (var i = 0; i < MaterialCount; ++i) {
-                Materials[i] = Section<Material>.ReadData(stream);
+                Materials[i] = ReadSection<Material>();
             }
         }
     }

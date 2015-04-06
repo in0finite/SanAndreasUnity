@@ -9,6 +9,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly String Name;
 
         public FrameName(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             Name = new String(header, stream);
         }

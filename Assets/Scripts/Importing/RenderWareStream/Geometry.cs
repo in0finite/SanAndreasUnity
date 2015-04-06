@@ -73,6 +73,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly MaterialSplit[] MaterialSplits;
 
         public Geometry(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             var dataHeader = SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
@@ -139,9 +140,9 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                 }
             }
 
-            Materials = Section<MaterialList>.ReadData(stream).Materials;
+            Materials = ReadSection<MaterialList>().Materials;
 
-            var extensions = Section<Extension>.ReadData(stream, this);
+            var extensions = ReadSection<Extension>();
             MaterialSplits = extensions.FirstOrDefault<MaterialSplitList>().MaterialSplits;
         }
     }
