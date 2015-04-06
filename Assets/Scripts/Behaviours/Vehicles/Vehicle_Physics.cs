@@ -33,13 +33,24 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 wheel.Collider = wheel.Parent.gameObject.AddComponent<WheelCollider>();
                 wheel.Collider.radius = 0.35f;
-                wheel.Collider.suspensionDistance = 0.2f;
+                wheel.Collider.suspensionDistance = 0.1f;
 
                 var spring = wheel.Collider.suspensionSpring;
                 spring.targetPosition = 0.5f;
                 spring.damper = HandlingData.SuspensionDampingLevel * VConsts.Instance.SuspensionDampingScale;
                 spring.spring = HandlingData.SuspensionForceLevel * VConsts.Instance.SuspensionForceScale;
                 wheel.Collider.suspensionSpring = spring;
+
+                var friction = wheel.Collider.forwardFriction;
+                friction.extremumSlip = 0.6f;
+                friction.extremumValue = 1.2f;
+                friction.asymptoteSlip = 2.0f;
+                friction.asymptoteValue = 0.2f;
+                friction.stiffness = 1;
+
+                wheel.Collider.forwardFriction = friction;
+                wheel.Collider.sidewaysFriction = friction;
+
             }
         }
 
