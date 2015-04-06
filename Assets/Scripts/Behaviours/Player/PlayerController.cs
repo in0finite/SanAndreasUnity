@@ -80,12 +80,13 @@ namespace SanAndreasUnity.Behaviours.Player
                 Cursor.visible = true;
             }
 
-            if (!_lockedCursor) return;
+            if (_lockedCursor)
+            {
+                var cursorDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
-            var cursorDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-
-            Yaw += cursorDelta.x * CursorSensitivity.x;
-            Pitch -= cursorDelta.y * CursorSensitivity.y;
+                Yaw += cursorDelta.x * CursorSensitivity.x;
+                Pitch -= cursorDelta.y * CursorSensitivity.y;
+            }
 
             if (IsInVehicle) {
                 Camera.transform.rotation = Quaternion.AngleAxis(Yaw, Vector3.up) * Quaternion.AngleAxis(Pitch, Vector3.right);
@@ -105,6 +106,8 @@ namespace SanAndreasUnity.Behaviours.Player
 
                 return;
             }
+
+            if (!_lockedCursor) return;
 
             _move = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
