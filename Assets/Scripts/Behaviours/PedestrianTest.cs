@@ -37,7 +37,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Load(int id)
         {
-            Definition = GameData.GetDefinition<Pedestrian>(id);
+            Definition = Item.GetDefinition<Pedestrian>(id);
             if (Definition == null) return;
 
             LoadModel(Definition.ModelName, Definition.TextureDictionaryName);

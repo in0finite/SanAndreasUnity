@@ -10,22 +10,32 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 {
     public struct SectionHeader
     {
-        public static SectionHeader Read(Stream stream)
+        public static SectionHeader Read(Stream stream, SectionData parent = null)
         {
-            return new SectionHeader(stream);
+            return new SectionHeader(stream, parent);
         }
+
+        private readonly SectionData _parent;
 
         public readonly UInt32 Type;
         public readonly UInt32 Size;
         public readonly UInt16 Version;
 
-        private SectionHeader(Stream stream)
+        private SectionHeader(Stream stream, SectionData parent)
         {
+            _parent = parent;
+
             var reader = new BinaryReader(stream);
             Type = reader.ReadUInt32();
             Size = reader.ReadUInt32();
             reader.ReadUInt16(); // Unknown
             Version = reader.ReadUInt16();
+        }
+
+        public TSection GetParent<TSection>()
+            where TSection : SectionData
+        {
+            return (TSection) _parent;
         }
 
         public override string ToString()
@@ -103,14 +113,14 @@ namespace SanAndreasUnity.Importing.RenderWareStream
     public struct Section<TData>
         where TData : SectionData
     {
-        public static Section<TData> Read(Stream stream)
+        public static Section<TData> Read(Stream stream, SectionData parent = null)
         {
-            return new Section<TData>(stream);
+            return new Section<TData>(stream, parent);
         }
 
-        public static TData ReadData(Stream stream)
+        public static TData ReadData(Stream stream, SectionData parent = null)
         {
-            return new Section<TData>(stream).Data;
+            return new Section<TData>(stream, parent).Data;
         }
 
         public readonly SectionHeader Header;
@@ -118,9 +128,9 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
         public UInt32 Type { get { return Header.Type; } }
 
-        private Section(Stream stream)
+        private Section(Stream stream, SectionData parent)
         {
-            Header = SectionHeader.Read(stream);
+            Header = SectionHeader.Read(stream, parent);
             
             var end = stream.Position + Header.Size;
 

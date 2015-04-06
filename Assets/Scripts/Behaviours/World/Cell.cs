@@ -39,14 +39,14 @@ namespace SanAndreasUnity.Behaviours.World
 
                 timer.Start();
 
-                var insts = GameData.GetPlacements<Instance>(CellIds.ToArray())
+                var insts = Item.GetPlacements<Instance>(CellIds.ToArray())
                     .ToDictionary(x => x, x => StaticGeometry.Create());
 
                 foreach (var inst in insts) {
                     inst.Value.Initialize(inst.Key, insts);
                 }
 
-                var cars = GameData.GetPlacements<ParkedVehicle>(CellIds.ToArray())
+                var cars = Item.GetPlacements<ParkedVehicle>(CellIds.ToArray())
                     .Select(x => VehicleSpawner.Create(x))
                     .Cast<MapObject>()
                     .ToArray();

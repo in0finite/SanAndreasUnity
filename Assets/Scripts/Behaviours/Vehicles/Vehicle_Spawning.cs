@@ -157,7 +157,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             transform.position = spawner.transform.position + Vector3.up * 1f;
             transform.localRotation = spawner.transform.localRotation;
 
-            Definition = GameData.GetDefinition<VehicleDef>(spawner.Info.CarId);
+            Definition = Item.GetDefinition<VehicleDef>(spawner.Info.CarId);
 
             name = Definition.GameName;
 

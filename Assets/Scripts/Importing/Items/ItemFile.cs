@@ -20,13 +20,13 @@ namespace SanAndreasUnity.Importing.Items
         }
     }
 
-    public abstract class Item
+    public abstract class ItemBase
     {
         private readonly string[] _parts;
 
         public int Parts { get { return _parts.Length; } }
 
-        protected Item(string line, bool commaSeparated = true)
+        protected ItemBase(string line, bool commaSeparated = true)
         {
             var ws = new[] { ' ', '\t' };
 
@@ -43,7 +43,7 @@ namespace SanAndreasUnity.Importing.Items
             }
         }
 
-        protected Item(BinaryReader reader) { }
+        protected ItemBase(BinaryReader reader) { }
 
         public string GetString(int index)
         {
@@ -71,7 +71,7 @@ namespace SanAndreasUnity.Importing.Items
         }
     }
 
-    public abstract class Definition : Item
+    public abstract class Definition : ItemBase
     {
         protected Definition(string line, bool commaSeparated = true)
             : base(line, commaSeparated) { }
@@ -82,7 +82,7 @@ namespace SanAndreasUnity.Importing.Items
         int Id { get; }
     }
 
-    public abstract class Placement : Item
+    public abstract class Placement : ItemBase
     {
         protected Placement(string line, bool commaSeparated = true)
             : base(line, commaSeparated) { }
@@ -92,7 +92,7 @@ namespace SanAndreasUnity.Importing.Items
     }
 
     public class ItemFile<TType>
-        where TType : Item
+        where TType : ItemBase
     {
         private delegate TType ItemCtor(string line);
 
@@ -184,7 +184,7 @@ namespace SanAndreasUnity.Importing.Items
 
             stream.Seek(instOffset, SeekOrigin.Begin);
             for (var j = 0; j < instCount; ++j) {
-                insts.Add((TType) (Item) new Instance(reader));
+                insts.Add((TType) (ItemBase) new Instance(reader));
             }
 
             var cars = new List<TType>();
@@ -192,7 +192,7 @@ namespace SanAndreasUnity.Importing.Items
 
             stream.Seek(carsOffset, SeekOrigin.Begin);
             for (var j = 0; j < carsCount; ++j) {
-                cars.Add((TType) (Item) new ParkedVehicle(reader));
+                cars.Add((TType) (ItemBase) new ParkedVehicle(reader));
             }
         }
 

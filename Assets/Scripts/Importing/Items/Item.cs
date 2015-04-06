@@ -3,12 +3,10 @@ using System.IO;
 using System.Linq;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Items.Placements;
-using SanAndreasUnity.Importing.Items.Definitions;
-using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items
 {
-    public static class GameData
+    public static class Item
     {
         private static readonly List<Zone> _zones = new List<Zone>();
 

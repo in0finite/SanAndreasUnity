@@ -23,14 +23,6 @@ namespace SanAndreasUnity.Behaviours
             return path.Replace("${game_dir}", GameDir);
         }
 
-        private enum LoadOrderItemType
-        {
-            LoadList,
-            IDE,
-            IPL,
-            Handling
-        }
-
         private void Awake()
         {
             if (HasLoaded) return;
@@ -64,25 +56,41 @@ namespace SanAndreasUnity.Behaviours
 
             timer.Start();
 
-            foreach (var elem in Config.Get("load_order")) {
-                var type = (LoadOrderItemType) Enum.Parse(typeof(LoadOrderItemType), (string) elem["type"]);
-                var path = FormatPath((string) elem["path"]);
-
-                switch (type) {
-                    case LoadOrderItemType.LoadList:
-                        GameData.ReadLoadList(path); break;
-                    case LoadOrderItemType.IDE:
-                        GameData.ReadIde(path); break;
-                    case LoadOrderItemType.IPL:
-                        GameData.ReadIpl(path); break;
-                    case LoadOrderItemType.Handling:
-                        Handling.Load(path); break;
+            foreach (var path in Config.Get("item_paths").Select(x => FormatPath((string) x))) {
+                var ext = Path.GetExtension(path).ToLower();
+                switch (ext) {
+                    case ".dat":
+                        Item.ReadLoadList(path); break;
+                    case ".ide":
+                        Item.ReadIde(path); break;
+                    case ".ipl":
+                        Item.ReadIpl(path); break;
                 }
             }
 
             timer.Stop();
 
-            UnityEngine.Debug.LogFormat("Game Data load time: {0} ms", timer.Elapsed.TotalMilliseconds);
+            UnityEngine.Debug.LogFormat("Item info load time: {0} ms", timer.Elapsed.TotalMilliseconds);
+            timer.Reset();
+
+
+            timer.Start();
+
+            foreach (var path in Config.Get("item_paths").Select(x => FormatPath((string) x))) {
+                var ext = Path.GetExtension(path).ToLower();
+                switch (ext) {
+                    case ".dat":
+                        Item.ReadLoadList(path); break;
+                    case ".ide":
+                        Item.ReadIde(path); break;
+                    case ".ipl":
+                        Item.ReadIpl(path); break;
+                }
+            }
+
+            timer.Stop();
+
+            UnityEngine.Debug.LogFormat("Item info load time: {0} ms", timer.Elapsed.TotalMilliseconds);
             timer.Reset();
 
             HasLoaded = true;

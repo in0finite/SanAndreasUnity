@@ -11,12 +11,17 @@
 		"${game_dir}/models/player.img"
 	],
 
-	"load_order" : [
-		{ "type": "LoadList", "path": "${game_dir}/data/gta.dat" },
+	"item_paths" : [
+		"${game_dir}/data/gta.dat",
+		"${game_dir}/data/vehicles.ide",
+		"${game_dir}/data/peds.ide"
+	],
 
-		{ "type": "IDE",  "path": "${game_dir}/data/vehicles.ide" },
-		{ "type": "IDE",  "path": "${game_dir}/data/peds.ide" },
+	"handling_paths" : [
+		"${game_dir}/data/handling.cfg"
+	],
 
-		{ "type": "Handling", "path": "${game_dir}/data/handling.cfg" }
+	"water_paths" : [
+		"${game_dir}/data/water.dat"
 	]
 }
