@@ -37,7 +37,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 var spring = wheel.Collider.suspensionSpring;
                 spring.targetPosition = 0.5f;
-                spring.damper = HandlingData.SuspensionDampingLevel;
+                spring.damper = HandlingData.SuspensionDampingLevel * VConsts.Instance.SuspensionDampingScale;
                 spring.spring = HandlingData.SuspensionForceLevel * VConsts.Instance.SuspensionForceScale;
                 wheel.Collider.suspensionSpring = spring;
             }
@@ -63,6 +63,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     * VConsts.Instance.AccelerationScale;
 
                 var spring = wheel.Collider.suspensionSpring;
+                spring.damper = HandlingData.SuspensionDampingLevel * VConsts.Instance.SuspensionDampingScale;
                 spring.spring = HandlingData.SuspensionForceLevel * VConsts.Instance.SuspensionForceScale;
                 wheel.Collider.suspensionSpring = spring;
             }
