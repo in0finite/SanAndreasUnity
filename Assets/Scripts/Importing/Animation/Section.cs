@@ -22,6 +22,7 @@ namespace SanAndreasUnity.Importing.Animation
 
     public class AnimationPackage : Section
     {
-
+        public AnimationPackage(BinaryReader reader)
+            : base(reader) { }
     }
 }
