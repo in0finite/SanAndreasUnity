@@ -46,6 +46,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void UpdateValues(VConsts vals)
         {
             _rigidBody.drag = HandlingData.Drag * vals.DragScale;
+            _rigidBody.mass = HandlingData.Mass * vals.MassScale;
+
+            foreach (var wheel in _wheels) {
+                var spring = wheel.Collider.suspensionSpring;
+                spring.damper = HandlingData.SuspensionDampingLevel * VConsts.Instance.SuspensionDampingScale;
+                spring.spring = HandlingData.SuspensionForceLevel * VConsts.Instance.SuspensionForceScale;
+                wheel.Collider.suspensionSpring = spring;
+            }
         }
 
         private void FixedUpdate()
@@ -61,11 +69,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Collider.motorTorque = Accelerator
                     * HandlingData.TransmissionEngineAccel
                     * VConsts.Instance.AccelerationScale;
-
-                var spring = wheel.Collider.suspensionSpring;
-                spring.damper = HandlingData.SuspensionDampingLevel * VConsts.Instance.SuspensionDampingScale;
-                spring.spring = HandlingData.SuspensionForceLevel * VConsts.Instance.SuspensionForceScale;
-                wheel.Collider.suspensionSpring = spring;
             }
         }
     }

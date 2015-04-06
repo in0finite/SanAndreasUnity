@@ -403,10 +403,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82a245a7166802b41bcb706255d566f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DragScale: .0199999996
-  AccelerationScale: 25
-  SuspensionForceScale: 50000
+  DragScale: 100
+  AccelerationScale: 20
+  SuspensionForceScale: 100000
   SuspensionDampingScale: 10000
+  MassScale: 2
 --- !u!4 &1843689728
 Transform:
   m_ObjectHideFlags: 0
