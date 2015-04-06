@@ -22,4 +22,5 @@ Assets/Standard Assets
 Assets/Standard Assets.meta
 Assets/Editor/ImageEffects
 Assets/Editor/ImageEffects.meta
-config.json
+
+config.user.json

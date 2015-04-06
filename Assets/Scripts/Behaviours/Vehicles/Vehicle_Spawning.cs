@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Conversion;
 using UnityEngine;
 using System.Linq;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.Vehicle;
+using SanAndreasUnity.Importing.Items;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -157,7 +157,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             transform.position = spawner.transform.position + Vector3.up * 1f;
             transform.localRotation = spawner.transform.localRotation;
 
-            Definition = Cell.GameData.GetDefinition<VehicleDef>(spawner.Info.CarId);
+            Definition = GameData.GetDefinition<VehicleDef>(spawner.Info.CarId);
 
             name = Definition.GameName;
 

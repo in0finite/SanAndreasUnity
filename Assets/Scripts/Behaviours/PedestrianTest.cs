@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SanAndreasUnity.Behaviours.World;
-using SanAndreasUnity.Importing.Conversion;
+﻿using SanAndreasUnity.Importing.Conversion;
+using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using UnityEditor;
 using UnityEngine;
@@ -22,7 +18,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
-            if (Cell.GameData == null) return;
+            if (!GameData.HasLoaded) return;
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying && !EditorApplication.isPaused) return;
 #endif
@@ -41,7 +37,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Load(int id)
         {
-            Definition = Cell.GameData.GetDefinition<Pedestrian>(id);
+            Definition = GameData.GetDefinition<Pedestrian>(id);
             if (Definition == null) return;
 
             LoadModel(Definition.ModelName, Definition.TextureDictionaryName);

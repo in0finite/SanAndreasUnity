@@ -151,6 +151,8 @@ namespace SanAndreasUnity.Behaviours.World
                 _childA.UpdateParents();
                 _childB.UpdateParents();
             } else {
+                if (_objects.Count == 0) return;
+
                 var sum = _objects.Aggregate(new Vector2(), (s, x) => s + x.CellPos);
                 transform.position = new Vector3(sum.x / _objects.Count, 0f, sum.y / _objects.Count);
 

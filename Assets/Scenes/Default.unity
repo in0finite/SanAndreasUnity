@@ -260,6 +260,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1327530089}
   - 114: {fileID: 1327530088}
+  - 114: {fileID: 1327530090}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -293,6 +294,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!114 &1327530090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1327530087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29ff195586224b54ebfe1e606d27a4b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1521428844
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,8 +418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e93599847d269df4da17655e4ac7b3d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ModelName: BMYAP
-  TextureDictionaries: []
+  PedestrianId: 7
 --- !u!23 &1723330609
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -446,7 +457,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1723330607}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1682.84302, y: 60.5820007, z: -1039.41602}
+  m_LocalPosition: {x: 1682.84302, y: 25, z: -1032.03601}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

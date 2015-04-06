@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Importing.Conversion;
+using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Items.Placements;
 using UnityEngine;
@@ -46,7 +47,7 @@ namespace SanAndreasUnity.Behaviours.World
         public void Initialize(Instance inst, Dictionary<Instance, StaticGeometry> dict)
         {
             Instance = inst;
-            Instance.Object = Instance.Object ?? Cell.GameData.GetDefinition<Importing.Items.Definitions.Object>(inst.ObjectId);
+            Instance.Object = Instance.Object ?? GameData.GetDefinition<Importing.Items.Definitions.Object>(inst.ObjectId);
 
             Initialize(inst.Position, inst.Rotation);
 

@@ -8,18 +8,26 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items
 {
-    public class GameData
+    public static class GameData
     {
-        private readonly List<Zone> _zones;
+        private static readonly List<Zone> _zones = new List<Zone>();
 
-        private readonly Dictionary<int, IObjectDefinition> _definitions;
-        private readonly Dictionary<int, List<Placement>> _placements;
+        private static readonly Dictionary<int, IObjectDefinition> _definitions
+            = new Dictionary<int,IObjectDefinition>();
+        private static readonly Dictionary<int, List<Placement>> _placements
+            = new Dictionary<int,List<Placement>>();
 
-        public GameData(string path)
+        public static bool HasLoaded { get; private set; }
+
+        public static void Load(string path)
         {
-            _zones = new List<Zone>();
-            _definitions = new Dictionary<int, IObjectDefinition>();
-            _placements = new Dictionary<int, List<Placement>>();
+            if (HasLoaded) {
+                _zones.Clear();
+                _definitions.Clear();
+                _placements.Clear();
+            }
+
+            HasLoaded = true;
 
             var ws = new[] {' ', '\t'};
 
@@ -49,7 +57,7 @@ namespace SanAndreasUnity.Importing.Items
             }
         }
 
-        public void ReadIde(string path)
+        public static void ReadIde(string path)
         {
             var file = new ItemFile<Definition>(ArchiveManager.GetPath(path));
             foreach (var obj in file.GetItems<Definition>().OfType<IObjectDefinition>()) {
@@ -57,7 +65,7 @@ namespace SanAndreasUnity.Importing.Items
             }
         }
 
-        public void ReadIpl(string path)
+        public static void ReadIpl(string path)
         {
             var file = new ItemFile<Placement>(ArchiveManager.GetPath(path));
             foreach (var zone in file.GetSection<Zone>("zone")) {
@@ -106,13 +114,13 @@ namespace SanAndreasUnity.Importing.Items
             _placements[0].AddRange(cars.Cast<Placement>());
         }
 
-        public TDefinition GetDefinition<TDefinition>(int id)
+        public static TDefinition GetDefinition<TDefinition>(int id)
             where TDefinition : Definition, IObjectDefinition
         {
             return !_definitions.ContainsKey(id) ? null : (TDefinition) _definitions[id];
         }
 
-        public IEnumerable<TPlacement> GetPlacements<TPlacement>(params int[] cellIds)
+        public static IEnumerable<TPlacement> GetPlacements<TPlacement>(params int[] cellIds)
             where TPlacement : Placement
         {
             return cellIds.SelectMany(x => _placements.ContainsKey(x)

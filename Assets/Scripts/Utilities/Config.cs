@@ -11,9 +11,9 @@ namespace SanAndreasUnity.Utilities
             get { return "config.json"; }
         }
 
-        public static string TemplateFileName
+        public static string UserFileName
         {
-            get { return "config.template.json"; }
+            get { return "config.user.json"; }
         }
 
         public static string FilePath
@@ -21,25 +21,27 @@ namespace SanAndreasUnity.Utilities
             get { return Path.Combine(Application.dataPath, Path.Combine("..", FileName)); }
         }
 
-        public static string TemplateFilePath
+        public static string UserFilePath
         {
-            get { return Path.Combine(Application.dataPath, Path.Combine("..", TemplateFileName)); }
+            get { return Path.Combine(Application.dataPath, Path.Combine("..", UserFileName)); }
         }
 
         private static readonly JObject _root;
+        private static readonly JObject _user;
 
         static Config()
         {
-            if (!File.Exists(FilePath) && File.Exists(TemplateFilePath)) {
-                File.Copy(TemplateFilePath, FilePath);
+            if (!File.Exists(UserFilePath)) {
+                File.WriteAllText(UserFilePath, "{\r\n    // Specify overrides here\r\n}\r\n");
             }
 
             _root = JObject.Parse(File.ReadAllText(FilePath));
+            _user = JObject.Parse(File.ReadAllText(UserFilePath));
         }
 
         public static JToken Get(string key)
         {
-            return _root[key];
+            return _user[key] ?? _root[key];
         }
     }
 }
