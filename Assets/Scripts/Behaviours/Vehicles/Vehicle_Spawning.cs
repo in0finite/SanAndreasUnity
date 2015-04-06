@@ -25,8 +25,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             None,
             RightFront,
             LeftFront,
-            RightBack,
-            LeftBack,
+            RightRear,
+            LeftRear,
         }
 
         public static Vehicle Create(VehicleSpawner spawner)
@@ -104,10 +104,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     return DoorAlignment.RightFront;
                 case "door_lf_dummy":
                     return DoorAlignment.LeftFront;
-                case "door_rm_dummy":
-                    return DoorAlignment.RightBack;
-                case "door_lb_dummy":
-                    return DoorAlignment.LeftBack;
+                case "door_rr_dummy":
+                    return DoorAlignment.RightRear;
+                case "door_lr_dummy":
+                    return DoorAlignment.LeftRear;
                 default:
                     return DoorAlignment.None;
             }
@@ -244,7 +244,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         hinge.axis = Vector3.up;
                         hinge.useLimits = true;
 
-                        float limit = 90.0f * ((doorAlignment == DoorAlignment.LeftFront || doorAlignment ==  DoorAlignment.LeftBack) ? 1.0f : -1.0f);
+                        float limit = 90.0f * ((doorAlignment == DoorAlignment.LeftFront || doorAlignment == DoorAlignment.LeftRear) ? 1.0f : -1.0f);
                         hinge.limits = new JointLimits { min = Mathf.Min(0, limit), max = Mathf.Max(0, limit), };
 
                         hinge.connectedBody = gameObject.GetComponent<Rigidbody>();
