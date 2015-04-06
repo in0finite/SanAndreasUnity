@@ -55,7 +55,7 @@ namespace SanAndreasUnity.Importing.Animation
 
             for (int i = 0; i < frameCount; ++i)
             {
-                Frames[i] = new Frame(reader, boneId > 0);
+                Frames[i] = new Frame(reader, frameType == 4);
             }
         }
     }
@@ -74,7 +74,7 @@ namespace SanAndreasUnity.Importing.Animation
         public readonly Int16 TranslationY;
         public readonly Int16 TranslationZ;
 
-        public Frame(BinaryReader reader, bool child)
+        public Frame(BinaryReader reader, bool root)
         {
             QuaternionX = reader.ReadInt16();
             QuaternionY = reader.ReadInt16();
@@ -83,7 +83,7 @@ namespace SanAndreasUnity.Importing.Animation
 
             Time = reader.ReadInt16();
 
-            if (!child)
+            if (root)
             {
                 TranslationX = reader.ReadInt16();
                 TranslationY = reader.ReadInt16();
