@@ -1,4 +1,6 @@
-﻿using SanAndreasUnity.Importing.Conversion;
+﻿using System.IO;
+using SanAndreasUnity.Importing.Archive;
+using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using UnityEditor;
@@ -54,6 +56,8 @@ namespace SanAndreasUnity.Behaviours
             mr.sharedMaterials = geoms.Geometry[0].GetMaterials(MaterialFlags.Default);
 
             mr.sharedMesh = mf.sharedMesh;
+
+            var animation = new SanAndreasUnity.Importing.Animation.AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("colt45.ifp")));
         }
     }
 }
