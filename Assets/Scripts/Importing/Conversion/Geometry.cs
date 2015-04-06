@@ -234,7 +234,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             return new GeometryFrame
             {
-                Name = src.Name.Value,
+                Name = src.Name != null ? src.Name.Value : "unnamed",
                 Position = Convert(src.Position),
                 Rotation = Quaternion.LookRotation(Convert(src.MatrixForward), Convert(src.MatrixUp)),
                 ParentIndex = src.ParentIndex,
