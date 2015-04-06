@@ -141,7 +141,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             Materials = Section<MaterialList>.ReadData(stream).Materials;
 
-            var extensions = Section<Extension>.ReadData(stream);
+            var extensions = Section<Extension>.ReadData(stream, this);
             MaterialSplits = extensions.FirstOrDefault<MaterialSplitList>().MaterialSplits;
         }
     }

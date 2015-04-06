@@ -15,6 +15,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             UInt16 weightsPerVertex = reader.ReadUInt16();
 
             byte[] boneIds = reader.ReadBytes(boneIdCount);
+
+            var vertexCount = header.GetParent<Geometry>().VertexCount;
         }
     }
 }

@@ -32,6 +32,11 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             Version = reader.ReadUInt16();
         }
 
+        public SectionData GetParent()
+        {
+            return _parent;
+        }
+
         public TSection GetParent<TSection>()
             where TSection : SectionData
         {

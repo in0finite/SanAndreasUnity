@@ -14,7 +14,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         {
             var sections = new List<SectionData>();
             while (stream.Position < stream.Length) {
-                sections.Add(Section<SectionData>.ReadData(stream));
+                sections.Add(Section<SectionData>.ReadData(stream, header.GetParent()));
             }
 
             Sections = sections.ToArray();
