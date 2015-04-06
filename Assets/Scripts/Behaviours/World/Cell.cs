@@ -10,6 +10,7 @@ using System.IO;
 using SanAndreasUnity.Behaviours.Player;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Vehicles;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -28,8 +29,6 @@ namespace SanAndreasUnity.Behaviours.World
         void Update()
         {
             if (RootDivision == null && Loader.HasLoaded) {
-                var timer = new Stopwatch();
-
                 RootDivision = Division.Create(transform);
                 RootDivision.SetBounds(
                     new Vector2(-3000f, -3000f),
@@ -37,28 +36,26 @@ namespace SanAndreasUnity.Behaviours.World
 
                 var animation = new SanAndreasUnity.Importing.Animation.AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("colt45.ifp")));
 
-                timer.Start();
+                using (Utilities.Profiler.Start("Cell partitioning time")) {
+                    var insts = Item.GetPlacements<Instance>(CellIds.ToArray())
+                        .ToDictionary(x => x, x => StaticGeometry.Create());
 
-                var insts = Item.GetPlacements<Instance>(CellIds.ToArray())
-                    .ToDictionary(x => x, x => StaticGeometry.Create());
+                    foreach (var inst in insts) {
+                        inst.Value.Initialize(inst.Key, insts);
+                    }
 
-                foreach (var inst in insts) {
-                    inst.Value.Initialize(inst.Key, insts);
+                    var cars = Item.GetPlacements<ParkedVehicle>(CellIds.ToArray())
+                        .Select(x => VehicleSpawner.Create(x))
+                        .Cast<MapObject>()
+                        .ToArray();
+
+                    RootDivision.AddRange(insts.Values.Cast<MapObject>().Concat(cars));
                 }
 
-                var cars = Item.GetPlacements<ParkedVehicle>(CellIds.ToArray())
-                    .Select(x => VehicleSpawner.Create(x))
-                    .Cast<MapObject>()
-                    .ToArray();
-
-                RootDivision.AddRange(insts.Values.Cast<MapObject>().Concat(cars));
-                timer.Stop();
-
-                UnityEngine.Debug.LogFormat("Cell partitioning time: {0} ms", timer.Elapsed.TotalMilliseconds);
-                timer.Reset();
-
                 if (Water != null) {
-                    Water.Initialize(new WaterFile(ArchiveManager.GetPath("data", "water.dat")));
+                    using (Utilities.Profiler.Start("Water load time")) {
+                        Water.Initialize(new WaterFile(Config.GetPath("water_path")));
+                    }
                 }
 
                 _timer = new Stopwatch();

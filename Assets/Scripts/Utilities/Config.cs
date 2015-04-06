@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -29,11 +32,15 @@ namespace SanAndreasUnity.Utilities
         private static readonly JObject _root;
         private static readonly JObject _user;
 
+        private static readonly Dictionary<string, string> _substitutions;
+
         static Config()
         {
             if (!File.Exists(UserFilePath)) {
                 File.WriteAllText(UserFilePath, "{\r\n    // Specify overrides here\r\n}\r\n");
             }
+
+            _substitutions = new Dictionary<string,string>();
 
             _root = JObject.Parse(File.ReadAllText(FilePath));
             _user = JObject.Parse(File.ReadAllText(UserFilePath));
@@ -42,6 +49,32 @@ namespace SanAndreasUnity.Utilities
         public static JToken Get(string key)
         {
             return _user[key] ?? _root[key];
+        }
+
+        private static string GetSubstitution(string key)
+        {
+            if (_substitutions.ContainsKey(key)) return _substitutions[key];
+            var subs = ReplaceSubstitutions((string) Get(key));
+            _substitutions.Add(key, subs);
+            return subs;
+        }
+
+        private static readonly Regex _regex = new Regex(@"\$\{(?<key>[a-z0-9_]+)\}", RegexOptions.Compiled);
+        private static string ReplaceSubstitutions(string value)
+        {
+            return _regex.Replace(value, x => GetSubstitution(x.Groups["key"].Value));
+        }
+
+        public static string GetPath(string key)
+        {
+            return ReplaceSubstitutions((string) Get(key));
+        }
+
+        public static string[] GetPaths(string key)
+        {
+            return Get(key)
+                .Select(x => ReplaceSubstitutions((string) x))
+                .ToArray();
         }
     }
 }

@@ -15,21 +15,11 @@ namespace SanAndreasUnity.Behaviours
     {
         public static bool HasLoaded { get; private set; }
 
-        private static string _gameDir;
-        private static string GameDir { get { return _gameDir ?? (_gameDir = (string) Config.Get("game_dir")); } }
-
-        private static string FormatPath(string path)
-        {
-            return path.Replace("${game_dir}", GameDir);
-        }
-
         private void Awake()
         {
             if (HasLoaded) return;
 
-            var archivePaths = Config.Get("archive_paths")
-                .Select(x => FormatPath((string) x))
-                .ToArray();
+            var archivePaths = Config.GetPaths("archive_paths");
 
             IArchive[] archives;
             using (Utilities.Profiler.Start("Archive load time")) {
@@ -48,7 +38,7 @@ namespace SanAndreasUnity.Behaviours
             }
 
             using (Utilities.Profiler.Start("Item info load time")) {
-                foreach (var path in Config.Get("item_paths").Select(x => FormatPath((string) x))) {
+                foreach (var path in Config.GetPaths("item_paths")) {
                     var ext = Path.GetExtension(path).ToLower();
                     switch (ext) {
                         case ".dat":
@@ -62,9 +52,7 @@ namespace SanAndreasUnity.Behaviours
             }
 
             using (Utilities.Profiler.Start("Handling info load time")) {
-                foreach (var path in Config.Get("handling_paths").Select(x => FormatPath((string) x))) {
-                    Handling.Load(path);
-                }
+                Handling.Load(Config.GetPath("handling_path"));
             }
 
             HasLoaded = true;

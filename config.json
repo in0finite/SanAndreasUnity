@@ -17,11 +17,6 @@
 		"${game_dir}/data/peds.ide"
 	],
 
-	"handling_paths" : [
-		"${game_dir}/data/handling.cfg"
-	],
-
-	"water_paths" : [
-		"${game_dir}/data/water.dat"
-	]
+	"handling_path" : "${game_dir}/data/handling.cfg",
+	"water_path" : "${game_dir}/data/water.dat"
 }
