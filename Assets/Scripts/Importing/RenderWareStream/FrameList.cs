@@ -36,6 +36,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly UInt32 FrameCount;
 
         public readonly Frame[] Frames;
+        public readonly HierarchyAnimation[] HierarchyAnimation;
 
         public FrameList(SectionHeader header, Stream stream)
         {
@@ -45,21 +46,28 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             FrameCount = reader.ReadUInt32();
 
             Frames = new Frame[FrameCount];
+            HierarchyAnimation = new HierarchyAnimation[FrameCount];
 
-            for (var i = 0; i < FrameCount; ++i) {
+            for (var i = 0; i < FrameCount; ++i)
+            {
                 Frames[i] = new Frame(i, reader);
             }
 
-            for (var i = 0; i < FrameCount; ++i) {
+            for (var i = 0; i < FrameCount; ++i)
+            {
                 var extension = Section<Extension>.ReadData(stream);
+
                 var frameName = extension.FirstOrDefault<FrameName>();
-                if (frameName != null) Frames[i].Name = frameName.Name;
+                var hierarchyAnimation = extension.FirstOrDefault<HierarchyAnimation>();
 
-                var hanim = extension.FirstOrDefault<HierarchyAnimation>();
-
-                if (hanim != null)
+                if (frameName != null)
                 {
+                    Frames[i].Name = frameName.Name;
+                }
 
+                if (hierarchyAnimation != null)
+                {
+                    HierarchyAnimation[i] = hierarchyAnimation;
                 }
             }
         }
