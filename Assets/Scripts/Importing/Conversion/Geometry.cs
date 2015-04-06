@@ -94,6 +94,16 @@ namespace SanAndreasUnity.Importing.Conversion
             return dst.ToArray();
         }
 
+        private static int[] ReverseFaces(int[] indices)
+        {
+            for (var i = 0; i < indices.Length - 2; i += 3) {
+                var temp = indices[i];
+                indices[i] = indices[i + 1];
+                indices[i + 1] = temp;
+            }
+            return indices;
+        }
+
         private static UnityEngine.Vector3[] CalculateNormals(RenderWareStream.Geometry src, UnityEngine.Vector3[] verts)
         {
             var norms = new UnityEngine.Vector3[src.VertexCount];
@@ -218,9 +228,14 @@ namespace SanAndreasUnity.Importing.Conversion
             
             mesh.subMeshCount = src.MaterialSplits.Length;
 
+            var isTriangleStrip = (src.Flags & GeometryFlag.TriangleStrips) == GeometryFlag.TriangleStrips;
+
             var subMesh = 0;
             foreach (var split in src.MaterialSplits) {
-                mesh.SetIndices(FromTriangleStrip(split.FaceIndices), MeshTopology.Triangles, subMesh++);
+                var indices = isTriangleStrip
+                    ? FromTriangleStrip(split.FaceIndices)
+                    : ReverseFaces(split.FaceIndices);
+                mesh.SetIndices(indices, MeshTopology.Triangles, subMesh++);
             }
 
             mesh.RecalculateBounds();
