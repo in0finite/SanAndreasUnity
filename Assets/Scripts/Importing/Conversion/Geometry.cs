@@ -75,6 +75,28 @@ namespace SanAndreasUnity.Importing.Conversion
             return new Color32(clr.R, clr.G, clr.B, clr.A);
         }
 
+        private static UnityEngine.BoneWeight Convert(SkinBoneIndices boneIndices, SkinBoneWeights boneWeights)
+        {
+            return new UnityEngine.BoneWeight
+            {
+                boneIndex0 = boneIndices.Indices[0],
+                boneIndex1 = boneIndices.Indices[1],
+                boneIndex2 = boneIndices.Indices[2],
+                boneIndex3 = boneIndices.Indices[3],
+                
+                weight0 = boneWeights.Weights[0],
+                weight1 = boneWeights.Weights[1],
+                weight2 = boneWeights.Weights[2],
+                weight3 = boneWeights.Weights[3],
+            };
+        }
+
+        private static UnityEngine.BoneWeight[] Convert(SkinBoneIndices[] boneIndices, SkinBoneWeights[] boneWeights)
+        {
+            return Enumerable.Range(0, (int)boneIndices.Length).Select(x => Convert(boneIndices[x], boneWeights[x])).ToArray();
+        }
+
+
         private static int[] FromTriangleStrip(IList<int> indices)
         {
             var dst = new List<int>((indices.Count - 2) * 3);
@@ -302,7 +324,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static readonly Dictionary<string, GeometryParts> _sLoaded
             = new Dictionary<string, GeometryParts>();
-        
+
         public static GeometryParts Load(string modelName, params string[] texDictNames)
         {
             return Load(modelName, texDictNames.Select(x => TextureDictionary.Load(x)).ToArray());
@@ -338,6 +360,8 @@ namespace SanAndreasUnity.Importing.Conversion
         private Geometry(RenderWareStream.Geometry geom, Mesh mesh, TextureDictionary[] textureDictionaries)
         {
             Mesh = mesh;
+
+            Mesh.boneWeights = Convert(geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
 
             _geom = geom;
             _textureDictionaries = textureDictionaries;
