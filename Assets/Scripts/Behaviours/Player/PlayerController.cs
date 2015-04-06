@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 using SanAndreasUnity.Utilities;
+using System.Collections;
+using SanAndreasUnity.Behaviours.Vehicles;
+using System.Diagnostics;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours.Player
 {
@@ -24,6 +28,10 @@ namespace SanAndreasUnity.Behaviours.Player
 
         public float VelocitySmoothing = 0.05f;
 
+        public Vehicle CurrentVehicle { get; private set; }
+
+        public bool IsInVehicle { get { return CurrentVehicle != null; } }
+
         public Camera Camera;
 
         public float Pitch
@@ -46,18 +54,19 @@ namespace SanAndreasUnity.Behaviours.Player
             {
                 _yaw = Mathf.Clamp(value.NormalizeAngle(), YawClamp.x, YawClamp.y);
 
-                var angles = transform.localEulerAngles;
+                var trans = IsInVehicle ? Camera.transform : transform;
+                var angles = trans.localEulerAngles;
                 angles.y = _yaw;
-                transform.localEulerAngles = angles;
+                trans.localEulerAngles = angles;
             }
         }
 
-        void Awake()
+        private void Awake()
         {
             _controller = GetComponent<CharacterController>();
         }
 
-        void Update()
+        private void Update()
         {
             if (!_lockedCursor && Input.GetMouseButtonDown(0)) {
                 _lockedCursor = true;
@@ -69,29 +78,48 @@ namespace SanAndreasUnity.Behaviours.Player
                 Cursor.visible = true;
             }
 
-            if (_lockedCursor) {
-                var cursorDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+            if (!_lockedCursor) return;
 
-                Yaw += cursorDelta.x * CursorSensitivity.x;
-                Pitch -= cursorDelta.y * CursorSensitivity.y;
+            var cursorDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
-                _move = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+            Yaw += cursorDelta.x * CursorSensitivity.x;
+            Pitch -= cursorDelta.y * CursorSensitivity.y;
 
-                if (_move.sqrMagnitude > 0f) {
-                    _move.Normalize();
-                    _move = transform.forward * _move.z + transform.right * _move.x;
+            if (IsInVehicle) return;
 
-                    if (Input.GetKey(KeyCode.LeftShift)) {
-                        _move *= 12f;
-                    } else {
-                        _move *= 4f;
-                    }
+            _move = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+
+            if (_move.sqrMagnitude > 0f) {
+                _move.Normalize();
+                _move = transform.forward * _move.z + transform.right * _move.x;
+
+                if (Input.GetKey(KeyCode.LeftShift)) {
+                    _move *= 12f;
+                } else {
+                    _move *= 4f;
+                }
+            }
+
+            if (Input.GetButtonDown("Use")) {
+                foreach (var vehicle in FindObjectsOfType<Vehicle>()) {
+                    var dist = Vector3.Distance(Camera.transform.position, vehicle.transform.position);
+                    if (dist > 10f) continue;
+
+                    RaycastHit hitInfo;
+                    var ray = Camera.ViewportPointToRay(new Vector2(0.5f, 0.5f));
+                    if (!vehicle.GetComponentsInChildren<MeshCollider>().Any(
+                        x => x.Raycast(ray, out hitInfo, 2f))) continue;
+
+                    EnterVehicle(vehicle);
+                    break;
                 }
             }
         }
 
-        void FixedUpdate()
+        private void FixedUpdate()
         {
+            if (IsInVehicle) return;
+
             var vDiff = _move - new Vector3(_velocity.x, 0f, _velocity.z);
 
             _velocity += vDiff * (1f - Mathf.Pow(VelocitySmoothing, 4f * Time.fixedDeltaTime));
@@ -103,6 +131,32 @@ namespace SanAndreasUnity.Behaviours.Player
             }
 
             _controller.Move(_velocity * Time.fixedDeltaTime);
+        }
+
+        public void EnterVehicle(Vehicle vehicle)
+        {
+            if (CurrentVehicle != null) return;
+
+            StartCoroutine(EnterVehicleAsync(vehicle));
+        }
+
+        private IEnumerator EnterVehicleAsync(Vehicle vehicle)
+        {
+            _controller.enabled = false;
+            CurrentVehicle = vehicle;
+
+            var timer = new Stopwatch();
+            timer.Start();
+
+            Camera.transform.SetParent(vehicle.DriverTransform, true);
+
+            while (timer.Elapsed.TotalSeconds < 1f) {
+                Camera.transform.localPosition = Vector3.Lerp(Camera.transform.localPosition, Vector3.up * .65f, .25f);
+
+                yield return new WaitForFixedUpdate();
+            }
+
+            // TODO: enable vehicle controller
         }
     }
 }

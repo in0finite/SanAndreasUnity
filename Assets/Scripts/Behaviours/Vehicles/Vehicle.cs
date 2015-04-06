@@ -7,6 +7,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         public VehicleDef Definition { get; private set; }
 
+        public Transform DriverTransform
+        {
+            get { return GetPart("ped_frontseat"); }
+        }
+
         private void Update()
         {
             foreach (var wheel in _wheels)
