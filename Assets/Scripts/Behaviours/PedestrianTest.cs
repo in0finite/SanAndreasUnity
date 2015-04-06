@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
-            if (!GameData.HasLoaded) return;
+            if (!Loader.HasLoaded) return;
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying && !EditorApplication.isPaused) return;
 #endif

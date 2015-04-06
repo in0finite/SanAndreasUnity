@@ -27,7 +27,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         void Update()
         {
-            if (RootDivision == null && GameData.HasLoaded) {
+            if (RootDivision == null && Loader.HasLoaded) {
                 var timer = new Stopwatch();
 
                 RootDivision = Division.Create(transform);

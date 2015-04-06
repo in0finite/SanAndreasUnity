@@ -17,18 +17,8 @@ namespace SanAndreasUnity.Importing.Items
         private static readonly Dictionary<int, List<Placement>> _placements
             = new Dictionary<int,List<Placement>>();
 
-        public static bool HasLoaded { get; private set; }
-
-        public static void Load(string path)
+        public static void ReadLoadList(string path)
         {
-            if (HasLoaded) {
-                _zones.Clear();
-                _definitions.Clear();
-                _placements.Clear();
-            }
-
-            HasLoaded = true;
-
             var ws = new[] {' ', '\t'};
 
             using (var reader = File.OpenText(path)) {

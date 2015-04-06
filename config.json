@@ -4,7 +4,8 @@
 
 	"game_dir" : "C:/Program Files (x86)/Steam/steamapps/common/Grand Theft Auto San Andreas",
 
-	"image_archives" : [
+	"archive_paths" : [
+		"${game_dir}",
 		"${game_dir}/models/gta3.img",
 		"${game_dir}/models/gta_int.img",
 		"${game_dir}/models/player.img"
@@ -13,8 +14,8 @@
 	"load_order" : [
 		{ "type": "LoadList", "path": "${game_dir}/data/gta.dat" },
 
-		{ "type": "ItemDef",  "path": "${game_dir}/data/vehicles.ide" },
-		{ "type": "ItemDef",  "path": "${game_dir}/data/peds.ide" },
+		{ "type": "IDE",  "path": "${game_dir}/data/vehicles.ide" },
+		{ "type": "IDE",  "path": "${game_dir}/data/peds.ide" },
 
 		{ "type": "Handling", "path": "${game_dir}/data/handling.cfg" }
 	]
