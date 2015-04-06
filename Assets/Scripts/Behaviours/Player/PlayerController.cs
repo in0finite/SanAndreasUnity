@@ -87,7 +87,7 @@ namespace SanAndreasUnity.Behaviours.Player
 
             if (IsInVehicle) {
                 Camera.transform.rotation = Quaternion.AngleAxis(Yaw, Vector3.up) * Quaternion.AngleAxis(Pitch, Vector3.right);
-                Camera.transform.position = CurrentVehicle.transform.position - Camera.transform.forward * 8f;
+                Camera.transform.position = CurrentVehicle.transform.position - Camera.transform.forward * 6f;
                 return;
             }
 

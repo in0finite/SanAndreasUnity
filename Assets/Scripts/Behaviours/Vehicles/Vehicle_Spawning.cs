@@ -39,13 +39,28 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public class Wheel
         {
-            public WheelAlignment Alignment { get; set; }
+            public WheelAlignment Alignment
+            {
+                get { return _alignment; }
+                set
+                {
+                    _alignment = value;
+
+                    IsLeftHand = (value == WheelAlignment.LeftFront ||
+                        value == WheelAlignment.LeftMid ||
+                        value == WheelAlignment.LeftBack);
+                }
+            }
+
+            public bool IsLeftHand { get; private set; }
 
             public Transform Parent { get; set; }
             public Transform Child { get; set; }
             public WheelCollider Collider { get; set; }
 
             public Quaternion Roll { get; set; }
+
+            private WheelAlignment _alignment;
         }
 
         private readonly Dictionary<Transform, string> _namedFrames = new Dictionary<Transform, string>();
@@ -182,7 +197,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         wheelAlignment == WheelAlignment.LeftMid ||
                         wheelAlignment == WheelAlignment.LeftBack)
                     {
-                        //_children[i].Rotate(Vector3.up, 180.0f);
+                        _children[i].Rotate(Vector3.up, 180.0f);
                     }
                 }
             }

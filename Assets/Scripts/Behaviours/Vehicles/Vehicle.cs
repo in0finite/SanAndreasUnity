@@ -35,7 +35,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Child.localRotation = wheel.Roll;
 
                 // calculate new roll
-                wheel.Child.Rotate(Vector3.right, wheel.Collider.rpm / 60.0f * 360.0f * Time.deltaTime);
+                wheel.Child.Rotate(wheel.IsLeftHand ? Vector3.left : Vector3.right, wheel.Collider.rpm / 60.0f * 360.0f * Time.deltaTime);
                 wheel.Roll = wheel.Child.localRotation;
 
                 // apply yaw

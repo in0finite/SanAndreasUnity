@@ -405,9 +405,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DragScale: 100
   AccelerationScale: 20
-  SuspensionForceScale: 100000
-  SuspensionDampingScale: 10000
-  MassScale: 2
+  SuspensionForceScale: 50000
+  SuspensionDampingScale: 5000
+  MassScale: 4
 --- !u!4 &1843689728
 Transform:
   m_ObjectHideFlags: 0
