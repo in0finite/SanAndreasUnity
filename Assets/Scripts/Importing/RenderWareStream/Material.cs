@@ -33,6 +33,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly Single Smoothness;
 
         public Material(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
@@ -47,10 +48,10 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             Diffuse = reader.ReadSingle();
 
             for (var i = 0; i < TextureCount; ++i) {
-                Textures[i] = Section<Texture>.ReadData(stream);
+                Textures[i] = ReadSection<Texture>();
             }
 
-            var extensions = Section<Extension>.ReadData(stream);
+            var extensions = ReadSection<Extension>();
 
             var smoothness = Smoothness;
             var specular = Specular;
@@ -72,6 +73,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly float Intensity;
 
         public ReflectionMaterial(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             var reader = new BinaryReader(stream);
 
@@ -88,6 +90,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly float SpecularLevel;
 
         public SpecularMaterial(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             var reader = new BinaryReader(stream);
 

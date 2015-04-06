@@ -73,24 +73,15 @@ namespace SanAndreasUnity.Behaviours
             UnityEngine.Debug.LogFormat("Item info load time: {0} ms", timer.Elapsed.TotalMilliseconds);
             timer.Reset();
 
-
             timer.Start();
 
-            foreach (var path in Config.Get("item_paths").Select(x => FormatPath((string) x))) {
-                var ext = Path.GetExtension(path).ToLower();
-                switch (ext) {
-                    case ".dat":
-                        Item.ReadLoadList(path); break;
-                    case ".ide":
-                        Item.ReadIde(path); break;
-                    case ".ipl":
-                        Item.ReadIpl(path); break;
-                }
+            foreach (var path in Config.Get("handling_paths").Select(x => FormatPath((string) x))) {
+                Handling.Load(path);
             }
 
             timer.Stop();
 
-            UnityEngine.Debug.LogFormat("Item info load time: {0} ms", timer.Elapsed.TotalMilliseconds);
+            UnityEngine.Debug.LogFormat("Handling load time: {0} ms", timer.Elapsed.TotalMilliseconds);
             timer.Reset();
 
             HasLoaded = true;

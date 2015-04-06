@@ -18,8 +18,9 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly UInt32 Unused;
 
         public Atomic(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
-            var data = Section<Data>.ReadData(stream); // Struct
+            var data = ReadSection<Data>(); // Struct
             var reader = new BinaryReader(new MemoryStream(data.Value));
 
             FrameIndex = reader.ReadUInt32();

@@ -31,6 +31,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly MaterialSplit[] MaterialSplits;
 
         public MaterialSplitList(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             var reader = new BinaryReader(stream);
 

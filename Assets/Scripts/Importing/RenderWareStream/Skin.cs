@@ -32,6 +32,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
     public class Skin : SectionData
     {
         public Skin(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             var reader = new BinaryReader(stream);
 

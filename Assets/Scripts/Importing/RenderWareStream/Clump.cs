@@ -19,8 +19,9 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly Collision.CollisionFile Collision;
 
         public Clump(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
-            var data = Section<Data>.ReadData(stream); // Struct
+            var data = ReadSection<Data>(); // Struct
             if (data == null) return;
 
             var reader = new BinaryReader(new MemoryStream(data.Value));
@@ -29,17 +30,17 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             LightCount = reader.ReadUInt32();
             CameraCount = reader.ReadUInt32();
 
-            FrameList = Section<FrameList>.ReadData(stream); // Frame List
-            GeometryList = Section<GeometryList>.ReadData(stream); // Geometry List
+            FrameList = ReadSection<FrameList>(); // Frame List
+            GeometryList = ReadSection<GeometryList>(); // Geometry List
 
             Atomics = new Atomic[AtomicCount];
 
             for (int i = 0; i < AtomicCount; ++i)
             {
-                Atomics[i] = Section<Atomic>.ReadData(stream); // Atomic
+                Atomics[i] = ReadSection<Atomic>(); // Atomic
             }
 
-            var section = Section<SectionData>.ReadData(stream);
+            var section = ReadSection<SectionData>();
             var extension = section as Extension;
 
             if (extension != null) {

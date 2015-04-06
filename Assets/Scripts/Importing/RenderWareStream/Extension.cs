@@ -11,10 +11,11 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly SectionData[] Sections;
 
         public Extension(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             var sections = new List<SectionData>();
             while (stream.Position < stream.Length) {
-                sections.Add(Section<SectionData>.ReadData(stream, header.GetParent()));
+                sections.Add(ReadSection<SectionData>(header.GetParent()));
             }
 
             Sections = sections.ToArray();

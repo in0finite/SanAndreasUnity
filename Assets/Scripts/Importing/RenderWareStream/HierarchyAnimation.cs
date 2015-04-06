@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace SanAndreasUnity.Importing.RenderWareStream
 {
@@ -47,6 +48,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly UInt32 KeyFrameSize;
 
         public HierarchyAnimation(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             var reader = new BinaryReader(stream);
 

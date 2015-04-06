@@ -58,6 +58,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly string MaskName;
 
         public Texture(SectionHeader header, Stream stream)
+            : base(header, stream)
         {
             SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
@@ -65,8 +66,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             FilterMode = (Filter) reader.ReadUInt16();
             reader.ReadUInt16(); // Unknown
 
-            TextureName = Section<String>.ReadData(stream).Value;
-            MaskName = Section<String>.ReadData(stream).Value;
+            TextureName = ReadSection<String>().Value;
+            MaskName = ReadSection<String>().Value;
         }
     }
 }
