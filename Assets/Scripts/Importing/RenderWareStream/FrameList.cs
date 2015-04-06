@@ -54,6 +54,13 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                 var extension = Section<Extension>.ReadData(stream);
                 var frameName = extension.FirstOrDefault<FrameName>();
                 if (frameName != null) Frames[i].Name = frameName.Name;
+
+                var hanim = extension.FirstOrDefault<HierarchyAnimation>();
+
+                if (hanim != null)
+                {
+
+                }
             }
         }
     }
