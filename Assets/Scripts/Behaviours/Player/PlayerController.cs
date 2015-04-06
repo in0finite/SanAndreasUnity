@@ -149,6 +149,9 @@ namespace SanAndreasUnity.Behaviours.Player
             timer.Start();
 
             Camera.transform.SetParent(vehicle.DriverTransform, true);
+            transform.SetParent(vehicle.transform);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
 
             while (timer.Elapsed.TotalSeconds < 1f) {
                 Camera.transform.localPosition = Vector3.Lerp(Camera.transform.localPosition, Vector3.up * .65f, .25f);
@@ -156,7 +159,7 @@ namespace SanAndreasUnity.Behaviours.Player
                 yield return new WaitForFixedUpdate();
             }
 
-            // TODO: enable vehicle controller
+            vehicle.gameObject.AddComponent<VehicleController>();
         }
     }
 }

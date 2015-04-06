@@ -348,7 +348,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .25
+  near clip plane: .0625
   far clip plane: 2048
   field of view: 60
   orthographic: 0
@@ -405,6 +405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DragScale: .00999999978
   AccelerationScale: 50
+  SuspensionForceScale: 100000
 --- !u!4 &1843689728
 Transform:
   m_ObjectHideFlags: 0
