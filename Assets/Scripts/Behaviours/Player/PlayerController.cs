@@ -34,6 +34,8 @@ namespace SanAndreasUnity.Behaviours.Player
 
         public Camera Camera;
 
+        public float CarCameraDistance = 6.0f;
+
         public float Pitch
         {
             get { return _pitch; }
@@ -87,7 +89,20 @@ namespace SanAndreasUnity.Behaviours.Player
 
             if (IsInVehicle) {
                 Camera.transform.rotation = Quaternion.AngleAxis(Yaw, Vector3.up) * Quaternion.AngleAxis(Pitch, Vector3.right);
-                Camera.transform.position = CurrentVehicle.transform.position - Camera.transform.forward * 6f;
+
+                float distance = CarCameraDistance;
+
+                var castRay = new Ray(CurrentVehicle.transform.position, -Camera.transform.forward);
+
+                RaycastHit hitInfo;
+
+                if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance))
+                {
+                    distance = hitInfo.distance;
+                }
+
+                Camera.transform.position = castRay.GetPoint(distance);
+
                 return;
             }
 

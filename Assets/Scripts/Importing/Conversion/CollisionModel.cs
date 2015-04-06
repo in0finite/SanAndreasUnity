@@ -148,6 +148,8 @@ namespace SanAndreasUnity.Importing.Conversion
             foreach (var collider in clone.GetComponentsInChildren<Collider>()) {
                 var meshCollider = collider as MeshCollider;
 
+                collider.gameObject.layer = 2;
+
                 if (meshCollider != null) {
                     meshCollider.convex = true;
                 }

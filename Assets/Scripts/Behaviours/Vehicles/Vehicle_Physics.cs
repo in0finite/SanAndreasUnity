@@ -26,7 +26,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             VConsts.Changed += UpdateValues;
 
-            _rigidBody.mass = HandlingData.Mass;
+            _rigidBody.drag = HandlingData.Drag * VConsts.Instance.DragScale;
+            _rigidBody.mass = HandlingData.Mass * VConsts.Instance.MassScale;
             _rigidBody.centerOfMass = HandlingData.CentreOfMass;
 
             foreach (var wheel in _wheels)
@@ -42,10 +43,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Collider.suspensionSpring = spring;
 
                 var friction = wheel.Collider.forwardFriction;
-                friction.extremumSlip = 0.6f;
-                friction.extremumValue = 1.2f;
-                friction.asymptoteSlip = 2.0f;
-                friction.asymptoteValue = 0.2f;
+                friction.extremumSlip = 0.5f;
+                friction.extremumValue = 1.5f;
+                friction.asymptoteSlip = 20.0f;
+                friction.asymptoteValue = 0.5f;
                 friction.stiffness = 1;
 
                 wheel.Collider.forwardFriction = friction;
@@ -61,8 +62,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             foreach (var wheel in _wheels) {
                 var spring = wheel.Collider.suspensionSpring;
-                spring.damper = HandlingData.SuspensionDampingLevel * VConsts.Instance.SuspensionDampingScale;
-                spring.spring = HandlingData.SuspensionForceLevel * VConsts.Instance.SuspensionForceScale;
+                spring.damper = HandlingData.SuspensionDampingLevel * vals.SuspensionDampingScale;
+                spring.spring = HandlingData.SuspensionForceLevel * vals.SuspensionForceScale;
                 wheel.Collider.suspensionSpring = spring;
             }
         }

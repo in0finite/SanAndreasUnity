@@ -193,6 +193,7 @@ MonoBehaviour:
   YawClamp: {x: -180, y: 180}
   VelocitySmoothing: .0500000007
   Camera: {fileID: 1521428848}
+  CarCameraDistance: 6
 --- !u!143 &412119319
 CharacterController:
   m_ObjectHideFlags: 0
@@ -403,11 +404,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82a245a7166802b41bcb706255d566f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DragScale: 100
-  AccelerationScale: 20
+  DragScale: .0500000007
+  AccelerationScale: 40
   SuspensionForceScale: 50000
   SuspensionDampingScale: 5000
-  MassScale: 4
+  MassScale: 2
 --- !u!4 &1843689728
 Transform:
   m_ObjectHideFlags: 0
