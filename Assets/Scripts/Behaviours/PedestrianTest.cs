@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Conversion;
+using SanAndreasUnity.Importing.Items.Definitions;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,12 +12,13 @@ namespace SanAndreasUnity.Behaviours
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     [ExecuteInEditMode]
-    public class ModelTestDummy : MonoBehaviour
+    public class PedestrianTest : MonoBehaviour
     {
-        private string _loadedModelName;
+        private int _loadedPedestrianId;
 
-        public string ModelName;
-        public List<string> TextureDictionaries;
+        public Pedestrian Definition { get; private set; }
+
+        public int PedestrianId = 7;
 
         private void Update()
         {
@@ -25,17 +27,24 @@ namespace SanAndreasUnity.Behaviours
             if (!EditorApplication.isPlaying && !EditorApplication.isPaused) return;
 #endif
 
-            if (_loadedModelName != ModelName) {
-                _loadedModelName = ModelName;
+            if (_loadedPedestrianId != PedestrianId) {
+                _loadedPedestrianId = PedestrianId;
 
-                LoadModel(ModelName, TextureDictionaries.Count == 0
-                    ? new[] { ModelName } : TextureDictionaries.ToArray());
+                Load(PedestrianId);
             }
         }
         
         private void OnValidate()
         {
             Update();
+        }
+
+        private void Load(int id)
+        {
+            Definition = Cell.GameData.GetDefinition<Pedestrian>(id);
+            if (Definition == null) return;
+
+            LoadModel(Definition.ModelName, Definition.TextureDictionaryName);
         }
 
         private void LoadModel(string modelName, params string[] txds)

@@ -63,6 +63,7 @@ namespace SanAndreasUnity.Behaviours.World
                 timer.Start();
                 GameData = new GameData(ArchiveManager.GetPath("data", "gta.dat"));
                 GameData.ReadIde("data/vehicles.ide");
+                GameData.ReadIde("data/peds.ide");
 
                 Handling.Load(ArchiveManager.GetPath("data", "handling.cfg"));
                 timer.Stop();
