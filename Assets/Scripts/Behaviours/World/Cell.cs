@@ -35,6 +35,8 @@ namespace SanAndreasUnity.Behaviours.World
                     new Vector2(-3000f, -3000f),
                     new Vector2(+3000f, +3000f));
 
+                var animation = new SanAndreasUnity.Importing.Animation.AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("colt45.ifp")));
+
                 timer.Start();
 
                 var insts = GameData.GetPlacements<Instance>(CellIds.ToArray())
