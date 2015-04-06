@@ -62,31 +62,20 @@ namespace SanAndreasUnity.Importing.Animation
 
     public class Frame
     {
-        public readonly Int16 QuaternionX;
-        public readonly Int16 QuaternionY;
-        public readonly Int16 QuaternionZ;
-        public readonly Int16 QuaternionW;
+        public readonly Vector3 Translation;
+        public readonly Quaternion Rotation;
 
         public readonly Int16 Time;
 
-        public readonly Int16 TranslationX;
-        public readonly Int16 TranslationY;
-        public readonly Int16 TranslationZ;
-
         public Frame(BinaryReader reader, bool root)
         {
-            QuaternionX = reader.ReadInt16();
-            QuaternionY = reader.ReadInt16();
-            QuaternionZ = reader.ReadInt16();
-            QuaternionW = reader.ReadInt16();
+            Rotation = new Quaternion(reader, QuaternionCompression.Animation);
 
             Time = reader.ReadInt16();
 
             if (root)
             {
-                TranslationX = reader.ReadInt16();
-                TranslationY = reader.ReadInt16();
-                TranslationZ = reader.ReadInt16();
+                Translation = new Vector3(reader, VectorCompression.Animation);
             }
         }
     }

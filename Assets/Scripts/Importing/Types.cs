@@ -3,6 +3,19 @@ using System.IO;
 
 namespace SanAndreasUnity.Importing
 {
+    public enum VectorCompression
+    {
+        None,
+        Collision,
+        Animation,
+    }
+
+    public enum QuaternionCompression
+    {
+        None,
+        Animation,
+    }
+
     public struct Vector2
     {
         public readonly Single X;
@@ -24,16 +37,56 @@ namespace SanAndreasUnity.Importing
         public readonly Single Y;
         public readonly Single Z;
 
-        public Vector3(BinaryReader reader, bool compressed = false)
+        public Vector3(BinaryReader reader, VectorCompression compression = VectorCompression.None)
         {
-            if (!compressed) {
+            if (compression == VectorCompression.None)
+            {
                 X = reader.ReadSingle();
                 Y = reader.ReadSingle();
                 Z = reader.ReadSingle();
-            } else {
-                X = reader.ReadInt16() / 128f;
-                Y = reader.ReadInt16() / 128f;
-                Z = reader.ReadInt16() / 128f;
+            }
+            else
+            {
+                float compressionScale;
+
+                switch (compression)
+                {
+                    case VectorCompression.Collision: compressionScale = 128.0f; break;
+                    case VectorCompression.Animation: compressionScale = 1024.0f; break;
+                    default: compressionScale = 1.0f; break;
+                }
+
+                X = reader.ReadInt16() / compressionScale;
+                Y = reader.ReadInt16() / compressionScale;
+                Z = reader.ReadInt16() / compressionScale;
+            }
+        }
+    }
+
+    public struct Quaternion
+    {
+        public readonly Single X;
+        public readonly Single Y;
+        public readonly Single Z;
+        public readonly Single W;
+
+        public Quaternion(BinaryReader reader, QuaternionCompression compression = QuaternionCompression.None)
+        {
+            if (compression == QuaternionCompression.None)
+            {
+                X = reader.ReadSingle();
+                Y = reader.ReadSingle();
+                Z = reader.ReadSingle();
+                W = reader.ReadSingle();
+            }
+            else
+            {
+                float compressionScale = 4096.0f;
+
+                X = reader.ReadInt16() / compressionScale;
+                Y = reader.ReadInt16() / compressionScale;
+                Z = reader.ReadInt16() / compressionScale;
+                W = reader.ReadInt16() / compressionScale;
             }
         }
     }

@@ -251,7 +251,7 @@ namespace SanAndreasUnity.Importing.Conversion
             {
                 Name = src.Name != null ? src.Name.Value : "unnamed",
                 Position = Convert(src.Position),
-                Rotation = Quaternion.LookRotation(Convert(src.MatrixForward), Convert(src.MatrixUp)),
+                Rotation = UnityEngine.Quaternion.LookRotation(Convert(src.MatrixForward), Convert(src.MatrixUp)),
                 ParentIndex = src.ParentIndex,
                 GeometryIndex = atomic == null ? -1 : (int)atomic.GeometryIndex,
             };
