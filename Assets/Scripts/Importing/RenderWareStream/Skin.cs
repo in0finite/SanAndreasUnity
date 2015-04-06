@@ -31,6 +31,13 @@ namespace SanAndreasUnity.Importing.RenderWareStream
     [SectionType(0x0116)]
     public class Skin : SectionData
     {
+        public readonly SkinBoneIndices[] VertexBoneIndices;
+        public readonly SkinBoneWeights[] VertexBoneWeights;
+
+        public readonly Matrix4x4[] SkinToBoneMatrices;
+
+        public readonly byte[] MeshBoneRemapIndices;
+
         public Skin(SectionHeader header, Stream stream)
             : base(header, stream)
         {
@@ -44,24 +51,24 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             var vertexCount = header.GetParent<Geometry>().VertexCount;
 
-            SkinBoneIndices[] vertexBoneIndices = new SkinBoneIndices[vertexCount];
-            SkinBoneWeights[] vertexBoneWeights = new SkinBoneWeights[vertexCount];
+            VertexBoneIndices = new SkinBoneIndices[vertexCount];
+            VertexBoneWeights = new SkinBoneWeights[vertexCount];
 
             for (int i = 0; i < vertexCount; ++i)
             {
-                vertexBoneIndices[i] = new SkinBoneIndices(reader);
+                VertexBoneIndices[i] = new SkinBoneIndices(reader);
             }
 
             for (int i = 0; i < vertexCount; ++i)
             {
-                vertexBoneWeights[i] = new SkinBoneWeights(reader);
+                VertexBoneWeights[i] = new SkinBoneWeights(reader);
             }
 
-            Matrix4x4[] skinToBoneMatrices = new Matrix4x4[boneCount];
+            SkinToBoneMatrices = new Matrix4x4[boneCount];
 
             for (int i = 0; i < boneCount; ++i)
             {
-                skinToBoneMatrices[i] = new Matrix4x4(reader);
+                SkinToBoneMatrices[i] = new Matrix4x4(reader);
             }
 
             UInt32 boneLimit = reader.ReadUInt32();
@@ -70,7 +77,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             if (meshCount > 0)
             {
-                byte[] meshBoneRemapIndices = reader.ReadBytes((Int32)(boneCount + 2 * (RLE + meshCount)));
+                MeshBoneRemapIndices = reader.ReadBytes((Int32)(boneCount + 2 * (RLE + meshCount)));
             }
         }
     }

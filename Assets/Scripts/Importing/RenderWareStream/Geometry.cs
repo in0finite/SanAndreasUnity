@@ -72,6 +72,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly Material[] Materials;
         public readonly MaterialSplit[] MaterialSplits;
 
+        public readonly Skin Skinning;
+
         public Geometry(SectionHeader header, Stream stream)
             : base(header, stream)
         {
@@ -143,7 +145,9 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             Materials = ReadSection<MaterialList>().Materials;
 
             var extensions = ReadSection<Extension>();
+
             MaterialSplits = extensions.FirstOrDefault<MaterialSplitList>().MaterialSplits;
+            Skinning = extensions.FirstOrDefault<Skin>();
         }
     }
 }
