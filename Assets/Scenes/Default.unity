@@ -406,9 +406,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DragScale: .0500000007
   AccelerationScale: 40
+  BreakingScale: 100
   SuspensionForceScale: 50000
   SuspensionDampingScale: 5000
   MassScale: 2
+  FrictionExtremumSlip: .5
+  FrictionExtremumValue: 1.5
+  FrictionAsymptoteSlip: 20
+  FrictionAsymptoteValue: .5
+  FrictionStiffness: 1
 --- !u!4 &1843689728
 Transform:
   m_ObjectHideFlags: 0
