@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Importing.Collision
 
         public Vertex(BinaryReader reader, Version version)
         {
-            Position = new Vector3(reader, version != Version.COLL);
+            Position = new Vector3(reader, (version != Version.COLL) ? VectorCompression.Collision : VectorCompression.None);
         }
     }
 }

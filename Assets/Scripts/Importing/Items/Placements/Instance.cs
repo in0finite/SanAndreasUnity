@@ -24,7 +24,7 @@ namespace SanAndreasUnity.Importing.Items.Placements
         public readonly string LodGeometry;
         public readonly int CellId;
         public readonly UnityEngine.Vector3 Position;
-        public readonly Quaternion Rotation;
+        public readonly UnityEngine.Quaternion Rotation;
         public readonly int LodIndex;
 
         public Instance LodInstance { get; internal set; }
@@ -38,7 +38,7 @@ namespace SanAndreasUnity.Importing.Items.Placements
             LodGeometry = GetString(1);
             CellId = GetInt(2);
             Position = new UnityEngine.Vector3(GetSingle(3), GetSingle(5), GetSingle(4));
-            Rotation = new Quaternion(GetSingle(6), GetSingle(8), GetSingle(7), GetSingle(9));
+            Rotation = new UnityEngine.Quaternion(GetSingle(6), GetSingle(8), GetSingle(7), GetSingle(9));
             LodIndex = GetInt(10);
         }
 
@@ -55,7 +55,7 @@ namespace SanAndreasUnity.Importing.Items.Placements
             var rotY = reader.ReadSingle();
             var rotW = reader.ReadSingle();
 
-            Rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+            Rotation = new UnityEngine.Quaternion(rotX, rotY, rotZ, rotW);
 
             ObjectId = reader.ReadInt32();
             CellId = reader.ReadInt32();

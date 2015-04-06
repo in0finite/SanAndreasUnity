@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
-    [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+    [RequireComponent(typeof(MeshFilter), typeof(SkinnedMeshRenderer))]
     [ExecuteInEditMode]
     public class PedestrianTest : MonoBehaviour
     {
@@ -46,12 +46,14 @@ namespace SanAndreasUnity.Behaviours
         private void LoadModel(string modelName, params string[] txds)
         {
             var mf = GetComponent<MeshFilter>();
-            var mr = GetComponent<MeshRenderer>();
+            var mr = GetComponent<SkinnedMeshRenderer>();
 
             var geoms = Geometry.Load(modelName, txds);
 
             mf.sharedMesh = geoms.Geometry[0].Mesh;
             mr.sharedMaterials = geoms.Geometry[0].GetMaterials(MaterialFlags.Default);
+
+            mr.sharedMesh = mf.sharedMesh;
         }
     }
 }
