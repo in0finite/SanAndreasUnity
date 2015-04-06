@@ -23,6 +23,13 @@ namespace SanAndreasUnity.Importing.Animation
     public class AnimationPackage : Section
     {
         public AnimationPackage(BinaryReader reader)
-            : base(reader) { }
+            : base(reader)
+        {
+            string identifier = reader.ReadString(4);
+            Int32 fileSize = reader.ReadInt32();
+            string internalFileName = reader.ReadString(24);
+            Int32 animationCount = reader.ReadInt32();
+
+        }
     }
 }
