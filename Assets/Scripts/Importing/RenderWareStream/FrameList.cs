@@ -52,7 +52,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             for (var i = 0; i < FrameCount; ++i) {
                 var extension = Section<Extension>.ReadData(stream);
-                Frames[i].Name = extension.FirstOrDefault<FrameName>().Name;
+                var frameName = extension.FirstOrDefault<FrameName>();
+                if (frameName != null) Frames[i].Name = frameName.Name;
             }
         }
     }

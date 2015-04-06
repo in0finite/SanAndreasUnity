@@ -288,9 +288,9 @@ namespace SanAndreasUnity.Importing.Conversion
         private static readonly Dictionary<string, GeometryParts> _sLoaded
             = new Dictionary<string, GeometryParts>();
         
-        public static GeometryParts Load(string modelName, string texDictName)
+        public static GeometryParts Load(string modelName, params string[] texDictNames)
         {
-            return Load(modelName, TextureDictionary.Load(texDictName));
+            return Load(modelName, texDictNames.Select(x => TextureDictionary.Load(x)).ToArray());
         }
 
         public static GeometryParts Load(string modelName, params TextureDictionary[] txds)
