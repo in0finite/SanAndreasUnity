@@ -90,4 +90,20 @@ namespace SanAndreasUnity.Importing
             }
         }
     }
+
+    public struct Matrix4x4
+    {
+        public readonly Vector3 V0;
+        public readonly Vector3 V1;
+        public readonly Vector3 V2;
+        public readonly Vector3 V3;
+
+        public Matrix4x4(BinaryReader reader)
+        {
+            V0 = new Vector3(reader);
+            V1 = new Vector3(reader);
+            V2 = new Vector3(reader);
+            V3 = new Vector3(reader);
+        }
+    }
 }
