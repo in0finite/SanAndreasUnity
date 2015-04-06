@@ -85,7 +85,10 @@ namespace SanAndreasUnity.Behaviours.Player
             Yaw += cursorDelta.x * CursorSensitivity.x;
             Pitch -= cursorDelta.y * CursorSensitivity.y;
 
-            if (IsInVehicle) return;
+            if (IsInVehicle) {
+                Camera.transform.position = CurrentVehicle.transform.position - Camera.transform.forward * 10f;
+                return;
+            }
 
             _move = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
@@ -137,11 +140,6 @@ namespace SanAndreasUnity.Behaviours.Player
         {
             if (CurrentVehicle != null) return;
 
-            StartCoroutine(EnterVehicleAsync(vehicle));
-        }
-
-        private IEnumerator EnterVehicleAsync(Vehicle vehicle)
-        {
             _controller.enabled = false;
             CurrentVehicle = vehicle;
 
@@ -152,12 +150,6 @@ namespace SanAndreasUnity.Behaviours.Player
             transform.SetParent(vehicle.transform);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
-
-            while (timer.Elapsed.TotalSeconds < 1f) {
-                Camera.transform.localPosition = Vector3.Lerp(Camera.transform.localPosition, Vector3.up * .65f, .25f);
-
-                yield return new WaitForFixedUpdate();
-            }
 
             vehicle.gameObject.AddComponent<VehicleController>();
         }
