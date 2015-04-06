@@ -70,7 +70,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             if (meshCount > 0)
             {
-
+                byte[] meshBoneRemapIndices = reader.ReadBytes((Int32)(boneCount + 2 * (RLE + meshCount)));
             }
         }
     }
