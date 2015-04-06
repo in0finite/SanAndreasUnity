@@ -2,6 +2,7 @@
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Conversion;
 using UnityEngine;
+using System.Linq;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.Vehicle;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
@@ -47,7 +48,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             public Quaternion Roll { get; set; }
         }
 
-        private List<Wheel> _wheels = new List<Wheel>();
+        private readonly Dictionary<Transform, string> _namedFrames = new Dictionary<Transform, string>();
+        private readonly List<Wheel> _wheels = new List<Wheel>();
 
         private WheelAlignment GetWheelAlignment(string frameName)
         {
@@ -70,6 +72,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
+        public Transform GetPart(string name)
+        {
+            return _namedFrames.First(x => x.Value == name).Key;
+        }
+
         private GameObject AddPart(Geometry.GeometryFrame frame, Transform parent)
         {
             var child = new GameObject();
@@ -81,6 +88,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             child.transform.localRotation = frame.Rotation;
 
             _children.Add(child.transform);
+            _namedFrames.Add(child.transform, frame.Name);
 
             if (frame.GeometryIndex != -1)
             {
