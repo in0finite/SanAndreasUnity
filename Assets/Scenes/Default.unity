@@ -407,8 +407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ModelName: BMYAP
-  TextureDictionaries:
-  - BMYAP
+  TextureDictionaries: []
 --- !u!23 &1723330609
 MeshRenderer:
   m_ObjectHideFlags: 0
