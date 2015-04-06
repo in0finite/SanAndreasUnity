@@ -20,6 +20,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             LeftBack,
         }
 
+        public enum DoorAlignment
+        {
+            None,
+            RightFront,
+            LeftFront,
+            RightBack,
+            LeftBack,
+        }
+
         public static Vehicle Create(VehicleSpawner spawner)
         {
             // TODO: Random cars
@@ -84,6 +93,23 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     return WheelAlignment.LeftBack;
                 default:
                     return WheelAlignment.None;
+            }
+        }
+
+        private DoorAlignment GetDoorAlignment(string frameName)
+        {
+            switch (frameName)
+            {
+                case "door_rf_dummy":
+                    return DoorAlignment.RightFront;
+                case "door_lf_dummy":
+                    return DoorAlignment.LeftFront;
+                case "door_rm_dummy":
+                    return DoorAlignment.RightBack;
+                case "door_lb_dummy":
+                    return DoorAlignment.LeftBack;
+                default:
+                    return DoorAlignment.None;
             }
         }
 
@@ -203,6 +229,28 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
 
             InitializePhysics();
+
+            for (int i = 0; i < _geometryParts.Frames.Length; ++i)
+            {
+                var frame = _geometryParts.Frames[i];
+
+                if (frame.Name.StartsWith("door_"))
+                {
+                    var doorAlignment = GetDoorAlignment(frame.Name);
+
+                    if (doorAlignment != DoorAlignment.None)
+                    {
+                        var hinge = _children[i].gameObject.AddComponent<HingeJoint>();
+                        hinge.axis = Vector3.up;
+                        hinge.useLimits = true;
+
+                        float limit = 90.0f * ((doorAlignment == DoorAlignment.LeftFront || doorAlignment ==  DoorAlignment.LeftBack) ? 1.0f : -1.0f);
+                        hinge.limits = new JointLimits { min = Mathf.Min(0, limit), max = Mathf.Max(0, limit), };
+
+                        hinge.connectedBody = gameObject.GetComponent<Rigidbody>();
+                    }
+                }
+            }
         }
     }
 }

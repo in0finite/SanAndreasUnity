@@ -51,7 +51,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 wheel.Collider.forwardFriction = friction;
                 wheel.Collider.sidewaysFriction = friction;
-
             }
         }
 
@@ -65,6 +64,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 spring.damper = HandlingData.SuspensionDampingLevel * vals.SuspensionDampingScale;
                 spring.spring = HandlingData.SuspensionForceLevel * vals.SuspensionForceScale;
                 wheel.Collider.suspensionSpring = spring;
+
+                var friction = wheel.Collider.forwardFriction;
+                friction.extremumSlip = vals.FrictionExtremumSlip;
+                friction.extremumValue = vals.FrictionExtremumValue;
+                friction.asymptoteSlip = vals.FrictionAsymptoteSlip;
+                friction.asymptoteValue = vals.FrictionAsymptoteValue;
+                friction.stiffness = vals.FrictionStiffness;
+
+                wheel.Collider.sidewaysFriction = friction;
             }
         }
 
