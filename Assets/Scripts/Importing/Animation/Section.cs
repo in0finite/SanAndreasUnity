@@ -60,7 +60,6 @@ namespace SanAndreasUnity.Importing.Animation
         }
     }
 
-
     public class Frame
     {
         public readonly Int16 QuaternionX;
