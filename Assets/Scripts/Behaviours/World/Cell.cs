@@ -34,8 +34,6 @@ namespace SanAndreasUnity.Behaviours.World
                     new Vector2(-3000f, -3000f),
                     new Vector2(+3000f, +3000f));
 
-                var animation = new SanAndreasUnity.Importing.Animation.AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("colt45.ifp")));
-
                 using (Utilities.Profiler.Start("Cell partitioning time")) {
                     var insts = Item.GetPlacements<Instance>(CellIds.ToArray())
                         .ToDictionary(x => x, x => StaticGeometry.Create());

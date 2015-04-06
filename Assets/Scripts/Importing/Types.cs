@@ -63,6 +63,22 @@ namespace SanAndreasUnity.Importing
         }
     }
 
+    public struct Vector4
+    {
+        public readonly Single X;
+        public readonly Single Y;
+        public readonly Single Z;
+        public readonly Single W;
+
+        public Vector4(BinaryReader reader)
+        {
+            X = reader.ReadSingle();
+            Y = reader.ReadSingle();
+            Z = reader.ReadSingle();
+            W = reader.ReadSingle();
+        }
+    }
+
     public struct Quaternion
     {
         public readonly Single X;
@@ -93,17 +109,17 @@ namespace SanAndreasUnity.Importing
 
     public struct Matrix4x4
     {
-        public readonly Vector3 V0;
-        public readonly Vector3 V1;
-        public readonly Vector3 V2;
-        public readonly Vector3 V3;
+        public readonly Vector4 V0;
+        public readonly Vector4 V1;
+        public readonly Vector4 V2;
+        public readonly Vector4 V3;
 
         public Matrix4x4(BinaryReader reader)
         {
-            V0 = new Vector3(reader);
-            V1 = new Vector3(reader);
-            V2 = new Vector3(reader);
-            V3 = new Vector3(reader);
+            V0 = new Vector4(reader);
+            V1 = new Vector4(reader);
+            V2 = new Vector4(reader);
+            V3 = new Vector4(reader);
         }
     }
 }
