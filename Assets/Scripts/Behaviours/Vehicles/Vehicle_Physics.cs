@@ -14,6 +14,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [Range(-1, 1)]
         public float Steering;
 
+        [Range(-1, 1)]
+        public float Breaking;
+
         public Handling.Car HandlingData { get; private set; }
 
         private void InitializePhysics()
@@ -89,6 +92,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Collider.motorTorque = Accelerator
                     * HandlingData.TransmissionEngineAccel
                     * VConsts.Instance.AccelerationScale;
+
+                wheel.Collider.brakeTorque = Breaking * HandlingData.BrakeDecel * VConsts.Instance.BreakingScale;
             }
         }
     }

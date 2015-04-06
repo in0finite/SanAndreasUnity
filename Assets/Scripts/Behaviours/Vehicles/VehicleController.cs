@@ -16,6 +16,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             _vehicle.Accelerator = Input.GetAxis("Vertical");
             _vehicle.Steering = Input.GetAxis("Horizontal");
+            _vehicle.Breaking = Input.GetKey(KeyCode.Space) ? 1.0f : 0.0f;
         }
     }
 }
