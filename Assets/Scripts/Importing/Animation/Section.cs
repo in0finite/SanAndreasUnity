@@ -28,6 +28,7 @@ namespace SanAndreasUnity.Importing.Animation
         {
             string animationName = reader.ReadString(24);
             Int32 objectCount = reader.ReadInt32();
+            Int32 frameLength = reader.ReadInt32();
             Int32 unknown = reader.ReadInt32();
 
             Objects = new Object[objectCount];
@@ -46,6 +47,7 @@ namespace SanAndreasUnity.Importing.Animation
         public Object(BinaryReader reader)
         {
             string objectName = reader.ReadString(24);
+            Int32 frameType = reader.ReadInt32();
             Int32 frameCount = reader.ReadInt32();
             Int32 boneId = reader.ReadInt32();
 

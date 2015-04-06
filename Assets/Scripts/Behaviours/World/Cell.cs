@@ -46,6 +46,8 @@ namespace SanAndreasUnity.Behaviours.World
                     : null).Where(x => x != null).ToArray();
                 timer.Stop();
 
+                var animation = new SanAndreasUnity.Importing.Animation.AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("colt45.ifp")));
+
                 UnityEngine.Debug.LogFormat("Archive load time: {0} ms", timer.Elapsed.TotalMilliseconds);
                 timer.Reset();
 
