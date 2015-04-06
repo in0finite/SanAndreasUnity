@@ -16,20 +16,20 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             foreach (var wheel in _wheels)
             {
-                Vector3 position = wheel.Collider.transform.position;
+                Vector3 position = Vector3.zero;
 
                 WheelHit wheelHit;
 
                 if (wheel.Collider.GetGroundHit(out wheelHit))
                 {
-                    position.y = wheelHit.point.y + wheel.Collider.radius;
+                    position.y = (wheelHit.point.y - wheel.Collider.transform.position.y) + wheel.Collider.radius;
                 }
                 else
                 {
                     position.y -= wheel.Collider.suspensionDistance;
                 }
 
-                wheel.Child.transform.position = position;
+                wheel.Child.transform.localPosition = position;
 
                 // reset the yaw
                 wheel.Child.localRotation = wheel.Roll;
