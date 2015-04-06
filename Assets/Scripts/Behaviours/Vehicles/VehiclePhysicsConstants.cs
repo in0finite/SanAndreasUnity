@@ -20,6 +20,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         [Watched] public float DragScale = 1 / 100f;
         [Watched] public float AccelerationScale = 50f;
+        [Watched] public float SuspensionForceScale = 100000f;
 
         public bool HasChanged { get; private set; }
 
