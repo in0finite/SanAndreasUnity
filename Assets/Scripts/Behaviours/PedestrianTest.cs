@@ -52,6 +52,11 @@ namespace SanAndreasUnity.Behaviours
 
         private void LoadModel(string modelName, params string[] txds)
         {
+            _bones.ForEach(x => GameObject.Destroy(x.gameObject));
+
+            _bones.Clear();
+            _bindPoses.Clear();
+
             var mf = GetComponent<MeshFilter>();
             var mr = GetComponent<SkinnedMeshRenderer>();
 

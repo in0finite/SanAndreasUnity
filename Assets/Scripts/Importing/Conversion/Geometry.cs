@@ -79,10 +79,10 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             return new UnityEngine.BoneWeight
             {
-                boneIndex0 = boneIndices.Indices[0],
-                boneIndex1 = boneIndices.Indices[1],
-                boneIndex2 = boneIndices.Indices[2],
-                boneIndex3 = boneIndices.Indices[3],
+                boneIndex0 = (int)boneIndices.Indices[0],
+                boneIndex1 = (int)boneIndices.Indices[1],
+                boneIndex2 = (int)boneIndices.Indices[2],
+                boneIndex3 = (int)boneIndices.Indices[3],
                 
                 weight0 = boneWeights.Weights[0],
                 weight1 = boneWeights.Weights[1],
@@ -95,7 +95,6 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             return Enumerable.Range(0, (int)boneIndices.Length).Select(x => Convert(boneIndices[x], boneWeights[x])).ToArray();
         }
-
 
         private static int[] FromTriangleStrip(IList<int> indices)
         {
