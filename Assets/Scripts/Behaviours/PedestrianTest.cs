@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
@@ -17,6 +19,9 @@ namespace SanAndreasUnity.Behaviours
         public Pedestrian Definition { get; private set; }
 
         public int PedestrianId = 7;
+
+        private List<Transform> _bones = new List<Transform>();
+        private List<Matrix4x4> _bindPoses = new List<Matrix4x4>();
 
         private void Update()
         {
@@ -57,7 +62,40 @@ namespace SanAndreasUnity.Behaviours
 
             mr.sharedMesh = mf.sharedMesh;
 
+            for (int i = 0; i < geoms.Frames.Length; ++i)
+            {
+                var frame = geoms.Frames[i];
+
+                Transform parent;
+                var parentIndex = frame.ParentIndex;
+
+                if (parentIndex < 0) parent = transform;
+                else parent = _bones[parentIndex];
+
+                AddBone(frame, parent);
+            }
+
+            mf.sharedMesh.bindposes = _bindPoses.ToArray();
+            mr.bones = _bones.ToArray();
+
             var animation = new SanAndreasUnity.Importing.Animation.AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("colt45.ifp")));
+        }
+
+        private Transform AddBone(Geometry.GeometryFrame frame, Transform parent)
+        {
+            var child = new GameObject();
+            child.name = frame.Name;
+            child.transform.SetParent(parent, false);
+
+            child.transform.localPosition = frame.Position;
+            child.transform.localRotation = frame.Rotation;
+
+            _bones.Add(child.transform);
+
+            _bindPoses.Add(child.transform.worldToLocalMatrix * transform.localToWorldMatrix);
+
+
+            return child.transform;
         }
     }
 }
