@@ -360,7 +360,7 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             Mesh = mesh;
 
-            Mesh.boneWeights = Convert(geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
+            //Mesh.boneWeights = Convert(geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
 
             _geom = geom;
             _textureDictionaries = textureDictionaries;
