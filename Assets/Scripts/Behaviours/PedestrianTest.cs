@@ -77,7 +77,7 @@ namespace SanAndreasUnity.Behaviours
                 if (parentIndex < 0) parent = transform;
                 else parent = _bones[parentIndex];
 
-                AddBone(frame, parent);
+                AddBone(i, frame, parent);
             }
 
             mf.sharedMesh.bindposes = _bindPoses.ToArray();
@@ -86,10 +86,10 @@ namespace SanAndreasUnity.Behaviours
             var animation = new SanAndreasUnity.Importing.Animation.AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("colt45.ifp")));
         }
 
-        private Transform AddBone(Geometry.GeometryFrame frame, Transform parent)
+        private Transform AddBone(int index, Geometry.GeometryFrame frame, Transform parent)
         {
             var child = new GameObject();
-            child.name = frame.Name;
+            child.name = string.Format("{0} ({1}", frame.Name, index);
             child.transform.SetParent(parent, false);
 
             child.transform.localPosition = frame.Position;
@@ -101,6 +101,20 @@ namespace SanAndreasUnity.Behaviours
 
 
             return child.transform;
+        }
+
+        void OnDrawGizmos()
+        {
+            foreach (var bone in _bones)
+            {
+                Gizmos.color = Color.white;
+                Gizmos.DrawWireSphere(bone.position, 0.02f);
+
+                if (bone.parent != null)
+                {
+                    Gizmos.DrawLine(bone.position, bone.parent.position);
+                }
+            }
         }
     }
 }
