@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Facepunch.Networking;
+using UnityEngine;
 
 namespace Facepunch
 {
@@ -12,6 +13,14 @@ namespace Facepunch
         public static void Quit()
         {
             IsQuitting = true;
+
+            if (Client.Instance != null && Client.Instance.NetStatus == NetStatus.Running) {
+                Client.Instance.Net.Shutdown();
+            }
+
+            if (Server.Instance != null && Server.Instance.NetStatus == NetStatus.Running) {
+                Server.Instance.Net.Shutdown();
+            }
 
 #if UNITY_EDITOR
             // We pause here since "isPlaying = false" doesn't seem to always work during scene start
