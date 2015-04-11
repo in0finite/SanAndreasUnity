@@ -27,7 +27,8 @@ namespace SanAndreasUnity.Importing.Archive
                 ".gxt",
                 ".col",
                 ".dff",
-                ".fxp"
+                ".fxp",
+                ".ifp"
             };
 
         private readonly Dictionary<String, LooseArchiveEntry> _fileDict;
