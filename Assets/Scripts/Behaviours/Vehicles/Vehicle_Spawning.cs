@@ -76,8 +76,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private WheelAlignment GetWheelAlignment(string frameName)
         {
-            switch (frameName)
-            {
+            switch (frameName) {
                 case "wheel_rf_dummy":
                     return WheelAlignment.RightFront;
                 case "wheel_lf_dummy":
@@ -97,8 +96,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private DoorAlignment GetDoorAlignment(string frameName)
         {
-            switch (frameName)
-            {
+            switch (frameName) {
                 case "door_rf_dummy":
                     return DoorAlignment.RightFront;
                 case "door_lf_dummy":
@@ -141,36 +139,31 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     _namedFrames.Add(pair.Value, frame.Name);
                 }
 
-                if (frame.Name.StartsWith("wheel_"))
-                {
-                    var wheelAlignment = GetWheelAlignment(frame.Name);
+                if (!frame.Name.StartsWith("wheel_") || wheel == null) continue;
 
-                    if (wheelAlignment != WheelAlignment.RightFront) {
-                        var copy = Instantiate(wheel);
-                        copy.SetParent(pair.Value, false);
+                var wheelAlignment = GetWheelAlignment(frame.Name);
 
-                        _wheels.Add(new Wheel {
-                            Alignment = wheelAlignment,
-                            Parent = pair.Value,
-                            Child = copy,
-                        });
-                    }
-                    else
-                    {
-                        _wheels.Add(new Wheel
-                        {
-                            Alignment = wheelAlignment,
-                            Parent = pair.Value,
-                            Child = wheel,
-                        });
-                    }
+                if (wheelAlignment != WheelAlignment.RightFront) {
+                    var copy = Instantiate(wheel);
+                    copy.SetParent(pair.Value, false);
 
-                    if (wheelAlignment == WheelAlignment.LeftFront ||
-                        wheelAlignment == WheelAlignment.LeftMid ||
-                        wheelAlignment == WheelAlignment.LeftBack)
-                    {
-                        pair.Value.Rotate(Vector3.up, 180.0f);
-                    }
+                    _wheels.Add(new Wheel {
+                        Alignment = wheelAlignment,
+                        Parent = pair.Value,
+                        Child = copy,
+                    });
+                } else {
+                    _wheels.Add(new Wheel {
+                        Alignment = wheelAlignment,
+                        Parent = pair.Value,
+                        Child = wheel,
+                    });
+                }
+
+                if (wheelAlignment == WheelAlignment.LeftFront ||
+                    wheelAlignment == WheelAlignment.LeftMid ||
+                    wheelAlignment == WheelAlignment.LeftBack) {
+                    pair.Value.Rotate(Vector3.up, 180.0f);
                 }
             }
 
