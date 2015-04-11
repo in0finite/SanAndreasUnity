@@ -16,7 +16,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             MatrixFlags = reader.ReadUInt32();
         }
 
-        public String Name;
+        public String Name { get; internal set; }
+        public HierarchyAnimation HAnim { get; internal set; }
 
         public readonly Int32 Index;
         public readonly Int32 ParentIndex;
@@ -36,7 +37,6 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly UInt32 FrameCount;
 
         public readonly Frame[] Frames;
-        public readonly HierarchyAnimation[] HierarchyAnimation;
 
         public FrameList(SectionHeader header, Stream stream)
             : base(header, stream)
@@ -47,7 +47,6 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             FrameCount = reader.ReadUInt32();
 
             Frames = new Frame[FrameCount];
-            HierarchyAnimation = new HierarchyAnimation[FrameCount];
 
             for (var i = 0; i < FrameCount; ++i)
             {
@@ -68,7 +67,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
                 if (hierarchyAnimation != null)
                 {
-                    HierarchyAnimation[i] = hierarchyAnimation;
+                    Frames[i].HAnim = hierarchyAnimation;
                 }
             }
         }

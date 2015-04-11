@@ -91,7 +91,7 @@ namespace SanAndreasUnity.Importing.Conversion
             };
         }
 
-        private static UnityEngine.BoneWeight[] Convert(SkinBoneIndices[] boneIndices, SkinBoneWeights[] boneWeights)
+        private static UnityEngine.BoneWeight[] Convert(RenderWareStream.Frame[] frames, SkinBoneIndices[] boneIndices, SkinBoneWeights[] boneWeights)
         {
             return Enumerable.Range(0, (int)boneIndices.Length).Select(x => Convert(boneIndices[x], boneWeights[x])).ToArray();
         }
@@ -326,12 +326,12 @@ namespace SanAndreasUnity.Importing.Conversion
             {
                 Name = name;
 
-                Geometry = clump.GeometryList.Geometry
-                    .Select(x => new Geometry(x, Convert(x), txds))
-                    .ToArray();
-
                 Frames = clump.FrameList.Frames
                     .Select(x => Convert(x, clump.Atomics))
+                    .ToArray();
+
+                Geometry = clump.GeometryList.Geometry
+                    .Select(x => new Geometry(x, clump.FrameList.Frames, Convert(x), txds))
                     .ToArray();
 
                 _collisions = clump.Collision;
@@ -384,11 +384,11 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public readonly UnityEngine.Matrix4x4[] SkinToBoneMatrices;
 
-        private Geometry(RenderWareStream.Geometry geom, Mesh mesh, TextureDictionary[] textureDictionaries)
+        private Geometry(RenderWareStream.Geometry geom, RenderWareStream.Frame[] frames, Mesh mesh, TextureDictionary[] textureDictionaries)
         {
             Mesh = mesh;
 
-            Mesh.boneWeights = Convert(geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
+            Mesh.boneWeights = Convert(frames, geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
 
             SkinToBoneMatrices = Convert(geom.Skinning.SkinToBoneMatrices);
 

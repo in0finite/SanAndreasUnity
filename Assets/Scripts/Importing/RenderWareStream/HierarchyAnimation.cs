@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -21,18 +22,55 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         PushParentMatrix = 2,
     }
 
-    public class HierarchyAnimationNode
+    public class HierarchyAnimationNode : IEnumerable<HierarchyAnimationNode>
     {
+        private readonly List<HierarchyAnimationNode> _children;
+
+        public readonly UInt32 NodeId;
+        public readonly UInt32 NodeIndex;
+        public readonly HierarchyAnimationNodeFlags Flags;
+        
+        public bool Push
+        {
+            get
+            {
+                return (Flags & HierarchyAnimationNodeFlags.PushParentMatrix)
+                    == HierarchyAnimationNodeFlags.PushParentMatrix;
+            }
+        }
+
+        public bool Pop
+        {
+            get
+            {
+                return (Flags & HierarchyAnimationNodeFlags.PopParentMatrix)
+                    == HierarchyAnimationNodeFlags.PopParentMatrix;
+            }
+        }
+
         public HierarchyAnimationNode(BinaryReader reader)
         {
+            _children = new List<HierarchyAnimationNode>();
+
             NodeId = reader.ReadUInt32();
             NodeIndex = reader.ReadUInt32();
             Flags = (HierarchyAnimationNodeFlags)reader.ReadUInt32();
         }
 
-        UInt32 NodeId;
-        UInt32 NodeIndex;
-        HierarchyAnimationNodeFlags Flags;
+        public void AddChild(HierarchyAnimationNode child)
+        {
+            _children.Add(child);
+        }
+
+        public IEnumerator<HierarchyAnimationNode> GetEnumerator()
+        {
+            return _children.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return _children.GetEnumerator();
+        }
     }
 
     [SectionType(0x011e)]
@@ -42,7 +80,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly UInt32 NodeId;
         public readonly UInt32 NodeCount;
 
-        public readonly HierarchyAnimationNode[] Nodes;
+        public readonly HierarchyAnimationNode Root;
 
         public readonly HierarchyAnimationFlags Flags;
         public readonly UInt32 KeyFrameSize;
@@ -56,16 +94,32 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             NodeId = reader.ReadUInt32();
             NodeCount = reader.ReadUInt32();
 
-            Nodes = new HierarchyAnimationNode[NodeCount];
+            var nodes = new HierarchyAnimationNode[NodeCount];
 
             if (NodeCount > 0)
             {
-                Flags = (HierarchyAnimationFlags)reader.ReadUInt32();
+                Flags = (HierarchyAnimationFlags) reader.ReadUInt32();
                 KeyFrameSize = reader.ReadUInt32();
 
                 for (int i = 0; i < NodeCount; ++i)
                 {
-                    Nodes[i] = new HierarchyAnimationNode(reader);
+                    nodes[i] = new HierarchyAnimationNode(reader);
+                }
+
+                var stack = new Stack<HierarchyAnimationNode>();
+                stack.Push(Root = nodes[0]);
+
+                foreach (var node in nodes.Skip(1)) {
+                    stack.Peek().AddChild(node);
+
+                    if (node.Push) {
+                        stack.Push(node);
+                    } else if (node.Pop) {
+                        var n = node;
+                        do {
+                            n = stack.Pop();
+                        } while (n.Pop);
+                    }
                 }
             }
         }
