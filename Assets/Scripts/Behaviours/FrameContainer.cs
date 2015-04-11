@@ -11,6 +11,7 @@ namespace SanAndreasUnity.Behaviours
         private string _path;
 
         public readonly int Index;
+        public readonly int BoneId;
         public readonly string Name;
         public readonly Transform Transform;
 
@@ -24,6 +25,7 @@ namespace SanAndreasUnity.Behaviours
         public FrameInfo(Geometry.GeometryFrame frame, Transform trans)
         {
             Index = frame.Source.Index;
+            BoneId = frame.Source.HAnim != null ? (int) frame.Source.HAnim.NodeId : -1;
             Name = frame.Name;
             Transform = trans;
         }
@@ -37,6 +39,7 @@ namespace SanAndreasUnity.Behaviours
     public class FrameContainer : MonoBehaviour, IEnumerable<FrameInfo>
     {
         private FrameInfo[] _frames;
+        private Dictionary<int, FrameInfo> _boneIdDict;
 
         internal void Initialize(Geometry.GeometryFrame[] frames,
             Dictionary<Geometry.GeometryFrame, Transform> transforms)
@@ -48,16 +51,23 @@ namespace SanAndreasUnity.Behaviours
                 if (frame.ParentIndex == -1) continue;
                 _frames[i].Parent = _frames[frame.ParentIndex];
             }
+
+            _boneIdDict = _frames.ToDictionary(x => x.BoneId, x => x);
         }
 
-        public FrameInfo this[string name]
+        public FrameInfo GetByName(string name)
         {
-            get { return _frames.FirstOrDefault(x => x.Name == name); }
+            return _frames.FirstOrDefault(x => x.Name == name);
+        }
+        
+        public FrameInfo GetByIndex(int index)
+        {
+            return _frames.FirstOrDefault(x => x.Name == name);
         }
 
-        public FrameInfo this[int index]
+        public FrameInfo GetByBoneId(int boneId)
         {
-            get { return _frames[index]; }
+            return _boneIdDict[boneId];
         }
 
         public IEnumerator<FrameInfo> GetEnumerator()

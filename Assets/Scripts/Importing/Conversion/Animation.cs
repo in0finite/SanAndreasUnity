@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Importing.Animation;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace SanAndreasUnity.Importing.Conversion
 {
     public class Animation
     {
-        public static UnityEngine.AnimationClip Convert(Clip animation, Transform[] trans)
+        public static UnityEngine.AnimationClip Convert(Clip animation, FrameContainer frames)
         {
             var clip = new UnityEngine.AnimationClip();
             clip.legacy = true;
@@ -17,12 +18,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             foreach (var bone in animation.Bones)
             {
-                if (bone.BoneId == 41) bonePath = "unnamed/Root/ Pelvis/ L Thigh";
-                else if (bone.BoneId == 42) bonePath = "unnamed/Root/ Pelvis/ L Thigh/ L Calf";
-                else if (bone.BoneId == 51) bonePath = "unnamed/Root/ Pelvis/ R Thigh";
-                else if (bone.BoneId == 52) bonePath = "unnamed/Root/ Pelvis/ R Thigh/ R Calf";
-                else continue;
-
+                bonePath = frames.GetByBoneId(bone.BoneId).Path;
 
                 //clip.SetCurve(bonePath, typeof(Transform), "localPosition.x", new UnityEngine.AnimationCurve(bone.Frames.Select(x => new Keyframe((float)x.Time * 0.1f, x.Translation.X)).ToArray()));
                 //clip.SetCurve(bonePath, typeof(Transform), "localPosition.y", new UnityEngine.AnimationCurve(bone.Frames.Select(x => new Keyframe((float)x.Time * 0.1f, x.Translation.Z)).ToArray()));

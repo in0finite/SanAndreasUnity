@@ -112,7 +112,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Transform GetPart(string name)
         {
-            return _frames[name].Transform;
+            return _frames.GetByName(name).Transform;
         }
 
         private void Initialize(VehicleSpawner spawner)

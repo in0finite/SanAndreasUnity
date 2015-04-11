@@ -51,13 +51,13 @@ namespace SanAndreasUnity.Behaviours
         private void LoadModel(string modelName, params string[] txds)
         {
             var geoms = Geometry.Load(modelName, txds);
-            geoms.AttachFrames(transform, MaterialFlags.Default);
+            var frames = geoms.AttachFrames(transform, MaterialFlags.Default);
 
             _anim = new AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("ped.ifp")));
 
             gameObject.AddComponent<UnityEngine.Animation>();
 
-            var clip = SanAndreasUnity.Importing.Conversion.Animation.Convert(_anim.Clips[262], GetComponentsInChildren<Transform>());
+            var clip = SanAndreasUnity.Importing.Conversion.Animation.Convert(_anim.Clips[262], frames);
 
             GetComponent<UnityEngine.Animation>().AddClip(clip, "test");
             GetComponent<UnityEngine.Animation>().Play("test");
