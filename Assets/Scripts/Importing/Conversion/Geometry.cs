@@ -370,7 +370,7 @@ namespace SanAndreasUnity.Importing.Conversion
             {
                 var transforms = Frames.ToDictionary(x => x, x => {
                     var trans = new GameObject(x.Name).transform;
-                    //trans.localPosition = x.Position;
+                    trans.localPosition = x.Position;
                     trans.localRotation = x.Rotation;
                     return trans;
                 });
@@ -407,7 +407,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
                             smr.sharedMesh = geometry.Mesh;
                             smr.sharedMesh.bindposes = geometry.SkinToBoneMatrices
-                                .Select((x, i) => x.inverse)
+                                .Select((x, i) => UnityEngine.Matrix4x4.Transpose(x))
                                 .ToArray();
 
                             renderer = smr;

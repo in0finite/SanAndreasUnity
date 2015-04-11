@@ -68,6 +68,11 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             for (int i = 0; i < boneCount; ++i)
             {
+                if (boneIdCount == 0)
+                {
+                    reader.BaseStream.Seek(4, SeekOrigin.Current);
+                }
+
                 SkinToBoneMatrices[i] = new Matrix4x4(reader);
             }
 
