@@ -41,6 +41,8 @@ namespace SanAndreasUnity.Behaviours
         private FrameInfo[] _frames;
         private Dictionary<int, FrameInfo> _boneIdDict;
 
+        public FrameInfo Root { get { return _frames.FirstOrDefault(x => x.Parent == null); } }
+
         internal void Initialize(Geometry.GeometryFrame[] frames,
             Dictionary<Geometry.GeometryFrame, Transform> transforms)
         {

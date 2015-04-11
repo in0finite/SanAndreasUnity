@@ -11,15 +11,19 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
+    [ExecuteInEditMode]
     public class PedestrianTest : MonoBehaviour
     {
         private int _loadedPedestrianId;
+        private AnimType _loadedAnimType;
+
+        private FrameContainer _frames;
 
         public Pedestrian Definition { get; private set; }
 
         public int PedestrianId = 7;
 
-        private AnimationPackage _anim;
+        public AnimType Anim = AnimType.Idle;
 
         private void Update()
         {
@@ -32,6 +36,12 @@ namespace SanAndreasUnity.Behaviours
                 _loadedPedestrianId = PedestrianId;
 
                 Load(PedestrianId);
+            }
+
+            if (_loadedAnimType != Anim) {
+                _loadedAnimType = Anim;
+
+                LoadAnim(Anim);
             }
         }
         
@@ -50,17 +60,28 @@ namespace SanAndreasUnity.Behaviours
 
         private void LoadModel(string modelName, params string[] txds)
         {
+            if (_frames != null) {
+                Destroy(_frames.Root.Transform.gameObject);
+                Destroy(_frames);
+            }
+
             var geoms = Geometry.Load(modelName, txds);
-            var frames = geoms.AttachFrames(transform, MaterialFlags.Default);
+            _frames = geoms.AttachFrames(transform, MaterialFlags.Default);
+        }
 
-            _anim = new AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("ped.ifp")));
+        private void LoadAnim(AnimType type)
+        {
+            var anim = gameObject.GetComponent<UnityEngine.Animation>();
+            if (anim == null) {
+                anim = gameObject.AddComponent<UnityEngine.Animation>();
+            }
 
-            gameObject.AddComponent<UnityEngine.Animation>();
+            var group = AnimationGroup.Get(Definition.AnimGroupName);
+            var animName = group[Anim];
+            var clip = Importing.Conversion.Animation.Load(group.FileName, animName, _frames);
 
-            var clip = SanAndreasUnity.Importing.Conversion.Animation.Convert(_anim.Clips[262], frames);
-
-            GetComponent<UnityEngine.Animation>().AddClip(clip, "test");
-            GetComponent<UnityEngine.Animation>().Play("test");
+            anim.AddClip(clip, animName);
+            anim.Play(animName);
         }
 
         void OnDrawGizmos()

@@ -90,6 +90,9 @@ namespace SanAndreasUnity.Importing.Animation
 
     public class AnimationPackage : Section
     {
+        private readonly Dictionary<string, Clip> _namedClips
+            = new Dictionary<string,Clip>(StringComparer.InvariantCultureIgnoreCase);
+
         public readonly string FileName;
         public readonly Int32 ClipCount;
         public readonly Clip[] Clips;
@@ -104,13 +107,17 @@ namespace SanAndreasUnity.Importing.Animation
 
             for (int i = 0; i < ClipCount; ++i)
             {
-                Clips[i] = new Clip(reader);
+                var clip = Clips[i] = new Clip(reader);
+                _namedClips.Add(clip.Name, clip);
             }
 
-            DebugPrint();
+            //DebugPrint();
         }
 
-
+        public Clip this[string name]
+        {
+            get { return _namedClips[name]; }
+        }
 
         public void DebugPrint()
         {
