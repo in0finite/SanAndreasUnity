@@ -279,6 +279,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1418616132}
   - 114: {fileID: 1418616129}
+  - 114: {fileID: 1418616130}
   m_Layer: 0
   m_Name: Model Test
   m_TagString: Untagged
@@ -299,6 +300,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PedestrianId: 7
   Anim: 0
+--- !u!114 &1418616130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1418616128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c16e4a02d730abb40a82e801954132f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1418616132
 Transform:
   m_ObjectHideFlags: 0

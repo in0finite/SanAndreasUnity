@@ -340,7 +340,7 @@ namespace SanAndreasUnity.Importing.Conversion
                         }
 
                         Renderer renderer;
-                        if (hAnim != null && geometry.SkinToBoneMatrices != null) {
+                        if (hAnim != null) {
                             var smr = gobj.AddComponent<SkinnedMeshRenderer>();
 
                             var bones = Convert(hAnim, transforms, Frames);
@@ -349,9 +349,12 @@ namespace SanAndreasUnity.Importing.Conversion
                             smr.bones = bones;
 
                             smr.sharedMesh = geometry.Mesh;
-                            smr.sharedMesh.bindposes = geometry.SkinToBoneMatrices
-                                .Select(x => x.transpose)
-                                .ToArray();
+
+                            if (smr.sharedMesh != null) {
+                                smr.sharedMesh.bindposes = geometry.SkinToBoneMatrices
+                                    .Select(x => x.transpose)
+                                    .ToArray();
+                            }
 
                             renderer = smr;
                         } else {

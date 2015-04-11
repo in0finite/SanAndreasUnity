@@ -112,7 +112,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Transform GetPart(string name)
         {
-            return _frames.GetByName(name).Transform;
+            return _frames.GetByName(name).transform;
         }
 
         private void Initialize(VehicleSpawner spawner)
@@ -130,7 +130,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 TextureDictionary.Load("misc"));
 
             _frames = _geometryParts.AttachFrames(transform, MaterialFlags.Vehicle);
-            var wheel = _frames.FirstOrDefault(x => x.Name == "wheel").Transform;
+            var wheel = _frames.FirstOrDefault(x => x.Name == "wheel").transform;
 
             foreach (var frame in _frames) {
                 if (!frame.Name.StartsWith("wheel_") || wheel == null) continue;
@@ -139,17 +139,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 if (wheelAlignment != WheelAlignment.RightFront) {
                     var copy = Instantiate(wheel);
-                    copy.SetParent(frame.Transform, false);
+                    copy.SetParent(frame.transform, false);
 
                     _wheels.Add(new Wheel {
                         Alignment = wheelAlignment,
-                        Parent = frame.Transform,
+                        Parent = frame.transform,
                         Child = copy,
                     });
                 } else {
                     _wheels.Add(new Wheel {
                         Alignment = wheelAlignment,
-                        Parent = frame.Transform,
+                        Parent = frame.transform,
                         Child = wheel,
                     });
                 }
@@ -157,7 +157,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (wheelAlignment == WheelAlignment.LeftFront ||
                     wheelAlignment == WheelAlignment.LeftMid ||
                     wheelAlignment == WheelAlignment.LeftBack) {
-                    frame.Transform.Rotate(Vector3.up, 180.0f);
+                    frame.transform.Rotate(Vector3.up, 180.0f);
                 }
             }
 
@@ -167,7 +167,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 var doorAlignment = GetDoorAlignment(pair.Name);
 
                 if (doorAlignment != DoorAlignment.None) {
-                    var hinge = pair.Transform.gameObject.AddComponent<HingeJoint>();
+                    var hinge = pair.gameObject.AddComponent<HingeJoint>();
                     hinge.axis = Vector3.up;
                     hinge.useLimits = true;
 

@@ -62,7 +62,7 @@ namespace SanAndreasUnity.Behaviours
         private void LoadModel(string modelName, params string[] txds)
         {
             if (_frames != null) {
-                Destroy(_frames.Root.Transform.gameObject);
+                Destroy(_frames.Root.gameObject);
                 Destroy(_frames);
             }
 
@@ -75,6 +75,11 @@ namespace SanAndreasUnity.Behaviours
             var anim = gameObject.GetComponent<UnityEngine.Animation>();
             if (anim == null) {
                 anim = gameObject.AddComponent<UnityEngine.Animation>();
+            }
+
+            if (type == AnimType.None) {
+                anim.Stop();
+                return;
             }
 
             var group = AnimationGroup.Get(Definition.AnimGroupName);
