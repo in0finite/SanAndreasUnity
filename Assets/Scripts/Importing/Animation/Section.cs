@@ -23,28 +23,28 @@ namespace SanAndreasUnity.Importing.Animation
     public class Animation
     {
         public readonly string Name;
-        public readonly Int32 ObjectCount;
+        public readonly Int32 BoneCount;
         public readonly Int32 FrameLength;
         public readonly Int32 Unknown;
-        public readonly Object[] Objects;
+        public readonly Bone[] Bones;
 
         public Animation(BinaryReader reader)
         {
             Name = reader.ReadString(24);
-            ObjectCount = reader.ReadInt32();
+            BoneCount = reader.ReadInt32();
             FrameLength = reader.ReadInt32();
             Unknown = reader.ReadInt32();
 
-            Objects = new Object[ObjectCount];
+            Bones = new Bone[BoneCount];
 
-            for (int i = 0; i < ObjectCount; ++i)
+            for (int i = 0; i < BoneCount; ++i)
             {
-                Objects[i] = new Object(reader);
+                Bones[i] = new Bone(reader);
             }
         }
     }
 
-    public class Object
+    public class Bone
     {
         public readonly string Name;
         public readonly Int32 FrameType;
@@ -52,7 +52,7 @@ namespace SanAndreasUnity.Importing.Animation
         public readonly Int32 BoneId;
         public readonly Frame[] Frames;
 
-        public Object(BinaryReader reader)
+        public Bone(BinaryReader reader)
         {
             Name = reader.ReadString(24);
             FrameType = reader.ReadInt32();
