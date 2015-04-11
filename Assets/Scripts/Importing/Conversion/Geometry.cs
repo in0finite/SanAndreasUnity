@@ -104,16 +104,16 @@ namespace SanAndreasUnity.Importing.Conversion
         private static UnityEngine.Matrix4x4 Convert(Matrix4x4 mat)
         {
             UnityEngine.Vector4 v0 = Convert(mat.V0);
-            UnityEngine.Vector4 v1 = Convert(mat.V1);
-            UnityEngine.Vector4 v2 = Convert(mat.V2);
+            UnityEngine.Vector4 v1 = Convert(mat.V2);
+            UnityEngine.Vector4 v2 = Convert(mat.V1);
             UnityEngine.Vector4 v3 = Convert(mat.V3);
 
             return new UnityEngine.Matrix4x4
             {
-                m00 = v0.x, m01 = v0.y, m02 = v0.z, m03 = v0.w,
-                m10 = v1.x, m11 = v1.y, m12 = v1.z, m13 = v1.w,
-                m20 = v2.x, m21 = v2.y, m22 = v2.z, m23 = v2.w,
-                m30 = v3.x, m31 = v3.y, m32 = v3.z, m33 = v3.w,
+                m00 = v0.x, m01 = v0.y, m02 = v0.z, m03 = 0f,
+                m10 = v1.x, m11 = v1.y, m12 = v1.z, m13 = 0f,
+                m20 = v2.x, m21 = v2.y, m22 = v2.z, m23 = 0f,
+                m30 = v3.x, m31 = v3.y, m32 = v3.z, m33 = 1f,
             };
         }
 
@@ -370,7 +370,7 @@ namespace SanAndreasUnity.Importing.Conversion
             {
                 var transforms = Frames.ToDictionary(x => x, x => {
                     var trans = new GameObject(x.Name).transform;
-                    trans.localPosition = x.Position;
+                    //trans.localPosition = x.Position;
                     trans.localRotation = x.Rotation;
                     return trans;
                 });
@@ -406,8 +406,9 @@ namespace SanAndreasUnity.Importing.Conversion
                             smr.bones = bones;
 
                             smr.sharedMesh = geometry.Mesh;
-                            smr.sharedMesh.bindposes = bones
-                                .Select(x => UnityEngine.Matrix4x4.identity).ToArray();
+                            smr.sharedMesh.bindposes = geometry.SkinToBoneMatrices
+                                .Select((x, i) => x.inverse)
+                                .ToArray();
 
                             renderer = smr;
                         } else {

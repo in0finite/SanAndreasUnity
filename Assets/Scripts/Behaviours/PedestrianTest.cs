@@ -10,7 +10,6 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
-    [ExecuteInEditMode]
     public class PedestrianTest : MonoBehaviour
     {
         private int _loadedPedestrianId;
