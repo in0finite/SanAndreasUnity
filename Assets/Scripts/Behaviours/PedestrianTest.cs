@@ -10,7 +10,6 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
-    [RequireComponent(typeof(MeshFilter), typeof(SkinnedMeshRenderer))]
     [ExecuteInEditMode]
     public class PedestrianTest : MonoBehaviour
     {
@@ -57,55 +56,15 @@ namespace SanAndreasUnity.Behaviours
             _bones.Clear();
             _bindPoses.Clear();
 
-            var mf = GetComponent<MeshFilter>();
-            var mr = GetComponent<SkinnedMeshRenderer>();
-
             var geoms = Geometry.Load(modelName, txds);
-
-            mf.sharedMesh = geoms.Geometry[0].Mesh;
-            mr.sharedMaterials = geoms.Geometry[0].GetMaterials(MaterialFlags.Default);
-
-            mr.sharedMesh = mf.sharedMesh;
-
-            for (int i = 0; i < geoms.Frames.Length; ++i)
-            {
-                var frame = geoms.Frames[i];
-
-                Transform parent;
-                var parentIndex = frame.ParentIndex;
-
-                if (parentIndex < 0) parent = transform;
-                else parent = _bones[parentIndex];
-
-                AddBone(i, frame, parent);
-            }
-
-            mf.sharedMesh.bindposes = _bindPoses.ToArray();
-            mr.bones = _bones.ToArray();
+            geoms.AttachFrames(transform, MaterialFlags.Default);
 
             var animation = new SanAndreasUnity.Importing.Animation.AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("colt45.ifp")));
         }
 
-        private Transform AddBone(int index, Geometry.GeometryFrame frame, Transform parent)
-        {
-            var child = new GameObject();
-            child.name = string.Format("{0} ({1}", frame.Name, index);
-            child.transform.SetParent(parent, false);
-
-            child.transform.localPosition = frame.Position;
-            child.transform.localRotation = frame.Rotation;
-
-            _bones.Add(child.transform);
-
-            _bindPoses.Add(child.transform.worldToLocalMatrix * transform.localToWorldMatrix);
-
-
-            return child.transform;
-        }
-
         void OnDrawGizmos()
         {
-            foreach (var bone in _bones)
+            foreach (var bone in GetComponentsInChildren<Transform>())
             {
                 Gizmos.color = Color.white;
                 Gizmos.DrawWireSphere(bone.position, 0.02f);

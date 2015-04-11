@@ -81,6 +81,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly UInt32 NodeCount;
 
         public readonly HierarchyAnimationNode Root;
+        public readonly HierarchyAnimationNode[] Nodes;
 
         public readonly HierarchyAnimationFlags Flags;
         public readonly UInt32 KeyFrameSize;
@@ -94,7 +95,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             NodeId = reader.ReadUInt32();
             NodeCount = reader.ReadUInt32();
 
-            var nodes = new HierarchyAnimationNode[NodeCount];
+            Nodes = new HierarchyAnimationNode[NodeCount];
 
             if (NodeCount > 0)
             {
@@ -103,13 +104,13 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
                 for (int i = 0; i < NodeCount; ++i)
                 {
-                    nodes[i] = new HierarchyAnimationNode(reader);
+                    Nodes[i] = new HierarchyAnimationNode(reader);
                 }
 
                 var stack = new Stack<HierarchyAnimationNode>();
-                stack.Push(Root = nodes[0]);
+                stack.Push(Root = Nodes[0]);
 
-                foreach (var node in nodes.Skip(1)) {
+                foreach (var node in Nodes.Skip(1)) {
                     stack.Peek().AddChild(node);
 
                     if (node.Push) {

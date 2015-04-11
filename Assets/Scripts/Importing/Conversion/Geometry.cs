@@ -91,7 +91,7 @@ namespace SanAndreasUnity.Importing.Conversion
             };
         }
 
-        private static UnityEngine.BoneWeight[] Convert(RenderWareStream.Frame[] frames, SkinBoneIndices[] boneIndices, SkinBoneWeights[] boneWeights)
+        private static UnityEngine.BoneWeight[] Convert(SkinBoneIndices[] boneIndices, SkinBoneWeights[] boneWeights)
         {
             return Enumerable.Range(0, (int)boneIndices.Length).Select(x => Convert(boneIndices[x], boneWeights[x])).ToArray();
         }
@@ -294,24 +294,44 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             var atomic = atomics.FirstOrDefault(x => x.FrameIndex == src.Index);
 
-            return new GeometryFrame
-            {
-                Name = src.Name != null ? src.Name.Value : "unnamed",
-                Position = Convert(src.Position),
-                Rotation = UnityEngine.Quaternion.LookRotation(Convert(src.MatrixForward), Convert(src.MatrixUp)),
-                ParentIndex = src.ParentIndex,
-                GeometryIndex = atomic == null ? -1 : (int)atomic.GeometryIndex,
-            };
+            return new GeometryFrame(src, atomic);
+        }
+
+        private static Transform[] Convert(HierarchyAnimation hAnim, Dictionary<GeometryFrame, Transform> transforms, GeometryFrame[] frames)
+        {
+            var dict = frames.Where(x => x.Source.HAnim != null)
+                .ToDictionary(x => x.Source.HAnim.NodeId, x => transforms[x]);
+
+            return hAnim.Nodes.Select(x => dict[x.NodeId]).ToArray();
         }
 
         public class GeometryFrame
         {
-            public string Name;
-            public UnityEngine.Vector3 Position;
-            public UnityEngine.Quaternion Rotation;
+            public readonly RenderWareStream.Frame Source;
 
-            public int ParentIndex;
-            public int GeometryIndex;
+            public readonly string Name;
+            public readonly UnityEngine.Vector3 Position;
+            public readonly UnityEngine.Quaternion Rotation;
+
+            public readonly int ParentIndex;
+            public readonly int GeometryIndex;
+
+            public GeometryFrame(RenderWareStream.Frame src, RenderWareStream.Atomic atomic)
+            {
+                Source = src;
+
+                Name = src.Name != null ? src.Name.Value : "unnamed";
+                ParentIndex = src.ParentIndex;
+                GeometryIndex = atomic == null ? -1 : (int)atomic.GeometryIndex;
+
+                Position = Convert(src.Position);
+                Rotation = UnityEngine.Quaternion.LookRotation(Convert(src.MatrixForward), Convert(src.MatrixUp));
+            }
+
+            public override int GetHashCode()
+            {
+                return Source.Index;
+            }
         }
 
         public class GeometryParts
@@ -326,12 +346,12 @@ namespace SanAndreasUnity.Importing.Conversion
             {
                 Name = name;
 
+                Geometry = clump.GeometryList.Geometry
+                    .Select(x => new Geometry(x, Convert(x), txds))
+                    .ToArray();
+                
                 Frames = clump.FrameList.Frames
                     .Select(x => Convert(x, clump.Atomics))
-                    .ToArray();
-
-                Geometry = clump.GeometryList.Geometry
-                    .Select(x => new Geometry(x, clump.FrameList.Frames, Convert(x), txds))
                     .ToArray();
 
                 _collisions = clump.Collision;
@@ -343,6 +363,68 @@ namespace SanAndreasUnity.Importing.Conversion
                     CollisionModel.Load(_collisions, destParent, forceConvex);
                 } else {
                     CollisionModel.Load(Name, destParent, forceConvex);
+                }
+            }
+
+            public void AttachFrames(Transform destParent, MaterialFlags flags)
+            {
+                var transforms = Frames.ToDictionary(x => x, x => {
+                    var trans = new GameObject(x.Name).transform;
+                    trans.localPosition = x.Position;
+                    trans.localRotation = x.Rotation;
+                    return trans;
+                });
+
+                foreach (var frame in Frames) {
+                    if (frame.ParentIndex != -1) {
+                        transforms[frame].SetParent(transforms[Frames[frame.ParentIndex]], false);
+                    } else {
+                        transforms[frame].SetParent(destParent, false);
+                    }
+
+                    if (frame.GeometryIndex != -1) {
+                        var gobj = transforms[frame].gameObject;
+                        var geometry = Geometry[frame.GeometryIndex];
+
+                        HierarchyAnimation hAnim = null;
+                        var parent = frame;
+                        while ((hAnim = parent.Source.HAnim) == null || hAnim.NodeCount == 0) {
+                            if (parent.ParentIndex == -1) {
+                                hAnim = null;
+                                break;
+                            }
+                            parent = Frames[parent.ParentIndex];
+                        }
+
+                        Renderer renderer;
+                        if (hAnim != null) {
+                            var smr = gobj.AddComponent<SkinnedMeshRenderer>();
+
+                            var bones = Convert(hAnim, transforms, Frames);
+
+                            smr.rootBone = bones[0];
+                            smr.bones = bones;
+
+                            smr.sharedMesh = geometry.Mesh;
+                            smr.sharedMesh.bindposes = bones
+                                .Select(x => UnityEngine.Matrix4x4.identity).ToArray();
+
+                            renderer = smr;
+                        } else {
+                            var mf = gobj.AddComponent<MeshFilter>();
+                            mf.sharedMesh = geometry.Mesh;
+
+                            renderer = gobj.AddComponent<MeshRenderer>();
+                        }
+
+                        renderer.sharedMaterials = geometry.GetMaterials(flags);
+
+                        // filter these out for now
+                        if (frame.Name.EndsWith("_vlo") ||
+                            frame.Name.EndsWith("_dam")) {
+                            gobj.SetActive(false);
+                        }
+                    }
                 }
             }
         }
@@ -384,11 +466,11 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public readonly UnityEngine.Matrix4x4[] SkinToBoneMatrices;
 
-        private Geometry(RenderWareStream.Geometry geom, RenderWareStream.Frame[] frames, Mesh mesh, TextureDictionary[] textureDictionaries)
+        private Geometry(RenderWareStream.Geometry geom, Mesh mesh, TextureDictionary[] textureDictionaries)
         {
             Mesh = mesh;
 
-            Mesh.boneWeights = Convert(frames, geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
+            Mesh.boneWeights = Convert(geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
 
             SkinToBoneMatrices = Convert(geom.Skinning.SkinToBoneMatrices);
 

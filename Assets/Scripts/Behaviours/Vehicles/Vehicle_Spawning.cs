@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.Vehicle;
 using SanAndreasUnity.Importing.Items;
+using System;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -118,40 +119,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return _namedFrames.First(x => x.Value == name).Key;
         }
 
-        private GameObject AddPart(Geometry.GeometryFrame frame, Transform parent)
-        {
-            var child = new GameObject();
-            child.name = frame.Name;
-
-            child.transform.SetParent(parent, false);
-
-            child.transform.localPosition = frame.Position;
-            child.transform.localRotation = frame.Rotation;
-
-            _children.Add(child.transform);
-            _namedFrames.Add(child.transform, frame.Name);
-
-            if (frame.GeometryIndex != -1)
-            {
-                var mf = child.AddComponent<MeshFilter>();
-                var mr = child.AddComponent<MeshRenderer>();
-
-                var geometry = _geometryParts.Geometry[frame.GeometryIndex];
-
-                mf.sharedMesh = geometry.Mesh;
-                mr.sharedMaterials = geometry.GetMaterials(MaterialFlags.Vehicle);
-
-                // filter these out for now
-                if (frame.Name.EndsWith("_vlo") ||
-                    frame.Name.EndsWith("_dam"))
-                {
-                    child.SetActive(false);
-                }
-            }
-
-            return child;
-        }
-
         private void Initialize(VehicleSpawner spawner)
         {
             transform.position = spawner.transform.position + Vector3.up * 1f;
@@ -175,19 +142,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     _wheelFrameIndex = i;
                 }
 
-                Transform parent;
-                var parentIndex = frame.ParentIndex;
-
-                if (parentIndex < 0)
-                {
-                    parent = transform;
-                }
-                else
-                {
-                    parent = _children[parentIndex];
-                }
-
-                AddPart(frame, parent);
+                // Get transform for frame
+                throw new NotImplementedException();
             }
 
             for (int i = 0; i < _geometryParts.Frames.Length; ++i)
@@ -200,14 +156,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                     if (wheelAlignment != WheelAlignment.RightFront)
                     {
-                        var child = AddPart(_geometryParts.Frames[_wheelFrameIndex], _children[i]);
+                        // Get transform for frame
+                        throw new NotImplementedException();
 
-                        _wheels.Add(new Wheel
-                        {
-                            Alignment = wheelAlignment,
-                            Parent = _children[i],
-                            Child = child.transform,
-                        });
+                        //var child = AddPart(_geometryParts.Frames[_wheelFrameIndex], _children[i]);
+
+                        //_wheels.Add(new Wheel
+                        //{
+                        //    Alignment = wheelAlignment,
+                        //    Parent = _children[i],
+                        //    Child = child.transform,
+                        //});
                     }
                     else
                     {
