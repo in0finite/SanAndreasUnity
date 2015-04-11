@@ -22,18 +22,22 @@ namespace SanAndreasUnity.Importing.Animation
 
     public class Animation
     {
-        public Object[] Objects;
+        public readonly string Name;
+        public readonly Int32 ObjectCount;
+        public readonly Int32 FrameLength;
+        public readonly Int32 Unknown;
+        public readonly Object[] Objects;
 
         public Animation(BinaryReader reader)
         {
-            string animationName = reader.ReadString(24);
-            Int32 objectCount = reader.ReadInt32();
-            Int32 frameLength = reader.ReadInt32();
-            Int32 unknown = reader.ReadInt32();
+            Name = reader.ReadString(24);
+            ObjectCount = reader.ReadInt32();
+            FrameLength = reader.ReadInt32();
+            Unknown = reader.ReadInt32();
 
-            Objects = new Object[objectCount];
+            Objects = new Object[ObjectCount];
 
-            for (int i = 0; i < objectCount; ++i)
+            for (int i = 0; i < ObjectCount; ++i)
             {
                 Objects[i] = new Object(reader);
             }
@@ -42,20 +46,24 @@ namespace SanAndreasUnity.Importing.Animation
 
     public class Object
     {
+        public readonly string Name;
+        public readonly Int32 FrameType;
+        public readonly Int32 FrameCount;
+        public readonly Int32 BoneId;
         public readonly Frame[] Frames;
 
         public Object(BinaryReader reader)
         {
-            string objectName = reader.ReadString(24);
-            Int32 frameType = reader.ReadInt32();
-            Int32 frameCount = reader.ReadInt32();
-            Int32 boneId = reader.ReadInt32();
+            Name = reader.ReadString(24);
+            FrameType = reader.ReadInt32();
+            FrameCount = reader.ReadInt32();
+            BoneId = reader.ReadInt32();
 
-            Frames = new Frame[frameCount];
+            Frames = new Frame[FrameCount];
 
-            for (int i = 0; i < frameCount; ++i)
+            for (int i = 0; i < FrameCount; ++i)
             {
-                Frames[i] = new Frame(reader, frameType == 4);
+                Frames[i] = new Frame(reader, FrameType == 4);
             }
         }
     }
@@ -82,17 +90,19 @@ namespace SanAndreasUnity.Importing.Animation
 
     public class AnimationPackage : Section
     {
+        public readonly string FileName;
+        public readonly Int32 AnimationCount;
         public readonly Animation[] Animations;
 
         public AnimationPackage(BinaryReader reader)
             : base(reader)
         {
-            string internalFileName = reader.ReadString(24);
-            Int32 animationCount = reader.ReadInt32();
+            FileName = reader.ReadString(24);
+            AnimationCount = reader.ReadInt32();
 
-            Animations = new Animation[animationCount];
+            Animations = new Animation[AnimationCount];
 
-            for (int i = 0; i < animationCount; ++i)
+            for (int i = 0; i < AnimationCount; ++i)
             {
                 Animations[i] = new Animation(reader);
             }

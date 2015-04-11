@@ -5,6 +5,7 @@ using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
+using SanAndreasUnity.Importing.Animation;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,8 +19,7 @@ namespace SanAndreasUnity.Behaviours
 
         public int PedestrianId = 7;
 
-        private List<Transform> _bones = new List<Transform>();
-        private List<Matrix4x4> _bindPoses = new List<Matrix4x4>();
+        private AnimationPackage _anim;
 
         private void Update()
         {
@@ -50,15 +50,20 @@ namespace SanAndreasUnity.Behaviours
 
         private void LoadModel(string modelName, params string[] txds)
         {
-            _bones.ForEach(x => GameObject.Destroy(x.gameObject));
-
-            _bones.Clear();
-            _bindPoses.Clear();
-
             var geoms = Geometry.Load(modelName, txds);
             geoms.AttachFrames(transform, MaterialFlags.Default);
 
-            var animation = new SanAndreasUnity.Importing.Animation.AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("colt45.ifp")));
+            _anim = new AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("ped.ifp")));//Definition.AnimFileName + ".ifp")));
+
+            gameObject.AddComponent<UnityEngine.Animation>();
+
+            var curve = UnityEngine.AnimationCurve.Linear(0, 1, 2, 3);
+            var clip = new UnityEngine.AnimationClip();
+            clip.legacy = true;
+            clip.SetCurve("unnamed/Root/ Pelvis/ Spine/ Spine1/ Neck/ Head", typeof(Transform), "localPosition.x", curve);
+
+            GetComponent<UnityEngine.Animation>().AddClip(clip, "test");
+            GetComponent<UnityEngine.Animation>().Play("test");
         }
 
         void OnDrawGizmos()
