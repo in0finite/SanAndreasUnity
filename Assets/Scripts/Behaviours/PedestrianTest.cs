@@ -57,7 +57,7 @@ namespace SanAndreasUnity.Behaviours
 
             gameObject.AddComponent<UnityEngine.Animation>();
 
-            var clip = SanAndreasUnity.Importing.Conversion.Animation.Convert(_anim.Clips[262]);
+            var clip = SanAndreasUnity.Importing.Conversion.Animation.Convert(_anim.Clips[262], GetComponentsInChildren<Transform>());
 
             GetComponent<UnityEngine.Animation>().AddClip(clip, "test");
             GetComponent<UnityEngine.Animation>().Play("test");
