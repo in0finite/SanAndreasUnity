@@ -245,6 +245,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public class GeometryFrame
         {
+            public const string DefaultName = "unnamed";
+
             public readonly RenderWareStream.Frame Source;
 
             public readonly string Name;
@@ -258,7 +260,7 @@ namespace SanAndreasUnity.Importing.Conversion
             {
                 Source = src;
 
-                Name = src.Name != null ? src.Name.Value : "unnamed";
+                Name = src.Name != null ? src.Name.Value : DefaultName;
                 ParentIndex = src.ParentIndex;
                 GeometryIndex = atomic == null ? -1 : (int)atomic.GeometryIndex;
 
@@ -304,7 +306,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 }
             }
 
-            public void AttachFrames(Transform destParent, MaterialFlags flags)
+            public Dictionary<GeometryFrame, Transform> AttachFrames(Transform destParent, MaterialFlags flags)
             {
                 var transforms = Frames.ToDictionary(x => x, x => {
                     var trans = new GameObject(x.Name).transform;
@@ -365,6 +367,8 @@ namespace SanAndreasUnity.Importing.Conversion
                         }
                     }
                 }
+
+                return transforms;
             }
         }
 
@@ -409,9 +413,10 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             Mesh = mesh;
 
-            Mesh.boneWeights = Types.Convert(geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
-
-            SkinToBoneMatrices = Types.Convert(geom.Skinning.SkinToBoneMatrices);
+            if (geom.Skinning != null) {
+                Mesh.boneWeights = Types.Convert(geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
+                SkinToBoneMatrices = Types.Convert(geom.Skinning.SkinToBoneMatrices);
+            }
 
             _geom = geom;
             _textureDictionaries = textureDictionaries;
