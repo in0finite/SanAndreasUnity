@@ -53,14 +53,11 @@ namespace SanAndreasUnity.Behaviours
             var geoms = Geometry.Load(modelName, txds);
             geoms.AttachFrames(transform, MaterialFlags.Default);
 
-            _anim = new AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("ped.ifp")));//Definition.AnimFileName + ".ifp")));
+            _anim = new AnimationPackage(new BinaryReader(ArchiveManager.ReadFile("ped.ifp")));
 
             gameObject.AddComponent<UnityEngine.Animation>();
 
-            var curve = UnityEngine.AnimationCurve.Linear(0, 1, 2, 3);
-            var clip = new UnityEngine.AnimationClip();
-            clip.legacy = true;
-            clip.SetCurve("unnamed/Root/ Pelvis/ Spine/ Spine1/ Neck/ Head", typeof(Transform), "localPosition.x", curve);
+            var clip = SanAndreasUnity.Importing.Conversion.Animation.Convert(_anim.Clips[262]);
 
             GetComponent<UnityEngine.Animation>().AddClip(clip, "test");
             GetComponent<UnityEngine.Animation>().Play("test");

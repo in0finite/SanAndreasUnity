@@ -20,7 +20,7 @@ namespace SanAndreasUnity.Importing.Animation
         }
     }
 
-    public class Animation
+    public class Clip
     {
         public readonly string Name;
         public readonly Int32 BoneCount;
@@ -28,7 +28,7 @@ namespace SanAndreasUnity.Importing.Animation
         public readonly Int32 Unknown;
         public readonly Bone[] Bones;
 
-        public Animation(BinaryReader reader)
+        public Clip(BinaryReader reader)
         {
             Name = reader.ReadString(24);
             BoneCount = reader.ReadInt32();
@@ -91,21 +91,46 @@ namespace SanAndreasUnity.Importing.Animation
     public class AnimationPackage : Section
     {
         public readonly string FileName;
-        public readonly Int32 AnimationCount;
-        public readonly Animation[] Animations;
+        public readonly Int32 ClipCount;
+        public readonly Clip[] Clips;
 
         public AnimationPackage(BinaryReader reader)
             : base(reader)
         {
             FileName = reader.ReadString(24);
-            AnimationCount = reader.ReadInt32();
+            ClipCount = reader.ReadInt32();
 
-            Animations = new Animation[AnimationCount];
+            Clips = new Clip[ClipCount];
 
-            for (int i = 0; i < AnimationCount; ++i)
+            for (int i = 0; i < ClipCount; ++i)
             {
-                Animations[i] = new Animation(reader);
+                Clips[i] = new Clip(reader);
             }
+
+            DebugPrint();
+        }
+
+
+
+        public void DebugPrint()
+        {
+            string s = "";
+
+            for (int i = 0; i < ClipCount; ++i)
+            {
+                var anim = Clips[i];
+
+                s += string.Format("(#{0}) {1}\n", i, anim.Name);
+
+                for (int j = 0; j < anim.BoneCount; ++j)
+                {
+                    var bone = anim.Bones[j];
+
+                    s += string.Format("{0} (id: {1})\n", bone.Name, bone.BoneId);
+                }
+            }
+
+            File.WriteAllText("anim.txt", s);
         }
     }
 }
