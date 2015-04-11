@@ -10,9 +10,12 @@ using UnityEngine;
 namespace SanAndreasUnity.Importing.Conversion
 {
     using BFrame = SanAndreasUnity.Behaviours.Frame;
+    using UVector4 = UnityEngine.Vector4;
 
     public class Animation
     {
+        private const float TimeScale = 0.02f;
+
         private static UnityEngine.AnimationClip Convert(Clip animation, FrameContainer frames)
         {
             var clip = new UnityEngine.AnimationClip();
@@ -32,13 +35,25 @@ namespace SanAndreasUnity.Importing.Conversion
                     var q = Types.Convert(x.Rotation);
                     float ang; UnityEngine.Vector3 axis;
                     q.ToAngleAxis(out ang, out axis);
-                    return new UnityEngine.Vector4(axis.x, axis.y, axis.z, ang);
+                    return new UVector4(axis.x, axis.y, axis.z, ang);
                 });
 
-                clip.SetCurve(bonePath, typeof(BFrame), "RotationAxis.x", new UnityEngine.AnimationCurve(bone.Frames.Select(x => new Keyframe((float) x.Time / 50f, axisAngle[x].x)).ToArray()));
-                clip.SetCurve(bonePath, typeof(BFrame), "RotationAxis.y", new UnityEngine.AnimationCurve(bone.Frames.Select(x => new Keyframe((float) x.Time / 50f, axisAngle[x].y)).ToArray()));
-                clip.SetCurve(bonePath, typeof(BFrame), "RotationAxis.z", new UnityEngine.AnimationCurve(bone.Frames.Select(x => new Keyframe((float) x.Time / 50f, axisAngle[x].z)).ToArray()));
-                clip.SetCurve(bonePath, typeof(BFrame), "RotationAngle", new UnityEngine.AnimationCurve(bone.Frames.Select(x => new Keyframe((float) x.Time / 50f, axisAngle[x].w)).ToArray()));  
+                var axes = new [] {
+                    new { Name = "RotationAxis.x", Mask = new UVector4(1f, 0f, 0f, 0f) },
+                    new { Name = "RotationAxis.y", Mask = new UVector4(0f, 1f, 0f, 0f) },
+                    new { Name = "RotationAxis.z", Mask = new UVector4(0f, 0f, 1f, 0f) },
+                    new { Name = "RotationAngle", Mask = new UVector4(0f, 0f, 0f, 1f) }
+                };
+
+                foreach (var axis in axes) {
+                    var keys = bone.Frames
+                        .Select(x => new Keyframe(x.Time * TimeScale,
+                            UVector4.Dot(axisAngle[x], axis.Mask)))
+                        .ToArray();
+
+                    clip.SetCurve(bonePath, typeof(BFrame), axis.Name,
+                        new UnityEngine.AnimationCurve(keys));
+                }
             }
 
             clip.wrapMode = WrapMode.Loop;
