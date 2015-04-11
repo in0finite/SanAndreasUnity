@@ -12,6 +12,7 @@ namespace SanAndreasUnity.Importing.Animation
 
     public enum AnimType
     {
+        None = -1,
         Walk = 0,
         Run = 1,
         Panicked = 2,

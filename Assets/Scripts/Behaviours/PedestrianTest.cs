@@ -15,7 +15,7 @@ namespace SanAndreasUnity.Behaviours
     public class PedestrianTest : MonoBehaviour
     {
         private int _loadedPedestrianId;
-        private AnimType _loadedAnimType;
+        private AnimType _loadedAnimType = AnimType.None;
 
         private FrameContainer _frames;
 
@@ -34,6 +34,7 @@ namespace SanAndreasUnity.Behaviours
 
             if (_loadedPedestrianId != PedestrianId) {
                 _loadedPedestrianId = PedestrianId;
+                _loadedAnimType = AnimType.None;
 
                 Load(PedestrianId);
             }

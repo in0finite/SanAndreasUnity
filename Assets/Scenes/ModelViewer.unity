@@ -298,7 +298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PedestrianId: 7
-  Anim: 1
+  Anim: 0
 --- !u!4 &1418616132
 Transform:
   m_ObjectHideFlags: 0
