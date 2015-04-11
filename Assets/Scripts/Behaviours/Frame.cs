@@ -21,11 +21,16 @@ namespace SanAndreasUnity.Behaviours
             get { return _path ?? (_path = FindPath()); }
         }
 
+        public Vector3 RotationAxis;
+        public float RotationAngle;
+
         internal void Initialize(Importing.Conversion.Geometry.GeometryFrame frame)
         {
             Index = frame.Source.Index;
             BoneId = frame.Source.HAnim != null ? (int) frame.Source.HAnim.NodeId : -1;
             Name = frame.Name;
+
+            transform.localRotation.ToAngleAxis(out RotationAngle, out RotationAxis);
 
             if (frame.Source.HAnim == null) return;
 
@@ -35,6 +40,11 @@ namespace SanAndreasUnity.Behaviours
         private string FindPath()
         {
             return Parent == null ? Name : string.Format("{0}/{1}", Parent.Path, Name);
+        }
+
+        private void Update()
+        {
+            transform.localRotation = Quaternion.AngleAxis(RotationAngle, RotationAxis);
         }
     }
 }

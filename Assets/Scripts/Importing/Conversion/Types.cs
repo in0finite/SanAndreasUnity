@@ -49,6 +49,11 @@ namespace SanAndreasUnity.Importing.Conversion
             return new UnityEngine.Vector4(vec.X, vec.Z, vec.Y, vec.W);
         }
 
+        public static UnityEngine.Quaternion Convert(Quaternion quat)
+        {
+            return new UnityEngine.Quaternion(quat.X, quat.Z, quat.Y, -quat.W);
+        }
+
         public static UnityEngine.Matrix4x4 Convert(Matrix4x4 mat)
         {
             UnityEngine.Vector4 v0 = Convert(mat.V0);
