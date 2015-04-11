@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Collision;
 using SanAndreasUnity.Importing.Items;
@@ -306,7 +307,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 }
             }
 
-            public Dictionary<GeometryFrame, Transform> AttachFrames(Transform destParent, MaterialFlags flags)
+            public FrameContainer AttachFrames(Transform destParent, MaterialFlags flags)
             {
                 var transforms = Frames.ToDictionary(x => x, x => {
                     var trans = new GameObject(x.Name).transform;
@@ -314,6 +315,8 @@ namespace SanAndreasUnity.Importing.Conversion
                     trans.localRotation = x.Rotation;
                     return trans;
                 });
+
+                var container = destParent.gameObject.AddComponent<FrameContainer>();
 
                 foreach (var frame in Frames) {
                     if (frame.ParentIndex != -1) {
@@ -368,7 +371,9 @@ namespace SanAndreasUnity.Importing.Conversion
                     }
                 }
 
-                return transforms;
+                container.Initialize(Frames, transforms);
+
+                return container;
             }
         }
 

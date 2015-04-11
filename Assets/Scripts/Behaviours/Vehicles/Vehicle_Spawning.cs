@@ -71,7 +71,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             private WheelAlignment _alignment;
         }
 
-        private readonly Dictionary<Transform, string> _namedFrames = new Dictionary<Transform, string>();
+        private FrameContainer _frames;
         private readonly List<Wheel> _wheels = new List<Wheel>();
 
         private WheelAlignment GetWheelAlignment(string frameName)
@@ -112,7 +112,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Transform GetPart(string name)
         {
-            return _namedFrames.First(x => x.Value == name).Key;
+            return _frames[name].Transform;
         }
 
         private void Initialize(VehicleSpawner spawner)
@@ -129,33 +129,27 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 TextureDictionary.Load("vehicle"),
                 TextureDictionary.Load("misc"));
 
-            var frames = _geometryParts.AttachFrames(transform, MaterialFlags.Vehicle);
-            var wheel = frames.FirstOrDefault(x => x.Key.Name == "wheel").Value;
+            _frames = _geometryParts.AttachFrames(transform, MaterialFlags.Vehicle);
+            var wheel = _frames.FirstOrDefault(x => x.Name == "wheel").Transform;
 
-            foreach (var pair in frames) {
-                var frame = pair.Key;
-
-                if (frame.Name != Geometry.GeometryFrame.DefaultName) {
-                    _namedFrames.Add(pair.Value, frame.Name);
-                }
-
+            foreach (var frame in _frames) {
                 if (!frame.Name.StartsWith("wheel_") || wheel == null) continue;
 
                 var wheelAlignment = GetWheelAlignment(frame.Name);
 
                 if (wheelAlignment != WheelAlignment.RightFront) {
                     var copy = Instantiate(wheel);
-                    copy.SetParent(pair.Value, false);
+                    copy.SetParent(frame.Transform, false);
 
                     _wheels.Add(new Wheel {
                         Alignment = wheelAlignment,
-                        Parent = pair.Value,
+                        Parent = frame.Transform,
                         Child = copy,
                     });
                 } else {
                     _wheels.Add(new Wheel {
                         Alignment = wheelAlignment,
-                        Parent = pair.Value,
+                        Parent = frame.Transform,
                         Child = wheel,
                     });
                 }
@@ -163,17 +157,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (wheelAlignment == WheelAlignment.LeftFront ||
                     wheelAlignment == WheelAlignment.LeftMid ||
                     wheelAlignment == WheelAlignment.LeftBack) {
-                    pair.Value.Rotate(Vector3.up, 180.0f);
+                    frame.Transform.Rotate(Vector3.up, 180.0f);
                 }
             }
 
             InitializePhysics();
 
-            foreach (var pair in frames.Where(x => x.Key.Name.StartsWith("door_"))) {
-                var doorAlignment = GetDoorAlignment(pair.Key.Name);
+            foreach (var pair in _frames.Where(x => x.Name.StartsWith("door_"))) {
+                var doorAlignment = GetDoorAlignment(pair.Name);
 
                 if (doorAlignment != DoorAlignment.None) {
-                    var hinge = pair.Value.gameObject.AddComponent<HingeJoint>();
+                    var hinge = pair.Transform.gameObject.AddComponent<HingeJoint>();
                     hinge.axis = Vector3.up;
                     hinge.useLimits = true;
 
