@@ -8,7 +8,9 @@
 		"${game_dir}",
 		"${game_dir}/models/gta3.img",
 		"${game_dir}/models/gta_int.img",
-		"${game_dir}/models/player.img"
+		"${game_dir}/models/player.img",
+		"${game_dir}/anim/anim.img",
+		"${game_dir}/anim/cuts.img"
 	],
 
 	"item_paths" : [
