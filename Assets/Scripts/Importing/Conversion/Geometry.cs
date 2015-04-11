@@ -60,68 +60,6 @@ namespace SanAndreasUnity.Importing.Conversion
             get { return _sSmoothnessId == -1 ? _sSmoothnessId = Shader.PropertyToID("_Smoothness") : _sSmoothnessId; }
         }
 
-        private static UnityEngine.Vector2 Convert(Vector2 vec)
-        {
-            return new UnityEngine.Vector2(vec.X, vec.Y);
-        }
-
-        private static UnityEngine.Vector3 Convert(Vector3 vec)
-        {
-            return new UnityEngine.Vector3(vec.X, vec.Z, vec.Y);
-        }
-
-        private static Color32 Convert(Color4 clr)
-        {
-            return new Color32(clr.R, clr.G, clr.B, clr.A);
-        }
-
-        private static UnityEngine.BoneWeight Convert(SkinBoneIndices boneIndices, SkinBoneWeights boneWeights)
-        {
-            return new UnityEngine.BoneWeight
-            {
-                boneIndex0 = (int)boneIndices.Indices[0],
-                boneIndex1 = (int)boneIndices.Indices[1],
-                boneIndex2 = (int)boneIndices.Indices[2],
-                boneIndex3 = (int)boneIndices.Indices[3],
-                
-                weight0 = boneWeights.Weights[0],
-                weight1 = boneWeights.Weights[1],
-                weight2 = boneWeights.Weights[2],
-                weight3 = boneWeights.Weights[3],
-            };
-        }
-
-        private static UnityEngine.BoneWeight[] Convert(SkinBoneIndices[] boneIndices, SkinBoneWeights[] boneWeights)
-        {
-            return Enumerable.Range(0, (int)boneIndices.Length).Select(x => Convert(boneIndices[x], boneWeights[x])).ToArray();
-        }
-
-        private static UnityEngine.Vector4 Convert(Vector4 vec)
-        {
-            return new UnityEngine.Vector4(vec.X, vec.Z, vec.Y, vec.W);
-        }
-
-        private static UnityEngine.Matrix4x4 Convert(Matrix4x4 mat)
-        {
-            UnityEngine.Vector4 v0 = Convert(mat.V0);
-            UnityEngine.Vector4 v1 = Convert(mat.V2);
-            UnityEngine.Vector4 v2 = Convert(mat.V1);
-            UnityEngine.Vector4 v3 = Convert(mat.V3);
-
-            return new UnityEngine.Matrix4x4
-            {
-                m00 = v0.x, m01 = v0.y, m02 = v0.z, m03 = 0f,
-                m10 = v1.x, m11 = v1.y, m12 = v1.z, m13 = 0f,
-                m20 = v2.x, m21 = v2.y, m22 = v2.z, m23 = 0f,
-                m30 = v3.x, m31 = v3.y, m32 = v3.z, m33 = 1f,
-            };
-        }
-
-        private static UnityEngine.Matrix4x4[] Convert(Matrix4x4[] mat)
-        {
-            return Enumerable.Range(0, (int)mat.Length).Select(x => Convert(mat[x])).ToArray();
-        }
-
         private static int[] FromTriangleStrip(IList<int> indices)
         {
             var dst = new List<int>((indices.Count - 2) * 3);
@@ -224,7 +162,7 @@ namespace SanAndreasUnity.Importing.Conversion
             var shader = GetShader(flags);
             var mat = new UnityEngine.Material(shader);
 
-            mat.color = Convert(src.Colour);
+            mat.color = Types.Convert(src.Colour);
 
             if (src.TextureCount > 0) {
                 var tex = src.Textures[0];
@@ -255,18 +193,18 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             var mesh = new Mesh();
 
-            mesh.vertices = src.Vertices.Select(x => Convert(x)).ToArray();
+            mesh.vertices = src.Vertices.Select(x => Types.Convert(x)).ToArray();
 
             if (src.Normals != null) {
-                mesh.normals = src.Normals.Select(x => Convert(x)).ToArray();
+                mesh.normals = src.Normals.Select(x => Types.Convert(x)).ToArray();
             }
 
             if (src.Colours != null) {
-                mesh.colors32 = src.Colours.Select(x => Convert(x)).ToArray();
+                mesh.colors32 = src.Colours.Select(x => Types.Convert(x)).ToArray();
             }
 
             if (src.TexCoords != null && src.TexCoords.Length > 0) {
-                mesh.uv = src.TexCoords[0].Select(x => Convert(x)).ToArray();
+                mesh.uv = src.TexCoords[0].Select(x => Types.Convert(x)).ToArray();
             }
 
             if (src.Normals == null) {
@@ -324,8 +262,8 @@ namespace SanAndreasUnity.Importing.Conversion
                 ParentIndex = src.ParentIndex;
                 GeometryIndex = atomic == null ? -1 : (int)atomic.GeometryIndex;
 
-                Position = Convert(src.Position);
-                Rotation = UnityEngine.Quaternion.LookRotation(Convert(src.MatrixForward), Convert(src.MatrixUp));
+                Position = Types.Convert(src.Position);
+                Rotation = UnityEngine.Quaternion.LookRotation(Types.Convert(src.MatrixForward), Types.Convert(src.MatrixUp));
             }
 
             public override int GetHashCode()
@@ -471,9 +409,9 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             Mesh = mesh;
 
-            Mesh.boneWeights = Convert(geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
+            Mesh.boneWeights = Types.Convert(geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
 
-            SkinToBoneMatrices = Convert(geom.Skinning.SkinToBoneMatrices);
+            SkinToBoneMatrices = Types.Convert(geom.Skinning.SkinToBoneMatrices);
 
             _geom = geom;
             _textureDictionaries = textureDictionaries;
