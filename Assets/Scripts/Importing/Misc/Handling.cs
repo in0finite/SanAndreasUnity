@@ -25,6 +25,8 @@ namespace SanAndreasUnity.Importing.Vehicles
 
     public static class Handling
     {
+        #region Reflection
+
         [Flags]
         private enum ColumnFlags
         {
@@ -133,6 +135,34 @@ namespace SanAndreasUnity.Importing.Vehicles
             }
         }
 
+        private static Dictionary<char, Func<String, IEntry>> _sCtors;
+
+        private static readonly List<IEntry> _sEntries = new List<IEntry>();
+
+        private static void GenerateCtors()
+        {
+            _sCtors = new Dictionary<char, Func<string, IEntry>>();
+
+            var param = Expression.Parameter(typeof(String), "line");
+
+            foreach (var type in typeof(Handling).GetNestedTypes()) {
+                if (type.IsAbstract) continue;
+                if (type.IsInterface) continue;
+                if (!typeof(IEntry).IsAssignableFrom(type)) continue;
+                var attrib = (PrefixAttribute) type.GetCustomAttributes(typeof(PrefixAttribute), true).FirstOrDefault();
+                var prefix = attrib != null ? attrib.Value : '\0';
+
+                var ctor = type.GetConstructor(new[] { typeof(string) });
+                var ctorCall = Expression.New(ctor, param);
+                var cast = Expression.Convert(ctorCall, typeof(IEntry));
+                var lambda = Expression.Lambda<Func<String, IEntry>>(cast, param).Compile();
+
+                _sCtors.Add(prefix, lambda);
+            }
+        }
+
+        #endregion
+
         public class Car : Entry<Car>, IVehicleEntry
         {
             [Column(0)] public string Id { get; set; }
@@ -213,32 +243,6 @@ namespace SanAndreasUnity.Importing.Vehicles
             public bool AntiLockBrakes { get { return _AntiLockBrakes != 0; } }
 
             public Car(string line) : base(line) { }
-        }
-
-        private static Dictionary<char, Func<String, IEntry>> _sCtors;
-
-        private static readonly List<IEntry> _sEntries = new List<IEntry>();
- 
-        private static void GenerateCtors()
-        {
-            _sCtors = new Dictionary<char,Func<string,IEntry>>();
-
-            var param = Expression.Parameter(typeof(String), "line");
-
-            foreach (var type in typeof(Handling).GetNestedTypes()) {
-                if (type.IsAbstract) continue;
-                if (type.IsInterface) continue;
-                if (!typeof(IEntry).IsAssignableFrom(type)) continue;
-                var attrib = (PrefixAttribute) type.GetCustomAttributes(typeof(PrefixAttribute), true).FirstOrDefault();
-                var prefix = attrib != null ? attrib.Value : '\0';
-
-                var ctor = type.GetConstructor(new[] { typeof(string) });
-                var ctorCall = Expression.New(ctor, param);
-                var cast = Expression.Convert(ctorCall, typeof(IEntry));
-                var lambda = Expression.Lambda<Func<String, IEntry>>(cast, param).Compile();
-
-                _sCtors.Add(prefix, lambda);
-            }
         }
 
         public static void Load(string path)

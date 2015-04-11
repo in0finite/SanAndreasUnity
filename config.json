@@ -20,5 +20,6 @@
 	],
 
 	"handling_path" : "${game_dir}/data/handling.cfg",
-	"water_path" : "${game_dir}/data/water.dat"
+	"water_path" : "${game_dir}/data/water.dat",
+	"anim_group_path" : "${game_dir}/data/animgrp.dat"
 }

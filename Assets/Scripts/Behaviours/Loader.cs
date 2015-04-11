@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Collision;
 using SanAndreasUnity.Importing.Items;
@@ -53,6 +54,10 @@ namespace SanAndreasUnity.Behaviours
 
             using (Utilities.Profiler.Start("Handling info load time")) {
                 Handling.Load(Config.GetPath("handling_path"));
+            }
+
+            using (Utilities.Profiler.Start("Animation group info load time")) {
+                AnimationGroup.Load(Config.GetPath("anim_group_path"));
             }
 
             HasLoaded = true;
