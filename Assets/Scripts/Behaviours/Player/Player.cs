@@ -15,7 +15,6 @@ namespace SanAndreasUnity.Behaviours
         private CharacterController _controller;
 
         private float _pitch;
-        private float _yaw;
 
         #endregion
 
@@ -27,9 +26,6 @@ namespace SanAndreasUnity.Behaviours
         public float WalkSpeed = 1.5f;
         public float RunSpeed = 5f;
         public float TurnSpeed = 10f;
-
-        public Vector2 PitchClamp = new Vector2(-89f, 89f);
-        public Vector2 YawClamp = new Vector2(-180f, 180f);
 
         public float VelocitySmoothing = 0.05f;
 
@@ -46,38 +42,9 @@ namespace SanAndreasUnity.Behaviours
         }
 
         public Vector3 Velocity { get; private set; }
-
         public Vector3 Movement { get; set; }
 
-        public float Pitch
-        {
-            get { return _pitch; }
-            set
-            {
-                _pitch = Mathf.Clamp(value, PitchClamp.x, PitchClamp.y);
-
-                var angles = Camera.transform.localEulerAngles;
-                angles.x = _pitch;
-                Camera.transform.localEulerAngles = angles;
-            }
-        }
-
-        public float Yaw
-        {
-            get { return _yaw; }
-            set
-            {
-                _yaw = Mathf.Clamp(value.NormalizeAngle(), YawClamp.x, YawClamp.y);
-
-                var trans = Camera.transform;
-                var angles = trans.localEulerAngles;
-                angles.y = _yaw;
-                trans.localEulerAngles = angles;
-            }
-        }
-
-        public Vector3 Heading { get; set; }
-
+        public Vector3 Heading { get; private set; }
         public Vehicle CurrentVehicle { get; private set; }
 
         public bool IsInVehicle { get { return CurrentVehicle != null; } }
@@ -139,6 +106,10 @@ namespace SanAndreasUnity.Behaviours
             if (IsInVehicle) return;
 
             if (IsLocalPlayer) {
+                if (Movement.sqrMagnitude > float.Epsilon) {
+                    Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
+                }
+
                 var vDiff = Movement - new Vector3(Velocity.x, 0f, Velocity.z);
 
                 Velocity += vDiff * (1f - Mathf.Pow(VelocitySmoothing, 4f * Time.fixedDeltaTime));
@@ -148,10 +119,6 @@ namespace SanAndreasUnity.Behaviours
                 _controller.Move(Velocity * Time.fixedDeltaTime);
             } else {
                 Velocity = _controller.velocity;
-            }
-
-            if (Velocity.sqrMagnitude <= VelocitySmoothing) {
-                PlayerModel.Walking = false;
             }
         }
     }

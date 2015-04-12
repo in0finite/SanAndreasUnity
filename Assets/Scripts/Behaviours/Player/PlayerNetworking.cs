@@ -44,13 +44,14 @@ namespace SanAndreasUnity.Behaviours
             optional UnityEngine.Vector3 Position = 3;
 
             //:interpolate
-            //:smoothing = 0.5
-            optional UnityEngine.Vector3 Velocity = 4;
+            optional UnityEngine.Vector3 Movement = 4;
 
             //:interpolate
             //:angle
             //:smoothing = 0.5
             optional float Yaw = 5;
+
+            optional bool Running = 6;
         }
 
 #endif
@@ -89,8 +90,9 @@ namespace SanAndreasUnity.Behaviours
         {
             return new PlayerState {
                 Position = Position,
-                Velocity = Velocity,
-                Yaw = Yaw,
+                Movement = Movement,
+                Yaw = Quaternion.FromToRotation(Vector3.forward, Heading).eulerAngles.y,
+                Running = PlayerModel.Running,
                 Timestamp = ServerTime
             };
         }
@@ -98,8 +100,18 @@ namespace SanAndreasUnity.Behaviours
         private void UpdateFromSnapshot(PlayerState message)
         {
             Position = message.Position;
-            Velocity = message.Velocity;
-            Yaw = message.Yaw;
+            Movement = message.Movement;
+            Heading = Quaternion.AngleAxis(message.Yaw, Vector3.up) * Vector3.forward;
+
+            if (Movement.sqrMagnitude > 0f) {
+                if (message.Running) {
+                    PlayerModel.Running = message.Running;
+                } else {
+                    PlayerModel.Walking = true;
+                }
+            } else {
+                PlayerModel.Walking = false;
+            }
         }
 
 #if CLIENT
@@ -145,9 +157,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void NetworkingFixedUpdate()
         {
-            if (IsClient && IsLocalPlayer) {
-                Velocity = GetComponent<CharacterController>().velocity;
-            } else {
+            if (!IsClient || !IsLocalPlayer) {
                 _snapshots.Update();
                 UpdateFromSnapshot(_snapshots.Current);
             }

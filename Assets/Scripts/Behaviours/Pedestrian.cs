@@ -31,18 +31,14 @@ namespace SanAndreasUnity.Behaviours
 
         public bool Walking
         {
-            set
-            {
-                Anim = value ? AnimType.Walk : AnimType.Idle;
-            }
+            set { Anim = value ? AnimType.Walk : AnimType.Idle; }
+            get { return Anim == AnimType.Walk || Running; }
         }
 
         public bool Running
         {
-            set
-            {
-                Anim = value ? AnimType.Run : AnimType.Walk;
-            }
+            set { Anim = value ? AnimType.Run : AnimType.Walk; }
+            get { return Anim == AnimType.Run || Anim == AnimType.Panicked; }
         }
 
         public Vector3 Position

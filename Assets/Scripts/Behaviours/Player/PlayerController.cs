@@ -16,6 +16,9 @@ namespace SanAndreasUnity.Behaviours
 
         private Player _player;
 
+        private float _pitch;
+        private float _yaw;
+
         #endregion
 
         #region Inspector Fields
@@ -25,12 +28,41 @@ namespace SanAndreasUnity.Behaviours
         public float CarCameraDistance = 6.0f;
         public float PlayerCameraDistance = 2.0f;
 
+        public Vector2 PitchClamp = new Vector2(-89f, 89f);
+
         #endregion
 
         #region Properties
 
         public Camera Camera { get { return _player.Camera; } }
         public Pedestrian PlayerModel { get { return _player.PlayerModel; } }
+
+        public float Pitch
+        {
+            get { return _pitch; }
+            set
+            {
+                _pitch = Mathf.Clamp(value, PitchClamp.x, PitchClamp.y);
+
+                var angles = Camera.transform.localEulerAngles;
+                angles.x = _pitch;
+                Camera.transform.localEulerAngles = angles;
+            }
+        }
+
+        public float Yaw
+        {
+            get { return _yaw; }
+            set
+            {
+                _yaw = value.NormalizeAngle();
+
+                var trans = Camera.transform;
+                var angles = trans.localEulerAngles;
+                angles.y = _yaw;
+                trans.localEulerAngles = angles;
+            }
+        }
 
         #endregion
 
@@ -55,12 +87,12 @@ namespace SanAndreasUnity.Behaviours
             {
                 var cursorDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
-                _player.Yaw += cursorDelta.x * CursorSensitivity.x;
-                _player.Pitch -= cursorDelta.y * CursorSensitivity.y;
+                Yaw += cursorDelta.x * CursorSensitivity.x;
+                Pitch -= cursorDelta.y * CursorSensitivity.y;
             }
 
-            Camera.transform.rotation = Quaternion.AngleAxis(_player.Yaw, Vector3.up)
-                * Quaternion.AngleAxis(_player.Pitch, Vector3.right);
+            Camera.transform.rotation = Quaternion.AngleAxis(Yaw, Vector3.up)
+                * Quaternion.AngleAxis(Pitch, Vector3.right);
 
             float distance;
             Transform castFrom;
@@ -95,8 +127,6 @@ namespace SanAndreasUnity.Behaviours
             {
                 inputMove.Normalize();
 
-                _player.Heading = Quaternion.AngleAxis(_player.Yaw, Vector3.up) * inputMove;
-
                 if (Input.GetKey(KeyCode.LeftShift)) {
                     moveSpeed = _player.RunSpeed;
                     PlayerModel.Running = true;
@@ -104,9 +134,12 @@ namespace SanAndreasUnity.Behaviours
                     moveSpeed = _player.WalkSpeed;
                     PlayerModel.Walking = true;
                 }
+            } else {
+                PlayerModel.Walking = false;
             }
 
-            _player.Movement = transform.forward * moveSpeed;
+            _player.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
+                new Vector3(1f, 0f, 1f)).normalized * moveSpeed;
 
             if (Input.GetButtonDown("Use")) {
                 foreach (var vehicle in FindObjectsOfType<Vehicle>()) {
