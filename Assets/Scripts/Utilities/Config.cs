@@ -11,8 +11,6 @@ namespace SanAndreasUnity.Utilities
 {
     public static class Config
     {
-        public static readonly ulong UserId;
-
         public static string FileName
         {
             get { return "config.json"; }
@@ -48,30 +46,6 @@ namespace SanAndreasUnity.Utilities
 
             _root = JObject.Parse(File.ReadAllText(FilePath));
             _user = JObject.Parse(File.ReadAllText(UserFilePath));
-
-            // Risky
-            UserId = BitConverter.ToUInt64(Guid.NewGuid().ToByteArray(), 8);
-
-            Client.ResolveUserId += () => UserId;
-            Client.ResolveUsername += () => Get<string>("cl_name");
-            
-            if (Get<bool>("cl_connect")) {
-                NetConfig.RemoteHostname = Get<string>("cl_remote_hostname");
-                NetConfig.Port = Get<int>("cl_remote_port");
-                NetConfig.IsClient = true;
-            } else {
-                NetConfig.IsClient = false;
-            }
-
-            if (Get<bool>("sv_listen")) {
-                NetConfig.ServerName = Get<string>("sv_name");
-                NetConfig.Port = Get<int>("sv_port");
-                NetConfig.MaxConnections = Get<int>("sv_max_connections");
-                NetConfig.IsServer = true;
-            } else {
-                NetConfig.IsServer = false;
-            }
-
         }
 
         private static TVal ConvertVal<TVal>(JToken val)

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Facepunch.Networking;
 using ProtoBuf;
 using ProtoBuf.Player;
+using SanAndreasUnity.Utilities;
+using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Networking
 {
@@ -35,13 +37,24 @@ namespace SanAndreasUnity.Behaviours.Networking
 #endif
 
         private readonly Dictionary<IRemote, Player> _players;
-        private readonly Random _random = new Random();
+        private readonly System.Random _random = new System.Random();
 
         public List<UnityEngine.Transform> PlayerSpawns = new List<UnityEngine.Transform>();
 
         public Server()
         {
             _players = new Dictionary<IRemote,Player>();
+
+            if (Config.Get<bool>("sv_listen")) {
+                NetConfig.ServerName = Config.Get<string>("sv_name");
+                NetConfig.Port = Config.Get<int>("sv_port");
+                NetConfig.MaxConnections = Config.Get<int>("sv_max_connections");
+                NetConfig.IsServer = true;
+
+                Debug.LogFormat("Will listen on port {0}", NetConfig.Port);
+            } else {
+                NetConfig.IsServer = false;
+            }
         }
 
         protected override void OnAcceptClient(Facepunch.Networking.IRemote client, ConnectRequest request)

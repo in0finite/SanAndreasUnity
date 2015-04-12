@@ -1,12 +1,34 @@
-﻿using Facepunch.Networking;
+﻿using System;
+using Facepunch.Networking;
 using ProtoBuf;
 using ProtoBuf.Player;
 using SanAndreasUnity.Utilities;
+using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Networking
 {
     public class Client : Facepunch.Networking.Client
     {
+        public static readonly ulong UserId;
+
+        static Client()
+        {
+            // Risky
+            UserId = BitConverter.ToUInt64(Guid.NewGuid().ToByteArray(), 8);
+
+            Client.ResolveUserId += () => UserId;
+            Client.ResolveUsername += () => Config.Get<string>("cl_name");
+
+            if (Config.Get<bool>("cl_connect")) {
+                NetConfig.RemoteHostname = Config.Get<string>("cl_remote_hostname");
+                NetConfig.Port = Config.Get<int>("cl_remote_port");
+                NetConfig.IsClient = true;
+
+                Debug.LogFormat("Will connect to {0}:{1}", NetConfig.RemoteHostname, NetConfig.Port);
+            } else {
+                NetConfig.IsClient = false;
+            }
+        }
 
 #if PROTOBUF
         

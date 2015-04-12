@@ -119,12 +119,14 @@ namespace SanAndreasUnity.Behaviours.World
         private IEnumerator Fade()
         {
             if (_isFading) yield break;
+            
+            var mr = GetComponent<MeshRenderer>();
+            if (mr == null) yield break;
 
             _isFading = true;
 
             const float fadeRate = 2f;
 
-            var mr = GetComponent<MeshRenderer>();
             var pb = new MaterialPropertyBlock();
 
             var val = IsVisible ? 0f : -1f;
