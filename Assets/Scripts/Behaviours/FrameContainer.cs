@@ -55,8 +55,10 @@ namespace SanAndreasUnity.Behaviours
             return _frames.GetEnumerator();
         }
 
-        void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
+            if (_frames == null) return;
+
             foreach (var frame in _frames)
             {
                 Gizmos.color = Color.white;
