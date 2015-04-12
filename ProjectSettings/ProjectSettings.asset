@@ -257,7 +257,8 @@ PlayerSettings:
   psp2InfoBarColor: 0
   psmSplashimage: {fileID: 0}
   spritePackerPolicy: 
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: CLIENT;SERVER
   metroPackageName: SanAndreasTest
   metroPackageLogo: 
   metroPackageLogo140: 

@@ -9,7 +9,7 @@ namespace Facepunch.Editor
     public class ProtoBufGen : MonoBehaviour
     {
         private static readonly String _sAssPath = new DirectoryInfo(UnityEngine.Application.dataPath).FullName;
-        private static readonly String _sRootPath = new DirectoryInfo(Path.Combine(_sAssPath, "../../..")).FullName;
+        private static readonly String _sRootPath = new DirectoryInfo(Path.Combine(_sAssPath, "..")).FullName;
 
         [MenuItem("Facepunch/Generate ProtoBuf")]
 // ReSharper disable once UnusedMember.Local
