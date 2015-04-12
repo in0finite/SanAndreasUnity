@@ -54,5 +54,19 @@ namespace SanAndreasUnity.Behaviours
         {
             return _frames.GetEnumerator();
         }
+
+        void OnDrawGizmos()
+        {
+            foreach (var frame in _frames)
+            {
+                Gizmos.color = Color.white;
+                Gizmos.DrawWireSphere(frame.transform.position, 0.02f);
+
+                if (frame.Parent != null)
+                {
+                    Gizmos.DrawLine(frame.transform.position, frame.Parent.transform.position);
+                }
+            }
+        }
     }
 }

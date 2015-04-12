@@ -89,19 +89,5 @@ namespace SanAndreasUnity.Behaviours
             anim.AddClip(clip, animName);
             anim.Play(animName);
         }
-
-        void OnDrawGizmos()
-        {
-            foreach (var bone in GetComponentsInChildren<Transform>())
-            {
-                Gizmos.color = Color.white;
-                Gizmos.DrawWireSphere(bone.position, 0.02f);
-
-                if (bone.parent != null)
-                {
-                    Gizmos.DrawLine(bone.position, bone.parent.position);
-                }
-            }
-        }
     }
 }
