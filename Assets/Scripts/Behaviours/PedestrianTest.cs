@@ -44,6 +44,12 @@ namespace SanAndreasUnity.Behaviours
 
                 LoadAnim(Anim);
             }
+
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                if (Anim == AnimType.Walk) Anim = AnimType.Run;
+                else if (Anim == AnimType.Run) Anim = AnimType.Walk; 
+            }
         }
         
         private void OnValidate()
@@ -87,7 +93,7 @@ namespace SanAndreasUnity.Behaviours
             var clip = Importing.Conversion.Animation.Load(group.FileName, animName, _frames);
 
             anim.AddClip(clip, animName);
-            anim.Play(animName);
+            anim.CrossFade(animName, 0.5f);
         }
     }
 }

@@ -12,6 +12,7 @@ namespace SanAndreasUnity.Importing.Conversion
     using BFrame = SanAndreasUnity.Behaviours.Frame;
     using UVector3 = UnityEngine.Vector3;
     using UVector4 = UnityEngine.Vector4;
+    using UQuaternion = UnityEngine.Quaternion;
 
     public class Animation
     {
@@ -23,10 +24,10 @@ namespace SanAndreasUnity.Importing.Conversion
             clip.legacy = true;
 
             var rotateAxes = new[] {
-                new { Name = "RotationAxis.x", Mask = new UVector4(1f, 0f, 0f, 0f) },
-                new { Name = "RotationAxis.y", Mask = new UVector4(0f, 1f, 0f, 0f) },
-                new { Name = "RotationAxis.z", Mask = new UVector4(0f, 0f, 1f, 0f) },
-                new { Name = "RotationAngle", Mask = new UVector4(0f, 0f, 0f, 1f) }
+                new { Name = "localRotation.x", Mask = new UVector4(1f, 0f, 0f, 0f) },
+                new { Name = "localRotation.y", Mask = new UVector4(0f, 1f, 0f, 0f) },
+                new { Name = "localRotation.z", Mask = new UVector4(0f, 0f, 1f, 0f) },
+                new { Name = "localRotation.w", Mask = new UVector4(0f, 0f, 0f, 1f) }
             };
 
             var translateAxes = new[] {
@@ -38,7 +39,6 @@ namespace SanAndreasUnity.Importing.Conversion
             foreach (var bone in animation.Bones)
             {
                 var frame = frames.GetByBoneId(bone.BoneId);
-                frame.AnimationDriven = true;
 
                 string bonePath = frame.Path;
 
@@ -46,7 +46,7 @@ namespace SanAndreasUnity.Importing.Conversion
                     var q = Types.Convert(x.Rotation);
                     float ang; UnityEngine.Vector3 axis;
                     q.ToAngleAxis(out ang, out axis);
-                    return new UVector4(axis.x, axis.y, axis.z, ang);
+                    return new UVector4(q.x, q.y, q.z, q.w);
                 });
 
                 foreach (var axis in rotateAxes) {
@@ -55,7 +55,7 @@ namespace SanAndreasUnity.Importing.Conversion
                             UVector4.Dot(axisAngle[x], axis.Mask)))
                         .ToArray();
 
-                    clip.SetCurve(bonePath, typeof(BFrame), axis.Name,
+                    clip.SetCurve(bonePath, typeof(Transform), axis.Name,
                         new UnityEngine.AnimationCurve(keys));
                 }
 
