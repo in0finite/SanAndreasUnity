@@ -10,6 +10,7 @@ using UnityEngine;
 namespace SanAndreasUnity.Importing.Conversion
 {
     using BFrame = SanAndreasUnity.Behaviours.Frame;
+    using UVector3 = UnityEngine.Vector3;
     using UVector4 = UnityEngine.Vector4;
 
     public class Animation
@@ -25,7 +26,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
             foreach (var bone in animation.Bones)
             {
-                bonePath = frames.GetByBoneId(bone.BoneId).Path;
+                var frame = frames.GetByBoneId(bone.BoneId);
+                bonePath = frame.Path;
 
                 //clip.SetCurve(bonePath, typeof(Transform), "localPosition.x", new UnityEngine.AnimationCurve(bone.Frames.Select(x => new Keyframe((float) x.Time / 50f, x.Translation.X)).ToArray()));
                 //clip.SetCurve(bonePath, typeof(Transform), "localPosition.y", new UnityEngine.AnimationCurve(bone.Frames.Select(x => new Keyframe((float) x.Time / 50f, x.Translation.Z)).ToArray()));
@@ -38,20 +40,37 @@ namespace SanAndreasUnity.Importing.Conversion
                     return new UVector4(axis.x, axis.y, axis.z, ang);
                 });
 
-                var axes = new [] {
+                var rotateAxes = new [] {
                     new { Name = "RotationAxis.x", Mask = new UVector4(1f, 0f, 0f, 0f) },
                     new { Name = "RotationAxis.y", Mask = new UVector4(0f, 1f, 0f, 0f) },
                     new { Name = "RotationAxis.z", Mask = new UVector4(0f, 0f, 1f, 0f) },
                     new { Name = "RotationAngle", Mask = new UVector4(0f, 0f, 0f, 1f) }
                 };
 
-                foreach (var axis in axes) {
+                var translateAxes = new[] {
+                    new { Name = "localPosition.x", Mask = new UVector3(1f, 0f, 0f) },
+                    new { Name = "localPosition.y", Mask = new UVector3(0f, 1f, 0f) },
+                    new { Name = "localPosition.z", Mask = new UVector3(0f, 0f, 1f) },
+                };
+
+                foreach (var axis in rotateAxes) {
                     var keys = bone.Frames
                         .Select(x => new Keyframe(x.Time * TimeScale,
                             UVector4.Dot(axisAngle[x], axis.Mask)))
                         .ToArray();
 
                     clip.SetCurve(bonePath, typeof(BFrame), axis.Name,
+                        new UnityEngine.AnimationCurve(keys));
+                }
+
+                foreach (var translateAxis in translateAxes)
+                {
+                    var keys = bone.Frames
+                        .Select(x => new Keyframe(x.Time * TimeScale,
+                            UVector3.Dot(frame.transform.localPosition + Types.Convert(x.Translation), translateAxis.Mask)))
+                        .ToArray();
+
+                    clip.SetCurve(bonePath, typeof(Transform), translateAxis.Name,
                         new UnityEngine.AnimationCurve(keys));
                 }
             }
