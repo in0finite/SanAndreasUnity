@@ -27,7 +27,7 @@ namespace SanAndreasUnity.Behaviours
                 _frames[i].Parent = _frames[frame.ParentIndex];
             }
 
-            _boneIdDict = _frames.ToDictionary(x => x.BoneId, x => x);
+            _boneIdDict = _frames.Where(x => x.BoneId > -1).ToDictionary(x => x.BoneId, x => x);
         }
 
         public Frame GetByName(string name)
