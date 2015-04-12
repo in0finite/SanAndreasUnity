@@ -22,16 +22,10 @@ namespace SanAndreasUnity.Importing.Conversion
             var clip = new UnityEngine.AnimationClip();
             clip.legacy = true;
 
-            string bonePath = "";
-
             foreach (var bone in animation.Bones)
             {
                 var frame = frames.GetByBoneId(bone.BoneId);
-                bonePath = frame.Path;
-
-                //clip.SetCurve(bonePath, typeof(Transform), "localPosition.x", new UnityEngine.AnimationCurve(bone.Frames.Select(x => new Keyframe((float) x.Time / 50f, x.Translation.X)).ToArray()));
-                //clip.SetCurve(bonePath, typeof(Transform), "localPosition.y", new UnityEngine.AnimationCurve(bone.Frames.Select(x => new Keyframe((float) x.Time / 50f, x.Translation.Z)).ToArray()));
-                //clip.SetCurve(bonePath, typeof(Transform), "localPosition.z", new UnityEngine.AnimationCurve(bone.Frames.Select(x => new Keyframe((float) x.Time / 50f, x.Translation.Y)).ToArray()));
+                string bonePath = frame.Path;
 
                 var axisAngle = bone.Frames.ToDictionary(x => x, x => {
                     var q = Types.Convert(x.Rotation);
