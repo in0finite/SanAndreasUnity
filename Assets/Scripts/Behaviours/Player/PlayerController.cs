@@ -35,6 +35,15 @@ namespace SanAndreasUnity.Behaviours.Player
         public Camera Camera;
 
         public float CarCameraDistance = 6.0f;
+        public float PlayerCameraDistance = 2.0f;
+
+        public PedestrianTest PlayerModel;
+
+        public Vector3 Heading { get; set; }
+
+        public float WalkSpeed;
+        public float RunSpeed;
+        public float TurnSpeed;
 
         public float Pitch
         {
@@ -56,7 +65,7 @@ namespace SanAndreasUnity.Behaviours.Player
             {
                 _yaw = Mathf.Clamp(value.NormalizeAngle(), YawClamp.x, YawClamp.y);
 
-                var trans = IsInVehicle ? Camera.transform : transform;
+                var trans = Camera.transform;
                 var angles = trans.localEulerAngles;
                 angles.y = _yaw;
                 trans.localEulerAngles = angles;
@@ -91,6 +100,7 @@ namespace SanAndreasUnity.Behaviours.Player
             if (IsInVehicle) {
                 Camera.transform.rotation = Quaternion.AngleAxis(Yaw, Vector3.up) * Quaternion.AngleAxis(Pitch, Vector3.right);
 
+                CarCameraDistance = Mathf.Clamp(CarCameraDistance - Input.mouseScrollDelta.y, 2.0f, 32.0f);
                 float distance = CarCameraDistance;
 
                 var castRay = new Ray(CurrentVehicle.transform.position, -Camera.transform.forward);
@@ -106,21 +116,57 @@ namespace SanAndreasUnity.Behaviours.Player
 
                 return;
             }
+            else
+            {
+                Camera.transform.rotation = Quaternion.AngleAxis(Yaw, Vector3.up) * Quaternion.AngleAxis(Pitch, Vector3.right);
+
+                PlayerCameraDistance = Mathf.Clamp(PlayerCameraDistance - Input.mouseScrollDelta.y, 2.0f, 32.0f);
+                float distance = PlayerCameraDistance;
+
+                var castRay = new Ray(transform.position, -Camera.transform.forward);
+
+                RaycastHit hitInfo;
+
+                if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance))
+                {
+                    distance = hitInfo.distance;
+                }
+
+                Camera.transform.position = castRay.GetPoint(distance);
+            }
+
+
 
             if (!_lockedCursor) return;
 
-            _move = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+            var inputMove = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+            float moveSpeed = 0.0f;
 
-            if (_move.sqrMagnitude > 0f) {
-                _move.Normalize();
-                _move = transform.forward * _move.z + transform.right * _move.x;
+            if (inputMove.sqrMagnitude > 0f)
+            {
+                inputMove.Normalize();
+
+                Heading = Quaternion.AngleAxis(_yaw, Vector3.up) * inputMove;
 
                 if (Input.GetKey(KeyCode.LeftShift)) {
-                    _move *= 12f;
+                    moveSpeed = RunSpeed;
+                    PlayerModel.Running = true;
                 } else {
-                    _move *= 4f;
+                    moveSpeed = WalkSpeed;
+                    PlayerModel.Walking = true;
                 }
             }
+            else if (_velocity.sqrMagnitude <= VelocitySmoothing)
+            {
+                PlayerModel.Walking = false;
+            }
+
+
+            Vector3 forward = Vector3.RotateTowards(transform.forward, Heading, TurnSpeed * Time.deltaTime, 0.0f);
+            transform.localRotation = Quaternion.LookRotation(forward);
+
+            _move = transform.forward * moveSpeed;
+
 
             if (Input.GetButtonDown("Use")) {
                 foreach (var vehicle in FindObjectsOfType<Vehicle>()) {
@@ -128,9 +174,9 @@ namespace SanAndreasUnity.Behaviours.Player
                     if (dist > 10f) continue;
 
                     RaycastHit hitInfo;
-                    var ray = Camera.ViewportPointToRay(new Vector2(0.5f, 0.5f));
+                    var ray = new Ray(Camera.transform.position, Camera.transform.forward);
                     if (!vehicle.GetComponentsInChildren<MeshCollider>().Any(
-                        x => x.Raycast(ray, out hitInfo, 2f))) continue;
+                        x => x.Raycast(ray, out hitInfo, 10f))) continue;
 
                     EnterVehicle(vehicle);
                     break;

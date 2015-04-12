@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
@@ -24,6 +25,28 @@ namespace SanAndreasUnity.Behaviours
         public int PedestrianId = 7;
 
         public AnimType Anim = AnimType.Idle;
+
+        public bool Walking
+        {
+            set
+            {
+                Anim = value ? AnimType.Walk : AnimType.Idle;
+            }
+        }
+
+        public bool Running
+        {
+            set
+            {
+                Anim = value ? AnimType.Run : AnimType.Walk;
+            }
+        }
+
+        public Vector3 Position
+        {
+            get { return transform.localPosition; }
+            set { transform.localPosition = value; }
+        }
 
         private void Update()
         {
@@ -51,7 +74,7 @@ namespace SanAndreasUnity.Behaviours
                 else if (Anim == AnimType.Run) Anim = AnimType.Walk; 
             }
         }
-        
+
         private void OnValidate()
         {
             Update();
@@ -93,7 +116,7 @@ namespace SanAndreasUnity.Behaviours
             var clip = Importing.Conversion.Animation.Load(group.FileName, animName, _frames);
 
             anim.AddClip(clip, animName);
-            anim.CrossFade(animName, 0.5f);
+            anim.CrossFade(animName);
         }
     }
 }
