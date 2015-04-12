@@ -77,7 +77,7 @@ namespace Facepunch.Networking
 
         protected override IRemoteServer CreateInstance()
         {
-            return NetProvider.Connect(NetConfig.Hostname, NetConfig.Port);
+            return NetProvider.Connect(NetConfig.RemoteHostname, NetConfig.Port);
         }
 
         protected override void OnNetworkingAwake()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Facepunch.Networking;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -51,19 +52,51 @@ namespace SanAndreasUnity.Utilities
             // Risky
             UserId = BitConverter.ToUInt64(Guid.NewGuid().ToByteArray(), 8);
 
-            Facepunch.Networking.Client.ResolveUserId += () => UserId;
-            Facepunch.Networking.Client.ResolveUsername += () => (String) Get("username");
+            Client.ResolveUserId += () => UserId;
+            Client.ResolveUsername += () => Get<string>("cl_name");
+            
+            if (Get<bool>("cl_connect")) {
+                NetConfig.RemoteHostname = Get<string>("cl_remote_hostname");
+                NetConfig.Port = Get<int>("cl_remote_port");
+                NetConfig.IsClient = true;
+            } else {
+                NetConfig.IsClient = false;
+            }
+
+            if (Get<bool>("sv_listen")) {
+                NetConfig.ServerName = Get<string>("sv_name");
+                NetConfig.Port = Get<int>("sv_port");
+                NetConfig.MaxConnections = Get<int>("sv_max_connections");
+                NetConfig.IsServer = true;
+            } else {
+                NetConfig.IsServer = false;
+            }
+
         }
 
-        public static JToken Get(string key)
+        private static TVal ConvertVal<TVal>(JToken val)
         {
-            return _user[key] ?? _root[key];
+            return (TVal) Convert.ChangeType(val, typeof(TVal));
+        }
+
+        public static TVal Get<TVal>(string key)
+        {
+            var userVal = _user[key];
+            if (userVal != null) {
+                try {
+                    return ConvertVal<TVal>(userVal);
+                } catch {
+                    Debug.LogWarningFormat("[config] Invalid value for key '{0}'.", key);
+                }
+            }
+
+            return ConvertVal<TVal>(_root[key]);
         }
 
         private static string GetSubstitution(string key)
         {
             if (_substitutions.ContainsKey(key)) return _substitutions[key];
-            var subs = ReplaceSubstitutions((string) Get(key));
+            var subs = ReplaceSubstitutions(Get<string>(key));
             _substitutions.Add(key, subs);
             return subs;
         }
@@ -76,12 +109,12 @@ namespace SanAndreasUnity.Utilities
 
         public static string GetPath(string key)
         {
-            return ReplaceSubstitutions((string) Get(key));
+            return ReplaceSubstitutions(Get<string>(key));
         }
 
         public static string[] GetPaths(string key)
         {
-            return Get(key)
+            return Get<JArray>(key)
                 .Select(x => ReplaceSubstitutions((string) x))
                 .ToArray();
         }

@@ -24,7 +24,9 @@ namespace Facepunch.Networking
 
         public static int MaxConnections { get; set; }
 
-        public static String Hostname { get; set; }
+        public static String ServerName { get; set; }
+
+        public static String RemoteHostname { get; set; }
 
         public static bool AutoUpdate { get; set; }
 
@@ -35,16 +37,16 @@ namespace Facepunch.Networking
             {
                 uint ip = 0;
 
-                if (!string.IsNullOrEmpty(Hostname))
+                if (!string.IsNullOrEmpty(RemoteHostname))
                 {
-                    var addressList = System.Net.Dns.GetHostEntry(Hostname).AddressList;
+                    var addressList = System.Net.Dns.GetHostEntry(RemoteHostname).AddressList;
 
                     if (addressList.Length == 0)
                     {
                         return ip;
                     }
 
-                    System.Net.IPAddress.Parse(Hostname).GetAddressBytes();
+                    System.Net.IPAddress.Parse(RemoteHostname).GetAddressBytes();
 
                     var ipBytes = addressList[0].GetAddressBytes();
                     ip = (uint)ipBytes[0] << 24;
@@ -66,7 +68,7 @@ namespace Facepunch.Networking
             RconPort = rconPort;
             MaxConnections = maxConnections;
 
-            Hostname = "localhost";
+            RemoteHostname = "localhost";
         }
 
         public static void DedicatedServer(int port, int rconPort, int maxConnections)
@@ -85,13 +87,15 @@ namespace Facepunch.Networking
             IsServer = false;
 
             Port = port;
-            Hostname = hostname;
+            RemoteHostname = hostname;
         }
 
         static NetConfig()
         {
+            ServerName = "Unnamed Server";
+
 #if UNITY_EDITOR
-            RconPassword = "IDGKGRGdkKqZuBdv";
+            RconPassword = "password";
             ListenServer(Application.DefaultPort, Application.DefaultRconPort, 8);
 #else
             Port = Application.DefaultPort;

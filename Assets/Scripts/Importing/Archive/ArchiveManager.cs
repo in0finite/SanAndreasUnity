@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Importing.Archive
     {
         public static string GameDir
         {
-            get { return (string) Config.Get("game_dir"); }
+            get { return Config.Get<string>("game_dir"); }
         }
 
         public static string ModelsDir { get { return Path.Combine(GameDir, "models"); } }
