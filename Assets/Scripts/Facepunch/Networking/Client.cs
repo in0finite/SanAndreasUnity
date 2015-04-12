@@ -1,5 +1,4 @@
 ﻿using System;
-using Facepunch.Steam;
 using ProtoBuf;
 // ReSharper disable once RedundantUsingDirective
 using System.Linq;
@@ -11,6 +10,11 @@ namespace Facepunch.Networking
 {
     public class Client : EndPoint<Client, IRemoteServer>
     {
+        public delegate String UsernameResolver();
+        public delegate ulong UserIdResolver();
+
+        public static event UsernameResolver ResolveUsername;
+        public static event UserIdResolver ResolveUserId;
 
 #if PROTOBUF
         
@@ -97,14 +101,13 @@ namespace Facepunch.Networking
 
         private IEnumerator SendConnectionRequest()
         {
-            while (!SteamService.IsInitialized) yield return null;
             while (Net.ConnectionStatus != ConnectionStatus.Connected) yield return null;
 
             var request = new ConnectRequest {
                 Os = Environment.OSVersion.VersionString,
                 Protocol = Protocol,
-                UserId = SteamService.LocalSteamID,
-                Username = SteamService.LocalName
+                UserId = ResolveUserId(),
+                Username = ResolveUsername()
             };
 
             OnPrepareConnectRequest(request);

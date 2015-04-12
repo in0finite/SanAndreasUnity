@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -9,6 +10,8 @@ namespace SanAndreasUnity.Utilities
 {
     public static class Config
     {
+        public static readonly ulong UserId;
+
         public static string FileName
         {
             get { return "config.json"; }
@@ -44,6 +47,12 @@ namespace SanAndreasUnity.Utilities
 
             _root = JObject.Parse(File.ReadAllText(FilePath));
             _user = JObject.Parse(File.ReadAllText(UserFilePath));
+
+            // Risky
+            UserId = BitConverter.ToUInt64(Guid.NewGuid().ToByteArray(), 8);
+
+            Facepunch.Networking.Client.ResolveUserId += () => UserId;
+            Facepunch.Networking.Client.ResolveUsername += () => (String) Get("username");
         }
 
         public static JToken Get(string key)

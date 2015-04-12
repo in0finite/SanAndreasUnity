@@ -23,5 +23,8 @@ Assets/Standard Assets.meta
 Assets/Editor/ImageEffects
 Assets/Editor/ImageEffects.meta
 
+Assets/Scripts/Generated/*.cs
+Assets/Scripts/Generated/*.cs.meta
+
 config.user.json
 anim.txt

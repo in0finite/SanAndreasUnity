@@ -8,11 +8,6 @@ namespace SanAndreasUnity.Utilities
 {
     public static class Tools
     {
-        public static float NormalizeAngle(this float ang)
-        {
-            return ang - Mathf.Floor((ang + 180f) / 360f) * 360f;
-        }
-
         public static byte[] ReadBytes(this Stream self, int count)
         {
             var data = new byte[count];

@@ -147,7 +147,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
---- !u!114 &829834958
+--- !u!114 &829834958 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 11464760, guid: 2efc0f7174246f84fba88b52ea93bc71,
     type: 2}
