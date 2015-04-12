@@ -176,7 +176,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static readonly Dictionary<string, string> _sParents = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
         private static readonly Dictionary<string, TextureDictionary> _sLoaded = new Dictionary<string, TextureDictionary>(StringComparer.InvariantCultureIgnoreCase);
-
+        
         public static TextureDictionary Load(string name)
         {
             name = name.ToLower();
@@ -241,6 +241,16 @@ namespace SanAndreasUnity.Importing.Conversion
         public TextureDictionary Parent
         {
             get { return _parent ?? (_parent = Load(ParentName)); }
+        }
+
+        public IEnumerable<string> DiffuseNames
+        {
+            get { return _diffuse.Keys; }
+        }
+
+        public IEnumerable<string> AlphaNames
+        {
+            get { return _alpha.Keys; }
         }
 
         private TextureDictionary(RenderWareStream.TextureDictionary txd)
