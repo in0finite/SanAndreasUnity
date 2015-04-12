@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     }
 
     [Section("objs")]
-    public class Object : Definition, IObjectDefinition
+    public class ObjectDef : Definition, IObjectDefinition
     {
         public readonly int Id;
 
@@ -41,7 +41,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
         public readonly float DrawDist;
         public readonly ObjectFlag Flags;
 
-        public Object(string line) : base(line)
+        public ObjectDef(string line) : base(line)
         {
             Id = GetInt(0);
             ModelName = GetString(1);

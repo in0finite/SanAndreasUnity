@@ -7,20 +7,23 @@ using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Animation;
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace SanAndreasUnity.Behaviours
 {
     [ExecuteInEditMode]
-    public class PedestrianTest : MonoBehaviour
+    public class Pedestrian : MonoBehaviour
     {
         private int _loadedPedestrianId;
         private AnimType _loadedAnimType = AnimType.None;
 
         private FrameContainer _frames;
 
-        public Pedestrian Definition { get; private set; }
+        public PedestrianDef Definition { get; private set; }
 
         public int PedestrianId = 7;
 
@@ -77,12 +80,12 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnValidate()
         {
-            Update();
+            if (_frames != null) Update();
         }
 
         private void Load(int id)
         {
-            Definition = Item.GetDefinition<Pedestrian>(id);
+            Definition = Item.GetDefinition<PedestrianDef>(id);
             if (Definition == null) return;
 
             LoadModel(Definition.ModelName, Definition.TextureDictionaryName);

@@ -47,7 +47,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         protected override void OnLoad()
         {
-            Vehicle.Create(this);
+            //Vehicle.Create(this);
         }
     }
 }

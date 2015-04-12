@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.Vehicle;
+using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {

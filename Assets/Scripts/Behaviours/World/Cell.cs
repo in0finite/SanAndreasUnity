@@ -3,18 +3,13 @@ using UnityEngine;
 using SanAndreasUnity.Importing.Items;
 using System.Linq;
 using System.Diagnostics;
-using SanAndreasUnity.Importing.Archive;
-using SanAndreasUnity.Importing.Collision;
 using SanAndreasUnity.Importing.Items.Placements;
-using System.IO;
-using SanAndreasUnity.Behaviours.Player;
 using SanAndreasUnity.Behaviours.Vehicles;
-using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours.World
 {
-    public class Cell : MonoBehaviour
+    public class Cell : SingletonComponent<Cell>
     {
         private Stopwatch _timer;
         private List<Division> _leaves;
@@ -23,7 +18,9 @@ namespace SanAndreasUnity.Behaviours.World
 
         public List<int> CellIds = new List<int> { 0, 13 };
 
-        public PlayerController Player;
+        public Camera PreviewCamera;
+
+        public Transform Focus;
         public Water Water;
 
         void Update()
@@ -62,7 +59,7 @@ namespace SanAndreasUnity.Behaviours.World
 
             if (_leaves == null) return;
 
-            var pos = Player.transform.position;
+            var pos = Focus.position;
             var toLoad = _leaves.Aggregate(false, (current, leaf) => current | leaf.RefreshLoadOrder(pos));
 
             if (!toLoad) return;

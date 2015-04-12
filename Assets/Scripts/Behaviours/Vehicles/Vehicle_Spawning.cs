@@ -2,7 +2,7 @@
 using SanAndreasUnity.Importing.Conversion;
 using UnityEngine;
 using System.Linq;
-using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.Vehicle;
+using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
 using SanAndreasUnity.Importing.Items;
 using System;
 

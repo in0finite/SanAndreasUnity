@@ -47,7 +47,7 @@ namespace SanAndreasUnity.Behaviours.World
         public void Initialize(Instance inst, Dictionary<Instance, StaticGeometry> dict)
         {
             Instance = inst;
-            Instance.Object = Instance.Object ?? Item.GetDefinition<Importing.Items.Definitions.Object>(inst.ObjectId);
+            Instance.Object = Instance.Object ?? Item.GetDefinition<Importing.Items.Definitions.ObjectDef>(inst.ObjectId);
 
             Initialize(inst.Position, inst.Rotation);
 

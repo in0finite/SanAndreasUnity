@@ -35,7 +35,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     }
 
     [Section("peds")]
-    public class Pedestrian : Definition, IObjectDefinition
+    public class PedestrianDef : Definition, IObjectDefinition
     {
         public readonly int Id;
 
@@ -55,7 +55,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
         public readonly int Radio1;
         public readonly int Radio2;
 
-        public Pedestrian(string line)
+        public PedestrianDef(string line)
             : base(line)
         {
             Id = GetInt(0);

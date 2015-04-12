@@ -28,7 +28,7 @@ namespace SanAndreasUnity.Importing.Items.Placements
         public readonly int LodIndex;
 
         public Instance LodInstance { get; internal set; }
-        public Definitions.Object Object { get; internal set; }
+        public Definitions.ObjectDef Object { get; internal set; }
 
         public bool IsLod { get; internal set; }
 

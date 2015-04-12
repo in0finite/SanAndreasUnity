@@ -93,11 +93,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 199630}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65fbbd2ba842afb4a9ee277f31862aa4, type: 3}
+  m_Script: {fileID: 11500000, guid: 883011d49c95b7c468eb69aed159b1c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ServerName: Test Server
+  ServerName: 
   TickRate: 20
+  PlayerSpawns:
+  - {fileID: 0}
 --- !u!114 &11483918
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -106,7 +108,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 138422}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72ab458a664e6bc4a9d885eb2c6c1ad8, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c555298883ef1942b60db8abde5b416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &100100000

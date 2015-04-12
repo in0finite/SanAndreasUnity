@@ -21,7 +21,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     }
 
     [Section("cars")]
-    public class Vehicle : Definition, IObjectDefinition
+    public class VehicleDef : Definition, IObjectDefinition
     {
         public readonly int Id;
 
@@ -52,7 +52,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
 
         public readonly int UpgradeId;
 
-        public Vehicle(string line) : base(line)
+        public VehicleDef(string line) : base(line)
         {
             Id = GetInt(0);
 
