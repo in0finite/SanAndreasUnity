@@ -21,6 +21,8 @@ namespace SanAndreasUnity.Behaviours
             get { return _path ?? (_path = FindPath()); }
         }
 
+        public bool AnimationDriven;
+
         public Vector3 RotationAxis;
         public float RotationAngle;
 
@@ -44,6 +46,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
+            if (!AnimationDriven) return;
             transform.localRotation = Quaternion.AngleAxis(RotationAngle, RotationAxis);
         }
     }

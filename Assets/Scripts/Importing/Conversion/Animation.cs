@@ -38,6 +38,8 @@ namespace SanAndreasUnity.Importing.Conversion
             foreach (var bone in animation.Bones)
             {
                 var frame = frames.GetByBoneId(bone.BoneId);
+                frame.AnimationDriven = true;
+
                 string bonePath = frame.Path;
 
                 var axisAngle = bone.Frames.ToDictionary(x => x, x => {
