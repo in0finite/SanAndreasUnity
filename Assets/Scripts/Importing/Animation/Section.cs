@@ -110,34 +110,11 @@ namespace SanAndreasUnity.Importing.Animation
                 var clip = Clips[i] = new Clip(reader);
                 _namedClips.Add(clip.Name, clip);
             }
-
-            //DebugPrint();
         }
 
         public Clip this[string name]
         {
             get { return _namedClips[name]; }
-        }
-
-        public void DebugPrint()
-        {
-            string s = "";
-
-            for (int i = 0; i < ClipCount; ++i)
-            {
-                var anim = Clips[i];
-
-                s += string.Format("(#{0}) {1}\n", i, anim.Name);
-
-                for (int j = 0; j < anim.BoneCount; ++j)
-                {
-                    var bone = anim.Bones[j];
-
-                    s += string.Format("{0} (id: {1})\n", bone.Name, bone.BoneId);
-                }
-            }
-
-            File.WriteAllText("anim.txt", s);
         }
     }
 }
