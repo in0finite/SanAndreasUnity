@@ -22,6 +22,19 @@ namespace SanAndreasUnity.Importing.Conversion
             var clip = new UnityEngine.AnimationClip();
             clip.legacy = true;
 
+            var rotateAxes = new[] {
+                new { Name = "RotationAxis.x", Mask = new UVector4(1f, 0f, 0f, 0f) },
+                new { Name = "RotationAxis.y", Mask = new UVector4(0f, 1f, 0f, 0f) },
+                new { Name = "RotationAxis.z", Mask = new UVector4(0f, 0f, 1f, 0f) },
+                new { Name = "RotationAngle", Mask = new UVector4(0f, 0f, 0f, 1f) }
+            };
+
+            var translateAxes = new[] {
+                new { Name = "localPosition.x", Mask = new UVector3(1f, 0f, 0f) },
+                new { Name = "localPosition.y", Mask = new UVector3(0f, 1f, 0f) },
+                new { Name = "localPosition.z", Mask = new UVector3(0f, 0f, 1f) },
+            };
+
             foreach (var bone in animation.Bones)
             {
                 var frame = frames.GetByBoneId(bone.BoneId);
@@ -34,19 +47,6 @@ namespace SanAndreasUnity.Importing.Conversion
                     return new UVector4(axis.x, axis.y, axis.z, ang);
                 });
 
-                var rotateAxes = new [] {
-                    new { Name = "RotationAxis.x", Mask = new UVector4(1f, 0f, 0f, 0f) },
-                    new { Name = "RotationAxis.y", Mask = new UVector4(0f, 1f, 0f, 0f) },
-                    new { Name = "RotationAxis.z", Mask = new UVector4(0f, 0f, 1f, 0f) },
-                    new { Name = "RotationAngle", Mask = new UVector4(0f, 0f, 0f, 1f) }
-                };
-
-                var translateAxes = new[] {
-                    new { Name = "localPosition.x", Mask = new UVector3(1f, 0f, 0f) },
-                    new { Name = "localPosition.y", Mask = new UVector3(0f, 1f, 0f) },
-                    new { Name = "localPosition.z", Mask = new UVector3(0f, 0f, 1f) },
-                };
-
                 foreach (var axis in rotateAxes) {
                     var keys = bone.Frames
                         .Select(x => new Keyframe(x.Time * TimeScale,
@@ -56,6 +56,8 @@ namespace SanAndreasUnity.Importing.Conversion
                     clip.SetCurve(bonePath, typeof(BFrame), axis.Name,
                         new UnityEngine.AnimationCurve(keys));
                 }
+
+                if (bone.Name == "Root") continue;
 
                 foreach (var translateAxis in translateAxes)
                 {
