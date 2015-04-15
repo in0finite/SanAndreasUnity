@@ -100,10 +100,10 @@ namespace SanAndreasUnity.Behaviours
         {
             NetworkingFixedUpdate();
 
+            if (IsInVehicle) return;
+
             var forward = Vector3.RotateTowards(transform.forward, Heading, TurnSpeed * Time.deltaTime, 0.0f);
             transform.localRotation = Quaternion.LookRotation(forward);
-
-            if (IsInVehicle) return;
 
             if (IsLocalPlayer) {
                 if (Movement.sqrMagnitude > float.Epsilon) {

@@ -66,12 +66,6 @@ namespace SanAndreasUnity.Behaviours
 
                 LoadAnim(Anim);
             }
-
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                if (Anim == AnimType.Walk) Anim = AnimType.Run;
-                else if (Anim == AnimType.Run) Anim = AnimType.Walk; 
-            }
         }
 
         private void OnValidate()
