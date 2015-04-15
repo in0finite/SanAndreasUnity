@@ -19,6 +19,7 @@
         }
 
         LOD 200
+        Cull Front
                 
         CGPROGRAM
 

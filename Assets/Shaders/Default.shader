@@ -20,7 +20,8 @@
         }
 
         LOD 200
-        
+        Cull Front
+
         CGPROGRAM
 
         #pragma surface surf StandardSpecular addshadow alphatest:_AlphaCutoff

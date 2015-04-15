@@ -58,8 +58,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
             for (var i = 0; i < indices.Count - 2; ++i) {
                 var a = indices[i];
-                var b = indices[i + 2 - (i & 1)];
-                var c = indices[i + 1 + (i & 1)];
+                var b = indices[i + 1 + (i & 1)];
+                var c = indices[i + 2 - (i & 1)];
 
                 if (a == b || b == c || a == c) continue;
 
@@ -69,16 +69,6 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             return dst.ToArray();
-        }
-
-        private static int[] ReverseFaces(int[] indices)
-        {
-            for (var i = 0; i < indices.Length - 2; i += 3) {
-                var temp = indices[i];
-                indices[i] = indices[i + 1];
-                indices[i + 1] = temp;
-            }
-            return indices;
         }
 
         private static UnityEngine.Vector3[] CalculateNormals(RenderWareStream.Geometry src, UnityEngine.Vector3[] verts)
@@ -261,7 +251,7 @@ namespace SanAndreasUnity.Importing.Conversion
             foreach (var split in src.MaterialSplits) {
                 var indices = isTriangleStrip
                     ? FromTriangleStrip(split.FaceIndices)
-                    : ReverseFaces(split.FaceIndices);
+                    : split.FaceIndices;
                 mesh.SetIndices(indices, MeshTopology.Triangles, subMesh++);
             }
 
