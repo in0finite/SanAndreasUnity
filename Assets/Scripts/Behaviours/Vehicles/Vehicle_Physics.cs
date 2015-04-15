@@ -37,9 +37,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 var front = (wheel.Alignment & WheelAlignment.Front) == WheelAlignment.Front;
 
+                wheel.Parent.position += Vector3.up * (HandlingData.SuspensionUpperLimit + HandlingData.SuspensionLowerLimit);
+
                 wheel.Collider = wheel.Parent.gameObject.AddComponent<WheelCollider>();
                 wheel.Collider.radius = (front ? Definition.WheelScaleFront : Definition.WheelScaleRear) * .5f;
-                wheel.Collider.suspensionDistance = 0.1f;
+                wheel.Collider.suspensionDistance = HandlingData.SuspensionUpperLimit - HandlingData.SuspensionLowerLimit;
 
                 var spring = wheel.Collider.suspensionSpring;
                 spring.targetPosition = 0.5f;
