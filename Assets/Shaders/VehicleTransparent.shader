@@ -28,6 +28,7 @@
         }
 
         LOD 200
+        Cull Off
         
         CGPROGRAM
 
