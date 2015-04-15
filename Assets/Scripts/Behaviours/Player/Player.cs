@@ -89,11 +89,13 @@ namespace SanAndreasUnity.Behaviours
             timer.Start();
 
             Camera.transform.SetParent(vehicle.DriverTransform, true);
-            transform.SetParent(vehicle.transform);
-            transform.localPosition = Vector3.zero;
+            transform.SetParent(vehicle.DriverTransform.parent);
+            transform.localPosition = Vector3.Scale(vehicle.DriverTransform.localPosition, new Vector3(-1.0f, 0.0f, 0.0f));
             transform.localRotation = Quaternion.identity;
 
             vehicle.gameObject.AddComponent<VehicleController>();
+
+            PlayerModel.LoadAnim("CAR_Lsit");
         }
 
         private void FixedUpdate()
