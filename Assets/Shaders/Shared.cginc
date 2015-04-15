@@ -12,14 +12,8 @@ fixed3 _CarColor3;
 fixed3 _CarColor4;
 #endif
 
-#ifdef VEHICLE
 float _Specular;
 float _Smoothness;
-#endif
-
-#ifdef ALPHA
-float _Alpha;
-#endif
 
 #ifdef FADE
 sampler2D _NoiseTex;
@@ -55,17 +49,8 @@ void surf(Input IN, inout SurfaceOutputStandardSpecular o)
 #endif
         * IN.color.rgb * _Color.rgb;
 
-#ifdef ALPHA
-    o.Alpha = fade * mask * IN.color.a * _Color.a * _Alpha;
-#else
     o.Alpha = fade * mask * IN.color.a * _Color.a;
-#endif
 
-#ifdef VEHICLE
     o.Specular = _Specular * o.Alpha;
     o.Smoothness = _Smoothness;
-#else
-    o.Specular = 0;
-    o.Smoothness = 0;
-#endif
 }

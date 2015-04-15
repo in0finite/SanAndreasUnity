@@ -16,8 +16,6 @@
         _CarColor2 ("Car Color 2", Color) = (1, 1, 1, 1)
         _CarColor3 ("Car Color 3", Color) = (1, 1, 1, 1)
         _CarColor4 ("Car Color 4", Color) = (1, 1, 1, 1)
-
-        _Alpha ("Alpha", Range(0.0, 1.0)) = 0.5
     }
 
     SubShader
@@ -36,7 +34,6 @@
         #pragma target 3.0
 
         #define VEHICLE
-        #define ALPHA
 
         #include "Shared.cginc"
 

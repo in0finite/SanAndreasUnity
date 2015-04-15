@@ -29,7 +29,6 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly UInt32 Flags;
         public readonly Single Ambient;
         public readonly Single Specular;
-        public readonly Single Diffuse;
         public readonly Single Smoothness;
 
         public Material(SectionHeader header, Stream stream)
@@ -44,8 +43,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             TextureCount = reader.ReadUInt32();
             Textures = new Texture[TextureCount];
             Ambient = reader.ReadSingle();
-            Specular = reader.ReadSingle();
-            Diffuse = reader.ReadSingle();
+            Smoothness = reader.ReadSingle();
+            Specular = 1f - reader.ReadSingle();
 
             for (var i = 0; i < TextureCount; ++i) {
                 Textures[i] = ReadSection<Texture>();
@@ -56,8 +55,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             var smoothness = Smoothness;
             var specular = Specular;
 
-            extensions.ForEach<ReflectionMaterial>(x => smoothness = x.Intensity);
-            extensions.ForEach<SpecularMaterial>(x => specular = x.SpecularLevel);
+            extensions.ForEach<ReflectionMaterial>(x => specular = x.Intensity);
+            extensions.ForEach<SpecularMaterial>(x => smoothness = x.SpecularLevel);
 
             Smoothness = smoothness;
             Specular = specular;

@@ -194,9 +194,8 @@ namespace SanAndreasUnity.Importing.Conversion
             var clr = Types.Convert(src.Colour);
 
             if (vehicle) {
-
                 var found = false;
-                for (var i = 0; i < _sKeyColors.Length; ++i) {
+                for (var i = 1; i < _sKeyColors.Length; ++i) {
                     var key = _sKeyColors[i];
                     if (key.r != clr.r || key.g != clr.g || key.b != clr.b) continue;
                     mat.SetInt(CarColorIndexId, i);
@@ -215,6 +214,9 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (diffuse != null) mat.SetTexture(MainTexId, diffuse);
             if (mask != null) mat.SetTexture(MaskTexId, mask);
+
+            mat.SetFloat(SpecularId, src.Specular);
+            mat.SetFloat(SmoothnessId, src.Smoothness);
 
             return mat;
         }
