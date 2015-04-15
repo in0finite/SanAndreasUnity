@@ -15,7 +15,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public float Steering;
 
         [Range(-1, 1)]
-        public float Breaking;
+        public float Braking;
 
         public Handling.Car HandlingData { get; private set; }
 
@@ -72,21 +72,46 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
+        private float DriveBias(Wheel wheel)
+        {
+            switch (HandlingData.TransmissionDriveType) {
+                case DriveType.Forward:
+                    return wheel.IsFront ? 1f : 0f;
+                case DriveType.Rear:
+                    return wheel.IsRear ? 1f : 0f;
+                default:
+                    return 1f;
+            }
+        }
+
+        private bool ShouldSteer(Wheel wheel)
+        {
+            // TODO: look at flags
+            return wheel.IsFront;
+        }
+
+        private float BrakeBias(Wheel wheel)
+        {
+            return wheel.IsFront
+                ? HandlingData.BrakeBias : wheel.IsRear
+                ? 1f - HandlingData.BrakeBias : .5f;
+        }
+
         private void FixedUpdate()
         {
             foreach (var wheel in _wheels)
             {
-                if (wheel.Alignment == WheelAlignment.RightFront ||
-                    wheel.Alignment == WheelAlignment.LeftFront)
-                {
+                if (ShouldSteer(wheel)) {
                     wheel.Collider.steerAngle = HandlingData.SteeringLock * Steering;
                 }
-               
-                wheel.Collider.motorTorque = Accelerator
-                    * HandlingData.TransmissionEngineAccel
-                    * VConsts.Instance.AccelerationScale;
 
-                wheel.Collider.brakeTorque = Breaking * HandlingData.BrakeDecel * VConsts.Instance.BreakingScale;
+                wheel.Collider.motorTorque =
+                    Accelerator * HandlingData.TransmissionEngineAccel
+                    * VConsts.Instance.AccelerationScale * DriveBias(wheel);
+
+                wheel.Collider.brakeTorque = 
+                    Braking * HandlingData.BrakeDecel
+                    * VConsts.Instance.BreakingScale * BrakeBias(wheel);
             }
         }
     }

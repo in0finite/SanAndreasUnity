@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             Front = 1,
             Mid = 2,
-            Back = 4,
+            Rear = 4,
 
             Left = 8,
             Right = 16,
@@ -27,8 +27,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             LeftFront = Left | Front,
             RightMid = Right | Mid,
             LeftMid = Left | Mid,
-            RightBack = Right | Back,
-            LeftBack = Left | Back,
+            RightRear = Right | Rear,
+            LeftRear = Left | Rear,
         }
 
         public enum DoorAlignment
@@ -56,28 +56,38 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public class Wheel
         {
-            public WheelAlignment Alignment
-            {
-                get { return _alignment; }
-                set
-                {
-                    _alignment = value;
+            public WheelAlignment Alignment { get; set; }
 
-                    IsLeftHand = (value == WheelAlignment.LeftFront ||
-                        value == WheelAlignment.LeftMid ||
-                        value == WheelAlignment.LeftBack);
-                }
+            public bool IsLeftHand 
+            {
+                get { return (Alignment & WheelAlignment.Left) == WheelAlignment.Left; }
             }
 
-            public bool IsLeftHand { get; private set; }
+            public bool IsRightHand
+            {
+                get { return (Alignment & WheelAlignment.Right) == WheelAlignment.Right; }
+            }
+
+            public bool IsFront
+            {
+                get { return (Alignment & WheelAlignment.Front) == WheelAlignment.Front; }
+            }
+
+            public bool IsMid
+            {
+                get { return (Alignment & WheelAlignment.Mid) == WheelAlignment.Mid; }
+            }
+
+            public bool IsRear
+            {
+                get { return (Alignment & WheelAlignment.Rear) == WheelAlignment.Rear; }
+            }
 
             public Transform Parent { get; set; }
             public Transform Child { get; set; }
             public WheelCollider Collider { get; set; }
 
             public Quaternion Roll { get; set; }
-
-            private WheelAlignment _alignment;
         }
 
         private FrameContainer _frames;
@@ -95,9 +105,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 case "wheel_lm_dummy":
                     return WheelAlignment.LeftMid;
                 case "wheel_rb_dummy":
-                    return WheelAlignment.RightBack;
+                    return WheelAlignment.RightRear;
                 case "wheel_lb_dummy":
-                    return WheelAlignment.LeftBack;
+                    return WheelAlignment.LeftRear;
                 default:
                     return WheelAlignment.None;
             }
@@ -149,26 +159,26 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 var wheelAlignment = GetWheelAlignment(frame.Name);
 
+                Wheel inst;
+
                 if (wheelAlignment != WheelAlignment.RightFront) {
                     var copy = Instantiate(wheel);
                     copy.SetParent(frame.transform, false);
 
-                    _wheels.Add(new Wheel {
+                    _wheels.Add(inst = new Wheel {
                         Alignment = wheelAlignment,
                         Parent = frame.transform,
                         Child = copy,
                     });
                 } else {
-                    _wheels.Add(new Wheel {
+                    _wheels.Add(inst = new Wheel {
                         Alignment = wheelAlignment,
                         Parent = frame.transform,
                         Child = wheel,
                     });
                 }
 
-                if (wheelAlignment == WheelAlignment.LeftFront ||
-                    wheelAlignment == WheelAlignment.LeftMid ||
-                    wheelAlignment == WheelAlignment.LeftBack) {
+                if (inst.IsLeftHand) {
                     frame.transform.Rotate(Vector3.up, 180.0f);
                 }
             }

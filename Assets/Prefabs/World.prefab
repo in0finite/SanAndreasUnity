@@ -360,15 +360,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DragScale: .0500000007
-  AccelerationScale: 40
+  AccelerationScale: 100
   BreakingScale: 100
-  SuspensionForceScale: 50000
-  SuspensionDampingScale: 5000
-  MassScale: 2
-  FrictionExtremumSlip: .5
-  FrictionExtremumValue: 1.5
-  FrictionAsymptoteSlip: 20
-  FrictionAsymptoteValue: .5
+  SuspensionForceScale: 100000
+  SuspensionDampingScale: 10000
+  MassScale: 1
+  FrictionExtremumSlip: .25
+  FrictionExtremumValue: 1
+  FrictionAsymptoteSlip: 1000
+  FrictionAsymptoteValue: .25
   FrictionStiffness: 1
 --- !u!124 &12458128
 Behaviour:
