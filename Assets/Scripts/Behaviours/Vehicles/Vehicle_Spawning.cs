@@ -11,15 +11,24 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 {
     public partial class Vehicle
     {
+        [Flags]
         public enum WheelAlignment
         {
-            None,
-            RightFront,
-            LeftFront,
-            RightMid,
-            LeftMid,
-            RightBack,
-            LeftBack,
+            None = 0,
+
+            Front = 1,
+            Mid = 2,
+            Back = 4,
+
+            Left = 8,
+            Right = 16,
+
+            RightFront = Right | Front,
+            LeftFront = Left | Front,
+            RightMid = Right | Mid,
+            LeftMid = Left | Mid,
+            RightBack = Right | Back,
+            LeftBack = Left | Back,
         }
 
         public enum DoorAlignment

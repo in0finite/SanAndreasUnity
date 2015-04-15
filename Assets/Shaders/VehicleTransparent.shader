@@ -27,6 +27,7 @@
 
         LOD 200
         Cull Off
+        ZWrite Off
         
         CGPROGRAM
 

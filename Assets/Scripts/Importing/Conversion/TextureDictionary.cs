@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Importing.Conversion
 {
     public static class TextureDictionaryExtensions
     {
-        public static Texture2D GetDiffuse(this TextureDictionary[] txds, string name)
+        public static LoadedTexture GetDiffuse(this TextureDictionary[] txds, string name)
         {
             foreach (var txd in txds) {
                 var tex = txd.GetDiffuse(name);
@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return null;
         }
 
-        public static Texture2D GetAlpha(this TextureDictionary[] txds, string name)
+        public static LoadedTexture GetAlpha(this TextureDictionary[] txds, string name)
         {
             foreach (var txd in txds) {
                 var tex = txd.GetAlpha(name);
@@ -27,6 +27,18 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             return null;
+        }
+    }
+
+    public class LoadedTexture
+    {
+        public readonly Texture2D Texture;
+        public readonly bool HasAlpha;
+
+        public LoadedTexture(Texture2D tex, bool hasAlpha)
+        {
+            Texture = tex;
+            HasAlpha = hasAlpha;
         }
     }
 
@@ -93,7 +105,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return dest;
         }
 
-        private static Texture2D Convert(TextureNative src)
+        private static LoadedTexture Convert(TextureNative src)
         {
             TextureFormat format;
 
@@ -134,9 +146,7 @@ namespace SanAndreasUnity.Importing.Conversion
                     throw new NotImplementedException(string.Format("CompressionMode.{0}", src.Compression));
             }
 
-            var tex = new Texture2D(src.Width, src.Height, format, false /*loadMips*/) {
-                alphaIsTransparency = src.Alpha
-            };
+            var tex = new Texture2D(src.Width, src.Height, format, false /*loadMips*/);
 
             switch (src.FilterFlags) {
                 case Filter.None:
@@ -173,7 +183,7 @@ namespace SanAndreasUnity.Importing.Conversion
             tex.LoadRawTextureData(data);
             tex.Apply(loadMips || autoMips, true);
 
-            return tex;
+            return new LoadedTexture(tex, src.Alpha);
         }
 
         private static readonly Dictionary<string, string> _sParents = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
@@ -206,7 +216,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private class Texture
         {
-            private Texture2D _converted;
+            private LoadedTexture _converted;
             private bool _attemptedConversion;
 
             public string DiffuseName { get { return Native.DiffuseName; } }
@@ -215,7 +225,7 @@ namespace SanAndreasUnity.Importing.Conversion
             public bool IsDiffuse { get { return !string.IsNullOrEmpty(DiffuseName); } }
             public bool IsAlpha { get { return !string.IsNullOrEmpty(AlphaName); } }
 
-            public Texture2D Converted
+            public LoadedTexture Converted
             {
                 get
                 {
@@ -288,7 +298,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return _diffuse[name].Native;
         }
 
-        public Texture2D GetDiffuse(string name)
+        public LoadedTexture GetDiffuse(string name)
         {
             if (!_diffuse.ContainsKey(name)) {
                 return ParentName != null ? Parent.GetDiffuse(name) : null;
@@ -297,7 +307,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return _diffuse[name].Converted;
         }
 
-        public Texture2D GetAlpha(string name)
+        public LoadedTexture GetAlpha(string name)
         {
             if (!_alpha.ContainsKey(name)) {
                 return ParentName != null ? Parent.GetAlpha(name) : null;

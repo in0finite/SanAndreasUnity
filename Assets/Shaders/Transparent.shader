@@ -20,6 +20,7 @@
 
         LOD 200
         Cull Front
+        ZWrite Off
                 
         CGPROGRAM
 

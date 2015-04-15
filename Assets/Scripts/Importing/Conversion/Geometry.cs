@@ -151,10 +151,17 @@ namespace SanAndreasUnity.Importing.Conversion
             // TODO
         };
 
+        private static LoadedTexture _sWhiteTex;
+
+        private static LoadedTexture WhiteTex
+        {
+            get { return _sWhiteTex ?? (_sWhiteTex = new LoadedTexture(Texture2D.whiteTexture, false)); }
+        }
+
         private static UnityEngine.Material Convert(RenderWareStream.Material src, TextureDictionary[] txds, MaterialFlags flags)
         {
-            Texture2D diffuse;
-            Texture2D mask = null;
+            LoadedTexture diffuse;
+            LoadedTexture mask = null;
 
             var overrideAlpha = (flags & MaterialFlags.OverrideAlpha) == MaterialFlags.OverrideAlpha;
             var vehicle = (flags & MaterialFlags.Vehicle) == MaterialFlags.Vehicle;
@@ -181,11 +188,11 @@ namespace SanAndreasUnity.Importing.Conversion
                     mask = diffuse;
                 }
 
-                if (!overrideAlpha && mask != null && mask.alphaIsTransparency) {
+                if (!overrideAlpha && mask != null && mask.HasAlpha) {
                     flags |= MaterialFlags.Alpha;
                 }
             } else {
-                diffuse = Texture2D.whiteTexture;
+                diffuse = WhiteTex;
             }
 
             var shader = GetShader(flags);
@@ -212,8 +219,8 @@ namespace SanAndreasUnity.Importing.Conversion
                 mat.color = clr;
             }
 
-            if (diffuse != null) mat.SetTexture(MainTexId, diffuse);
-            if (mask != null) mat.SetTexture(MaskTexId, mask);
+            if (diffuse != null) mat.SetTexture(MainTexId, diffuse.Texture);
+            if (mask != null) mat.SetTexture(MaskTexId, mask.Texture);
 
             mat.SetFloat(SpecularId, src.Specular);
             mat.SetFloat(SmoothnessId, src.Smoothness);
