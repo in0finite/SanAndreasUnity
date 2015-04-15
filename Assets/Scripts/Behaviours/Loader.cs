@@ -55,7 +55,11 @@ namespace SanAndreasUnity.Behaviours
             }
 
             using (Utilities.Profiler.Start("Animation group info load time")) {
-                AnimationGroup.Load(Config.GetPath("anim_group_path"));
+                AnimationGroup.Load(Config.GetPath("anim_groups_path"));
+            }
+
+            using (Utilities.Profiler.Start("Car color info load time")) {
+                CarColors.Load(Config.GetPath("car_colors_path"));
             }
 
             HasLoaded = true;

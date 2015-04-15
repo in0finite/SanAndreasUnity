@@ -50,6 +50,11 @@ namespace SanAndreasUnity.Importing.Items
             return _parts[index];
         }
 
+        public byte GetByte(int index)
+        {
+            return byte.Parse(_parts[index]);
+        }
+
         public int GetInt(int index)
         {
             return int.Parse(_parts[index]);
@@ -130,10 +135,14 @@ namespace SanAndreasUnity.Importing.Items
             using (var reader = File.OpenText(path)) {
                 string line;
                 while ((line = reader.ReadLine()) != null) {
+                    var hashIndex = line.IndexOf('#');
+                    if (hashIndex != -1) {
+                        line = line.Substring(0, hashIndex);
+                    }
+
                     line = line.Trim();
 
                     if (line.Length == 0) continue;
-                    if (line.StartsWith("#")) continue;
 
                     if (curSection == null) {
                         line = line.ToLower();
