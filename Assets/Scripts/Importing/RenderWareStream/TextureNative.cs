@@ -46,7 +46,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                 var dxt = reader.ReadString(4);
                 switch (dxt) {
                     case "DXT1":
-                        Compression = CompressionMode.DXT1; break;
+                        Compression = CompressionMode.DXT1;
+                        break;
                     case "DXT3":
                         Compression = CompressionMode.DXT3; break;
                     default:

@@ -1,8 +1,18 @@
 ﻿sampler2D _MainTex;
 sampler2D _MaskTex;
 
+fixed4 _Color;
+
 #ifdef VEHICLE
-fixed3 _Color;
+int _CarColorIndex;
+
+fixed3 _CarColor1;
+fixed3 _CarColor2;
+fixed3 _CarColor3;
+fixed3 _CarColor4;
+#endif
+
+#ifdef VEHICLE
 float _Specular;
 float _Smoothness;
 #endif
@@ -14,7 +24,7 @@ float _Alpha;
 #ifdef FADE
 sampler2D _NoiseTex;
 
-half _Fade;
+fixed _Fade;
 #endif
 
 struct Input
@@ -27,29 +37,32 @@ struct Input
 void surf(Input IN, inout SurfaceOutputStandardSpecular o)
 {
 #ifdef FADE
-    half noise = tex2D(_NoiseTex, IN.screenPos.xy / IN.screenPos.w).a * .99;
-    half fade = half(_Fade < 0 ? noise > 1 + _Fade : noise < _Fade);
+    fixed noise = tex2D(_NoiseTex, IN.screenPos.xy / IN.screenPos.w).a * .99;
+    fixed fade = fixed(_Fade < 0 ? noise > 1 + _Fade : noise < _Fade);
 #else
-    half fade = 1;
+    fixed fade = 1;
 #endif
 
-    half3 clr = tex2D(_MainTex, IN.uv_MainTex).rgb;
-    half mask = tex2D(_MaskTex, IN.uv_MainTex).a;
-    
+    fixed3 clr = tex2D(_MainTex, IN.uv_MainTex).rgb;
+    fixed mask = tex2D(_MaskTex, IN.uv_MainTex).a;
+
+    o.Albedo = clr
 #ifdef VEHICLE
-    o.Albedo = clr * IN.color.rgb * _Color;
-#else
-    o.Albedo = clr * IN.color.rgb;
+        * lerp(_CarColor1, fixed3(1, 1, 1), clamp(abs(_CarColorIndex - 1), 0, 1))
+        * lerp(_CarColor2, fixed3(1, 1, 1), clamp(abs(_CarColorIndex - 2), 0, 1))
+        * lerp(_CarColor3, fixed3(1, 1, 1), clamp(abs(_CarColorIndex - 3), 0, 1))
+        * lerp(_CarColor4, fixed3(1, 1, 1), clamp(abs(_CarColorIndex - 4), 0, 1))
 #endif
+        * IN.color.rgb * _Color.rgb;
 
 #ifdef ALPHA
-    o.Alpha = fade * mask * IN.color.a * _Alpha;
+    o.Alpha = fade * mask * IN.color.a * _Color.a * _Alpha;
 #else
-    o.Alpha = fade * mask * IN.color.a;
+    o.Alpha = fade * mask * IN.color.a * _Color.a;
 #endif
 
 #ifdef VEHICLE
-    o.Specular = _Specular;
+    o.Specular = _Specular * o.Alpha;
     o.Smoothness = _Smoothness;
 #else
     o.Specular = 0;

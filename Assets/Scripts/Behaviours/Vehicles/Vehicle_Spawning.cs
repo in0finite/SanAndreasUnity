@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SanAndreasUnity.Importing.Conversion;
+using SanAndreasUnity.Importing.Vehicles;
 using UnityEngine;
 using System.Linq;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
@@ -42,7 +43,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return inst;
         }
 
-        private List<Transform> _children = new List<Transform>();
         private Geometry.GeometryParts _geometryParts;
 
         public class Wheel
@@ -121,6 +121,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             transform.localRotation = spawner.transform.localRotation;
 
             Definition = Item.GetDefinition<VehicleDef>(spawner.Info.CarId);
+
+            var clrs = CarColors.Get(Definition.ModelName);
+            SetColors(clrs[UnityEngine.Random.Range(0, clrs.Count)]);
 
             name = Definition.GameName;
 

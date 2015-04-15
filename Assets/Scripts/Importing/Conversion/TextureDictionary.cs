@@ -134,7 +134,9 @@ namespace SanAndreasUnity.Importing.Conversion
                     throw new NotImplementedException(string.Format("CompressionMode.{0}", src.Compression));
             }
 
-            var tex = new Texture2D(src.Width, src.Height, format, false /*loadMips*/);
+            var tex = new Texture2D(src.Width, src.Height, format, false /*loadMips*/) {
+                alphaIsTransparency = src.Alpha
+            };
 
             switch (src.FilterFlags) {
                 case Filter.None:

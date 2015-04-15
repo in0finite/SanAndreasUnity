@@ -1,15 +1,53 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
     public partial class Vehicle : MonoBehaviour
     {
+        private static int[] _sCarColorIds;
+        protected static int[] CarColorIds
+        {
+            get
+            {
+                return _sCarColorIds ?? (_sCarColorIds = Enumerable.Range(1, 4)
+                    .Select(x => Shader.PropertyToID(string.Format("_CarColor{0}", x)))
+                    .ToArray());
+            }
+        }
+
+        private readonly Color32[] _colors = { Color.white, Color.white, Color.white, Color.white };
+        private readonly MaterialPropertyBlock _props = new MaterialPropertyBlock();
+        private bool _colorsChanged;
+
         public VehicleDef Definition { get; private set; }
+
+        public void SetColors(params Color32[] clrs)
+        {
+            for (var i = 0; i < 4 && i < clrs.Length; ++i) {
+                if (_colors[i].Equals(clrs[i])) continue;
+                _colors[i] = clrs[i];
+                _colorsChanged = true;
+            }
+        }
 
         public Transform DriverTransform
         {
             get { return GetPart("ped_frontseat"); }
+        }
+
+        private void UpdateColors()
+        {
+            for (var i = 0; i < 4; ++i) {
+                _props.SetColor(CarColorIds[i], _colors[i]);
+            }
+
+            foreach (var frame in _frames) {
+                var mr = frame.GetComponent<MeshRenderer>();
+                if (mr == null) continue;
+                mr.SetPropertyBlock(_props);
+            }
         }
 
         private void Update()
@@ -40,6 +78,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 // apply yaw
                 wheel.Child.localRotation = Quaternion.AngleAxis(wheel.Collider.steerAngle, Vector3.up) * wheel.Roll;
+            }
+
+            if (_colorsChanged) {
+                _colorsChanged = false;
+                UpdateColors();
             }
         }
     }

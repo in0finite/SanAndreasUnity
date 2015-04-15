@@ -107,7 +107,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 461086}
   m_Layer: 0
-  m_Name: Farm
+  m_Name: Car park
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -173,7 +173,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 162096}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 35, z: 0}
+  m_LocalPosition: {x: 1632.31726, y: 37.4302368, z: -1058.64233}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 418232}
@@ -347,7 +347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57ea334de36794f45af24c665b00e893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WaterPrefab: {fileID: 100000, guid: 9485b0c79d11e2e4d0007da98d76c639, type: 2}
+  WaterPrefab: {fileID: 0}
 --- !u!114 &11460870
 MonoBehaviour:
   m_ObjectHideFlags: 1

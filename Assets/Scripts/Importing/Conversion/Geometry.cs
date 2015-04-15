@@ -4,39 +4,24 @@ using System.Linq;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Collision;
-using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.RenderWareStream;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Conversion
 {
+    [Flags]
     public enum MaterialFlags
     {
         Default = 0,
         NoBackCull = 1,
         Alpha = 2,
-        Vehicle = 4
+        Vehicle = 4,
+        OverrideAlpha = 8
     }
 
     public class Geometry
     {
-        private static Texture2D _sBlackTex;
-
-        protected static Texture2D BlackTex
-        {
-            get
-            {
-                if (_sBlackTex != null) return _sBlackTex;
-
-                _sBlackTex = new Texture2D(1, 1);
-                _sBlackTex.SetPixel(0, 0, Color.black);
-                _sBlackTex.Apply();
-
-                return _sBlackTex;
-            }
-        }
-
         private static int _sMainTexId = -1;
         protected static int MainTexId
         {
@@ -59,6 +44,12 @@ namespace SanAndreasUnity.Importing.Conversion
         protected static int SmoothnessId
         {
             get { return _sSmoothnessId == -1 ? _sSmoothnessId = Shader.PropertyToID("_Smoothness") : _sSmoothnessId; }
+        }
+
+        private static int _sCarColorIndexId = -1;
+        protected static int CarColorIndexId
+        {
+            get { return _sCarColorIndexId == -1 ? _sCarColorIndexId = Shader.PropertyToID("_CarColorIndex") : _sCarColorIndexId; }
         }
 
         private static int[] FromTriangleStrip(IList<int> indices)
@@ -130,6 +121,10 @@ namespace SanAndreasUnity.Importing.Conversion
             var alpha = (flags & MaterialFlags.Alpha) == MaterialFlags.Alpha;
             var vehicle = (flags & MaterialFlags.Vehicle) == MaterialFlags.Vehicle;
 
+            if (vehicle && alpha) {
+                return Shader.Find("SanAndreasUnity/VehicleTransparent");
+            }
+
             if (vehicle) {
                 return Shader.Find("SanAndreasUnity/Vehicle");
             }
@@ -158,34 +153,76 @@ namespace SanAndreasUnity.Importing.Conversion
             return shader;
         }
 
+        private static readonly Color32[] _sKeyColors = new[] {
+            new Color32(255, 255, 255, 255),
+            new Color32(60, 255, 0, 255),
+            new Color32(255, 0, 175, 255)
+            // TODO
+            // TODO
+        };
+
         private static UnityEngine.Material Convert(RenderWareStream.Material src, TextureDictionary[] txds, MaterialFlags flags)
         {
-            var shader = GetShader(flags);
-            var mat = new UnityEngine.Material(shader);
+            Texture2D diffuse;
+            Texture2D mask = null;
 
-            mat.color = Types.Convert(src.Colour);
+            var overrideAlpha = (flags & MaterialFlags.OverrideAlpha) == MaterialFlags.OverrideAlpha;
+            var vehicle = (flags & MaterialFlags.Vehicle) == MaterialFlags.Vehicle;
+
+            if (!overrideAlpha && src.Colour.A != 255) {
+                flags |= MaterialFlags.Alpha;
+            }
 
             if (src.TextureCount > 0) {
                 var tex = src.Textures[0];
-                var diffuse = txds.GetDiffuse(tex.TextureName);
+                diffuse = txds.GetDiffuse(tex.TextureName);
 
                 if (src.TextureCount > 1) {
                     Debug.LogFormat("Something has {0} textures!", src.TextureCount);
                 }
 
-                if (diffuse != null) {
-                    mat.SetTexture(MainTexId, diffuse);
-                } else {
+                if (diffuse == null) {
                     Debug.LogWarningFormat("Unable to find texture {0}", tex.TextureName);
                 }
 
                 if (!string.IsNullOrEmpty(tex.MaskName)) {
-                    mat.SetTexture(MaskTexId, txds.GetAlpha(tex.MaskName) ?? diffuse);
+                    mask = txds.GetAlpha(tex.MaskName) ?? diffuse;
+
+                    if (!overrideAlpha && mask != null && mask.alphaIsTransparency) {
+                        flags |= MaterialFlags.Alpha;
+                    }
                 }
             } else {
-                mat.SetTexture(MainTexId, BlackTex);
+                diffuse = Texture2D.whiteTexture;
             }
 
+            var shader = GetShader(flags);
+            var mat = new UnityEngine.Material(shader);
+
+            var clr = Types.Convert(src.Colour);
+
+            if (vehicle) {
+
+                var found = false;
+                for (var i = 0; i < _sKeyColors.Length; ++i) {
+                    var key = _sKeyColors[i];
+                    if (key.r != clr.r || key.g != clr.g || key.b != clr.b) continue;
+                    mat.SetInt(CarColorIndexId, i);
+                    found = true;
+                    break;
+                }
+
+                if (found) {
+                    mat.color = Color.white;
+                } else {
+                    mat.color = clr;
+                }
+            } else {
+                mat.color = clr;
+            }
+
+            if (diffuse != null) mat.SetTexture(MainTexId, diffuse);
+            if (mask != null) mat.SetTexture(MaskTexId, mask);
 
             return mat;
         }
@@ -194,6 +231,7 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             var mesh = new Mesh();
 
+// ReSharper disable ConvertClosureToMethodGroup
             mesh.vertices = src.Vertices.Select(x => Types.Convert(x)).ToArray();
 
             if (src.Normals != null) {
@@ -207,6 +245,7 @@ namespace SanAndreasUnity.Importing.Conversion
             if (src.TexCoords != null && src.TexCoords.Length > 0) {
                 mesh.uv = src.TexCoords[0].Select(x => Types.Convert(x)).ToArray();
             }
+// ReSharper restore ConvertClosureToMethodGroup
 
             if (src.Normals == null) {
                 mesh.normals = CalculateNormals(src, mesh.vertices);
@@ -229,14 +268,14 @@ namespace SanAndreasUnity.Importing.Conversion
             return mesh;
         }
 
-        private static GeometryFrame Convert(RenderWareStream.Frame src, RenderWareStream.Atomic[] atomics)
+        private static GeometryFrame Convert(RenderWareStream.Frame src, IEnumerable<Atomic> atomics)
         {
             var atomic = atomics.FirstOrDefault(x => x.FrameIndex == src.Index);
 
             return new GeometryFrame(src, atomic);
         }
 
-        private static Transform[] Convert(HierarchyAnimation hAnim, Dictionary<GeometryFrame, Transform> transforms, GeometryFrame[] frames)
+        private static Transform[] Convert(HierarchyAnimation hAnim, Dictionary<GeometryFrame, Transform> transforms, IEnumerable<GeometryFrame> frames)
         {
             var dict = frames.Where(x => x.Source.HAnim != null)
                 .ToDictionary(x => x.Source.HAnim.NodeId, x => transforms[x]);
@@ -439,7 +478,7 @@ namespace SanAndreasUnity.Importing.Conversion
         public UnityEngine.Material[] GetMaterials(ObjectFlag flags,
             Action<UnityEngine.Material> setupMaterial)
         {
-            var matFlags = MaterialFlags.Default;
+            var matFlags = MaterialFlags.Default | MaterialFlags.OverrideAlpha;
 
             if ((flags & ObjectFlag.NoBackCull) == ObjectFlag.NoBackCull) {
                 matFlags |= MaterialFlags.NoBackCull;

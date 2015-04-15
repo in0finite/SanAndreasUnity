@@ -1,5 +1,4 @@
-﻿using SanAndreasUnity.Importing.Items.Definitions;
-using SanAndreasUnity.Importing.Items.Placements;
+﻿using SanAndreasUnity.Importing.Items.Placements;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
@@ -47,7 +46,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         protected override void OnLoad()
         {
-            //Vehicle.Create(this);
+            Vehicle.Create(this);
         }
     }
 }
