@@ -187,10 +187,12 @@ namespace SanAndreasUnity.Importing.Conversion
 
                 if (!string.IsNullOrEmpty(tex.MaskName)) {
                     mask = txds.GetAlpha(tex.MaskName) ?? diffuse;
+                } else if (vehicle) {
+                    mask = diffuse;
+                }
 
-                    if (!overrideAlpha && mask != null && mask.alphaIsTransparency) {
-                        flags |= MaterialFlags.Alpha;
-                    }
+                if (!overrideAlpha && mask != null && mask.alphaIsTransparency) {
+                    flags |= MaterialFlags.Alpha;
                 }
             } else {
                 diffuse = Texture2D.whiteTexture;

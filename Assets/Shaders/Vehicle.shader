@@ -6,8 +6,8 @@
         _MaskTex ("Mask (A)", 2D) = "white" {}
         _NoiseTex ("Noise (A)", 2D) = "white" {}
 
-        _Specular ("Specular", Range(0.0, 1.0)) = 0.5
-        _Smoothness ("Smoothness", Range(0.0, 1.0)) = 0.5
+        _Specular ("Specular", Range(0.0, 1.0)) = 0.25
+        _Smoothness ("Smoothness", Range(0.0, 1.0)) = 0.75
         _Color ("Color", Color) = (1, 1, 1, 1)
 
         _CarColorIndex ("Car Color Index", Range(0, 4)) = 0
