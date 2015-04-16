@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 using UnityEditor;
 using System.Diagnostics;
@@ -8,13 +7,13 @@ namespace Facepunch.Editor
 {
     public class ProtoBufGen : MonoBehaviour
     {
-        public static string RootPath { get; set; }
         public static string AssetsPath { get; set; }
+        public static string RootPath { get; set; }
 
         static ProtoBufGen()
         {
-            RootPath = new DirectoryInfo(Path.Combine(_sAssPath, "..")).FullName;
             AssetsPath = new DirectoryInfo(UnityEngine.Application.dataPath).FullName;
+            RootPath = new DirectoryInfo(Path.Combine(AssetsPath, "..")).FullName;
         }
 
         [MenuItem("Facepunch/Generate ProtoBuf")]
@@ -23,16 +22,14 @@ namespace Facepunch.Editor
         {
             var fileName = "premake5";
 
-            var root = ResolveRootPath == null ? _sRootPath : ResolveRootPath();
-
             if (UnityEngine.Application.platform == RuntimePlatform.WindowsEditor) {
-                fileName = Path.Combine(root, fileName + ".exe");
+                fileName = Path.Combine(RootPath, fileName + ".exe");
             }
 
             using (var process = new Process {
                 StartInfo = new ProcessStartInfo {
                     FileName = fileName,
-                    WorkingDirectory = root,
+                    WorkingDirectory = RootPath,
                     Arguments = "--protogen",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
@@ -48,7 +45,7 @@ namespace Facepunch.Editor
 
                     if (!e.Data.Contains(": error CS001: ")) return;
 
-                    UnityEngine.Debug.LogError(e.Data.Substring(_sAssPath.Length + 1));
+                    UnityEngine.Debug.LogError(e.Data.Substring(AssetsPath.Length + 1));
                 };
 
                 process.OutputDataReceived += hander;

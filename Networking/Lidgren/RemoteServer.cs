@@ -18,13 +18,12 @@ namespace Facepunch.Networking.Lidgren
 
         private NetConnection Connection { get { return Peer.Connections.FirstOrDefault(); } }
 
-        public override IPEndPoint RemoteEndPoint
         public override Thread NetThread
         {
             get { return Peer.Thread; }
         }
 
-        public override IPEndPoint EndPoint
+        public override IPEndPoint RemoteEndPoint
         {
             get { return Connection == null ? null : Connection.RemoteEndPoint; }
         }
