@@ -20,7 +20,7 @@ namespace Facepunch.Networking
     /// </summary>
     public interface IRemote
     {
-        IPEndPoint EndPoint { get; }
+        IPEndPoint RemoteEndPoint { get; }
 
         ConnectionStatus ConnectionStatus { get; }
 

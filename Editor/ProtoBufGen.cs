@@ -8,8 +8,14 @@ namespace Facepunch.Editor
 {
     public class ProtoBufGen : MonoBehaviour
     {
-        private static readonly String _sAssPath = new DirectoryInfo(UnityEngine.Application.dataPath).FullName;
-        private static readonly String _sRootPath = new DirectoryInfo(Path.Combine(_sAssPath, "../../..")).FullName;
+        public static string RootPath { get; set; }
+        public static string AssetsPath { get; set; }
+
+        static ProtoBufGen()
+        {
+            RootPath = new DirectoryInfo(Path.Combine(_sAssPath, "..")).FullName;
+            AssetsPath = new DirectoryInfo(UnityEngine.Application.dataPath).FullName;
+        }
 
         [MenuItem("Facepunch/Generate ProtoBuf")]
 // ReSharper disable once UnusedMember.Local
@@ -17,14 +23,16 @@ namespace Facepunch.Editor
         {
             var fileName = "premake5";
 
+            var root = ResolveRootPath == null ? _sRootPath : ResolveRootPath();
+
             if (UnityEngine.Application.platform == RuntimePlatform.WindowsEditor) {
-                fileName = Path.Combine(_sRootPath, fileName + ".exe");
+                fileName = Path.Combine(root, fileName + ".exe");
             }
 
             using (var process = new Process {
                 StartInfo = new ProcessStartInfo {
                     FileName = fileName,
-                    WorkingDirectory = _sRootPath,
+                    WorkingDirectory = root,
                     Arguments = "--protogen",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,

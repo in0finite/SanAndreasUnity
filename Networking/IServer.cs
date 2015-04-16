@@ -215,7 +215,7 @@ namespace Facepunch.Networking
 
     public abstract class RemoteServer : ServerBase, IRemoteServer
     {
-        public abstract IPEndPoint EndPoint { get; }
+        public abstract IPEndPoint RemoteEndPoint { get; }
 
         public abstract ConnectionStatus ConnectionStatus { get; }
 
