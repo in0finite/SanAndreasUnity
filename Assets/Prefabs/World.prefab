@@ -359,15 +359,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82a245a7166802b41bcb706255d566f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DragScale: .0500000007
-  AccelerationScale: 100
+  DragScale: .0199999996
+  AccelerationScale: 150
   BreakingScale: 100
   SuspensionForceScale: 100000
-  SuspensionDampingScale: 10000
+  SuspensionDampingScale: 50000
   MassScale: 1
-  FrictionExtremumSlip: .25
+  FrictionExtremumSlip: .125
   FrictionExtremumValue: 1
-  FrictionAsymptoteSlip: 1000
+  FrictionAsymptoteSlip: 5000
   FrictionAsymptoteValue: .25
   FrictionStiffness: 1
 --- !u!124 &12458128
