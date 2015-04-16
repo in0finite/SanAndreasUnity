@@ -27,6 +27,7 @@ namespace SanAndreasUnity.Importing.Animation
         public readonly Int32 FrameLength;
         public readonly Int32 Unknown;
         public readonly Bone[] Bones;
+        public readonly int EndTime;
 
         public Clip(BinaryReader reader)
         {
@@ -41,6 +42,10 @@ namespace SanAndreasUnity.Importing.Animation
             {
                 Bones[i] = new Bone(reader);
             }
+
+            if (BoneCount > 0) {
+                EndTime = Bones.Max(x => x.EndTime);
+            }
         }
     }
 
@@ -51,6 +56,7 @@ namespace SanAndreasUnity.Importing.Animation
         public readonly Int32 FrameCount;
         public readonly Int32 BoneId;
         public readonly Frame[] Frames;
+        public readonly int EndTime;
 
         public Bone(BinaryReader reader)
         {
@@ -64,6 +70,10 @@ namespace SanAndreasUnity.Importing.Animation
             for (int i = 0; i < FrameCount; ++i)
             {
                 Frames[i] = new Frame(reader, FrameType == 4);
+            }
+
+            if (FrameCount > 0) {
+                EndTime = Frames[FrameCount - 1].Time;
             }
         }
     }

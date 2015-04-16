@@ -24,24 +24,25 @@ namespace SanAndreasUnity.Importing.Conversion
             clip.legacy = true;
 
             var rotateAxes = new[] {
-                new { Name = "localRotation.x", Mask = new UVector4(1f, 0f, 0f, 0f) },
-                new { Name = "localRotation.y", Mask = new UVector4(0f, 1f, 0f, 0f) },
-                new { Name = "localRotation.z", Mask = new UVector4(0f, 0f, 1f, 0f) },
-                new { Name = "localRotation.w", Mask = new UVector4(0f, 0f, 0f, 1f) }
+                new { Name = "x", Mask = new UVector4(1f, 0f, 0f, 0f) },
+                new { Name = "y", Mask = new UVector4(0f, 1f, 0f, 0f) },
+                new { Name = "z", Mask = new UVector4(0f, 0f, 1f, 0f) },
+                new { Name = "w", Mask = new UVector4(0f, 0f, 0f, 1f) }
             };
 
             var translateAxes = new[] {
-                new { Name = "localPosition.x", Mask = new UVector3(1f, 0f, 0f) },
-                new { Name = "localPosition.y", Mask = new UVector3(0f, 1f, 0f) },
-                new { Name = "localPosition.z", Mask = new UVector3(0f, 0f, 1f) },
+                new { Name = "x", Mask = new UVector3(1f, 0f, 0f) },
+                new { Name = "y", Mask = new UVector3(0f, 1f, 0f) },
+                new { Name = "z", Mask = new UVector3(0f, 0f, 1f) },
             };
 
             foreach (var bone in animation.Bones) {
+                var bFrames = bone.Frames;
                 var frame = frames.GetByBoneId(bone.BoneId);
 
                 string bonePath = frame.Path;
 
-                var axisAngle = bone.Frames.ToDictionary(x => x, x => {
+                var axisAngle = bFrames.ToDictionary(x => x, x => {
                     var q = Types.Convert(x.Rotation);
                     float ang; UnityEngine.Vector3 axis;
                     q.ToAngleAxis(out ang, out axis);
@@ -49,27 +50,52 @@ namespace SanAndreasUnity.Importing.Conversion
                 });
 
                 foreach (var axis in rotateAxes) {
-                    var keys = bone.Frames
+                    var keys = bFrames
                         .Select(x => new Keyframe(x.Time * TimeScale,
                             UVector4.Dot(axisAngle[x], axis.Mask)))
                         .ToArray();
 
-                    clip.SetCurve(bonePath, typeof(Transform), axis.Name,
+                    clip.SetCurve(bonePath, typeof(Transform), "localRotation." + axis.Name,
                         new UnityEngine.AnimationCurve(keys));
                 }
 
+                var converted = bFrames.Select(x => Types.Convert(x.Translation)).ToArray();
+
+                if (!converted.Any(x => !x.Equals(UVector3.zero))) continue;
+
+                var anyVelocities = false;
+                var deltaVals = converted.Select((x, i) => {
+                    var prev = Math.Max(0, i - 1);
+                    var next = Math.Min(i + 1, converted.Length - 1);
+
+                    var prevTime = bFrames[prev].Time * TimeScale;
+                    var nextTime = bFrames[next].Time * TimeScale;
+
+                    return prevTime == nextTime || !(anyVelocities = true) ? UVector3.zero
+                        : (converted[next] - converted[prev]) / (nextTime - prevTime);
+                }).ToArray();
+
                 foreach (var translateAxis in translateAxes) {
-                    var keys = bone.Frames
-                        .Select(x => new Keyframe(x.Time * TimeScale,
-                            UVector3.Dot(frame.transform.localPosition + Types.Convert(x.Translation), translateAxis.Mask)))
+                    var positions = bFrames
+                        .Select((x, i) => new Keyframe(x.Time * TimeScale,
+                            UVector3.Dot(frame.transform.localPosition + converted[i], translateAxis.Mask)))
                         .ToArray();
 
-                    clip.SetCurve(bonePath, typeof(Transform), translateAxis.Name,
-                        new UnityEngine.AnimationCurve(keys));
+                    var deltas = bFrames.Select((x, i) => new Keyframe(x.Time * TimeScale,
+                        UVector3.Dot(deltaVals[i], translateAxis.Mask))).ToArray();
+
+                    clip.SetCurve(bonePath, typeof(Transform), "localPosition." + translateAxis.Name,
+                        new UnityEngine.AnimationCurve(positions));
+
+                    if (!anyVelocities) continue;
+                    
+                    clip.SetCurve(bonePath, typeof(Behaviours.Frame), "LocalVelocity." + translateAxis.Name,
+                        new UnityEngine.AnimationCurve(deltas));
                 }
             }
 
             clip.wrapMode = WrapMode.Loop;
+            clip.EnsureQuaternionContinuity();
 
             return clip;
         }

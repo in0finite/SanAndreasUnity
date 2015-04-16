@@ -23,11 +23,7 @@ namespace SanAndreasUnity.Behaviours
         public Camera Camera;
         public Pedestrian PlayerModel;
 
-        public float WalkSpeed = 1.5f;
-        public float RunSpeed = 5f;
         public float TurnSpeed = 10f;
-
-        public float VelocitySmoothing = 0.05f;
 
         #endregion
         
@@ -129,9 +125,9 @@ namespace SanAndreasUnity.Behaviours
                     Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
                 }
 
-                var vDiff = Movement - new Vector3(Velocity.x, 0f, Velocity.z);
+                var vDiff = Movement * PlayerModel.Speed - new Vector3(Velocity.x, 0f, Velocity.z);
 
-                Velocity += vDiff * (1f - Mathf.Pow(VelocitySmoothing, 4f * Time.fixedDeltaTime));
+                Velocity += vDiff;
                 Velocity = new Vector3(Velocity.x, _controller.isGrounded
                     ? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
 

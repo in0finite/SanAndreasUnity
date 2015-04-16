@@ -121,17 +121,14 @@ namespace SanAndreasUnity.Behaviours
             if (!_lockedCursor) return;
 
             var inputMove = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
-            float moveSpeed = 0.0f;
 
             if (inputMove.sqrMagnitude > 0f)
             {
                 inputMove.Normalize();
 
                 if (Input.GetKey(KeyCode.LeftShift)) {
-                    moveSpeed = _player.RunSpeed;
                     PlayerModel.Running = true;
                 } else {
-                    moveSpeed = _player.WalkSpeed;
                     PlayerModel.Walking = true;
                 }
             } else {
@@ -139,7 +136,7 @@ namespace SanAndreasUnity.Behaviours
             }
 
             _player.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
-                new Vector3(1f, 0f, 1f)).normalized * moveSpeed;
+                new Vector3(1f, 0f, 1f)).normalized;
 
             if (!Input.GetButtonDown("Use")) return;
 

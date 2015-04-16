@@ -14,6 +14,8 @@ namespace SanAndreasUnity.Behaviours
 
         public Frame Parent { get; internal set; }
 
+        public Vector3 LocalVelocity;
+
         public HierarchyAnimationFlags Flags;
 
         public string Path
