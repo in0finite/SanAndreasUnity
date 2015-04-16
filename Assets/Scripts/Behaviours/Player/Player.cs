@@ -95,7 +95,24 @@ namespace SanAndreasUnity.Behaviours
 
             vehicle.gameObject.AddComponent<VehicleController>();
 
-            PlayerModel.LoadAnim("CAR_sit");
+            PlayerModel.LoadAnim("Car_sit");
+            PlayerModel.LoadAnim("Drive_L");
+            PlayerModel.LoadAnim("Drive_R");
+        }
+
+        private void Update()
+        {
+            if (IsInVehicle)
+            {
+                var driveState = CurrentVehicle.Steering > 0 ? PlayerModel.Anim["Drive_R"] : PlayerModel.Anim["Drive_L"];
+
+                PlayerModel.Anim.Play(driveState.name, PlayMode.StopAll);
+
+                driveState.speed = 0.0f;
+                driveState.wrapMode = WrapMode.ClampForever;
+                driveState.time = Mathf.Lerp(0.0f, driveState.length, Mathf.Abs(CurrentVehicle.Steering));
+            }
+
         }
 
         private void FixedUpdate()

@@ -22,26 +22,26 @@ namespace SanAndreasUnity.Behaviours
         private AnimType _loadedAnimType = AnimType.None;
 
         private AnimationGroup _animGroup;
-        private UnityEngine.Animation _anim;
+        public UnityEngine.Animation Anim { get; private set; }
 
         private FrameContainer _frames;
 
         public PedestrianDef Definition { get; private set; }
 
-        public int PedestrianId = 3;
+        public int PedestrianId = 7;
 
-        public AnimType Anim = AnimType.Idle;
+        public AnimType AnimType = AnimType.Idle;
 
         public bool Walking
         {
-            set { Anim = value ? AnimType.Walk : AnimType.Idle; }
-            get { return Anim == AnimType.Walk || Running; }
+            set { AnimType = value ? AnimType.Walk : AnimType.Idle; }
+            get { return AnimType == AnimType.Walk || Running; }
         }
 
         public bool Running
         {
-            set { Anim = value ? AnimType.Run : AnimType.Walk; }
-            get { return Anim == AnimType.Run || Anim == AnimType.Panicked; }
+            set { AnimType = value ? AnimType.Run : AnimType.Walk; }
+            get { return AnimType == AnimType.Run || AnimType == AnimType.Panicked; }
         }
 
         public Vector3 Position
@@ -65,11 +65,11 @@ namespace SanAndreasUnity.Behaviours
                 Load(PedestrianId);
             }
 
-            if (_loadedAnimType != Anim)
+            if (_loadedAnimType != AnimType)
             {
-                _loadedAnimType = Anim;
+                _loadedAnimType = AnimType;
 
-                LoadAnim(Anim);
+                LoadAnim(AnimType);
             }
         }
 
@@ -87,11 +87,11 @@ namespace SanAndreasUnity.Behaviours
 
             _animGroup = AnimationGroup.Get(Definition.AnimGroupName);
 
-            _anim = gameObject.GetComponent<UnityEngine.Animation>();
+            Anim = gameObject.GetComponent<UnityEngine.Animation>();
 
-            if (_anim == null)
+            if (Anim == null)
             {
-                _anim = gameObject.AddComponent<UnityEngine.Animation>();
+                Anim = gameObject.AddComponent<UnityEngine.Animation>();
             }
         }
 
@@ -111,12 +111,12 @@ namespace SanAndreasUnity.Behaviours
         {
             if (type == AnimType.None)
             {
-                _anim.Stop();
+                Anim.Stop();
 
                 return;
             }
 
-            var animName = _animGroup[Anim];
+            var animName = _animGroup[AnimType];
 
             LoadAnim(animName);
         }
@@ -125,8 +125,8 @@ namespace SanAndreasUnity.Behaviours
         {
             var clip = Importing.Conversion.Animation.Load(_animGroup.FileName, animName, _frames);
 
-            _anim.AddClip(clip, animName);
-            _anim.CrossFade(animName);
+            Anim.AddClip(clip, animName);
+            Anim.CrossFade(animName);
         }
     }
 }
