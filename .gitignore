@@ -1,0 +1,10 @@
+*.*
+
+!*.cs
+!*.cs.meta
+!.*
+
+Library/
+Build/
+Assets/
+obj/
