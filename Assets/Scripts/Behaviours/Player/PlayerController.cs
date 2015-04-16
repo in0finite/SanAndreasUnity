@@ -95,19 +95,19 @@ namespace SanAndreasUnity.Behaviours
                 * Quaternion.AngleAxis(Pitch, Vector3.right);
 
             float distance;
-            Transform castFrom;
+            Vector3 castFrom;
 
             if (_player.IsInVehicle) {
                 CarCameraDistance = Mathf.Clamp(CarCameraDistance - Input.mouseScrollDelta.y, 2.0f, 32.0f);
                 distance = CarCameraDistance;
-                castFrom = _player.CurrentVehicle.transform;
+                castFrom = _player.CurrentVehicle.transform.position;
             } else {
                 PlayerCameraDistance = Mathf.Clamp(PlayerCameraDistance - Input.mouseScrollDelta.y, 2.0f, 32.0f);
                 distance = PlayerCameraDistance;
-                castFrom = transform;
+                castFrom = transform.position + Vector3.up * .5f;
             }
 
-            var castRay = new Ray(castFrom.position, -Camera.transform.forward);
+            var castRay = new Ray(castFrom, -Camera.transform.forward);
 
             RaycastHit hitInfo;
 

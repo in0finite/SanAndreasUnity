@@ -75,7 +75,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 188192}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1683, y: -50, z: 1038}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 411904}
@@ -180,10 +180,7 @@ MonoBehaviour:
   _editorIdSerialized: 256
   Camera: {fileID: 2096612}
   PlayerModel: {fileID: 11405868}
-  WalkSpeed: 1.5
-  RunSpeed: 5
   TurnSpeed: 10
-  VelocitySmoothing: .0500000007
 --- !u!114 &11456232
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -213,7 +210,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 1.75
-  m_Radius: .5
+  m_Radius: .400000006
   m_SlopeLimit: 45
   m_StepOffset: .300000012
   m_SkinWidth: .0799999982
