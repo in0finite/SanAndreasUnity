@@ -25,11 +25,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [Watched] public float SuspensionDampingScale = 1000f;
         [Watched] public float MassScale = 1f;
 
-        [Watched] public float FrictionExtremumSlip = 0.5f;
-        [Watched] public float FrictionExtremumValue = 1.5f;
-        [Watched] public float FrictionAsymptoteSlip = 20.0f;
-        [Watched] public float FrictionAsymptoteValue = 0.5f;
-        [Watched] public float FrictionStiffness = 1;
+        [Watched] public float ForwardFrictionExtremumSlip = 0.5f;
+        [Watched] public float ForwardFrictionExtremumValue = 1.5f;
+        [Watched] public float ForwardFrictionAsymptoteSlip = 20.0f;
+        [Watched] public float ForwardFrictionAsymptoteValue = 0.5f;
+
+        [Watched] public float SideFrictionExtremumSlip = 0.5f;
+        [Watched] public float SideFrictionExtremumValue = 1.5f;
+        [Watched] public float SideFrictionAsymptoteSlip = 20.0f;
+        [Watched] public float SideFrictionAsymptoteValue = 0.5f;
 
         public bool HasChanged { get; private set; }
 

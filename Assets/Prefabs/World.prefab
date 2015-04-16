@@ -347,7 +347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57ea334de36794f45af24c665b00e893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WaterPrefab: {fileID: 100000, guid: 9485b0c79d11e2e4d0007da98d76c639, type: 2}
+  WaterPrefab: {fileID: 0}
 --- !u!114 &11460870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -365,11 +365,14 @@ MonoBehaviour:
   SuspensionForceScale: 100000
   SuspensionDampingScale: 50000
   MassScale: 1
-  FrictionExtremumSlip: .125
-  FrictionExtremumValue: 1
-  FrictionAsymptoteSlip: 5000
-  FrictionAsymptoteValue: .25
-  FrictionStiffness: 1
+  ForwardFrictionExtremumSlip: .125
+  ForwardFrictionExtremumValue: 1
+  ForwardFrictionAsymptoteSlip: 5000
+  ForwardFrictionAsymptoteValue: .25
+  SideFrictionExtremumSlip: .125
+  SideFrictionExtremumValue: 1
+  SideFrictionAsymptoteSlip: 5000
+  SideFrictionAsymptoteValue: .25
 --- !u!124 &12458128
 Behaviour:
   m_ObjectHideFlags: 1

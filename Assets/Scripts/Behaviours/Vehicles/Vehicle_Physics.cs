@@ -14,7 +14,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [Range(-1, 1)]
         public float Steering;
 
-        [Range(-1, 1)]
+        [Range(0, 1)]
         public float Braking;
 
         public Handling.Car HandlingData { get; private set; }
@@ -57,18 +57,27 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             foreach (var wheel in _wheels) {
                 var spring = wheel.Collider.suspensionSpring;
+
                 spring.damper = HandlingData.SuspensionDampingLevel * vals.SuspensionDampingScale;
                 spring.spring = HandlingData.SuspensionForceLevel * vals.SuspensionForceScale;
+
                 wheel.Collider.suspensionSpring = spring;
 
-                var friction = wheel.Collider.forwardFriction;
-                friction.extremumSlip = vals.FrictionExtremumSlip;
-                friction.extremumValue = vals.FrictionExtremumValue;
-                friction.asymptoteSlip = vals.FrictionAsymptoteSlip;
-                friction.asymptoteValue = vals.FrictionAsymptoteValue;
-                friction.stiffness = vals.FrictionStiffness;
-
+                var friction = wheel.Collider.sidewaysFriction;
+                friction.extremumSlip = vals.SideFrictionExtremumSlip;
+                friction.extremumValue = vals.SideFrictionExtremumValue;
+                friction.asymptoteSlip = vals.SideFrictionAsymptoteSlip;
+                friction.asymptoteValue = vals.SideFrictionAsymptoteValue;
+                friction.stiffness = 1f;
                 wheel.Collider.sidewaysFriction = friction;
+
+                friction = wheel.Collider.forwardFriction;
+                friction.extremumSlip = vals.ForwardFrictionExtremumSlip;
+                friction.extremumValue = vals.ForwardFrictionExtremumValue;
+                friction.asymptoteSlip = vals.ForwardFrictionAsymptoteSlip;
+                friction.asymptoteValue = vals.ForwardFrictionAsymptoteValue;
+                friction.stiffness = 1f;
+                wheel.Collider.forwardFriction = friction;
             }
         }
 
