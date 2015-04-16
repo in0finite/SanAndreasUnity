@@ -1,4 +1,6 @@
-﻿using Steamworks;
+﻿#if STEAM
+
+using Steamworks;
 
 namespace Facepunch.Steam
 {
@@ -22,3 +24,5 @@ namespace Facepunch.Steam
         }
     }
 }
+
+#endif

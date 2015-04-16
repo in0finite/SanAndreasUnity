@@ -2,6 +2,7 @@
 
 !*.cs
 !*.cs.meta
+!Plugins/*.*
 !.*
 
 Library/

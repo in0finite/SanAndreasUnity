@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#if STEAM
+
+using UnityEngine;
 using System.Linq;
 using Steamworks;
 
@@ -123,3 +125,5 @@ namespace Facepunch.Steam
         }
     }
 }
+
+#endif

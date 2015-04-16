@@ -9,15 +9,22 @@ namespace SanAndreasUnity.Behaviours.Networking
 {
     public class Client : Facepunch.Networking.Client
     {
-        public static readonly ulong UserId;
+        private static readonly ulong _sUserId;
+
+        protected override ulong UserId
+        {
+            get { return _sUserId; }
+        }
+
+        protected override string Username
+        {
+            get { return Config.Get<string>("cl_name"); }
+        }
 
         static Client()
         {
             // Risky
-            UserId = BitConverter.ToUInt64(Guid.NewGuid().ToByteArray(), 8);
-
-            Client.ResolveUserId += () => UserId;
-            Client.ResolveUsername += () => Config.Get<string>("cl_name");
+            _sUserId = BitConverter.ToUInt64(Guid.NewGuid().ToByteArray(), 8);
 
             if (Config.Get<bool>("cl_connect")) {
                 NetConfig.RemoteHostname = Config.Get<string>("cl_remote_hostname");
