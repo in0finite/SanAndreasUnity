@@ -8,13 +8,8 @@ using UnityEngine;
 
 namespace Facepunch.Networking
 {
-    public class Client : EndPoint<Client, IRemoteServer>
+    public abstract class Client : EndPoint<Client, IRemoteServer>
     {
-        public delegate String UsernameResolver();
-        public delegate ulong UserIdResolver();
-
-        public static event UsernameResolver ResolveUsername;
-        public static event UserIdResolver ResolveUserId;
 
 #if PROTOBUF
         
@@ -68,7 +63,15 @@ namespace Facepunch.Networking
             get { return "net-cl"; }
         }
 
-        public Client()
+        protected virtual bool IsReadyToConnect
+        {
+            get { return true; }
+        }
+
+        protected abstract ulong UserId { get; }
+        protected abstract string Username { get; }
+
+        protected Client()
         {
             _networkables = new Dictionary<uint,Networkable>();
 
@@ -101,13 +104,14 @@ namespace Facepunch.Networking
 
         private IEnumerator SendConnectionRequest()
         {
+            while (!IsReadyToConnect) yield return null;
             while (Net.ConnectionStatus != ConnectionStatus.Connected) yield return null;
 
             var request = new ConnectRequest {
                 Os = Environment.OSVersion.VersionString,
                 Protocol = Protocol,
-                UserId = ResolveUserId(),
-                Username = ResolveUsername()
+                UserId = UserId,
+                Username = Username
             };
 
             OnPrepareConnectRequest(request);

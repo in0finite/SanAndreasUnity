@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using Lidgren.Network;
 using UnityEngine;
 using ProtoBuf;
@@ -16,6 +17,11 @@ namespace Facepunch.Networking.Lidgren
         public const String AppIdentifier = "Arcade";
 
         private NetConnection Connection { get { return Peer.Connections.FirstOrDefault(); } }
+
+        public override Thread NetThread
+        {
+            get { return Peer.Thread; }
+        }
 
         public override IPEndPoint RemoteEndPoint
         {
@@ -108,17 +114,21 @@ namespace Facepunch.Networking.Lidgren
                         }
                         break;
                     case NetIncomingMessageType.Data:
-                        _readerStream.ClearWriteReset(x => x.Write(msg.Data, 0, msg.LengthBytes));
-                        var value = MessageTable.Deserialize(_readerStream);
-                        HandleMessage(this, value);
+                        try {
+                            _readerStream.ClearWriteReset(x => x.Write(msg.Data, 0, msg.LengthBytes));
+                            var value = MessageTable.Deserialize(_readerStream);
+                            HandleMessage(this, value);
+                        } catch (Exception e) {
+                            Log(LogType.Error, e.ToString());
+                        }
                         break;
                     default:
                         Log(LogType.Error, "Unhandled type: {0}", msg.MessageType);
                         break;
                 }
-
-                Peer.Recycle(msg);
             }
+
+            Peer.Recycle(received);
 
             return received.Count > 0;
         }

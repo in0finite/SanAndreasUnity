@@ -107,6 +107,57 @@ namespace Facepunch.Networking
             RandomNumberGenerator.Create().GetBytes(bytes);
 
             RconPassword = String.Join("", bytes.Select(x => x.ToString("x2")).ToArray());
+
+            var args = Environment.GetCommandLineArgs();
+            for (var i = 1; i < args.Length - 1; ++i) {
+                switch (args[i]) {
+                    case "--client":
+                        IsClient = true;
+                        IsDefinedByCommandLine = true;
+                        break;
+                    case "--server":
+                        IsServer = true;
+                        IsDefinedByCommandLine = true;
+                        break;
+                    case "--port":
+                        int port;
+                        if (int.TryParse(args[++i], out port)) {
+                            Port = port;
+                            break;
+                        }
+
+                        Debug.LogErrorFormat("Invalid port '{0}'.", args[i]);
+                        break;
+                    case "--rcon-port":
+                        int rconPort;
+                        if (int.TryParse(args[++i], out rconPort)) {
+                            RconPort = rconPort;
+                            break;
+                        }
+
+                        RconPort = 0;
+                        Debug.LogErrorFormat("Invalid rcon port '{0}'.", args[i]);
+                        break;
+                    case "--rcon-password":
+                        RconPassword = args[++i];
+                        break;
+                    case "--max-connections":
+                        int maxConnections;
+                        if (int.TryParse(args[++i], out maxConnections)) {
+                            MaxConnections = maxConnections;
+                            break;
+                        }
+
+                        Debug.LogErrorFormat("Invalid max connection count '{0}'.", args[i]);
+                        break;
+                    case "--hostname":
+                        Hostname = args[++i];
+                        break;
+                    case "--autoupdate":
+                        AutoUpdate = true;
+                        break;
+                }
+            }
 #endif
         }
     }
