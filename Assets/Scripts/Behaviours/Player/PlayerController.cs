@@ -141,18 +141,18 @@ namespace SanAndreasUnity.Behaviours
             _player.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
                 new Vector3(1f, 0f, 1f)).normalized * moveSpeed;
 
-            if (Input.GetButtonDown("Use")) {
-                foreach (var vehicle in FindObjectsOfType<Vehicle>()) {
-                    var dist = Vector3.Distance(Camera.transform.position, vehicle.transform.position);
-                    if (dist > 10f) continue;
+            if (!Input.GetButtonDown("Use")) return;
 
-                    var ray = new Ray(Camera.transform.position, Camera.transform.forward);
-                    if (!vehicle.GetComponentsInChildren<MeshCollider>().Any(
-                        x => x.Raycast(ray, out hitInfo, 10f))) continue;
+            foreach (var vehicle in FindObjectsOfType<Vehicle>()) {
+                var dist = Vector3.Distance(transform.position, vehicle.transform.position);
+                if (dist > 10f) continue;
 
-                    _player.EnterVehicle(vehicle);
-                    break;
-                }
+                var ray = new Ray(transform.position, vehicle.transform.position - transform.position);
+                if (!vehicle.GetComponentsInChildren<MeshCollider>().Any(
+                    x => x.Raycast(ray, out hitInfo, 1.5f))) continue;
+
+                _player.EnterVehicle(vehicle);
+                break;
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using SanAndreasUnity.Importing.Vehicles;
+﻿using System.Linq;
+using SanAndreasUnity.Importing.Vehicles;
 using UnityEngine;
 using VConsts = SanAndreasUnity.Behaviours.Vehicles.VehiclePhysicsConstants;
 
@@ -31,8 +32,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             var vals = VConsts.Instance;
 
-            foreach (var wheel in _wheels)
-            {
+            foreach (var wheel in _wheels) {
                 var front = (wheel.Alignment & WheelAlignment.Front) == WheelAlignment.Front;
 
                 wheel.Parent.position += Vector3.up * (HandlingData.SuspensionUpperLimit + HandlingData.SuspensionLowerLimit);
@@ -108,8 +108,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void FixedUpdate()
         {
-            foreach (var wheel in _wheels)
-            {
+            foreach (var wheel in _wheels) {
                 if (ShouldSteer(wheel)) {
                     wheel.Collider.steerAngle = HandlingData.SteeringLock * Steering;
                 }
@@ -118,7 +117,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     Accelerator * HandlingData.TransmissionEngineAccel
                     * VConsts.Instance.AccelerationScale * DriveBias(wheel);
 
-                wheel.Collider.brakeTorque = 
+                wheel.Collider.brakeTorque =
                     Braking * HandlingData.BrakeDecel
                     * VConsts.Instance.BreakingScale * BrakeBias(wheel);
             }

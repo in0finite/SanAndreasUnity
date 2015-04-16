@@ -360,19 +360,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DragScale: .0199999996
-  AccelerationScale: 150
+  AccelerationScale: 50
   BreakingScale: 100
-  SuspensionForceScale: 100000
-  SuspensionDampingScale: 50000
+  SuspensionForceScale: 80000
+  SuspensionDampingScale: 30000
   MassScale: 1
   ForwardFrictionExtremumSlip: .125
-  ForwardFrictionExtremumValue: 1
-  ForwardFrictionAsymptoteSlip: 5000
-  ForwardFrictionAsymptoteValue: .25
+  ForwardFrictionExtremumValue: 2
+  ForwardFrictionAsymptoteSlip: 15
+  ForwardFrictionAsymptoteValue: 1
   SideFrictionExtremumSlip: .125
-  SideFrictionExtremumValue: 1
-  SideFrictionAsymptoteSlip: 5000
-  SideFrictionAsymptoteValue: .25
+  SideFrictionExtremumValue: 1.25
+  SideFrictionAsymptoteSlip: 30
+  SideFrictionAsymptoteValue: .75
 --- !u!124 &12458128
 Behaviour:
   m_ObjectHideFlags: 1
