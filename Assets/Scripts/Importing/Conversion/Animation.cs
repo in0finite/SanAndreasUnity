@@ -16,7 +16,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
     public class Animation
     {
-        private const float TimeScale = 0.02f;
+        private const float TimeScale = 1f / 64f;
 
         private static UnityEngine.AnimationClip Convert(Clip animation, FrameContainer frames)
         {
@@ -36,8 +36,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 new { Name = "localPosition.z", Mask = new UVector3(0f, 0f, 1f) },
             };
 
-            foreach (var bone in animation.Bones)
-            {
+            foreach (var bone in animation.Bones) {
                 var frame = frames.GetByBoneId(bone.BoneId);
 
                 string bonePath = frame.Path;
@@ -59,10 +58,7 @@ namespace SanAndreasUnity.Importing.Conversion
                         new UnityEngine.AnimationCurve(keys));
                 }
 
-                if (bone.Name == "Root") continue;
-
-                foreach (var translateAxis in translateAxes)
-                {
+                foreach (var translateAxis in translateAxes) {
                     var keys = bone.Frames
                         .Select(x => new Keyframe(x.Time * TimeScale,
                             UVector3.Dot(frame.transform.localPosition + Types.Convert(x.Translation), translateAxis.Mask)))
@@ -83,7 +79,7 @@ namespace SanAndreasUnity.Importing.Conversion
             private readonly AnimationPackage _package;
 
             private readonly Dictionary<string, UnityEngine.AnimationClip> _clips
-                = new Dictionary<string,AnimationClip>();
+                = new Dictionary<string, AnimationClip>();
 
             public Package(string fileName)
             {
@@ -102,7 +98,7 @@ namespace SanAndreasUnity.Importing.Conversion
         }
 
         private static readonly Dictionary<string, Package> _sLoaded
-            = new Dictionary<string,Package>();
+            = new Dictionary<string, Package>();
 
         public static UnityEngine.AnimationClip Load(string fileName, string clipName, FrameContainer frames)
         {

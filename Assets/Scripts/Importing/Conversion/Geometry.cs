@@ -34,10 +34,10 @@ namespace SanAndreasUnity.Importing.Conversion
             get { return _sMaskTexId == -1 ? _sMaskTexId = Shader.PropertyToID("_MaskTex") : _sMaskTexId; }
         }
 
-        private static int _sSpecularId = -1;
-        protected static int SpecularId
+        private static int _sMetallicId = -1;
+        protected static int MetallicId
         {
-            get { return _sSpecularId == -1 ? _sSpecularId = Shader.PropertyToID("_Specular") : _sSpecularId; }
+            get { return _sMetallicId == -1 ? _sMetallicId = Shader.PropertyToID("_Metallic") : _sMetallicId; }
         }
 
         private static int _sSmoothnessId = -1;
@@ -222,7 +222,7 @@ namespace SanAndreasUnity.Importing.Conversion
             if (diffuse != null) mat.SetTexture(MainTexId, diffuse.Texture);
             if (mask != null) mat.SetTexture(MaskTexId, mask.Texture);
 
-            mat.SetFloat(SpecularId, src.Specular);
+            mat.SetFloat(MetallicId, src.Specular);
             mat.SetFloat(SmoothnessId, src.Smoothness);
 
             return mat;

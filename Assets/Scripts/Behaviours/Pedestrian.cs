@@ -21,6 +21,9 @@ namespace SanAndreasUnity.Behaviours
         private int _loadedPedestrianId;
         private AnimType _loadedAnimType = AnimType.None;
 
+        private Transform _root;
+        private float _lastRootOffset;
+
         private AnimationGroup _animGroup;
         public UnityEngine.Animation Anim { get; private set; }
 
@@ -44,10 +47,24 @@ namespace SanAndreasUnity.Behaviours
             get { return AnimType == AnimType.Run || AnimType == AnimType.Panicked; }
         }
 
+        public float Speed { get; private set; }
+
         public Vector3 Position
         {
             get { return transform.localPosition; }
             set { transform.localPosition = value; }
+        }
+
+        private void LateUpdate()
+        {
+            if (_root == null) return;
+
+            var rootOffset = _root.localPosition.z;
+            if (rootOffset > _lastRootOffset) {
+                Speed = (rootOffset - _lastRootOffset) / Time.deltaTime;
+            }
+            _root.parent.localPosition = new Vector3(0f, -_root.localPosition.y * .5f, -_root.localPosition.z);
+            _lastRootOffset = rootOffset;
         }
 
         private void Update()
@@ -89,8 +106,7 @@ namespace SanAndreasUnity.Behaviours
 
             Anim = gameObject.GetComponent<UnityEngine.Animation>();
 
-            if (Anim == null)
-            {
+            if (Anim == null) {
                 Anim = gameObject.AddComponent<UnityEngine.Animation>();
             }
         }
@@ -105,6 +121,8 @@ namespace SanAndreasUnity.Behaviours
 
             var geoms = Geometry.Load(modelName, txds);
             _frames = geoms.AttachFrames(transform, MaterialFlags.Default);
+
+            _root = _frames.GetByName("Root").transform;
         }
 
         private void LoadAnim(AnimType type)

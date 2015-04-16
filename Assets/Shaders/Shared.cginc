@@ -10,10 +10,10 @@ fixed3 _CarColor1;
 fixed3 _CarColor2;
 fixed3 _CarColor3;
 fixed3 _CarColor4;
-#endif
 
-float _Specular;
+float _Metallic;
 float _Smoothness;
+#endif
 
 #ifdef FADE
 sampler2D _NoiseTex;
@@ -28,7 +28,7 @@ struct Input
     float4 color : COLOR;
 };
 
-void surf(Input IN, inout SurfaceOutputStandardSpecular o)
+void surf(Input IN, inout SurfaceOutputStandard o)
 {
 #ifdef FADE
     fixed noise = tex2D(_NoiseTex, IN.screenPos.xy / IN.screenPos.w).a * .99;
@@ -50,7 +50,12 @@ void surf(Input IN, inout SurfaceOutputStandardSpecular o)
         * IN.color.rgb * _Color.rgb;
 
     o.Alpha = fade * mask * IN.color.a * _Color.a;
-
-    o.Specular = _Specular * o.Alpha;
+    
+#ifdef VEHICLE
+    o.Metallic = _Metallic * o.Alpha;
     o.Smoothness = _Smoothness;
+#else
+    o.Metallic = 0;
+    o.Smoothness = 0;
+#endif
 }

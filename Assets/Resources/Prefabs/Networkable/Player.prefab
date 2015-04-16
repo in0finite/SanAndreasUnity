@@ -61,7 +61,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 151936}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1683, y: 50, z: -1038}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 480888}
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PedestrianId: 167
-  Anim: 0
+  AnimType: 3
 --- !u!114 &11434656
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -183,8 +183,6 @@ MonoBehaviour:
   WalkSpeed: 1.5
   RunSpeed: 5
   TurnSpeed: 10
-  PitchClamp: {x: -89, y: 89}
-  YawClamp: {x: -180, y: 180}
   VelocitySmoothing: .0500000007
 --- !u!114 &11456232
 MonoBehaviour:
@@ -214,13 +212,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 2
+  m_Height: 1.75
   m_Radius: .5
   m_SlopeLimit: 45
   m_StepOffset: .300000012
   m_SkinWidth: .0799999982
   m_MinMoveDistance: .00100000005
-  m_Center: {x: 0, y: .140000001, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
