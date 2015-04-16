@@ -24,7 +24,9 @@ namespace Facepunch.Networking
 
         public static int MaxConnections { get; set; }
 
-        public static String Hostname { get; set; }
+        public static String ServerName { get; set; }
+
+        public static String RemoteHostname { get; set; }
 
         public static bool AutoUpdate { get; set; }
 
@@ -35,16 +37,16 @@ namespace Facepunch.Networking
             {
                 uint ip = 0;
 
-                if (!string.IsNullOrEmpty(Hostname))
+                if (!string.IsNullOrEmpty(RemoteHostname))
                 {
-                    var addressList = System.Net.Dns.GetHostEntry(Hostname).AddressList;
+                    var addressList = System.Net.Dns.GetHostEntry(RemoteHostname).AddressList;
 
                     if (addressList.Length == 0)
                     {
                         return ip;
                     }
 
-                    System.Net.IPAddress.Parse(Hostname).GetAddressBytes();
+                    System.Net.IPAddress.Parse(RemoteHostname).GetAddressBytes();
 
                     var ipBytes = addressList[0].GetAddressBytes();
                     ip = (uint)ipBytes[0] << 24;
@@ -66,7 +68,7 @@ namespace Facepunch.Networking
             RconPort = rconPort;
             MaxConnections = maxConnections;
 
-            Hostname = "localhost";
+            RemoteHostname = "localhost";
         }
 
         public static void DedicatedServer(int port, int rconPort, int maxConnections)
@@ -85,75 +87,26 @@ namespace Facepunch.Networking
             IsServer = false;
 
             Port = port;
-            Hostname = hostname;
+            RemoteHostname = hostname;
         }
 
         static NetConfig()
         {
+            ServerName = "Unnamed Server";
+
 #if UNITY_EDITOR
-            RconPassword = "IDGKGRGdkKqZuBdv";
+            RconPassword = "password";
             ListenServer(Application.DefaultPort, Application.DefaultRconPort, 8);
 #else
             Port = Application.DefaultPort;
             RconPort = 0;
-            Hostname = "localhost";
+            RemoteHostname = "localhost";
             MaxConnections = 8;
 
             var bytes = new byte[8];
             RandomNumberGenerator.Create().GetBytes(bytes);
 
             RconPassword = String.Join("", bytes.Select(x => x.ToString("x2")).ToArray());
-
-            var args = Environment.GetCommandLineArgs();
-            for (var i = 1; i < args.Length - 1; ++i) {
-                switch (args[i]) {
-                    case "--client":
-                        IsClient = true;
-                        IsDefinedByCommandLine = true;
-                        break;
-                    case "--server":
-                        IsServer = true;
-                        IsDefinedByCommandLine = true;
-                        break;
-                    case "--port":
-                        int port;
-                        if (int.TryParse(args[++i], out port)) {
-                            Port = port;
-                            break;
-                        }
-
-                        Debug.LogErrorFormat("Invalid port '{0}'.", args[i]);
-                        break;
-                    case "--rcon-port":
-                        int rconPort;
-                        if (int.TryParse(args[++i], out rconPort)) {
-                            RconPort = rconPort;
-                            break;
-                        }
-
-                        RconPort = 0;
-                        Debug.LogErrorFormat("Invalid rcon port '{0}'.", args[i]);
-                        break;
-                    case "--rcon-password":
-                        RconPassword = args[++i];
-                        break;
-                    case "--max-connections":
-                        int maxConnections;
-                        if (int.TryParse(args[++i], out maxConnections)) {
-                            MaxConnections = maxConnections;
-                            break;
-                        }
-
-                        Debug.LogErrorFormat("Invalid max connection count '{0}'.", args[i]);
-                        break;
-                    case "--hostname":
-                        Hostname = args[++i];
-                        break;
-                    case "--autoupdate":
-                        AutoUpdate = true;
-                        break;
-                }
-            }
 #endif
         }
     }

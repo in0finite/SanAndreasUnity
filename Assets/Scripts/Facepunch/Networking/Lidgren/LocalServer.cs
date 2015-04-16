@@ -44,7 +44,7 @@ namespace Facepunch.Networking.Lidgren
 
             public NetConnection Connection { get; private set; }
 
-            public IPEndPoint EndPoint { get { return Connection.RemoteEndPoint; } }
+            public IPEndPoint RemoteEndPoint { get { return Connection.RemoteEndPoint; } }
 
             public ConnectionStatus ConnectionStatus { get { return (ConnectionStatus) Connection.Status; } }
 

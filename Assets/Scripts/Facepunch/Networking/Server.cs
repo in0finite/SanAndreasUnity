@@ -57,7 +57,7 @@ namespace Facepunch.Networking
         }
 #endif
 
-        public String ServerName = "Test Server";
+        public String ServerName;
         public int TickRate = 20;
 
         public Group GlobalGroup { get; private set; }
@@ -133,6 +133,10 @@ namespace Facepunch.Networking
         protected override void OnNetworkingAwake()
         {
             base.OnNetworkingAwake();
+
+            if (string.IsNullOrEmpty(ServerName)) {
+                ServerName = NetConfig.ServerName;
+            }
 
             _startTime = SystemTime;
 
