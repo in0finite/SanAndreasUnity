@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using Lidgren.Network;
 using ProtoBuf;
 using UnityEngine;
@@ -36,6 +37,11 @@ namespace Facepunch.Networking.Lidgren
         public override NetStatus NetStatus
         {
             get { return (NetStatus) Peer.Status; }
+        }
+
+        public override Thread NetThread
+        {
+            get { return Peer.Thread; }
         }
 
         private class Client : IRemote
@@ -202,17 +208,21 @@ namespace Facepunch.Networking.Lidgren
                         Log(LogType.Log, "New status: {0} (Reason: {1})", status, reason);
                         break;
                     case NetIncomingMessageType.Data:
-                        _readerStream.ClearWriteReset(x => x.Write(msg.Data, 0, msg.LengthBytes));
-                        var value = MessageTable.Deserialize(_readerStream);
-                        HandleMessage(client, value);
+                        try {
+                            _readerStream.ClearWriteReset(x => x.Write(msg.Data, 0, msg.LengthBytes));
+                            var value = MessageTable.Deserialize(_readerStream);
+                            HandleMessage(client, value);
+                        } catch (Exception e) {
+                            Log(LogType.Error, e.ToString());
+                        }
                         break;
                     default:
                         Log(LogType.Error, "Unhandled type: {0}", msg.MessageType);
                         break;
                 }
-
-                Peer.Recycle(msg);
             }
+
+            Peer.Recycle(received);
 
             return received.Count > 0;
         }

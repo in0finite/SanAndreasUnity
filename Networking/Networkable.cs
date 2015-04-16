@@ -420,15 +420,17 @@ namespace Facepunch.Networking
         /// </summary>
         protected virtual void OnFirstObserve(IEnumerable<IRemote> clients) { }
 
+        private readonly ProtoBuf.Transform _transform = new ProtoBuf.Transform();
+
         public ProtoBuf.Transform TransformSnapshot
         {
             get
             {
-                return new ProtoBuf.Transform {
-                    Position = transform.position,
-                    Rotation = transform.rotation,
-                    Scale = transform.localScale
-                };
+                _transform.Position = transform.position;
+                _transform.Rotation = transform.rotation;
+                _transform.Scale = transform.localScale;
+
+                return _transform;
             }
 
             set
@@ -437,23 +439,6 @@ namespace Facepunch.Networking
                 transform.rotation = value.Rotation;
                 transform.localScale = value.Scale;
             }
-        }
-
-        public void UpdateTransform(ProtoBuf.Transform trans)
-        {
-            transform.position = trans.Position;
-            transform.rotation = trans.Rotation;
-            transform.localScale = trans.Scale;
-        }
-
-        public void UpdateTransform(ProtoBuf.Transform from, ProtoBuf.Transform to, float t)
-        {
-            t = Mathf.Clamp01(t);
-            var s = 1 - t;
-
-            transform.position = s * from.Position + t * to.Position;
-            transform.rotation = Quaternion.Lerp(from.Rotation, to.Rotation, t);
-            transform.localScale = s * from.Scale + t * to.Scale;
         }
 
         // ReSharper disable once UnusedMember.Local
