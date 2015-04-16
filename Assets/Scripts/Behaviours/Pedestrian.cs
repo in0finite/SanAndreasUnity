@@ -141,9 +141,11 @@ namespace SanAndreasUnity.Behaviours
 
         public void LoadAnim(string animName)
         {
-            var clip = Importing.Conversion.Animation.Load(_animGroup.FileName, animName, _frames);
+            if (!Anim.GetClip(animName)) {
+                var clip = Importing.Conversion.Animation.Load(_animGroup.FileName, animName, _frames);
+                Anim.AddClip(clip, animName);
+            }
 
-            Anim.AddClip(clip, animName);
             Anim.CrossFade(animName);
         }
     }
