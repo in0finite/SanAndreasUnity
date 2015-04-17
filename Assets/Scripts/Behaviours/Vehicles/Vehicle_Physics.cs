@@ -125,11 +125,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             foreach (var wheel in _wheels.Where(x => x.Complement != null)) {
                 if (wheel.Travel == wheel.Complement.Travel) continue;
+                if (!wheel.Collider.isGrounded) continue;
 
                 var force = (wheel.Complement.Travel - wheel.Travel) * vals.AntiRollScale;
-                //if (wheel.Collider.isGrounded) {
-                    _rigidBody.AddForceAtPosition(wheel.Parent.transform.up * force, wheel.Parent.position);
-                //}
+                _rigidBody.AddForceAtPosition(wheel.Parent.transform.up * force, wheel.Parent.position);
             }
         }
     }

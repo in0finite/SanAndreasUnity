@@ -108,6 +108,12 @@ namespace SanAndreasUnity.Importing.Items
             return !_definitions.ContainsKey(id) ? null : (TDefinition) _definitions[id];
         }
 
+        public static IEnumerable<TDefinition> GetDefinitions<TDefinition>()
+            where TDefinition : Definition
+        {
+            return _definitions.Values.OfType<TDefinition>();
+        }
+
         public static IEnumerable<TPlacement> GetPlacements<TPlacement>(params int[] cellIds)
             where TPlacement : Placement
         {

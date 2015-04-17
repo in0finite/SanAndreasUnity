@@ -21,9 +21,14 @@ namespace SanAndreasUnity.Importing.Vehicles
             _sCarColors = file.GetItems<CarColorDef>().ToDictionary(x => x.Name, x => new CarColors(x));
         }
 
-        public static CarColors Get(string carName)
+        public static CarColors GetCarDefaults(string carName)
         {
             return _sCarColors.ContainsKey(carName) ? _sCarColors[carName] : null;
+        }
+
+        public static Color32[] FromIndices(params int[] indices)
+        {
+            return indices.Select(x => _sColors[x]).ToArray();
         }
 
         private readonly CarColorDef _def;

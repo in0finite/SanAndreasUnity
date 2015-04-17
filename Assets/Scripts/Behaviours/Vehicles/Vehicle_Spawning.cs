@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using SanAndreasUnity.Importing.Conversion;
+using SanAndreasUnity.Importing.Items;
+using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Vehicles;
 using UnityEngine;
 using System.Linq;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
-using SanAndreasUnity.Importing.Items;
 using System;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
@@ -43,14 +44,49 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             LeftRear,
         }
 
+        private static VehicleDef[] _sRandomSpawnable;
+        private static int _sMaxSpawnableIndex;
+
+        private static VehicleDef[] GetRandomSpawnableDefs(out int maxIndex)
+        {
+            var all = Item.GetDefinitions<VehicleDef>().ToArray();
+
+            var defs = all
+                .Where(x => x.Frequency > 0 && x.VehicleType == VehicleType.Car)
+                .ToArray();
+
+            maxIndex = defs.Sum(x => x.Frequency);
+
+            return defs;
+        }
+
+        private static VehicleDef GetRandomDef()
+        {
+            if (_sRandomSpawnable == null) {
+                _sRandomSpawnable = GetRandomSpawnableDefs(out _sMaxSpawnableIndex);
+            }
+
+            var index = UnityEngine.Random.Range(0, _sMaxSpawnableIndex);
+            foreach (var def in _sRandomSpawnable) {
+                index -= def.Frequency;
+                if (index < 0) return def;
+            }
+
+            throw new Exception("Unable to find cars to spawn");
+        }
+
         public static Vehicle Create(VehicleSpawner spawner)
         {
-            // TODO: Random cars
-            if (spawner.Info.CarId == -1) return null;
-
             var inst = new GameObject().AddComponent<Vehicle>();
 
-            inst.Initialize(spawner);
+            VehicleDef def;
+            if (spawner.Info.CarId == -1) {
+                def = GetRandomDef();
+            } else {
+                def = Item.GetDefinition<VehicleDef>(spawner.Info.CarId);
+            }
+
+            inst.Initialize(def, spawner.transform.position, spawner.transform.rotation, spawner.Info.Colors);
 
             return inst;
         }
@@ -150,15 +186,24 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return _frames.GetByName(name).transform;
         }
 
-        private void Initialize(VehicleSpawner spawner)
+        private void Initialize(VehicleDef def, Vector3 position, Quaternion rotation, int[] colors = null)
         {
-            transform.position = spawner.transform.position + Vector3.up * 1f;
-            transform.localRotation = spawner.transform.localRotation;
+            transform.position = position + Vector3.up * 1f;
+            transform.localRotation = rotation;
 
-            Definition = Item.GetDefinition<VehicleDef>(spawner.Info.CarId);
+            Definition = def;
 
-            var clrs = CarColors.Get(Definition.ModelName);
-            SetColors(clrs[UnityEngine.Random.Range(0, clrs.Count)]);
+            if (colors != null && colors[0] != -1) {
+                SetColors(CarColors.FromIndices(colors.TakeWhile(x => x != -1).ToArray()));
+            } else {
+                var defaultClrs = CarColors.GetCarDefaults(Definition.ModelName);
+
+                if (defaultClrs != null) {
+                    SetColors(defaultClrs[UnityEngine.Random.Range(0, defaultClrs.Count)]);
+                } else {
+                    Debug.LogWarningFormat("No colours defined for {0}!", def.GameName);
+                }
+            }
 
             name = Definition.GameName;
 

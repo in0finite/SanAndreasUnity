@@ -66,7 +66,7 @@ namespace SanAndreasUnity.Behaviours
             Camera.gameObject.SetActive(true);
             Camera.transform.SetParent(null, true);
 
-            Cell.Focus = Camera.transform;
+            Cell.Focus = transform;
             Cell.PreviewCamera.gameObject.SetActive(false);
 
             gameObject.AddComponent<PlayerController>();
