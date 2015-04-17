@@ -35,7 +35,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             foreach (var wheel in _wheels) {
                 var front = (wheel.Alignment & WheelAlignment.Front) == WheelAlignment.Front;
 
-                wheel.Parent.position += Vector3.up * (HandlingData.SuspensionUpperLimit + HandlingData.SuspensionLowerLimit);
+                wheel.Parent.position -= Vector3.up * HandlingData.SuspensionLowerLimit;
 
                 wheel.Collider = wheel.Parent.gameObject.AddComponent<WheelCollider>();
                 wheel.Collider.radius = (front ? Definition.WheelScaleFront : Definition.WheelScaleRear) * .5f;

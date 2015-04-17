@@ -213,7 +213,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 TextureDictionary.Load("misc"));
 
             _frames = _geometryParts.AttachFrames(transform, MaterialFlags.Vehicle);
-            var wheel = _frames.FirstOrDefault(x => x.Name == "wheel").transform;
+            var wheelFrame = _frames.FirstOrDefault(x => x.Name == "wheel");
+
+            if (wheelFrame == null) return;
+            var wheel = wheelFrame.transform;
 
             foreach (var frame in _frames) {
                 if (!frame.Name.StartsWith("wheel_") || wheel == null) continue;
@@ -257,16 +260,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             foreach (var pair in _frames.Where(x => x.Name.StartsWith("door_"))) {
                 var doorAlignment = GetDoorAlignment(pair.Name);
 
-                if (doorAlignment != DoorAlignment.None) {
-                    var hinge = pair.gameObject.AddComponent<HingeJoint>();
-                    hinge.axis = Vector3.up;
-                    hinge.useLimits = true;
+                if (doorAlignment == DoorAlignment.None) continue;
 
-                    float limit = 90.0f * ((doorAlignment == DoorAlignment.LeftFront || doorAlignment == DoorAlignment.LeftRear) ? 1.0f : -1.0f);
-                    hinge.limits = new JointLimits { min = Mathf.Min(0, limit), max = Mathf.Max(0, limit), };
+                var hinge = pair.gameObject.AddComponent<HingeJoint>();
+                hinge.axis = Vector3.up;
+                hinge.useLimits = true;
 
-                    hinge.connectedBody = gameObject.GetComponent<Rigidbody>();
-                }
+                var limit = 90.0f * ((doorAlignment == DoorAlignment.LeftFront || doorAlignment == DoorAlignment.LeftRear) ? 1.0f : -1.0f);
+                hinge.limits = new JointLimits { min = Mathf.Min(0, limit), max = Mathf.Max(0, limit), };
+                hinge.connectedBody = gameObject.GetComponent<Rigidbody>();
             }
         }
     }
