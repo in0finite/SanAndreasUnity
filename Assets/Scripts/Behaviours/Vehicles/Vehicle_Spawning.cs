@@ -188,9 +188,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Initialize(VehicleDef def, Vector3 position, Quaternion rotation, int[] colors = null)
         {
-            transform.position = position + Vector3.up * 1f;
-            transform.localRotation = rotation;
-
             Definition = def;
 
             if (colors != null && colors[0] != -1) {
@@ -215,7 +212,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             _frames = _geometryParts.AttachFrames(transform, MaterialFlags.Vehicle);
             var wheelFrame = _frames.FirstOrDefault(x => x.Name == "wheel");
 
-            if (wheelFrame == null) return;
+            if (wheelFrame == null) {
+                Debug.LogWarningFormat("No wheels defined for {0}!", def.GameName);
+                Destroy(gameObject);
+                return;
+            }
+
             var wheel = wheelFrame.transform;
 
             foreach (var frame in _frames) {
@@ -270,6 +272,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 hinge.limits = new JointLimits { min = Mathf.Min(0, limit), max = Mathf.Max(0, limit), };
                 hinge.connectedBody = gameObject.GetComponent<Rigidbody>();
             }
+
+            transform.position = position - Vector3.up * _wheels.Average(x => x.Child.position.y);
+            transform.localRotation = rotation;
         }
     }
 }
