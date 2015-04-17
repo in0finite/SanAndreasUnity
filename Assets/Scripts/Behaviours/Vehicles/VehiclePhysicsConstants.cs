@@ -35,6 +35,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [Watched] public float SideFrictionAsymptoteSlip = 20.0f;
         [Watched] public float SideFrictionAsymptoteValue = 0.5f;
 
+        [Watched] public float AntiRollScale = 1f;
+
         public bool HasChanged { get; private set; }
 
         public VehiclePhysicsConstants()

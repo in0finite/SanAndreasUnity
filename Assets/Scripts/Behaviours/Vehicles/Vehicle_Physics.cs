@@ -40,10 +40,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Collider = wheel.Parent.gameObject.AddComponent<WheelCollider>();
                 wheel.Collider.radius = (front ? Definition.WheelScaleFront : Definition.WheelScaleRear) * .5f;
                 wheel.Collider.suspensionDistance = HandlingData.SuspensionUpperLimit - HandlingData.SuspensionLowerLimit;
-
-                var spring = wheel.Collider.suspensionSpring;
-                spring.targetPosition = 0.5f;
-                wheel.Collider.suspensionSpring = spring;
             }
 
             UpdateValues(vals);
@@ -60,6 +56,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 spring.damper = HandlingData.SuspensionDampingLevel * vals.SuspensionDampingScale;
                 spring.spring = HandlingData.SuspensionForceLevel * vals.SuspensionForceScale;
+                spring.targetPosition = 0.5f;
 
                 wheel.Collider.suspensionSpring = spring;
 
@@ -108,6 +105,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void FixedUpdate()
         {
+            var vals = VConsts.Instance;
+
             foreach (var wheel in _wheels) {
                 if (ShouldSteer(wheel)) {
                     wheel.Collider.steerAngle = HandlingData.SteeringLock * Steering;
@@ -115,11 +114,22 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 wheel.Collider.motorTorque =
                     Accelerator * HandlingData.TransmissionEngineAccel
-                    * VConsts.Instance.AccelerationScale * DriveBias(wheel);
+                    * vals.AccelerationScale * DriveBias(wheel);
 
                 wheel.Collider.brakeTorque =
                     Braking * HandlingData.BrakeDecel
-                    * VConsts.Instance.BreakingScale * BrakeBias(wheel);
+                    * vals.BreakingScale * BrakeBias(wheel);
+
+                if (wheel.Complement != null) wheel.UpdateTravel();
+            }
+
+            foreach (var wheel in _wheels.Where(x => x.Complement != null)) {
+                if (wheel.Travel == wheel.Complement.Travel) continue;
+
+                var force = (wheel.Complement.Travel - wheel.Travel) * vals.AntiRollScale;
+                //if (wheel.Collider.isGrounded) {
+                    _rigidBody.AddForceAtPosition(wheel.Parent.transform.up * force, wheel.Parent.position);
+                //}
             }
         }
     }

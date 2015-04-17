@@ -362,17 +362,18 @@ MonoBehaviour:
   DragScale: .0199999996
   AccelerationScale: 50
   BreakingScale: 100
-  SuspensionForceScale: 80000
-  SuspensionDampingScale: 30000
+  SuspensionForceScale: 100000
+  SuspensionDampingScale: 50000
   MassScale: 1
-  ForwardFrictionExtremumSlip: .125
-  ForwardFrictionExtremumValue: 2
-  ForwardFrictionAsymptoteSlip: 15
-  ForwardFrictionAsymptoteValue: 1
-  SideFrictionExtremumSlip: .125
-  SideFrictionExtremumValue: 1.25
-  SideFrictionAsymptoteSlip: 30
-  SideFrictionAsymptoteValue: .75
+  ForwardFrictionExtremumSlip: .100000001
+  ForwardFrictionExtremumValue: 2.5
+  ForwardFrictionAsymptoteSlip: 1
+  ForwardFrictionAsymptoteValue: 2
+  SideFrictionExtremumSlip: .5
+  SideFrictionExtremumValue: 2.25
+  SideFrictionAsymptoteSlip: 1
+  SideFrictionAsymptoteValue: 1.5
+  AntiRollScale: 10000
 --- !u!124 &12458128
 Behaviour:
   m_ObjectHideFlags: 1

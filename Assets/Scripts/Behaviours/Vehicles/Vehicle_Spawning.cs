@@ -23,6 +23,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             Left = 8,
             Right = 16,
 
+            LeftRightMask = Left | Right,
+            FrontMidRearMask = Front | Mid | Rear,
+
             RightFront = Right | Front,
             LeftFront = Left | Front,
             RightMid = Right | Mid,
@@ -86,6 +89,19 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             public Transform Parent { get; set; }
             public Transform Child { get; set; }
             public WheelCollider Collider { get; set; }
+            public Wheel Complement { get; set; }
+
+            public float Travel { get; private set; }
+
+            public void UpdateTravel()
+            {
+                Travel = 1f;
+
+                WheelHit hit;
+                if (Collider.GetGroundHit(out hit)) {
+                    Travel = (-Parent.transform.InverseTransformPoint(hit.point).y - Collider.radius) / Collider.suspensionDistance;
+                }
+            }
 
             public Quaternion Roll { get; set; }
         }
@@ -180,6 +196,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 if (inst.IsLeftHand) {
                     frame.transform.Rotate(Vector3.up, 180.0f);
+                }
+
+                inst.Complement = _wheels.FirstOrDefault(x =>
+                    (x.Alignment & WheelAlignment.LeftRightMask) != (inst.Alignment & WheelAlignment.LeftRightMask) &&
+                    (x.Alignment & WheelAlignment.FrontMidRearMask) == (inst.Alignment & WheelAlignment.FrontMidRearMask));
+
+                if (inst.Complement != null) {
+                    inst.Complement.Complement = inst;
                 }
             }
 
