@@ -373,7 +373,7 @@ MonoBehaviour:
   SideFrictionExtremumValue: 2.5
   SideFrictionAsymptoteSlip: 1
   SideFrictionAsymptoteValue: 2
-  AntiRollScale: 50000
+  AntiRollScale: 20000
 --- !u!124 &12458128
 Behaviour:
   m_ObjectHideFlags: 1
