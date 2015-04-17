@@ -359,21 +359,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82a245a7166802b41bcb706255d566f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DragScale: .0199999996
-  AccelerationScale: 50
-  BreakingScale: 100
+  DragScale: .0500000007
+  AccelerationScale: 75
+  BreakingScale: 1
   SuspensionForceScale: 100000
   SuspensionDampingScale: 50000
   MassScale: 1
-  ForwardFrictionExtremumSlip: .100000001
+  ForwardFrictionExtremumSlip: .00999999978
   ForwardFrictionExtremumValue: 2.5
   ForwardFrictionAsymptoteSlip: 1
   ForwardFrictionAsymptoteValue: 2
   SideFrictionExtremumSlip: .5
-  SideFrictionExtremumValue: 2.25
+  SideFrictionExtremumValue: 2.5
   SideFrictionAsymptoteSlip: 1
-  SideFrictionAsymptoteValue: 1.5
-  AntiRollScale: 10000
+  SideFrictionAsymptoteValue: 2
+  AntiRollScale: 50000
 --- !u!124 &12458128
 Behaviour:
   m_ObjectHideFlags: 1
