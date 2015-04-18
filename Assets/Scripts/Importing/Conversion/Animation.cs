@@ -153,6 +153,9 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public UnityEngine.AnimationClip Clip { get { return _clip; } }
 
+        public UVector3 RootStart { get { return _rootStart; } }
+        public UVector3 RootEnd { get { return _rootEnd; } }
+
         private Animation(Clip anim, FrameContainer frames)
         {
             _clip = Convert(anim, frames, out _rootStart, out _rootEnd);
