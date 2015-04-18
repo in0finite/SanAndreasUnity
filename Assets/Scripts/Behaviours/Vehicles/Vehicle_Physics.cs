@@ -37,8 +37,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 wheel.Parent.position -= Vector3.up * HandlingData.SuspensionLowerLimit;
 
+                var scale = front ? Definition.WheelScaleFront : Definition.WheelScaleRear;
+
+                var mf = wheel.Child.GetComponent<MeshFilter>();
+                if (mf != null) {
+                    var size = mf.sharedMesh.bounds.size.y;
+                    wheel.Child.localScale = Vector3.one * scale / size;
+                }
+
                 wheel.Collider = wheel.Parent.gameObject.AddComponent<WheelCollider>();
-                wheel.Collider.radius = (front ? Definition.WheelScaleFront : Definition.WheelScaleRear) * .5f;
+                wheel.Collider.radius = scale * .5f;
                 wheel.Collider.suspensionDistance = HandlingData.SuspensionUpperLimit - HandlingData.SuspensionLowerLimit;
             }
 

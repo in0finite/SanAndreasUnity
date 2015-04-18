@@ -183,7 +183,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Transform GetPart(string name)
         {
-            return _frames.GetByName(name).transform;
+            var frame = _frames.GetByName(name);
+            return frame != null ? frame.transform : null;
         }
 
         private void Initialize(VehicleDef def, Vector3 position, Quaternion rotation, int[] colors = null)
