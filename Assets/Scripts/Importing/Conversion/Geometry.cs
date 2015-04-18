@@ -75,28 +75,32 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             var norms = new UnityEngine.Vector3[src.VertexCount];
 
-            //for (var i = 0; i < src.FaceCount; ++i) {
-            //    var face = src.Faces[i];
+            for (var i = 0; i < src.FaceCount; ++i) {
+                var face = src.Faces[i];
 
-            //    var a = verts[face.Vertex0];
-            //    var b = verts[face.Vertex1];
-            //    var c = verts[face.Vertex2];
+                var a = verts[face.Vertex0];
+                var b = verts[face.Vertex1];
+                var c = verts[face.Vertex2];
 
-            //    var v = b - a;
-            //    var w = c - b;
+                var v = b - a;
+                var w = c - b;
 
-            //    var norm = new UnityEngine.Vector3(
-            //        v.y * w.z - v.z * w.y,
-            //        v.z * w.x - v.x * w.z,
-            //        v.x * w.y - v.y * w.x).normalized;
+                var norm = new UnityEngine.Vector3(
+                    v.y * w.z - v.z * w.y,
+                    v.z * w.x - v.x * w.z,
+                    v.x * w.y - v.y * w.x).normalized;
 
-            //    norms[face.Vertex0] -= norm;
-            //    norms[face.Vertex1] -= norm;
-            //    norms[face.Vertex2] -= norm;
-            //}
+                norms[face.Vertex0] -= norm;
+                norms[face.Vertex1] -= norm;    
+                norms[face.Vertex2] -= norm;
+            }
 
             for (var i = 0; i < src.VertexCount; ++i) {
-                norms[i] = UnityEngine.Vector3.up; // norms[i].normalized;
+                if (norms[i].sqrMagnitude <= 0f) {
+                    norms[i] = UnityEngine.Vector3.up;
+                } else {
+                    norms[i] = norms[i].normalized;
+                }
             }
 
             return norms;
