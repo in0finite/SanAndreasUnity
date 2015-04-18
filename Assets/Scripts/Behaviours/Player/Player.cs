@@ -86,8 +86,8 @@ namespace SanAndreasUnity.Behaviours
             timer.Start();
 
             Camera.transform.SetParent(vehicle.DriverTransform, true);
-            transform.SetParent(vehicle.DriverTransform.parent);
-            transform.localPosition = Vector3.Scale(vehicle.DriverTransform.localPosition, new Vector3(-1.0f, 1.0f, 1.0f));
+            transform.SetParent(vehicle.DriverTransform);
+            transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
 
             vehicle.gameObject.AddComponent<VehicleController>();

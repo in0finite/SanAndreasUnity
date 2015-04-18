@@ -273,6 +273,19 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 hinge.connectedBody = gameObject.GetComponent<Rigidbody>();
             }
 
+            var frontSeat = GetPart("ped_frontseat");
+            if (frontSeat != null) {
+                if (frontSeat.localPosition.x > 0f) {
+                    DriverTransform = new GameObject("ped_driverseat").transform;
+                    DriverTransform.SetParent(frontSeat.parent, false);
+                    DriverTransform.localPosition = Vector3.Scale(
+                        frontSeat.localPosition,
+                        new Vector3(-1f, 1f, 1f));
+                } else {
+                    DriverTransform = frontSeat;
+                }
+            }
+
             transform.position = position - Vector3.up * _wheels.Average(x => x.Child.position.y);
             transform.localRotation = rotation;
         }

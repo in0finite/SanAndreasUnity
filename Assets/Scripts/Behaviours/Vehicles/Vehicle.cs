@@ -32,10 +32,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
-        public Transform DriverTransform
-        {
-            get { return GetPart("ped_frontseat"); }
-        }
+        public Transform DriverTransform { get; private set; }
 
         private void UpdateColors()
         {
