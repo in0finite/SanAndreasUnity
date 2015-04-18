@@ -51,6 +51,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private readonly MaterialPropertyBlock _props = new MaterialPropertyBlock();
         private bool _colorsChanged;
 
+        private VehicleController _controller;
+
         public void SetColors(params Color32[] clrs)
         {
             for (var i = 0; i < 4 && i < clrs.Length; ++i) {
@@ -82,6 +84,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public VehicleDef Definition { get; private set; }
 
         public Transform DriverTransform { get; private set; }
+
+        public VehicleController StartControlling()
+        {
+            return _controller ?? (_controller = gameObject.AddComponent<VehicleController>());
+        }
+
+        public void StopControlling()
+        {
+            Destroy(_controller);
+            _controller = null;
+        }
 
         private void UpdateColors()
         {
@@ -126,10 +139,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Child.localRotation = Quaternion.AngleAxis(wheel.Collider.steerAngle, Vector3.up) * wheel.Roll;
             }
 
-            if (Braking > 0f || Vector3.Dot(_rigidBody.velocity, transform.forward) > 0f && Accelerator < 0f) {
-                SetLight(VehicleLight.Rear, 1f);
+            if (_controller != null) {
+                SetLight(VehicleLight.Front, 1f);
+
+                if (Braking > 0f || Vector3.Dot(_rigidBody.velocity, transform.forward) > 0f && Accelerator < 0f) {
+                    SetLight(VehicleLight.Rear, 1f);
+                } else {
+                    SetLight(VehicleLight.Rear, 0f);
+                }
             } else {
-                SetLight(VehicleLight.Rear, 0f);
+                SetLight(VehicleLight.All, 0f);
+                Braking = 1f;
             }
 
             if (_colorsChanged) {

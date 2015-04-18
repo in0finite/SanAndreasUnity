@@ -88,7 +88,7 @@ namespace SanAndreasUnity.Behaviours
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
 
-            vehicle.gameObject.AddComponent<VehicleController>();
+            vehicle.StartControlling();
         }
 
         private void Update()
