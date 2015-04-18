@@ -12,6 +12,8 @@
 
 	"cl_model_id": 167,
 
+	"cl_drawdist_scale": 1.0,
+
 	// Server options
 
 	"sv_listen": true,

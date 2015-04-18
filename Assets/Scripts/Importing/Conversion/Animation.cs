@@ -37,7 +37,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 new { Name = "z", Mask = new UVector3(0f, 0f, 1f) },
             };
 
-            var root = animation.Bones.FirstOrDefault(x => x.Name == "Root");
+            var root = animation.Bones.FirstOrDefault(x => x.BoneId == 0);
             if (root != null && root.FrameCount > 0) {
                 rootStart = Types.Convert(root.Frames.First().Translation);
                 rootEnd = Types.Convert(root.Frames.Last().Translation);
