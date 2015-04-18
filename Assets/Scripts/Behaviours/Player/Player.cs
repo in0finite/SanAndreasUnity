@@ -3,6 +3,7 @@ using Facepunch.Networking;
 using ProtoBuf.Player;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Behaviours.World;
+using SanAndreasUnity.Importing.Animation;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
@@ -91,22 +92,24 @@ namespace SanAndreasUnity.Behaviours
 
             vehicle.gameObject.AddComponent<VehicleController>();
 
-            PlayerModel.LoadAnim("Car_sit");
-            PlayerModel.LoadAnim("Drive_L");
-            PlayerModel.LoadAnim("Drive_R");
+            // Precache car anims
+            PlayerModel.LoadAnim(AnimGroup.Car, AnimIndex.Sit);
+            PlayerModel.LoadAnim(AnimGroup.Car, AnimIndex.DriveLeft);
+            PlayerModel.LoadAnim(AnimGroup.Car, AnimIndex.DriveRight);
         }
 
         private void Update()
         {
             if (IsInVehicle)
             {
-                var driveState = CurrentVehicle.Steering > 0 ? PlayerModel.Anim["Drive_R"] : PlayerModel.Anim["Drive_L"];
+                var driveState = CurrentVehicle.Steering > 0
+                    ? AnimIndex.DriveRight : AnimIndex.DriveLeft;
 
-                PlayerModel.Anim.Play(driveState.name, PlayMode.StopAll);
+                var state = PlayerModel.PlayAnim(AnimGroup.Car, driveState, PlayMode.StopAll);
 
-                driveState.speed = 0.0f;
-                driveState.wrapMode = WrapMode.ClampForever;
-                driveState.time = Mathf.Lerp(0.0f, driveState.length, Mathf.Abs(CurrentVehicle.Steering));
+                state.speed = 0.0f;
+                state.wrapMode = WrapMode.ClampForever;
+                state.time = Mathf.Lerp(0.0f, state.length, Mathf.Abs(CurrentVehicle.Steering));
             }
 
         }

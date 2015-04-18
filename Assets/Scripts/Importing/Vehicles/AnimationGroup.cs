@@ -5,20 +5,29 @@ using System.Text.RegularExpressions;
 
 namespace SanAndreasUnity.Importing.Animation
 {
-    public enum AnimGroupType
+    public enum AnimGroup
     {
-        WalkCycle
+        None = 0,
+        WalkCycle = 1,
+        Car = 2
     }
 
-    public enum AnimType
+    public enum AnimIndex
     {
         None = -1,
+
+        // AnimGroup.WalkCycle
         Walk = 0,
         Run = 1,
         Panicked = 2,
         Idle = 3,
         RoadCross = 4,
-        WalkStart = 5
+        WalkStart = 5,
+
+        // AnimGroup.Car
+        Sit = 0,
+        DriveLeft = 1,
+        DriveRight = 2
     }
 
     public class AnimationGroup
@@ -32,8 +41,8 @@ namespace SanAndreasUnity.Importing.Animation
         private static readonly Regex _sEndRegex = new Regex(@"^\s*end\s*",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Dictionary<string, AnimationGroup> _sGroups
-            = new Dictionary<string,AnimationGroup>();
+        private static readonly Dictionary<string, Dictionary<AnimGroup, AnimationGroup>> _sGroups
+            = new Dictionary<string, Dictionary<AnimGroup, AnimationGroup>>();
 
         public static void Load(string path)
         {
@@ -44,27 +53,41 @@ namespace SanAndreasUnity.Importing.Animation
                     if (!match.Success) continue;
 
                     var group = new AnimationGroup(match, reader);
-                    _sGroups.Add(group.Name, group);
+
+                    if (!_sGroups.ContainsKey(group.Name)) {
+                        _sGroups.Add(group.Name, new Dictionary<AnimGroup,AnimationGroup>());
+                    }
+
+                    _sGroups[group.Name].Add(group.Type, group);
                 }
             }
         }
 
-        public static AnimationGroup Get(string name)
+        private static AnimationGroup GetInternal(string name, AnimGroup type)
         {
-            return _sGroups.ContainsKey(name) ? _sGroups[name] : null;
+            Dictionary<AnimGroup, AnimationGroup> groupDict;
+            if (!_sGroups.TryGetValue(name, out groupDict)) return null;
+
+            AnimationGroup group;
+            return groupDict.TryGetValue(type, out group) ? group : null;
+        }
+
+        public static AnimationGroup Get(string name, AnimGroup type)
+        {
+            return GetInternal(name, type) ?? GetInternal("default", type);
         }
 
         private readonly string[] _animations;
 
         public readonly string Name;
         public readonly string FileName;
-        public readonly AnimGroupType Type;
+        public readonly AnimGroup Type;
 
         private AnimationGroup(Match match, StreamReader reader)
         {
             Name = match.Groups["groupName"].Value;
             FileName = match.Groups["fileName"].Value + ".ifp";
-            Type = (AnimGroupType) Enum.Parse(typeof(AnimGroupType), match.Groups["animType"].Value, true);
+            Type = (AnimGroup) Enum.Parse(typeof(AnimGroup), match.Groups["animType"].Value, true);
 
             var animCount = int.Parse(match.Groups["animCount"].Value);
             _animations = new String[animCount];
@@ -78,7 +101,7 @@ namespace SanAndreasUnity.Importing.Animation
             }
         }
 
-        public string this[AnimType type]
+        public string this[AnimIndex type]
         {
             get { return _animations[(int) type]; }
         }

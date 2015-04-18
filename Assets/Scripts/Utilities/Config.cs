@@ -70,7 +70,18 @@ namespace SanAndreasUnity.Utilities
         private static string GetSubstitution(string key)
         {
             if (_substitutions.ContainsKey(key)) return _substitutions[key];
-            var subs = ReplaceSubstitutions(Get<string>(key));
+
+            string subs;
+            if (key == "data_dir") {
+#if UNITY_EDITOR
+                return Path.Combine(Application.dataPath, Path.Combine("..", "Data"));
+#else
+                return Application.dataPath;
+#endif
+            } else {
+                subs = ReplaceSubstitutions(Get<string>(key));
+            }
+
             _substitutions.Add(key, subs);
             return subs;
         }

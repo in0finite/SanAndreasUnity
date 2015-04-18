@@ -1,0 +1,20 @@
+#
+# filename:  auxanimgrp.dat
+# description:	This file describes additional anim association groups. 
+#
+#format is
+# name, filename, animtype, numanims
+#  animlist....
+#end
+#
+# name: 	name of animation definition group
+# filename:	name of file in which these animations occur (minus the IFP extension)
+# animtype:	type of animations 
+# numanims:	number of animations in groups
+#
+
+default, ped, car, 3
+	Car_sit
+	Drive_L
+	Drive_R
+end
