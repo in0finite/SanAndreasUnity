@@ -14,6 +14,12 @@ namespace SanAndreasUnity.Behaviours
             get { return _sNoiseTex == null || _sNoiseTex.width != Screen.width || _sNoiseTex.height != Screen.height; }
         }
 
+        private static int _sBreakableLayer = -1;
+        public static int BreakableLayer
+        {
+            get { return _sBreakableLayer == -1 ? _sBreakableLayer = LayerMask.NameToLayer("Breakable") : _sBreakableLayer; }
+        }
+
         private static int _sNoiseTexId = -1;
         protected static int NoiseTexId
         {

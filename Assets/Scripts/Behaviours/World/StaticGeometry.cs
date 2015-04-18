@@ -109,6 +109,10 @@ namespace SanAndreasUnity.Behaviours.World
                 mat => mat.SetTexture(NoiseTexId, NoiseTex));
 
             geoms.AttachCollisionModel(transform);
+
+            if (Instance.Object.HasFlag(ObjectFlag.Breakable)) {
+                gameObject.SetLayerRecursive(BreakableLayer);
+            }
         }
 
         protected override void OnShow()

@@ -108,7 +108,8 @@ namespace SanAndreasUnity.Behaviours
 
             RaycastHit hitInfo;
 
-            if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance)) {
+            if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance, 
+                -1 ^ (1 << MapObject.BreakableLayer))) {
                 distance = hitInfo.distance;
             }
 
