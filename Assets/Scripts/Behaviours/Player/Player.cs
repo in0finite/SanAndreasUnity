@@ -91,15 +91,12 @@ namespace SanAndreasUnity.Behaviours
             transform.localRotation = Quaternion.identity;
 
             vehicle.gameObject.AddComponent<VehicleController>();
-
-            // Precache car anims
-            PlayerModel.LoadAnim(AnimGroup.Car, AnimIndex.Sit);
-            PlayerModel.LoadAnim(AnimGroup.Car, AnimIndex.DriveLeft);
-            PlayerModel.LoadAnim(AnimGroup.Car, AnimIndex.DriveRight);
         }
 
         private void Update()
         {
+            PlayerModel.OnFoot = !IsInVehicle;
+
             if (IsInVehicle)
             {
                 var driveState = CurrentVehicle.Steering > 0

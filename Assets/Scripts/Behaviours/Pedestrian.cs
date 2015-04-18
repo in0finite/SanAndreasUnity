@@ -34,6 +34,8 @@ namespace SanAndreasUnity.Behaviours
         public AnimGroup AnimGroup = AnimGroup.WalkCycle;
         public AnimIndex AnimIndex = AnimIndex.Idle;
 
+        public bool OnFoot { get; set; }
+
         public bool Walking
         {
             set
@@ -75,9 +77,17 @@ namespace SanAndreasUnity.Behaviours
             if (_root == null) return;
 
             var trans = _root.transform;
-            
-            Speed = _root.LocalVelocity.z;
-            trans.parent.localPosition = new Vector3(0f, -trans.localPosition.y * .5f, -trans.localPosition.z);
+
+            if (OnFoot)
+            {
+                Speed = _root.LocalVelocity.z;
+                trans.parent.localPosition = new Vector3(0f, -trans.localPosition.y * .5f, -trans.localPosition.z);
+            }
+            else
+            {
+                Speed = 0.0f;
+                trans.parent.localPosition = Vector3.zero;
+            }
         }
 
         private void Update()
@@ -120,6 +130,17 @@ namespace SanAndreasUnity.Behaviours
             if (_anim == null) {
                 _anim = gameObject.AddComponent<UnityEngine.Animation>();
             }
+
+            LoadAnim(AnimGroup.WalkCycle, AnimIndex.Walk);
+            LoadAnim(AnimGroup.WalkCycle, AnimIndex.Run);
+            LoadAnim(AnimGroup.WalkCycle, AnimIndex.Panicked);
+            LoadAnim(AnimGroup.WalkCycle, AnimIndex.Idle);
+            LoadAnim(AnimGroup.WalkCycle, AnimIndex.RoadCross);
+            LoadAnim(AnimGroup.WalkCycle, AnimIndex.WalkStart);
+
+            LoadAnim(AnimGroup.Car, AnimIndex.Sit);
+            LoadAnim(AnimGroup.Car, AnimIndex.DriveLeft);
+            LoadAnim(AnimGroup.Car, AnimIndex.DriveRight);
         }
 
         private void LoadModel(string modelName, params string[] txds)
@@ -136,19 +157,40 @@ namespace SanAndreasUnity.Behaviours
             _root = _frames.GetByName("Root");
         }
 
-        public AnimationState LoadAnim(AnimGroup group, AnimIndex anim)
-        {
-            return LoadAnim(group, anim, false);
-        }
-
         public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, PlayMode playMode)
         {
-            return LoadAnim(group, anim, true, playMode);
+            var animState = LoadAnim(group, anim);
+
+            _curAnimGroup = AnimGroup = group;
+            _curAnim = AnimIndex = anim;
+
+            _anim.Play(animState.name, playMode);
+
+            return animState;
         }
 
         public AnimationState CrossFadeAnim(AnimGroup group, AnimIndex anim, float duration, PlayMode playMode)
         {
-            return LoadAnim(group, anim, true, playMode, duration);
+            var animState = LoadAnim(group, anim);
+
+            _curAnimGroup = AnimGroup = group;
+            _curAnim = AnimIndex = anim;
+
+            _anim.CrossFade(animState.name, duration, playMode);
+
+            return animState;
+        }
+
+        public AnimationState CrossFadeAnimQueued(AnimGroup group, AnimIndex anim, float duration, QueueMode queueMode, PlayMode playMode)
+        {
+            var animState = LoadAnim(group, anim);
+
+            _curAnimGroup = AnimGroup = group;
+            _curAnim = AnimIndex = anim;
+
+            _anim.CrossFadeQueued(animState.name, duration, queueMode, playMode);
+
+            return animState;
         }
 
         public AnimationClip GetAnim(AnimGroup group, AnimIndex anim)
@@ -157,21 +199,14 @@ namespace SanAndreasUnity.Behaviours
             return _anim.GetClip(animGroup[anim]);
         }
 
-        private AnimationState LoadAnim(AnimGroup group, AnimIndex anim,
-            bool play, PlayMode playMode = PlayMode.StopAll, float crossFadeDuration = 0f)
+        private AnimationState LoadAnim(AnimGroup group, AnimIndex anim)
         {
             if (anim == AnimIndex.None) {
-                if (play) _anim.Stop();
                 return null;
             }
 
             var animGroup = AnimationGroup.Get(Definition.AnimGroupName, group);
             var animName = animGroup[anim];
-
-            if (play) {
-                _curAnimGroup = AnimGroup = group;
-                _curAnim = AnimIndex = anim;
-            }
 
             AnimationState state;
 
@@ -181,14 +216,6 @@ namespace SanAndreasUnity.Behaviours
                 state = _anim[animName];
             } else {
                 state = _anim[animName];
-            }
-
-            if (!play) return state;
-
-            if (crossFadeDuration > 0f) {
-                _anim.CrossFade(animName, crossFadeDuration, playMode);
-            } else {
-                _anim.Play(animName, playMode);
             }
 
             return state;

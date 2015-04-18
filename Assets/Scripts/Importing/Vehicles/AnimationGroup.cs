@@ -27,7 +27,11 @@ namespace SanAndreasUnity.Importing.Animation
         // AnimGroup.Car
         Sit = 0,
         DriveLeft = 1,
-        DriveRight = 2
+        DriveRight = 2,
+        GetInLeft = 3,
+        GetInRight = 4,
+        GetOutLeft = 5,
+        GetOutRight = 6,
     }
 
     public class AnimationGroup
