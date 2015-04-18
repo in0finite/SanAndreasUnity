@@ -4,12 +4,35 @@ using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
-    public partial class Vehicle : MonoBehaviour
+    public enum VehicleLight
+    {
+        FrontLeft = 1,
+        FrontRight = 2,
+
+        RearLeft = 4,
+        RearRight = 8,
+
+        Front = FrontLeft | FrontRight,
+        Rear = RearLeft | RearRight,
+
+        All = Front | Rear
+    }
+
+    public partial class Vehicle : Networking.Networkable
     {
         private static int _sLayer = -1;
         public static int Layer
         {
             get { return _sLayer == -1 ? _sLayer = LayerMask.NameToLayer("Vehicle") : _sLayer; }
+        }
+
+        private static int _sLightsId = -1;
+        protected static int LightsId
+        {
+            get
+            {
+                return _sLightsId == -1 ? _sLightsId = Shader.PropertyToID("_Lights") : _sLightsId;
+            }
         }
 
         private static int[] _sCarColorIds;
@@ -24,10 +47,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         }
 
         private readonly Color32[] _colors = { Color.white, Color.white, Color.white, Color.white };
+        private readonly float[] _lights = { 1f, 1f, 1f, 1f };
         private readonly MaterialPropertyBlock _props = new MaterialPropertyBlock();
         private bool _colorsChanged;
-
-        public VehicleDef Definition { get; private set; }
 
         public void SetColors(params Color32[] clrs)
         {
@@ -38,13 +60,38 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
+        public void SetLight(VehicleLight light, float brightness)
+        {
+            brightness = Mathf.Clamp01(brightness);
+
+            for (var i = 0; i < 4; ++i) {
+                var bit = 1 << i;
+                if (((int) light & bit) == bit) {
+                    SetLight(i, brightness);
+                }
+            }
+        }
+
+        private void SetLight(int index, float brightness)
+        {
+            if (_lights[index] == brightness) return;
+            _lights[index] = brightness;
+            _colorsChanged = true;
+        }
+
+        public VehicleDef Definition { get; private set; }
+
         public Transform DriverTransform { get; private set; }
 
         private void UpdateColors()
         {
+            _colorsChanged = false;
+
             for (var i = 0; i < 4; ++i) {
                 _props.SetColor(CarColorIds[i], _colors[i]);
             }
+
+            _props.SetVector(LightsId, new Vector4(_lights[0], _lights[1], _lights[2], _lights[3]));
 
             foreach (var frame in _frames) {
                 var mr = frame.GetComponent<MeshRenderer>();
@@ -55,18 +102,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Update()
         {
-            foreach (var wheel in _wheels)
-            {
+            foreach (var wheel in _wheels) {
                 Vector3 position = Vector3.zero;
 
                 WheelHit wheelHit;
 
-                if (wheel.Collider.GetGroundHit(out wheelHit))
-                {
+                if (wheel.Collider.GetGroundHit(out wheelHit)) {
                     position.y = (wheelHit.point.y - wheel.Collider.transform.position.y) + wheel.Collider.radius;
-                }
-                else
-                {
+                } else {
                     position.y -= wheel.Collider.suspensionDistance;
                 }
 
@@ -83,8 +126,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Child.localRotation = Quaternion.AngleAxis(wheel.Collider.steerAngle, Vector3.up) * wheel.Roll;
             }
 
+            if (Braking > 0f || Vector3.Dot(_rigidBody.velocity, transform.forward) > 0f && Accelerator < 0f) {
+                SetLight(VehicleLight.Rear, 1f);
+            } else {
+                SetLight(VehicleLight.Rear, 0f);
+            }
+
             if (_colorsChanged) {
-                _colorsChanged = false;
                 UpdateColors();
             }
         }

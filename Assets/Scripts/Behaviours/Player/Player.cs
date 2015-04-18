@@ -15,8 +15,6 @@ namespace SanAndreasUnity.Behaviours
         
         private CharacterController _controller;
 
-        private float _pitch;
-
         #endregion
 
         #region Inspector Fields

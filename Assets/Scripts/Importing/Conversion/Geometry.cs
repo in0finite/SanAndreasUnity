@@ -145,10 +145,20 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static readonly Color32[] _sKeyColors = new[] {
             new Color32(255, 255, 255, 255),
+
+            // Paint job
             new Color32(60, 255, 0, 255),
-            new Color32(255, 0, 175, 255)
-            // TODO
-            // TODO
+            new Color32(255, 0, 175, 255),
+            new Color32(60, 255, 0, 255),  // TODO
+            new Color32(255, 0, 175, 255), // TODO
+
+            // Head lights
+            new Color32(255, 175, 0, 255),   // L
+            new Color32(0, 255, 200, 255), // R
+
+            // Tail lights
+            new Color32(185, 255, 0, 255), // L
+            new Color32(255, 60, 0, 255)   // R
         };
 
         private static LoadedTexture _sWhiteTex;
