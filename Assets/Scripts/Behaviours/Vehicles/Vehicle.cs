@@ -6,6 +6,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 {
     public partial class Vehicle : MonoBehaviour
     {
+        private static int _sLayer = -1;
+        public static int Layer
+        {
+            get { return _sLayer == -1 ? _sLayer = LayerMask.NameToLayer("Vehicle") : _sLayer; }
+        }
+
         private static int[] _sCarColorIds;
         protected static int[] CarColorIds
         {

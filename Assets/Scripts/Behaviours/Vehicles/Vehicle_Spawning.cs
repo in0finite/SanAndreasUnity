@@ -288,6 +288,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             transform.position = position - Vector3.up * _wheels.Average(x => x.Child.position.y);
             transform.localRotation = rotation;
+
+            gameObject.SetLayerRecursive(Layer);
         }
     }
 }
