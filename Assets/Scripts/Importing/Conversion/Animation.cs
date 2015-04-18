@@ -109,7 +109,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             public Package(string fileName)
             {
-                using (var reader = new BinaryReader(ArchiveManager.ReadFile(fileName))) {
+                using (var reader = new BinaryReader(ArchiveManager.ReadFile(fileName + ".ifp"))) {
                     _package = new AnimationPackage(reader);
                 }
             }

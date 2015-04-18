@@ -86,7 +86,7 @@ namespace SanAndreasUnity.Importing.Animation
         private AnimationGroup(Match match, StreamReader reader)
         {
             Name = match.Groups["groupName"].Value;
-            FileName = match.Groups["fileName"].Value + ".ifp";
+            FileName = match.Groups["fileName"].Value;
             Type = (AnimGroup) Enum.Parse(typeof(AnimGroup), match.Groups["animType"].Value, true);
 
             var animCount = int.Parse(match.Groups["animCount"].Value);
