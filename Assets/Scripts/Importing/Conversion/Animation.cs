@@ -18,7 +18,8 @@ namespace SanAndreasUnity.Importing.Conversion
     {
         private const float TimeScale = 1f / 64f;
 
-        private static UnityEngine.AnimationClip Convert(Clip animation, FrameContainer frames)
+        private static UnityEngine.AnimationClip Convert(Clip animation, FrameContainer frames,
+            out UVector3 rootStart, out UVector3 rootEnd)
         {
             var clip = new UnityEngine.AnimationClip();
             clip.legacy = true;
@@ -35,6 +36,14 @@ namespace SanAndreasUnity.Importing.Conversion
                 new { Name = "y", Mask = new UVector3(0f, 1f, 0f) },
                 new { Name = "z", Mask = new UVector3(0f, 0f, 1f) },
             };
+
+            var root = animation.Bones.FirstOrDefault(x => x.Name == "Root");
+            if (root != null && root.FrameCount > 0) {
+                rootStart = Types.Convert(root.Frames.First().Translation);
+                rootEnd = Types.Convert(root.Frames.Last().Translation);
+            } else {
+                rootStart = rootEnd = UVector3.zero;
+            }
 
             foreach (var bone in animation.Bones) {
                 var bFrames = bone.Frames;
@@ -89,7 +98,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
                     if (!anyVelocities) continue;
                     
-                    clip.SetCurve(bonePath, typeof(Behaviours.Frame), "LocalVelocity." + translateAxis.Name,
+                    clip.SetCurve(bonePath, typeof(BFrame), "LocalVelocity." + translateAxis.Name,
                         new UnityEngine.AnimationCurve(deltas));
                 }
             }
@@ -104,8 +113,8 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             private readonly AnimationPackage _package;
 
-            private readonly Dictionary<string, UnityEngine.AnimationClip> _clips
-                = new Dictionary<string, AnimationClip>();
+            private readonly Dictionary<string, Animation> _anims
+                = new Dictionary<string, Animation>();
 
             public Package(string fileName)
             {
@@ -114,19 +123,19 @@ namespace SanAndreasUnity.Importing.Conversion
                 }
             }
 
-            public UnityEngine.AnimationClip Load(string clipName, FrameContainer frames)
+            public Animation Load(string clipName, FrameContainer frames)
             {
-                if (_clips.ContainsKey(clipName)) return _clips[clipName];
-                var clip = Convert(_package[clipName], frames);
-                _clips.Add(clipName, clip);
-                return clip;
+                if (_anims.ContainsKey(clipName)) return _anims[clipName];
+                var anim = new Animation(_package[clipName], frames);
+                _anims.Add(clipName, anim);
+                return anim;
             }
         }
 
         private static readonly Dictionary<string, Package> _sLoaded
             = new Dictionary<string, Package>();
 
-        public static UnityEngine.AnimationClip Load(string fileName, string clipName, FrameContainer frames)
+        public static Animation Load(string fileName, string clipName, FrameContainer frames)
         {
             Package package;
             if (!_sLoaded.ContainsKey(fileName)) {
@@ -136,6 +145,17 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             return package.Load(clipName, frames);
+        }
+
+        private readonly UnityEngine.AnimationClip _clip;
+        private readonly UVector3 _rootStart;
+        private readonly UVector3 _rootEnd;
+
+        public UnityEngine.AnimationClip Clip { get { return _clip; } }
+
+        private Animation(Clip anim, FrameContainer frames)
+        {
+            _clip = Convert(anim, frames, out _rootStart, out _rootEnd);
         }
     }
 }

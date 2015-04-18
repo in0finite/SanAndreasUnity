@@ -15,6 +15,8 @@ using UnityEditor;
 
 namespace SanAndreasUnity.Behaviours
 {
+    using Anim = SanAndreasUnity.Importing.Conversion.Animation;
+
     [ExecuteInEditMode]
     public class Pedestrian : MonoBehaviour
     {
@@ -26,6 +28,9 @@ namespace SanAndreasUnity.Behaviours
 
         private FrameContainer _frames;
         private Frame _root;
+
+        private readonly Dictionary<string, Anim> _loadedAnims
+            = new Dictionary<string,Anim>();
 
         public PedestrianDef Definition { get; private set; }
 
@@ -149,6 +154,7 @@ namespace SanAndreasUnity.Behaviours
             {
                 Destroy(_frames.Root.gameObject);
                 Destroy(_frames);
+                _loadedAnims.Clear();
             }
 
             var geoms = Geometry.Load(modelName, txds);
@@ -193,10 +199,12 @@ namespace SanAndreasUnity.Behaviours
             return animState;
         }
 
-        public AnimationClip GetAnim(AnimGroup group, AnimIndex anim)
+        public Anim GetAnim(AnimGroup group, AnimIndex anim)
         {
             var animGroup = AnimationGroup.Get(Definition.AnimGroupName, group);
-            return _anim.GetClip(animGroup[anim]);
+
+            Anim result;
+            return _loadedAnims.TryGetValue(animGroup[anim], out result) ? result : null;
         }
 
         private AnimationState LoadAnim(AnimGroup group, AnimIndex anim)
@@ -210,9 +218,10 @@ namespace SanAndreasUnity.Behaviours
 
             AnimationState state;
 
-            if (!_anim.GetClip(animName)) {
+            if (!_loadedAnims.ContainsKey(animName)) {
                 var clip = Importing.Conversion.Animation.Load(animGroup.FileName, animName, _frames);
-                _anim.AddClip(clip, animName);
+                _loadedAnims.Add(animName, clip);
+                _anim.AddClip(clip.Clip, animName);
                 state = _anim[animName];
             } else {
                 state = _anim[animName];
