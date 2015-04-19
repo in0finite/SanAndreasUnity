@@ -47,6 +47,8 @@ namespace SanAndreasUnity.Behaviours.World
                             .ToArray();
 
                         RootDivision.AddRange(insts.Values.Cast<MapObject>().Concat(cars));
+                    } else {
+                        RootDivision.AddRange(insts.Values.Cast<MapObject>());
                     }
                 }
 
