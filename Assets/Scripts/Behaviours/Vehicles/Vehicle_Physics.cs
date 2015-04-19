@@ -117,6 +117,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void FixedUpdate()
         {
+            var groundRay = new Ray(transform.position, -Vector3.up);
+            if (!Physics.Raycast(groundRay, transform.position.y + 256f, (-1) ^ LayerMask)) {
+                _rigidBody.constraints = RigidbodyConstraints.FreezeAll;
+            } else {
+                _rigidBody.constraints = RigidbodyConstraints.None;
+            }
+
             var vals = VConsts.Instance;
 
             foreach (var wheel in _wheels) {

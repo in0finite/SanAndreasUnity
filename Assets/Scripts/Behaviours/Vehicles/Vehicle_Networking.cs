@@ -59,12 +59,21 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [ClientSpawnMethod]
         private static Vehicle Spawn(VehicleSpawn message)
         {
-            var inst = new GameObject().AddComponent<Vehicle>();
+            return new GameObject().AddComponent<Vehicle>();
+        }
+
+
+        [MessageHandler(Domain.Client)]
+        private void OnSpawn(IRemote sender, VehicleSpawn message)
+        {
+            if (IsServer) return;
+
             var def = Item.GetDefinition<VehicleDef>(message.Info.VehicleId);
 
-            inst.Initialize(def, message.Info.Colors.ToArray());
+            Debug.LogFormat("Spawning a {0}", def.GameName);
 
-            return inst;
+            Initialize(def, message.Info.Colors.ToArray());
+            UpdateFromSnapshot(message.State);
         }
 
 #endif

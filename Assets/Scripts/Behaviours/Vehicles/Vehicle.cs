@@ -24,8 +24,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private static int _sLayer = -1;
         public static int Layer
         {
-            get { return _sLayer == -1 ? _sLayer = LayerMask.NameToLayer("Vehicle") : _sLayer; }
+            get { return _sLayer == -1 ? _sLayer = UnityEngine.LayerMask.NameToLayer("Vehicle") : _sLayer; }
         }
+
+        public static int LayerMask { get { return 1 << Layer; } }
 
         private static int _sLightsId = -1;
         protected static int LightsId
