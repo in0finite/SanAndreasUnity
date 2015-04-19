@@ -1,4 +1,5 @@
-﻿using SanAndreasUnity.Importing.Items.Placements;
+﻿using Facepunch.Networking;
+using SanAndreasUnity.Importing.Items.Placements;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
@@ -34,6 +35,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         protected override float OnRefreshLoadOrder(Vector3 from)
         {
+            if (!NetConfig.IsServer) return float.PositiveInfinity;
             if (HasLoaded) return float.PositiveInfinity;
             var dist = Vector3.Distance(from, transform.position);
             if (dist > 100f) return float.PositiveInfinity;

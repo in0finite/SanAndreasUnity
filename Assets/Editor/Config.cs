@@ -16,9 +16,6 @@ namespace SanAndreasUnity.Editor
             var dest = Path.Combine(destDir, Utilities.Config.FileName);
             File.Copy(Utilities.Config.FilePath, dest, true);
 
-            dest = Path.Combine(destDir, Utilities.Config.UserFileName);
-            File.Copy(Utilities.Config.UserFilePath, dest, true);
-
             var dataDir = SanAndreasUnity.Utilities.Config.DataPath;
 
             switch (target) {
