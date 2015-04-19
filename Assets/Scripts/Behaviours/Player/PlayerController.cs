@@ -27,7 +27,7 @@ namespace SanAndreasUnity.Behaviours
 
         public Vector2 PitchClamp = new Vector2(-89f, 89f);
 
-        public float EnterVehicleRadius = 10.0f;
+        public float EnterVehicleRadius = 5.0f;
 
         #endregion
 
@@ -156,17 +156,13 @@ namespace SanAndreasUnity.Behaviours
             {
                 Debug.Log(string.Format("closest seat is {0}", vehicle.FindClosestSeat(transform.position)));
 
-                var ray = new Ray(transform.position, vehicle.transform.position - transform.position);
-                if (!vehicle.GetComponentsInChildren<MeshCollider>().Any(
-                    x => x.Raycast(ray, out hitInfo, 1.5f))) continue;
-
                 _player.EnterVehicle(vehicle);
 
                 break;
             }
         }
 
-        void OnDrawGizmos()
+        void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.white;
 
