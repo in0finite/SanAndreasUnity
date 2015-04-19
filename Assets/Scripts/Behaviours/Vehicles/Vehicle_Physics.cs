@@ -109,8 +109,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private float BrakeBias(Wheel wheel)
         {
             return wheel.IsFront
-                ? HandlingData.BrakeBias : wheel.IsRear
-                ? 1f - HandlingData.BrakeBias : .5f;
+                ? 1f - HandlingData.BrakeBias : wheel.IsRear
+                ? HandlingData.BrakeBias : .5f;
         }
 
         private void FixedUpdate()
