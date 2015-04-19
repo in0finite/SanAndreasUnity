@@ -133,6 +133,12 @@ namespace SanAndreasUnity.Behaviours
             if (seat.IsDriver)
             {
                 IsDrivingVehicle = true;
+
+                PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
+            }
+            else
+            {
+                PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
             }
 
             IsInVehicleSeat = true;

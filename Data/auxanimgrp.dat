@@ -13,8 +13,9 @@
 # numanims:	number of animations in groups
 #
 
-default, ped, car, 7
+default, ped, car, 8
 	CAR_sit
+	CAR_sitp
 	Drive_L
 	Drive_R
 	CAR_getin_LHS
