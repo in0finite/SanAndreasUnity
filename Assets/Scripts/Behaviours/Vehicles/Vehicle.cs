@@ -166,7 +166,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (_controller != null) {
                 SetLight(VehicleLight.Front, 1f);
 
-                if (Braking > 0f || Vector3.Dot(_rigidBody.velocity, transform.forward) > 0f && Accelerator < 0f) {
+                if (Braking > 0f) {
                     SetLight(VehicleLight.Rear, 1f);
                 } else {
                     SetLight(VehicleLight.Rear, 0f);

@@ -14,9 +14,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Update()
         {
-            _vehicle.Accelerator = Input.GetAxis("Vertical");
+            var accel = Input.GetAxis("Vertical");
+            var brake = Input.GetKey(KeyCode.Space) ? 1.0f : 0.0f;
+            var speed = Vector3.Dot(_vehicle.Velocity, _vehicle.transform.forward);
+
+            if (speed * accel < 0f) {
+                brake = Mathf.Max(brake, 0.75f);
+                accel = 0f;
+            }
+
+            _vehicle.Accelerator = accel;
             _vehicle.Steering = Input.GetAxis("Horizontal");
-            _vehicle.Braking = Input.GetKey(KeyCode.Space) ? 1.0f : 0.0f;
+            _vehicle.Braking = brake;
         }
     }
 }

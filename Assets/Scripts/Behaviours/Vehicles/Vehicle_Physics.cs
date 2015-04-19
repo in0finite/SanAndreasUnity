@@ -18,6 +18,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [Range(0, 1)]
         public float Braking;
 
+        public Vector3 Velocity { get { return _rigidBody.velocity; } }
+
         public Handling.Car HandlingData { get; private set; }
 
         private void InitializePhysics()
