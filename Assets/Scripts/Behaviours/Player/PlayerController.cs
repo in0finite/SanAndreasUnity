@@ -145,10 +145,11 @@ namespace SanAndreasUnity.Behaviours
 
             if (!Input.GetButtonDown("Use")) return;
 
-            foreach (var vehicle in FindObjectsOfType<Vehicle>()) {
-                var dist = Vector3.Distance(transform.position, vehicle.transform.position);
-                if (dist > 10f) continue;
+            var vehicles = FindObjectsOfType<Vehicle>().Where(x => Vector3.Distance(transform.position, x.transform.position) < 10.0f)
+                .OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).ToArray();
 
+            foreach (var vehicle in vehicles)
+            {
                 var ray = new Ray(transform.position, vehicle.transform.position - transform.position);
                 if (!vehicle.GetComponentsInChildren<MeshCollider>().Any(
                     x => x.Raycast(ray, out hitInfo, 1.5f))) continue;

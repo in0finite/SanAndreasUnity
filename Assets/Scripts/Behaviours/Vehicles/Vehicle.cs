@@ -84,6 +84,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public VehicleDef Definition { get; private set; }
 
         public Transform DriverTransform { get; private set; }
+        public Transform[] SeatTransforms { get; private set; }
 
         public VehicleController StartControlling()
         {

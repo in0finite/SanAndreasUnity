@@ -44,6 +44,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             LeftRear,
         }
 
+        public enum SeatAlignment
+        {
+            None = -1,
+            FrontRight = 0,
+            FrontLeft = 1,
+            BackRight = 2,
+            BackLeft = 3,
+        }
+
         private static VehicleDef[] _sRandomSpawnable;
         private static int _sMaxSpawnableIndex;
 
@@ -62,12 +71,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private static VehicleDef GetRandomDef()
         {
-            if (_sRandomSpawnable == null) {
+            if (_sRandomSpawnable == null)
+            {
                 _sRandomSpawnable = GetRandomSpawnableDefs(out _sMaxSpawnableIndex);
             }
 
             var index = UnityEngine.Random.Range(0, _sMaxSpawnableIndex);
-            foreach (var def in _sRandomSpawnable) {
+            foreach (var def in _sRandomSpawnable)
+            {
                 index -= def.Frequency;
                 if (index < 0) return def;
             }
@@ -80,9 +91,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             var inst = new GameObject().AddComponent<Vehicle>();
 
             VehicleDef def;
-            if (spawner.Info.CarId == -1) {
+            if (spawner.Info.CarId == -1)
+            {
                 def = GetRandomDef();
-            } else {
+            }
+            else
+            {
                 def = Item.GetDefinition<VehicleDef>(spawner.Info.CarId);
             }
 
@@ -97,7 +111,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             public WheelAlignment Alignment { get; set; }
 
-            public bool IsLeftHand 
+            public bool IsLeftHand
             {
                 get { return (Alignment & WheelAlignment.Left) == WheelAlignment.Left; }
             }
@@ -134,7 +148,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 Travel = 1f;
 
                 WheelHit hit;
-                if (Collider.GetGroundHit(out hit)) {
+                if (Collider.GetGroundHit(out hit))
+                {
                     Travel = (-Parent.transform.InverseTransformPoint(hit.point).y - Collider.radius) / Collider.suspensionDistance;
                 }
             }
@@ -147,7 +162,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private WheelAlignment GetWheelAlignment(string frameName)
         {
-            switch (frameName) {
+            switch (frameName)
+            {
                 case "wheel_rf_dummy":
                     return WheelAlignment.RightFront;
                 case "wheel_lf_dummy":
@@ -167,7 +183,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private DoorAlignment GetDoorAlignment(string frameName)
         {
-            switch (frameName) {
+            switch (frameName)
+            {
                 case "door_rf_dummy":
                     return DoorAlignment.RightFront;
                 case "door_lf_dummy":
@@ -191,14 +208,20 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             Definition = def;
 
-            if (colors != null && colors[0] != -1) {
+            if (colors != null && colors[0] != -1)
+            {
                 SetColors(CarColors.FromIndices(colors.TakeWhile(x => x != -1).ToArray()));
-            } else {
+            }
+            else
+            {
                 var defaultClrs = CarColors.GetCarDefaults(Definition.ModelName);
 
-                if (defaultClrs != null) {
+                if (defaultClrs != null)
+                {
                     SetColors(defaultClrs[UnityEngine.Random.Range(0, defaultClrs.Count)]);
-                } else {
+                }
+                else
+                {
                     Debug.LogWarningFormat("No colours defined for {0}!", def.GameName);
                 }
             }
@@ -213,7 +236,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             _frames = _geometryParts.AttachFrames(transform, MaterialFlags.Vehicle);
             var wheelFrame = _frames.FirstOrDefault(x => x.Name == "wheel");
 
-            if (wheelFrame == null) {
+            if (wheelFrame == null)
+            {
                 Debug.LogWarningFormat("No wheels defined for {0}!", def.GameName);
                 Destroy(gameObject);
                 return;
@@ -221,31 +245,38 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             var wheel = wheelFrame.transform;
 
-            foreach (var frame in _frames) {
+            foreach (var frame in _frames)
+            {
                 if (!frame.Name.StartsWith("wheel_") || wheel == null) continue;
 
                 var wheelAlignment = GetWheelAlignment(frame.Name);
 
                 Wheel inst;
 
-                if (wheelAlignment != WheelAlignment.RightFront) {
+                if (wheelAlignment != WheelAlignment.RightFront)
+                {
                     var copy = Instantiate(wheel);
                     copy.SetParent(frame.transform, false);
 
-                    _wheels.Add(inst = new Wheel {
+                    _wheels.Add(inst = new Wheel
+                    {
                         Alignment = wheelAlignment,
                         Parent = frame.transform,
                         Child = copy,
                     });
-                } else {
-                    _wheels.Add(inst = new Wheel {
+                }
+                else
+                {
+                    _wheels.Add(inst = new Wheel
+                    {
                         Alignment = wheelAlignment,
                         Parent = frame.transform,
                         Child = wheel,
                     });
                 }
 
-                if (inst.IsLeftHand) {
+                if (inst.IsLeftHand)
+                {
                     frame.transform.Rotate(Vector3.up, 180.0f);
                 }
 
@@ -253,14 +284,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     (x.Alignment & WheelAlignment.LeftRightMask) != (inst.Alignment & WheelAlignment.LeftRightMask) &&
                     (x.Alignment & WheelAlignment.FrontMidRearMask) == (inst.Alignment & WheelAlignment.FrontMidRearMask));
 
-                if (inst.Complement != null) {
+                if (inst.Complement != null)
+                {
                     inst.Complement.Complement = inst;
                 }
             }
 
             InitializePhysics();
 
-            foreach (var pair in _frames.Where(x => x.Name.StartsWith("door_"))) {
+            foreach (var pair in _frames.Where(x => x.Name.StartsWith("door_")))
+            {
                 var doorAlignment = GetDoorAlignment(pair.Name);
 
                 if (doorAlignment == DoorAlignment.None) continue;
@@ -275,15 +308,45 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
 
             var frontSeat = GetPart("ped_frontseat");
-            if (frontSeat != null) {
-                if (frontSeat.localPosition.x > 0f) {
-                    DriverTransform = new GameObject("ped_driverseat").transform;
-                    DriverTransform.SetParent(frontSeat.parent, false);
-                    DriverTransform.localPosition = Vector3.Scale(
-                        frontSeat.localPosition,
-                        new Vector3(-1f, 1f, 1f));
-                } else {
-                    DriverTransform = frontSeat;
+            var backSeat = GetPart("ped_backseat");
+
+            SeatTransforms = new Transform[backSeat != null ? 4 : 2];
+
+            if (frontSeat != null)
+            {
+                var frontSeatMirror = new GameObject("ped_frontseat").transform;
+                frontSeatMirror.SetParent(frontSeat.parent, false);
+                frontSeatMirror.localPosition = Vector3.Scale(frontSeat.localPosition, new Vector3(-1f, 1f, 1f));
+
+                if (frontSeat.localPosition.x > 0f)
+                {
+                    SeatTransforms[(int)SeatAlignment.FrontRight] = frontSeat;
+                    SeatTransforms[(int)SeatAlignment.FrontLeft] = frontSeatMirror;
+                }
+                else
+                {
+                    SeatTransforms[(int)SeatAlignment.FrontRight] = frontSeatMirror;
+                    SeatTransforms[(int)SeatAlignment.FrontLeft] = frontSeat;
+                }
+
+                DriverTransform = SeatTransforms[(int)SeatAlignment.FrontLeft];
+            }
+
+            if (backSeat != null)
+            {
+                var backSeatMirror = new GameObject("ped_backseat").transform;
+                backSeatMirror.SetParent(backSeat.parent, false);
+                backSeatMirror.localPosition = Vector3.Scale(backSeat.localPosition, new Vector3(-1f, 1f, 1f));
+
+                if (backSeat.localPosition.x > 0f)
+                {
+                    SeatTransforms[(int)SeatAlignment.BackRight] = backSeat;
+                    SeatTransforms[(int)SeatAlignment.BackLeft] = backSeatMirror;
+                }
+                else
+                {
+                    SeatTransforms[(int)SeatAlignment.BackRight] = backSeatMirror;
+                    SeatTransforms[(int)SeatAlignment.BackLeft] = backSeat;
                 }
             }
 
