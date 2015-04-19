@@ -6,6 +6,7 @@ using System.Diagnostics;
 using SanAndreasUnity.Importing.Items.Placements;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Utilities;
+using Facepunch.Networking;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -39,12 +40,14 @@ namespace SanAndreasUnity.Behaviours.World
                         inst.Value.Initialize(inst.Key, insts);
                     }
 
-                    var cars = Item.GetPlacements<ParkedVehicle>(CellIds.ToArray())
-                        .Select(x => VehicleSpawner.Create(x))
-                        .Cast<MapObject>()
-                        .ToArray();
+                    if (NetConfig.IsServer) {
+                        var cars = Item.GetPlacements<ParkedVehicle>(CellIds.ToArray())
+                            .Select(x => VehicleSpawner.Create(x))
+                            .Cast<MapObject>()
+                            .ToArray();
 
-                    RootDivision.AddRange(insts.Values.Cast<MapObject>().Concat(cars));
+                        RootDivision.AddRange(insts.Values.Cast<MapObject>().Concat(cars));
+                    }
                 }
 
                 if (Water != null) {

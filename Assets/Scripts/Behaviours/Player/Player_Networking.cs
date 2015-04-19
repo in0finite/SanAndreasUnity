@@ -164,7 +164,9 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!IsLocalPlayer) return;
 
-            SendToServer(GetPedestrianSnapshot(), DeliveryMethod.UnreliableSequenced, 2);
+            if (!IsInVehicle) {
+                SendToServer(GetPedestrianSnapshot(), DeliveryMethod.UnreliableSequenced, 2);
+            }
         }
 
         [MessageHandler(Domain.Client)]
