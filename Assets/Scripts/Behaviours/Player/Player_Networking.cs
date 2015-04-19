@@ -113,6 +113,7 @@ namespace SanAndreasUnity.Behaviours
         private void UpdateFromPedestrianSnapshot(PlayerPedestrianState message)
         {
             if (IsLocalPlayer) return;
+            if (transform.parent != null) return;
 
             Position = message.Position;
             Movement = message.Movement;

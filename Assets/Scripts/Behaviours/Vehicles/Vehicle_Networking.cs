@@ -44,16 +44,21 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             //:interpolate
             optional UnityEngine.Quaternion Rotation = 4;
 
-            //:interpolate
             optional UnityEngine.Vector3 Velocity = 5;
         
             //:interpolate
+            optional UnityEngine.Vector3 AngularVelocity = 9;
+        
+            //:interpolate
+            //:smoothing = 0.5
             optional float Steering = 6;
         
             //:interpolate
+            //:smoothing = 0.5
             optional float Accelerator = 7;
         
             //:interpolate
+            //:smoothing = 0.5
             optional float Braking = 8;
         }
 
@@ -105,6 +110,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 Position = transform.position,
                 Rotation = transform.rotation,
                 Velocity = _rigidBody != null ? _rigidBody.velocity : Vector3.zero,
+                AngularVelocity = _rigidBody != null ? _rigidBody.angularVelocity : Vector3.zero,
                 Steering = Steering,
                 Accelerator = Accelerator,
                 Braking = Braking,
@@ -123,7 +129,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (_rigidBody != null) {
                 _rigidBody.velocity = state.Velocity;
-                _rigidBody.angularVelocity = Vector3.zero;
+                _rigidBody.angularVelocity = state.AngularVelocity;
             }
         }
 

@@ -17,7 +17,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public float Steering;
 
         [Range(0, 1)]
-        public float Braking;
+        public float Braking = 1f;
 
         public Vector3 Velocity { get { return _rigidBody.velocity; } }
 
@@ -119,10 +119,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void PhysicsFixedUpdate()
         {
             var groundRay = new Ray(transform.position + Vector3.up, -Vector3.up);
-            if (Physics.SphereCast(groundRay, 0.25f, transform.position.y + 256f, (-1) ^ LayerMask)) {
-                _rigidBody.constraints = RigidbodyConstraints.None;
-            } else {
+            if (!IsControlling && HasDriver || !Physics.SphereCast(groundRay, 0.25f, transform.position.y + 256f, (-1) ^ LayerMask)) {
                 _rigidBody.constraints = RigidbodyConstraints.FreezeAll;
+            } else {
+                _rigidBody.constraints = RigidbodyConstraints.None;
             }
 
             var vals = VConsts.Instance;

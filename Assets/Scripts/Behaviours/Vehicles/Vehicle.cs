@@ -88,6 +88,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Transform DriverTransform { get; private set; }
 
+        public bool HasDriver { get { return DriverTransform.childCount > 0; } }
+
         public bool IsControlling { get { return _controller != null; } }
 
         public VehicleController StartControlling()
@@ -169,10 +171,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Child.localRotation = Quaternion.AngleAxis(wheel.Collider.steerAngle, Vector3.up) * wheel.Roll;
             }
 
-            if (_controller != null) {
+            if (HasDriver) {
                 SetLight(VehicleLight.Front, 1f);
 
-                if (Braking > 0f) {
+                if (Braking > 0.125f) {
                     SetLight(VehicleLight.Rear, 1f);
                 } else {
                     SetLight(VehicleLight.Rear, 0f);

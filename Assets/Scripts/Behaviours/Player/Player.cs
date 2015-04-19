@@ -84,8 +84,9 @@ namespace SanAndreasUnity.Behaviours
 
             var seat = vehicle.GetSeat(seatAlignment);
 
+            _controller.enabled = false;
+
             if (IsLocalPlayer) {
-                _controller.enabled = false;
                 Camera.transform.SetParent(seat.Parent, true);
 
                 SendToServer(_lastPassengerState = new PlayerPassengerState {
@@ -119,6 +120,8 @@ namespace SanAndreasUnity.Behaviours
                 SendToServer(_lastPassengerState = new PlayerPassengerState {
                     Vechicle = null
                 }, DeliveryMethod.ReliableOrdered, 1);
+            } else {
+                _snapshots.Reset();
             }
 
             StartCoroutine(ExitVehicleAnimation(immediate));
@@ -181,7 +184,7 @@ namespace SanAndreasUnity.Behaviours
             Camera.transform.SetParent(null, true);
             transform.SetParent(null);
 
-            if (IsLocalPlayer) _controller.enabled = true;
+            _controller.enabled = true;
 
             PlayerModel.VehicleParentOffset = Vector3.zero;
         }
