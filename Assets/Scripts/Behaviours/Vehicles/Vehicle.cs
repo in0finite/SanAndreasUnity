@@ -91,6 +91,28 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return _controller ?? (_controller = gameObject.AddComponent<VehicleController>());
         }
 
+        public SeatAlignment FindClosestSeat(Vector3 position)
+        {
+            var seat = SeatTransforms.Select((s, i) => new { s, i })
+                .OrderBy(x => Vector3.Distance(position, x.s.position))
+                .FirstOrDefault();
+
+            return (seat == null ? SeatAlignment.None : (SeatAlignment)seat.i);
+        }
+
+        public Transform FindClosestSeatTransform(Vector3 position)
+        {
+            return GetSeatTransform(FindClosestSeat(position));
+        }
+
+        public Transform GetSeatTransform(SeatAlignment seat)
+        {
+            if (seat == SeatAlignment.None) return transform;
+            if ((int)seat >= SeatTransforms.Length) return transform;
+
+            return SeatTransforms[(int)seat];
+        }
+
         public void StopControlling()
         {
             Destroy(_controller);

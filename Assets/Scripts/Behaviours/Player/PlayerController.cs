@@ -27,6 +27,8 @@ namespace SanAndreasUnity.Behaviours
 
         public Vector2 PitchClamp = new Vector2(-89f, 89f);
 
+        public float EnterVehicleRadius = 10.0f;
+
         #endregion
 
         #region Properties
@@ -145,16 +147,54 @@ namespace SanAndreasUnity.Behaviours
 
             if (!Input.GetButtonDown("Use")) return;
 
-            var vehicles = FindObjectsOfType<Vehicle>().Where(x => Vector3.Distance(transform.position, x.transform.position) < 10.0f)
-                .OrderBy(x => Vector3.Distance(transform.position, x.transform.position)).ToArray();
+            // find any vehicles that have a seat inside the checking radius and sort by closest seat
+            var vehicles = FindObjectsOfType<Vehicle>()
+                .Where(x => Vector3.Distance(transform.position, x.FindClosestSeatTransform(transform.position).position) < EnterVehicleRadius)
+                .OrderBy(x => Vector3.Distance(transform.position, x.FindClosestSeatTransform(transform.position).position)).ToArray();
 
             foreach (var vehicle in vehicles)
             {
+                Debug.Log(string.Format("closest seat is {0}", vehicle.FindClosestSeat(transform.position)));
+
                 var ray = new Ray(transform.position, vehicle.transform.position - transform.position);
                 if (!vehicle.GetComponentsInChildren<MeshCollider>().Any(
                     x => x.Raycast(ray, out hitInfo, 1.5f))) continue;
 
                 _player.EnterVehicle(vehicle);
+
+                break;
+            }
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.color = Color.white;
+
+            Gizmos.DrawWireSphere(transform.position, EnterVehicleRadius);
+
+            var vehicles = FindObjectsOfType<Vehicle>()
+                .Where(x => Vector3.Distance(transform.position, x.FindClosestSeatTransform(transform.position).position) < EnterVehicleRadius)
+                .OrderBy(x => Vector3.Distance(transform.position, x.FindClosestSeatTransform(transform.position).position)).ToArray();
+
+            foreach (var vehicle in vehicles)
+            {
+                foreach (var seatTransform in vehicle.SeatTransforms)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawWireSphere(seatTransform.position, 0.1f);
+                }
+
+                var closestSeat = vehicle.FindClosestSeat(transform.position);
+
+                if (closestSeat != Vehicle.SeatAlignment.None)
+                {
+                    var closestSeatTransform = vehicle.GetSeatTransform(closestSeat);
+
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawWireSphere(closestSeatTransform.position, 0.1f);
+                    Gizmos.DrawLine(transform.position, closestSeatTransform.position);
+                }
+
                 break;
             }
         }
