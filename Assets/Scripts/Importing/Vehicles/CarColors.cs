@@ -32,7 +32,7 @@ namespace SanAndreasUnity.Importing.Vehicles
         }
 
         private readonly CarColorDef _def;
-        private readonly Color32[][] _vals;
+        private readonly int[][] _vals;
 
         public int Count { get { return _def.Colors.Length; } }
 
@@ -40,18 +40,18 @@ namespace SanAndreasUnity.Importing.Vehicles
         {
             _def = def;
             _vals = _def.Colors.Select(x => {
-                var arr = new Color32[def.Is4Color ? 4 : 2];
-                arr[0] = _sColors[x.A];
+                var arr = new int[def.Is4Color ? 4 : 2];
+                arr[0] = x.A;
                 // To fix "moonbeam" having an invalid second color
-                arr[1] = _sColors[x.B < _sColors.Length ? x.B : x.A];
+                arr[1] = x.B < _sColors.Length ? x.B : x.A;
                 if (!def.Is4Color) return arr;
-                arr[2] = _sColors[x.C];
-                arr[3] = _sColors[x.D];
+                arr[2] = x.C;
+                arr[3] = x.D;
                 return arr;
             }).ToArray();
         }
 
-        public Color32[] this[int index]
+        public int[] this[int index]
         {
             get { return _vals[index]; }
         }

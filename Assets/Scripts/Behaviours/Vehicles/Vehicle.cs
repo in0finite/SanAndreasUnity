@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using SanAndreasUnity.Importing.Vehicles;
 using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
 
@@ -46,18 +47,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
-        private readonly Color32[] _colors = { Color.white, Color.white, Color.white, Color.white };
+        private readonly int[] _colors = { 0, 0, 0, 0 };
         private readonly float[] _lights = { 1f, 1f, 1f, 1f };
         private readonly MaterialPropertyBlock _props = new MaterialPropertyBlock();
         private bool _colorsChanged;
 
         private VehicleController _controller;
 
-        public void SetColors(params Color32[] clrs)
+        public void SetColors(params int[] clrIndices)
         {
-            for (var i = 0; i < 4 && i < clrs.Length; ++i) {
-                if (_colors[i].Equals(clrs[i])) continue;
-                _colors[i] = clrs[i];
+            for (var i = 0; i < 4 && i < clrIndices.Length; ++i) {
+                if (_colors[i].Equals(clrIndices[i])) continue;
+                _colors[i] = clrIndices[i];
                 _colorsChanged = true;
             }
         }
@@ -124,8 +125,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             _colorsChanged = false;
 
+            var indices = CarColors.FromIndices(_colors);
             for (var i = 0; i < 4; ++i) {
-                _props.SetColor(CarColorIds[i], _colors[i]);
+                _props.SetColor(CarColorIds[i], indices[i]);
             }
 
             _props.SetVector(LightsId, new Vector4(_lights[0], _lights[1], _lights[2], _lights[3]));

@@ -20,6 +20,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Vector3 Velocity { get { return _rigidBody.velocity; } }
 
+        public float AverageWheelHeight { get { return _wheels.Average(x => x.Child.position.y); } }
+
         public Handling.Car HandlingData { get; private set; }
 
         private void InitializePhysics()
