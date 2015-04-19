@@ -53,7 +53,7 @@ namespace SanAndreasUnity.Behaviours
 
         public Player()
         {
-            _snapshots = new SnapshotBuffer<PlayerState>(.25d);
+            _snapshots = new SnapshotBuffer<PlayerPedestrianState>(.25d);
         }
 
         protected override void OnAwake()

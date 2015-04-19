@@ -29,12 +29,13 @@ namespace SanAndreasUnity.Behaviours
         {
             required ProtoBuf.NetworkableInfo Networkable = 1;
             optional PlayerInfo Player = 2;
-            optional PlayerState State = 3;
+            optional PlayerPedestrianState PedestrianState = 3;
+            optional PlayerPassengerState PassengerState = 5;
             optional bool IsLocal = 4;
         }
 
         //:baseclass = ISnapshot, INetworkableMessage
-        message PlayerState
+        message PlayerPedestrianState
         {
             optional ProtoBuf.NetworkableInfo Networkable = 1;
             required int64 Timestamp = 2;
@@ -53,12 +54,30 @@ namespace SanAndreasUnity.Behaviours
 
             optional bool Running = 6;
         }
+        
+        //:baseclass = INetworkableMessage
+        message PlayerPassengerState
+        {
+            enum PassengerPosition
+            {
+                Unknown = 0;
+                Driver = 1;
+                FrontRight = 2;
+                RearLeft = 3;
+                RearRight = 4;
+            }
+
+            optional ProtoBuf.NetworkableInfo Networkable = 1;
+
+            required ProtoBuf.NetworkableInfo Vechicle = 2;
+            required PassengerPosition Position = 3;
+        }
 
 #endif
 
         #region Private fields
 
-        private readonly SnapshotBuffer<PlayerState> _snapshots;
+        private readonly SnapshotBuffer<PlayerPedestrianState> _snapshots;
 
         #endregion
 
@@ -86,9 +105,11 @@ namespace SanAndreasUnity.Behaviours
             transform.position = new Vector3(-5f, 0.1f, 1f);
         }
 
-        private PlayerState GetSnapshot()
+        private PlayerPedestrianState GetPedestrianSnapshot()
         {
-            return new PlayerState {
+            if (IsInVehicle) return null;
+
+            return new PlayerPedestrianState {
                 Position = Position,
                 Movement = Movement,
                 Yaw = Quaternion.FromToRotation(Vector3.forward, Heading).eulerAngles.y,
@@ -97,7 +118,7 @@ namespace SanAndreasUnity.Behaviours
             };
         }
 
-        private void UpdateFromSnapshot(PlayerState message)
+        private void UpdateFromPedestrianSnapshot(PlayerPedestrianState message)
         {
             Position = message.Position;
             Movement = message.Movement;
@@ -131,8 +152,8 @@ namespace SanAndreasUnity.Behaviours
 
             name = string.Format("Player ({0})", Username);
 
-            _snapshots.Add(message.State);
-            UpdateFromSnapshot(message.State);
+            _snapshots.Add(message.PedestrianState);
+            UpdateFromPedestrianSnapshot(message.PedestrianState);
 
             if (message.IsLocal) {
                 SetupLocalPlayer();
@@ -143,11 +164,11 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!IsLocalPlayer) return;
 
-            SendToServer(GetSnapshot(), DeliveryMethod.UnreliableSequenced, 2);
+            SendToServer(GetPedestrianSnapshot(), DeliveryMethod.UnreliableSequenced, 2);
         }
 
         [MessageHandler(Domain.Client)]
-        private void OnReceiveMessageFromServer(IRemote sender, PlayerState message)
+        private void OnReceiveMessageFromServer(IRemote sender, PlayerPedestrianState message)
         {
             if (IsLocalPlayer) return;
 
@@ -159,7 +180,7 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!IsClient || !IsLocalPlayer) {
                 _snapshots.Update();
-                UpdateFromSnapshot(_snapshots.Current);
+                UpdateFromPedestrianSnapshot(_snapshots.Current);
             }
         }
 
@@ -171,7 +192,7 @@ namespace SanAndreasUnity.Behaviours
                     Username = Username,
                     Modelid = PlayerModel.PedestrianId
                 },
-                State = GetSnapshot()
+                PedestrianState = GetPedestrianSnapshot()
             };
 
             SendToClients(msg, clients.Where(x => x != Remote), DeliveryMethod.ReliableOrdered, 1);
@@ -184,7 +205,7 @@ namespace SanAndreasUnity.Behaviours
         }
 
         [MessageHandler(Domain.Server)]
-        private void OnReceiveMessageFromClient(IRemote sender, PlayerState message)
+        private void OnReceiveMessageFromClient(IRemote sender, PlayerPedestrianState message)
         {
             if (sender != Remote) return;
 

@@ -31,6 +31,17 @@ namespace SanAndreasUnity.Utilities
             get { return Path.Combine(Application.dataPath, Path.Combine("..", UserFileName)); }
         }
 
+        public static string DataPath
+        {
+            get { 
+#if UNITY_EDITOR
+                return Path.Combine(Application.dataPath, Path.Combine("..", "Data"));
+#else
+                return Path.Combine(Application.dataPath, "Data");
+#endif
+            }
+        }
+
         private static readonly JObject _root;
         private static readonly JObject _user;
 
@@ -73,11 +84,7 @@ namespace SanAndreasUnity.Utilities
 
             string subs;
             if (key == "data_dir") {
-#if UNITY_EDITOR
-                return Path.Combine(Application.dataPath, Path.Combine("..", "Data"));
-#else
-                return Application.dataPath;
-#endif
+                subs = DataPath;
             } else {
                 subs = ReplaceSubstitutions(Get<string>(key));
             }

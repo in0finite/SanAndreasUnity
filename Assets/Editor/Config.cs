@@ -2,6 +2,7 @@
 using UnityEditor.Callbacks;
 using UnityEditor;
 using System.IO;
+using System;
 
 namespace SanAndreasUnity.Editor
 {
@@ -17,6 +18,28 @@ namespace SanAndreasUnity.Editor
 
             dest = Path.Combine(destDir, Utilities.Config.UserFileName);
             File.Copy(Utilities.Config.UserFilePath, dest, true);
+
+            var dataDir = SanAndreasUnity.Utilities.Config.DataPath;
+
+            switch (target) {
+                case BuildTarget.StandaloneWindows:
+                case BuildTarget.StandaloneWindows64:
+                case BuildTarget.StandaloneLinux:
+                case BuildTarget.StandaloneLinux64:
+                case BuildTarget.StandaloneLinuxUniversal:
+                    dest = Path.Combine(destDir, Path.GetFileNameWithoutExtension(pathToBuiltProject) + "_Data");
+                    break;
+                default:
+                    throw new NotImplementedException(String.Format("Build target '{0}' is not supported.", target));
+            }
+
+            dest = Path.Combine(dest, "Data");
+
+            if (Directory.Exists(dest)) {
+                Directory.Delete(dest);
+            }
+
+            FileUtil.CopyFileOrDirectory(dataDir, dest);
         }
     }
 }

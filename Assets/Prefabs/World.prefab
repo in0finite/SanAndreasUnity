@@ -365,7 +365,7 @@ MonoBehaviour:
   SuspensionForceScale: 100000
   SuspensionDampingScale: 50000
   MassScale: 1
-  ForwardFrictionExtremumSlip: .00999999978
+  ForwardFrictionExtremumSlip: .125
   ForwardFrictionExtremumValue: 2.5
   ForwardFrictionAsymptoteSlip: 1
   ForwardFrictionAsymptoteValue: 2
