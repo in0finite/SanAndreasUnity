@@ -234,6 +234,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 TextureDictionary.Load("misc"));
 
             _frames = _geometryParts.AttachFrames(transform, MaterialFlags.Vehicle);
+
             var wheelFrame = _frames.FirstOrDefault(x => x.Name == "wheel");
 
             if (wheelFrame == null)
@@ -243,19 +244,29 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 return;
             }
 
-            var wheel = wheelFrame.transform;
-
             foreach (var frame in _frames)
             {
-                if (!frame.Name.StartsWith("wheel_") || wheel == null) continue;
+                if (!frame.Name.StartsWith("wheel_")) continue;
+                if (!frame.Name.EndsWith("_dummy")) continue;
+
+                var childFrames = _frames.Where(x => x.ParentIndex == frame.Index);
+
+                // disable all children of wheel dummies
+                foreach (var childFrame in childFrames)
+                {
+                    childFrame.gameObject.SetActive(false);
+                }
 
                 var wheelAlignment = GetWheelAlignment(frame.Name);
 
                 Wheel inst;
 
-                if (wheelAlignment != WheelAlignment.RightFront)
+                // see if this wheel dummy has a wheel child
+                var wheel = childFrames.FirstOrDefault(x => x.Name == "wheel");
+
+                if (wheel == null)
                 {
-                    var copy = Instantiate(wheel);
+                    var copy = Instantiate(wheelFrame.transform);
                     copy.SetParent(frame.transform, false);
 
                     _wheels.Add(inst = new Wheel
@@ -267,11 +278,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 }
                 else
                 {
+                    // all children of wheel dummies get set to inactive so activate this one
+                    wheel.gameObject.SetActive(true);
+
                     _wheels.Add(inst = new Wheel
                     {
                         Alignment = wheelAlignment,
                         Parent = frame.transform,
-                        Child = wheel,
+                        Child = wheel.transform,
                     });
                 }
 

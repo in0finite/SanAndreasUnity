@@ -25,6 +25,7 @@ namespace SanAndreasUnity.Behaviours
                 var frame = frames[i];
                 if (frame.ParentIndex == -1) continue;
                 _frames[i].Parent = _frames[frame.ParentIndex];
+                _frames[i].ParentIndex = frame.ParentIndex;
             }
 
             _boneIdDict = _frames.Where(x => x.BoneId > -1).ToDictionary(x => x.BoneId, x => x);
@@ -37,7 +38,7 @@ namespace SanAndreasUnity.Behaviours
 
         public Frame GetByIndex(int index)
         {
-            return _frames.FirstOrDefault(x => x.Name == name);
+            return _frames[index];
         }
 
         public Frame GetByBoneId(int boneId)

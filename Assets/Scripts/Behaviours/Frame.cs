@@ -13,6 +13,7 @@ namespace SanAndreasUnity.Behaviours
         public string Name { get; private set; }
 
         public Frame Parent { get; internal set; }
+        public int ParentIndex { get; internal set; }
 
         public Vector3 LocalVelocity;
 
