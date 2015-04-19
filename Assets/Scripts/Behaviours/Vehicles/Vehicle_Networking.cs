@@ -48,7 +48,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             optional UnityEngine.Vector3 Velocity = 5;
         
             //:interpolate
-            optional UnityEngine.Vector3 AngularVelocity = 6;
+            optional float Steering = 6;
+        
+            //:interpolate
+            optional float Accelerator = 7;
+        
+            //:interpolate
+            optional float Braking = 8;
         }
 
 #endif
@@ -99,7 +105,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 Position = transform.position,
                 Rotation = transform.rotation,
                 Velocity = _rigidBody != null ? _rigidBody.velocity : Vector3.zero,
-                AngularVelocity = _rigidBody != null ? _rigidBody.angularVelocity : Vector3.zero
+                Steering = Steering,
+                Accelerator = Accelerator,
+                Braking = Braking,
+                Timestamp = ServerTime
             };
         }
 
@@ -108,9 +117,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             transform.position = state.Position;
             transform.rotation = state.Rotation;
 
+            Steering = state.Steering;
+            Accelerator = state.Accelerator;
+            Braking = state.Braking;
+
             if (_rigidBody != null) {
                 _rigidBody.velocity = state.Velocity;
-                _rigidBody.angularVelocity = state.AngularVelocity;
+                _rigidBody.angularVelocity = Vector3.zero;
             }
         }
 
@@ -127,8 +140,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void NetworkingFixedUpdate()
         {
-            if (!IsServer && !IsControlling) {
-                if (_snapshots.Update()) UpdateFromSnapshot(_snapshots.Current);
+            if (!IsClient) return;
+            if (!IsControlling && _snapshots.Update()) {
+                UpdateFromSnapshot(_snapshots.Current);
             }
         }
 
@@ -136,13 +150,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void OnReceiveMessageFromClient(IRemote sender, VehicleState message)
         {
             // TODO: Check to see if controller is driver
-
-#if CLIENT
-            if (!IsClient) {
-                _snapshots.Add(message);
-            }
-#endif
-
+            
             SendToClients(message, Group.Subscribers.Where(x => x != sender),
                 DeliveryMethod.UnreliableSequenced, 2);
         }
