@@ -67,8 +67,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [MessageHandler(Domain.Client)]
         private void OnSpawn(IRemote sender, VehicleSpawn message)
         {
-            _snapshots.Add(message.State);
-
             if (IsServer) return;
 
             var def = Item.GetDefinition<VehicleDef>(message.Info.VehicleId);
@@ -130,8 +128,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void NetworkingFixedUpdate()
         {
             if (!IsServer && !IsControlling) {
-                _snapshots.Update();
-                UpdateFromSnapshot(_snapshots.Current);
+                if (_snapshots.Update()) UpdateFromSnapshot(_snapshots.Current);
             }
         }
 

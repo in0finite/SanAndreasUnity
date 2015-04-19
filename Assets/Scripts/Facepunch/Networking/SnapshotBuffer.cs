@@ -303,7 +303,7 @@ namespace Facepunch.Networking
         /// Current server coordinated time in microseconds,
         /// usually accessed with `Networkable.ServerTime`.
         /// </param>
-        public void Update()
+        public bool Update()
         {
             var time = (Stopwatch.GetTimestamp() * _timestampResolution) / Stopwatch.Frequency;
             var dt = time - _lastUpdateTime;
@@ -311,26 +311,26 @@ namespace Facepunch.Networking
             _lastUpdateTime = time;
 
             if (_playbackTime == -1) {
-                if (_snapshots.Count == 0) return;
+                if (_snapshots.Count == 0) return false;
 
                 _playbackTime = _snapshots.First.Value.Timestamp - _idealBufferedTime;
 
                 _last = _snapshots.First.Value;
                 LerpCurrent(_last, 0.0f, float.PositiveInfinity);
 
-                return;
+                return true;
             }
 
             // Playback rate depends on the duration of buffered
             // snapshots, in an attempt to maintain a buffer
             // of duration `_idealBufferedTime`.
 
-            if (_snapshots.Count == 0) return;
+            if (_snapshots.Count == 0) return false;
 
             var max = _snapshots.Count == 0 ? _playbackTime : _snapshots.Max(x => x.Timestamp);
             var rate = (max - _playbackTime) / (double) _idealBufferedTime;
 
-            if (rate <= 0d) return;
+            if (rate <= 0d) return false;
 
             _playbackTime += (long) (dt * rate);
 
@@ -344,7 +344,7 @@ namespace Facepunch.Networking
 
                 if (_snapshots.Count == 0) {
                     LerpCurrent(_last, 0f, dtFloat);
-                    return;
+                    return true;
                 }
 
                 next = _snapshots.First.Value;
@@ -354,6 +354,8 @@ namespace Facepunch.Networking
                 / (double) (next.Timestamp - _last.Timestamp));
 
             LerpCurrent(next, t, dtFloat);
+
+            return true;
         }
     }
 }

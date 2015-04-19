@@ -88,7 +88,7 @@ namespace SanAndreasUnity.Behaviours
                 _controller.enabled = false;
                 Camera.transform.SetParent(seat.Parent, true);
 
-                SendToServer(new PlayerPassengerState {
+                SendToServer(_lastPassengerState = new PlayerPassengerState {
                     Vechicle = vehicle,
                     SeatAlignment = (int) seatAlignment
                 }, DeliveryMethod.ReliableOrdered, 1);
@@ -116,7 +116,7 @@ namespace SanAndreasUnity.Behaviours
             CurrentVehicle.StopControlling();
 
             if (IsLocalPlayer) {
-                SendToServer(new PlayerPassengerState {
+                SendToServer(_lastPassengerState = new PlayerPassengerState {
                     Vechicle = null
                 }, DeliveryMethod.ReliableOrdered, 1);
             }

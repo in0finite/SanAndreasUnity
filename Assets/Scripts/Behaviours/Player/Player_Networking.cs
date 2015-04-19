@@ -71,6 +71,8 @@ namespace SanAndreasUnity.Behaviours
         private readonly SnapshotBuffer<PlayerPedestrianState> _snapshots
             = new SnapshotBuffer<PlayerPedestrianState>(.25);
 
+        private PlayerPassengerState _lastPassengerState;
+
         #endregion
 
         #region Properties
@@ -127,21 +129,33 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
+        private PlayerPassengerState _pendingPassenger;
+
         private void UpdateFromPassengerSnapshot(PlayerPassengerState message)
         {
             if (IsLocalPlayer) return;
             if (!IsInVehicle && message.Vechicle == null) return;
             if (IsInVehicle && CurrentVehicle.Info.Equals(message.Vechicle)) return;
 
+            _pendingPassenger = null;
+
             if (message.Vechicle == null) {
                 ExitVehicle();
-            } else if (!IsInVehicle) {
-                EnterVehicle(Client.GetNetworkable<Vehicle>(message.Vechicle),
-                    (Vehicle.SeatAlignment) message.SeatAlignment);
             } else {
-                ExitVehicle(true);
-                EnterVehicle(Client.GetNetworkable<Vehicle>(message.Vechicle),
-                    (Vehicle.SeatAlignment) message.SeatAlignment, true);
+                var vehicle = Client.GetNetworkable<Vehicle>(message.Vechicle);
+
+                if (vehicle == null) {
+                    _pendingPassenger = message;
+                    return;
+                }
+
+                if (!IsInVehicle) {
+                    EnterVehicle(vehicle,
+                        (Vehicle.SeatAlignment) message.SeatAlignment);
+                } else {
+                    ExitVehicle(true);
+                    EnterVehicle(vehicle, (Vehicle.SeatAlignment) message.SeatAlignment, true);
+                }
             }
         }
 
@@ -161,8 +175,6 @@ namespace SanAndreasUnity.Behaviours
             PlayerModel.PedestrianId = message.Player.Modelid;
 
             name = string.Format("Player ({0})", Username);
-
-            _snapshots.Add(message.PedestrianState);
 
             if (message.PedestrianState != null) {
                 UpdateFromPedestrianSnapshot(message.PedestrianState);
@@ -204,11 +216,14 @@ namespace SanAndreasUnity.Behaviours
 
         private void NetworkingFixedUpdate()
         {
+            if (_pendingPassenger != null) {
+                UpdateFromPassengerSnapshot(_pendingPassenger);
+            }
+
             if (IsInVehicle) return;
             if (IsLocalPlayer) return;
 
-            _snapshots.Update();
-            UpdateFromPedestrianSnapshot(_snapshots.Current);
+            if (_snapshots.Update()) UpdateFromPedestrianSnapshot(_snapshots.Current);
         }
 
         protected override void OnFirstObserve(IEnumerable<IRemote> clients)
@@ -219,7 +234,8 @@ namespace SanAndreasUnity.Behaviours
                     Username = Username,
                     Modelid = PlayerModel.PedestrianId
                 },
-                PedestrianState = GetPedestrianSnapshot()
+                PedestrianState = GetPedestrianSnapshot(),
+                PassengerState = _lastPassengerState
             };
 
             SendToClients(msg, clients.Where(x => x != Remote), DeliveryMethod.ReliableOrdered, 1);
