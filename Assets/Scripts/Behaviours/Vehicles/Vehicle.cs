@@ -88,6 +88,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Transform DriverTransform { get; private set; }
 
+        public bool IsControlling { get { return _controller != null; } }
+
         public VehicleController StartControlling()
         {
             return _controller ?? (_controller = gameObject.AddComponent<VehicleController>());
@@ -183,6 +185,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (_colorsChanged) {
                 UpdateColors();
             }
+        }
+
+        private void FixedUpdate()
+        {
+            NetworkingFixedUpdate();
+            PhysicsFixedUpdate();
         }
     }
 }

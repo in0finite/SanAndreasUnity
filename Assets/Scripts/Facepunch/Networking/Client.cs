@@ -68,8 +68,8 @@ namespace Facepunch.Networking
             get { return true; }
         }
 
-        protected abstract ulong UserId { get; }
-        protected abstract string Username { get; }
+        public abstract ulong UserId { get; }
+        public abstract string Username { get; }
 
         protected Client()
         {

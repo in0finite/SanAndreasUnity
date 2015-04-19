@@ -42,7 +42,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             optional UnityEngine.Vector3 Position = 3;
         
             //:interpolate
-            //:smoothing = 0.5
             optional UnityEngine.Quaternion Rotation = 4;
 
             //:interpolate
@@ -56,24 +55,42 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
 #if CLIENT
 
+        private readonly SnapshotBuffer<VehicleState> _snapshots
+            = new SnapshotBuffer<VehicleState>(.25);
+
         [ClientSpawnMethod]
         private static Vehicle Spawn(VehicleSpawn message)
         {
             return new GameObject().AddComponent<Vehicle>();
         }
 
-
         [MessageHandler(Domain.Client)]
         private void OnSpawn(IRemote sender, VehicleSpawn message)
         {
+            _snapshots.Add(message.State);
+
             if (IsServer) return;
 
             var def = Item.GetDefinition<VehicleDef>(message.Info.VehicleId);
 
-            Debug.LogFormat("Spawning a {0}", def.GameName);
-
             Initialize(def, message.Info.Colors.ToArray());
+
             UpdateFromSnapshot(message.State);
+        }
+
+        protected override void OnClientNetworkingUpdate()
+        {
+            if (!IsControlling) return;
+
+            SendToServer(GetSnapshot(), DeliveryMethod.UnreliableSequenced, 2);
+        }
+
+        [MessageHandler(Domain.Client)]
+        private void OnReceiveMessageFromServer(IRemote sender, VehicleState message)
+        {
+            if (IsControlling) return;
+
+            _snapshots.Add(message);
         }
 
 #endif
@@ -83,8 +100,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return new VehicleState {
                 Position = transform.position,
                 Rotation = transform.rotation,
-                Velocity = _rigidBody.velocity,
-                AngularVelocity = _rigidBody.angularVelocity
+                Velocity = _rigidBody != null ? _rigidBody.velocity : Vector3.zero,
+                AngularVelocity = _rigidBody != null ? _rigidBody.angularVelocity : Vector3.zero
             };
         }
 
@@ -93,8 +110,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             transform.position = state.Position;
             transform.rotation = state.Rotation;
 
-            _rigidBody.velocity = state.Velocity;
-            _rigidBody.angularVelocity = state.AngularVelocity;
+            if (_rigidBody != null) {
+                _rigidBody.velocity = state.Velocity;
+                _rigidBody.angularVelocity = state.AngularVelocity;
+            }
         }
 
         protected override void OnFirstObserve(IEnumerable<IRemote> clients)
@@ -105,7 +124,30 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     Colors = _colors.ToList()
                 },
                 State = GetSnapshot()
-            }, clients, DeliveryMethod.ReliableOrdered, 2);
+            }, clients, DeliveryMethod.ReliableOrdered, 1);
+        }
+
+        private void NetworkingFixedUpdate()
+        {
+            if (!IsServer && !IsControlling) {
+                _snapshots.Update();
+                UpdateFromSnapshot(_snapshots.Current);
+            }
+        }
+
+        [MessageHandler(Domain.Server)]
+        private void OnReceiveMessageFromClient(IRemote sender, VehicleState message)
+        {
+            // TODO: Check to see if controller is driver
+
+#if CLIENT
+            if (!IsClient) {
+                _snapshots.Add(message);
+            }
+#endif
+
+            SendToClients(message, Group.Subscribers.Where(x => x != sender),
+                DeliveryMethod.UnreliableSequenced, 2);
         }
     }
 }

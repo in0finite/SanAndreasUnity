@@ -5,6 +5,7 @@ using VConsts = SanAndreasUnity.Behaviours.Vehicles.VehiclePhysicsConstants;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
+    [RequireComponent(typeof(Rigidbody))]
     public partial class Vehicle
     {
         private Rigidbody _rigidBody;
@@ -20,7 +21,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Vector3 Velocity { get { return _rigidBody.velocity; } }
 
-        public float AverageWheelHeight { get { return _wheels.Average(x => x.Child.position.y); } }
+        public float AverageWheelHeight { get { return _wheels.Count == 0 ? transform.position.y : _wheels.Average(x => x.Child.position.y); } }
 
         public Handling.Car HandlingData { get; private set; }
 
@@ -28,7 +29,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             _geometryParts.AttachCollisionModel(transform, true);
 
-            _rigidBody = gameObject.AddComponent<Rigidbody>();
+            _rigidBody = gameObject.GetComponent<Rigidbody>();
 
             HandlingData = Handling.Get<Handling.Car>(Definition.HandlingName);
 
@@ -115,13 +116,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 ? HandlingData.BrakeBias : .5f;
         }
 
-        private void FixedUpdate()
+        private void PhysicsFixedUpdate()
         {
-            var groundRay = new Ray(transform.position, -Vector3.up);
-            if (!Physics.Raycast(groundRay, transform.position.y + 256f, (-1) ^ LayerMask)) {
-                _rigidBody.constraints = RigidbodyConstraints.FreezeAll;
-            } else {
+            var groundRay = new Ray(transform.position + Vector3.up, -Vector3.up);
+            if (Physics.SphereCast(groundRay, 0.25f, transform.position.y + 256f, (-1) ^ LayerMask)) {
                 _rigidBody.constraints = RigidbodyConstraints.None;
+            } else {
+                _rigidBody.constraints = RigidbodyConstraints.FreezeAll;
             }
 
             var vals = VConsts.Instance;

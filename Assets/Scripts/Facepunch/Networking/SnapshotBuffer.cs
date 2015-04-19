@@ -128,7 +128,7 @@ namespace Facepunch.Networking
             AddLerpMethod<Vector2>(lerpMethods, Vector2.Lerp);
             AddLerpMethod<Vector3>(lerpMethods, Vector3.Lerp);
             AddLerpMethod<Vector4>(lerpMethods, Vector4.Lerp);
-            AddLerpMethod<Quaternion>(lerpMethods, Quaternion.Lerp);
+            AddLerpMethod<Quaternion>(lerpMethods, Quaternion.Slerp);
 
             var lerpAngle = GetLerpMethod<float>(Mathf.LerpAngle);
 

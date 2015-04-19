@@ -11,12 +11,12 @@ namespace SanAndreasUnity.Behaviours.Networking
     {
         private static readonly ulong _sUserId;
 
-        protected override ulong UserId
+        public override ulong UserId
         {
             get { return _sUserId; }
         }
 
-        protected override string Username
+        public override string Username
         {
             get { return Config.Get<string>("cl_name"); }
         }

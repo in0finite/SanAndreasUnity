@@ -51,11 +51,6 @@ namespace SanAndreasUnity.Behaviours
 
         #endregion
 
-        public Player()
-        {
-            _snapshots = new SnapshotBuffer<PlayerPedestrianState>(.25d);
-        }
-
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -78,11 +73,10 @@ namespace SanAndreasUnity.Behaviours
 
 #endif
 
-        public void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment)
+        public void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
         {
             if (IsInVehicle) return;
 
-            _controller.enabled = false;
             CurrentVehicle = vehicle;
 
             var timer = new Stopwatch();
@@ -90,13 +84,21 @@ namespace SanAndreasUnity.Behaviours
 
             var seat = vehicle.GetSeat(seatAlignment);
 
-            Camera.transform.SetParent(seat.Parent, true);
+            if (IsLocalPlayer) {
+                _controller.enabled = false;
+                Camera.transform.SetParent(seat.Parent, true);
+
+                SendToServer(new PlayerPassengerState {
+                    Vechicle = vehicle,
+                    SeatAlignment = (int) seatAlignment
+                }, DeliveryMethod.ReliableOrdered, 1);
+            }
+
             transform.SetParent(seat.Parent);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
 
-            if (seat.IsDriver)
-            {
+            if (IsLocalPlayer && seat.IsDriver) {
                 vehicle.StartControlling();
             }
 
@@ -104,47 +106,51 @@ namespace SanAndreasUnity.Behaviours
 
             _currentVehicleSeatAlignment = seat.Alignment;
 
-            StartCoroutine(EnterVehicleAnimation(seat));
+            StartCoroutine(EnterVehicleAnimation(seat, immediate));
         }
 
-        public void ExitVehicle()
+        public void ExitVehicle(bool immediate = false)
         {
             if (!IsInVehicle || !IsInVehicleSeat) return;
 
             CurrentVehicle.StopControlling();
 
-            StartCoroutine(ExitVehicleAnimation());
+            if (IsLocalPlayer) {
+                SendToServer(new PlayerPassengerState {
+                    Vechicle = null
+                }, DeliveryMethod.ReliableOrdered, 1);
+            }
+
+            StartCoroutine(ExitVehicleAnimation(immediate));
         }
 
-        private IEnumerator EnterVehicleAnimation(Vehicle.Seat seat)
+        private IEnumerator EnterVehicleAnimation(Vehicle.Seat seat, bool immediate)
         {
             var animIndex = seat.IsLeftHand ? AnimIndex.GetInLeft : AnimIndex.GetInRight;
 
             PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, animIndex).RootEnd, new Vector3(-1, -1, -1));
 
-            var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
-            animState.wrapMode = WrapMode.Once;
+            if (!immediate) {
+                var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
+                animState.wrapMode = WrapMode.Once;
 
-            while (animState.enabled)
-            {
-                yield return new WaitForEndOfFrame();
+                while (animState.enabled) {
+                    yield return new WaitForEndOfFrame();
+                }
             }
 
-            if (seat.IsDriver)
-            {
+            if (seat.IsDriver) {
                 IsDrivingVehicle = true;
 
                 PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
-            }
-            else
-            {
+            } else {
                 PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
             }
 
             IsInVehicleSeat = true;
         }
 
-        private IEnumerator ExitVehicleAnimation()
+        private IEnumerator ExitVehicleAnimation(bool immediate)
         {
             IsDrivingVehicle = false;
             IsInVehicleSeat = false;
@@ -155,12 +161,13 @@ namespace SanAndreasUnity.Behaviours
 
             PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, animIndex).RootStart, new Vector3(-1, -1, -1));
 
-            var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
-            animState.wrapMode = WrapMode.Once;
+            if (!immediate) {
+                var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
+                animState.wrapMode = WrapMode.Once;
 
-            while (animState.enabled)
-            {
-                yield return new WaitForEndOfFrame();
+                while (animState.enabled) {
+                    yield return new WaitForEndOfFrame();
+                }
             }
 
             PlayerModel.IsInVehicle = false;
@@ -174,7 +181,7 @@ namespace SanAndreasUnity.Behaviours
             Camera.transform.SetParent(null, true);
             transform.SetParent(null);
 
-            _controller.enabled = true;
+            if (IsLocalPlayer) _controller.enabled = true;
 
             PlayerModel.VehicleParentOffset = Vector3.zero;
         }
@@ -194,8 +201,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
-            if (IsInVehicle && IsDrivingVehicle)
-            {
+            if (IsInVehicle && IsDrivingVehicle) {
                 UpdateWheelTurning();
             }
         }
@@ -209,10 +215,8 @@ namespace SanAndreasUnity.Behaviours
             var forward = Vector3.RotateTowards(transform.forward, Heading, TurnSpeed * Time.deltaTime, 0.0f);
             transform.localRotation = Quaternion.LookRotation(forward);
 
-            if (IsLocalPlayer)
-            {
-                if (Movement.sqrMagnitude > float.Epsilon)
-                {
+            if (IsLocalPlayer) {
+                if (Movement.sqrMagnitude > float.Epsilon) {
                     Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
                 }
 
@@ -223,9 +227,7 @@ namespace SanAndreasUnity.Behaviours
                     ? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
 
                 _controller.Move(Velocity * Time.fixedDeltaTime);
-            }
-            else
-            {
+            } else {
                 Velocity = _controller.velocity;
             }
         }

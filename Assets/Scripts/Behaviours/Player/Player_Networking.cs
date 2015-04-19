@@ -58,26 +58,18 @@ namespace SanAndreasUnity.Behaviours
         //:baseclass = INetworkableMessage
         message PlayerPassengerState
         {
-            enum PassengerPosition
-            {
-                Unknown = 0;
-                Driver = 1;
-                FrontRight = 2;
-                RearLeft = 3;
-                RearRight = 4;
-            }
-
             optional ProtoBuf.NetworkableInfo Networkable = 1;
 
-            required ProtoBuf.NetworkableInfo Vechicle = 2;
-            required PassengerPosition Position = 3;
+            optional ProtoBuf.NetworkableInfo Vechicle = 2;
+            optional int32 SeatAlignment = 3 [default=0];
         }
 
 #endif
 
         #region Private fields
 
-        private readonly SnapshotBuffer<PlayerPedestrianState> _snapshots;
+        private readonly SnapshotBuffer<PlayerPedestrianState> _snapshots
+            = new SnapshotBuffer<PlayerPedestrianState>(.25);
 
         #endregion
 
@@ -87,7 +79,7 @@ namespace SanAndreasUnity.Behaviours
         public ulong UserId { get; private set; }
         public string Username { get; private set; }
 
-        public bool IsLocalPlayer { get { return IsClient && Client.LocalPlayer == this; } }
+        public bool IsLocalPlayer { get; private set; }
 
         #endregion
 
@@ -101,8 +93,6 @@ namespace SanAndreasUnity.Behaviours
             remote.Disconnected += (sender, reason) => Destroy(gameObject);
 
             name = string.Format("Player ({0})", Username);
-
-            transform.position = new Vector3(-5f, 0.1f, 1f);
         }
 
         private PlayerPedestrianState GetPedestrianSnapshot()
@@ -120,6 +110,8 @@ namespace SanAndreasUnity.Behaviours
 
         private void UpdateFromPedestrianSnapshot(PlayerPedestrianState message)
         {
+            if (IsLocalPlayer) return;
+
             Position = message.Position;
             Movement = message.Movement;
             Heading = Quaternion.AngleAxis(message.Yaw, Vector3.up) * Vector3.forward;
@@ -132,6 +124,24 @@ namespace SanAndreasUnity.Behaviours
                 }
             } else {
                 PlayerModel.Walking = false;
+            }
+        }
+
+        private void UpdateFromPassengerSnapshot(PlayerPassengerState message)
+        {
+            if (IsLocalPlayer) return;
+            if (!IsInVehicle && message.Vechicle == null) return;
+            if (IsInVehicle && CurrentVehicle.Info.Equals(message.Vechicle)) return;
+
+            if (message.Vechicle == null) {
+                ExitVehicle();
+            } else if (!IsInVehicle) {
+                EnterVehicle(Client.GetNetworkable<Vehicle>(message.Vechicle),
+                    (Vehicle.SeatAlignment) message.SeatAlignment);
+            } else {
+                ExitVehicle(true);
+                EnterVehicle(Client.GetNetworkable<Vehicle>(message.Vechicle),
+                    (Vehicle.SeatAlignment) message.SeatAlignment, true);
             }
         }
 
@@ -153,9 +163,15 @@ namespace SanAndreasUnity.Behaviours
             name = string.Format("Player ({0})", Username);
 
             _snapshots.Add(message.PedestrianState);
-            UpdateFromPedestrianSnapshot(message.PedestrianState);
+
+            if (message.PedestrianState != null) {
+                UpdateFromPedestrianSnapshot(message.PedestrianState);
+            } else {
+                UpdateFromPassengerSnapshot(message.PassengerState);
+            }
 
             if (message.IsLocal) {
+                IsLocalPlayer = true;
                 SetupLocalPlayer();
             }
         }
@@ -164,7 +180,7 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!IsLocalPlayer) return;
 
-            if (!IsInVehicle) {
+            if (!IsInVehicle && transform.parent == null) {
                 SendToServer(GetPedestrianSnapshot(), DeliveryMethod.UnreliableSequenced, 2);
             }
         }
@@ -176,14 +192,23 @@ namespace SanAndreasUnity.Behaviours
 
             _snapshots.Add(message);
         }
+
+        [MessageHandler(Domain.Client)]
+        private void OnReceiveMessageFromServer(IRemote sender, PlayerPassengerState message)
+        {
+            if (IsLocalPlayer) return;
+
+            UpdateFromPassengerSnapshot(message);
+        }
 #endif
 
         private void NetworkingFixedUpdate()
         {
-            if (!IsClient || !IsLocalPlayer) {
-                _snapshots.Update();
-                UpdateFromPedestrianSnapshot(_snapshots.Current);
-            }
+            if (IsInVehicle) return;
+            if (IsLocalPlayer) return;
+
+            _snapshots.Update();
+            UpdateFromPedestrianSnapshot(_snapshots.Current);
         }
 
         protected override void OnFirstObserve(IEnumerable<IRemote> clients)
@@ -219,6 +244,21 @@ namespace SanAndreasUnity.Behaviours
 
             SendToClients(message, Group.Subscribers.Where(x => x != Remote),
                 DeliveryMethod.UnreliableSequenced, 2);
+        }
+
+        [MessageHandler(Domain.Server)]
+        private void OnReceiveMessageFromClient(IRemote sender, PlayerPassengerState message)
+        {
+            if (sender != Remote) return;
+
+#if CLIENT
+            if (!IsClient) {
+                UpdateFromPassengerSnapshot(message);
+            }
+#endif
+
+            SendToClients(message, Group.Subscribers.Where(x => x != Remote),
+                DeliveryMethod.ReliableOrdered, 1);
         }
     }
 }

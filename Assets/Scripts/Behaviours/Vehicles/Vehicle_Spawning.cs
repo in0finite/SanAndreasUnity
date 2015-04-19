@@ -35,6 +35,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             LeftRear = Left | Rear,
         }
 
+        [Flags]
         public enum SeatAlignment
         {
             None = 0,

@@ -26,6 +26,24 @@ namespace ProtoBuf
     /// </summary>
     public interface INetworkableSpawnMessage : INetworkableMessage { }
 
+    public partial class NetworkableInfo : IEquatable<NetworkableInfo>
+    {
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as NetworkableInfo);
+        }
+
+        public bool Equals(NetworkableInfo other)
+        {
+            return other != null && other.Ident == Ident;
+        }
+
+        public override int GetHashCode()
+        {
+            return (int) Ident;
+        }
+    }
+
 #if PROTOBUF
 
     package ProtoBuf;
@@ -59,6 +77,11 @@ namespace Facepunch.Networking
     /// </summary>
     public abstract class Networkable : MonoBehaviour
     {
+        public static implicit operator NetworkableInfo(Networkable inst)
+        {
+            return inst.Info;
+        }
+
         /// <remarks>
         /// Assuming the prefab is named "Prefabs/Networkable/TNetworkable".
         /// </remarks>
