@@ -23,7 +23,7 @@ namespace SanAndreasUnity.Behaviours
         public Vector2 CursorSensitivity = new Vector2(2f, 2f);
 
         public float CarCameraDistance = 6.0f;
-        public float PlayerCameraDistance = 2.0f;
+        public float PlayerCameraDistance = 3.0f;
 
         public Vector2 PitchClamp = new Vector2(-89f, 89f);
 

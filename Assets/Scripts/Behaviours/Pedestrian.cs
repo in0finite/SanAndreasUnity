@@ -41,6 +41,8 @@ namespace SanAndreasUnity.Behaviours
 
         public bool OnFoot { get; set; }
 
+        public Vector3 VehicleParentOffset { get; set; }
+
         public bool Walking
         {
             set
@@ -91,7 +93,7 @@ namespace SanAndreasUnity.Behaviours
             else
             {
                 Speed = 0.0f;
-                trans.parent.localPosition = Vector3.zero;
+                trans.parent.localPosition = VehicleParentOffset;
             }
         }
 
@@ -146,6 +148,10 @@ namespace SanAndreasUnity.Behaviours
             LoadAnim(AnimGroup.Car, AnimIndex.Sit);
             LoadAnim(AnimGroup.Car, AnimIndex.DriveLeft);
             LoadAnim(AnimGroup.Car, AnimIndex.DriveRight);
+            LoadAnim(AnimGroup.Car, AnimIndex.GetInLeft);
+            LoadAnim(AnimGroup.Car, AnimIndex.GetInRight);
+            LoadAnim(AnimGroup.Car, AnimIndex.GetOutLeft);
+            LoadAnim(AnimGroup.Car, AnimIndex.GetOutRight);
         }
 
         private void LoadModel(string modelName, params string[] txds)
