@@ -35,6 +35,25 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             LeftRear = Left | Rear,
         }
 
+        public enum SeatAlignment
+        {
+            None = 0,
+
+            Front = 1,
+            Back = 2,
+
+            Left = 4,
+            Right = 8,
+
+            FrontBackMask = Front | Back,
+            LeftRightMask = Left | Right,
+
+            FrontRight = Front | Right,
+            FrontLeft = Front | Left,
+            BackRight = Back | Right,
+            BackLeft = Back | Left,
+        }
+
         public enum DoorAlignment
         {
             None,
@@ -42,15 +61,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             LeftFront,
             RightRear,
             LeftRear,
-        }
-
-        public enum SeatAlignment
-        {
-            None = -1,
-            FrontRight = 0,
-            FrontLeft = 1,
-            BackRight = 2,
-            BackLeft = 3,
         }
 
         private static VehicleDef[] _sRandomSpawnable;
@@ -157,8 +167,40 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             public Quaternion Roll { get; set; }
         }
 
+        public class Seat
+        {
+            public SeatAlignment Alignment { get; set; }
+
+            public Transform Parent { get; set; }
+
+            public bool IsLeftHand
+            {
+                get { return (Alignment & SeatAlignment.Left) == SeatAlignment.Left; }
+            }
+
+            public bool IsRightHand
+            {
+                get { return (Alignment & SeatAlignment.Right) == SeatAlignment.Right; }
+            }
+
+            public bool IsFront
+            {
+                get { return (Alignment & SeatAlignment.Front) == SeatAlignment.Front; }
+            }
+
+            public bool IsBack
+            {
+                get { return (Alignment & SeatAlignment.Back) == SeatAlignment.Back; }
+            }
+        }
+
         private FrameContainer _frames;
+
         private readonly List<Wheel> _wheels = new List<Wheel>();
+        private readonly List<Seat> _seats = new List<Seat>();
+
+        public List<Wheel> Wheels { get { return _wheels; } }
+        public List<Seat> Seats { get { return _seats; } }
 
         private WheelAlignment GetWheelAlignment(string frameName)
         {
@@ -202,6 +244,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             var frame = _frames.GetByName(name);
             return frame != null ? frame.transform : null;
+        }
+
+        private void AttachSeat(Transform parent, SeatAlignment alignment)
+        {
+            _seats.Add(new Seat { Parent = parent, Alignment = alignment });
         }
 
         private void Initialize(VehicleDef def, Vector3 position, Quaternion rotation, int[] colors = null)
@@ -324,8 +371,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             var frontSeat = GetPart("ped_frontseat");
             var backSeat = GetPart("ped_backseat");
 
-            SeatTransforms = new Transform[backSeat != null ? 4 : 2];
-
             if (frontSeat != null)
             {
                 var frontSeatMirror = new GameObject("ped_frontseat").transform;
@@ -334,16 +379,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 if (frontSeat.localPosition.x > 0f)
                 {
-                    SeatTransforms[(int)SeatAlignment.FrontRight] = frontSeat;
-                    SeatTransforms[(int)SeatAlignment.FrontLeft] = frontSeatMirror;
+                    AttachSeat(frontSeat, SeatAlignment.FrontRight);
+                    AttachSeat(frontSeatMirror, SeatAlignment.FrontLeft);
                 }
                 else
                 {
-                    SeatTransforms[(int)SeatAlignment.FrontRight] = frontSeatMirror;
-                    SeatTransforms[(int)SeatAlignment.FrontLeft] = frontSeat;
+                    AttachSeat(frontSeatMirror, SeatAlignment.FrontRight);
+                    AttachSeat(frontSeat, SeatAlignment.FrontLeft);
                 }
 
-                DriverTransform = SeatTransforms[(int)SeatAlignment.FrontLeft];
+                DriverTransform = GetSeat(SeatAlignment.FrontLeft).Parent;
             }
 
             if (backSeat != null)
@@ -354,13 +399,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 if (backSeat.localPosition.x > 0f)
                 {
-                    SeatTransforms[(int)SeatAlignment.BackRight] = backSeat;
-                    SeatTransforms[(int)SeatAlignment.BackLeft] = backSeatMirror;
+                    AttachSeat(backSeat, SeatAlignment.BackRight);
+                    AttachSeat(backSeatMirror, SeatAlignment.BackLeft);
                 }
                 else
                 {
-                    SeatTransforms[(int)SeatAlignment.BackRight] = backSeatMirror;
-                    SeatTransforms[(int)SeatAlignment.BackLeft] = backSeat;
+                    AttachSeat(backSeatMirror, SeatAlignment.BackRight);
+                    AttachSeat(backSeat, SeatAlignment.BackLeft);
                 }
             }
 

@@ -75,7 +75,7 @@ namespace SanAndreasUnity.Behaviours
 
 #endif
 
-        public void EnterVehicle(Vehicle vehicle)
+        public void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment)
         {
             if (IsInVehicle) return;
 
@@ -85,8 +85,10 @@ namespace SanAndreasUnity.Behaviours
             var timer = new Stopwatch();
             timer.Start();
 
-            Camera.transform.SetParent(vehicle.DriverTransform, true);
-            transform.SetParent(vehicle.DriverTransform);
+            var seat = vehicle.GetSeat(seatAlignment);
+
+            Camera.transform.SetParent(seat.Parent, true);
+            transform.SetParent(seat.Parent);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
 

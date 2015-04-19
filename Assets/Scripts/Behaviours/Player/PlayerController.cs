@@ -154,9 +154,9 @@ namespace SanAndreasUnity.Behaviours
 
             foreach (var vehicle in vehicles)
             {
-                Debug.Log(string.Format("closest seat is {0}", vehicle.FindClosestSeat(transform.position)));
+                var seat = vehicle.FindClosestSeat(transform.position);
 
-                _player.EnterVehicle(vehicle);
+                _player.EnterVehicle(vehicle, seat);
 
                 break;
             }
@@ -174,10 +174,10 @@ namespace SanAndreasUnity.Behaviours
 
             foreach (var vehicle in vehicles)
             {
-                foreach (var seatTransform in vehicle.SeatTransforms)
+                foreach (var seat in vehicle.Seats)
                 {
                     Gizmos.color = Color.red;
-                    Gizmos.DrawWireSphere(seatTransform.position, 0.1f);
+                    Gizmos.DrawWireSphere(seat.Parent.position, 0.1f);
                 }
 
                 var closestSeat = vehicle.FindClosestSeat(transform.position);

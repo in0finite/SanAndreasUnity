@@ -84,7 +84,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public VehicleDef Definition { get; private set; }
 
         public Transform DriverTransform { get; private set; }
-        public Transform[] SeatTransforms { get; private set; }
 
         public VehicleController StartControlling()
         {
@@ -93,11 +92,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public SeatAlignment FindClosestSeat(Vector3 position)
         {
-            var seat = SeatTransforms.Select((s, i) => new { s, i })
-                .OrderBy(x => Vector3.Distance(position, x.s.position))
+            var seat = _seats.Select((s, i) => new { s, i })
+                .OrderBy(x => Vector3.Distance(position, x.s.Parent.position))
                 .FirstOrDefault();
 
-            return (seat == null ? SeatAlignment.None : (SeatAlignment)seat.i);
+            return (seat == null ? SeatAlignment.None : seat.s.Alignment);
         }
 
         public Transform FindClosestSeatTransform(Vector3 position)
@@ -105,12 +104,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return GetSeatTransform(FindClosestSeat(position));
         }
 
-        public Transform GetSeatTransform(SeatAlignment seat)
+        public Seat GetSeat(SeatAlignment alignment)
         {
-            if (seat == SeatAlignment.None) return transform;
-            if ((int)seat >= SeatTransforms.Length) return transform;
+            return _seats.FirstOrDefault(x => x.Alignment == alignment);
+        }
 
-            return SeatTransforms[(int)seat];
+        public Transform GetSeatTransform(SeatAlignment alignment)
+        {
+            return GetSeat(alignment).Parent;
         }
 
         public void StopControlling()
