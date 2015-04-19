@@ -44,7 +44,10 @@ namespace SanAndreasUnity.Behaviours
         public Vehicle CurrentVehicle { get; private set; }
 
         public bool IsInVehicle { get { return CurrentVehicle != null; } }
+        public bool IsInVehicleSeat { get; private set; }
         public bool IsDrivingVehicle { get; private set; }
+
+        private Vehicle.SeatAlignment _currentVehicleSeatAlignment;
 
         #endregion
 
@@ -92,27 +95,34 @@ namespace SanAndreasUnity.Behaviours
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
 
-            vehicle.StartControlling();
+            if (seat.IsDriver)
+            {
+                vehicle.StartControlling();
+            }
 
             PlayerModel.IsInVehicle = true;
 
-            StartCoroutine(EnterVehicleAnimation());
+            _currentVehicleSeatAlignment = seat.Alignment;
+
+            StartCoroutine(EnterVehicleAnimation(seat));
         }
 
         public void ExitVehicle()
         {
-            if (!IsInVehicle || !IsDrivingVehicle) return;
+            if (!IsInVehicle || !IsInVehicleSeat) return;
 
             CurrentVehicle.StopControlling();
 
             StartCoroutine(ExitVehicleAnimation());
         }
 
-        private IEnumerator EnterVehicleAnimation()
+        private IEnumerator EnterVehicleAnimation(Vehicle.Seat seat)
         {
-            PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, AnimIndex.GetInLeft).RootEnd, new Vector3(-1, -1, -1));
+            var animIndex = seat.IsLeftHand ? AnimIndex.GetInLeft : AnimIndex.GetInRight;
 
-            var animState = PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.GetInLeft, PlayMode.StopAll);
+            PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, animIndex).RootEnd, new Vector3(-1, -1, -1));
+
+            var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
             animState.wrapMode = WrapMode.Once;
 
             while (animState.enabled)
@@ -120,16 +130,26 @@ namespace SanAndreasUnity.Behaviours
                 yield return new WaitForEndOfFrame();
             }
 
-            IsDrivingVehicle = true;
+            if (seat.IsDriver)
+            {
+                IsDrivingVehicle = true;
+            }
+
+            IsInVehicleSeat = true;
         }
 
         private IEnumerator ExitVehicleAnimation()
         {
             IsDrivingVehicle = false;
+            IsInVehicleSeat = false;
 
-            PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, AnimIndex.GetOutLeft).RootStart, new Vector3(-1, -1, -1));
+            var seat = CurrentVehicle.GetSeat(_currentVehicleSeatAlignment);
 
-            var animState = PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.GetOutLeft, PlayMode.StopAll);
+            var animIndex = seat.IsLeftHand ? AnimIndex.GetOutLeft : AnimIndex.GetOutRight;
+
+            PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, animIndex).RootStart, new Vector3(-1, -1, -1));
+
+            var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
             animState.wrapMode = WrapMode.Once;
 
             while (animState.enabled)
@@ -140,6 +160,7 @@ namespace SanAndreasUnity.Behaviours
             PlayerModel.IsInVehicle = false;
 
             CurrentVehicle = null;
+            _currentVehicleSeatAlignment = Vehicle.SeatAlignment.None;
 
             transform.localPosition = PlayerModel.VehicleParentOffset;
             transform.localRotation = Quaternion.identity;

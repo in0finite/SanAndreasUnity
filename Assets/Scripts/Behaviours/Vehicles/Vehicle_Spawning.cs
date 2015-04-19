@@ -192,6 +192,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 get { return (Alignment & SeatAlignment.Back) == SeatAlignment.Back; }
             }
+
+            public bool IsDriver
+            {
+                get { return Alignment == SeatAlignment.FrontLeft; }
+            }
         }
 
         private FrameContainer _frames;
