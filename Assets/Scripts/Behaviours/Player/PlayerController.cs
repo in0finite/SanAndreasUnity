@@ -115,6 +115,13 @@ namespace SanAndreasUnity.Behaviours
 
             Camera.transform.position = castRay.GetPoint(distance);
 
+            if (Input.GetButtonDown("Use") && _player.IsInVehicle)
+            {
+                _player.ExitVehicle();
+
+                return;
+            }
+
             if (_player.IsInVehicle) return;
             if (!_lockedCursor) return;
 

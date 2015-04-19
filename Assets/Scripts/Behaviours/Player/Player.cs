@@ -92,13 +92,22 @@ namespace SanAndreasUnity.Behaviours
 
             vehicle.StartControlling();
 
-            StartCoroutine(DriveVehicle());
+            PlayerModel.IsInVehicle = true;
+
+            StartCoroutine(EnterVehicleAnimation());
         }
 
-        private IEnumerator DriveVehicle()
+        public void ExitVehicle()
         {
-            if (IsDrivingVehicle) yield break;
+            if (!IsInVehicle || !IsDrivingVehicle) return;
 
+            CurrentVehicle.StopControlling();
+
+            StartCoroutine(ExitVehicleAnimation());
+        }
+
+        private IEnumerator EnterVehicleAnimation()
+        {
             PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, AnimIndex.GetInLeft).RootEnd, new Vector3(-1, -1, -1));
 
             var animState = PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.GetInLeft, PlayMode.StopAll);
@@ -110,6 +119,35 @@ namespace SanAndreasUnity.Behaviours
             }
 
             IsDrivingVehicle = true;
+        }
+
+        private IEnumerator ExitVehicleAnimation()
+        {
+            IsDrivingVehicle = false;
+
+            PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, AnimIndex.GetOutLeft).RootStart, new Vector3(-1, -1, -1));
+
+            var animState = PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.GetOutLeft, PlayMode.StopAll);
+            animState.wrapMode = WrapMode.Once;
+
+            while (animState.enabled)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            PlayerModel.IsInVehicle = false;
+
+            CurrentVehicle = null;
+
+            transform.localPosition = PlayerModel.VehicleParentOffset;
+            transform.localRotation = Quaternion.identity;
+
+            Camera.transform.SetParent(null, true);
+            transform.SetParent(null);
+
+            _controller.enabled = true;
+
+            PlayerModel.VehicleParentOffset = Vector3.zero;
         }
 
         private void UpdateWheelTurning()
@@ -127,8 +165,6 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
-            PlayerModel.OnFoot = !IsInVehicle;
-
             if (IsInVehicle && IsDrivingVehicle)
             {
                 UpdateWheelTurning();

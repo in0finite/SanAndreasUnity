@@ -39,7 +39,7 @@ namespace SanAndreasUnity.Behaviours
         public AnimGroup AnimGroup = AnimGroup.WalkCycle;
         public AnimIndex AnimIndex = AnimIndex.Idle;
 
-        public bool OnFoot { get; set; }
+        public bool IsInVehicle { get; set; }
 
         public Vector3 VehicleParentOffset { get; set; }
 
@@ -85,15 +85,15 @@ namespace SanAndreasUnity.Behaviours
 
             var trans = _root.transform;
 
-            if (OnFoot)
-            {
-                Speed = _root.LocalVelocity.z;
-                trans.parent.localPosition = new Vector3(0f, -trans.localPosition.y * .5f, -trans.localPosition.z);
-            }
-            else
+            if (IsInVehicle)
             {
                 Speed = 0.0f;
                 trans.parent.localPosition = VehicleParentOffset;
+            }
+            else
+            {
+                Speed = _root.LocalVelocity.z;
+                trans.parent.localPosition = new Vector3(0f, -trans.localPosition.y * .5f, -trans.localPosition.z);
             }
         }
 

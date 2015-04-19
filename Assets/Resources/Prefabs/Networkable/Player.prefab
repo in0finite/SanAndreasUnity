@@ -165,7 +165,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PedestrianId: 167
-  AnimType: 3
+  AnimGroup: 1
+  AnimIndex: 3
 --- !u!114 &11434656
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -210,7 +211,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 1.75
-  m_Radius: .400000006
+  m_Radius: .25
   m_SlopeLimit: 45
   m_StepOffset: .300000012
   m_SkinWidth: .0799999982
