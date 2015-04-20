@@ -119,7 +119,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void PhysicsFixedUpdate()
         {
             var groundRay = new Ray(transform.position + Vector3.up, -Vector3.up);
-            if (!IsControlling && HasDriver || !Physics.SphereCast(groundRay, 0.25f, transform.position.y + 256f, (-1) ^ LayerMask)) {
+            if (!Physics.SphereCast(groundRay, 0.25f, transform.position.y + 256f, (-1) ^ LayerMask)) {
                 _rigidBody.constraints = RigidbodyConstraints.FreezeAll;
             } else {
                 _rigidBody.constraints = RigidbodyConstraints.None;
