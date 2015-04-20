@@ -38,15 +38,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             required int64 Timestamp = 2;
 
             //:interpolate
-            //:smoothing = 0.5
+            //:smoothing = 0.35
             optional UnityEngine.Vector3 Position = 3;
         
             //:interpolate
+            //:smoothing = 0.35
             optional UnityEngine.Quaternion Rotation = 4;
 
             optional UnityEngine.Vector3 Velocity = 5;
         
-            //:interpolate
             optional UnityEngine.Vector3 AngularVelocity = 9;
         
             //:interpolate
