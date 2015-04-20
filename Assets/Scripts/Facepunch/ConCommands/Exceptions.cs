@@ -23,7 +23,7 @@ namespace Facepunch.ConCommands
         }
 
         public ConCommandException(Domain domain, IEnumerable<String> command, Exception inner)
-            : base(String.Format("An exception was thrown while running the command \"{0}\".", FormatCommand(command.ToArray())), inner)
+            : base(String.Format("An exception was thrown while running the command \"{0}\". {1}", FormatCommand(command.ToArray()), inner), inner)
         {
             Domain = domain;
             Command = command.ToArray();

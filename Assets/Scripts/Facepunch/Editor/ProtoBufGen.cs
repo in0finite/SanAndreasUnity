@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.Serialization.Formatters;
 using UnityEngine;
 using UnityEditor;
 using System.Diagnostics;
@@ -13,7 +14,18 @@ namespace Facepunch.Editor
         static ProtoBufGen()
         {
             AssetsPath = new DirectoryInfo(UnityEngine.Application.dataPath).FullName;
-            RootPath = new DirectoryInfo(Path.Combine(AssetsPath, "..")).FullName;
+            RootPath = AssetsPath;
+            
+            while (!File.Exists(Path.Combine(RootPath, "premake5.lua"))) {
+                var parent = new DirectoryInfo(Path.Combine(RootPath, "..")).FullName;
+
+                if (!Directory.Exists(parent)) {
+                    UnityEngine.Debug.LogWarning("Could not find premake script!");
+                    break;
+                }
+
+                RootPath = parent;
+            }
         }
 
         [MenuItem("Facepunch/Generate ProtoBuf")]

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using Facepunch.ConCommands;
 using Facepunch.Networking;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using ThreadState = System.Threading.ThreadState;
 
@@ -18,11 +20,14 @@ namespace Facepunch.Utilities
         /// <remarks>
         /// http://stackoverflow.com/questions/285031/how-to-get-non-current-threads-stacktrace
         /// </remarks>
-        private static StackTrace GetStackTrace(Thread targetThread)
+        private static StackTrace GetStackTrace(Thread targetThread, out Exception error)
         {
             var suspend = targetThread.ThreadState != ThreadState.Suspended;
+            error = null;
 
             StackTrace stackTrace = null;
+
+            Exception ex = null;
 
             if (suspend) {
                 var ready = new ManualResetEvent(false);
@@ -33,7 +38,9 @@ namespace Facepunch.Utilities
                     Thread.Sleep(200);
                     try {
                         targetThread.Resume();
-                    } catch { }
+                    } catch (Exception e) {
+                        ex = e;
+                    }
                 }).Start();
 
                 ready.WaitOne();
@@ -42,11 +49,19 @@ namespace Facepunch.Utilities
 
             try {
                 stackTrace = new StackTrace(targetThread, true);
-            } catch { /* Deadlock */ } finally {
+            } catch (Exception e) {
+                error = e;
+            } finally {
                 if (suspend) {
-                    try { targetThread.Resume(); } catch { stackTrace = null;  /* Deadlock */  }
+                    try {
+                        targetThread.Resume();
+                    } catch (Exception e) {
+                        error = error ?? e;
+                    }
                 }
             }
+
+            error = error ?? ex;
 
             return stackTrace;
         }
@@ -65,18 +80,19 @@ namespace Facepunch.Utilities
             writer.WriteLine("Network thread status: {0}", Server.Instance.Net.NetThread.ThreadState);
             writer.WriteLine("Main thread state: {0}", Instance.MainThreadState);
 
-            if (Instance.SinceLastUpdate.TotalSeconds > 2d * Instance.SamplePeriod) {
-                writer.WriteLine("Main thread has been hanging for {0:F1} minutes!", Instance.SinceLastUpdate.TotalMinutes);
+            if (!(Instance.SinceLastUpdate.TotalSeconds > 2d * Instance.SamplePeriod)) return writer.ToString();
 
-                var trace = Instance.GetMainThreadStackTrace();
-                if (trace != null) {
-                    writer.WriteLine("Stack trace:");
-                    writer.WriteLine(trace.ToString());
-                } else {
-                    writer.WriteLine("Unable to retrieve stack trace");
-                }
+            writer.WriteLine("Main thread has been hanging for {0:F1} minutes!", Instance.SinceLastUpdate.TotalMinutes);
+
+            Exception ex;
+            var trace = Instance.GetMainThreadStackTrace(out ex);
+            if (trace != null) {
+                writer.WriteLine("Stack trace:");
+                writer.WriteLine(trace.ToString());
+            } else {
+                writer.WriteLine("Unable to retrieve stack trace:");
+                writer.WriteLine(ex);
             }
-
 
             return writer.ToString();
         }
@@ -87,6 +103,12 @@ namespace Facepunch.Utilities
         private int _lastGcPasses;
 
         private Thread _mainThread;
+        private Thread _watcherThread;
+
+        private bool _stopWatching;
+
+        private readonly AutoResetEvent _sampleWait;
+        private readonly ManualResetEvent _stopWait;
 
         private readonly Queue<double> _gcPeriods = new Queue<double>();
 
@@ -126,14 +148,52 @@ namespace Facepunch.Utilities
         public PerformanceSampler()
         {
             _lastGcPass = DateTime.UtcNow;
-            Sample();
+
+            _sampleWait = new AutoResetEvent(false);
+            _stopWait = new ManualResetEvent(true);
+
+            Sample(false);
         }
 
-        private void Sample()
+        private static void SampleFailed()
         {
+            UnityEngine.Debug.LogErrorFormat("PerformanceSampler has failed to sample (time: {0})!", DateTime.UtcNow);
+
+            if (String.IsNullOrEmpty(NetConfig.HangNotifyUrl)) return;
+
+            using (var client = new WebClient()) {
+                client.UploadString(NetConfig.HangNotifyUrl, "POST", new JObject {
+                    {"status", "hanging"},
+                    {"time", DateTime.UtcNow.ToBinary()},
+                    {"last_state", NetStatusCommand(null)}
+                }.ToString());
+            }
+        }
+
+        private void WatcherEntry()
+        {
+            _stopWait.Reset();
+
+            while (!_stopWatching) {
+                if (_sampleWait.WaitOne(TimeSpan.FromSeconds(SamplePeriod * 2d))) continue;
+                SampleFailed();
+                break;
+            }
+
+            _stopWait.Set();
+        }
+
+        private void Sample(bool watch)
+        {
+            if (watch && _watcherThread == null) {
+                _watcherThread = new Thread(WatcherEntry);
+                _watcherThread.Start();
+            }
+
             if (_mainThread == null) _mainThread = Thread.CurrentThread;
 
             _lastUpdate = DateTime.UtcNow;
+            _sampleWait.Set();
 
             var diff = _timer.Elapsed.TotalSeconds;
 
@@ -176,13 +236,14 @@ namespace Facepunch.Utilities
             _timer.Start();
         }
 
-        public StackTrace GetMainThreadStackTrace()
+        public StackTrace GetMainThreadStackTrace(out Exception ex)
         {
             if (_mainThread.ThreadState == ThreadState.Stopped) {
+                ex = new Exception("Thread stopped");
                 return null;
             }
 
-            return GetStackTrace(_mainThread);
+            return GetStackTrace(_mainThread, out ex);
         }
 
 // ReSharper disable once UnusedMember.Local
@@ -190,7 +251,22 @@ namespace Facepunch.Utilities
         {
             if (!(_timer.Elapsed.TotalSeconds > SamplePeriod)) return;
 
-            Sample();
+            Sample(true);
+        }
+
+        private void OnDestroy()
+        {
+            UnityEngine.Debug.Log("Destroying PerformanceSampler");
+
+            _stopWatching = true;
+            _sampleWait.Set();
+
+            if (_watcherThread != null && !_stopWait.WaitOne(1000)) {
+                UnityEngine.Debug.LogWarning("Timeout while stopping watcher thread!");
+                _watcherThread.Abort();
+            }
+
+            _watcherThread = null;
         }
     }
 }

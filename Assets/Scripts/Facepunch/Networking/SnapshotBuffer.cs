@@ -138,8 +138,6 @@ namespace Facepunch.Networking
             var one = Expression.Constant(1f);
             var smoothExponent = Expression.Divide(one, dt);
 
-            var deltaAngle = typeof(Mathf).GetMethod("DeltaAngle");
-
             // Delegate generation for each public property in TSnapshot
 
             var actions = new List<LerpDelegate>();
@@ -171,17 +169,13 @@ namespace Facepunch.Networking
 
                     if (smoothRate < 1d) {
                         // Smoothing
-                        
+
                         var smoothRateConst = Expression.Constant(smoothRate);
                         var smoothing = Expression.Call(pow, smoothRateConst, smoothExponent);
 
                         var destGet = Expression.Call(dest, get);
-                        var diff = isAngle
-                            ? (Expression) Expression.Call(deltaAngle, destGet, destVal)
-                            : Expression.Subtract(destVal, destGet);
-                        var incr = Expression.Multiply(diff, smoothing);
 
-                        destVal = Expression.Add(destGet, incr);
+                        destVal = Expression.Call(method, destGet, destVal, smoothing);
                     }
                 }
 
@@ -201,6 +195,7 @@ namespace Facepunch.Networking
 
         private long _lastUpdateTime;
         private long _playbackTime;
+        private double _rate;
 
         private readonly TSnapshot _current;
         private TSnapshot _last;
@@ -328,11 +323,13 @@ namespace Facepunch.Networking
             if (_snapshots.Count == 0) return false;
 
             var max = _snapshots.Count == 0 ? _playbackTime : _snapshots.Max(x => x.Timestamp);
-            var rate = (max - _playbackTime) / (double) _idealBufferedTime;
+            var destRate = (max - _last.Timestamp) / (double) _idealBufferedTime;
 
-            if (rate <= 0d) return false;
+            _rate += (destRate - _rate) / 60f;
 
-            _playbackTime += (long) (dt * rate);
+            if (_rate <= 0d) return false;
+
+            _playbackTime += (long) (dt * _rate);
 
             var next = _snapshots.First.Value;
 
