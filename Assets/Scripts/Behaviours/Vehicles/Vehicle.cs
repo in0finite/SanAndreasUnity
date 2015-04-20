@@ -88,7 +88,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Transform DriverTransform { get; private set; }
 
-        public bool HasDriver { get { return DriverTransform.childCount > 0; } }
+        public bool HasDriver { get { return DriverTransform != null && DriverTransform.childCount > 0; } }
 
         public bool IsControlling { get { return _controller != null; } }
 
