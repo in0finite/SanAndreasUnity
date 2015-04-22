@@ -35,7 +35,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         message VehicleState
         {
             optional ProtoBuf.NetworkableInfo Networkable = 1;
-            required int64 Timestamp = 2;
+            required double Timestamp = 2;
 
             //:interpolate
             //:smoothing = 0.35
@@ -114,7 +114,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 Steering = Steering,
                 Accelerator = Accelerator,
                 Braking = Braking,
-                Timestamp = ServerTime
+                Timestamp = NetTime
             };
         }
 

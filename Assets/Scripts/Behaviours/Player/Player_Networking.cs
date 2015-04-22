@@ -38,7 +38,7 @@ namespace SanAndreasUnity.Behaviours
         message PlayerPedestrianState
         {
             optional ProtoBuf.NetworkableInfo Networkable = 1;
-            required int64 Timestamp = 2;
+            required double Timestamp = 2;
 
             //:interpolate
             //:smoothing = 0.5
@@ -106,7 +106,7 @@ namespace SanAndreasUnity.Behaviours
                 Movement = Movement,
                 Yaw = Quaternion.FromToRotation(Vector3.forward, Heading).eulerAngles.y,
                 Running = PlayerModel.Running,
-                Timestamp = ServerTime
+                Timestamp = NetTime
             };
         }
 
