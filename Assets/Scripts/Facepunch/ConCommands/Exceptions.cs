@@ -23,7 +23,7 @@ namespace Facepunch.ConCommands
         }
 
         public ConCommandException(Domain domain, IEnumerable<String> command, Exception inner)
-            : base(String.Format("An exception was thrown while running the command \"{0}\". {1}", FormatCommand(command.ToArray()), inner), inner)
+            : base(inner.Message, inner)
         {
             Domain = domain;
             Command = command.ToArray();
@@ -40,9 +40,9 @@ namespace Facepunch.ConCommands
             var option = options.FirstOrDefault();
             command = FormatCommand(prefix, command);
 
-            if (option == null || prefix.Length == 0) return String.Format("{0} console command \"{1}\" does not exist.", domain, command);
+            if (option == null || prefix.Length == 0) return String.Format("{0} console command '{1}' does not exist.", domain, command);
 
-            return String.Format("{0} console command \"{1}\" is not valid, did you mean \"{2} {3}\"?",
+            return String.Format("{0} console command '{1}' is not valid, did you mean '{2} {3}'?",
                 domain, command, prefix, option);
         }
 

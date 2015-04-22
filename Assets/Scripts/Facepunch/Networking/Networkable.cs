@@ -48,6 +48,8 @@ namespace ProtoBuf
 
     package ProtoBuf;
 
+    import UnityEngine;
+
     message NetworkableInfo
     {
         required uint32 Ident = 1;
@@ -55,9 +57,9 @@ namespace ProtoBuf
 
     message Transform
     {
-        optional UnityEngine.Vector3 Position = 1;
-        optional UnityEngine.Quaternion Rotation = 2;
-        optional UnityEngine.Vector3 Scale = 3;
+        optional Vector3 Position = 1;
+        optional Quaternion Rotation = 2;
+        optional Vector3 Scale = 3;
     }
 
     message NetworkableSave
@@ -258,7 +260,7 @@ namespace Facepunch.Networking
         protected Client Client { get { return IsClient ? _client : null; } }
 #endif
 
-        public long ServerTime { get { return IsServer ? Server.Time : IsClient ? Client.Time : 0; } }
+        public double NetTime { get { return IsServer ? Server.Time : IsClient ? Client.Time : 0; } }
 
         protected bool IsClient
         {

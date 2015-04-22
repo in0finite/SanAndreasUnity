@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using ProtoBuf;
@@ -9,7 +10,7 @@ namespace Facepunch.Networking
 {
     public interface IEndPoint
     {
-        long Time { get; }
+        double Time { get; }
     }
 
     public abstract class EndPoint<TComponent, TServer> : SingletonComponent<TComponent>, IEndPoint
@@ -35,11 +36,11 @@ namespace Facepunch.Networking
         /// <summary>
         /// Time since the server started, in microseconds.
         /// </summary>
-        public abstract long Time { get; }
+        public abstract double Time { get; }
 
-        public long SystemTime
+        public double SystemTime
         {
-            get { return (Stopwatch.GetTimestamp() * 1000000) / Stopwatch.Frequency; }
+            get { return Stopwatch.GetTimestamp() / (double) Stopwatch.Frequency; }
         }
 
         private static UnityEngine.Application.LogCallback LogHandler(String prefix)
@@ -124,6 +125,8 @@ namespace Facepunch.Networking
         {
             return info == null ? null : GetNetworkable<TNetworkable>(info.Ident);
         }
+
+        public abstract IEnumerable<Networkable> GetNetworkables();
 
         // ReSharper disable once UnusedMember.Local
         private void OnDestroy()

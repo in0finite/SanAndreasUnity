@@ -35,7 +35,7 @@ namespace Facepunch.Networking
             optional string HostName = 3;
 
             optional int32 UpdateRate = 5;
-            optional int64 ServerTime = 6;
+            optional double ServerTime = 6;
 
             optional MessageTableSchema MessageTable = 4;
         }
@@ -62,9 +62,9 @@ namespace Facepunch.Networking
 
         public Group GlobalGroup { get; private set; }
 
-        private long _startTime;
+        private double _startTime;
 
-        public override long Time
+        public override double Time
         {
             get { return SystemTime - _startTime; }
         }
@@ -167,6 +167,8 @@ namespace Facepunch.Networking
 
         protected override void OnUpdate()
         {
+            ConCommand.PerformMainThreadTasks();
+
             foreach (var group in _groups) {
                 group.Value.Update();
             }
@@ -272,6 +274,11 @@ namespace Facepunch.Networking
         public override Networkable GetNetworkable(uint id)
         {
             return _networkables.ContainsKey(id) ? _networkables[id] : null;
+        }
+
+        public override IEnumerable<Networkable> GetNetworkables()
+        {
+            return _networkables.Values;
         }
 
         protected override void OnDestroyed()

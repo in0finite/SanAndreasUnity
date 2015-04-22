@@ -36,9 +36,9 @@ namespace Facepunch.Networking
 
         public String ServerName { get; private set; }
 
-        private long _timeDiff;
+        private double _timeDiff;
 
-        public override long Time
+        public override double Time
         {
             get { return SystemTime - _timeDiff; }
         }
@@ -158,6 +158,11 @@ namespace Facepunch.Networking
         public override Networkable GetNetworkable(uint id)
         {
             return _networkables.ContainsKey(id) ? _networkables[id] : null;
+        }
+
+        public override IEnumerable<Networkable> GetNetworkables()
+        {
+            return _networkables.Values;
         }
 
         protected virtual void OnDispatchNetworkableMessage(Networkable target, IRemote sender, INetworkableMessage message)

@@ -27,6 +27,8 @@ namespace Facepunch.ConCommands
             return args.ToString();
         }
 
+        public Domain Domain { get; private set; }
+
         public String[] Prefix { get; private set; }
         public String[] Values { get; private set; }
 
@@ -63,8 +65,10 @@ namespace Facepunch.ConCommands
                 : (TValue) _getCache[index][type];
         }
 
-        public ConCommandArgs(String[] prefix, String[] values)
+        public ConCommandArgs(Domain domain, String[] prefix, String[] values)
         {
+            Domain = domain;
+
             Prefix = prefix;
             Values = values;
         }

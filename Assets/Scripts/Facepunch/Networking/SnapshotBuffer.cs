@@ -18,7 +18,7 @@ namespace ProtoBuf
         /// <summary>
         /// Estimated server time when this snapshot was sampled.
         /// </summary>
-        long Timestamp { get; set; }
+        double Timestamp { get; set; }
     }
 
     /// <summary>
@@ -149,7 +149,7 @@ namespace Facepunch.Networking
                 if (get == null || set == null) continue;
 
                 var aGet = Expression.Call(a, get);
-                var bGet = Expression.Call(a, get);
+                var bGet = Expression.Call(b, get);
 
                 Expression destVal;
 
@@ -190,11 +190,8 @@ namespace Facepunch.Networking
 
         private readonly LinkedList<TSnapshot> _snapshots;
 
-        private long _idealBufferedTime;
-        private readonly long _timestampResolution;
-
-        private long _lastUpdateTime;
-        private long _playbackTime;
+        private double _lastUpdateTime;
+        private double _playbackTime;
         private double _rate;
 
         private readonly TSnapshot _current;
@@ -208,21 +205,16 @@ namespace Facepunch.Networking
         /// <summary>
         /// Time, in seconds, to attempt to buffer snapshots before playback.
         /// </summary>
-        public double IdealBufferedTime
-        {
-            get { return _idealBufferedTime / (double) _timestampResolution; }
-            set { _idealBufferedTime = (long) (_timestampResolution * value); }
-        }
+        public double IdealBufferedTime { get; set; }
 
         /// <summary>
         /// Creates a new SnapshotBuffer that attempts to maintain
         /// the specified buffered duration.
         /// </summary>
-        public SnapshotBuffer(double idealBufferedTime = 0.1d, long timestampResolution = 1000000)
+        public SnapshotBuffer(double idealBufferedTime = 0.25d)
         {
             _snapshots = new LinkedList<TSnapshot>();
 
-            _timestampResolution = timestampResolution;
             IdealBufferedTime = idealBufferedTime;
 
             _current = new TSnapshot();
@@ -283,10 +275,10 @@ namespace Facepunch.Networking
         {
             _snapshots.Clear();
 
-            _last = new TSnapshot();
+            _last = new TSnapshot { Timestamp = long.MinValue };
             LerpCurrent(_last, 0f, float.PositiveInfinity);
 
-            _playbackTime = -1;
+            _playbackTime = double.NegativeInfinity;
         }
 
         /// <summary>
@@ -300,15 +292,15 @@ namespace Facepunch.Networking
         /// </param>
         public bool Update()
         {
-            var time = (Stopwatch.GetTimestamp() * _timestampResolution) / Stopwatch.Frequency;
+            var time = (double) (ulong) Stopwatch.GetTimestamp() / Stopwatch.Frequency;
             var dt = time - _lastUpdateTime;
 
             _lastUpdateTime = time;
 
-            if (_playbackTime == -1) {
+            if (double.IsNegativeInfinity(_playbackTime)) {
                 if (_snapshots.Count == 0) return false;
 
-                _playbackTime = _snapshots.First.Value.Timestamp - _idealBufferedTime;
+                _playbackTime = _snapshots.First.Value.Timestamp - IdealBufferedTime;
 
                 _last = _snapshots.First.Value;
                 LerpCurrent(_last, 0.0f, float.PositiveInfinity);
@@ -323,17 +315,17 @@ namespace Facepunch.Networking
             if (_snapshots.Count == 0) return false;
 
             var max = _snapshots.Count == 0 ? _playbackTime : _snapshots.Max(x => x.Timestamp);
-            var destRate = (max - _last.Timestamp) / (double) _idealBufferedTime;
+            var destRate = (max - _last.Timestamp) / IdealBufferedTime;
 
-            _rate += (destRate - _rate) / 60f;
+            _rate = destRate;
 
             if (_rate <= 0d) return false;
 
-            _playbackTime += (long) (dt * _rate);
+            _playbackTime += dt * _rate;
 
             var next = _snapshots.First.Value;
 
-            var dtFloat = (float) ((double) dt / _timestampResolution);
+            var dtFloat = (float) dt;
 
             while (_playbackTime > next.Timestamp) {
                 _last = next;
@@ -348,8 +340,8 @@ namespace Facepunch.Networking
             }
 
             var t = (float) ((_playbackTime - _last.Timestamp)
-                / (double) (next.Timestamp - _last.Timestamp));
-
+                / (next.Timestamp - _last.Timestamp));
+            
             LerpCurrent(next, t, dtFloat);
 
             return true;

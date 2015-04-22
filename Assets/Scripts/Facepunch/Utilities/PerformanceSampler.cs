@@ -157,7 +157,8 @@ namespace Facepunch.Utilities
 
         private static void SampleFailed()
         {
-            UnityEngine.Debug.LogErrorFormat("PerformanceSampler has failed to sample (time: {0})!", DateTime.UtcNow);
+            UnityEngine.Debug.LogErrorFormat("!!! PerformanceSampler has failed to sample (time: {0}) !!!", DateTime.UtcNow);
+            UnityEngine.Debug.LogFormat("HangNotifyUrl: {0}", NetConfig.HangNotifyUrl);
 
             if (String.IsNullOrEmpty(NetConfig.HangNotifyUrl)) return;
 
@@ -175,7 +176,8 @@ namespace Facepunch.Utilities
             _stopWait.Reset();
 
             while (!_stopWatching) {
-                if (_sampleWait.WaitOne(TimeSpan.FromSeconds(SamplePeriod * 2d))) continue;
+                if (_sampleWait.WaitOne(TimeSpan.FromSeconds(SamplePeriod * 2d + 10d))) continue;
+                if (_stopWatching) return;
                 SampleFailed();
                 break;
             }

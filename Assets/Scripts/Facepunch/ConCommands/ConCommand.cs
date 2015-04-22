@@ -3,16 +3,65 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using Facepunch.Networking;
 
 namespace Facepunch.ConCommands
 {
     public static class ConCommand
     {
+        private class MainThreadTask
+        {
+            private readonly ManualResetEvent _waitHandle;
+            private readonly Func<object> _task;
+
+            private object _result;
+            private Exception _exception;
+
+            public MainThreadTask(Func<object> task)
+            {
+                _waitHandle = new ManualResetEvent(false);
+                _task = task;
+
+                _result = null;
+                _exception = null;
+            }
+
+            public TResult AwaitResult<TResult>(int timeout)
+            {
+                if (!_waitHandle.WaitOne(timeout)) {
+                    throw new TimeoutException("Timed out waiting for command to be performed on the main thread.");
+                }
+
+                if (_exception != null) {
+                    throw _exception;
+                }
+
+                return (TResult) _result;
+            }
+
+            public void Perform()
+            {
+                try {
+                    _result = _task();
+                } catch (Exception e) {
+                    _exception = e;
+                }
+
+                _waitHandle.Set();
+            }
+        }
+
         private delegate void ConCommandSilentDelegate(ConCommandArgs args);
         private delegate Object ConCommandDelegate(ConCommandArgs args);
 
+        private static Thread _sMainThread;
+        private static readonly Queue<MainThreadTask> _sMainThreadTasks
+            = new Queue<MainThreadTask>();
+
         private const String DefaultSuccessString = "Command executed successfully";
+
+        private const int MainThreadTaskTimeout = 2000;
 
         private class CommandSet
         {
@@ -82,7 +131,21 @@ namespace Facepunch.ConCommands
 
                 if (_delegate != null && (_attribute.Domain & domain) == domain) {
                     try {
-                        return _delegate(new ConCommandArgs(_prefix, args.ToArray())).ToString();
+                        try {
+                            return _delegate(new ConCommandArgs(domain, _prefix, args.ToArray())).ToString();
+                        } catch (Exception e) {
+                            if (!e.Message.Contains("can only be called from the main thread.")) throw e;
+
+                            if (_sMainThread == null) {
+                                throw new Exception("Command must be performed on the main thread, "
+                                    + "but ConCommand.PerformMainThreadTasks() has not been called.");
+                            }
+
+                            var task = new MainThreadTask(() => Run(domain, args));
+                            _sMainThreadTasks.Enqueue(task);
+
+                            return task.AwaitResult<String>(MainThreadTaskTimeout);
+                        }
                     } catch (Exception e) {
                         throw new ConCommandException(domain, _prefix.Concat(args), e);
                     }
@@ -219,5 +282,18 @@ namespace Facepunch.ConCommands
             return Run(Domain.Client, args);
         }
 #endif
+
+        public static void PerformMainThreadTasks()
+        {
+            if (_sMainThread == null) {
+                _sMainThread = Thread.CurrentThread;
+            } else if (_sMainThread != Thread.CurrentThread) {
+                throw new InvalidOperationException("PerformMainThreadTasks() must always be called from the same thread.");
+            }
+
+            while (_sMainThreadTasks.Count > 0) {
+                _sMainThreadTasks.Dequeue().Perform();
+            }
+        }
     }
 }
