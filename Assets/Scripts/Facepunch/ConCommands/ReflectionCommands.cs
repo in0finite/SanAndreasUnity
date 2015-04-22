@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Arcade.Networking;
 using Facepunch.Networking;
 using UnityEngine;
 
@@ -161,10 +160,10 @@ namespace Facepunch.ConCommands
 
                 switch (_domain) {
                     case Domain.Client:
-                        nw = ArcadeClient.Instance.GetNetworkable(_ident);
+                        nw = Client.Instance.GetNetworkable(_ident);
                         break;
                     case Domain.Server:
-                        nw = ArcadeServer.Instance.GetNetworkable(_ident);
+                        nw = Server.Instance.GetNetworkable(_ident);
                         break;
                     default:
                         throw new ArgumentException("Invalid domain");
