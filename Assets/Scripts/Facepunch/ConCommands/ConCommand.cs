@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using Facepunch.Networking;
+using ParseSharp;
+using ParseSharp.BackusNaur;
 
 namespace Facepunch.ConCommands
 {
@@ -147,6 +148,7 @@ namespace Facepunch.ConCommands
                             return task.AwaitResult<String>(MainThreadTaskTimeout);
                         }
                     } catch (Exception e) {
+                        UnityEngine.Debug.LogError(e);
                         throw new ConCommandException(domain, _prefix.Concat(args), e);
                     }
                 }
@@ -193,80 +195,74 @@ namespace Facepunch.ConCommands
             }
         }
 
+        private static Parser _sCommandListParser;
+
         private static IEnumerable<string[]> Split(String args)
         {
-            var commands = new List<String[]>();
-            var split = new List<String>();
+            if (_sCommandListParser == null) {
+                _sCommandListParser = ParserGenerator.FromEBnf(@"
+                    (* skip-whitespace *)
+                    Command List      = Command, {"";"", Command}, End of Input;
+                    Command           = Argument, {Argument};
 
-            var cur = new StringBuilder(args.Length);
+                    (* collapse *)
+                    End of Input      = ? /$/ ?;
 
-            const char escapeChar = '\\';
-            const char quoteChar = '"';
-            const char cmdSepChar = ';';
+                    (* match-whitespace *)
+                    Argument          = Argument Part, {Argument Part};
 
-            var escaped = false;
-            var quoted = false;
+                    (* omit-from-hierarchy *)
+                    Argument Part     = Simple Character | (""\\"", Escaped Character) | (""\"""", Quoted String, ""\"""");
 
-            var i = 0;
-            while (i < args.Length) {
-                split.Clear();
+                    (* omit-from-hierarchy *)
+                    Quoted String     = {Quoted Character | (""\\"", Escaped Character)};
 
-                var canSkip = true;
-                while (i++ < args.Length) {
-                    var c = args[i - 1];
+                    (* collapse *)
+                    Simple Character  = ? /[^\s\\"";]/ ?;
 
-                    if (escaped) {
-                        switch (c) {
-                            case 'r': cur.Append('\r'); break;
-                            case 'n': cur.Append('\n'); break;
-                            case 't': cur.Append('\t'); break;
-                            default: cur.Append(c); break;
-                        }
+                    (* collapse *)
+                    Quoted Character  = ? /[^""\\]/ ?;
 
-                        escaped = false;
-                        continue;
-                    }
-
-                    if (!quoted && !escaped) {
-                        if (c == cmdSepChar) break;
-
-                        if (char.IsWhiteSpace(c)) {
-                            if (cur.Length > 0 || !canSkip) split.Add(cur.ToString());
-                            cur.Remove(0, cur.Length);
-                            canSkip = true;
-                            continue;
-                        }
-                    }
-
-                    canSkip = false;
-
-                    switch (c) {
-                        case quoteChar: quoted = !quoted; break;
-                        case escapeChar: escaped = true; break;
-                        default: cur.Append(c); break;
-                    }
-                }
-
-                split.Add(cur.ToString());
-                cur.Remove(0, cur.Length);
-
-                commands.Add(split.ToArray());
+                    (* collapse *)
+                    Escaped Character = ""\\"" | ""\"""" | ""n"" | ""t"" | ""r"";
+                ");
             }
 
-            return commands.Where(x => x.Length > 0);
+            var match = _sCommandListParser.Parse(args);
+
+            if (!match.Success) {
+                throw new Exception(match.Error.ToString());
+            }
+
+            return match
+                .Where(x => x.Parser.Name == "Command")
+                .Select(command => command
+                    .Select(arg => String.Join(String.Empty, arg
+                    .Select(c => {
+                        if (c.Parser.Name != "Escaped Character") return c.Value;
+                        switch (c.Value[0]) {
+                            case '\\': return "\\";
+                            case 'n': return "\n";
+                            case 'r': return "\r";
+                            case 't': return "\t";
+                        }
+                        return c.Value;
+                    })
+                    .ToArray()))
+                .ToArray());
         }
 
         public static ConCommandResult Run(Domain domain, String args)
         {
-            var commands = Split(args);
-
             try {
+                var commands = Split(args);
+
                 var result = new ConCommandResult(DefaultSuccessString);
                 foreach (var command in commands) {
                     result = new ConCommandResult(_sRootCommand.Run(domain, command));
                 }
                 return result;
-            } catch (ConCommandException e) {
+            } catch (Exception e) {
                 return new ConCommandResult(e);
             }
         }

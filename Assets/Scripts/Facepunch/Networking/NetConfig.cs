@@ -30,7 +30,11 @@ namespace Facepunch.Networking
 
         public static bool AutoUpdate { get; set; }
 
+        public static string UpdateCheckUrl { get; set; }
+
         public static string HangNotifyUrl { get; set; }
+
+        public static string InitialScene { get; set; }
 
         // TODO: replace this with something better?
         public static uint IP
@@ -158,8 +162,14 @@ namespace Facepunch.Networking
                     case "--autoupdate":
                         AutoUpdate = true;
                         break;
+                    case "--update-check-url":
+                        UpdateCheckUrl = args[++i];
+                        break;
                     case "--notify-url":
                         HangNotifyUrl = args[++i];
+                        break;
+                    case "--initial-scene":
+                        InitialScene = args[++i];
                         break;
                 }
             }

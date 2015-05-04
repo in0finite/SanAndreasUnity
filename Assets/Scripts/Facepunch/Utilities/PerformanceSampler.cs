@@ -13,6 +13,15 @@ using ThreadState = System.Threading.ThreadState;
 
 namespace Facepunch.Utilities
 {
+    public interface IGateKeeper : IDisposable
+    {
+        object Owner { get; }
+        String Name { get; }
+        int Counter { get; }
+
+        IDisposable Sample();
+    }
+
     public class PerformanceSampler : SingletonComponent<PerformanceSampler>
     {
 #pragma warning disable 0618
@@ -69,10 +78,11 @@ namespace Facepunch.Utilities
 #pragma warning restore 0618
 
         [ConCommand(Domain.Shared, "system", "status")]
-        private static String NetStatusCommand(ConCommandArgs args)
+        private static String SystemStatusCommand(ConCommandArgs args)
         {
             var writer = new StringWriter();
 
+            writer.WriteLine("Uptime: {0:F1} minutes", Instance.Uptime.TotalMinutes);
             writer.WriteLine("Processor time: {0:F1}%", Instance.ProcessorTimePercent);
             writer.WriteLine("Total memory: {0:F1} KB", Instance.TotalMemory / 1024d);
             writer.WriteLine("Avg GC period: {0:F2} s", Instance.AverageGarbageCollectionPeriod);
@@ -84,18 +94,77 @@ namespace Facepunch.Utilities
 
             writer.WriteLine("Main thread has been hanging for {0:F1} minutes!", Instance.SinceLastUpdate.TotalMinutes);
 
-            Exception ex;
-            var trace = Instance.GetMainThreadStackTrace(out ex);
-            if (trace != null) {
-                writer.WriteLine("Stack trace:");
-                writer.WriteLine(trace.ToString());
-            } else {
-                writer.WriteLine("Unable to retrieve stack trace:");
-                writer.WriteLine(ex);
+            return writer.ToString();
+        }
+
+        [ConCommand(Domain.Shared, "system", "gate-keepers")]
+        private static String SystemGateKeepersCommand(ConCommandArgs args)
+        {
+            var writer = new StringWriter();
+
+            foreach (var gateKeeper in GateKeepers) {
+                writer.WriteLine("Owner: {0}, Name: {1}, Count: {2}", gateKeeper.Owner, gateKeeper.Name, gateKeeper.Counter);
             }
 
             return writer.ToString();
         }
+
+        private class GateKeeper : IGateKeeper
+        {
+            private class Sampler : IDisposable
+            {
+                private readonly GateKeeper _keeper;
+
+                public Sampler(GateKeeper keeper)
+                {
+                    _keeper = keeper;
+                }
+
+                public void Dispose()
+                {
+                    --_keeper.Counter;
+                }
+            }
+
+            private readonly Sampler _sampler;
+
+            public object Owner { get; private set; }
+            public string Name { get; private set; }
+            public int Counter { get; private set; }
+
+            public GateKeeper(object owner, String name)
+            {
+                _sampler = new Sampler(this);
+
+                Owner = owner;
+                Name = name;
+                Counter = 0;
+            }
+
+            public IDisposable Sample()
+            {
+                ++Counter;
+                return _sampler;
+            }
+
+            public void Dispose()
+            {
+                _sGateKeepers.Remove(this);
+            }
+        }
+
+        private static readonly List<GateKeeper> _sGateKeepers = new List<GateKeeper>();
+
+        public static IEnumerable<IGateKeeper> GateKeepers { get { return _sGateKeepers.Cast<IGateKeeper>(); } }
+
+        public static IGateKeeper CreateGatekeeper(object owner, String name)
+        {
+            var keeper = new GateKeeper(owner, name);
+            _sGateKeepers.Add(keeper);
+            return keeper;
+        }
+
+        private readonly DateTime _startTime;
 
         private DateTime _lastUpdate;
         private TimeSpan _lastProcessorTime;
@@ -113,6 +182,11 @@ namespace Facepunch.Utilities
         private readonly Queue<double> _gcPeriods = new Queue<double>();
 
         private readonly Stopwatch _timer = new Stopwatch();
+
+        public TimeSpan Uptime
+        {
+            get { return DateTime.UtcNow - _startTime; }
+        }
 
         public ThreadState MainThreadState
         {
@@ -147,7 +221,7 @@ namespace Facepunch.Utilities
 
         public PerformanceSampler()
         {
-            _lastGcPass = DateTime.UtcNow;
+            _startTime = _lastGcPass = DateTime.UtcNow;
 
             _sampleWait = new AutoResetEvent(false);
             _stopWait = new ManualResetEvent(true);
@@ -166,7 +240,8 @@ namespace Facepunch.Utilities
                 client.UploadString(NetConfig.HangNotifyUrl, "POST", new JObject {
                     {"status", "hanging"},
                     {"time", DateTime.UtcNow.ToBinary()},
-                    {"last_state", NetStatusCommand(null)}
+                    {"last_state", SystemStatusCommand(null)},
+                    {"port", NetConfig.Port}
                 }.ToString());
             }
         }

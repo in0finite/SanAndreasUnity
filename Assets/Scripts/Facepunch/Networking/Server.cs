@@ -130,6 +130,21 @@ namespace Facepunch.Networking
         }
 #endif
 
+        protected override void OnAwake()
+        {
+            base.OnAwake();
+
+            if (!NetConfig.RconEnabled) return;
+
+            _rcon = new RConServer(NetConfig.RconPort);
+            _rcon.VerifyCredentials += OnVerifyRconCredentials;
+            _rcon.ExecuteCommand += (creds, command) => ConCommand.RunServer(command);
+
+            UnityEngine.Application.logMessageReceived += _rcon.BroadcastLog;
+
+            _rcon.Start();
+        }
+
         protected override void OnNetworkingAwake()
         {
             base.OnNetworkingAwake();
@@ -148,16 +163,6 @@ namespace Facepunch.Networking
 #endif
 
             Net.RegisterHandler<ConnectRequest>(OnReceiveMessage);
-
-            if (!NetConfig.RconEnabled) return;
-
-            _rcon = new RConServer(NetConfig.RconPort);
-            _rcon.VerifyCredentials += OnVerifyRconCredentials;
-            _rcon.ExecuteCommand += (creds, command) => ConCommand.RunServer(command);
-
-            UnityEngine.Application.logMessageReceived += _rcon.BroadcastLog;
-
-            _rcon.Start();
         }
 
         protected virtual bool OnVerifyRconCredentials(RConCredentials creds)

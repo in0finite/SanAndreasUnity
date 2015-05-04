@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using Facepunch.Networking;
+using ParseSharp;
+using ParseSharp.BackusNaur;
 using UnityEngine;
 
 namespace Facepunch.ConCommands
@@ -14,37 +15,57 @@ namespace Facepunch.ConCommands
 
     public static class ReflectionCommands
     {
-        private const string NamePattern = "[A-Za-z_][A-Za-z0-9_]*";
+        private static readonly Parser _sLocationParser;
+        private static readonly Parser _sValueParser;
 
-        private static readonly Regex _sNetworkableRegex = new Regex(@"^\[\s*(?<id>[0-9]+)\s*\]", RegexOptions.Compiled);
-        private static readonly Regex _sStaticRegex = new Regex(@"^\[(?<type>[^\]]+)\]", RegexOptions.Compiled);
+        static ReflectionCommands()
+        {
+            const string ebnf = @"
+                (* skip-whitespace omit-from-hierarchy *)
+                Location Root = Location, End of Input;
 
-        private static readonly Regex _sMemberRegex = new Regex(string.Format(@"\s*\.\s*(?<name>{0})", NamePattern), RegexOptions.Compiled);
+                (* skip-whitespace omit-from-hierarchy *)
+                Value Root = Value, End of Input;
 
-        private static readonly Regex _sComponentRegex = new Regex(string.Format(@"\s*<(?<component>[^>]+)>"), RegexOptions.Compiled);
+                Location = ""["", Root, ""]"", {Accessor};
 
-        private const string VectorNumberPattern = @"(\s*(?<number>-?[0-9]+(\.[0-9]+)?)f?\s*,?){2,4}";
+                (* omit-from-hierarchy *) Root     = Networkable Identifier | Type Name;
+                (* omit-from-hierarchy *) Accessor = Member Access | Component Access | Invocation;
 
-        private const string ValuePattern = @"
-\s*(
-    (?<null>null)|
-    (?<bool>[tT]rue|[fF]alse)|
-    (\{(?<vector>" + VectorNumberPattern + @")\})|
-    (--)*(
-        (?<float>-?[0-9]+(\.[0-9]+)?)f|
-        (?<double>-?[0-9]+(\.[0-9]+d?|d))
-    )|
-    0x(?<hex>[0-9a-fA-F]+)|
-    (?<int>-?[0-9]+)|(\(\))|
-    (""(?<string>(\\\\|\\""|[^""])*)"")|
-    ('(?<string>(\\\\|\\'|[^""])*)')
-)\s*
-            ";
+                Member Access = ""."", Identifier;
+                Component Access = ""<"", Type Name, "">"";
 
-        private static readonly Regex _sValueRegex = new Regex(ValuePattern, RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
-        private static readonly Regex _sParametersRegex = new Regex(string.Format(@"\s*\(((?<value>{0})(,(?<value>{0}))*)?\)", ValuePattern), RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace);
+                Invocation = ""("", [Value, {"","", Value}], "")"";
 
-        private static readonly Regex _sVectorRegex = new Regex(VectorNumberPattern, RegexOptions.Compiled);
+                (* omit-from-hierarchy *)
+                Value = Null | Boolean | Vector | Float | Double | (""0x"", Hex Integer) | Integer | String | Location;
+
+                Boolean = True | False;
+                Vector = ""Vector"", Invocation;
+
+                Float = (Integer | Decimal), ""f"";
+                Double = Decimal, [""d""];
+
+                String = ""'"", {(""\\"", Escaped Character) | Single Character}, ""'"";
+
+                (* collapse *) End of Input = ? /$/ ?;
+                (* collapse *) Single Character = ? /[^\\']/ ?;
+                (* collapse *) Escaped Character = ? /[\\'rnt]/ ?;
+                (* collapse *) Integer = ? /-?[0-9]+/ ?;
+                (* collapse *) Hex Integer = ? /[0-9A-F]/i ?;
+                (* collapse *) Decimal = ? /-?[0-9]+\.[0-9]+/ ?;
+
+                (* collapse *) Networkable Identifier = ? /[0-9]+/ ?;
+                (* collapse *) Type Name = ? /[^0-9\]>][^\]>]*/ ?;
+                (* collapse *) Component Name = Type Name;
+                (* collapse *) Null = ""null"";
+                (* collapse *) True = ? /[Tt]rue/ ?;
+                (* collapse *) False = ? /[Ff]alse/ ?;
+                (* collapse *) Identifier = ? /[A-Za-z_][A-Za-z0-9_]*/ ?;";
+
+            _sLocationParser = ParserGenerator.FromEBnf(ebnf, "Location Root");
+            _sValueParser = ParserGenerator.FromEBnf(ebnf, "Value Root");
+        }
 
         #region Member types
 
@@ -68,40 +89,36 @@ namespace Facepunch.ConCommands
                 return type.GetMembers(GetBindingFlags());
             }
 
-            public Member FindMember(string path, ref int startAt)
+            public Member FindMember(Domain domain, ParseResult result)
             {
                 var context = GetValue();
                 var type = GetContextType(context);
 
-                Match match;
-                if (TryMatch(_sMemberRegex, path, ref startAt, out match)) {
-                    var name = match.Groups["name"].Value;
+                switch (result.Parser.Name) {
+                    case "Member Access":
+                        var name = result[0].Value;
 
-                    foreach (var member in GetMembers(type).Where(x => x.Name == name)) {
-                        var field = member as FieldInfo;
-                        if (field != null) return new Field(field, context);
-                        var prop = member as PropertyInfo;
-                        if (prop != null) return new Property(prop, context);
-                        var method = member as MethodInfo;
-                        if (method != null) return new Method(method, context);
-                    }
+                        foreach (var member in GetMembers(type).Where(x => x.Name == name)) {
+                            var field = member as FieldInfo;
+                            if (field != null) return new Field(field, context);
+                            var prop = member as PropertyInfo;
+                            if (prop != null) return new Property(prop, context);
+                            var method = member as MethodInfo;
+                            if (method != null) return new Method(method, context);
+                        }
 
-                    throw new Exception(string.Format("Could not find {2} member '{0}' in type '{1}'",
-                        name, type.FullName, context == null ? "static" : "instance"));
-                }
-
-                if (TryMatch(_sComponentRegex, path, ref startAt, out match)) {
-                    var componentName = match.Groups["component"].Value;
-                    return new Component(componentName, context);
-                }
-
-                if (TryMatch(_sParametersRegex, path, ref startAt, out match)) {
+                        throw new Exception(string.Format("Could not find {2} member '{0}' in type '{1}'",
+                            name, type.FullName, context == null ? "static" : "instance"));
+                    case "Component Access":
+                        var componentName = result[0].Value;
+                        return new Component(componentName, context);
+                    case "Invocation":
 // ReSharper disable once ConvertClosureToMethodGroup
-                    var values = match.Groups["value"].Captures.Cast<Capture>().Select(x => ReadValue(x.Value, false)).ToArray();
-                    return new Invocation(values, this);
+                        var values = result.Select(x => ReadValue(domain, x)).ToArray();
+                        return new Invocation(values, this);
+                    default:
+                        throw new Exception("This should not occur - parser grammar is incorrect");
                 }
-
-                throw new Exception(string.Format("Expected '.Member' or '<Component>' at character {0} in path", startAt + 1));
             }
         }
 
@@ -306,92 +323,65 @@ namespace Facepunch.ConCommands
 
         #endregion
 
-        private static bool TryMatch(Regex regex, string value, ref int startAt, out Match match)
+        private static object ParseVector(Domain domain, ParseResult result)
         {
-            match = regex.Match(value, startAt);
-            if (match.Success && match.Index == startAt) {
-                startAt += match.Length;
-                return true;
+            var values = result.Select(x => Convert.ToSingle(ReadValue(domain, x))).ToArray();
+
+            switch (result.ChildCount) {
+                case 2: return new Vector2(values[0], values[1]);
+                case 3: return new Vector3(values[0], values[1], values[2]);
+                case 4: return new Vector4(values[0], values[1], values[2], values[3]);
+                default: throw new Exception("Failed to parse Vector - bad number of arguments");
             }
-
-            match = null;
-            return false;
         }
 
-        private static bool TryGroup<TVal>(RegexGroup group, Func<string, TVal> parser, ref object val)
+        private static char ParseChar(ParseResult result)
         {
-            if (!group.Success) return false;
-            val = parser(group.Value);
-            return true;
+            if (result.Parser.Name == "Single Character") return result.Value[0];
+
+            switch (result.Value) {
+                case "r": return '\r';
+                case "n": return '\n';
+                case "t": return '\t';
+                default: return result.Value[0];
+            }
         }
 
-        private static object ParseVector(string str)
+        private static object ReadValue(Domain domain, ParseResult result)
         {
-            var match = _sVectorRegex.Match(str);
-            if (!match.Success) throw new Exception("Failed to parse Vector - this shouldn't happen");
-
-            var numbers = match.Groups["number"].Captures.Cast<Capture>().Select(x => float.Parse(x.Value)).ToArray();
-
-            switch (numbers.Length) {
-                case 2:
-                    return new Vector2(numbers[0], numbers[1]);
-                case 3:
-                    return new Vector3(numbers[0], numbers[1], numbers[2]);
-                case 4:
-                    return new Vector4(numbers[0], numbers[1], numbers[2], numbers[3]);
+            switch (result.Parser.Name) {
+                case "Null": return null;
+                case "Boolean": return bool.Parse(result.Value);
+                case "Vector": return ParseVector(domain, result[0]);
+                case "Float": return float.Parse(result[0].Value);
+                case "Double": return double.Parse(result[0].Value);
+                case "Integer": return int.Parse(result.Value);
+                case "Hex Integer": return uint.Parse(result.Value, NumberStyles.HexNumber);
+                case "String": return new string(result.Select(x => ParseChar(x)).ToArray());
+                case "Location": return FindMember(domain, result).GetValue();
                 default:
-                    throw new Exception("Failed to parse Vector - this shouldn't happen");
+                    throw new Exception("This should not occur - parser grammar is incorrect");
             }
         }
 
-        private static object ReadValue(string str, bool defaultToString)
+        private static Member FindRootMember(Domain domain, ParseResult result)
         {
-            var match = _sValueRegex.Match(str);
-
-            object val = null;
-
-// ReSharper disable RedundantTypeArgumentsOfMethod
-            if (TryGroup<object>(match.Groups["vector"], ParseVector, ref val) ||
-                TryGroup<bool>(match.Groups["bool"], bool.Parse, ref val) ||
-                TryGroup<float>(match.Groups["float"], float.Parse, ref val) ||
-                TryGroup<double>(match.Groups["double"], double.Parse, ref val) ||
-                TryGroup<int>(match.Groups["hex"], x => int.Parse(x, NumberStyles.HexNumber), ref val) ||
-                TryGroup<int>(match.Groups["int"], int.Parse, ref val) ||
-                TryGroup<string>(match.Groups["string"], x => x.Replace("\\\\", "\\"), ref val) ||
-                TryGroup<object>(match.Groups["null"], x => null, ref val)) {
-// ReSharper restore RedundantTypeArgumentsOfMethod
-                return val;
+            switch (result.Parser.Name) {
+                case "Networkable Identifier":
+                    return new NetworkableId(domain, uint.Parse(result.Value));
+                case "Type Name":
+                    return new Static(Type.GetType(result.Value));
+                default:
+                    throw new Exception("This should not occur - parser grammar is incorrect");
             }
-
-            if (defaultToString) {
-                return str;
-            }
-
-            throw new Exception(string.Format("Failed to parse value '{0}'", str));
         }
 
-        private static Member FindRootMember(Domain domain, string path, ref int startAt)
+        private static Member FindMember(Domain domain, ParseResult result)
         {
-            Match match;
+            var member = FindRootMember(domain, result[0]);
 
-            if (TryMatch(_sNetworkableRegex, path, ref startAt, out match)) {
-                return new NetworkableId(domain, uint.Parse(match.Groups["id"].Value));
-            }
-
-            if (TryMatch(_sStaticRegex, path, ref startAt, out match)) {
-                return new Static(Type.GetType(match.Groups["type"].Value));
-            }
-
-            throw new Exception("Invalid member path root, expected '[networkable id]' or '[type name]'");
-        }
-
-        private static Member FindMember(Domain domain, string path)
-        {
-            var startAt = 0;
-            var member = FindRootMember(domain, path, ref startAt);
-
-            while (startAt < path.Length) {
-                member = member.FindMember(path, ref startAt);
+            for (var i = 1; i < result.ChildCount; ++i) {
+                member = member.FindMember(domain, result[i]);
             }
 
             return member;
@@ -402,7 +392,12 @@ namespace Facepunch.ConCommands
         {
             if (args.ValueCount != 1) throw new Exception("Expected 1 argument: a member path");
 
-            var member = FindMember(args.Domain, args.Values[0]);
+            var match = _sLocationParser.Parse(args.Values[0]);
+            if (!match.Success) {
+                throw new Exception(match.Error.ToString());
+            }
+
+            var member = FindMember(args.Domain, match[0]);
             return (member.GetValue() ?? "null").ToString();
         }
 
@@ -411,8 +406,18 @@ namespace Facepunch.ConCommands
         {
             if (args.ValueCount != 2) throw new Exception("Expected 2 arguments: a member path and a value");
 
-            var member = FindMember(args.Domain, args.Values[0]);
-            member.SetValue(ReadValue(args.Values[1], true));
+            var location = _sLocationParser.Parse(args.Values[0]);
+            if (!location.Success) {
+                throw new Exception(location.Error.ToString());
+            }
+
+            var value = _sValueParser.Parse(args.Values[1]);
+            if (!value.Success) {
+                throw new Exception(value.Error.ToString());
+            }
+
+            var member = FindMember(args.Domain, location[0]);
+            member.SetValue(ReadValue(args.Domain, value[0]));
         }
     }
 }

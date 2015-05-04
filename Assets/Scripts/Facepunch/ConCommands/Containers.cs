@@ -87,11 +87,11 @@ namespace Facepunch.ConCommands
         }
 
         public bool Success { get; private set; }
-        public ConCommandException Exception { get; private set; }
+        public Exception Exception { get; private set; }
         public String Message { get; private set; }
         public Object Value { get; private set; }
 
-        public ConCommandResult(ConCommandException ex)
+        public ConCommandResult(Exception ex)
         {
             Success = false;
             Exception = ex;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using Facepunch.Utilities;
 using ProtoBuf;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -13,10 +14,24 @@ namespace Facepunch.Networking
         double Time { get; }
     }
 
+    [Flags]
+    public enum DiagnosticState
+    {
+        None = 0,
+        DisableCheckForMessages = 1,
+        DisableFlushSentMessages = 2,
+        DisableNetworking = 3
+    }
+
     public abstract class EndPoint<TComponent, TServer> : SingletonComponent<TComponent>, IEndPoint
         where TComponent : EndPoint<TComponent, TServer>
         where TServer : class, IServer
     {
+        private readonly List<IGateKeeper> _gateKeepers = new List<IGateKeeper>();
+        private IGateKeeper _checkForMessages;
+        private IGateKeeper _onUpdate;
+        private IGateKeeper _flushSentMessages;
+
         protected virtual bool ShouldActivate { get { return false; } }
 
         protected virtual int Protocol { get { return 0x0001; } }
@@ -32,6 +47,35 @@ namespace Facepunch.Networking
         private delegate void LogFormatDelegate(String format, params object[] args);
 
         private long _nextTick;
+
+        public DiagnosticState DiagnosticState = DiagnosticState.None;
+
+        protected bool DisableCheckForMessages
+        {
+            get
+            {
+                return (DiagnosticState & DiagnosticState.DisableCheckForMessages) ==
+                       DiagnosticState.DisableCheckForMessages;
+            }
+        }
+
+        protected bool DisableFlushSentMessages
+        {
+            get
+            {
+                return (DiagnosticState & DiagnosticState.DisableFlushSentMessages) ==
+                       DiagnosticState.DisableFlushSentMessages;
+            }
+        }
+
+        protected bool DisableNetworking
+        {
+            get
+            {
+                return (DiagnosticState & DiagnosticState.DisableNetworking) ==
+                       DiagnosticState.DisableNetworking;
+            }
+        }
 
         /// <summary>
         /// Time since the server started, in microseconds.
@@ -78,6 +122,12 @@ namespace Facepunch.Networking
 
             _nextTick = Stopwatch.GetTimestamp();
 
+            _gateKeepers.Add(_checkForMessages = PerformanceSampler.CreateGatekeeper(this, "CheckForMessages"));
+            _gateKeepers.Add(_onUpdate = PerformanceSampler.CreateGatekeeper(this, "CheckForMessages"));
+            _gateKeepers.Add(_flushSentMessages = PerformanceSampler.CreateGatekeeper(this, "CheckForMessages"));
+
+            if (DisableNetworking) return;
+
             Net = CreateInstance();
             Net.PopulateMessageTable(Assembly.GetExecutingAssembly());
             Net.LogMessage += LogHandler(LogPrefix);
@@ -94,19 +144,29 @@ namespace Facepunch.Networking
         // ReSharper disable once UnusedMember.Local
         private void Update()
         {
-            if (Net == null) return;
-
             var now = Stopwatch.GetTimestamp();
             if (_nextTick > now) return;
 
             _nextTick += Stopwatch.Frequency / UpdateRate;
 
             Profiler.BeginSample(String.Format("{0}.Update", GetType().Name), this);
-            Net.CheckForMessages();
 
-            OnUpdate();
+            if (Net != null && !DisableCheckForMessages) {
+                using (_checkForMessages.Sample()) {
+                    Net.CheckForMessages();
+                }
+            }
 
-            Net.FlushSentMessages();
+            using (_onUpdate.Sample()) {
+                OnUpdate();
+            }
+
+            if (Net != null && !DisableFlushSentMessages) {
+                using (_flushSentMessages.Sample()) {
+                    Net.FlushSentMessages();
+                }
+            }
+
             Profiler.EndSample();
         }
 
