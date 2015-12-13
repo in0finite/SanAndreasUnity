@@ -4,8 +4,8 @@ using System.Net;
 using System.Security.Authentication;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
-using WebSocketSharp;
 using WebSocketSharp.Server;
+using Logger = WebSocketSharp.Logger;
 
 namespace Facepunch.RCon
 {
