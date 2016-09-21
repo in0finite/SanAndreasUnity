@@ -24,14 +24,16 @@ public class PedestrianModelViewerUI : MonoBehaviour {
 			return;
 
 		if (GUILayout.Button ("Next")) {
-			pedestrian.PedestrianId++;
+			pedestrian.Load (pedestrian.PedestrianId + 1);
+			pedestrian.PlayAnim (pedestrian.AnimGroup, pedestrian.animIndex, PlayMode.StopAll);
 		}
 
 		if (GUILayout.Button ("Previous")) {
 			int newId = pedestrian.PedestrianId - 1;
 			if (newId < 0)
 				newId = 0;
-			pedestrian.PedestrianId = newId;
+			pedestrian.Load (newId);
+			pedestrian.PlayAnim (pedestrian.AnimGroup, pedestrian.animIndex, PlayMode.StopAll);
 		}
 
 

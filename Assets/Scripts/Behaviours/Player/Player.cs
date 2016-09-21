@@ -241,11 +241,13 @@ namespace SanAndreasUnity.Behaviours
 			// switch weapons
 			if (!IsInVehicle) {
 				if (Input.mouseScrollDelta.y != 0) {
+					
 					if (currentWeaponSlot < 0)
 						currentWeaponSlot = 0;
 					
-					for( int i=currentWeaponSlot + (int) Mathf.Sign(Input.mouseScrollDelta.y); i != currentWeaponSlot ;
-						i += (int) Mathf.Sign(Input.mouseScrollDelta.y) ) {
+					for( int i=currentWeaponSlot + (int) Mathf.Sign(Input.mouseScrollDelta.y), count=0;
+						i != currentWeaponSlot && count < (int) WeaponSlot.Count ;
+						i += (int) Mathf.Sign(Input.mouseScrollDelta.y), count++ ) {
 
 						if (i < 0)
 							i = weapons.Length - 1;
@@ -257,6 +259,7 @@ namespace SanAndreasUnity.Behaviours
 							break;
 						}
 					}
+
 				}
 			}
 
@@ -264,8 +267,8 @@ namespace SanAndreasUnity.Behaviours
 			if (null == System.Array.Find<Weapon> (weapons, w => w != null)) {
 				// player has no weapons
 
-				weapons[(int)WeaponSlot.Machine] = Weapon.Load(355);
-				this.SwitchWeapon ((int)WeaponSlot.Machine);
+			//	weapons[(int)WeaponSlot.Machine] = Weapon.Load(355);
+			//	this.SwitchWeapon ((int)WeaponSlot.Machine);
 			}
 
         }

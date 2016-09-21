@@ -140,14 +140,17 @@ namespace SanAndreasUnity.Behaviours
 
 						AnimationState runState = PlayerModel.PlayAnim (AnimGroup.WalkCycle,
 							AnimIndex.Run, PlayMode.StopAll);
-						runState.AddMixingTransform (PlayerModel.Frames.GetByName(" L Thigh").transform, true);
-						runState.AddMixingTransform (PlayerModel.Frames.GetByName(" R Thigh").transform, true);
+						Frame f1 = PlayerModel.Frames.GetByBoneId (41);//PlayerModel.Frames.GetByName (" L Thigh");
+						Frame f2 = PlayerModel.Frames.GetByBoneId (51);//PlayerModel.Frames.GetByName (" R Thigh");
+						runState.AddMixingTransform (f1.transform, true);
+						runState.AddMixingTransform (f2.transform, true);
 					//	runState.wrapMode = WrapMode.Loop;
 
 						PlayerModel._anim [AnimIndex.IdleArmed].layer = 1;
 						AnimationState armedState = PlayerModel.PlayAnim (AnimGroup.MyWalkCycle,
 							AnimIndex.IdleArmed, PlayMode.StopSameLayer);
-						armedState.AddMixingTransform (PlayerModel.Frames.GetByName(" Spine").transform, true);
+						Frame f3 = PlayerModel.Frames.GetByBoneId (2);//PlayerModel.Frames.GetByName (" Spine");
+						armedState.AddMixingTransform (f3.transform, true);
 					//	armedState.layer = 1;
 					//	armedState.wrapMode = WrapMode.Loop;
 

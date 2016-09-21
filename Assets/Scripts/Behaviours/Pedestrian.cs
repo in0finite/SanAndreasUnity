@@ -38,6 +38,9 @@ namespace SanAndreasUnity.Behaviours
 
         public int PedestrianId = 7;
 
+		// have we loaded model since the Loader has finished loading
+		private	bool	loadedModelOnStartup = false;
+
         public AnimGroup AnimGroup = AnimGroup.WalkCycle;
     //    public AnimIndex AnimIndex = AnimIndex.Idle;
 		public	string	animIndex = "" ;
@@ -125,7 +128,23 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
-            
+			#if UNITY_EDITOR
+			if (!EditorApplication.isPlaying)
+				return ;
+			#endif
+
+			if (Loader.HasLoaded) {
+				if (!loadedModelOnStartup) {
+					// load model on startup
+					Debug.Log("Loading pedestrian model after startup.");
+					Load(PedestrianId);
+					// and play animation
+					PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle, PlayMode.StopAll);
+
+					loadedModelOnStartup = true;
+				}
+			}
+
 
 			// update transform of weapon
 			if (weapon != null && m_rightFinger != null && m_leftFinger != null) {
@@ -147,7 +166,8 @@ namespace SanAndreasUnity.Behaviours
 			if (!Loader.HasLoaded) return;
 
 			#if UNITY_EDITOR
-			if (!EditorApplication.isPlaying && !EditorApplication.isPaused) return;
+			if (!EditorApplication.isPlaying && !EditorApplication.isPaused)
+				return ;
 			#endif
 
 			if (_curPedestrianId != PedestrianId)
@@ -182,9 +202,9 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-        private void Load(int id)
+		public void Load(int id)
         {
-            _curPedestrianId = PedestrianId;
+			_curPedestrianId = PedestrianId = id;
 
             Definition = Item.GetDefinition<PedestrianDef>(id);
             if (Definition == null) return;

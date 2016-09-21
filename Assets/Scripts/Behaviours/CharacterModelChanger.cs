@@ -44,7 +44,7 @@ public class CharacterModelChanger : MonoBehaviour {
 			return;
 		}
 
-		ped.PedestrianId = newModelId;
+		ped.Load (newModelId);
 
 	}
 

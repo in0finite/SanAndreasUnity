@@ -6,9 +6,8 @@ This won't be a complete re-implementation of the game, but we're hoping to buil
 
 ## Setup Instructions
 
-Before opening the project you'll need to run the [premake](http://premake.github.io/) script. A Windows binary is included, but for other platforms you'll need to install premake 5 yourself.
-
-On Windows, run `premake.bat`. For Mac and Linux, use `premake.sh`.
+Before starting the game, edit config.user.json to set path to gta.
+Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data folder. The script which should do that, doesn't work right now.
 
 ## Media
 
