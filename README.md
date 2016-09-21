@@ -7,7 +7,10 @@ This won't be a complete re-implementation of the game, but we're hoping to buil
 ## Setup Instructions
 
 Before starting the game, edit config.user.json to set path to gta.
+
 Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data folder. The script which should do that, doesn't work right now.
+
+Press V to spawn vehicle xD.
 
 ## Media
 
