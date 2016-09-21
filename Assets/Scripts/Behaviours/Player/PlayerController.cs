@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using SanAndreasUnity.Behaviours.Vehicles;
 using System.Linq;
+using SanAndreasUnity.Importing.Animation;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -134,7 +135,30 @@ namespace SanAndreasUnity.Behaviours
                 inputMove.Normalize();
 
                 if (Input.GetKey(KeyCode.LeftShift)) {
-                    PlayerModel.Running = true;
+					if (_player.currentWeaponSlot > 0) {
+						// player is holding a weapon
+
+						AnimationState runState = PlayerModel.PlayAnim (AnimGroup.WalkCycle,
+							AnimIndex.Run, PlayMode.StopAll);
+						runState.AddMixingTransform (PlayerModel.Frames.GetByName(" L Thigh").transform, true);
+						runState.AddMixingTransform (PlayerModel.Frames.GetByName(" R Thigh").transform, true);
+					//	runState.wrapMode = WrapMode.Loop;
+
+						PlayerModel._anim [AnimIndex.IdleArmed].layer = 1;
+						AnimationState armedState = PlayerModel.PlayAnim (AnimGroup.MyWalkCycle,
+							AnimIndex.IdleArmed, PlayMode.StopSameLayer);
+						armedState.AddMixingTransform (PlayerModel.Frames.GetByName(" Spine").transform, true);
+					//	armedState.layer = 1;
+					//	armedState.wrapMode = WrapMode.Loop;
+
+					//	PlayerModel._anim.Blend( );
+						
+					} else {
+						// player is not holding a weapon
+						PlayerModel.PlayAnim (AnimGroup.WalkCycle,
+							AnimIndex.Run, PlayMode.StopAll);
+					}
+                //    PlayerModel.Running = true;
                 } else {
                     PlayerModel.Walking = true;
                 }

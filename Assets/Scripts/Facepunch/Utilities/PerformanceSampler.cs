@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using Facepunch.ConCommands;
-using Facepunch.Networking;
+//using Facepunch.ConCommands;
+//using Facepunch.Networking;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 using ThreadState = System.Threading.ThreadState;
@@ -77,7 +77,7 @@ namespace Facepunch.Utilities
 
 #pragma warning restore 0618
 
-        [ConCommand(Domain.Shared, "system", "status")]
+   /*     [ConCommand(Domain.Shared, "system", "status")]
         private static String SystemStatusCommand(ConCommandArgs args)
         {
             var writer = new StringWriter();
@@ -108,6 +108,7 @@ namespace Facepunch.Utilities
 
             return writer.ToString();
         }
+    */
 
         private class GateKeeper : IGateKeeper
         {
@@ -232,8 +233,9 @@ namespace Facepunch.Utilities
         private static void SampleFailed()
         {
             UnityEngine.Debug.LogErrorFormat("!!! PerformanceSampler has failed to sample (time: {0}) !!!", DateTime.UtcNow);
-            UnityEngine.Debug.LogFormat("HangNotifyUrl: {0}", NetConfig.HangNotifyUrl);
+        //    UnityEngine.Debug.LogFormat("HangNotifyUrl: {0}", NetConfig.HangNotifyUrl);
 
+			/*
             if (String.IsNullOrEmpty(NetConfig.HangNotifyUrl)) return;
 
             using (var client = new WebClient()) {
@@ -244,6 +246,7 @@ namespace Facepunch.Utilities
                     {"port", NetConfig.Port}
                 }.ToString());
             }
+            */
         }
 
         private void WatcherEntry()

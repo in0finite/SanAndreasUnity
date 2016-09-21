@@ -436,6 +436,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static readonly Dictionary<string, GeometryParts> _sLoaded
             = new Dictionary<string, GeometryParts>();
+		public	static	int	NumGeometryPartsLoaded { get { return _sLoaded.Count; } }
 
         public static GeometryParts Load(string modelName, params string[] texDictNames)
         {

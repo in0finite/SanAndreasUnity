@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Facepunch.Networking;
-using ProtoBuf.Player;
+//using Facepunch.Networking;
+//using ProtoBuf.Player;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Behaviours.World;
 using UnityEngine;
@@ -68,16 +68,16 @@ namespace SanAndreasUnity.Behaviours
 
         #region Private fields
 
-        private readonly SnapshotBuffer<PlayerPedestrianState> _snapshots
-            = new SnapshotBuffer<PlayerPedestrianState>(.25);
+   //     private readonly SnapshotBuffer<PlayerPedestrianState> _snapshots
+   //         = new SnapshotBuffer<PlayerPedestrianState>(.25);
 
-        private PlayerPassengerState _lastPassengerState;
+   //     private PlayerPassengerState _lastPassengerState;
 
         #endregion
 
         #region Properties
 
-        public IRemote Remote { get; private set; }
+//        public IRemote Remote { get; private set; }
         public ulong UserId { get; private set; }
         public string Username { get; private set; }
 
@@ -85,7 +85,7 @@ namespace SanAndreasUnity.Behaviours
 
         #endregion
 
-        internal void ServerSideInit(IRemote remote, ulong userId, string username, int modelId)
+    /*    internal void ServerSideInit(IRemote remote, ulong userId, string username, int modelId)
         {
             Remote = remote;
             UserId = userId;
@@ -130,7 +130,7 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        private PlayerPassengerState _pendingPassenger;
+    //    private PlayerPassengerState _pendingPassenger;
 
         private void UpdateFromPassengerSnapshot(PlayerPassengerState message)
         {
@@ -159,6 +159,7 @@ namespace SanAndreasUnity.Behaviours
                 }
             }
         }
+    */
 
 #if CLIENT
 
@@ -215,6 +216,7 @@ namespace SanAndreasUnity.Behaviours
         }
 #endif
 
+/*
         private void NetworkingFixedUpdate()
         {
             if (_pendingPassenger != null) {
@@ -277,5 +279,6 @@ namespace SanAndreasUnity.Behaviours
             SendToClients(message, Group.Subscribers.Where(x => x != Remote),
                 DeliveryMethod.ReliableOrdered, 1);
         }
+*/
     }
 }

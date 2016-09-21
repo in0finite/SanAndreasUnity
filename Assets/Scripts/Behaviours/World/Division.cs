@@ -32,6 +32,17 @@ namespace SanAndreasUnity.Behaviours.World
         private Division _childB;
 
         private List<MapObject> _objects;
+		public	int	NumObjects { get { return this._objects.Count; } }
+		public	int	NumObjectsIncludingChildren {
+			get {
+				int count = _objects.Count;
+				if (_childA != null)
+					count += _childA.NumObjectsIncludingChildren;
+				if (_childB != null)
+					count += _childB.NumObjectsIncludingChildren;
+				return count;
+			}
+		}
 
         private bool _isVertSplit;
         private float _splitVal;
@@ -195,46 +206,78 @@ namespace SanAndreasUnity.Behaviours.World
 
         public float GetDistance(Vector3 pos)
         {
-            if (Contains(pos)) return 0f;
-
-            var dx = Mathf.Max(Min.x - pos.x, pos.x - Max.x);
-            var dz = Mathf.Max(Min.y - pos.z, pos.z - Max.y);
-
-            return new Vector2(dx, dz).magnitude;
+			return Mathf.Sqrt (GetDistanceSquared (pos));
         }
 
-        public bool RefreshLoadOrder(Vector3 from)
+		public	float	GetDistanceSquared( Vector3 pos ) {
+
+			if (Contains(pos)) return 0f;
+
+			var dx = Mathf.Max(Min.x - pos.x, pos.x - Max.x);
+			var dz = Mathf.Max(Min.y - pos.z, pos.z - Max.y);
+
+			return new Vector2(dx, dz).sqrMagnitude;
+		}
+
+		public bool RefreshLoadOrder(Vector3 from, out int numMapObjectsUpdatedLoadOrder)
         {
             var toLoad = false;
+			numMapObjectsUpdatedLoadOrder = 0;
 
-            if (Vector3.Distance(from, _lastRefreshPos) > GetDistance(from) / 16f) {
-                _lastRefreshPos = from;
-                foreach (var obj in _objects) {
-                    toLoad |= obj.RefreshLoadOrder(from);
-                }
-            } else {
-                toLoad = _objects.Any(x => !float.IsPositiveInfinity(x.LoadOrder));
-            }
+			if (GetDistanceSquared (from) <= Cell.Instance.maxDrawDistance * Cell.Instance.maxDrawDistance) {
+
+				float divisionRefreshDistanceDeltaSquared = Cell.Instance.divisionRefreshDistanceDelta * Cell.Instance.divisionRefreshDistanceDelta;
+				//	float factor = Cell.Instance.divisionLoadOrderDistanceFactor; //16;
+				//	if (Vector3.SqrMagnitude(from - _lastRefreshPos) > GetDistanceSquared(from) / (factor*factor)) {
+				if (Vector3.SqrMagnitude (from - _lastRefreshPos) > divisionRefreshDistanceDeltaSquared) {
+					_lastRefreshPos = from;
+					foreach (var obj in _objects) {
+						bool b = obj.RefreshLoadOrder (from);
+						if (b) {
+							toLoad = true;
+							numMapObjectsUpdatedLoadOrder++;
+						}
+					}
+				} else {
+					toLoad = _objects.Any (x => !float.IsPositiveInfinity (x.LoadOrder));
+				}
+
+			}
 
             if (toLoad) {
-                _objects.Sort();
+                _objects.Sort();	// THIS MAY BE PERFORMANCE DROP
                 LoadOrder = _objects[0].LoadOrder;
             } else {
                 LoadOrder = float.PositiveInfinity;
             }
 
-            return toLoad;
+			return toLoad;
         }
 
-        public bool LoadWhile(Func<bool> predicate)
+        public int LoadWhile(Func<bool> predicate)
         {
+			int numLoaded = 0;
             foreach (var toLoad in _objects) {
-                if (float.IsPositiveInfinity(toLoad.LoadOrder)) break;
-                toLoad.Show();
-                if (!predicate()) break;
+                if (float.IsPositiveInfinity(toLoad.LoadOrder))
+					break;
+				
+				if (toLoad.HasLoaded) {
+					// this object is loaded, just show it
+					toLoad.Show ();
+				}
+				else {
+					// this object is still not loaded from disk
+					// check if we should load it
+					if (predicate ()) {
+						toLoad.Show ();
+						numLoaded++;
+					}
+				}
             }
 
-            return predicate();
+        //    return predicate();
+		//	return false ;
+			return numLoaded ;
         }
 
         public IEnumerator<Division> GetEnumerator()

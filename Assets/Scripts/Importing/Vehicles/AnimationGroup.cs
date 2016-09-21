@@ -9,9 +9,15 @@ namespace SanAndreasUnity.Importing.Animation
     {
         None = 0,
         WalkCycle = 1,
-        Car = 2
+        Car = 2,
+		MyWalkCycle = 3,
+		Colt45 = 4,
+		Rifle = 5,
+		Rocket = 6,
+		Grenade = 7
     }
 
+	/*
     public enum AnimIndex
     {
         None = -1,
@@ -24,6 +30,12 @@ namespace SanAndreasUnity.Importing.Animation
         RoadCross = 4,
         WalkStart = 5,
 
+		IdleArmed = 0,
+		FuckU = 1,
+		GUN_STAND = 2,
+		COLT45FIRE = 3,
+		COLT45RELOAD = 4,
+
         // AnimGroup.Car
         Sit = 0,
         SitPassenger = 1,
@@ -34,6 +46,25 @@ namespace SanAndreasUnity.Importing.Animation
         GetOutLeft = 6,
         GetOutRight = 7,
     }
+    */
+
+	public class AnimIndex {
+		public static string Walk = "walk_civi";
+		public static string Run = "run_civi";
+		public static string Panicked = "sprint_panic";
+		public static string Idle = "idle_stance";
+
+		public static string Sit = "CAR_sit";
+		public static string SitPassenger = "CAR_sitp" ;
+		public static string DriveLeft = "Drive_L";
+		public static string DriveRight = "Drive_R";
+		public static string GetInLeft = "CAR_getin_LHS";
+		public static string GetInRight = "CAR_getin_RHS";
+		public static string GetOutLeft = "CAR_getout_LHS";
+		public static string GetOutRight = "CAR_getout_RHS";
+
+		public static string IdleArmed = "IDLE_ARMED";
+	}
 
     public class AnimationGroup
     {
@@ -46,7 +77,7 @@ namespace SanAndreasUnity.Importing.Animation
         private static readonly Regex _sEndRegex = new Regex(@"^\s*end\s*",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static readonly Dictionary<string, Dictionary<AnimGroup, AnimationGroup>> _sGroups
+		public static readonly Dictionary<string, Dictionary<AnimGroup, AnimationGroup>> _sGroups
             = new Dictionary<string, Dictionary<AnimGroup, AnimationGroup>>();
 
         public static void Load(string path)
@@ -83,6 +114,7 @@ namespace SanAndreasUnity.Importing.Animation
         }
 
         private readonly string[] _animations;
+		public	string[] Animations { get { return this._animations; } }
 
         public readonly string Name;
         public readonly string FileName;
@@ -106,9 +138,18 @@ namespace SanAndreasUnity.Importing.Animation
             }
         }
 
+		/*
         public string this[AnimIndex type]
         {
+			
             get { return _animations[(int) type]; }
         }
+        */
+
+		public	bool	HasAnimation( string animName ) {
+
+			return System.Array.IndexOf<string> (_animations, animName) >= 0;
+
+		}
     }
 }

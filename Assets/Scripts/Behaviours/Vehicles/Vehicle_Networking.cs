@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Facepunch.Networking;
-using ProtoBuf.Vehicle;
+//using Facepunch.Networking;
+//using ProtoBuf.Vehicle;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using UnityEngine;
@@ -104,6 +104,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
 #endif
 
+/*
         private VehicleState GetSnapshot()
         {
             return new VehicleState {
@@ -160,5 +161,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             SendToClients(message, Group.Subscribers.Where(x => x != sender),
                 DeliveryMethod.UnreliableSequenced, 2);
         }
+*/
     }
 }

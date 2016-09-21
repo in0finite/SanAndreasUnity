@@ -11,7 +11,28 @@
 /*.user
 /*.userprefs
 /*.pidb
+/*.pdb
 /*.booproj
+
+# Built program and data
+/*.exe
+/*_Data
+*.apk
+*.unitypackage
+
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Unity3D generated meta files
+*.pidb.meta
 
 #Unity3D Generated File On Crash Reports
 sysinfo.txt

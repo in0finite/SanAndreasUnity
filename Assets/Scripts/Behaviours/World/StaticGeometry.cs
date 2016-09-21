@@ -70,10 +70,30 @@ namespace SanAndreasUnity.Behaviours.World
             if (!_canLoad) return false;
 
             var obj = Instance.Object;
-            var dist = Vector3.Distance(from, transform.position);
+        
+		//	if (obj.HasFlag (ObjectFlag.DisableDrawDist))
+		//		return true;
+			
+			//    var dist = Vector3.Distance(from, transform.position);
+			var distSquared = Vector3.SqrMagnitude( from - transform.position );
 
-            return (dist <= obj.DrawDist || (obj.DrawDist >= 300 && dist < 2560))
-                && (!HasLoaded || LodParent == null || !LodParent.IsVisible || !LodParent.ShouldBeVisible(from));
+			if (distSquared > Cell.Instance.maxDrawDistance * Cell.Instance.maxDrawDistance)
+				return false;
+
+			if (distSquared > obj.DrawDist * obj.DrawDist)
+				return false;
+			
+
+			if (!HasLoaded || LodParent == null || !LodParent.IsVisible)
+				return true;
+			
+			if (!LodParent.ShouldBeVisible (from))
+				return true;
+
+			return false;
+
+		//	return (distSquared <= obj.DrawDist * obj.DrawDist || (obj.DrawDist >= 300 && distSquared < 2560*2560))
+        //        && (!HasLoaded || LodParent == null || !LodParent.IsVisible || !LodParent.ShouldBeVisible(from));
         }
 
         protected override float OnRefreshLoadOrder(Vector3 from)
@@ -81,7 +101,7 @@ namespace SanAndreasUnity.Behaviours.World
             var visible = ShouldBeVisible(from);
 
             if (!IsVisible) {
-                return visible ? Vector3.Distance(from, transform.position) : float.PositiveInfinity;
+				return visible ? Vector3.SqrMagnitude(from - transform.position) : float.PositiveInfinity;
             }
 
             if (!visible) Hide();

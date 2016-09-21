@@ -23,7 +23,7 @@
 
 	// Asset paths
 
-	"game_dir" : "C:/Program Files (x86)/Steam/steamapps/common/Grand Theft Auto San Andreas",
+	"game_dir" : "C:/Program Files (x86)/Rockstar Games/GTA San Andreas",
 
 	"archive_paths" : [
 		"${game_dir}",
@@ -37,7 +37,8 @@
 	"item_paths" : [
 		"${game_dir}/data/gta.dat",
 		"${game_dir}/data/vehicles.ide",
-		"${game_dir}/data/peds.ide"
+		"${game_dir}/data/peds.ide",
+		"${game_dir}/data/default.ide"
 	],
 
 	"handling_path" : "${game_dir}/data/handling.cfg",

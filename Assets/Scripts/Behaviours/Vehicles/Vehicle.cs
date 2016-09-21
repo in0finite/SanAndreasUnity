@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         All = Front | Rear
     }
 
-    public partial class Vehicle : Networking.Networkable
+	public partial class Vehicle : MonoBehaviour
     {
         private static int _sLayer = -1;
         public static int Layer
@@ -191,7 +191,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void FixedUpdate()
         {
-            NetworkingFixedUpdate();
+        //    NetworkingFixedUpdate();
             PhysicsFixedUpdate();
         }
     }

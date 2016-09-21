@@ -8,7 +8,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 495706}
-  - 114: {fileID: 11483918}
   m_Layer: 0
   m_Name: Client
   m_TagString: Untagged
@@ -39,7 +38,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 413050}
-  - 114: {fileID: 11448326}
   m_Layer: 0
   m_Name: Server
   m_TagString: Untagged
@@ -85,32 +83,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 458624}
   m_RootOrder: 0
---- !u!114 &11448326
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 199630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 883011d49c95b7c468eb69aed159b1c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ServerName: 
-  TickRate: 20
-  PlayerSpawns:
-  - {fileID: 0}
---- !u!114 &11483918
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 138422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c555298883ef1942b60db8abde5b416, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

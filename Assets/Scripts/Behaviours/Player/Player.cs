@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Collections;
-using Facepunch.Networking;
-using ProtoBuf.Player;
+//using Facepunch.Networking;
+//using ProtoBuf.Player;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Animation;
@@ -10,7 +10,7 @@ using UnityEngine;
 namespace SanAndreasUnity.Behaviours
 {
     [RequireComponent(typeof(CharacterController))]
-    public partial class Player : Networking.Networkable
+	public partial class Player : MonoBehaviour
     {
         #region Private fields
 
@@ -24,6 +24,9 @@ namespace SanAndreasUnity.Behaviours
         public Pedestrian PlayerModel;
 
         public float TurnSpeed = 10f;
+
+		public	Weapon[] weapons = new Weapon[(int)WeaponSlot.Count] ;
+		public	int	currentWeaponSlot = -1;
 
         #endregion
 
@@ -51,12 +54,32 @@ namespace SanAndreasUnity.Behaviours
 
         #endregion
 
-        protected override void OnAwake()
+   //     protected override void OnAwake()
+		protected void Awake()
         {
-            base.OnAwake();
+        //    base.OnAwake();
 
             _controller = GetComponent<CharacterController>();
+
+			IsLocalPlayer = true;
         }
+
+		void	Start() {
+
+		//	MySetupLocalPlayer ();
+
+		}
+
+		private void MySetupLocalPlayer()
+		{
+			Camera.gameObject.SetActive(true);
+			Camera.transform.SetParent(null, true);
+
+			Cell.Focus = transform;
+			Cell.PreviewCamera.gameObject.SetActive(false);
+
+			gameObject.AddComponent<PlayerController>();
+		}
 
 #if CLIENT
 
@@ -89,10 +112,12 @@ namespace SanAndreasUnity.Behaviours
             if (IsLocalPlayer) {
                 Camera.transform.SetParent(seat.Parent, true);
 
+				/*
                 SendToServer(_lastPassengerState = new PlayerPassengerState {
                     Vechicle = vehicle,
                     SeatAlignment = (int) seatAlignment
                 }, DeliveryMethod.ReliableOrdered, 1);
+                */
             }
 
             transform.SetParent(seat.Parent);
@@ -117,11 +142,13 @@ namespace SanAndreasUnity.Behaviours
             CurrentVehicle.StopControlling();
 
             if (IsLocalPlayer) {
+				/*
                 SendToServer(_lastPassengerState = new PlayerPassengerState {
                     Vechicle = null
                 }, DeliveryMethod.ReliableOrdered, 1);
+                */
             } else {
-                _snapshots.Reset();
+            //    _snapshots.Reset();
             }
 
             StartCoroutine(ExitVehicleAnimation(immediate));
@@ -204,14 +231,51 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
+			if (!Loader.HasLoaded)
+				return;
+
             if (IsInVehicle && IsDrivingVehicle) {
                 UpdateWheelTurning();
             }
+
+			// switch weapons
+			if (!IsInVehicle) {
+				if (Input.mouseScrollDelta.y != 0) {
+					if (currentWeaponSlot < 0)
+						currentWeaponSlot = 0;
+					
+					for( int i=currentWeaponSlot + (int) Mathf.Sign(Input.mouseScrollDelta.y); i != currentWeaponSlot ;
+						i += (int) Mathf.Sign(Input.mouseScrollDelta.y) ) {
+
+						if (i < 0)
+							i = weapons.Length - 1;
+						if (i >= weapons.Length)
+							i = 0;
+
+						if (weapons [i] != null) {
+							this.SwitchWeapon (i);
+							break;
+						}
+					}
+				}
+			}
+
+			// add weapons to player if he doesn't have any
+			if (null == System.Array.Find<Weapon> (weapons, w => w != null)) {
+				// player has no weapons
+
+				weapons[(int)WeaponSlot.Machine] = Weapon.Load(355);
+				this.SwitchWeapon ((int)WeaponSlot.Machine);
+			}
+
         }
 
         private void FixedUpdate()
         {
-            NetworkingFixedUpdate();
+			if (!Loader.HasLoaded)
+				return;
+			
+        //    NetworkingFixedUpdate();
 
             if (IsInVehicle) return;
 
@@ -234,5 +298,24 @@ namespace SanAndreasUnity.Behaviours
                 Velocity = _controller.velocity;
             }
         }
+
+		private	void	SwitchWeapon( int slotIndex ) {
+
+			if (PlayerModel.weapon != null) {
+				// set parent to weapons container in order to hide it
+			//	PlayerModel.weapon.SetParent (Weapon.weaponsContainer.transform);
+
+				PlayerModel.weapon.gameObject.SetActive (false);
+			}
+
+			PlayerModel.weapon = weapons [slotIndex].gameObject.transform;
+			// change parent to make it visible
+		//	PlayerModel.weapon.SetParent(this.transform);
+			PlayerModel.weapon.gameObject.SetActive(true);
+
+			currentWeaponSlot = slotIndex;
+
+		}
+
     }
 }

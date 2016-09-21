@@ -97,24 +97,34 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static Vehicle Create(VehicleSpawner spawner)
         {
-            var inst = new GameObject().AddComponent<Vehicle>();
-
-            VehicleDef def;
-            if (spawner.Info.CarId == -1) {
-                def = GetRandomDef();
-            } else {
-                def = Item.GetDefinition<VehicleDef>(spawner.Info.CarId);
-            }
-
-            inst.Initialize(def, spawner.Info.Colors);
-
-            inst.transform.position = spawner.transform.position - Vector3.up * inst.AverageWheelHeight;
-            inst.transform.localRotation = spawner.transform.rotation;
-
-            Networking.Server.Instance.GlobalGroup.Add(inst);
-
-            return inst;
+			return Create (spawner.Info.CarId, spawner.Info.Colors, spawner.transform.position,
+				spawner.transform.rotation);
         }
+
+		public static Vehicle Create( int carId, int[] colors, Vector3 position, Quaternion rotation) {
+
+			var inst = new GameObject().AddComponent<Vehicle>();
+
+			VehicleDef def;
+			if (carId == -1) {
+				def = GetRandomDef();
+			} else {
+				def = Item.GetDefinition<VehicleDef>(carId);
+			}
+
+			inst.Initialize(def, colors);
+
+			inst.transform.position = position - Vector3.up * inst.AverageWheelHeight;
+			inst.transform.localRotation = rotation;
+
+			//    Networking.Server.Instance.GlobalGroup.Add(inst);
+
+			OutOfRangeDestroyer destroyer = inst.gameObject.AddComponent<OutOfRangeDestroyer> ();
+			destroyer.timeUntilDestroyed = 5;
+			destroyer.range = 300;
+
+			return inst;
+		}
 
         private Geometry.GeometryParts _geometryParts;
 
