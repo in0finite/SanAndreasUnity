@@ -1,0 +1,17 @@
+Animations must be loaded/played by index – because different anim definition groups (man, woman, etc) use different anim names ( walk_civi, woman_walknorm, respectively).
+
+Character can't move along x and z axes when running armed.
+
+Weapons. Aiming with weapons – aim animation.
+
+What else can be imported: ai paths, character spawn info, item pickups, audio, 
+
+Rigid body character.
+
+Airplane.
+
+Load map in editor.
+
+Async geometry loading.
+
+Make everything networked.
