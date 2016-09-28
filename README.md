@@ -10,7 +10,15 @@ Before starting the game, edit config.user.json to set path to gta.
 
 Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data folder. The script which should do that, doesn't work right now.
 
-Press V to spawn vehicle xD.
+## In game controls
+
+V - spawn vehicle
+
+P - change pedestrian model
+
+L shift - run
+
+mouse scroll - zoom in/out
 
 ## Media
 
