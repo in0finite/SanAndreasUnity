@@ -41,6 +41,12 @@ mouse scroll - zoom in/out
 
 ## Media
 
+!(/media/ak47.png)
+!(/media/driving.png)
+!(/media/lasventuras.png)
+!(/media/modelviewer.png)
+!(/media/vehicles.png)
+
 ### First networking test
 
 [![First networking test](http://files.facepunch.com/ziks/2015/April/12/vidthumb1.png)](http://files.facepunch.com/ziks/2015/April/12/2015-04-12-2011-02.mp4)
