@@ -41,11 +41,11 @@ mouse scroll - zoom in/out
 
 ## Media
 
-!(/media/ak47.png)
-!(/media/driving.png)
-!(/media/lasventuras.png)
-!(/media/modelviewer.png)
-!(/media/vehicles.png)
+![](/media/ak47.png)
+![](/media/driving.png)
+![](/media/lasventuras.png)
+![](/media/modelviewer.png)
+![](/media/vehicles.png)
 
 ### First networking test
 
