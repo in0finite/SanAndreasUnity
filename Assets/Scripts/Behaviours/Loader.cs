@@ -7,9 +7,17 @@ using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+using System.Collections.Generic;
 
 namespace SanAndreasUnity.Behaviours
 {
+	#if UNITY_EDITOR
+//	[ExecuteInEditMode]
+	[InitializeOnLoad]
+	#endif
     public class Loader : MonoBehaviour
     {
 	//	public	bool	asynchronousLoad = false;
@@ -28,10 +36,18 @@ namespace SanAndreasUnity.Behaviours
 		private	static	IArchive[] archives;
 
 
+		static	Loader() {
+			// called on editor startup
+			// start loading game data
+
+		//	EditorApplication.update += StaticUpdate;
+
+		}
+
         private void Awake()
         {
             if (HasLoaded) return;
-
+			
 			/*
 			var archivePaths = Config.GetPaths ("archive_paths");
 
@@ -84,7 +100,14 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-		void Update() {
+		static	void StaticUpdate() {
+
+			#if UNITY_EDITOR
+			if (!EditorApplication.isPlaying && !HasLoaded) {
+				// display loading progress in editor
+
+			}
+			#endif
 
 			if (HasLoaded)
 				return;
@@ -93,28 +116,42 @@ namespace SanAndreasUnity.Behaviours
 			switch (loadingStatus) {
 
 			case 0:
-				
+
+				Debug.Log ("Started loading GTA.");
+
 				archivePaths = Config.GetPaths ("archive_paths");
 
 				break;
 			case 1:
 				
 				using (Utilities.Profiler.Start ("Archive load time")) {
-					archives = archivePaths.Select (x => 
-						File.Exists (x) ? (IArchive)ArchiveManager.LoadImageArchive (x)
-						: Directory.Exists (x) ? ArchiveManager.LoadLooseArchive (x)
-						: null).Where (x => x != null).ToArray ();
+					
+					List<IArchive> listArchives = new List<IArchive> ();
+					foreach( var path in archivePaths) {
+						if(File.Exists(path)) {
+							listArchives.Add (ArchiveManager.LoadImageArchive (path));
+						} else if( Directory.Exists (path) ) {
+							listArchives.Add (ArchiveManager.LoadLooseArchive (path));
+						} else {
+							Debug.Log("Archive not found: " + path);	
+						}
+					}
+					archives = listArchives.FindAll (a => a != null).ToArray ();
+
 				}
 
 				break;
 			case 2:
 
 				using (Utilities.Profiler.Start ("Collision load time")) {
+					int numCollisionFiles = 0;
 					foreach (var archive in archives) {
 						foreach (var colFile in archive.GetFileNamesWithExtension(".col")) {
 							CollisionFile.Load (colFile);
+							numCollisionFiles++;
 						}
 					}
+					Debug.Log ("Number of collision files " + numCollisionFiles);
 				}
 
 				break;
@@ -162,12 +199,20 @@ namespace SanAndreasUnity.Behaviours
 
 				HasLoaded = true;
 
+				Debug.Log ("GTA loading finished.");
+
 				break;
 
 			}
 
 			loadingStatus++;
 
+
+		}
+
+		void Update() {
+
+			StaticUpdate ();
 
 		}
 

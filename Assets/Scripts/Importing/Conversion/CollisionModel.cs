@@ -143,6 +143,8 @@ namespace SanAndreasUnity.Importing.Conversion
             clone.name = "Collision";
             clone.transform.SetParent(destParent, false);
 
+		//	Debug.Log ("Setting parent (" + destParent.name + ") for " + clone.name);
+
             if (!forceConvex) return;
 
             foreach (var collider in clone.GetComponentsInChildren<Collider>()) {

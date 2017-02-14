@@ -22,8 +22,8 @@ namespace SanAndreasUnity.Behaviours
     {
         private int _curPedestrianId;
         private AnimGroup _curAnimGroup = AnimGroup.None;
-    //    private AnimIndex _curAnim = AnimIndex.None;
-		private	string	_curAnim = "" ;
+        private AnimIndex _curAnim = AnimIndex.None;
+	//	private	string	_curAnim = "" ;
 
 		public UnityEngine.Animation _anim { get; private set; }
 
@@ -42,8 +42,8 @@ namespace SanAndreasUnity.Behaviours
 		private	bool	loadedModelOnStartup = false;
 
         public AnimGroup AnimGroup = AnimGroup.WalkCycle;
-    //    public AnimIndex AnimIndex = AnimIndex.Idle;
-		public	string	animIndex = "" ;
+        public AnimIndex animIndex = AnimIndex.Idle;
+	//	public	string	animIndex = "" ;
 
         public bool IsInVehicle { get; set; }
 
@@ -211,8 +211,8 @@ namespace SanAndreasUnity.Behaviours
 
             LoadModel(Definition.ModelName, Definition.TextureDictionaryName);
 
-        //    _curAnim = AnimIndex.None;
-			_curAnim = "" ;
+            _curAnim = AnimIndex.None;
+		//	_curAnim = "" ;
             _curAnimGroup = AnimGroup.None;
 
             _anim = gameObject.GetComponent<UnityEngine.Animation>();
@@ -220,8 +220,7 @@ namespace SanAndreasUnity.Behaviours
             if (_anim == null) {
                 _anim = gameObject.AddComponent<UnityEngine.Animation>();
             }
-
-			/*
+				
             LoadAnim(AnimGroup.WalkCycle, AnimIndex.Walk);
             LoadAnim(AnimGroup.WalkCycle, AnimIndex.Run);
             LoadAnim(AnimGroup.WalkCycle, AnimIndex.Panicked);
@@ -236,9 +235,11 @@ namespace SanAndreasUnity.Behaviours
             LoadAnim(AnimGroup.Car, AnimIndex.GetInRight);
             LoadAnim(AnimGroup.Car, AnimIndex.GetOutLeft);
             LoadAnim(AnimGroup.Car, AnimIndex.GetOutRight);
-			*/
 
-			LoadAllAnimations ();
+			LoadAnim(AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
+			LoadAnim(AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND);
+
+		//	LoadAllAnimations ();
 
         }
 
@@ -260,7 +261,7 @@ namespace SanAndreasUnity.Behaviours
 			m_leftFinger = _frames.GetByName (" L Finger").transform;
         }
 			
-        public AnimationState PlayAnim(AnimGroup group, string anim, PlayMode playMode)
+		public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, PlayMode playMode)
         {
             var animState = LoadAnim(group, anim);
 			if (null == animState)
@@ -274,7 +275,7 @@ namespace SanAndreasUnity.Behaviours
             return animState;
         }
 
-        public AnimationState CrossFadeAnim(AnimGroup group, string anim, float duration, PlayMode playMode)
+		public AnimationState CrossFadeAnim(AnimGroup group, AnimIndex anim, float duration, PlayMode playMode)
         {
             var animState = LoadAnim(group, anim);
 			if (null == animState)
@@ -288,7 +289,7 @@ namespace SanAndreasUnity.Behaviours
             return animState;
         }
 
-        public AnimationState CrossFadeAnimQueued(AnimGroup group, string anim, float duration, QueueMode queueMode, PlayMode playMode)
+		public AnimationState CrossFadeAnimQueued(AnimGroup group, AnimIndex anim, float duration, QueueMode queueMode, PlayMode playMode)
         {
             var animState = LoadAnim(group, anim);
 			if (null == animState)
@@ -302,21 +303,30 @@ namespace SanAndreasUnity.Behaviours
             return animState;
         }
 
-        public Anim GetAnim(AnimGroup group, string anim)
+		public Anim GetAnim(AnimGroup group, AnimIndex anim)
         {
-        //    var animGroup = AnimationGroup.Get(Definition.AnimGroupName, group);
+            var animGroup = AnimationGroup.Get(Definition.AnimGroupName, group);
 
+			var animName = animGroup [anim];
+			
             Anim result;
-            return _loadedAnims.TryGetValue(anim, out result) ? result : null;
+			return _loadedAnims.TryGetValue(animName, out result) ? result : null;
         }
 
-        private AnimationState LoadAnim(AnimGroup group, string anim)
+		public	string	GetAnimName(AnimGroup group, AnimIndex anim) {
+
+			var animGroup = AnimationGroup.Get(Definition.AnimGroupName, group);
+
+			return animGroup [anim];
+		}
+
+		private AnimationState LoadAnim(AnimGroup group, AnimIndex anim)
         {
-        //    if (anim == AnimIndex.None) {
-        //        return null;
-        //    }
-			if ("" == anim)
-				return null;
+            if (anim == AnimIndex.None) {
+                return null;
+            }
+		//	if ("" == anim)
+		//		return null;
 
 			if (group == AnimGroup.None) {
 				return null;
@@ -325,10 +335,10 @@ namespace SanAndreasUnity.Behaviours
             var animGroup = AnimationGroup.Get(Definition.AnimGroupName, group);
 			if (null == animGroup)
 				return null;
-        //    var animName = animGroup[anim];
-			var animName = anim ;
-			if (!animGroup.HasAnimation (animName))
-				return null;
+            var animName = animGroup[anim];
+		//	var animName = anim ;
+		//	if (!animGroup.HasAnimation (animName))
+		//		return null;
 
             AnimationState state;
 

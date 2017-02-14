@@ -6,7 +6,7 @@ This won't be a complete re-implementation of the game, but we're hoping to buil
 
 ## Setup Instructions
 
-Before starting the game, edit config.user.json to set path to gta.
+Before starting the game, create/edit config.user.json inside project folder to specify path to gta.
 
 Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data folder. The script which should do that, doesn't work right now.
 
@@ -19,6 +19,25 @@ P - change pedestrian model
 L shift - run
 
 mouse scroll - zoom in/out
+
+## Here is a list of what I think should be done next
+
+* Animations must be loaded/played by index – because different anim definition groups (man, woman, etc) use different anim names ( walk_civi, woman_walknorm, respectively).
+
+* Weapons. Aiming with weapons – aim animation.
+
+* What else can be imported: ai paths, character spawn info, item pickups, audio, 
+
+* Rigid body character.
+
+* Airplane.
+
+* Load map in editor.
+
+* Async geometry loading.
+
+* Make everything networked.
+
 
 ## Media
 
@@ -33,3 +52,4 @@ mouse scroll - zoom in/out
 ## Resources
 
 * [GTAModding Wiki](http://www.gtamodding.com/wiki/Main_Page)
+

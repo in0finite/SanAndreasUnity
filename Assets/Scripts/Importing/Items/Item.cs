@@ -35,7 +35,7 @@ namespace SanAndreasUnity.Importing.Items
 
                     switch (type.ToLower()) {
                         case "ide":
-                            ReadIde(args);
+							ReadIde(args);
                             break;
                         case "ipl":
                             ReadIpl(args);

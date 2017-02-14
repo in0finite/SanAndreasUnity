@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Importing.Archive
 
         public static string GetPath(params string[] relative)
         {
-            return relative.Aggregate(GameDir, Path.Combine);
+			return relative.Aggregate(GameDir, Path.Combine).Replace('\\', Path.DirectorySeparatorChar);
         }
 
         private static readonly List<IArchive> _sLoadedArchives = new List<IArchive>();

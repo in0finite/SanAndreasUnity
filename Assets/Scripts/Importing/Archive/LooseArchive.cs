@@ -41,11 +41,15 @@ namespace SanAndreasUnity.Importing.Archive
 
         private LooseArchive(string dirPath)
         {
-            _fileDict = new Dictionary<string, LooseArchiveEntry>(StringComparer.InvariantCultureIgnoreCase);
+			Debug.Log ("Loading loose archive: " + dirPath);
+
+			_fileDict = new Dictionary<string, LooseArchiveEntry>(StringComparer.InvariantCultureIgnoreCase);
             _extDict = new Dictionary<string, List<string>>(StringComparer.InvariantCultureIgnoreCase);
 
             foreach (var file in Directory.GetFiles(dirPath, "*", SearchOption.AllDirectories)) {
                 var ext = Path.GetExtension(file);
+
+				ext = ext.ToLower ();
 
                 if (!_sValidExtensions.Contains(ext)) continue;
 
@@ -55,6 +59,8 @@ namespace SanAndreasUnity.Importing.Archive
                     Debug.LogWarningFormat("Already loaded {0}", entry.Name);
                     continue;
                 }
+
+			//	Debug.Log ("Adding loose archive entry: " + entry.FilePath);
 
                 _fileDict.Add(entry.Name, entry);
 

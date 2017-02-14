@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿
+/*
+using System.IO;
 using System.Runtime.Serialization.Formatters;
 using UnityEngine;
 using UnityEditor;
@@ -10,6 +12,7 @@ namespace Facepunch.Editor
     {
         public static string AssetsPath { get; set; }
         public static string RootPath { get; set; }
+
 
         static ProtoBufGen()
         {
@@ -27,8 +30,9 @@ namespace Facepunch.Editor
                 RootPath = parent;
             }
         }
+        
 
-        [MenuItem("Facepunch/Generate ProtoBuf")]
+     //   [MenuItem("Facepunch/Generate ProtoBuf")]
 // ReSharper disable once UnusedMember.Local
         private static void Generate()
         {
@@ -84,3 +88,4 @@ namespace Facepunch.Editor
         }
     }
 }
+*/

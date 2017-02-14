@@ -142,14 +142,14 @@ namespace UnityEngine
         //
         public static void InvokeAtomic(this MonoBehaviour mb, string strName, float fDelay)
         {
-            Profiler.BeginSample("InvokeAtomic");
+			UnityEngine.Profiling.Profiler.BeginSample("InvokeAtomic");
 
             if (!mb.IsInvoking(strName))
             {
                 mb.Invoke(strName, fDelay);
             }
 
-            Profiler.EndSample();
+			UnityEngine.Profiling.Profiler.EndSample();
         }
 
         //

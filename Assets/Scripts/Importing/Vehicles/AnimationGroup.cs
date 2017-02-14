@@ -16,8 +16,7 @@ namespace SanAndreasUnity.Importing.Animation
 		Rocket = 6,
 		Grenade = 7
     }
-
-	/*
+			
     public enum AnimIndex
     {
         None = -1,
@@ -46,8 +45,8 @@ namespace SanAndreasUnity.Importing.Animation
         GetOutLeft = 6,
         GetOutRight = 7,
     }
-    */
 
+	/*
 	public class AnimIndex {
 		public static string Walk = "walk_civi";
 		public static string Run = "run_civi";
@@ -65,6 +64,7 @@ namespace SanAndreasUnity.Importing.Animation
 
 		public static string IdleArmed = "IDLE_ARMED";
 	}
+	*/
 
     public class AnimationGroup
     {
@@ -137,14 +137,12 @@ namespace SanAndreasUnity.Importing.Animation
                 _animations[i++] = line;
             }
         }
-
-		/*
+			
         public string this[AnimIndex type]
         {
 			
             get { return _animations[(int) type]; }
         }
-        */
 
 		public	bool	HasAnimation( string animName ) {
 

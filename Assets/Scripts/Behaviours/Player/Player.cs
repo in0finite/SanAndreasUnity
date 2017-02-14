@@ -27,6 +27,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public	Weapon[] weapons = new Weapon[(int)WeaponSlot.Count] ;
 		public	int	currentWeaponSlot = -1;
+		public	bool	autoAddWeapon = false ;
 
         #endregion
 
@@ -238,7 +239,7 @@ namespace SanAndreasUnity.Behaviours
                 UpdateWheelTurning();
             }
 
-			// switch weapons
+			// switch weapons - does not work
 			if (!IsInVehicle) {
 				if (Input.mouseScrollDelta.y != 0) {
 					
@@ -264,11 +265,11 @@ namespace SanAndreasUnity.Behaviours
 			}
 
 			// add weapons to player if he doesn't have any
-			if (null == System.Array.Find<Weapon> (weapons, w => w != null)) {
+			if (autoAddWeapon && null == System.Array.Find (weapons, w => w != null)) {
 				// player has no weapons
 
-			//	weapons[(int)WeaponSlot.Machine] = Weapon.Load(355);
-			//	this.SwitchWeapon ((int)WeaponSlot.Machine);
+				weapons[(int)WeaponSlot.Machine] = Weapon.Load(355);
+				this.SwitchWeapon ((int)WeaponSlot.Machine);
 			}
 
         }

@@ -27,6 +27,7 @@ namespace SanAndreasUnity.Importing.Archive
 
         public static ImageArchive Load(String filePath)
         {
+			UnityEngine.Debug.Log ("Loading image archive: " + filePath);
             return new ImageArchive(new FileStream(filePath, FileMode.Open, FileAccess.Read));
         }
 

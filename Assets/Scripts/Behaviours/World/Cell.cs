@@ -116,11 +116,12 @@ namespace SanAndreasUnity.Behaviours.World
 				
 				numObjectsLoadedThisFrame += div.LoadWhile (() => _timer.Elapsed.TotalSeconds < 1d / 60d) ;
 
-				if (_timer.Elapsed.TotalSeconds >= 1d / 60d)
-				//	break;
-					;
-				else
+				if (_timer.Elapsed.TotalSeconds >= 1d / 60d) {
+					//	break;
+
+				} else {
 					numLeavesLoadedThisFrame++;
+				}
 			}
 			measuredTimes [2] = (float) _timer.Elapsed.TotalMilliseconds;
 

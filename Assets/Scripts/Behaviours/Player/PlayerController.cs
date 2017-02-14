@@ -30,6 +30,8 @@ namespace SanAndreasUnity.Behaviours
 
         public float EnterVehicleRadius = 5.0f;
 
+		public	float	animationBlendWeight = 0.4f ;
+
         #endregion
 
         #region Properties
@@ -128,49 +130,59 @@ namespace SanAndreasUnity.Behaviours
             if (_player.IsInVehicle) return;
             if (!_lockedCursor) return;
 
-            var inputMove = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+			
+			if (_player.currentWeaponSlot > 0 && Input.GetMouseButton (1)) {
+				// right click is on
+				// aim with weapon
+			//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
+			//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
+				PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND, PlayMode.StopAll);
+			} else {
 
-            if (inputMove.sqrMagnitude > 0f)
-            {
-                inputMove.Normalize();
+				var inputMove = new Vector3 (Input.GetAxis ("Horizontal"), 0f, Input.GetAxis ("Vertical"));
 
-                if (Input.GetKey(KeyCode.LeftShift)) {
-					if (_player.currentWeaponSlot > 0) {
-						// player is holding a weapon
+				if (inputMove.sqrMagnitude > 0f) {
+					inputMove.Normalize ();
 
-						AnimationState runState = PlayerModel.PlayAnim (AnimGroup.WalkCycle,
-							AnimIndex.Run, PlayMode.StopAll);
-						Frame f1 = PlayerModel.Frames.GetByBoneId (41);//PlayerModel.Frames.GetByName (" L Thigh");
-						Frame f2 = PlayerModel.Frames.GetByBoneId (51);//PlayerModel.Frames.GetByName (" R Thigh");
-						runState.AddMixingTransform (f1.transform, true);
-						runState.AddMixingTransform (f2.transform, true);
-					//	runState.wrapMode = WrapMode.Loop;
+					if (Input.GetKey (KeyCode.LeftShift)) {
+						if (_player.currentWeaponSlot > 0) {
+							// player is holding a weapon
 
-						PlayerModel._anim [AnimIndex.IdleArmed].layer = 1;
-						AnimationState armedState = PlayerModel.PlayAnim (AnimGroup.MyWalkCycle,
-							AnimIndex.IdleArmed, PlayMode.StopSameLayer);
-						Frame f3 = PlayerModel.Frames.GetByBoneId (2);//PlayerModel.Frames.GetByName (" Spine");
-						armedState.AddMixingTransform (f3.transform, true);
-					//	armedState.layer = 1;
-					//	armedState.wrapMode = WrapMode.Loop;
-
-					//	PlayerModel._anim.Blend( );
+							this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.WalkCycle,
+								AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
 						
+						} else {
+							// player is not holding a weapon
+							PlayerModel.PlayAnim (AnimGroup.WalkCycle,
+								AnimIndex.Run, PlayMode.StopAll);
+						}
+						//    PlayerModel.Running = true;
 					} else {
-						// player is not holding a weapon
-						PlayerModel.PlayAnim (AnimGroup.WalkCycle,
-							AnimIndex.Run, PlayMode.StopAll);
+						// player is walking
+						if (_player.currentWeaponSlot > 0) {
+							this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.WalkCycle,
+								AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
+						} else {
+							PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Walk, PlayMode.StopAll);
+						}
+						//    PlayerModel.Walking = true;
 					}
-                //    PlayerModel.Running = true;
-                } else {
-                    PlayerModel.Walking = true;
-                }
-            } else {
-                PlayerModel.Walking = false;
-            }
+				} else {
+					// player is standing
+					if (_player.currentWeaponSlot > 0) {
+						this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
+							AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
+						//	PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, PlayMode.StopAll);
+					} else {
+						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle, PlayMode.StopAll);
+					}
+					//    PlayerModel.Walking = false;
+				}
 
-            _player.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
-                new Vector3(1f, 0f, 1f)).normalized;
+				_player.Movement = Vector3.Scale (Camera.transform.TransformVector (inputMove),
+					new Vector3 (1f, 0f, 1f)).normalized;
+			}
+
 
             if (!Input.GetButtonDown("Use")) return;
 
@@ -221,5 +233,35 @@ namespace SanAndreasUnity.Behaviours
                 break;
             }
         }
+
+		void	Play2Animations( int[] boneIds1, int[] boneIds2,
+			AnimGroup group1, AnimGroup group2, AnimIndex animIndex1, AnimIndex animIndex2 ) {
+
+			PlayerModel._anim [ PlayerModel.GetAnimName( group1, animIndex1 ) ].layer = 0;
+
+			AnimationState state = PlayerModel.PlayAnim (group1, animIndex1, PlayMode.StopSameLayer);
+			
+			foreach( int boneId in boneIds1 ) {
+				Frame f = PlayerModel.Frames.GetByBoneId (boneId);
+				state.AddMixingTransform (f.transform, true);
+				//	runState.wrapMode = WrapMode.Loop;
+			}
+			
+			PlayerModel._anim [ PlayerModel.GetAnimName( group2, animIndex2 ) ].layer = 1;
+
+			state = PlayerModel.PlayAnim (group2, animIndex2, PlayMode.StopSameLayer);
+			
+			foreach( int boneId in boneIds2 ) {
+				Frame f = PlayerModel.Frames.GetByBoneId (boneId);
+				//	state.RemoveMixingTransform(f.transform);
+				state.AddMixingTransform (f.transform, true);
+				//	state.wrapMode = WrapMode.Loop;
+			}
+			state.weight = this.animationBlendWeight;
+
+			//	PlayerModel._anim.Blend( );
+
+		}
+
     }
 }
