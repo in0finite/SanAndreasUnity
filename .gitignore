@@ -49,3 +49,4 @@ Assets/Scripts/Generated/*.cs.meta
 
 config.user.json
 anim.txt
+*.app
