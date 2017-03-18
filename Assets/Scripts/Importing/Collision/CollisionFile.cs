@@ -62,15 +62,36 @@ namespace SanAndreasUnity.Importing.Collision
                     try {
                         var versString = Encoding.ASCII.GetString(versBuffer);
                         version = (Version) Enum.Parse(typeof (Version), versString);
-                    } catch {
+					} catch (Exception e) {
                         Debug.LogWarningFormat("Error while reading {0} at 0x{1:x} ({2}%)",
                             fileName, stream.Position - 4, (stream.Position - 4) * 100 / stream.Length);
+						Debug.LogWarning (e.Message);
+
+						// The length of 'male01', 'fatmale02' and 'b_wom1' in peds.col seems to be off by 1 in my version. So 'fix' for this case:
+						if ((versBuffer [0] == 'O') && (versBuffer [1] == 'L') && (versBuffer [2] == 'L') && ((versBuffer [3] == 0xD0) || (versBuffer [3] == 0xA4) || (versBuffer [3] == 0x8C))) {
+							Debug.Log ("Known problem (size off by one). Attempting to fix by adjusting read pointer...");
+							stream.Position -= 5;
+							continue;
+						} else {
+							Debug.LogError ("Unknown problem. Please report an issue for this!");
+						}
+
                         break;
                     }
 
                     var modelInfo = new CollisionFileInfo(reader, fileName, version);
                     thisFile.Add(modelInfo);
-                    _sModelNameDict.Add(modelInfo.Name, modelInfo);
+
+					try {
+                    	_sModelNameDict.Add(modelInfo.Name, modelInfo);
+					} catch (System.ArgumentException e) {
+						// The collision file for 'ct_man2' is appearing two times consecutively in my game files. Ignore second one.
+						if (modelInfo.Name != "ct_man2") {
+							Debug.LogError (e.Message);
+						} else {
+							Debug.Log ("Known problem (duplicate ct_man2 collision). Skipping...");
+						}
+					}
                 }
             }
         }
