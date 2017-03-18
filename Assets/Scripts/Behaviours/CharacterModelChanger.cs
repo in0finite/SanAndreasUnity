@@ -44,8 +44,11 @@ public class CharacterModelChanger : MonoBehaviour {
 			return;
 		}
 
-		ped.Load (newModelId);
-
+		// Retry with another random model if this one doesn't work
+		try {
+			ped.Load (newModelId);
+		} catch (System.NullReferenceException) {
+			ChangePedestrianModel (ped, -1);
+		}
 	}
-
 }
