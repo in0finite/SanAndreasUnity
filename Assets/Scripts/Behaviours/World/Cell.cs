@@ -168,6 +168,9 @@ namespace SanAndreasUnity.Behaviours.World
 			if (!Loader.HasLoaded)
 				return;
 
+			if (!Cursor.visible)
+				return;
+
 			GUILayout.Space (30);
 			GUILayout.Label ("total num divisions " + (null == _leaves ? 0 : _leaves.Count));
 			GUILayout.Label ("total num objects " + totalNumObjects);

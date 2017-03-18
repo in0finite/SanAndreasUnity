@@ -14,29 +14,26 @@ public class UIVehicleSpawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
 		if (Input.GetKeyDown (this.spawnKey)) {
 			this.SpawnVehicle ();
 		}
-
 	}
 
-	void	OnGUI() {
+	void OnGUI() {
+		if (!Cursor.visible)
+			return;
 
 		GUILayout.BeginHorizontal ();
 		GUILayout.FlexibleSpace ();
 
-	//	if( GUILayout.Button("Spawn vehicle") ) {
-			
-	//		this.SpawnVehicle ();
-	//	}
+		if( GUILayout.Button("Spawn vehicle") ) {
+			this.SpawnVehicle ();
+		}
 
 		GUILayout.EndHorizontal();
-
 	}
 
-	public	void	SpawnVehicle() {
-
+	public void SpawnVehicle() {
 		SanAndreasUnity.Behaviours.PlayerController cont =
 			GameObject.FindObjectOfType<SanAndreasUnity.Behaviours.PlayerController> ();
 
@@ -53,5 +50,4 @@ public class UIVehicleSpawner : MonoBehaviour {
 		}
 
 	}
-
 }

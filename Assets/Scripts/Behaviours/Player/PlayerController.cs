@@ -71,11 +71,15 @@ namespace SanAndreasUnity.Behaviours
         private void Awake()
         {
             _player = GetComponent<Player>();
+
+			_lockedCursor = true;
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
         }
 
         private void Update()
         {
-            if (!_lockedCursor && Input.GetMouseButtonDown(0)) {
+            if (!_lockedCursor && Input.GetKeyDown(KeyCode.Escape)) {
                 _lockedCursor = true;
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
