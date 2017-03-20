@@ -29,6 +29,8 @@ namespace SanAndreasUnity.Behaviours
 		public	int	currentWeaponSlot = -1;
 		public	bool	autoAddWeapon = false ;
 
+		public bool enableFlying = false;
+
         #endregion
 
         #region Properties
@@ -291,7 +293,11 @@ namespace SanAndreasUnity.Behaviours
             var forward = Vector3.RotateTowards(transform.forward, Heading, TurnSpeed * Time.deltaTime, 0.0f);
             transform.localRotation = Quaternion.LookRotation(forward);
 
-            if (IsLocalPlayer) {
+			if (enableFlying) {
+				Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
+				Velocity = Movement * Time.fixedDeltaTime;
+				_controller.Move (Velocity);
+			} else if (IsLocalPlayer) {
                 if (Movement.sqrMagnitude > float.Epsilon) {
                     Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
                 }

@@ -77,13 +77,37 @@ namespace SanAndreasUnity.Behaviours
 			Cursor.visible = false;
         }
 
+		void OnGUI() {
+			if (!_player.enableFlying) return;
+
+			GUILayout.BeginArea (new Rect (Screen.width - 180, Screen.height - 30, 180, 30));
+			GUILayout.BeginHorizontal ();
+			GUILayout.FlexibleSpace ();
+			GUILayout.Label ("Flying-mode enabled!");
+			GUILayout.FlexibleSpace ();
+			GUILayout.EndHorizontal ();
+			GUILayout.EndArea ();
+		}
+
         private void Update()
         {
-            if (!_lockedCursor && Input.GetKeyDown(KeyCode.Escape)) {
+			if (!Loader.HasLoaded)
+				return;
+
+			if (!_player.enableFlying && Input.GetKeyDown (KeyCode.T)) {
+				_player.enableFlying = true;
+				_player.Movement = new Vector3 (0f, 0f, 0f); // disable current movement
+				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
+
+			} else if (_player.enableFlying && Input.GetKeyDown (KeyCode.T)) {
+				_player.enableFlying = false;
+			}
+			
+            if (!_lockedCursor && Input.GetKeyDown(KeyCode.Q)) {
                 _lockedCursor = true;
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
-            } else if (_lockedCursor && Input.GetKeyDown(KeyCode.Escape)) {
+            } else if (_lockedCursor && Input.GetKeyDown(KeyCode.Q)) {
                 _lockedCursor = false;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
@@ -133,7 +157,22 @@ namespace SanAndreasUnity.Behaviours
 
             if (_player.IsInVehicle) return;
             if (!_lockedCursor) return;
-
+			if (_player.enableFlying) {
+				var up_down = 0.0f;
+				if (Input.GetKey (KeyCode.Backspace)) {
+					up_down = 1.0f;
+				} else if (Input.GetKey (KeyCode.Delete)) {
+					up_down = -1.0f;
+				}
+				var inputMove = new Vector3 (Input.GetAxis ("Horizontal"), up_down, Input.GetAxis ("Vertical"));
+				_player.Movement = Vector3.Scale (Camera.transform.TransformVector (inputMove),
+					new Vector3 (1f, 1f, 1f)).normalized;
+				_player.Movement *= 10.0f;
+				if (Input.GetKey (KeyCode.LeftShift)) {
+					_player.Movement *= 10.0f;
+				}
+				return;
+			}
 			
 			if (_player.currentWeaponSlot > 0 && Input.GetMouseButton (1)) {
 				// right click is on
