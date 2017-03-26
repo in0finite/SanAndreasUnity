@@ -31,7 +31,10 @@
 		"${game_dir}/models/gta_int.img",
 		"${game_dir}/models/player.img",
 		"${game_dir}/anim/anim.img",
-		"${game_dir}/anim/cuts.img"
+		"${game_dir}/anim/cuts.img",
+		"${game_dir}/models/cutscene.img",
+		"${game_dir}/data/paths/carrec.img",
+		"${game_dir}/data/script/script.img"
 	],
 
 	"item_paths" : [

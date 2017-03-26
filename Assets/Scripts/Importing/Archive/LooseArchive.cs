@@ -60,7 +60,7 @@ namespace SanAndreasUnity.Importing.Archive
                     continue;
                 }
 
-			//	Debug.Log ("Adding loose archive entry: " + entry.FilePath);
+				//Debug.Log ("Adding loose archive entry: " + entry.FilePath);
 
                 _fileDict.Add(entry.Name, entry);
 

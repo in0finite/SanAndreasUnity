@@ -94,7 +94,7 @@ namespace SanAndreasUnity.Behaviours
 			if (!Loader.HasLoaded)
 				return;
 
-			if (!_player.enableFlying && Input.GetKeyDown (KeyCode.T)) {
+			if (!_player.enableFlying && !_player.IsInVehicle && Input.GetKeyDown (KeyCode.T)) {
 				_player.enableFlying = true;
 				_player.Movement = new Vector3 (0f, 0f, 0f); // disable current movement
 				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
@@ -170,6 +170,8 @@ namespace SanAndreasUnity.Behaviours
 				_player.Movement *= 10.0f;
 				if (Input.GetKey (KeyCode.LeftShift)) {
 					_player.Movement *= 10.0f;
+				} else if (Input.GetKey (KeyCode.Z)) {
+					_player.Movement *= 100.0f;
 				}
 				return;
 			}

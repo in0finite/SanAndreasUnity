@@ -14,7 +14,9 @@ namespace SanAndreasUnity.Importing.Animation
 		Colt45 = 4,
 		Rifle = 5,
 		Rocket = 6,
-		Grenade = 7
+		Grenade = 7,
+
+		_Count = 8
     }
 			
     public enum AnimIndex
@@ -44,6 +46,8 @@ namespace SanAndreasUnity.Importing.Animation
         GetInRight = 5,
         GetOutLeft = 6,
         GetOutRight = 7,
+
+		_Count = 8
     }
 
 	/*

@@ -116,11 +116,13 @@ namespace SanAndreasUnity.Behaviours
 
             if (IsInVehicle)
             {
+				// 'Anchor' pedestrian model into the vehicle
                 Speed = 0.0f;
                 trans.parent.localPosition = VehicleParentOffset;
             }
             else
             {
+				// Store movement defined by animation for pedestrian model
                 Speed = _root.LocalVelocity.z;
                 trans.parent.localPosition = new Vector3(0f, -trans.localPosition.y * .5f, -trans.localPosition.z);
             }
