@@ -33,6 +33,11 @@ namespace SanAndreasUnity.Importing.Items
                     var type = line.Substring(0, index);
                     var args = line.Substring(index).TrimStart();
 
+					args = args.Replace("DATA\\MAPS\\", "data/maps/");
+					args = args.Replace (".IDE", ".ide");
+					args = args.Replace (".IPL", ".ipl");
+					args = args.Replace ('\\', Path.DirectorySeparatorChar);
+
                     switch (type.ToLower()) {
                         case "ide":
 							ReadIde(args);
