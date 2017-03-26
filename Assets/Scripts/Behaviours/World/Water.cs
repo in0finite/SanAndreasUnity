@@ -41,7 +41,10 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void Initialize(WaterFile file)
         {
-            if (WaterPrefab == null) return;
+			if (WaterPrefab == null) {
+				Debug.LogWarning ("No water prefab set, skipping load!");
+				return;
+			}
 
             foreach (var face in file.Faces) {
                 AddFace(face);

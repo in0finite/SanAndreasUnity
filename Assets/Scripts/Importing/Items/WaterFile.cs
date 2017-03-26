@@ -24,6 +24,8 @@ namespace SanAndreasUnity.Importing.Items
                 }
             }
 
+			UnityEngine.Debug.Log ("Loading water file: \"" + path + "\" with " + faces.Count + " faces");
+
             Faces = faces.ToArray();
         }
     }
