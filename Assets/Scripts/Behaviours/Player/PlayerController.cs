@@ -94,9 +94,15 @@ namespace SanAndreasUnity.Behaviours
 				GUILayout.EndArea ();
 			}
 
-			if (_player.enableFlying) {
-				GUILayout.BeginArea (new Rect (Screen.width - 140, Screen.height - 30, 140, 30));
-				GUILayout.Label ("Flying-mode enabled!");
+			if (_player.enableFlying || _player.enableNoclip) {
+				int height = (_player.enableFlying && _player.enableNoclip) ? 50 : 25;
+				GUILayout.BeginArea (new Rect (Screen.width - 140, Screen.height - height, 140, height));
+				if (_player.enableFlying) {
+					GUILayout.Label ("Flying-mode enabled!");
+				}
+				if (_player.enableNoclip) {
+					GUILayout.Label ("Noclip-mode enabled!");
+				}
 				GUILayout.EndArea ();
 			}
 		}
@@ -112,6 +118,15 @@ namespace SanAndreasUnity.Behaviours
 				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
 			} else if (_player.enableFlying && Input.GetKeyDown (KeyCode.T)) {
 				_player.enableFlying = false;
+			}
+
+			if (!_player.IsInVehicle && Input.GetKeyDown (KeyCode.R)) {
+				_player.enableNoclip = !_player.enableNoclip;
+				_player.characterController.detectCollisions = !_player.enableNoclip;
+				if (_player.enableNoclip && !_player.enableFlying) {
+					_player.Movement = new Vector3 (0f, 0f, 0f); // disable current movement
+					PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
+				}
 			}
 
 			// Fix cursor state if it has been 'broken', happens eg. with zoom gestures in the editor in macOS
@@ -176,7 +191,7 @@ namespace SanAndreasUnity.Behaviours
 
             if (_player.IsInVehicle) return;
             
-			if (_player.enableFlying) {
+			if (_player.enableFlying || _player.enableNoclip) {
 				var up_down = 0.0f;
 				if (Input.GetKey (KeyCode.Backspace)) {
 					up_down = 1.0f;
@@ -246,7 +261,6 @@ namespace SanAndreasUnity.Behaviours
 				_player.Movement = Vector3.Scale (Camera.transform.TransformVector (inputMove),
 					new Vector3 (1f, 0f, 1f)).normalized;
 			}
-
 
             if (!Input.GetButtonDown("Use")) return;
 

@@ -14,8 +14,6 @@ namespace SanAndreasUnity.Behaviours
     {
         #region Private fields
 
-        private CharacterController _controller;
-
         #endregion
 
         #region Inspector Fields
@@ -30,6 +28,9 @@ namespace SanAndreasUnity.Behaviours
 		public	bool	autoAddWeapon = false ;
 
 		public bool enableFlying = false;
+		public bool enableNoclip = false;
+
+		public CharacterController characterController;
 
         #endregion
 
@@ -62,7 +63,7 @@ namespace SanAndreasUnity.Behaviours
         {
         //    base.OnAwake();
 
-            _controller = GetComponent<CharacterController>();
+            characterController = GetComponent<CharacterController>();
 
 			IsLocalPlayer = true;
         }
@@ -110,7 +111,7 @@ namespace SanAndreasUnity.Behaviours
 
             var seat = vehicle.GetSeat(seatAlignment);
 
-            _controller.enabled = false;
+            characterController.enabled = false;
 
             if (IsLocalPlayer) {
                 Camera.transform.SetParent(seat.Parent, true);
@@ -214,7 +215,7 @@ namespace SanAndreasUnity.Behaviours
             Camera.transform.SetParent(null, true);
             transform.SetParent(null);
 
-            _controller.enabled = true;
+            characterController.enabled = true;
 
             PlayerModel.VehicleParentOffset = Vector3.zero;
         }
@@ -270,7 +271,6 @@ namespace SanAndreasUnity.Behaviours
 							break;
 						}
 					}
-
 				}
 			}
 
@@ -296,10 +296,14 @@ namespace SanAndreasUnity.Behaviours
             var forward = Vector3.RotateTowards(transform.forward, Heading, TurnSpeed * Time.deltaTime, 0.0f);
             transform.localRotation = Quaternion.LookRotation(forward);
 
-			if (enableFlying) {
+			if (enableFlying || enableNoclip) {
 				Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
 				Velocity = Movement * Time.fixedDeltaTime;
-				_controller.Move (Velocity);
+				if (enableNoclip) {
+					transform.position += Velocity;
+				} else {
+					characterController.Move (Velocity);
+				}
 			} else if (IsLocalPlayer) {
                 if (Movement.sqrMagnitude > float.Epsilon) {
                     Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
@@ -308,12 +312,12 @@ namespace SanAndreasUnity.Behaviours
                 var vDiff = Movement * PlayerModel.Speed - new Vector3(Velocity.x, 0f, Velocity.z);
 
                 Velocity += vDiff;
-                Velocity = new Vector3(Velocity.x, _controller.isGrounded
+                Velocity = new Vector3(Velocity.x, characterController.isGrounded
                     ? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
 
-                _controller.Move(Velocity * Time.fixedDeltaTime);
+				characterController.Move (Velocity * Time.fixedDeltaTime);
             } else {
-                Velocity = _controller.velocity;
+                Velocity = characterController.velocity;
             }
         }
 

@@ -24,6 +24,8 @@ Q - toggle debug menu
 
 T - enable debug flying mode
 
+R - enable debug noclip mode
+
 backspace - fly up
 
 delete - fly down

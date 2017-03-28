@@ -188,7 +188,4 @@ QualitySettings:
     asyncUploadTimeSlice: 2
     asyncUploadBufferSize: 4
     excludedTargetPlatforms: []
-  m_PerPlatformDefaultQuality:
-    Android: 0
-    Standalone: 4
-    Web: 0
+  m_PerPlatformDefaultQuality: {}
