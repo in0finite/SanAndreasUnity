@@ -1,1 +1,1 @@
-m_EditorVersion: 5.5.0xf3Linux
+m_EditorVersion: 5.5.2f1
