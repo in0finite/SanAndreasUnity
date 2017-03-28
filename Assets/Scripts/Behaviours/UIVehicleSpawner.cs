@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using SanAndreasUnity.Behaviours;
 
 public class UIVehicleSpawner : MonoBehaviour {
 
 	public	Vector3	spawnOffset = new Vector3( 0, 2, 5 );
 	public	KeyCode	spawnKey = KeyCode.V;
 
+	private PlayerController _playerController;
 
 	// Use this for initialization
 	void Start () {
-	
+		_playerController = GameObject.Find ("Player").GetComponent<PlayerController> ();
 	}
 	
 	// Update is called once per frame
@@ -20,7 +22,7 @@ public class UIVehicleSpawner : MonoBehaviour {
 	}
 
 	void OnGUI() {
-		if (!Cursor.visible)
+		if (_playerController.CursorLocked)
 			return;
 
 		GUILayout.BeginHorizontal ();
@@ -42,7 +44,7 @@ public class UIVehicleSpawner : MonoBehaviour {
 		} else {
 			Vector3 pos = cont.transform.position + cont.transform.forward * this.spawnOffset.z + cont.transform.up * this.spawnOffset.y
 				+ cont.transform.right * this.spawnOffset.x ;
-			Quaternion rotation = Quaternion.LookRotation (cont.transform.right, Vector3.up);
+			Quaternion rotation = Quaternion.LookRotation (-cont.transform.right, Vector3.up);
 
 			//	SanAndreasUnity.Behaviours.Vehicles.VehicleSpawner.Create ();
 			SanAndreasUnity.Behaviours.Vehicles.Vehicle v = SanAndreasUnity.Behaviours.Vehicles.Vehicle.Create( -1, null, pos, rotation);

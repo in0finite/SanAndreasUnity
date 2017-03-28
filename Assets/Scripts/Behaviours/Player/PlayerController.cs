@@ -10,12 +10,12 @@ namespace SanAndreasUnity.Behaviours
     {
         #region Private fields
 
-        private bool _lockedCursor;
-
         private Player _player;
 
         private float _pitch;
         private float _yaw;
+
+		private Transform[] _spawns;
 
         #endregion
 
@@ -31,6 +31,8 @@ namespace SanAndreasUnity.Behaviours
         public float EnterVehicleRadius = 5.0f;
 
 		public	float	animationBlendWeight = 0.4f ;
+
+		public bool CursorLocked;
 
         #endregion
 
@@ -72,21 +74,31 @@ namespace SanAndreasUnity.Behaviours
         {
             _player = GetComponent<Player>();
 
-			_lockedCursor = true;
+			CursorLocked = true;
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
+
+			_spawns = GameObject.Find ("Player Spawns").GetComponentsInChildren<Transform> ();
         }
 
 		void OnGUI() {
-			if (!_player.enableFlying) return;
+			if ((!CursorLocked) && (!_player.IsInVehicle) && (_spawns.Count () > 1)) {
+				GUILayout.BeginArea (new Rect (Screen.width - 260, 10, 250, 200));
+				GUILayout.Label ("Teleport to a location:");
+				for (int i = 1; i < _spawns.Count (); i++) {
+					if (GUILayout.Button (_spawns [i].name)) {
+						_player.transform.position = _spawns [i].position;
+						_player.transform.rotation = _spawns [i].rotation;
+					}
+				}
+				GUILayout.EndArea ();
+			}
 
-			GUILayout.BeginArea (new Rect (Screen.width - 180, Screen.height - 30, 180, 30));
-			GUILayout.BeginHorizontal ();
-			GUILayout.FlexibleSpace ();
-			GUILayout.Label ("Flying-mode enabled!");
-			GUILayout.FlexibleSpace ();
-			GUILayout.EndHorizontal ();
-			GUILayout.EndArea ();
+			if (_player.enableFlying) {
+				GUILayout.BeginArea (new Rect (Screen.width - 140, Screen.height - 30, 140, 30));
+				GUILayout.Label ("Flying-mode enabled!");
+				GUILayout.EndArea ();
+			}
 		}
 
         private void Update()
@@ -98,22 +110,27 @@ namespace SanAndreasUnity.Behaviours
 				_player.enableFlying = true;
 				_player.Movement = new Vector3 (0f, 0f, 0f); // disable current movement
 				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
-
 			} else if (_player.enableFlying && Input.GetKeyDown (KeyCode.T)) {
 				_player.enableFlying = false;
 			}
+
+			// Fix cursor state if it has been 'broken', happens eg. with zoom gestures in the editor in macOS
+			if (CursorLocked && ((Cursor.lockState != CursorLockMode.Locked) || (Cursor.visible))) {
+				Cursor.lockState = CursorLockMode.Locked;
+				Cursor.visible = false;
+			}
 			
-            if (!_lockedCursor && Input.GetKeyDown(KeyCode.Q)) {
-                _lockedCursor = true;
+            if (!CursorLocked && Input.GetKeyDown(KeyCode.Q)) {
+                CursorLocked = true;
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
-            } else if (_lockedCursor && Input.GetKeyDown(KeyCode.Q)) {
-                _lockedCursor = false;
+            } else if (CursorLocked && Input.GetKeyDown(KeyCode.Q)) {
+                CursorLocked = false;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
 
-            if (_lockedCursor)
+            if (CursorLocked)
             {
                 var cursorDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
@@ -148,6 +165,8 @@ namespace SanAndreasUnity.Behaviours
 
             Camera.transform.position = castRay.GetPoint(distance);
 
+			if (!CursorLocked) return;
+
             if (Input.GetButtonDown("Use") && _player.IsInVehicle)
             {
                 _player.ExitVehicle();
@@ -156,7 +175,7 @@ namespace SanAndreasUnity.Behaviours
             }
 
             if (_player.IsInVehicle) return;
-            if (!_lockedCursor) return;
+            
 			if (_player.enableFlying) {
 				var up_down = 0.0f;
 				if (Input.GetKey (KeyCode.Backspace)) {

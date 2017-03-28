@@ -44,11 +44,13 @@ namespace SanAndreasUnity.Behaviours.World
 
 		public	bool	loadParkedVehicles = true ;
 
+		private PlayerController _playerController;
 
 		void	Awake() {
 
 			Instance = this;
 
+			_playerController = GameObject.Find ("Player").GetComponent<PlayerController> ();
 		}
 
 		void	Start() {
@@ -168,7 +170,7 @@ namespace SanAndreasUnity.Behaviours.World
 			if (!Loader.HasLoaded)
 				return;
 
-			if (!Cursor.visible)
+			if (_playerController.CursorLocked)
 				return;
 
 			GUILayout.Space (30);

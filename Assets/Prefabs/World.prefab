@@ -5,9 +5,9 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 418232}
+  - component: {fileID: 418232}
   m_Layer: 0
   m_Name: Player Spawns
   m_TagString: Untagged
@@ -20,9 +20,9 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 492816}
+  - component: {fileID: 492816}
   m_Layer: 0
   m_Name: Focus
   m_TagString: Untagged
@@ -35,11 +35,11 @@ GameObject:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 421924}
+  - component: {fileID: 421924}
   m_Layer: 0
-  m_Name: Car park downtown
+  m_Name: Los Santos - Car park downtown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,10 +50,10 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 468082}
-  - 114: {fileID: 11460870}
+  - component: {fileID: 468082}
+  - component: {fileID: 11460870}
   m_Layer: 0
   m_Name: Vehicle Physics
   m_TagString: Untagged
@@ -66,13 +66,13 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 440826}
-  - 20: {fileID: 2068374}
-  - 124: {fileID: 12458128}
-  - 92: {fileID: 9210286}
-  - 81: {fileID: 8101816}
+  - component: {fileID: 440826}
+  - component: {fileID: 2068374}
+  - component: {fileID: 12458128}
+  - component: {fileID: 9210286}
+  - component: {fileID: 8101816}
   m_Layer: 0
   m_Name: Preview Camera
   m_TagString: Untagged
@@ -85,9 +85,9 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 499186}
+  - component: {fileID: 499186}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -100,11 +100,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 472884}
-  - 114: {fileID: 11436500}
-  - 114: {fileID: 11450014}
+  - component: {fileID: 472884}
+  - component: {fileID: 11436500}
+  - component: {fileID: 11450014}
   m_Layer: 0
   m_Name: Cell
   m_TagString: Untagged
@@ -117,10 +117,10 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 406580}
-  - 108: {fileID: 10808534}
+  - component: {fileID: 406580}
+  - component: {fileID: 10808534}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -133,11 +133,11 @@ GameObject:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 475742}
+  - component: {fileID: 475742}
   m_Layer: 0
-  m_Name: LV casino 2
+  m_Name: Los Santos - Grove Street
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -148,11 +148,11 @@ GameObject:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 461086}
+  - component: {fileID: 461086}
   m_Layer: 0
-  m_Name: Car park
+  m_Name: Abandoned Airport - Hideout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -163,10 +163,10 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 462626}
-  - 114: {fileID: 11455068}
+  - component: {fileID: 462626}
+  - component: {fileID: 11455068}
   m_Layer: 0
   m_Name: Water
   m_TagString: Untagged
@@ -186,6 +186,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 499186}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &418232
 Transform:
   m_ObjectHideFlags: 1
@@ -196,11 +197,16 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 421924}
-  - {fileID: 461086}
+  - {fileID: 4493953062982132}
   - {fileID: 475742}
+  - {fileID: 4393180410188950}
+  - {fileID: 461086}
+  - {fileID: 4916251233388722}
+  - {fileID: 4077053835485560}
+  - {fileID: 421924}
   m_Father: {fileID: 499186}
   m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &421924
 Transform:
   m_ObjectHideFlags: 1
@@ -208,11 +214,12 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 133962}
   m_LocalRotation: {x: 0, y: 0.9929142, z: 0, w: 0.11883355}
-  m_LocalPosition: {x: 1647.612, y: 25, z: -1104.8595}
+  m_LocalPosition: {x: 1647.612, y: 40, z: -1104.8595}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 418232}
-  m_RootOrder: 0
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &440826
 Transform:
   m_ObjectHideFlags: 1
@@ -225,18 +232,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 499186}
   m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &461086
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 162096}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2119, y: 32.80384, z: -1133}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: -0.731205, z: 0, w: 0.6821578}
+  m_LocalPosition: {x: 429.3022, y: 40, z: 2520.922}
+  m_LocalScale: {x: 1.0000005, y: 1, z: 1.0000005}
   m_Children: []
   m_Father: {fileID: 418232}
-  m_RootOrder: 1
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: -93.97501, z: 0}
 --- !u!4 &462626
 Transform:
   m_ObjectHideFlags: 1
@@ -249,6 +258,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 499186}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &468082
 Transform:
   m_ObjectHideFlags: 1
@@ -261,6 +271,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 499186}
   m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &472884
 Transform:
   m_ObjectHideFlags: 1
@@ -273,18 +284,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 499186}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &475742
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 156920}
-  m_LocalRotation: {x: 0, y: 0.73046196, z: 0, w: 0.6829534}
-  m_LocalPosition: {x: 2106.089, y: 10.775312, z: 1848.0103}
-  m_LocalScale: {x: 1.0000002, y: 0.99999976, z: 1.0000005}
+  m_LocalRotation: {x: 0, y: -0.36325127, z: 0, w: 0.9316912}
+  m_LocalPosition: {x: 2499.062, y: 40, z: -1673.578}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 418232}
-  m_RootOrder: 2
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: -42.6, z: 0}
 --- !u!4 &492816
 Transform:
   m_ObjectHideFlags: 1
@@ -297,6 +310,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 499186}
   m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &499186
 Transform:
   m_ObjectHideFlags: 1
@@ -316,6 +330,7 @@ Transform:
   - {fileID: 492816}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &2068374
 Camera:
   m_ObjectHideFlags: 1
@@ -371,7 +386,7 @@ Light:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 153756}
   m_Enabled: 1
-  serializedVersion: 6
+  serializedVersion: 7
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
@@ -381,6 +396,7 @@ Light:
   m_Shadows:
     m_Type: 1
     m_Resolution: -1
+    m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
@@ -393,10 +409,10 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_Lightmapping: 4
+  m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
-  m_AreaSize: {x: 1, y: 1}
 --- !u!114 &11436500
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -413,7 +429,9 @@ MonoBehaviour:
   Focus: {fileID: 0}
   Water: {fileID: 11455068}
   divisionLoadOrderDistanceFactor: 16
+  divisionRefreshDistanceDelta: 1
   maxDrawDistance: 500
+  loadParkedVehicles: 1
 --- !u!114 &11450014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -481,3 +499,115 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 143544}
   m_IsPrefabParent: 1
+--- !u!1 &1000405462072482
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4916251233388722}
+  m_Layer: 0
+  m_Name: Red County - Catalinas Cabin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1061115742419774
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4493953062982132}
+  m_Layer: 0
+  m_Name: Las Venturas - The Visage casino
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1550219727895838
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4393180410188950}
+  m_Layer: 0
+  m_Name: San Fierro - Hideout
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1743648181207958
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4077053835485560}
+  m_Layer: 0
+  m_Name: Los Santos - Car park
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4077053835485560
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1743648181207958}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2119, y: 40, z: -1133}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 418232}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4393180410188950
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1550219727895838}
+  m_LocalRotation: {x: 0, y: 0.6859772, z: 0, w: 0.7276231}
+  m_LocalPosition: {x: -2020, y: 40, z: 157.8858}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 418232}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 86.62501, z: 0}
+--- !u!4 &4493953062982132
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1061115742419774}
+  m_LocalRotation: {x: 0, y: 0.73046196, z: 0, w: 0.6829534}
+  m_LocalPosition: {x: 2106.089, y: 40, z: 1848.0103}
+  m_LocalScale: {x: 1.0000002, y: 0.99999976, z: 1.0000005}
+  m_Children: []
+  m_Father: {fileID: 418232}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4916251233388722
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000405462072482}
+  m_LocalRotation: {x: 0, y: -0.98017275, z: 0, w: 0.19814493}
+  m_LocalPosition: {x: 870.7422, y: 100, z: -33.3372}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 418232}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: -157.143, z: 0}

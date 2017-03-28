@@ -239,7 +239,10 @@ namespace SanAndreasUnity.Behaviours
 
 			// Reset to a valid (and solid!) start position when falling below the world
 			if (transform.position.y < -300) {
-				transform.position = GameObject.Find("LV casino 2").GetComponent<Transform>().position;
+				Velocity = new Vector3(0, 0, 0);
+				Transform spawn = GameObject.Find ("Player Spawns").GetComponentsInChildren<Transform> () [1];
+				transform.position = spawn.position;
+				transform.rotation = spawn.rotation;
 			}
 
             if (IsInVehicle && IsDrivingVehicle) {

@@ -20,6 +20,8 @@ L shift - run
 
 mouse scroll - zoom in/out
 
+Q - toggle debug menu
+
 T - enable debug flying mode
 
 backspace - fly up
