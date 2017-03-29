@@ -246,6 +246,28 @@ namespace SanAndreasUnity.Behaviours
 				transform.rotation = spawn.rotation;
 			}
 
+			// Constrain to stay inside map
+			if (transform.position.x < -3000) {
+				var t = transform.position;
+				t.x = -3000;
+				transform.position = t;
+			}
+			if (transform.position.x > 3000) {
+				var t = transform.position;
+				t.x = 3000;
+				transform.position = t;
+			}
+			if (transform.position.z < -3000) {
+				var t = transform.position;
+				t.z = -3000;
+				transform.position = t;
+			}
+			if (transform.position.z > 3000) {
+				var t = transform.position;
+				t.z = 3000;
+				transform.position = t;
+			}
+
             if (IsInVehicle && IsDrivingVehicle) {
                 UpdateWheelTurning();
             }
