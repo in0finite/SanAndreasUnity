@@ -181,7 +181,8 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             tex.LoadRawTextureData(data);
-            tex.Apply(loadMips || autoMips, true);
+			tex.Apply(loadMips || autoMips,
+				false /* true */); // makeNoLongerReadable: needed to flip GUI textures. doubles memory used for textures!
 
             return new LoadedTexture(tex, src.Alpha);
         }

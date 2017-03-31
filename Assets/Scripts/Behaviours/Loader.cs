@@ -3,6 +3,7 @@ using System.Linq;
 using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Collision;
+using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
@@ -113,6 +114,17 @@ namespace SanAndreasUnity.Behaviours {
 			case 7:
 				using (Utilities.Profiler.Start ("special texture load time")) {
 					MiniMap.loadTextures ();
+
+					// Load mouse cursor texture, resize from 32x32 to 16x16 to match normal system cursor size
+					Texture2D mouse = TextureDictionary.Load ("fronten_pc").GetDiffuse ("mouse").Texture;
+					Texture2D mouseFix = new Texture2D (mouse.width, mouse.height);
+					for (int x = 0; x < mouse.width; x++) {
+						for (int y = 0; y < mouse.height; y++) {
+							mouseFix.SetPixel (x, mouse.height - y - 1, mouse.GetPixel (x, y));
+						}
+					}
+					mouseFix.Apply ();
+					Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
 				}
 				HasLoaded = true;
 				Debug.Log ("GTA loading finished.");
