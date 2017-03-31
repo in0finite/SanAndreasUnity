@@ -144,11 +144,9 @@ namespace SanAndreasUnity.Behaviours {
 				return;
 
 			// display loading progress
-			GUILayout.BeginHorizontal ();
-			GUILayout.FlexibleSpace ();
+			GUILayout.BeginArea (new Rect(10, 5, 400, 100));
 			GUILayout.Label ("<size=25>" + loadingStatusString + "</size>");
-			GUILayout.FlexibleSpace ();
-			GUILayout.EndHorizontal ();
+			GUILayout.EndArea ();
 		}
 	}
 }

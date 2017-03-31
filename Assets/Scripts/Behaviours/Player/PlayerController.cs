@@ -90,20 +90,28 @@ namespace SanAndreasUnity.Behaviours
 
 			_spawns = GameObject.Find ("Player Spawns").GetComponentsInChildren<Transform> ();
 			fpsTexture = new Texture2D (fpsTextureWidth, fpsTextureHeight, TextureFormat.RGBA32, false, true);
+
+			teleportWindowRect = new Rect (Screen.width - 260, 10, 250, 10 + (25 * _spawns.Count()));
         }
+
+		private static Rect teleportWindowRect;
+		private const int teleportWindowID = 1;
+
+		void teleportWindow(int windowID) {
+			for (int i = 1; i < _spawns.Count (); i++) {
+				if (GUILayout.Button (_spawns [i].name)) {
+					_player.transform.position = _spawns [i].position;
+					_player.transform.rotation = _spawns [i].rotation;
+				}
+			}
+
+			GUI.DragWindow();
+		}
 
 		void OnGUI() {
 			// Show buttons for teleport to player spawn locations
 			if ((!CursorLocked) && (!_player.IsInVehicle) && (_spawns.Count () > 1)) {
-				GUILayout.BeginArea (new Rect (Screen.width - 260, 10, 250, 200));
-				GUILayout.Label ("Teleport to a location:");
-				for (int i = 1; i < _spawns.Count (); i++) {
-					if (GUILayout.Button (_spawns [i].name)) {
-						_player.transform.position = _spawns [i].position;
-						_player.transform.rotation = _spawns [i].rotation;
-					}
-				}
-				GUILayout.EndArea ();
+				teleportWindowRect = GUILayout.Window (teleportWindowID, teleportWindowRect, teleportWindow, "Teleport to a location:");
 			}
 
 			// Shohw flying / noclip states

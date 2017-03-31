@@ -24,7 +24,7 @@ namespace SanAndreasUnity.Behaviours.World
         public Transform Focus;
         public Water Water;
 
-		public	static	Cell	Instance = null;
+		public	static Cell Instance = null;
 
 		// Statistics
 		private	int		totalNumObjects = 0 ;
@@ -40,27 +40,21 @@ namespace SanAndreasUnity.Behaviours.World
 		// variable used by Division class
 		public	float	divisionRefreshDistanceDelta = 20;
 		// variable used by MapObject class
-		public	float	maxDrawDistance = 500 ;
+		public	float	maxDrawDistance = 500;
 
-		public	bool	loadParkedVehicles = true ;
-
+		public	bool	loadParkedVehicles = true;
 		private PlayerController _playerController;
 
-		void	Awake() {
-
+		void Awake() {
 			Instance = this;
-
 			_playerController = GameObject.Find ("Player").GetComponent<PlayerController> ();
 		}
 
-		void	Start() {
-
+		void Start() {
 			this.InvokeRepeating ("UpdateDivisions", 0f, 0.1f);
-
 		}
 
-        void Update()
-        {
+        void Update() {
             if (RootDivision == null && Loader.HasLoaded) {
                 RootDivision = Division.Create(transform);
                 RootDivision.SetBounds(
@@ -129,7 +123,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         }
 
-		void	UpdateDivisions() {
+		void UpdateDivisions() {
 
 			if (_leaves == null) return;
 
@@ -165,15 +159,20 @@ namespace SanAndreasUnity.Behaviours.World
 
 		}
 
-		void	OnGUI() {
+		private static Rect windowRect = new Rect (10, 10, 250, 330);
+		private const int windowID = 0;
 
+		void OnGUI() {
 			if (!Loader.HasLoaded)
 				return;
 
 			if (_playerController.CursorLocked)
 				return;
 
-			GUILayout.Space (30);
+			windowRect = GUILayout.Window (windowID, windowRect, showWindow, "World statistics");
+		}
+
+		void showWindow(int windowID) {
 			GUILayout.Label ("total num divisions " + (null == _leaves ? 0 : _leaves.Count));
 			GUILayout.Label ("total num objects " + totalNumObjects);
 			GUILayout.Label ("geometry parts loaded " + SanAndreasUnity.Importing.Conversion.Geometry.NumGeometryPartsLoaded);
@@ -183,7 +182,7 @@ namespace SanAndreasUnity.Behaviours.World
 			GUILayout.Label ("num divisions loading this frame " + numLeavesLoadedThisFrame);
 			GUILayout.Label ("num objects loading this frame " + numObjectsLoadedThisFrame);
 
-			GUILayout.Space (30);
+			GUILayout.Space (10);
 
 			string[] timeNames = new string[]{ "refresh load order ", "sort ", "load / update display " };
 			int i = 0;
@@ -192,6 +191,7 @@ namespace SanAndreasUnity.Behaviours.World
 				i++;
 			}
 
+			GUI.DragWindow();
 		}
 
 	}

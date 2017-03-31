@@ -104,12 +104,7 @@ namespace SanAndreasUnity.Behaviours {
 
 			// Player coordinates on map, (0; 0) moved from center to top-left
 			Vector2 pos = new Vector2 (player.transform.position.x + (mapEdge / 2), mapEdge - (player.transform.position.z + (mapEdge / 2)));
-
-			GUILayout.BeginArea (new Rect (10, 10, 150, 25));
-			GUILayout.Label ("Pos: " + (int)pos.x + " " + (int)pos.y + " (" + (int)player.transform.position.y + ")");
-			GUILayout.EndArea ();
-
-			drawMapWindow (new Vector2 (10, 40), pos);
+			drawMapWindow (new Vector2 (10, 10), pos);
 		}
 	}
 }

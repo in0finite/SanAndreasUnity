@@ -8,10 +8,14 @@ public class UIVehicleSpawner : MonoBehaviour {
 	public	KeyCode	spawnKey = KeyCode.V;
 
 	private PlayerController _playerController;
+	private Player _player;
 
 	// Use this for initialization
 	void Start () {
 		_playerController = GameObject.Find ("Player").GetComponent<PlayerController> ();
+		_player = GameObject.Find ("Player").GetComponent<Player> ();
+
+		windowRect = new Rect (Screen.width / 2 - 100, 10, 200, 100);
 	}
 	
 	// Update is called once per frame
@@ -21,18 +25,29 @@ public class UIVehicleSpawner : MonoBehaviour {
 		}
 	}
 
+	private static Rect windowRect;
+	private const int windowID = 2;
+
 	void OnGUI() {
 		if (_playerController.CursorLocked)
 			return;
 
-		GUILayout.BeginHorizontal ();
-		GUILayout.FlexibleSpace ();
+		windowRect = GUILayout.Window (windowID, windowRect, spawnWindow, "Utilities");
+	}
 
-		if( GUILayout.Button("Spawn vehicle") ) {
+	void spawnWindow(int windowID) {
+		Vector2 pos = new Vector2 (_player.transform.position.x + 3000, 6000 - (_player.transform.position.z + 3000));
+		GUILayout.Label ("Pos: X" + (int)pos.x + " Y" + (int)pos.y + " Z" + (int)_player.transform.position.y);
+
+		if (GUILayout.Button("Spawn vehicle")) {
 			this.SpawnVehicle ();
 		}
 
-		GUILayout.EndHorizontal();
+		if (GUILayout.Button("Change player model")) {
+			CharacterModelChanger.ChangePedestrianModel ();
+		}
+
+		GUI.DragWindow();
 	}
 
 	public void SpawnVehicle() {
