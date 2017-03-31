@@ -115,7 +115,7 @@ namespace SanAndreasUnity.Behaviours {
 				using (Utilities.Profiler.Start ("special texture load time")) {
 					MiniMap.loadTextures ();
 
-					// Load mouse cursor texture, resize from 32x32 to 16x16 to match normal system cursor size
+					// Load mouse cursor texture
 					Texture2D mouse = TextureDictionary.Load ("fronten_pc").GetDiffuse ("mouse").Texture;
 					Texture2D mouseFix = new Texture2D (mouse.width, mouse.height);
 					for (int x = 0; x < mouse.width; x++) {
