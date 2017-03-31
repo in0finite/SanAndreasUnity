@@ -16,7 +16,7 @@ V - spawn vehicle
 
 P - change pedestrian model
 
-L shift - run
+L shift - run / fly fast
 
 mouse scroll - zoom in/out
 
@@ -29,6 +29,8 @@ R - enable debug noclip mode
 backspace - fly up
 
 delete - fly down
+
+Z - fly very fast
 
 ## Here is a list of what I think should be done next
 
@@ -51,9 +53,9 @@ delete - fly down
 
 ## Media
 
-![screen shot 2017-04-01 at 00 03 25](https://cloud.githubusercontent.com/assets/557828/24571348/d964f098-1670-11e7-8759-0160dbf5bcb5.png)
-
 ![screen shot 2017-04-01 at 00 01 31](https://cloud.githubusercontent.com/assets/557828/24571347/d95f11a0-1670-11e7-9e8e-d2a511d9f929.png)
+
+![screen shot 2017-04-01 at 00 03 25](https://cloud.githubusercontent.com/assets/557828/24571348/d964f098-1670-11e7-8759-0160dbf5bcb5.png)
 
 ![screen shot 2017-04-01 at 00 02 13](https://cloud.githubusercontent.com/assets/557828/24571349/d96b7c24-1670-11e7-997d-ae15913481f8.png)
 
