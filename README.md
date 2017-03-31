@@ -51,19 +51,11 @@ delete - fly down
 
 ## Media
 
-![](/media/ak47.png)
-![](/media/driving.png)
-![](/media/lasventuras.png)
-![](/media/modelviewer.png)
-![](/media/vehicles.png)
+![screen shot 2017-04-01 at 00 03 25](https://cloud.githubusercontent.com/assets/557828/24571348/d964f098-1670-11e7-8759-0160dbf5bcb5.png)
 
-### First networking test
+![screen shot 2017-04-01 at 00 01 31](https://cloud.githubusercontent.com/assets/557828/24571347/d95f11a0-1670-11e7-9e8e-d2a511d9f929.png)
 
-[![First networking test](http://files.facepunch.com/ziks/2015/April/12/vidthumb1.png)](http://files.facepunch.com/ziks/2015/April/12/2015-04-12-2011-02.mp4)
-
-### Basic car physics
-
-[![Basic car physics](http://files.facepunch.com/ziks/2015/April/12/vidthumb2.png)](http://files.facepunch.com/layla/2015/April/06/2015-04-06_04-32-12.mp4)
+![screen shot 2017-04-01 at 00 02 13](https://cloud.githubusercontent.com/assets/557828/24571349/d96b7c24-1670-11e7-997d-ae15913481f8.png)
 
 ## Resources
 
