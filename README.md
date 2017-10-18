@@ -20,9 +20,7 @@ L shift - run
 
 mouse scroll - zoom in/out
 
-## Here is a list of what I think should be done next
-
-* Animations must be loaded/played by index – because different anim definition groups (man, woman, etc) use different anim names ( walk_civi, woman_walknorm, respectively).
+## TODO list
 
 * Weapons. Aiming with weapons – aim animation.
 
@@ -37,6 +35,8 @@ mouse scroll - zoom in/out
 * Async geometry loading.
 
 * Make everything networked.
+
+* Animations must be loaded/played by index – because different anim definition groups (man, woman, etc) use different anim names ( walk_civi, woman_walknorm, respectively).
 
 
 ## Media
