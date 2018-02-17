@@ -51,10 +51,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private readonly int[] _colors = { 0, 0, 0, 0 };
         private readonly float[] _lights = { 1f, 1f, 1f, 1f };
-        private readonly MaterialPropertyBlock _props = new MaterialPropertyBlock();
+		private MaterialPropertyBlock _props = null;
         private bool _colorsChanged;
 
         private VehicleController _controller;
+
+
+		private void Awake() {
+
+			_props = new MaterialPropertyBlock();
+
+		}
 
         public void SetColors(params int[] clrIndices)
         {
