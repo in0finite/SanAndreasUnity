@@ -13,6 +13,7 @@
 /*.pidb
 /*.pdb
 /*.booproj
+/.vs
 
 # Built program and data
 /*.exe
