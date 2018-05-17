@@ -23,7 +23,7 @@
 
 	// Asset paths
 
-	"game_dir" : "C:/Program Files (x86)/Rockstar Games/GTA San Andreas",
+	"game_dir" : "D:/JUEGOS/KPS GTA San Andreas",
 
 	"archive_paths" : [
 		"${game_dir}",
