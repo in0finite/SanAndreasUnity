@@ -54,7 +54,8 @@
         public CarColor2Def(string line)
             : base(line, 2)
         {
-            for (var i = 0; i < Colors.Length; ++i) {
+            for (var i = 0; i < Colors.Length; ++i)
+            {
                 Colors[i] = new ColorIndices(GetInt(i * 2 + 1), GetInt(i * 2 + 2));
             }
         }
@@ -66,7 +67,8 @@
         public CarColor4Def(string line)
             : base(line, 4)
         {
-            for (var i = 0; i < Colors.Length; ++i) {
+            for (var i = 0; i < Colors.Length; ++i)
+            {
                 Colors[i] = new ColorIndices(GetInt(i * 4 + 1), GetInt(i * 4 + 2), GetInt(i * 4 + 3), GetInt(i * 4 + 4));
             }
         }

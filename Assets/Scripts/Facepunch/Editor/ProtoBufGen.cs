@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
 using System.IO;
 using System.Runtime.Serialization.Formatters;
 using UnityEngine;
@@ -13,12 +12,11 @@ namespace Facepunch.Editor
         public static string AssetsPath { get; set; }
         public static string RootPath { get; set; }
 
-
         static ProtoBufGen()
         {
             AssetsPath = new DirectoryInfo(UnityEngine.Application.dataPath).FullName;
             RootPath = AssetsPath;
-            
+
             while (!File.Exists(Path.Combine(RootPath, "premake5.lua"))) {
                 var parent = new DirectoryInfo(Path.Combine(RootPath, "..")).FullName;
 
@@ -30,7 +28,6 @@ namespace Facepunch.Editor
                 RootPath = parent;
             }
         }
-        
 
      //   [MenuItem("Facepunch/Generate ProtoBuf")]
 // ReSharper disable once UnusedMember.Local

@@ -1,10 +1,8 @@
-﻿using System;
+﻿using SanAndreasUnity.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-
-using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Animation
 {
@@ -43,7 +41,8 @@ namespace SanAndreasUnity.Importing.Animation
                 Bones[i] = new Bone(reader);
             }
 
-            if (BoneCount > 0) {
+            if (BoneCount > 0)
+            {
                 EndTime = Bones.Max(x => x.EndTime);
             }
         }
@@ -72,7 +71,8 @@ namespace SanAndreasUnity.Importing.Animation
                 Frames[i] = new Frame(reader, FrameType == 4);
             }
 
-            if (FrameCount > 0) {
+            if (FrameCount > 0)
+            {
                 EndTime = Frames[FrameCount - 1].Time;
             }
         }
@@ -101,7 +101,7 @@ namespace SanAndreasUnity.Importing.Animation
     public class AnimationPackage : Section
     {
         private readonly Dictionary<string, Clip> _namedClips
-            = new Dictionary<string,Clip>(StringComparer.InvariantCultureIgnoreCase);
+            = new Dictionary<string, Clip>(StringComparer.InvariantCultureIgnoreCase);
 
         public readonly string FileName;
         public readonly Int32 ClipCount;

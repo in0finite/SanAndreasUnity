@@ -6,23 +6,24 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public class VehicleController : MonoBehaviour
     {
         private Vehicle _vehicle;
-		private PlayerController _playerController;
+        private PlayerController _playerController;
 
         private void Awake()
         {
             _vehicle = GetComponent<Vehicle>();
-			_playerController = GameObject.Find ("Player").GetComponent<PlayerController> ();
+            _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         }
 
         private void Update()
         {
-			if (!_playerController.CursorLocked) return;
-			
+            if (!_playerController.CursorLocked) return;
+
             var accel = Input.GetAxis("Vertical");
             var brake = Input.GetKey(KeyCode.Space) ? 1.0f : 0.0f;
             var speed = Vector3.Dot(_vehicle.Velocity, _vehicle.transform.forward);
 
-            if (speed * accel < 0f) {
+            if (speed * accel < 0f)
+            {
                 brake = Mathf.Max(brake, 0.75f);
                 accel = 0f;
             }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SanAndreasUnity.Importing.RenderWareStream;
 using System.Linq;
-using SanAndreasUnity.Importing.RenderWareStream;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Conversion
@@ -31,7 +29,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 boneIndex1 = (int)boneIndices.Indices[1],
                 boneIndex2 = (int)boneIndices.Indices[2],
                 boneIndex3 = (int)boneIndices.Indices[3],
-                
+
                 weight0 = boneWeights.Weights[0],
                 weight1 = boneWeights.Weights[1],
                 weight2 = boneWeights.Weights[2],
@@ -63,10 +61,22 @@ namespace SanAndreasUnity.Importing.Conversion
 
             return new UnityEngine.Matrix4x4
             {
-                m00 = v0.x, m01 = v0.y, m02 = v0.z, m03 = 0f,
-                m10 = v1.x, m11 = v1.y, m12 = v1.z, m13 = 0f,
-                m20 = v2.x, m21 = v2.y, m22 = v2.z, m23 = 0f,
-                m30 = v3.x, m31 = v3.y, m32 = v3.z, m33 = 1f,
+                m00 = v0.x,
+                m01 = v0.y,
+                m02 = v0.z,
+                m03 = 0f,
+                m10 = v1.x,
+                m11 = v1.y,
+                m12 = v1.z,
+                m13 = 0f,
+                m20 = v2.x,
+                m21 = v2.y,
+                m22 = v2.z,
+                m23 = 0f,
+                m30 = v3.x,
+                m31 = v3.y,
+                m32 = v3.z,
+                m33 = 1f,
             };
         }
 

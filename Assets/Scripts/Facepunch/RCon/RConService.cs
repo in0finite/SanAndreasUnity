@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Security.Authentication;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using WebSocketSharp;
 
@@ -23,26 +23,29 @@ namespace Facepunch.RCon
 
         protected override void OnMessage(String action, JToken data)
         {
-            switch (action) {
-                case "auth": {
-                    var name = (String) data["name"];
-                    var password = (String) data["password"];
+            switch (action)
+            {
+                case "auth":
+                    {
+                        var name = (String)data["name"];
+                        var password = (String)data["password"];
 
-                    var creds = new RConCredentials(Context.UserEndPoint.Address, name, password);
-                    var session = Server.TryCreateSession(creds);
+                        var creds = new RConCredentials(Context.UserEndPoint.Address, name, password);
+                        var session = Server.TryCreateSession(creds);
 
-                    Send("auth_response", session.ToJObject());
-                    return;
-                }
-                case "exec": {
-                    var session = Server.TryGetSession(Context.UserEndPoint.Address, data["session"] as JObject);
-                    if (session == null) throw new AuthenticationException("Invalid session");
+                        Send("auth_response", session.ToJObject());
+                        return;
+                    }
+                case "exec":
+                    {
+                        var session = Server.TryGetSession(Context.UserEndPoint.Address, data["session"] as JObject);
+                        if (session == null) throw new AuthenticationException("Invalid session");
 
-                    var response = Server.ExecuteCommandInternal(session.Credentials, (String) data["command"]);
+                        var response = Server.ExecuteCommandInternal(session.Credentials, (String)data["command"]);
 
-                    Send("exec_response", response);
-                    return;
-                }
+                        Send("exec_response", response);
+                        return;
+                    }
             }
         }
 

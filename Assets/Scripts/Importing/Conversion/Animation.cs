@@ -1,10 +1,10 @@
-﻿using System;
+﻿using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Importing.Animation;
+using SanAndreasUnity.Importing.Archive;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SanAndreasUnity.Behaviours;
-using SanAndreasUnity.Importing.Animation;
-using SanAndreasUnity.Importing.Archive;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Conversion
@@ -12,7 +12,6 @@ namespace SanAndreasUnity.Importing.Conversion
     using BFrame = SanAndreasUnity.Behaviours.Frame;
     using UVector3 = UnityEngine.Vector3;
     using UVector4 = UnityEngine.Vector4;
-    using UQuaternion = UnityEngine.Quaternion;
 
     public class Animation
     {
@@ -38,27 +37,33 @@ namespace SanAndreasUnity.Importing.Conversion
             };
 
             var root = animation.Bones.FirstOrDefault(x => x.BoneId == 0);
-            if (root != null && root.FrameCount > 0) {
+            if (root != null && root.FrameCount > 0)
+            {
                 rootStart = Types.Convert(root.Frames.First().Translation);
                 rootEnd = Types.Convert(root.Frames.Last().Translation);
-            } else {
+            }
+            else
+            {
                 rootStart = rootEnd = UVector3.zero;
             }
 
-            foreach (var bone in animation.Bones) {
+            foreach (var bone in animation.Bones)
+            {
                 var bFrames = bone.Frames;
                 var frame = frames.GetByBoneId(bone.BoneId);
 
                 string bonePath = frame.Path;
 
-                var axisAngle = bFrames.ToDictionary(x => x, x => {
+                var axisAngle = bFrames.ToDictionary(x => x, x =>
+                {
                     var q = Types.Convert(x.Rotation);
                     float ang; UnityEngine.Vector3 axis;
                     q.ToAngleAxis(out ang, out axis);
                     return new UVector4(q.x, q.y, q.z, q.w);
                 });
 
-                foreach (var axis in rotateAxes) {
+                foreach (var axis in rotateAxes)
+                {
                     var keys = bFrames
                         .Select(x => new Keyframe(x.Time * TimeScale,
                             UVector4.Dot(axisAngle[x], axis.Mask)))
@@ -73,7 +78,8 @@ namespace SanAndreasUnity.Importing.Conversion
                 if (!converted.Any(x => !x.Equals(UVector3.zero))) continue;
 
                 var anyVelocities = false;
-                var deltaVals = converted.Select((x, i) => {
+                var deltaVals = converted.Select((x, i) =>
+                {
                     var prev = Math.Max(0, i - 1);
                     var next = Math.Min(i + 1, converted.Length - 1);
 
@@ -84,7 +90,8 @@ namespace SanAndreasUnity.Importing.Conversion
                         : (converted[next] - converted[prev]) / (nextTime - prevTime);
                 }).ToArray();
 
-                foreach (var translateAxis in translateAxes) {
+                foreach (var translateAxis in translateAxes)
+                {
                     var positions = bFrames
                         .Select((x, i) => new Keyframe(x.Time * TimeScale,
                             UVector3.Dot(frame.transform.localPosition + converted[i], translateAxis.Mask)))
@@ -97,7 +104,7 @@ namespace SanAndreasUnity.Importing.Conversion
                         new UnityEngine.AnimationCurve(positions));
 
                     if (!anyVelocities) continue;
-                    
+
                     clip.SetCurve(bonePath, typeof(BFrame), "LocalVelocity." + translateAxis.Name,
                         new UnityEngine.AnimationCurve(deltas));
                 }
@@ -118,7 +125,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
             public Package(string fileName)
             {
-                using (var reader = new BinaryReader(ArchiveManager.ReadFile(fileName + ".ifp"))) {
+                using (var reader = new BinaryReader(ArchiveManager.ReadFile(fileName + ".ifp")))
+                {
                     _package = new AnimationPackage(reader);
                 }
             }
@@ -138,9 +146,12 @@ namespace SanAndreasUnity.Importing.Conversion
         public static Animation Load(string fileName, string clipName, FrameContainer frames)
         {
             Package package;
-            if (!_sLoaded.ContainsKey(fileName)) {
+            if (!_sLoaded.ContainsKey(fileName))
+            {
                 _sLoaded.Add(fileName, package = new Package(fileName));
-            } else {
+            }
+            else
+            {
                 package = _sLoaded[fileName];
             }
 

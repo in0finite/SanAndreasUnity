@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SanAndreasUnity.Importing.Collision;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using SanAndreasUnity.Importing.Collision;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -16,7 +16,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static Mesh Convert(IEnumerable<Face> faces, IEnumerable<Vertex> vertices)
         {
-            var mesh = new Mesh {
+            var mesh = new Mesh
+            {
                 vertices = vertices.Select(x => Convert(x.Position)).ToArray(),
                 subMeshCount = 1
             };
@@ -52,7 +53,8 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             CollisionModel col;
 
-            if (_sLoaded.ContainsKey(name)) {
+            if (_sLoaded.ContainsKey(name))
+            {
                 col = _sLoaded[name];
                 if (col == null) return;
 
@@ -61,7 +63,8 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             file = file ?? CollisionFile.FromName(name);
-            if (file == null || (file.Flags & Flags.NotEmpty) != Flags.NotEmpty) {
+            if (file == null || (file.Flags & Flags.NotEmpty) != Flags.NotEmpty)
+            {
                 _sLoaded.Add(name, null);
                 return;
             }
@@ -78,14 +81,15 @@ namespace SanAndreasUnity.Importing.Conversion
         private void Add<TCollider>(Surface surface, Action<TCollider> setup)
             where TCollider : Collider
         {
-            if (!_flagGroups.ContainsKey(surface.Flags)) {
-                var group = new GameObject(string.Format("Group {0}", (int) surface.Flags));
+            if (!_flagGroups.ContainsKey(surface.Flags))
+            {
+                var group = new GameObject(string.Format("Group {0}", (int)surface.Flags));
                 group.transform.SetParent(_template.transform);
 
                 _flagGroups.Add(surface.Flags, group.transform);
             }
 
-            var type = typeof (TCollider);
+            var type = typeof(TCollider);
             var obj = new GameObject(type.Name, type);
             obj.transform.SetParent(_flagGroups[surface.Flags]);
 
@@ -94,7 +98,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private CollisionModel(CollisionFile file)
         {
-            if (_sTemplateParent == null) {
+            if (_sTemplateParent == null)
+            {
                 _sTemplateParent = new GameObject("Collision Templates");
                 _sTemplateParent.SetActive(false);
             }
@@ -102,10 +107,12 @@ namespace SanAndreasUnity.Importing.Conversion
             _template = new GameObject(file.Name);
             _template.transform.SetParent(_sTemplateParent.transform);
 
-            _flagGroups = new Dictionary<SurfaceFlags,Transform>();
+            _flagGroups = new Dictionary<SurfaceFlags, Transform>();
 
-            foreach (var box in file.Boxes) {
-                Add<BoxCollider>(box.Surface, x => {
+            foreach (var box in file.Boxes)
+            {
+                Add<BoxCollider>(box.Surface, x =>
+                {
                     var min = Convert(box.Min);
                     var max = Convert(box.Max);
 
@@ -114,21 +121,29 @@ namespace SanAndreasUnity.Importing.Conversion
                 });
             }
 
-            foreach (var sphere in file.Spheres) {
-                Add<SphereCollider>(sphere.Surface, x => {
+            foreach (var sphere in file.Spheres)
+            {
+                Add<SphereCollider>(sphere.Surface, x =>
+                {
                     x.center = Convert(sphere.Center);
                     x.radius = sphere.Radius;
                 });
             }
 
-            if (file.FaceGroups.Length > 0) {
-                foreach (var group in file.FaceGroups) {
-                    Add<MeshCollider>(file.Faces[group.StartFace].Surface, x => {
+            if (file.FaceGroups.Length > 0)
+            {
+                foreach (var group in file.FaceGroups)
+                {
+                    Add<MeshCollider>(file.Faces[group.StartFace].Surface, x =>
+                    {
                         x.sharedMesh = Convert(group, file.Faces, file.Vertices);
                     });
                 }
-            } else if (file.Faces.Length > 0) {
-                Add<MeshCollider>(file.Faces[0].Surface, x => {
+            }
+            else if (file.Faces.Length > 0)
+            {
+                Add<MeshCollider>(file.Faces[0].Surface, x =>
+                {
                     x.sharedMesh = Convert(file.Faces, file.Vertices);
                 });
             }
@@ -143,16 +158,18 @@ namespace SanAndreasUnity.Importing.Conversion
             clone.name = "Collision";
             clone.transform.SetParent(destParent, false);
 
-		//	Debug.Log ("Setting parent (" + destParent.name + ") for " + clone.name);
+            //	Debug.Log ("Setting parent (" + destParent.name + ") for " + clone.name);
 
             if (!forceConvex) return;
 
-            foreach (var collider in clone.GetComponentsInChildren<Collider>()) {
+            foreach (var collider in clone.GetComponentsInChildren<Collider>())
+            {
                 var meshCollider = collider as MeshCollider;
 
                 collider.gameObject.layer = 2;
 
-                if (meshCollider != null) {
+                if (meshCollider != null)
+                {
                     meshCollider.convex = true;
                 }
             }

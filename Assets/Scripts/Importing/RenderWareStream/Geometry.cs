@@ -28,7 +28,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         {
             Vertex1 = reader.ReadUInt16();
             Vertex0 = reader.ReadUInt16();
-            Flags = (GeometryFlag) reader.ReadUInt16();
+            Flags = (GeometryFlag)reader.ReadUInt16();
             Vertex2 = reader.ReadUInt16();
         }
     }
@@ -80,38 +80,45 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             var dataHeader = SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
 
-            Flags = (GeometryFlag) reader.ReadUInt16();
+            Flags = (GeometryFlag)reader.ReadUInt16();
             var uvCount = reader.ReadByte(); // uv count
             reader.ReadByte(); // native flags
             FaceCount = reader.ReadUInt32();
             VertexCount = reader.ReadUInt32();
             FrameCount = reader.ReadUInt32();
 
-            if (dataHeader.Version == 4099) {
+            if (dataHeader.Version == 4099)
+            {
                 Ambient = reader.ReadSingle();
                 Diffuse = reader.ReadSingle();
                 Specular = reader.ReadSingle();
             }
 
-            if ((Flags & GeometryFlag.Colors) != 0) {
+            if ((Flags & GeometryFlag.Colors) != 0)
+            {
                 Colours = new Color4[VertexCount];
-                for (var i = 0; i < VertexCount; ++i) {
+                for (var i = 0; i < VertexCount; ++i)
+                {
                     Colours[i] = new Color4(reader);
                 }
             }
 
-            if ((Flags & (GeometryFlag.TexCoords | GeometryFlag.TexCoords2)) != 0) {
+            if ((Flags & (GeometryFlag.TexCoords | GeometryFlag.TexCoords2)) != 0)
+            {
                 TexCoords = new Vector2[uvCount][];
-                for (var j = 0; j < uvCount; ++j) {
-                    var uvs =  TexCoords[j] = new Vector2[VertexCount];
-                    for (var i = 0; i < VertexCount; ++i) {
+                for (var j = 0; j < uvCount; ++j)
+                {
+                    var uvs = TexCoords[j] = new Vector2[VertexCount];
+                    for (var i = 0; i < VertexCount; ++i)
+                    {
                         uvs[i] = new Vector2(reader);
                     }
                 }
             }
-            
+
             Faces = new FaceInfo[FaceCount];
-            for (var i = 0; i < FaceCount; ++i) {
+            for (var i = 0; i < FaceCount; ++i)
+            {
                 Faces[i] = new FaceInfo(reader);
             }
 
@@ -120,7 +127,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             HasPosition = reader.ReadUInt32();
             HasNormals = reader.ReadUInt32();
 
-            if (HasPosition > 1 || HasNormals > 1) {
+            if (HasPosition > 1 || HasNormals > 1)
+            {
                 throw new Exception("Well there you go");
             }
 

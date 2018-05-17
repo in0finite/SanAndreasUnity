@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 
 namespace SanAndreasUnity.Importing.Items.Definitions
 {
@@ -59,8 +56,8 @@ namespace SanAndreasUnity.Importing.Items.Definitions
             ModelName = GetString(1);
             TextureDictionaryName = GetString(2);
 
-            VehicleType = (VehicleType) Enum.Parse(typeof(VehicleType), GetString(3), true);
-        
+            VehicleType = (VehicleType)Enum.Parse(typeof(VehicleType), GetString(3), true);
+
             HandlingName = GetString(4);
             GameName = GetString(5);
             AnimsName = GetString(6);
@@ -72,7 +69,8 @@ namespace SanAndreasUnity.Importing.Items.Definitions
 
             HasWheels = Parts >= 15;
 
-            if (HasWheels) {
+            if (HasWheels)
+            {
                 WheelId = GetInt(11);
                 WheelScaleFront = GetSingle(12);
                 WheelScaleRear = GetSingle(13);

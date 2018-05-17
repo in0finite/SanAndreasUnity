@@ -49,12 +49,15 @@ namespace ParseSharp.BackusNaur
 
             var input = _location.Input;
 
-            for (var i = 0; i < input.Length && i < _location.Index; ++i) {
-                switch (input[i]) {
+            for (var i = 0; i < input.Length && i < _location.Index; ++i)
+            {
+                switch (input[i])
+                {
                     case '\n':
                         ++_lineNumber;
                         _columnNumber = 1;
                         break;
+
                     default:
                         ++_columnNumber;
                         break;
@@ -85,7 +88,8 @@ namespace ParseSharp.BackusNaur
     {
         public static Parser Generate(params Rule[] rules)
         {
-            if (rules.Length == 0) {
+            if (rules.Length == 0)
+            {
                 return Parser.Null("No rules specified");
             }
 
@@ -93,7 +97,8 @@ namespace ParseSharp.BackusNaur
             ctx.AddRules(rules);
             var result = rules.First().Generate(ctx);
 
-            if (ctx._errors.Any()) {
+            if (ctx._errors.Any())
+            {
                 throw new ParserGenerationException(ctx._errors.ToArray());
             }
 
@@ -111,14 +116,16 @@ namespace ParseSharp.BackusNaur
 
         private void AddRules(params Rule[] rules)
         {
-            foreach (var rule in rules) {
+            foreach (var rule in rules)
+            {
                 _rules.Add(rule.Identifier, rule);
             }
         }
 
         public Parser GetRule(ParseResult result, String name)
         {
-            if (_rules.ContainsKey(name)) {
+            if (_rules.ContainsKey(name))
+            {
                 return _rules[name].Generate(this);
             }
 
@@ -145,14 +152,15 @@ namespace ParseSharp.BackusNaur
 
         public Parser Generate(string rootParserName = null)
         {
-            if (rootParserName == null) {
+            if (rootParserName == null)
+            {
                 return ParserGenerationContext.Generate(Rules);
-            } 
+            }
 
             var root = Rules.FirstOrDefault(x => x.Identifier == rootParserName);
             if (root == null) throw new ArgumentException("No rule found with the given name.", "rootParserName");
 
-            return ParserGenerationContext.Generate(new[] {root}.Concat(Rules.Where(x => x != root)).ToArray());
+            return ParserGenerationContext.Generate(new[] { root }.Concat(Rules.Where(x => x != root)).ToArray());
         }
     }
 
@@ -166,7 +174,7 @@ namespace ParseSharp.BackusNaur
         internal bool Defined { get; private set; }
 
         public readonly String Identifier;
-        public readonly String[] Options; 
+        public readonly String[] Options;
         public readonly Expression Expression;
         public readonly LateDefinedParser GeneratedParser;
 
@@ -179,7 +187,7 @@ namespace ParseSharp.BackusNaur
 
             Identifier = GetChild<Identifier>(ChildCount - 2).Value;
             Expression = GetChild<Expression>(ChildCount - 1);
-            
+
             GeneratedParser = Parser.LateDefined(Identifier,
                 Options.Contains("collapse") ? LateDefinedType.Collapse :
                 Options.Contains("omit-from-hierarchy") ? LateDefinedType.OmitFromHierarchy :
@@ -196,9 +204,12 @@ namespace ParseSharp.BackusNaur
             var matchWhitespace = Options.Contains("match-whitespace");
             var ignoreWhitespace = Options.Contains("skip-whitespace");
 
-            if (matchWhitespace && !ignoreWhitespace) {
+            if (matchWhitespace && !ignoreWhitespace)
+            {
                 GeneratedParser.Definition = GeneratedParser.Definition.MatchWhitespace;
-            } else if (ignoreWhitespace && !matchWhitespace) {
+            }
+            else if (ignoreWhitespace && !matchWhitespace)
+            {
                 GeneratedParser.Definition = GeneratedParser.Definition.IgnoreWhitespace;
             }
 
@@ -266,7 +277,9 @@ namespace ParseSharp.BackusNaur
 
     internal abstract class Factor : ResultSubstitution, IParserGenerator
     {
-        protected Factor(ParseResult original) : base(original) { }
+        protected Factor(ParseResult original) : base(original)
+        {
+        }
 
         public abstract Parser Generate(ParserGenerationContext ctx);
     }
@@ -319,7 +332,9 @@ namespace ParseSharp.BackusNaur
     {
         public char Char { get; protected set; }
 
-        protected Character(ParseResult original) : base(original) { }
+        protected Character(ParseResult original) : base(original)
+        {
+        }
     }
 
     internal sealed class SingleCharacter : Character
@@ -336,16 +351,20 @@ namespace ParseSharp.BackusNaur
         public EscapedCharacter(ParseResult original)
             : base(original)
         {
-            switch (Value[0]) {
+            switch (Value[0])
+            {
                 case 'r':
                     Char = '\r';
                     break;
+
                 case 'n':
                     Char = '\n';
                     break;
+
                 case 't':
                     Char = '\t';
                     break;
+
                 default:
                     Char = Value[0];
                     break;
@@ -362,7 +381,7 @@ namespace ParseSharp.BackusNaur
             var regex = GetChild<RegularExpression>(0);
             var options = GetChild<PatternOptions>(1);
 
-            Regex = new Regex(regex.PatternString, (RegexOptions) options.Options | RegexOptions.Compiled);
+            Regex = new Regex(regex.PatternString, (RegexOptions)options.Options | RegexOptions.Compiled);
         }
 
         public override Parser Generate(ParserGenerationContext ctx)
@@ -387,26 +406,33 @@ namespace ParseSharp.BackusNaur
     {
         public String Char { get; protected set; }
 
-        protected RegexCharacter(ParseResult original) : base(original) { }
+        protected RegexCharacter(ParseResult original) : base(original)
+        {
+        }
     }
 
     internal sealed class RegexEscapedCharacter : RegexCharacter
     {
         public RegexEscapedCharacter(ParseResult original) : base(original)
         {
-            switch (Value[0]) {
+            switch (Value[0])
+            {
                 case 'r':
                     Char = "\r";
                     break;
+
                 case 'n':
                     Char = "\n";
                     break;
+
                 case 't':
                     Char = "\t";
                     break;
+
                 case '\\':
                     Char = "\\";
                     break;
+
                 default:
                     Char = "\\" + Value[0];
                     break;
@@ -418,7 +444,7 @@ namespace ParseSharp.BackusNaur
     {
         public RegexSingleCharacter(ParseResult original) : base(original)
         {
-            Char = new String(new[] {Value[0]});
+            Char = new String(new[] { Value[0] });
         }
     }
 
@@ -428,8 +454,10 @@ namespace ParseSharp.BackusNaur
 
         public PatternOptions(ParseResult original) : base(original)
         {
-            foreach (var c in Value) {
-                switch (c) {
+            foreach (var c in Value)
+            {
+                switch (c)
+                {
                     case 'i':
                         Options |= ParseSharp.PatternOptions.IgnoreCase;
                         break;
@@ -442,7 +470,7 @@ namespace ParseSharp.BackusNaur
     {
         public HexEscapedCharacter(ParseResult original) : base(original)
         {
-            Char = (char) ushort.Parse(Value, NumberStyles.HexNumber);
+            Char = (char)ushort.Parse(Value, NumberStyles.HexNumber);
         }
     }
 
@@ -463,7 +491,9 @@ namespace ParseSharp.BackusNaur
 
     internal sealed class Optional : Group
     {
-        public Optional(ParseResult original) : base(original) { }
+        public Optional(ParseResult original) : base(original)
+        {
+        }
 
         public override Parser Generate(ParserGenerationContext ctx)
         {
@@ -473,7 +503,9 @@ namespace ParseSharp.BackusNaur
 
     internal sealed class Repeated : Group
     {
-        public Repeated(ParseResult original) : base(original) { }
+        public Repeated(ParseResult original) : base(original)
+        {
+        }
 
         public override Parser Generate(ParserGenerationContext ctx)
         {

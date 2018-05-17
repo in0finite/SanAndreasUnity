@@ -47,7 +47,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
             ModelName = GetString(1);
             TextureDictionaryName = GetString(2);
             DrawDist = GetSingle(3);
-            Flags = (ObjectFlag) GetInt(4);
+            Flags = (ObjectFlag)GetInt(4);
         }
 
         public bool HasFlag(ObjectFlag flag)

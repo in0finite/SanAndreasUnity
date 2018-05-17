@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using SanAndreasUnity.Importing.Conversion;
 using System.Collections.Generic;
-using SanAndreasUnity.Importing.Conversion;
+using System.Linq;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
@@ -15,13 +15,15 @@ namespace SanAndreasUnity.Behaviours
         internal void Initialize(Geometry.GeometryFrame[] frames,
             Dictionary<Geometry.GeometryFrame, Transform> transforms)
         {
-            _frames = frames.Select(x => {
+            _frames = frames.Select(x =>
+            {
                 var frame = transforms[x].gameObject.AddComponent<Frame>();
                 frame.Initialize(x);
                 return frame;
             }).ToArray();
 
-            for (var i = 0; i < frames.Length; ++i) {
+            for (var i = 0; i < frames.Length; ++i)
+            {
                 var frame = frames[i];
                 if (frame.ParentIndex == -1) continue;
                 _frames[i].Parent = _frames[frame.ParentIndex];

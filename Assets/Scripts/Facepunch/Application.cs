@@ -14,7 +14,7 @@ namespace Facepunch
         {
             IsQuitting = true;
 
-			/*
+            /*
             if (Client.Instance != null && Client.Instance.NetStatus == NetStatus.Running) {
                 Client.Instance.Net.Shutdown();
             }

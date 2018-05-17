@@ -43,9 +43,11 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             var section = ReadSection<SectionData>();
             var extension = section as Extension;
 
-            if (extension != null) {
+            if (extension != null)
+            {
                 var collision = extension.FirstOrDefault<CollisionModel>();
-                if (collision != null) {
+                if (collision != null)
+                {
                     Collision = collision.Collision;
                 }
             }

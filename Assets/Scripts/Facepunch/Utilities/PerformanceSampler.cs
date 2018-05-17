@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
+
 //using Facepunch.ConCommands;
 //using Facepunch.Networking;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using ThreadState = System.Threading.ThreadState;
 
@@ -38,16 +36,21 @@ namespace Facepunch.Utilities
 
             Exception ex = null;
 
-            if (suspend) {
+            if (suspend)
+            {
                 var ready = new ManualResetEvent(false);
 
-                new Thread(() => {
+                new Thread(() =>
+                {
                     // Backstop to release thread in case of deadlock:
                     ready.Set();
                     Thread.Sleep(200);
-                    try {
+                    try
+                    {
                         targetThread.Resume();
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         ex = e;
                     }
                 }).Start();
@@ -56,15 +59,24 @@ namespace Facepunch.Utilities
                 targetThread.Suspend();
             }
 
-            try {
+            try
+            {
                 stackTrace = new StackTrace(targetThread, true);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 error = e;
-            } finally {
-                if (suspend) {
-                    try {
+            }
+            finally
+            {
+                if (suspend)
+                {
+                    try
+                    {
                         targetThread.Resume();
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         error = error ?? e;
                     }
                 }
@@ -77,38 +89,38 @@ namespace Facepunch.Utilities
 
 #pragma warning restore 0618
 
-   /*     [ConCommand(Domain.Shared, "system", "status")]
-        private static String SystemStatusCommand(ConCommandArgs args)
-        {
-            var writer = new StringWriter();
+        /*     [ConCommand(Domain.Shared, "system", "status")]
+             private static String SystemStatusCommand(ConCommandArgs args)
+             {
+                 var writer = new StringWriter();
 
-            writer.WriteLine("Uptime: {0:F1} minutes", Instance.Uptime.TotalMinutes);
-            writer.WriteLine("Processor time: {0:F1}%", Instance.ProcessorTimePercent);
-            writer.WriteLine("Total memory: {0:F1} KB", Instance.TotalMemory / 1024d);
-            writer.WriteLine("Avg GC period: {0:F2} s", Instance.AverageGarbageCollectionPeriod);
-            writer.WriteLine("Network status: {0}", Server.Instance.NetStatus);
-            writer.WriteLine("Network thread status: {0}", Server.Instance.Net.NetThread.ThreadState);
-            writer.WriteLine("Main thread state: {0}", Instance.MainThreadState);
+                 writer.WriteLine("Uptime: {0:F1} minutes", Instance.Uptime.TotalMinutes);
+                 writer.WriteLine("Processor time: {0:F1}%", Instance.ProcessorTimePercent);
+                 writer.WriteLine("Total memory: {0:F1} KB", Instance.TotalMemory / 1024d);
+                 writer.WriteLine("Avg GC period: {0:F2} s", Instance.AverageGarbageCollectionPeriod);
+                 writer.WriteLine("Network status: {0}", Server.Instance.NetStatus);
+                 writer.WriteLine("Network thread status: {0}", Server.Instance.Net.NetThread.ThreadState);
+                 writer.WriteLine("Main thread state: {0}", Instance.MainThreadState);
 
-            if (!(Instance.SinceLastUpdate.TotalSeconds > 2d * Instance.SamplePeriod)) return writer.ToString();
+                 if (!(Instance.SinceLastUpdate.TotalSeconds > 2d * Instance.SamplePeriod)) return writer.ToString();
 
-            writer.WriteLine("Main thread has been hanging for {0:F1} minutes!", Instance.SinceLastUpdate.TotalMinutes);
+                 writer.WriteLine("Main thread has been hanging for {0:F1} minutes!", Instance.SinceLastUpdate.TotalMinutes);
 
-            return writer.ToString();
-        }
+                 return writer.ToString();
+             }
 
-        [ConCommand(Domain.Shared, "system", "gate-keepers")]
-        private static String SystemGateKeepersCommand(ConCommandArgs args)
-        {
-            var writer = new StringWriter();
+             [ConCommand(Domain.Shared, "system", "gate-keepers")]
+             private static String SystemGateKeepersCommand(ConCommandArgs args)
+             {
+                 var writer = new StringWriter();
 
-            foreach (var gateKeeper in GateKeepers) {
-                writer.WriteLine("Owner: {0}, Name: {1}, Count: {2}", gateKeeper.Owner, gateKeeper.Name, gateKeeper.Counter);
-            }
+                 foreach (var gateKeeper in GateKeepers) {
+                     writer.WriteLine("Owner: {0}, Name: {1}, Count: {2}", gateKeeper.Owner, gateKeeper.Name, gateKeeper.Counter);
+                 }
 
-            return writer.ToString();
-        }
-    */
+                 return writer.ToString();
+             }
+         */
 
         private class GateKeeper : IGateKeeper
         {
@@ -191,7 +203,7 @@ namespace Facepunch.Utilities
 
         public ThreadState MainThreadState
         {
-            get { return _mainThread == null ? ThreadState.Unstarted : _mainThread.ThreadState; } 
+            get { return _mainThread == null ? ThreadState.Unstarted : _mainThread.ThreadState; }
         }
 
         public TimeSpan SinceLastUpdate
@@ -205,7 +217,7 @@ namespace Facepunch.Utilities
         {
             get
             {
-                return _gcPeriods.Count == 0 
+                return _gcPeriods.Count == 0
                     ? float.PositiveInfinity
                     : (_gcPeriods.Sum() + (DateTime.UtcNow - _lastGcPass).TotalSeconds)
                     / (_gcPeriods.Count + 1);
@@ -233,9 +245,9 @@ namespace Facepunch.Utilities
         private static void SampleFailed()
         {
             UnityEngine.Debug.LogErrorFormat("!!! PerformanceSampler has failed to sample (time: {0}) !!!", DateTime.UtcNow);
-        //    UnityEngine.Debug.LogFormat("HangNotifyUrl: {0}", NetConfig.HangNotifyUrl);
+            //    UnityEngine.Debug.LogFormat("HangNotifyUrl: {0}", NetConfig.HangNotifyUrl);
 
-			/*
+            /*
             if (String.IsNullOrEmpty(NetConfig.HangNotifyUrl)) return;
 
             using (var client = new WebClient()) {
@@ -253,7 +265,8 @@ namespace Facepunch.Utilities
         {
             _stopWait.Reset();
 
-            while (!_stopWatching) {
+            while (!_stopWatching)
+            {
                 if (_sampleWait.WaitOne(TimeSpan.FromSeconds(SamplePeriod * 2d + 10d))) continue;
                 if (_stopWatching) return;
                 SampleFailed();
@@ -265,7 +278,8 @@ namespace Facepunch.Utilities
 
         private void Sample(bool watch)
         {
-            if (watch && _watcherThread == null) {
+            if (watch && _watcherThread == null)
+            {
                 _watcherThread = new Thread(WatcherEntry);
                 _watcherThread.Start();
             }
@@ -285,21 +299,27 @@ namespace Facepunch.Utilities
 
             _lastGcPasses = gcPasses;
 
-            if (gcPassDiff > 0) {
+            if (gcPassDiff > 0)
+            {
                 var gcTimeDiff = _lastUpdate - _lastGcPass;
 
-                if (gcPassDiff == 1) {
+                if (gcPassDiff == 1)
+                {
                     _gcPeriods.Enqueue(gcTimeDiff.TotalSeconds);
-                } else {
+                }
+                else
+                {
                     var avg = diff / (gcPassDiff - 1) + (gcTimeDiff.TotalSeconds - diff);
-                    for (var i = 0; i < gcPassDiff; ++i) {
+                    for (var i = 0; i < gcPassDiff; ++i)
+                    {
                         _gcPeriods.Enqueue(avg);
                     }
                 }
 
                 _lastGcPass = _lastUpdate;
 
-                while (_gcPeriods.Count > GarbageCollectionSamples) {
+                while (_gcPeriods.Count > GarbageCollectionSamples)
+                {
                     _gcPeriods.Dequeue();
                 }
             }
@@ -308,7 +328,7 @@ namespace Facepunch.Utilities
 
             var processorTimeDiff = processorTime.Subtract(_lastProcessorTime);
 
-            ProcessorTimePercent = (float) ((processorTimeDiff.TotalSeconds * 100d / Environment.ProcessorCount) / diff);
+            ProcessorTimePercent = (float)((processorTimeDiff.TotalSeconds * 100d / Environment.ProcessorCount) / diff);
 
             _lastProcessorTime = processorTime;
 
@@ -318,7 +338,8 @@ namespace Facepunch.Utilities
 
         public StackTrace GetMainThreadStackTrace(out Exception ex)
         {
-            if (_mainThread.ThreadState == ThreadState.Stopped) {
+            if (_mainThread.ThreadState == ThreadState.Stopped)
+            {
                 ex = new Exception("Thread stopped");
                 return null;
             }
@@ -326,7 +347,7 @@ namespace Facepunch.Utilities
             return GetStackTrace(_mainThread, out ex);
         }
 
-// ReSharper disable once UnusedMember.Local
+        // ReSharper disable once UnusedMember.Local
         private void Update()
         {
             if (!(_timer.Elapsed.TotalSeconds > SamplePeriod)) return;
@@ -341,7 +362,8 @@ namespace Facepunch.Utilities
             _stopWatching = true;
             _sampleWait.Set();
 
-            if (_watcherThread != null && !_stopWait.WaitOne(1000)) {
+            if (_watcherThread != null && !_stopWait.WaitOne(1000))
+            {
                 UnityEngine.Debug.LogWarning("Timeout while stopping watcher thread!");
                 _watcherThread.Abort();
             }

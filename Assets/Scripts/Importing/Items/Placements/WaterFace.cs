@@ -42,11 +42,12 @@ namespace SanAndreasUnity.Importing.Items.Placements
             var vertCount = (Parts - 1) / 7;
             Vertices = new Vertex[vertCount];
 
-            for (var i = 0; i < vertCount; ++i) {
+            for (var i = 0; i < vertCount; ++i)
+            {
                 Vertices[i] = new Vertex(this, i * 7);
             }
 
-            Flags = (WaterFlags) GetInt(Parts - 1);
+            Flags = (WaterFlags)GetInt(Parts - 1);
         }
     }
 }

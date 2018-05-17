@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using SanAndreasUnity.Importing.Vehicles;
+﻿using SanAndreasUnity.Importing.Vehicles;
+using System.Linq;
 using UnityEngine;
 using VConsts = SanAndreasUnity.Behaviours.Vehicles.VehiclePhysicsConstants;
 
@@ -37,7 +37,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             var vals = VConsts.Instance;
 
-            foreach (var wheel in _wheels) {
+            foreach (var wheel in _wheels)
+            {
                 var front = (wheel.Alignment & WheelAlignment.Front) == WheelAlignment.Front;
 
                 wheel.Parent.position -= Vector3.up * HandlingData.SuspensionLowerLimit;
@@ -45,7 +46,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 var scale = front ? Definition.WheelScaleFront : Definition.WheelScaleRear;
 
                 var mf = wheel.Child.GetComponent<MeshFilter>();
-                if (mf != null) {
+                if (mf != null)
+                {
                     var size = mf.sharedMesh.bounds.size.y;
                     wheel.Child.localScale = Vector3.one * scale / size;
                 }
@@ -64,7 +66,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             _rigidBody.mass = HandlingData.Mass * vals.MassScale;
             _rigidBody.centerOfMass = HandlingData.CentreOfMass;
 
-            foreach (var wheel in _wheels) {
+            foreach (var wheel in _wheels)
+            {
                 var spring = wheel.Collider.suspensionSpring;
 
                 spring.damper = HandlingData.SuspensionDampingLevel * vals.SuspensionDampingScale;
@@ -93,11 +96,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private float DriveBias(Wheel wheel)
         {
-            switch (HandlingData.TransmissionDriveType) {
+            switch (HandlingData.TransmissionDriveType)
+            {
                 case DriveType.Forward:
                     return wheel.IsFront ? 1f : 0f;
+
                 case DriveType.Rear:
                     return wheel.IsRear ? 1f : 0f;
+
                 default:
                     return 1f;
             }
@@ -119,18 +125,23 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void PhysicsFixedUpdate()
         {
             var groundRay = new Ray(transform.position + Vector3.up, -Vector3.up);
-            if (!Physics.SphereCast(groundRay, 0.25f, transform.position.y + 256f, (-1) ^ LayerMask)) {
+            if (!Physics.SphereCast(groundRay, 0.25f, transform.position.y + 256f, (-1) ^ LayerMask))
+            {
                 _rigidBody.velocity = Vector3.zero;
                 _rigidBody.angularVelocity = Vector3.zero;
                 _rigidBody.useGravity = false;
-            } else {
+            }
+            else
+            {
                 _rigidBody.useGravity = true;
             }
 
             var vals = VConsts.Instance;
 
-            foreach (var wheel in _wheels) {
-                if (ShouldSteer(wheel)) {
+            foreach (var wheel in _wheels)
+            {
+                if (ShouldSteer(wheel))
+                {
                     wheel.Collider.steerAngle = HandlingData.SteeringLock * Steering;
                 }
 
@@ -145,7 +156,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (wheel.Complement != null) wheel.UpdateTravel();
             }
 
-            foreach (var wheel in _wheels.Where(x => x.Complement != null)) {
+            foreach (var wheel in _wheels.Where(x => x.Complement != null))
+            {
                 if (wheel.Travel == wheel.Complement.Travel) continue;
                 if (!wheel.Collider.isGrounded) continue;
 

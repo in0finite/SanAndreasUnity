@@ -16,8 +16,9 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             FaceIndices = new Int32[VertexCount];
             MaterialIndex = reader.ReadUInt32();
 
-            for (var i = 0; i < VertexCount; ++i) {
-                FaceIndices[i] = (Int32) reader.ReadUInt32();
+            for (var i = 0; i < VertexCount; ++i)
+            {
+                FaceIndices[i] = (Int32)reader.ReadUInt32();
             }
         }
     }
@@ -40,7 +41,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             MaterialSplits = new MaterialSplit[SplitCount];
             FaceCount = reader.ReadUInt32();
 
-            for (var i = 0; i < SplitCount; ++i) {
+            for (var i = 0; i < SplitCount; ++i)
+            {
                 MaterialSplits[i] = new MaterialSplit(stream);
             }
         }

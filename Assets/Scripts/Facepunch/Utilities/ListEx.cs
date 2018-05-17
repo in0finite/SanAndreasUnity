@@ -10,7 +10,8 @@ namespace System.Collections.Generic
 
             if (count == 0 || itemCount == 0) return;
 
-            if (count >= itemCount) {
+            if (count >= itemCount)
+            {
                 list.Clear();
 
                 return;
@@ -18,7 +19,8 @@ namespace System.Collections.Generic
 
             int removeIndex = index;
 
-            if (count < 0) {
+            if (count < 0)
+            {
                 removeIndex += count;
                 count = -count;
             }
@@ -26,9 +28,12 @@ namespace System.Collections.Generic
             removeIndex = removeIndex.Mod(itemCount);
             int backCount = count - (itemCount - removeIndex);
 
-            if (backCount <= 0) {
+            if (backCount <= 0)
+            {
                 list.RemoveRange(removeIndex, count);
-            } else {
+            }
+            else
+            {
                 list.RemoveRange(removeIndex, count - backCount);
                 list.RemoveRange(0, backCount);
             }

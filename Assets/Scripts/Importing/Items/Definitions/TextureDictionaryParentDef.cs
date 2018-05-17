@@ -1,5 +1,4 @@
 ﻿using SanAndreasUnity.Importing.Conversion;
-using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items.Definitions
 {

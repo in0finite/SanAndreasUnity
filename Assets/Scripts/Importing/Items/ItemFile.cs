@@ -1,12 +1,12 @@
-﻿using System;
+﻿using SanAndreasUnity.Importing.Items.Placements;
+using SanAndreasUnity.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using SanAndreasUnity.Importing.Items.Placements;
-using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Items
 {
@@ -30,12 +30,15 @@ namespace SanAndreasUnity.Importing.Items
         {
             var ws = new[] { ' ', '\t' };
 
-            if (commaSeparated) {
+            if (commaSeparated)
+            {
                 _parts = line.Split(',')
                     .SelectMany(x => x.Split(ws, StringSplitOptions.RemoveEmptyEntries))
                     .Select(x => x.Trim())
                     .ToArray();
-            } else {
+            }
+            else
+            {
                 _parts = line.Split(ws, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim())
                     .Where(x => x.Length > 0)
@@ -43,7 +46,9 @@ namespace SanAndreasUnity.Importing.Items
             }
         }
 
-        protected ItemBase(BinaryReader reader) { }
+        protected ItemBase(BinaryReader reader)
+        {
+        }
 
         public string GetString(int index)
         {
@@ -107,15 +112,16 @@ namespace SanAndreasUnity.Importing.Items
         {
             _sCtors = new Dictionary<string, ItemCtor>();
 
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
-                var attrib = (SectionAttribute) type.GetCustomAttributes(typeof(SectionAttribute), false).FirstOrDefault();
+            foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                var attrib = (SectionAttribute)type.GetCustomAttributes(typeof(SectionAttribute), false).FirstOrDefault();
                 if (attrib == null) continue;
 
                 if (!typeof(TType).IsAssignableFrom(type)) continue;
 
-                var ctor = type.GetConstructor(new[] {typeof (string)});
+                var ctor = type.GetConstructor(new[] { typeof(string) });
 
-                var line = Expression.Parameter(typeof (string), "line");
+                var line = Expression.Parameter(typeof(string), "line");
                 var call = Expression.New(ctor, line);
                 var cast = Expression.Convert(call, typeof(TType));
                 var lamb = Expression.Lambda<ItemCtor>(cast, line);
@@ -132,11 +138,14 @@ namespace SanAndreasUnity.Importing.Items
             List<TType> curSection = null;
             ItemCtor curCtor = null;
 
-            using (var reader = File.OpenText(path)) {
+            using (var reader = File.OpenText(path))
+            {
                 string line;
-                while ((line = reader.ReadLine()) != null) {
+                while ((line = reader.ReadLine()) != null)
+                {
                     var hashIndex = line.IndexOf('#');
-                    if (hashIndex != -1) {
+                    if (hashIndex != -1)
+                    {
                         line = line.Substring(0, hashIndex);
                     }
 
@@ -144,24 +153,30 @@ namespace SanAndreasUnity.Importing.Items
 
                     if (line.Length == 0) continue;
 
-                    if (curSection == null) {
+                    if (curSection == null)
+                    {
                         line = line.ToLower();
 
-                        if (_sections.ContainsKey(line)) {
+                        if (_sections.ContainsKey(line))
+                        {
                             curSection = _sections[line];
-                        } else {
+                        }
+                        else
+                        {
                             curSection = new List<TType>();
                             _sections.Add(line, curSection);
                         }
 
-                        if (_sCtors.ContainsKey(line)) {
+                        if (_sCtors.ContainsKey(line))
+                        {
                             curCtor = _sCtors[line];
                         }
 
                         continue;
                     }
 
-                    if (line.Equals("end")) {
+                    if (line.Equals("end"))
+                    {
                         curSection = null;
                         curCtor = null;
                         continue;
@@ -192,16 +207,18 @@ namespace SanAndreasUnity.Importing.Items
             _sections.Add("inst", insts);
 
             stream.Seek(instOffset, SeekOrigin.Begin);
-            for (var j = 0; j < instCount; ++j) {
-                insts.Add((TType) (ItemBase) new Instance(reader));
+            for (var j = 0; j < instCount; ++j)
+            {
+                insts.Add((TType)(ItemBase)new Instance(reader));
             }
 
             var cars = new List<TType>();
             _sections.Add("cars", cars);
 
             stream.Seek(carsOffset, SeekOrigin.Begin);
-            for (var j = 0; j < carsCount; ++j) {
-                cars.Add((TType) (ItemBase) new ParkedVehicle(reader));
+            for (var j = 0; j < carsCount; ++j)
+            {
+                cars.Add((TType)(ItemBase)new ParkedVehicle(reader));
             }
         }
 

@@ -39,7 +39,8 @@ namespace System.IO
             var bufferSize = buffer.Length;
 
             int read;
-            while ((read = from.Read(buffer, 0, bufferSize)) > 0) {
+            while ((read = from.Read(buffer, 0, bufferSize)) > 0)
+            {
                 dest.Write(buffer, 0, read);
             }
         }
@@ -51,7 +52,8 @@ namespace System.IO
 
             int toRead, read, total = 0;
             while ((toRead = Math.Min(length - total, bufferSize)) > 0
-                && (read = from.Read(buffer, 0, toRead)) > 0) {
+                && (read = from.Read(buffer, 0, toRead)) > 0)
+            {
                 dest.Write(buffer, 0, read);
                 total += read;
             }

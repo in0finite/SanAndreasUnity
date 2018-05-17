@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Archive
@@ -41,32 +40,35 @@ namespace SanAndreasUnity.Importing.Archive
 
         private LooseArchive(string dirPath)
         {
-			Debug.Log ("Loading loose archive: " + dirPath);
+            Debug.Log("Loading loose archive: " + dirPath);
 
-			_fileDict = new Dictionary<string, LooseArchiveEntry>(StringComparer.InvariantCultureIgnoreCase);
+            _fileDict = new Dictionary<string, LooseArchiveEntry>(StringComparer.InvariantCultureIgnoreCase);
             _extDict = new Dictionary<string, List<string>>(StringComparer.InvariantCultureIgnoreCase);
 
-            foreach (var file in Directory.GetFiles(dirPath, "*", SearchOption.AllDirectories)) {
+            foreach (var file in Directory.GetFiles(dirPath, "*", SearchOption.AllDirectories))
+            {
                 var ext = Path.GetExtension(file);
 
-				ext = ext.ToLower ();
+                ext = ext.ToLower();
 
                 if (!_sValidExtensions.Contains(ext)) continue;
 
                 var entry = new LooseArchiveEntry(file);
 
-                if (_fileDict.ContainsKey(entry.Name)) {
+                if (_fileDict.ContainsKey(entry.Name))
+                {
                     Debug.LogWarningFormat("Already loaded {0}", entry.Name);
                     continue;
                 }
 
-				//Debug.Log ("Adding loose archive entry: " + entry.FilePath);
+                //Debug.Log ("Adding loose archive entry: " + entry.FilePath);
 
                 _fileDict.Add(entry.Name, entry);
 
                 if (ext == null) continue;
 
-                if (!_extDict.ContainsKey(ext)) {
+                if (!_extDict.ContainsKey(ext))
+                {
                     _extDict.Add(ext, new List<string>());
                 }
 

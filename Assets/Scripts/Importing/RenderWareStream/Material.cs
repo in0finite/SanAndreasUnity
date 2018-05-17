@@ -46,7 +46,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             Smoothness = reader.ReadSingle();
             Specular = 1f - reader.ReadSingle();
 
-            for (var i = 0; i < TextureCount; ++i) {
+            for (var i = 0; i < TextureCount; ++i)
+            {
                 Textures[i] = ReadSection<Texture>();
             }
 

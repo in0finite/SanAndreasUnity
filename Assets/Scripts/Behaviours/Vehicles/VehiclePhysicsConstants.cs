@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
@@ -46,9 +45,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void DiscoverFields()
         {
-            _fields = new Dictionary<FieldInfo,object>();
+            _fields = new Dictionary<FieldInfo, object>();
 
-            foreach (var field in GetType().GetFields()) {
+            foreach (var field in GetType().GetFields())
+            {
                 if (field.DeclaringType != GetType()) continue;
                 if (field.FieldType.IsClass) continue;
                 if (field.GetCustomAttributes(typeof(WatchedAttribute), false).Length == 0) continue;
@@ -60,13 +60,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             HasChanged = false;
 
-            if (_fields == null) {
+            if (_fields == null)
+            {
                 DiscoverFields();
             }
 
-            foreach (var field in _fields) {
+            foreach (var field in _fields)
+            {
                 var cur = field.Key.GetValue(this);
-                if (!cur.Equals(field.Value)) {
+                if (!cur.Equals(field.Value))
+                {
                     HasChanged = true;
                     break;
                 }
@@ -74,11 +77,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (!HasChanged) return;
 
-            foreach (var field in _fields.Keys.ToArray()) {
+            foreach (var field in _fields.Keys.ToArray())
+            {
                 _fields[field] = field.GetValue(this);
             }
 
-            if (Changed != null) {
+            if (Changed != null)
+            {
                 Changed(this);
             }
         }

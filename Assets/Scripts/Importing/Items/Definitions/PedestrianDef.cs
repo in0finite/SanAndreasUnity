@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 
 namespace SanAndreasUnity.Importing.Items.Definitions
 {
@@ -61,11 +58,11 @@ namespace SanAndreasUnity.Importing.Items.Definitions
             Id = GetInt(0);
             ModelName = GetString(1);
             TextureDictionaryName = GetString(2);
-            DefaultType = (PedestrianType) Enum.Parse(typeof(PedestrianType), GetString(3), true);
+            DefaultType = (PedestrianType)Enum.Parse(typeof(PedestrianType), GetString(3), true);
             BehaviourName = GetString(4);
             AnimGroupName = GetString(5);
-            CanDriveMask = (uint) GetInt(6, NumberStyles.HexNumber);
-            Flags = (uint) GetInt(7);
+            CanDriveMask = (uint)GetInt(6, NumberStyles.HexNumber);
+            Flags = (uint)GetInt(7);
             AnimFileName = GetString(8);
             Radio1 = GetInt(9);
             Radio2 = GetInt(10);

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using SanAndreasUnity.Importing.Archive;
+using SanAndreasUnity.Importing.Items.Placements;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SanAndreasUnity.Importing.Archive;
-using SanAndreasUnity.Importing.Items.Placements;
 
 namespace SanAndreasUnity.Importing.Items
 {
@@ -11,17 +11,20 @@ namespace SanAndreasUnity.Importing.Items
         private static readonly List<Zone> _zones = new List<Zone>();
 
         private static readonly Dictionary<int, IObjectDefinition> _definitions
-            = new Dictionary<int,IObjectDefinition>();
+            = new Dictionary<int, IObjectDefinition>();
+
         private static readonly Dictionary<int, List<Placement>> _placements
-            = new Dictionary<int,List<Placement>>();
+            = new Dictionary<int, List<Placement>>();
 
         public static void ReadLoadList(string path)
         {
-            var ws = new[] {' ', '\t'};
+            var ws = new[] { ' ', '\t' };
 
-            using (var reader = File.OpenText(path)) {
+            using (var reader = File.OpenText(path))
+            {
                 string line;
-                while ((line = reader.ReadLine()) != null) {
+                while ((line = reader.ReadLine()) != null)
+                {
                     line = line.Trim();
 
                     if (line.Length == 0) continue;
@@ -33,15 +36,17 @@ namespace SanAndreasUnity.Importing.Items
                     var type = line.Substring(0, index);
                     var args = line.Substring(index).TrimStart();
 
-					args = args.Replace("DATA\\MAPS\\", "data/maps/");
-					args = args.Replace (".IDE", ".ide");
-					args = args.Replace (".IPL", ".ipl");
-					args = args.Replace ('\\', Path.DirectorySeparatorChar);
+                    args = args.Replace("DATA\\MAPS\\", "data/maps/");
+                    args = args.Replace(".IDE", ".ide");
+                    args = args.Replace(".IPL", ".ipl");
+                    args = args.Replace('\\', Path.DirectorySeparatorChar);
 
-                    switch (type.ToLower()) {
+                    switch (type.ToLower())
+                    {
                         case "ide":
-							ReadIde(args);
+                            ReadIde(args);
                             break;
+
                         case "ipl":
                             ReadIpl(args);
                             break;
@@ -53,7 +58,8 @@ namespace SanAndreasUnity.Importing.Items
         public static void ReadIde(string path)
         {
             var file = new ItemFile<Definition>(ArchiveManager.GetPath(path));
-            foreach (var obj in file.GetItems<Definition>().OfType<IObjectDefinition>()) {
+            foreach (var obj in file.GetItems<Definition>().OfType<IObjectDefinition>())
+            {
                 _definitions.Add(obj.Id, obj);
             }
         }
@@ -61,7 +67,8 @@ namespace SanAndreasUnity.Importing.Items
         public static void ReadIpl(string path)
         {
             var file = new ItemFile<Placement>(ArchiveManager.GetPath(path));
-            foreach (var zone in file.GetSection<Zone>("zone")) {
+            foreach (var zone in file.GetSection<Zone>("zone"))
+            {
                 _zones.Add(zone);
             }
 
@@ -74,9 +81,11 @@ namespace SanAndreasUnity.Importing.Items
 
             var streamFormat = Path.GetFileNameWithoutExtension(path).ToLower() + "_stream{0}.ipl";
             var missed = 0;
-            for (var i = 0;; ++i) {
+            for (var i = 0; ; ++i)
+            {
                 var streamPath = string.Format(streamFormat, i);
-                if (!ArchiveManager.FileExists(streamPath)) {
+                if (!ArchiveManager.FileExists(streamPath))
+                {
                     ++missed;
 
                     if (missed > 10) break;
@@ -91,16 +100,19 @@ namespace SanAndreasUnity.Importing.Items
             list.ResolveLod();
 
             var lastCell = -1;
-            foreach (var inst in list) {
+            foreach (var inst in list)
+            {
                 var cell = inst.CellId & 0xff;
-                if (lastCell != cell && !_placements.ContainsKey(lastCell = cell)) {
+                if (lastCell != cell && !_placements.ContainsKey(lastCell = cell))
+                {
                     _placements.Add(cell, new List<Placement>());
                 }
 
                 _placements[cell].Add(inst);
             }
 
-            if (!_placements.ContainsKey(0)) {
+            if (!_placements.ContainsKey(0))
+            {
                 _placements.Add(0, new List<Placement>());
             }
 
@@ -110,7 +122,7 @@ namespace SanAndreasUnity.Importing.Items
         public static TDefinition GetDefinition<TDefinition>(int id)
             where TDefinition : Definition, IObjectDefinition
         {
-            return !_definitions.ContainsKey(id) ? null : (TDefinition) _definitions[id];
+            return !_definitions.ContainsKey(id) ? null : (TDefinition)_definitions[id];
         }
 
         public static IEnumerable<TDefinition> GetDefinitions<TDefinition>()

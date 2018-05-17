@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace SanAndreasUnity.Importing.Collision
@@ -23,13 +22,15 @@ namespace SanAndreasUnity.Importing.Collision
 
         public Face(BinaryReader reader, Version version)
         {
-            switch (version) {
+            switch (version)
+            {
                 case Version.COLL:
                     A = reader.ReadInt32();
                     B = reader.ReadInt32();
                     C = reader.ReadInt32();
                     Surface = new Surface(reader);
                     break;
+
                 default:
                     A = reader.ReadUInt16();
                     B = reader.ReadUInt16();

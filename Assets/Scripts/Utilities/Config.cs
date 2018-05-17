@@ -1,10 +1,10 @@
-﻿using System;
+﻿//using Facepunch.Networking;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-//using Facepunch.Networking;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace SanAndreasUnity.Utilities
@@ -33,7 +33,8 @@ namespace SanAndreasUnity.Utilities
 
         public static string DataPath
         {
-            get { 
+            get
+            {
 #if UNITY_EDITOR
                 return Path.Combine(Application.dataPath, Path.Combine("..", "Data"));
 #else
@@ -49,11 +50,12 @@ namespace SanAndreasUnity.Utilities
 
         static Config()
         {
-            if (!File.Exists(UserFilePath)) {
+            if (!File.Exists(UserFilePath))
+            {
                 File.WriteAllText(UserFilePath, "{\r\n    // Specify overrides here\r\n}\r\n");
             }
 
-            _substitutions = new Dictionary<string,string>();
+            _substitutions = new Dictionary<string, string>();
 
             _root = JObject.Parse(File.ReadAllText(FilePath));
             _user = JObject.Parse(File.ReadAllText(UserFilePath));
@@ -61,16 +63,20 @@ namespace SanAndreasUnity.Utilities
 
         private static TVal ConvertVal<TVal>(JToken val)
         {
-            return (TVal) Convert.ChangeType(val, typeof(TVal));
+            return (TVal)Convert.ChangeType(val, typeof(TVal));
         }
 
         public static TVal Get<TVal>(string key)
         {
             var userVal = _user[key];
-            if (userVal != null) {
-                try {
+            if (userVal != null)
+            {
+                try
+                {
                     return ConvertVal<TVal>(userVal);
-                } catch {
+                }
+                catch
+                {
                     Debug.LogWarningFormat("[config] Invalid value for key '{0}'.", key);
                 }
             }
@@ -83,9 +89,12 @@ namespace SanAndreasUnity.Utilities
             if (_substitutions.ContainsKey(key)) return _substitutions[key];
 
             string subs;
-            if (key == "data_dir") {
+            if (key == "data_dir")
+            {
                 subs = DataPath;
-            } else {
+            }
+            else
+            {
                 subs = ReplaceSubstitutions(Get<string>(key));
             }
 
@@ -94,6 +103,7 @@ namespace SanAndreasUnity.Utilities
         }
 
         private static readonly Regex _regex = new Regex(@"\$\{(?<key>[a-z0-9_]+)\}", RegexOptions.Compiled);
+
         private static string ReplaceSubstitutions(string value)
         {
             return _regex.Replace(value, x => GetSubstitution(x.Groups["key"].Value));
@@ -107,7 +117,7 @@ namespace SanAndreasUnity.Utilities
         public static string[] GetPaths(string key)
         {
             return Get<JArray>(key)
-                .Select(x => ReplaceSubstitutions((string) x))
+                .Select(x => ReplaceSubstitutions((string)x))
                 .ToArray();
         }
     }

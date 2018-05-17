@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
@@ -32,17 +30,20 @@ namespace SanAndreasUnity.Behaviours.World
         private Division _childB;
 
         private List<MapObject> _objects;
-		public	int	NumObjects { get { return this._objects.Count; } }
-		public	int	NumObjectsIncludingChildren {
-			get {
-				int count = _objects.Count;
-				if (_childA != null)
-					count += _childA.NumObjectsIncludingChildren;
-				if (_childB != null)
-					count += _childB.NumObjectsIncludingChildren;
-				return count;
-			}
-		}
+        public int NumObjects { get { return this._objects.Count; } }
+
+        public int NumObjectsIncludingChildren
+        {
+            get
+            {
+                int count = _objects.Count;
+                if (_childA != null)
+                    count += _childA.NumObjectsIncludingChildren;
+                if (_childB != null)
+                    count += _childB.NumObjectsIncludingChildren;
+                return count;
+            }
+        }
 
         private bool _isVertSplit;
         private float _splitVal;
@@ -63,11 +64,13 @@ namespace SanAndreasUnity.Behaviours.World
 
             var mid = (Max + Min) * .5f;
 
-            if (float.IsNaN(mid.x) || float.IsInfinity(mid.x)) {
+            if (float.IsNaN(mid.x) || float.IsInfinity(mid.x))
+            {
                 mid.x = 0f;
             }
 
-            if (float.IsNaN(mid.y) || float.IsInfinity(mid.y)) {
+            if (float.IsNaN(mid.y) || float.IsInfinity(mid.y))
+            {
                 mid.y = 0f;
             }
 
@@ -80,18 +83,21 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void Subdivide()
         {
-            if (IsSubdivided) {
+            if (IsSubdivided)
+            {
                 throw new InvalidOperationException("Already subdivided");
             }
 
-            if (_objects.Count == 0) {
+            if (_objects.Count == 0)
+            {
                 throw new InvalidOperationException("Cannot subdivide an empty leaf");
             }
 
             var min = Max;
             var max = Min;
 
-            foreach (var obj in _objects) {
+            foreach (var obj in _objects)
+            {
                 var pos = obj.CellPos;
                 min.x = Mathf.Min(pos.x, min.x);
                 min.y = Mathf.Min(pos.y, min.y);
@@ -109,11 +115,14 @@ namespace SanAndreasUnity.Behaviours.World
             var mid = _objects.Count / 2;
             var median = (_objects[mid - 1].CellPos + _objects[mid].CellPos) * .5f;
 
-            if (_isVertSplit) {
+            if (_isVertSplit)
+            {
                 _splitVal = median.x;
                 _childA.SetBounds(Min, new Vector2(_splitVal, Max.y));
                 _childB.SetBounds(new Vector2(_splitVal, Min.y), Max);
-            } else {
+            }
+            else
+            {
                 _splitVal = median.y;
                 _childA.SetBounds(Min, new Vector2(Max.x, _splitVal));
                 _childB.SetBounds(new Vector2(Min.x, _splitVal), Max);
@@ -130,7 +139,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void AddInternal(MapObject obj)
         {
-            if (IsSubdivided) {
+            if (IsSubdivided)
+            {
                 var comp = _isVertSplit ? obj.CellPos.x : obj.CellPos.y;
                 (comp < _splitVal ? _childA : _childB).AddInternal(obj);
                 return;
@@ -149,7 +159,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void AddRange(IEnumerable<MapObject> objs)
         {
-            foreach (var obj in objs.OrderBy(x => x.RandomInt)) {
+            foreach (var obj in objs.OrderBy(x => x.RandomInt))
+            {
                 AddInternal(obj);
             }
 
@@ -158,16 +169,20 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void UpdateParents()
         {
-            if (IsSubdivided) {
+            if (IsSubdivided)
+            {
                 _childA.UpdateParents();
                 _childB.UpdateParents();
-            } else {
+            }
+            else
+            {
                 if (_objects.Count == 0) return;
 
                 var sum = _objects.Aggregate(new Vector2(), (s, x) => s + x.CellPos);
                 transform.position = new Vector3(sum.x / _objects.Count, 0f, sum.y / _objects.Count);
 
-                foreach (var obj in _objects) {
+                foreach (var obj in _objects)
+                {
                     obj.transform.SetParent(transform, true);
                 }
             }
@@ -197,92 +212,107 @@ namespace SanAndreasUnity.Behaviours.World
             var min = new Vector2(Math.Max(Min.x, -8192f), Math.Max(Min.y, -8192f));
             var max = new Vector2(Math.Min(Max.x, +8192f), Math.Min(Max.y, +8192f));
 
-            if (_isVertSplit) {
+            if (_isVertSplit)
+            {
                 Gizmos.DrawLine(new Vector3(_splitVal, 0f, min.y), new Vector3(_splitVal, 0f, max.y));
-            } else {
+            }
+            else
+            {
                 Gizmos.DrawLine(new Vector3(min.x, 0f, _splitVal), new Vector3(max.x, 0f, _splitVal));
             }
         }
 
         public float GetDistance(Vector3 pos)
         {
-			return Mathf.Sqrt (GetDistanceSquared (pos));
+            return Mathf.Sqrt(GetDistanceSquared(pos));
         }
 
-		public	float	GetDistanceSquared( Vector3 pos ) {
+        public float GetDistanceSquared(Vector3 pos)
+        {
+            if (Contains(pos)) return 0f;
 
-			if (Contains(pos)) return 0f;
+            var dx = Mathf.Max(Min.x - pos.x, pos.x - Max.x);
+            var dz = Mathf.Max(Min.y - pos.z, pos.z - Max.y);
 
-			var dx = Mathf.Max(Min.x - pos.x, pos.x - Max.x);
-			var dz = Mathf.Max(Min.y - pos.z, pos.z - Max.y);
+            return new Vector2(dx, dz).sqrMagnitude;
+        }
 
-			return new Vector2(dx, dz).sqrMagnitude;
-		}
-
-		public bool RefreshLoadOrder(Vector3 from, out int numMapObjectsUpdatedLoadOrder)
+        public bool RefreshLoadOrder(Vector3 from, out int numMapObjectsUpdatedLoadOrder)
         {
             var toLoad = false;
-			numMapObjectsUpdatedLoadOrder = 0;
+            numMapObjectsUpdatedLoadOrder = 0;
 
-			if (GetDistanceSquared (from) <= Cell.Instance.maxDrawDistance * Cell.Instance.maxDrawDistance) {
+            if (GetDistanceSquared(from) <= Cell.Instance.maxDrawDistance * Cell.Instance.maxDrawDistance)
+            {
+                float divisionRefreshDistanceDeltaSquared = Cell.Instance.divisionRefreshDistanceDelta * Cell.Instance.divisionRefreshDistanceDelta;
+                //	float factor = Cell.Instance.divisionLoadOrderDistanceFactor; //16;
+                //	if (Vector3.SqrMagnitude(from - _lastRefreshPos) > GetDistanceSquared(from) / (factor*factor)) {
+                if (Vector3.SqrMagnitude(from - _lastRefreshPos) > divisionRefreshDistanceDeltaSquared)
+                {
+                    _lastRefreshPos = from;
+                    foreach (var obj in _objects)
+                    {
+                        bool b = obj.RefreshLoadOrder(from);
+                        if (b)
+                        {
+                            toLoad = true;
+                            numMapObjectsUpdatedLoadOrder++;
+                        }
+                    }
+                }
+                else
+                {
+                    toLoad = _objects.Any(x => !float.IsPositiveInfinity(x.LoadOrder));
+                }
+            }
 
-				float divisionRefreshDistanceDeltaSquared = Cell.Instance.divisionRefreshDistanceDelta * Cell.Instance.divisionRefreshDistanceDelta;
-				//	float factor = Cell.Instance.divisionLoadOrderDistanceFactor; //16;
-				//	if (Vector3.SqrMagnitude(from - _lastRefreshPos) > GetDistanceSquared(from) / (factor*factor)) {
-				if (Vector3.SqrMagnitude (from - _lastRefreshPos) > divisionRefreshDistanceDeltaSquared) {
-					_lastRefreshPos = from;
-					foreach (var obj in _objects) {
-						bool b = obj.RefreshLoadOrder (from);
-						if (b) {
-							toLoad = true;
-							numMapObjectsUpdatedLoadOrder++;
-						}
-					}
-				} else {
-					toLoad = _objects.Any (x => !float.IsPositiveInfinity (x.LoadOrder));
-				}
-
-			}
-
-            if (toLoad) {
+            if (toLoad)
+            {
                 _objects.Sort();	// THIS MAY BE PERFORMANCE DROP
                 LoadOrder = _objects[0].LoadOrder;
-            } else {
+            }
+            else
+            {
                 LoadOrder = float.PositiveInfinity;
             }
 
-			return toLoad;
+            return toLoad;
         }
 
         public int LoadWhile(Func<bool> predicate)
         {
-			int numLoaded = 0;
-            foreach (var toLoad in _objects) {
+            int numLoaded = 0;
+            foreach (var toLoad in _objects)
+            {
                 if (float.IsPositiveInfinity(toLoad.LoadOrder))
-					break;
-				
-				if (toLoad.HasLoaded) {
-					// this object is loaded, just show it
-					toLoad.Show ();
-				}
-				else {
-					// this object is still not loaded from disk
-					// check if we should load it
-					if (predicate ()) {
-						toLoad.Show ();
-						numLoaded++;
-					}
-				}
+                    break;
+
+                if (toLoad.HasLoaded)
+                {
+                    // this object is loaded, just show it
+                    toLoad.Show();
+                }
+                else
+                {
+                    // this object is still not loaded from disk
+                    // check if we should load it
+                    if (predicate())
+                    {
+                        toLoad.Show();
+                        numLoaded++;
+                    }
+                }
             }
 
-        //    return predicate();
-		//	return false ;
-			return numLoaded ;
+            //    return predicate();
+            //	return false ;
+            return numLoaded;
         }
 
         public IEnumerator<Division> GetEnumerator()
         {
-            if (IsSubdivided) {
+            if (IsSubdivided)
+            {
                 return _childA.Concat(_childB).GetEnumerator();
             }
 

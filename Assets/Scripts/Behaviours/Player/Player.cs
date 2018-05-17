@@ -1,21 +1,17 @@
-﻿using System.Diagnostics;
-using System.Collections;
-//using Facepunch.Networking;
+﻿//using Facepunch.Networking;
 //using ProtoBuf.Player;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Animation;
+using System.Collections;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
     [RequireComponent(typeof(CharacterController))]
-	public partial class Player : MonoBehaviour
+    public partial class Player : MonoBehaviour
     {
-        #region Private fields
-
-        #endregion
-
         #region Inspector Fields
 
         public Camera Camera;
@@ -23,16 +19,16 @@ namespace SanAndreasUnity.Behaviours
 
         public float TurnSpeed = 10f;
 
-		public	Weapon[] weapons = new Weapon[(int)WeaponSlot.Count] ;
-		public	int	currentWeaponSlot = -1;
-		public	bool	autoAddWeapon = false ;
+        public Weapon[] weapons = new Weapon[(int)WeaponSlot.Count];
+        public int currentWeaponSlot = -1;
+        public bool autoAddWeapon = false;
 
-		public bool enableFlying = false;
-		public bool enableNoclip = false;
+        public bool enableFlying = false;
+        public bool enableNoclip = false;
 
-		public CharacterController characterController;
+        public CharacterController characterController;
 
-        #endregion
+        #endregion Inspector Fields
 
         #region Properties
 
@@ -56,34 +52,33 @@ namespace SanAndreasUnity.Behaviours
 
         private Vehicle.SeatAlignment _currentVehicleSeatAlignment;
 
-        #endregion
+        #endregion Properties
 
-   //     protected override void OnAwake()
-		protected void Awake()
+        //     protected override void OnAwake()
+        protected void Awake()
         {
-        //    base.OnAwake();
+            //    base.OnAwake();
 
             characterController = GetComponent<CharacterController>();
 
-			IsLocalPlayer = true;
+            IsLocalPlayer = true;
         }
 
-		void	Start() {
+        private void Start()
+        {
+            //	MySetupLocalPlayer ();
+        }
 
-		//	MySetupLocalPlayer ();
+        private void MySetupLocalPlayer()
+        {
+            Camera.gameObject.SetActive(true);
+            Camera.transform.SetParent(null, true);
 
-		}
+            Cell.Focus = transform;
+            Cell.PreviewCamera.gameObject.SetActive(false);
 
-		private void MySetupLocalPlayer()
-		{
-			Camera.gameObject.SetActive(true);
-			Camera.transform.SetParent(null, true);
-
-			Cell.Focus = transform;
-			Cell.PreviewCamera.gameObject.SetActive(false);
-
-			gameObject.AddComponent<PlayerController>();
-		}
+            gameObject.AddComponent<PlayerController>();
+        }
 
 #if CLIENT
 
@@ -113,10 +108,11 @@ namespace SanAndreasUnity.Behaviours
 
             characterController.enabled = false;
 
-            if (IsLocalPlayer) {
+            if (IsLocalPlayer)
+            {
                 Camera.transform.SetParent(seat.Parent, true);
 
-				/*
+                /*
                 SendToServer(_lastPassengerState = new PlayerPassengerState {
                     Vechicle = vehicle,
                     SeatAlignment = (int) seatAlignment
@@ -128,7 +124,8 @@ namespace SanAndreasUnity.Behaviours
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
 
-            if (IsLocalPlayer && seat.IsDriver) {
+            if (IsLocalPlayer && seat.IsDriver)
+            {
                 vehicle.StartControlling();
             }
 
@@ -145,14 +142,17 @@ namespace SanAndreasUnity.Behaviours
 
             CurrentVehicle.StopControlling();
 
-            if (IsLocalPlayer) {
-				/*
+            if (IsLocalPlayer)
+            {
+                /*
                 SendToServer(_lastPassengerState = new PlayerPassengerState {
                     Vechicle = null
                 }, DeliveryMethod.ReliableOrdered, 1);
                 */
-            } else {
-            //    _snapshots.Reset();
+            }
+            else
+            {
+                //    _snapshots.Reset();
             }
 
             StartCoroutine(ExitVehicleAnimation(immediate));
@@ -164,20 +164,25 @@ namespace SanAndreasUnity.Behaviours
 
             PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, animIndex).RootEnd, new Vector3(-1, -1, -1));
 
-            if (!immediate) {
+            if (!immediate)
+            {
                 var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
                 animState.wrapMode = WrapMode.Once;
 
-                while (animState.enabled) {
+                while (animState.enabled)
+                {
                     yield return new WaitForEndOfFrame();
                 }
             }
 
-            if (seat.IsDriver) {
+            if (seat.IsDriver)
+            {
                 IsDrivingVehicle = true;
 
                 PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
-            } else {
+            }
+            else
+            {
                 PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
             }
 
@@ -195,11 +200,13 @@ namespace SanAndreasUnity.Behaviours
 
             PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, animIndex).RootStart, new Vector3(-1, -1, -1));
 
-            if (!immediate) {
+            if (!immediate)
+            {
                 var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
                 animState.wrapMode = WrapMode.Once;
 
-                while (animState.enabled) {
+                while (animState.enabled)
+                {
                     yield return new WaitForEndOfFrame();
                 }
             }
@@ -235,99 +242,114 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
-			if (!Loader.HasLoaded)
-				return;
+            if (!Loader.HasLoaded)
+                return;
 
-			// Reset to a valid (and solid!) start position when falling below the world
-			if (transform.position.y < -300) {
-				Velocity = new Vector3(0, 0, 0);
-				Transform spawn = GameObject.Find ("Player Spawns").GetComponentsInChildren<Transform> () [1];
-				transform.position = spawn.position;
-				transform.rotation = spawn.rotation;
-			}
+            // Reset to a valid (and solid!) start position when falling below the world
+            if (transform.position.y < -300)
+            {
+                Velocity = new Vector3(0, 0, 0);
+                Transform spawn = GameObject.Find("Player Spawns").GetComponentsInChildren<Transform>()[1];
+                transform.position = spawn.position;
+                transform.rotation = spawn.rotation;
+            }
 
-			// Constrain to stay inside map
-			if (transform.position.x < -3000) {
-				var t = transform.position;
-				t.x = -3000;
-				transform.position = t;
-			}
-			if (transform.position.x > 3000) {
-				var t = transform.position;
-				t.x = 3000;
-				transform.position = t;
-			}
-			if (transform.position.z < -3000) {
-				var t = transform.position;
-				t.z = -3000;
-				transform.position = t;
-			}
-			if (transform.position.z > 3000) {
-				var t = transform.position;
-				t.z = 3000;
-				transform.position = t;
-			}
+            // Constrain to stay inside map
+            if (transform.position.x < -3000)
+            {
+                var t = transform.position;
+                t.x = -3000;
+                transform.position = t;
+            }
+            if (transform.position.x > 3000)
+            {
+                var t = transform.position;
+                t.x = 3000;
+                transform.position = t;
+            }
+            if (transform.position.z < -3000)
+            {
+                var t = transform.position;
+                t.z = -3000;
+                transform.position = t;
+            }
+            if (transform.position.z > 3000)
+            {
+                var t = transform.position;
+                t.z = 3000;
+                transform.position = t;
+            }
 
-            if (IsInVehicle && IsDrivingVehicle) {
+            if (IsInVehicle && IsDrivingVehicle)
+            {
                 UpdateWheelTurning();
             }
 
-			// switch weapons - does not work
-			if (!IsInVehicle) {
-				if (Input.mouseScrollDelta.y != 0) {
-					
-					if (currentWeaponSlot < 0)
-						currentWeaponSlot = 0;
-					
-					for( int i=currentWeaponSlot + (int) Mathf.Sign(Input.mouseScrollDelta.y), count=0;
-						i != currentWeaponSlot && count < (int) WeaponSlot.Count ;
-						i += (int) Mathf.Sign(Input.mouseScrollDelta.y), count++ ) {
+            // switch weapons - does not work
+            if (!IsInVehicle)
+            {
+                if (Input.mouseScrollDelta.y != 0)
+                {
+                    if (currentWeaponSlot < 0)
+                        currentWeaponSlot = 0;
 
-						if (i < 0)
-							i = weapons.Length - 1;
-						if (i >= weapons.Length)
-							i = 0;
+                    for (int i = currentWeaponSlot + (int)Mathf.Sign(Input.mouseScrollDelta.y), count = 0;
+                        i != currentWeaponSlot && count < (int)WeaponSlot.Count;
+                        i += (int)Mathf.Sign(Input.mouseScrollDelta.y), count++)
+                    {
+                        if (i < 0)
+                            i = weapons.Length - 1;
+                        if (i >= weapons.Length)
+                            i = 0;
 
-						if (weapons [i] != null) {
-							this.SwitchWeapon (i);
-							break;
-						}
-					}
-				}
-			}
+                        if (weapons[i] != null)
+                        {
+                            this.SwitchWeapon(i);
+                            break;
+                        }
+                    }
+                }
+            }
 
-			// add weapons to player if he doesn't have any
-			if (autoAddWeapon && null == System.Array.Find (weapons, w => w != null)) {
-				// player has no weapons
+            // add weapons to player if he doesn't have any
+            if (autoAddWeapon && null == System.Array.Find(weapons, w => w != null))
+            {
+                // player has no weapons
 
-				weapons[(int)WeaponSlot.Machine] = Weapon.Load(355);
-				this.SwitchWeapon ((int)WeaponSlot.Machine);
-			}
-
+                weapons[(int)WeaponSlot.Machine] = Weapon.Load(355);
+                this.SwitchWeapon((int)WeaponSlot.Machine);
+            }
         }
 
         private void FixedUpdate()
         {
-			if (!Loader.HasLoaded)
-				return;
-			
-        //    NetworkingFixedUpdate();
+            if (!Loader.HasLoaded)
+                return;
+
+            //    NetworkingFixedUpdate();
 
             if (IsInVehicle) return;
 
             var forward = Vector3.RotateTowards(transform.forward, Heading, TurnSpeed * Time.deltaTime, 0.0f);
             transform.localRotation = Quaternion.LookRotation(forward);
 
-			if (enableFlying || enableNoclip) {
-				Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
-				Velocity = Movement * Time.fixedDeltaTime;
-				if (enableNoclip) {
-					transform.position += Velocity;
-				} else {
-					characterController.Move (Velocity);
-				}
-			} else if (IsLocalPlayer) {
-                if (Movement.sqrMagnitude > float.Epsilon) {
+            if (enableFlying || enableNoclip)
+            {
+                Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
+                Velocity = Movement * Time.fixedDeltaTime;
+                if (enableNoclip)
+                {
+                    transform.position += Velocity;
+                }
+                else
+                {
+                    characterController.Move(Velocity);
+                }
+            }
+            else if (IsLocalPlayer)
+            {
+                if (Movement.sqrMagnitude > float.Epsilon)
+                {
                     Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
                 }
 
@@ -337,29 +359,30 @@ namespace SanAndreasUnity.Behaviours
                 Velocity = new Vector3(Velocity.x, characterController.isGrounded
                     ? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
 
-				characterController.Move (Velocity * Time.fixedDeltaTime);
-            } else {
+                characterController.Move(Velocity * Time.fixedDeltaTime);
+            }
+            else
+            {
                 Velocity = characterController.velocity;
             }
         }
 
-		private	void	SwitchWeapon( int slotIndex ) {
+        private void SwitchWeapon(int slotIndex)
+        {
+            if (PlayerModel.weapon != null)
+            {
+                // set parent to weapons container in order to hide it
+                //	PlayerModel.weapon.SetParent (Weapon.weaponsContainer.transform);
 
-			if (PlayerModel.weapon != null) {
-				// set parent to weapons container in order to hide it
-			//	PlayerModel.weapon.SetParent (Weapon.weaponsContainer.transform);
+                PlayerModel.weapon.gameObject.SetActive(false);
+            }
 
-				PlayerModel.weapon.gameObject.SetActive (false);
-			}
+            PlayerModel.weapon = weapons[slotIndex].gameObject.transform;
+            // change parent to make it visible
+            //	PlayerModel.weapon.SetParent(this.transform);
+            PlayerModel.weapon.gameObject.SetActive(true);
 
-			PlayerModel.weapon = weapons [slotIndex].gameObject.transform;
-			// change parent to make it visible
-		//	PlayerModel.weapon.SetParent(this.transform);
-			PlayerModel.weapon.gameObject.SetActive(true);
-
-			currentWeaponSlot = slotIndex;
-
-		}
-
+            currentWeaponSlot = slotIndex;
+        }
     }
 }

@@ -14,17 +14,19 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             : base(header, stream)
         {
             var sections = new List<SectionData>();
-            while (stream.Position < stream.Length) {
+            while (stream.Position < stream.Length)
+            {
                 sections.Add(ReadSection<SectionData>(header.GetParent()));
             }
 
             Sections = sections.ToArray();
         }
-        
+
         public void ForEach<TSection>(Action<TSection> action)
             where TSection : SectionData
         {
-            foreach (var section in Sections.OfType<TSection>()) {
+            foreach (var section in Sections.OfType<TSection>())
+            {
                 action(section);
             }
         }

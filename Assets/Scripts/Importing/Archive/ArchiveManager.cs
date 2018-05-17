@@ -1,16 +1,18 @@
-﻿using System;
+﻿using SanAndreasUnity.Importing.RenderWareStream;
+using SanAndreasUnity.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SanAndreasUnity.Importing.RenderWareStream;
-using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Archive
 {
     public interface IArchive
     {
         IEnumerable<string> GetFileNamesWithExtension(string ext);
+
         bool ContainsFile(string name);
+
         Stream ReadFile(string name);
     }
 
@@ -26,7 +28,7 @@ namespace SanAndreasUnity.Importing.Archive
 
         public static string GetPath(params string[] relative)
         {
-			return relative.Aggregate(GameDir, Path.Combine).Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
+            return relative.Aggregate(GameDir, Path.Combine).Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
         }
 
         private static readonly List<IArchive> _sLoadedArchives = new List<IArchive>();
@@ -60,9 +62,11 @@ namespace SanAndreasUnity.Importing.Archive
         public static TSection ReadFile<TSection>(string name)
             where TSection : SectionData
         {
-            using (var stream = ReadFile(name)) {
+            using (var stream = ReadFile(name))
+            {
                 var section = Section<SectionData>.ReadData(stream) as TSection;
-                if (section == null) {
+                if (section == null)
+                {
                     throw new ArgumentException(string.Format("File \"{0}\" is not a {1}!", name, typeof(TSection).Name), "name");
                 }
 

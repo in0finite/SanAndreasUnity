@@ -76,17 +76,19 @@ namespace SanAndreasUnity.Utilities
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (_position > _length) {
+            if (_position > _length)
+            {
                 return 0;
             }
 
             var basePos = _offset + _position;
 
-            if (_baseStream.Position != basePos) {
+            if (_baseStream.Position != basePos)
+            {
                 _baseStream.Seek(basePos, SeekOrigin.Begin);
             }
 
-            var read = _baseStream.Read(buffer, offset, (int) Math.Min(_length - _position, count));
+            var read = _baseStream.Read(buffer, offset, (int)Math.Min(_length - _position, count));
             _position += read;
 
             return read;
@@ -94,19 +96,23 @@ namespace SanAndreasUnity.Utilities
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            switch (origin) {
+            switch (origin)
+            {
                 case SeekOrigin.Begin:
                     _position = offset;
                     break;
+
                 case SeekOrigin.Current:
                     _position += offset;
                     break;
+
                 case SeekOrigin.End:
                     _position = _length - offset;
                     break;
             }
 
-            if (_position < 0 || _position > _length) {
+            if (_position < 0 || _position > _length)
+            {
                 throw new ArgumentOutOfRangeException("offset");
             }
 

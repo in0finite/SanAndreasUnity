@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using UnityEditor.Callbacks;
-using UnityEditor;
+﻿using System;
 using System.IO;
-using System;
+using UnityEditor;
+using UnityEditor.Callbacks;
+using UnityEngine;
 
 namespace SanAndreasUnity.Editor
 {
@@ -18,7 +18,8 @@ namespace SanAndreasUnity.Editor
 
             var dataDir = SanAndreasUnity.Utilities.Config.DataPath;
 
-            switch (target) {
+            switch (target)
+            {
                 case BuildTarget.StandaloneWindows:
                 case BuildTarget.StandaloneWindows64:
                 case BuildTarget.StandaloneLinux:
@@ -26,13 +27,15 @@ namespace SanAndreasUnity.Editor
                 case BuildTarget.StandaloneLinuxUniversal:
                     dest = Path.Combine(destDir, Path.GetFileNameWithoutExtension(pathToBuiltProject) + "_Data");
                     break;
+
                 default:
                     throw new NotImplementedException(String.Format("Build target '{0}' is not supported.", target));
             }
 
             dest = Path.Combine(dest, "Data");
 
-            if (Directory.Exists(dest)) {
+            if (Directory.Exists(dest))
+            {
                 Directory.Delete(dest);
             }
 

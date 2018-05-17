@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using SanAndreasUnity.Behaviours.Vehicles;
-using System.Linq;
+﻿using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Animation;
+using System.Linq;
+using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -15,19 +15,19 @@ namespace SanAndreasUnity.Behaviours
         private float _pitch;
         private float _yaw;
 
-		private Transform[] _spawns;
+        private Transform[] _spawns;
 
-		private static int fpsTextureWidth = 75;
-		private static int fpsTextureHeight = 25;
-		private static float fpsMaximum = 60.0f;
-		private static float fpsGreen = 50.0f;
-		private static float fpsRed = 23.0f;
-		private float fpsDeltaTime = 0.0f;
-		private Texture2D fpsTexture = null;
-		private float[] fpsHistory = new float[fpsTextureWidth];
-		private int fpsIndex = 0;
+        private static int fpsTextureWidth = 75;
+        private static int fpsTextureHeight = 25;
+        private static float fpsMaximum = 60.0f;
+        private static float fpsGreen = 50.0f;
+        private static float fpsRed = 23.0f;
+        private float fpsDeltaTime = 0.0f;
+        private Texture2D fpsTexture = null;
+        private float[] fpsHistory = new float[fpsTextureWidth];
+        private int fpsIndex = 0;
 
-        #endregion
+        #endregion Private fields
 
         #region Inspector Fields
 
@@ -40,11 +40,11 @@ namespace SanAndreasUnity.Behaviours
 
         public float EnterVehicleRadius = 5.0f;
 
-		public	float	animationBlendWeight = 0.4f ;
+        public float animationBlendWeight = 0.4f;
 
-		public bool CursorLocked;
+        public bool CursorLocked;
 
-        #endregion
+        #endregion Inspector Fields
 
         #region Properties
 
@@ -78,133 +78,154 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        #endregion
+        #endregion Properties
 
         private void Awake()
         {
             _player = GetComponent<Player>();
 
-			CursorLocked = true;
-			Cursor.lockState = CursorLockMode.Locked;
-			Cursor.visible = false;
+            CursorLocked = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
 
-			_spawns = GameObject.Find ("Player Spawns").GetComponentsInChildren<Transform> ();
-			fpsTexture = new Texture2D (fpsTextureWidth, fpsTextureHeight, TextureFormat.RGBA32, false, true);
+            _spawns = GameObject.Find("Player Spawns").GetComponentsInChildren<Transform>();
+            fpsTexture = new Texture2D(fpsTextureWidth, fpsTextureHeight, TextureFormat.RGBA32, false, true);
 
-			teleportWindowRect = new Rect (Screen.width - 260, 10, 250, 10 + (25 * _spawns.Count()));
+            teleportWindowRect = new Rect(Screen.width - 260, 10, 250, 10 + (25 * _spawns.Count()));
         }
 
-		private static Rect teleportWindowRect;
-		private const int teleportWindowID = 1;
+        private static Rect teleportWindowRect;
+        private const int teleportWindowID = 1;
 
-		void teleportWindow(int windowID) {
-			for (int i = 1; i < _spawns.Count (); i++) {
-				if (GUILayout.Button (_spawns [i].name)) {
-					_player.transform.position = _spawns [i].position;
-					_player.transform.rotation = _spawns [i].rotation;
-				}
-			}
+        private void teleportWindow(int windowID)
+        {
+            for (int i = 1; i < _spawns.Count(); i++)
+            {
+                if (GUILayout.Button(_spawns[i].name))
+                {
+                    _player.transform.position = _spawns[i].position;
+                    _player.transform.rotation = _spawns[i].rotation;
+                }
+            }
 
-			GUI.DragWindow();
-		}
+            GUI.DragWindow();
+        }
 
-		void OnGUI() {
-			// Show buttons for teleport to player spawn locations
-			if ((!CursorLocked) && (!_player.IsInVehicle) && (_spawns.Count () > 1)) {
-				teleportWindowRect = GUILayout.Window (teleportWindowID, teleportWindowRect, teleportWindow, "Teleport to a location:");
-			}
+        private void OnGUI()
+        {
+            // Show buttons for teleport to player spawn locations
+            if ((!CursorLocked) && (!_player.IsInVehicle) && (_spawns.Count() > 1))
+            {
+                teleportWindowRect = GUILayout.Window(teleportWindowID, teleportWindowRect, teleportWindow, "Teleport to a location:");
+            }
 
-			// Shohw flying / noclip states
-			if (_player.enableFlying || _player.enableNoclip) {
-				int height = (_player.enableFlying && _player.enableNoclip) ? 50 : 25;
-				GUILayout.BeginArea (new Rect (Screen.width - 140, Screen.height - height, 140, height));
-				if (_player.enableFlying) {
-					GUILayout.Label ("Flying-mode enabled!");
-				}
-				if (_player.enableNoclip) {
-					GUILayout.Label ("Noclip-mode enabled!");
-				}
-				GUILayout.EndArea ();
-			}
+            // Shohw flying / noclip states
+            if (_player.enableFlying || _player.enableNoclip)
+            {
+                int height = (_player.enableFlying && _player.enableNoclip) ? 50 : 25;
+                GUILayout.BeginArea(new Rect(Screen.width - 140, Screen.height - height, 140, height));
+                if (_player.enableFlying)
+                {
+                    GUILayout.Label("Flying-mode enabled!");
+                }
+                if (_player.enableNoclip)
+                {
+                    GUILayout.Label("Noclip-mode enabled!");
+                }
+                GUILayout.EndArea();
+            }
 
-			// Show FPS counter
-			float msec = fpsDeltaTime * 1000.0f;
-			float fps = 1.0f / fpsDeltaTime;
-			GUILayout.BeginArea (new Rect (15 + fpsTexture.width, Screen.height - 25, 100, 25));
-			GUILayout.Label (string.Format("{0:0.}fps ({1:0.0}ms)", fps, msec));
-			GUILayout.EndArea ();
+            // Show FPS counter
+            float msec = fpsDeltaTime * 1000.0f;
+            float fps = 1.0f / fpsDeltaTime;
+            GUILayout.BeginArea(new Rect(15 + fpsTexture.width, Screen.height - 25, 100, 25));
+            GUILayout.Label(string.Format("{0:0.}fps ({1:0.0}ms)", fps, msec));
+            GUILayout.EndArea();
 
-			if (fpsTexture == null) return;
+            if (fpsTexture == null) return;
 
-			// Show FPS history
-			Color[] colors = new Color[fpsTexture.width * fpsTexture.height];
-			Color cRed = new Color (1.0f, 0.0f, 0.0f, 1.0f);
-			Color cYellow = new Color (1.0f, 1.0f, 0.0f, 1.0f);
-			Color cGreen = new Color (0.0f, 1.0f, 0.0f, 1.0f);
-			for (int i = 0; i < (fpsTexture.width * fpsTexture.height); i++) {
-				colors [i] = new Color (0.0f, 0.0f, 0.0f, 0.66f); // Half-transparent background for FPS graph
-			}
-			fpsTexture.SetPixels (colors);
-			// Append to history storage
-			fpsHistory [fpsIndex] = fps;
-			int f = fpsIndex;
-			// Draw graph into texture
-			for (int i = fpsTexture.width - 1; i >= 0; i--) {
-				float graphVal = (fpsHistory [f] > fpsMaximum) ? fpsMaximum : fpsHistory [f];
-				int height = (int)(graphVal * fpsTexture.height / (fpsMaximum + 0.1f));
-				Color c = (fpsHistory[f] >= fpsGreen) ? cGreen : ((fpsHistory[f] <= fpsRed) ? cRed : cYellow);
-				fpsTexture.SetPixel(i, height, c);
-				f--;
-				if (f < 0) {
-					f = fpsHistory.Length - 1;
-				}
-			}
-			// Next entry in rolling history buffer
-			fpsIndex++;
-			if (fpsIndex >= fpsHistory.Length) {
-				fpsIndex = 0;
-			}
-			// Draw texture on GUI
-			fpsTexture.Apply (false, false);
-			GUI.DrawTexture (new Rect(5, Screen.height - fpsTexture.height - 5, fpsTexture.width, fpsTexture.height), fpsTexture);
-		}
+            // Show FPS history
+            Color[] colors = new Color[fpsTexture.width * fpsTexture.height];
+            Color cRed = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+            Color cYellow = new Color(1.0f, 1.0f, 0.0f, 1.0f);
+            Color cGreen = new Color(0.0f, 1.0f, 0.0f, 1.0f);
+            for (int i = 0; i < (fpsTexture.width * fpsTexture.height); i++)
+            {
+                colors[i] = new Color(0.0f, 0.0f, 0.0f, 0.66f); // Half-transparent background for FPS graph
+            }
+            fpsTexture.SetPixels(colors);
+            // Append to history storage
+            fpsHistory[fpsIndex] = fps;
+            int f = fpsIndex;
+            // Draw graph into texture
+            for (int i = fpsTexture.width - 1; i >= 0; i--)
+            {
+                float graphVal = (fpsHistory[f] > fpsMaximum) ? fpsMaximum : fpsHistory[f];
+                int height = (int)(graphVal * fpsTexture.height / (fpsMaximum + 0.1f));
+                Color c = (fpsHistory[f] >= fpsGreen) ? cGreen : ((fpsHistory[f] <= fpsRed) ? cRed : cYellow);
+                fpsTexture.SetPixel(i, height, c);
+                f--;
+                if (f < 0)
+                {
+                    f = fpsHistory.Length - 1;
+                }
+            }
+            // Next entry in rolling history buffer
+            fpsIndex++;
+            if (fpsIndex >= fpsHistory.Length)
+            {
+                fpsIndex = 0;
+            }
+            // Draw texture on GUI
+            fpsTexture.Apply(false, false);
+            GUI.DrawTexture(new Rect(5, Screen.height - fpsTexture.height - 5, fpsTexture.width, fpsTexture.height), fpsTexture);
+        }
 
         private void Update()
         {
-			// FPS counting
-			fpsDeltaTime += (Time.deltaTime - fpsDeltaTime) * 0.1f;
+            // FPS counting
+            fpsDeltaTime += (Time.deltaTime - fpsDeltaTime) * 0.1f;
 
-			if (!Loader.HasLoaded)
-				return;
+            if (!Loader.HasLoaded)
+                return;
 
-			if (!_player.enableFlying && !_player.IsInVehicle && Input.GetKeyDown (KeyCode.T)) {
-				_player.enableFlying = true;
-				_player.Movement = new Vector3 (0f, 0f, 0f); // disable current movement
-				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
-			} else if (_player.enableFlying && Input.GetKeyDown (KeyCode.T)) {
-				_player.enableFlying = false;
-			}
+            if (!_player.enableFlying && !_player.IsInVehicle && Input.GetKeyDown(KeyCode.T))
+            {
+                _player.enableFlying = true;
+                _player.Movement = new Vector3(0f, 0f, 0f); // disable current movement
+                PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
+            }
+            else if (_player.enableFlying && Input.GetKeyDown(KeyCode.T))
+            {
+                _player.enableFlying = false;
+            }
 
-			if (!_player.IsInVehicle && Input.GetKeyDown (KeyCode.R)) {
-				_player.enableNoclip = !_player.enableNoclip;
-				_player.characterController.detectCollisions = !_player.enableNoclip;
-				if (_player.enableNoclip && !_player.enableFlying) {
-					_player.Movement = new Vector3 (0f, 0f, 0f); // disable current movement
-					PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
-				}
-			}
+            if (!_player.IsInVehicle && Input.GetKeyDown(KeyCode.R))
+            {
+                _player.enableNoclip = !_player.enableNoclip;
+                _player.characterController.detectCollisions = !_player.enableNoclip;
+                if (_player.enableNoclip && !_player.enableFlying)
+                {
+                    _player.Movement = new Vector3(0f, 0f, 0f); // disable current movement
+                    PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
+                }
+            }
 
-			// Fix cursor state if it has been 'broken', happens eg. with zoom gestures in the editor in macOS
-			if (CursorLocked && ((Cursor.lockState != CursorLockMode.Locked) || (Cursor.visible))) {
-				Cursor.lockState = CursorLockMode.Locked;
-				Cursor.visible = false;
-			}
-			
-            if (!CursorLocked && Input.GetKeyDown(KeyCode.Q)) {
+            // Fix cursor state if it has been 'broken', happens eg. with zoom gestures in the editor in macOS
+            if (CursorLocked && ((Cursor.lockState != CursorLockMode.Locked) || (Cursor.visible)))
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+
+            if (!CursorLocked && Input.GetKeyDown(KeyCode.Q))
+            {
                 CursorLocked = true;
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
-            } else if (CursorLocked && Input.GetKeyDown(KeyCode.Q)) {
+            }
+            else if (CursorLocked && Input.GetKeyDown(KeyCode.Q))
+            {
                 CursorLocked = false;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
@@ -224,11 +245,14 @@ namespace SanAndreasUnity.Behaviours
             float distance;
             Vector3 castFrom;
 
-            if (_player.IsInVehicle) {
+            if (_player.IsInVehicle)
+            {
                 CarCameraDistance = Mathf.Clamp(CarCameraDistance - Input.mouseScrollDelta.y, 2.0f, 32.0f);
                 distance = CarCameraDistance;
                 castFrom = _player.CurrentVehicle.transform.position;
-            } else {
+            }
+            else
+            {
                 PlayerCameraDistance = Mathf.Clamp(PlayerCameraDistance - Input.mouseScrollDelta.y, 2.0f, 32.0f);
                 distance = PlayerCameraDistance;
                 castFrom = transform.position + Vector3.up * .5f;
@@ -238,14 +262,15 @@ namespace SanAndreasUnity.Behaviours
 
             RaycastHit hitInfo;
 
-            if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance, 
-                -1 ^ (1 << MapObject.BreakableLayer) ^ (1 << Vehicle.Layer))) {
+            if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance,
+                -1 ^ (1 << MapObject.BreakableLayer) ^ (1 << Vehicle.Layer)))
+            {
                 distance = hitInfo.distance;
             }
 
             Camera.transform.position = castRay.GetPoint(distance);
 
-			if (!CursorLocked) return;
+            if (!CursorLocked) return;
 
             if (Input.GetButtonDown("Use") && _player.IsInVehicle)
             {
@@ -255,77 +280,100 @@ namespace SanAndreasUnity.Behaviours
             }
 
             if (_player.IsInVehicle) return;
-            
-			if (_player.enableFlying || _player.enableNoclip) {
-				var up_down = 0.0f;
-				if (Input.GetKey (KeyCode.Backspace)) {
-					up_down = 1.0f;
-				} else if (Input.GetKey (KeyCode.Delete)) {
-					up_down = -1.0f;
-				}
-				var inputMove = new Vector3 (Input.GetAxis ("Horizontal"), up_down, Input.GetAxis ("Vertical"));
-				_player.Movement = Vector3.Scale (Camera.transform.TransformVector (inputMove),
-					new Vector3 (1f, 1f, 1f)).normalized;
-				_player.Movement *= 10.0f;
-				if (Input.GetKey (KeyCode.LeftShift)) {
-					_player.Movement *= 10.0f;
-				} else if (Input.GetKey (KeyCode.Z)) {
-					_player.Movement *= 100.0f;
-				}
-				return;
-			}
-			
-			if (_player.currentWeaponSlot > 0 && Input.GetMouseButton (1)) {
-				// right click is on
-				// aim with weapon
-			//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
-			//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
-				PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND, PlayMode.StopAll);
-			} else {
 
-				var inputMove = new Vector3 (Input.GetAxis ("Horizontal"), 0f, Input.GetAxis ("Vertical"));
+            if (_player.enableFlying || _player.enableNoclip)
+            {
+                var up_down = 0.0f;
+                if (Input.GetKey(KeyCode.Backspace))
+                {
+                    up_down = 1.0f;
+                }
+                else if (Input.GetKey(KeyCode.Delete))
+                {
+                    up_down = -1.0f;
+                }
+                var inputMove = new Vector3(Input.GetAxis("Horizontal"), up_down, Input.GetAxis("Vertical"));
+                _player.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
+                    new Vector3(1f, 1f, 1f)).normalized;
+                _player.Movement *= 10.0f;
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    _player.Movement *= 10.0f;
+                }
+                else if (Input.GetKey(KeyCode.Z))
+                {
+                    _player.Movement *= 100.0f;
+                }
+                return;
+            }
 
-				if (inputMove.sqrMagnitude > 0f) {
-					inputMove.Normalize ();
+            if (_player.currentWeaponSlot > 0 && Input.GetMouseButton(1))
+            {
+                // right click is on
+                // aim with weapon
+                //	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
+                //		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
+                PlayerModel.PlayAnim(AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND, PlayMode.StopAll);
+            }
+            else
+            {
+                var inputMove = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
-					if (Input.GetKey (KeyCode.LeftShift)) {
-						if (_player.currentWeaponSlot > 0) {
-							// player is holding a weapon
+                if (inputMove.sqrMagnitude > 0f)
+                {
+                    inputMove.Normalize();
 
-							this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.WalkCycle,
-								AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
-						
-						} else {
-							// player is not holding a weapon
-							PlayerModel.PlayAnim (AnimGroup.WalkCycle,
-								AnimIndex.Run, PlayMode.StopAll);
-						}
-						//    PlayerModel.Running = true;
-					} else {
-						// player is walking
-						if (_player.currentWeaponSlot > 0) {
-							this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.WalkCycle,
-								AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
-						} else {
-							PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Walk, PlayMode.StopAll);
-						}
-						//    PlayerModel.Walking = true;
-					}
-				} else {
-					// player is standing
-					if (_player.currentWeaponSlot > 0) {
-						this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
-							AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
-						//	PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, PlayMode.StopAll);
-					} else {
-						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle, PlayMode.StopAll);
-					}
-					//    PlayerModel.Walking = false;
-				}
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        if (_player.currentWeaponSlot > 0)
+                        {
+                            // player is holding a weapon
 
-				_player.Movement = Vector3.Scale (Camera.transform.TransformVector (inputMove),
-					new Vector3 (1f, 0f, 1f)).normalized;
-			}
+                            this.Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
+                                AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
+                        }
+                        else
+                        {
+                            // player is not holding a weapon
+                            PlayerModel.PlayAnim(AnimGroup.WalkCycle,
+                                AnimIndex.Run, PlayMode.StopAll);
+                        }
+                        //    PlayerModel.Running = true;
+                    }
+                    else
+                    {
+                        // player is walking
+                        if (_player.currentWeaponSlot > 0)
+                        {
+                            this.Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
+                                AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
+                        }
+                        else
+                        {
+                            PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.Walk, PlayMode.StopAll);
+                        }
+                        //    PlayerModel.Walking = true;
+                    }
+                }
+                else
+                {
+                    // player is standing
+                    if (_player.currentWeaponSlot > 0)
+                    {
+                        this.Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
+                            AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
+                        //	PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, PlayMode.StopAll);
+                    }
+                    else
+                    {
+                        PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle, PlayMode.StopAll);
+                    }
+                    //    PlayerModel.Walking = false;
+                }
+
+                _player.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
+                    new Vector3(1f, 0f, 1f)).normalized;
+            }
 
             if (!Input.GetButtonDown("Use")) return;
 
@@ -344,7 +392,7 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        void OnDrawGizmosSelected()
+        private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.white;
 
@@ -377,34 +425,34 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-		void	Play2Animations( int[] boneIds1, int[] boneIds2,
-			AnimGroup group1, AnimGroup group2, AnimIndex animIndex1, AnimIndex animIndex2 ) {
+        private void Play2Animations(int[] boneIds1, int[] boneIds2,
+            AnimGroup group1, AnimGroup group2, AnimIndex animIndex1, AnimIndex animIndex2)
+        {
+            PlayerModel._anim[PlayerModel.GetAnimName(group1, animIndex1)].layer = 0;
 
-			PlayerModel._anim [ PlayerModel.GetAnimName( group1, animIndex1 ) ].layer = 0;
+            AnimationState state = PlayerModel.PlayAnim(group1, animIndex1, PlayMode.StopSameLayer);
 
-			AnimationState state = PlayerModel.PlayAnim (group1, animIndex1, PlayMode.StopSameLayer);
-			
-			foreach( int boneId in boneIds1 ) {
-				Frame f = PlayerModel.Frames.GetByBoneId (boneId);
-				state.AddMixingTransform (f.transform, true);
-				//	runState.wrapMode = WrapMode.Loop;
-			}
-			
-			PlayerModel._anim [ PlayerModel.GetAnimName( group2, animIndex2 ) ].layer = 1;
+            foreach (int boneId in boneIds1)
+            {
+                Frame f = PlayerModel.Frames.GetByBoneId(boneId);
+                state.AddMixingTransform(f.transform, true);
+                //	runState.wrapMode = WrapMode.Loop;
+            }
 
-			state = PlayerModel.PlayAnim (group2, animIndex2, PlayMode.StopSameLayer);
-			
-			foreach( int boneId in boneIds2 ) {
-				Frame f = PlayerModel.Frames.GetByBoneId (boneId);
-				//	state.RemoveMixingTransform(f.transform);
-				state.AddMixingTransform (f.transform, true);
-				//	state.wrapMode = WrapMode.Loop;
-			}
-			state.weight = this.animationBlendWeight;
+            PlayerModel._anim[PlayerModel.GetAnimName(group2, animIndex2)].layer = 1;
 
-			//	PlayerModel._anim.Blend( );
+            state = PlayerModel.PlayAnim(group2, animIndex2, PlayMode.StopSameLayer);
 
-		}
+            foreach (int boneId in boneIds2)
+            {
+                Frame f = PlayerModel.Frames.GetByBoneId(boneId);
+                //	state.RemoveMixingTransform(f.transform);
+                state.AddMixingTransform(f.transform, true);
+                //	state.wrapMode = WrapMode.Loop;
+            }
+            state.weight = this.animationBlendWeight;
 
+            //	PlayerModel._anim.Blend( );
+        }
     }
 }

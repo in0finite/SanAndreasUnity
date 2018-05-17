@@ -63,7 +63,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             SectionHeader.Read(stream);
             var reader = new BinaryReader(stream);
 
-            FilterMode = (Filter) reader.ReadUInt16();
+            FilterMode = (Filter)reader.ReadUInt16();
             reader.ReadUInt16(); // Unknown
 
             TextureName = ReadSection<String>().Value;

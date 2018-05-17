@@ -17,7 +17,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             Materials = new Material[MaterialCount];
 
-            for (var i = 0; i < MaterialCount; ++i) {
+            for (var i = 0; i < MaterialCount; ++i)
+            {
                 Materials[i] = ReadSection<Material>();
             }
         }

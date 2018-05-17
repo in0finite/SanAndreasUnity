@@ -1,7 +1,7 @@
 ﻿using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Placements;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -27,7 +27,8 @@ namespace SanAndreasUnity.Behaviours.World
             mesh.normals = face.Vertices.Select(x => Vector3.up).ToArray();
 
             var indices = new int[(face.Vertices.Length - 2) * 3];
-            for (var i = 0; i < face.Vertices.Length - 2; ++i) {
+            for (var i = 0; i < face.Vertices.Length - 2; ++i)
+            {
                 var flip = i & 1;
                 indices[i * 3 + 0] = i + 1 - flip;
                 indices[i * 3 + 1] = i + 0 + flip;
@@ -41,12 +42,14 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void Initialize(WaterFile file)
         {
-			if (WaterPrefab == null) {
-				Debug.LogWarning ("No water prefab set, skipping load!");
-				return;
-			}
+            if (WaterPrefab == null)
+            {
+                Debug.LogWarning("No water prefab set, skipping load!");
+                return;
+            }
 
-            foreach (var face in file.Faces) {
+            foreach (var face in file.Faces)
+            {
                 AddFace(face);
             }
         }

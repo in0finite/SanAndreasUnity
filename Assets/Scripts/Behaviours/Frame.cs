@@ -1,5 +1,4 @@
-﻿using System;
-using SanAndreasUnity.Importing.RenderWareStream;
+﻿using SanAndreasUnity.Importing.RenderWareStream;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
@@ -27,7 +26,7 @@ namespace SanAndreasUnity.Behaviours
         internal void Initialize(Importing.Conversion.Geometry.GeometryFrame frame)
         {
             Index = frame.Source.Index;
-            BoneId = frame.Source.HAnim != null ? (int) frame.Source.HAnim.NodeId : -1;
+            BoneId = frame.Source.HAnim != null ? (int)frame.Source.HAnim.NodeId : -1;
             Name = frame.Name;
 
             if (frame.Source.HAnim == null) return;

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
@@ -15,18 +15,21 @@ namespace SanAndreasUnity.Behaviours
         }
 
         private static int _sBreakableLayer = -1;
+
         public static int BreakableLayer
         {
             get { return _sBreakableLayer == -1 ? _sBreakableLayer = LayerMask.NameToLayer("Breakable") : _sBreakableLayer; }
         }
 
         private static int _sNoiseTexId = -1;
+
         protected static int NoiseTexId
         {
             get { return _sNoiseTexId == -1 ? _sNoiseTexId = Shader.PropertyToID("_NoiseTex") : _sNoiseTexId; }
         }
 
         private static int _sFadeId = -1;
+
         protected static int FadeId
         {
             get { return _sFadeId == -1 ? _sFadeId = Shader.PropertyToID("_Fade") : _sFadeId; }
@@ -40,10 +43,13 @@ namespace SanAndreasUnity.Behaviours
             var timer = new Stopwatch();
             timer.Start();
 
-            if (_sNoiseTex == null) {
+            if (_sNoiseTex == null)
+            {
                 _sNoiseTex = new Texture2D(width, height, TextureFormat.Alpha8, false);
                 _sNoiseTex.filterMode = FilterMode.Bilinear;
-            } else {
+            }
+            else
+            {
                 _sNoiseTex.Resize(width, height);
             }
 
@@ -102,7 +108,8 @@ namespace SanAndreasUnity.Behaviours
 
         public void Show()
         {
-            if (!_loaded) {
+            if (!_loaded)
+            {
                 _loaded = true;
                 OnLoad();
             }
@@ -111,9 +118,13 @@ namespace SanAndreasUnity.Behaviours
             LoadOrder = float.PositiveInfinity;
         }
 
-        protected virtual void OnLoad() { }
+        protected virtual void OnLoad()
+        {
+        }
 
-        protected virtual void OnShow() { }
+        protected virtual void OnShow()
+        {
+        }
 
         public int CompareTo(MapObject other)
         {

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using SanAndreasUnity.Importing.Items;
+﻿using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Vehicles
@@ -39,7 +39,8 @@ namespace SanAndreasUnity.Importing.Vehicles
         private CarColors(CarColorDef def)
         {
             _def = def;
-            _vals = _def.Colors.Select(x => {
+            _vals = _def.Colors.Select(x =>
+            {
                 var arr = new int[def.Is4Color ? 4 : 2];
                 arr[0] = x.A;
                 // To fix "moonbeam" having an invalid second color

@@ -51,7 +51,7 @@ namespace ParseSharp
             PatternOptions options = PatternOptions.Compiled,
             bool omitFromResult = false)
         {
-            return new PatternParser(new Regex(pattern, (RegexOptions) options), omitFromResult);
+            return new PatternParser(new Regex(pattern, (RegexOptions)options), omitFromResult);
         }
 
         public static PatternParser Pattern(Regex regex, bool omitFromResult = false)
@@ -134,7 +134,7 @@ namespace ParseSharp
         public virtual String ExpectingDescription { get { return ToString(); } }
 
         public bool OmitFromResult { get; private set; }
-        
+
         protected abstract IEnumerable<ParseResult> OnParse(ParseContext ctx);
 
         public virtual string Name { get { return GetType().Name; } }
@@ -152,7 +152,8 @@ namespace ParseSharp
         internal ParseResult Parse(ParseContext parentContext)
         {
             var ctx = new ParseContext(parentContext, this);
-            if (!parentContext.IsUnique(ctx)) {
+            if (!parentContext.IsUnique(ctx))
+            {
                 return ctx.Error("Infinite parsing loop detected.");
             }
 
@@ -164,7 +165,8 @@ namespace ParseSharp
                 .SelectMany(x => x.FlattenHierarchy ? x : Single(x))
                 .ToArray();
 
-            if (failed != null) {
+            if (failed != null)
+            {
                 tailError = ctx.Expected(tailError, failed.Error as SymbolExpectedError);
             }
 
@@ -211,8 +213,10 @@ namespace ParseSharp
         protected static Parser[] Collapse<TParser>(Parser[] parsers)
             where TParser : AgregateParser
         {
-            if (parsers.OfType<TParser>().Any()) {
-                return parsers.SelectMany(x => {
+            if (parsers.OfType<TParser>().Any())
+            {
+                return parsers.SelectMany(x =>
+                {
                     var agregate = x as TParser;
                     return agregate != null ? agregate.Parsers : Single(x);
                 }).ToArray();
@@ -230,7 +234,8 @@ namespace ParseSharp
         {
             _parsers = parsers;
 
-            if (_parsers.Length == 0) {
+            if (_parsers.Length == 0)
+            {
                 throw new ArgumentException("At least one parser is required.", "parsers");
             }
         }
@@ -249,20 +254,28 @@ namespace ParseSharp
         protected override IEnumerable<ParseResult> OnParse(ParseContext ctx)
         {
             SymbolExpectedError tailError = null;
-// ReSharper disable once ConvertClosureToMethodGroup
-            foreach (var result in Parsers.Select(x => ctx.Parse(x))) {
-                if (result.Success || tailError == null) {
-                    if (tailError != null) {
+            // ReSharper disable once ConvertClosureToMethodGroup
+            foreach (var result in Parsers.Select(x => ctx.Parse(x)))
+            {
+                if (result.Success || tailError == null)
+                {
+                    if (tailError != null)
+                    {
                         result.TailError = ctx.Expected(result.TailError, tailError);
                     }
 
                     yield return result;
                     tailError = result.TailError;
-                } else {
+                }
+                else
+                {
                     var error = result.Error as SymbolExpectedError;
-                    if (error != null) {
+                    if (error != null)
+                    {
                         yield return ctx.Expected(tailError, error);
-                    } else {
+                    }
+                    else
+                    {
                         yield return result;
                     }
                 }
@@ -284,21 +297,25 @@ namespace ParseSharp
 
         public override string ExpectingDescription
         {
-            get { return Parsers.Length == 1 ? Parsers[0].ExpectingDescription :
-                String.Format("{0}, or {1}", String.Join(", ", Parsers.Take(Parsers.Length - 1)
-                    .Select(x => x.ExpectingDescription).ToArray()), Parsers.Last().ExpectingDescription); }
+            get
+            {
+                return Parsers.Length == 1 ? Parsers[0].ExpectingDescription :
+              String.Format("{0}, or {1}", String.Join(", ", Parsers.Take(Parsers.Length - 1)
+                  .Select(x => x.ExpectingDescription).ToArray()), Parsers.Last().ExpectingDescription);
+            }
         }
 
         protected override IEnumerable<ParseResult> OnParse(ParseContext ctx)
         {
-// ReSharper disable once ConvertClosureToMethodGroup
+            // ReSharper disable once ConvertClosureToMethodGroup
             var matches = Parsers.Select(x => ctx.Peek(x))
                 .OrderByDescending(x => x.Success ? x.Length : x.Error.Context.Offset)
                 .ToArray();
 
             var success = matches.FirstOrDefault(x => x.Success);
 
-            if (success == null && matches.All(x => x.Error.Context.Offset == matches[0].Error.Context.Offset)) {
+            if (success == null && matches.All(x => x.Error.Context.Offset == matches[0].Error.Context.Offset))
+            {
                 yield return matches[0].Error.Context.Expected(Parsers);
                 yield break;
             }
@@ -329,13 +346,17 @@ namespace ParseSharp
 
         protected override IEnumerable<ParseResult> OnParse(ParseContext ctx)
         {
-            for (;;) {
+            for (; ; )
+            {
                 var result = ctx.Parse(_parser);
 
-                if (result.Success) {
+                if (result.Success)
+                {
                     if (result.Length == 0) break;
                     yield return result;
-                } else {
+                }
+                else
+                {
                     yield return new ParseResult(result.Error, false);
                     break;
                 }
@@ -367,10 +388,13 @@ namespace ParseSharp
         {
             var result = ctx.Parse(_parser);
 
-            if (result.Success) {
+            if (result.Success)
+            {
                 if (result.Length == 0) yield break;
                 yield return result;
-            } else {
+            }
+            else
+            {
                 yield return new ParseResult(result.Error, false);
             }
         }
@@ -393,7 +417,8 @@ namespace ParseSharp
 
         protected override IEnumerable<ParseResult> OnParse(ParseContext ctx)
         {
-            if (!ctx.Match(_literal)) {
+            if (!ctx.Match(_literal))
+            {
                 yield return ctx.Expected(ExpectingDescription);
             }
         }
@@ -417,7 +442,8 @@ namespace ParseSharp
         protected override IEnumerable<ParseResult> OnParse(ParseContext ctx)
         {
             var match = _regex.Match(ctx.Input, ctx.Offset);
-            if (!match.Success || match.Index != ctx.Offset) {
+            if (!match.Success || match.Index != ctx.Offset)
+            {
                 yield return ctx.Expected(_regex);
                 yield break;
             }
@@ -464,13 +490,15 @@ namespace ParseSharp
 
         protected override IEnumerable<ParseResult> OnParse(ParseContext ctx)
         {
-            if (Definition == null) {
+            if (Definition == null)
+            {
                 throw new Exception(String.Format("LateDefined \"{0}\" Not yet defined.", Name));
             }
 
             var match = ctx.Parse(Definition);
 
-            if (!match.Success) {
+            if (!match.Success)
+            {
                 return Single(match.Error.Priority < 0 ? ctx.Expected(this) : match);
             }
 
@@ -490,9 +518,10 @@ namespace ParseSharp
 
         static LateDefinedParser()
         {
-            var ctor = typeof(TResult).GetConstructor(new [] {typeof(ParseResult)});
+            var ctor = typeof(TResult).GetConstructor(new[] { typeof(ParseResult) });
 
-            if (ctor == null) { 
+            if (ctor == null)
+            {
                 throw new Exception(String.Format(
                     "Type \"{0}\" must have a public constructor " +
                     "accepting a ParseResult if it can be a valid substitution.",

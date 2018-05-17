@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using SanAndreasUnity.Importing.Conversion;
+﻿using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Items.Placements;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
@@ -35,7 +35,8 @@ namespace SanAndreasUnity.Behaviours.World
                 gameObject.SetActive(true);
                 StartCoroutine(Fade());
 
-                if (value && LodChild != null) {
+                if (value && LodChild != null)
+                {
                     LodChild.Hide();
                 }
             }
@@ -55,7 +56,8 @@ namespace SanAndreasUnity.Behaviours.World
 
             name = _canLoad ? Instance.Object.ModelName : string.Format("Unknown ({0})", Instance.ObjectId);
 
-            if (_canLoad && Instance.LodInstance != null) {
+            if (_canLoad && Instance.LodInstance != null)
+            {
                 LodChild = dict[Instance.LodInstance];
                 LodChild.LodParent = this;
             }
@@ -70,38 +72,38 @@ namespace SanAndreasUnity.Behaviours.World
             if (!_canLoad) return false;
 
             var obj = Instance.Object;
-        
-		//	if (obj.HasFlag (ObjectFlag.DisableDrawDist))
-		//		return true;
-			
-			//    var dist = Vector3.Distance(from, transform.position);
-			var distSquared = Vector3.SqrMagnitude( from - transform.position );
 
-			if (distSquared > Cell.Instance.maxDrawDistance * Cell.Instance.maxDrawDistance)
-				return false;
+            //	if (obj.HasFlag (ObjectFlag.DisableDrawDist))
+            //		return true;
 
-			if (distSquared > obj.DrawDist * obj.DrawDist)
-				return false;
-			
+            //    var dist = Vector3.Distance(from, transform.position);
+            var distSquared = Vector3.SqrMagnitude(from - transform.position);
 
-			if (!HasLoaded || LodParent == null || !LodParent.IsVisible)
-				return true;
-			
-			if (!LodParent.ShouldBeVisible (from))
-				return true;
+            if (distSquared > Cell.Instance.maxDrawDistance * Cell.Instance.maxDrawDistance)
+                return false;
 
-			return false;
+            if (distSquared > obj.DrawDist * obj.DrawDist)
+                return false;
 
-		//	return (distSquared <= obj.DrawDist * obj.DrawDist || (obj.DrawDist >= 300 && distSquared < 2560*2560))
-        //        && (!HasLoaded || LodParent == null || !LodParent.IsVisible || !LodParent.ShouldBeVisible(from));
+            if (!HasLoaded || LodParent == null || !LodParent.IsVisible)
+                return true;
+
+            if (!LodParent.ShouldBeVisible(from))
+                return true;
+
+            return false;
+
+            //	return (distSquared <= obj.DrawDist * obj.DrawDist || (obj.DrawDist >= 300 && distSquared < 2560*2560))
+            //        && (!HasLoaded || LodParent == null || !LodParent.IsVisible || !LodParent.ShouldBeVisible(from));
         }
 
         protected override float OnRefreshLoadOrder(Vector3 from)
         {
             var visible = ShouldBeVisible(from);
 
-            if (!IsVisible) {
-				return visible ? Vector3.SqrMagnitude(from - transform.position) : float.PositiveInfinity;
+            if (!IsVisible)
+            {
+                return visible ? Vector3.SqrMagnitude(from - transform.position) : float.PositiveInfinity;
             }
 
             if (!visible) Hide();
@@ -130,7 +132,8 @@ namespace SanAndreasUnity.Behaviours.World
 
             geoms.AttachCollisionModel(transform);
 
-            if (Instance.Object.HasFlag(ObjectFlag.Breakable)) {
+            if (Instance.Object.HasFlag(ObjectFlag.Breakable))
+            {
                 gameObject.SetLayerRecursive(BreakableLayer);
             }
         }
@@ -143,7 +146,7 @@ namespace SanAndreasUnity.Behaviours.World
         private IEnumerator Fade()
         {
             if (_isFading) yield break;
-            
+
             var mr = GetComponent<MeshRenderer>();
             if (mr == null) yield break;
 
@@ -155,21 +158,23 @@ namespace SanAndreasUnity.Behaviours.World
 
             var val = IsVisible ? 0f : -1f;
 
-            for (; ; ) {
+            for (; ; )
+            {
                 var dest = IsVisible ? 1f : 0f;
                 var sign = Math.Sign(dest - val);
                 val += sign * fadeRate * Time.deltaTime;
 
                 if (sign == 0 || sign == 1 && val >= dest || sign == -1 && val <= dest) break;
 
-                pb.SetFloat(FadeId, (float) val);
+                pb.SetFloat(FadeId, (float)val);
                 mr.SetPropertyBlock(pb);
                 yield return new WaitForEndOfFrame();
             }
 
             mr.SetPropertyBlock(null);
 
-            if (!IsVisible) {
+            if (!IsVisible)
+            {
                 gameObject.SetActive(false);
             }
 

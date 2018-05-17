@@ -29,7 +29,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly UInt32 NodeId;
         public readonly UInt32 NodeIndex;
         public readonly HierarchyAnimationNodeFlags Flags;
-        
+
         public bool Push
         {
             get
@@ -99,7 +99,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             if (NodeCount > 0)
             {
-                Flags = (HierarchyAnimationFlags) reader.ReadUInt32();
+                Flags = (HierarchyAnimationFlags)reader.ReadUInt32();
                 KeyFrameSize = reader.ReadUInt32();
 
                 for (int i = 0; i < NodeCount; ++i)
@@ -110,14 +110,19 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                 var stack = new Stack<HierarchyAnimationNode>();
                 stack.Push(Root = Nodes[0]);
 
-                foreach (var node in Nodes.Skip(1)) {
+                foreach (var node in Nodes.Skip(1))
+                {
                     stack.Peek().AddChild(node);
 
-                    if (node.Push) {
+                    if (node.Push)
+                    {
                         stack.Push(node);
-                    } else if (node.Pop) {
+                    }
+                    else if (node.Pop)
+                    {
                         var n = node;
-                        do {
+                        do
+                        {
                             n = stack.Pop();
                         } while (n.Pop);
                     }

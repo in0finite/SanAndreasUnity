@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using SanAndreasUnity.Utilities;
+using System.IO;
 using System.Text;
-using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.RenderWareStream
 {
@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public String(SectionHeader header, Stream stream)
             : base(header, stream)
         {
-            Value = Encoding.UTF8.GetString(stream.ReadBytes((int) header.Size)).TrimNullChars();
+            Value = Encoding.UTF8.GetString(stream.ReadBytes((int)header.Size)).TrimNullChars();
         }
     }
 }

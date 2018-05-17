@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Net;
 using System.Security.Cryptography;
-using Newtonsoft.Json.Linq;
 
 namespace Facepunch.RCon
 {
@@ -9,7 +9,7 @@ namespace Facepunch.RCon
     {
         public static long ToUnixTimestamp(this DateTime time)
         {
-            return (long) (time.Subtract(new DateTime(1970, 1, 1)).TotalSeconds * 1000);
+            return (long)(time.Subtract(new DateTime(1970, 1, 1)).TotalSeconds * 1000);
         }
     }
 
@@ -43,8 +43,8 @@ namespace Facepunch.RCon
         {
             if (session == null) return false;
 
-            var name = (String) session["name"];
-            var secret = (String) session["secret"];
+            var name = (String)session["name"];
+            var secret = (String)session["secret"];
 
             if (name == null || secret == null) return false;
             if (!ip.Equals(Address)) return false;

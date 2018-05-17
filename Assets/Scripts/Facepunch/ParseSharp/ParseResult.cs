@@ -91,11 +91,13 @@ namespace ParseSharp
 
         private string ToString(string indent)
         {
-            if (!Success) {
+            if (!Success)
+            {
                 return string.Format("Parse error: {0}", Error);
             }
 
-            if (_children.Length == 0) {
+            if (_children.Length == 0)
+            {
                 return string.Format("{2}{0}: \"{1}\"",
                     Parser.Name, Value, indent);
             }

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using SanAndreasUnity.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.RenderWareStream
 {
@@ -40,7 +40,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public TSection GetParent<TSection>()
             where TSection : SectionData
         {
-            return (TSection) _parent;
+            return (TSection)_parent;
         }
 
         public override string ToString()
@@ -68,10 +68,11 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
         private static CtorDelegate CreateDelegate(Type type)
         {
-            var ctor = type.GetConstructor(new [] { typeof(SectionHeader), typeof(Stream) });
+            var ctor = type.GetConstructor(new[] { typeof(SectionHeader), typeof(Stream) });
 
-            if (ctor == null) {
-                throw new Exception(string.Format("Type {0} ") );
+            if (ctor == null)
+            {
+                throw new Exception(string.Format("Type {0} "));
             }
 
             var header = Expression.Parameter(typeof(SectionHeader), "header");
@@ -87,12 +88,14 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         {
             _sDataCtors.Clear();
 
-            foreach (var t in Assembly.GetExecutingAssembly().GetTypes()) {
-                if (t.BaseType != typeof (SectionData)) continue;
+            foreach (var t in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                if (t.BaseType != typeof(SectionData)) continue;
 
-                var attrib = (SectionTypeAttribute) t.GetCustomAttributes(typeof(SectionTypeAttribute), false).FirstOrDefault();
+                var attrib = (SectionTypeAttribute)t.GetCustomAttributes(typeof(SectionTypeAttribute), false).FirstOrDefault();
 
-                if (attrib != null) {
+                if (attrib != null)
+                {
                     _sDataCtors.Add(attrib.Value, CreateDelegate(t));
                 }
             }
@@ -107,11 +110,12 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             where T : SectionData
         {
             if (_sDataCtors.Count == 0) FindTypes();
-            if (!_sDataCtors.ContainsKey(header.Type)) {
+            if (!_sDataCtors.ContainsKey(header.Type))
+            {
                 if (typeof(T) == typeof(SectionData)) return null;
                 throw new Exception(string.Format("Unexpected section header {0}.", header.Type));
             }
-            return (T) _sDataCtors[header.Type](header, stream);
+            return (T)_sDataCtors[header.Type](header, stream);
         }
 
         private readonly SectionHeader _header;
@@ -151,11 +155,11 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         private Section(Stream stream, SectionData parent)
         {
             Header = SectionHeader.Read(stream, parent);
-            
+
             var end = stream.Position + Header.Size;
 
             Data = SectionData.Read<TData>(Header, new FrameStream(stream, stream.Position, Header.Size));
-            
+
             stream.Seek(end, SeekOrigin.Begin);
         }
 

@@ -30,7 +30,7 @@ namespace ParseSharp
         public int ColumnNumber
         {
             get
-            { 
+            {
                 if (_columnNumber == 0) FindLocation();
                 return _columnNumber;
             }
@@ -51,12 +51,15 @@ namespace ParseSharp
 
             var input = Context.Input;
 
-            for (var i = 0; i < input.Length && i < Context.Offset; ++i) {
-                switch (input[i]) {
+            for (var i = 0; i < input.Length && i < Context.Offset; ++i)
+            {
+                switch (input[i])
+                {
                     case '\n':
                         ++_lineNumber;
                         _columnNumber = 1;
                         break;
+
                     default:
                         ++_columnNumber;
                         break;
@@ -91,11 +94,13 @@ namespace ParseSharp
     {
         private static String FormatOptionList(String[] options)
         {
-            if (options.Length == 0) {
+            if (options.Length == 0)
+            {
                 throw new ArgumentException("Expected one or more option.", "options");
             }
 
-            if (options.Length == 1) {
+            if (options.Length == 1)
+            {
                 return String.Format("Expected {0}", options[0]);
             }
 

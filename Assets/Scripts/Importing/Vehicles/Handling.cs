@@ -41,7 +41,7 @@ namespace SanAndreasUnity.Importing.Vehicles
 
             public bool IsHexNumber
             {
-                get {  return (Flags & ColumnFlags.HexNumber) == ColumnFlags.HexNumber; }
+                get { return (Flags & ColumnFlags.HexNumber) == ColumnFlags.HexNumber; }
             }
 
             public ColumnAttribute(int value, ColumnFlags flags = ColumnFlags.Default)
@@ -55,7 +55,11 @@ namespace SanAndreasUnity.Importing.Vehicles
         private class PrefixAttribute : Attribute
         {
             public readonly char Value;
-            public PrefixAttribute(char value) { Value = value; }
+
+            public PrefixAttribute(char value)
+            {
+                Value = value;
+            }
         }
 
         public interface IEntry { }
@@ -80,27 +84,31 @@ namespace SanAndreasUnity.Importing.Vehicles
                 var hexNumConst = Expression.Constant(NumberStyles.HexNumber);
                 var valParam = Expression.Parameter(typeof(String), "val");
 
-                foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) {
-                    var attrib = (ColumnAttribute) prop.GetCustomAttributes(typeof(ColumnAttribute), true).FirstOrDefault();
+                foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                {
+                    var attrib = (ColumnAttribute)prop.GetCustomAttributes(typeof(ColumnAttribute), true).FirstOrDefault();
                     if (attrib == null) continue;
 
                     var set = prop.GetSetMethod(true);
-                    if (set == null) {
+                    if (set == null)
+                    {
                         throw new Exception("Set method is inaccessible");
                     }
 
                     Expression input = valParam;
 
-                    if (prop.PropertyType != typeof(string)) {
+                    if (prop.PropertyType != typeof(string))
+                    {
                         var argTypes = attrib.IsHexNumber
-                            ? new [] { typeof(string), typeof(NumberStyles) }
-                            : new [] { typeof(string) };
-                        
+                            ? new[] { typeof(string), typeof(NumberStyles) }
+                            : new[] { typeof(string) };
+
                         var convert = prop.PropertyType.GetMethod("Parse",
                             BindingFlags.Static | BindingFlags.Public,
                             null, argTypes, null);
 
-                        if (convert == null) {
+                        if (convert == null)
+                        {
                             throw new Exception(String.Format("Cannot convert a string to {0}", prop.PropertyType));
                         }
 
@@ -119,15 +127,18 @@ namespace SanAndreasUnity.Importing.Vehicles
 
             protected Entry(string line)
             {
-                if (_sParsers == null) {
+                if (_sParsers == null)
+                {
                     GenerateParsers();
                 }
 
                 var split = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                var self = (TEntry) this;
+                var self = (TEntry)this;
 
-                for (var i = 0; i < split.Length; ++i) {
-                    if (_sParsers.ContainsKey(i)) {
+                for (var i = 0; i < split.Length; ++i)
+                {
+                    if (_sParsers.ContainsKey(i))
+                    {
                         _sParsers[i](self, split[i]);
                     }
                 }
@@ -144,11 +155,12 @@ namespace SanAndreasUnity.Importing.Vehicles
 
             var param = Expression.Parameter(typeof(String), "line");
 
-            foreach (var type in typeof(Handling).GetNestedTypes()) {
+            foreach (var type in typeof(Handling).GetNestedTypes())
+            {
                 if (type.IsAbstract) continue;
                 if (type.IsInterface) continue;
                 if (!typeof(IEntry).IsAssignableFrom(type)) continue;
-                var attrib = (PrefixAttribute) type.GetCustomAttributes(typeof(PrefixAttribute), true).FirstOrDefault();
+                var attrib = (PrefixAttribute)type.GetCustomAttributes(typeof(PrefixAttribute), true).FirstOrDefault();
                 var prefix = attrib != null ? attrib.Value : '\0';
 
                 var ctor = type.GetConstructor(new[] { typeof(string) });
@@ -160,7 +172,7 @@ namespace SanAndreasUnity.Importing.Vehicles
             }
         }
 
-        #endregion
+        #endregion Reflection
 
         public class Car : Entry<Car>, IVehicleEntry
         {
@@ -182,7 +194,7 @@ namespace SanAndreasUnity.Importing.Vehicles
             [Column(14)] public float TransmissionEngineInertia { get; set; }
             [Column(15)] private string _TransmissionDriveType { get; set; }
             [Column(16)] private string _TransmissionEngineType { get; set; }
-            
+
             [Column(17)] public float BrakeDecel { get; set; }
             [Column(18)] public float BrakeBias { get; set; }
             [Column(19)] private int _AntiLockBrakes { get; set; }
@@ -217,7 +229,8 @@ namespace SanAndreasUnity.Importing.Vehicles
             {
                 get
                 {
-                    switch (_TransmissionDriveType) {
+                    switch (_TransmissionDriveType)
+                    {
                         case "F": return DriveType.Forward;
                         case "R": return DriveType.Rear;
                         case "4": return DriveType.FourWheel;
@@ -230,7 +243,8 @@ namespace SanAndreasUnity.Importing.Vehicles
             {
                 get
                 {
-                    switch (_TransmissionEngineType) {
+                    switch (_TransmissionEngineType)
+                    {
                         case "P": return EngineType.Petrol;
                         case "D": return EngineType.Diesel;
                         case "E": return EngineType.Electric;
@@ -241,18 +255,23 @@ namespace SanAndreasUnity.Importing.Vehicles
 
             public bool AntiLockBrakes { get { return _AntiLockBrakes != 0; } }
 
-            public Car(string line) : base(line) { }
+            public Car(string line) : base(line)
+            {
+            }
         }
 
         public static void Load(string path)
         {
-            if (_sCtors == null) {
+            if (_sCtors == null)
+            {
                 GenerateCtors();
             }
 
-            using (var reader = File.OpenText(path)) {
+            using (var reader = File.OpenText(path))
+            {
                 string line;
-                while ((line = reader.ReadLine()) != null) {
+                while ((line = reader.ReadLine()) != null)
+                {
                     line = line.Trim();
 
                     if (line.Length == 0) continue;
@@ -260,12 +279,14 @@ namespace SanAndreasUnity.Importing.Vehicles
 
                     var prefix = line[0];
 
-                    if (char.IsLetterOrDigit(prefix)) {
+                    if (char.IsLetterOrDigit(prefix))
+                    {
                         _sEntries.Add(_sCtors['\0'](line));
                         continue;
                     }
 
-                    foreach (var pair in _sCtors) {
+                    foreach (var pair in _sCtors)
+                    {
                         if (pair.Key != prefix) continue;
                         _sEntries.Add(pair.Value(line.Substring(1).TrimStart()));
                         break;

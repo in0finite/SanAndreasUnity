@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SanAndreasUnity.Utilities;
+using System;
 using System.IO;
-using System.Linq;
-using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.RenderWareStream
 {
@@ -35,56 +33,69 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             var reader = new BinaryReader(stream);
 
             PlatformID = reader.ReadUInt32();
-            FilterFlags = (Filter) reader.ReadUInt16();
-            WrapV = (WrapMode) reader.ReadByte();
-            WrapU = (WrapMode) reader.ReadByte();
+            FilterFlags = (Filter)reader.ReadUInt16();
+            WrapV = (WrapMode)reader.ReadByte();
+            WrapU = (WrapMode)reader.ReadByte();
             DiffuseName = reader.ReadString(32);
             AlphaName = reader.ReadString(32);
-            Format = (RasterFormat) reader.ReadUInt32();
+            Format = (RasterFormat)reader.ReadUInt32();
 
-            if (PlatformID == 9) {
+            if (PlatformID == 9)
+            {
                 var dxt = reader.ReadString(4);
-                switch (dxt) {
+                switch (dxt)
+                {
                     case "DXT1":
                         Compression = CompressionMode.DXT1;
                         break;
+
                     case "DXT3":
                         Compression = CompressionMode.DXT3; break;
                     default:
                         Compression = CompressionMode.None; break;
                 }
-            } else {
+            }
+            else
+            {
                 Alpha = reader.ReadUInt32() == 0x1;
             }
 
             Width = reader.ReadUInt16();
             Height = reader.ReadUInt16();
-            BPP = (byte) (reader.ReadByte() >> 3);
+            BPP = (byte)(reader.ReadByte() >> 3);
             MipMapCount = reader.ReadByte();
             RasterType = reader.ReadByte();
 
-            if (RasterType != 0x4) {
+            if (RasterType != 0x4)
+            {
                 throw new Exception("Unexpected RasterType, expected 0x04.");
             }
 
-            if (PlatformID == 9) {
+            if (PlatformID == 9)
+            {
                 Alpha = (reader.ReadByte() & 0x1) == 0x1;
-            } else {
-                Compression = (CompressionMode) reader.ReadByte();
+            }
+            else
+            {
+                Compression = (CompressionMode)reader.ReadByte();
             }
 
             ImageDataSize = reader.ReadInt32();
 
             ImageData = reader.ReadBytes(ImageDataSize);
 
-            if ((Format & RasterFormat.ExtMipMap) != 0) {
+            if ((Format & RasterFormat.ExtMipMap) != 0)
+            {
                 var tot = ImageDataSize;
-                for (var i = 0; i < MipMapCount; ++i) {
+                for (var i = 0; i < MipMapCount; ++i)
+                {
                     tot += ImageDataSize >> (2 * i);
                 }
 
                 ImageLevelData = reader.ReadBytes(tot);
-            } else {
+            }
+            else
+            {
                 ImageLevelData = ImageData;
             }
         }

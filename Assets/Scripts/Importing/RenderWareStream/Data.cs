@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             : base(header, stream)
         {
             Value = new byte[header.Size];
-            stream.Read(Value, 0, (int) header.Size);
+            stream.Read(Value, 0, (int)header.Size);
         }
     }
 }

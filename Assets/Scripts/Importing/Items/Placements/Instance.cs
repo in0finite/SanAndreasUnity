@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items.Placements
 {
@@ -8,8 +7,10 @@ namespace SanAndreasUnity.Importing.Items.Placements
     {
         public static void ResolveLod(this IList<Instance> insts)
         {
-            foreach (var inst in insts) {
-                if (inst.LodIndex != -1) {
+            foreach (var inst in insts)
+            {
+                if (inst.LodIndex != -1)
+                {
                     var lod = inst.LodInstance = insts[inst.LodIndex];
                     lod.IsLod = true;
                 }

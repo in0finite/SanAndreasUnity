@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SanAndreasUnity.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Archive
 {
@@ -20,14 +20,14 @@ namespace SanAndreasUnity.Importing.Archive
                 Offset = reader.ReadUInt32() << 11;
                 var sizeSecond = reader.ReadUInt16();
                 var sizeFirst = reader.ReadUInt16();
-                Size = (UInt32) ((sizeFirst != 0) ? sizeFirst << 11 : sizeSecond << 11);
+                Size = (UInt32)((sizeFirst != 0) ? sizeFirst << 11 : sizeSecond << 11);
                 Name = reader.ReadString(24);
             }
         }
 
         public static ImageArchive Load(String filePath)
         {
-			UnityEngine.Debug.Log ("Loading image archive: " + filePath);
+            UnityEngine.Debug.Log("Loading image archive: " + filePath);
             return new ImageArchive(new FileStream(filePath, FileMode.Open, FileAccess.Read));
         }
 
@@ -51,22 +51,25 @@ namespace SanAndreasUnity.Importing.Archive
             _fileDict = new Dictionary<string, ImageArchiveEntry>(StringComparer.InvariantCultureIgnoreCase);
             _extDict = new Dictionary<string, List<string>>(StringComparer.InvariantCultureIgnoreCase);
 
-            for (var i = 0; i < EntryCount; ++i) {
+            for (var i = 0; i < EntryCount; ++i)
+            {
                 var entry = new ImageArchiveEntry(reader);
                 _entries.Add(entry);
                 _fileDict.Add(entry.Name, entry);
 
-				//UnityEngine.Debug.Log ("Adding image archive entry: " + entry.Name);
+                //UnityEngine.Debug.Log ("Adding image archive entry: " + entry.Name);
 
                 var ext = Path.GetExtension(entry.Name);
-				if (ext == null) {
-					UnityEngine.Debug.LogWarning ("No file extension for: \"" + entry.Name + "\"");
-					continue;
-				}
+                if (ext == null)
+                {
+                    UnityEngine.Debug.LogWarning("No file extension for: \"" + entry.Name + "\"");
+                    continue;
+                }
 
-                if (!_extDict.ContainsKey(ext)) {
+                if (!_extDict.ContainsKey(ext))
+                {
                     _extDict.Add(ext, new List<string>());
-					UnityEngine.Debug.Log ("New image archive extension: \"" + ext + "\" for: \"" + entry.Name + "\"");
+                    UnityEngine.Debug.Log("New image archive extension: \"" + ext + "\" for: \"" + entry.Name + "\"");
                 }
 
                 _extDict[ext].Add(entry.Name);

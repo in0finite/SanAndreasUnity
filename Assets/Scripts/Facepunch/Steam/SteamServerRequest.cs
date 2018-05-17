@@ -108,15 +108,19 @@ namespace Facepunch.Steam
                 case RequestType.Favourites:
                     _handle = SteamMatchmakingServers.RequestFavoritesServerList(appid, filters, filterCount, _responder);
                     break;
+
                 case RequestType.Friends:
                     _handle = SteamMatchmakingServers.RequestFriendsServerList(appid, filters, filterCount, _responder);
                     break;
+
                 case RequestType.History:
                     _handle = SteamMatchmakingServers.RequestHistoryServerList(appid, filters, filterCount, _responder);
                     break;
+
                 case RequestType.Internet:
                     _handle = SteamMatchmakingServers.RequestInternetServerList(appid, filters, filterCount, _responder);
                     break;
+
                 case RequestType.LAN:
                     _handle = SteamMatchmakingServers.RequestLANServerList(appid, _responder);
                     break;
@@ -149,7 +153,6 @@ namespace Facepunch.Steam
 
         private void OnFailedToRespond(HServerListRequest request, int server)
         {
-
         }
 
         private void OnRefreshComplete(HServerListRequest request, EMatchMakingServerResponse response)

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace UnityEngine
@@ -51,7 +49,6 @@ namespace UnityEngine
             var children = GetAllChildren(transform);
             return children.Where(x => x.CompareTag(strTag)).ToArray();
         }
-
 
         //
         // Set local position and rotation to 0
@@ -142,14 +139,14 @@ namespace UnityEngine
         //
         public static void InvokeAtomic(this MonoBehaviour mb, string strName, float fDelay)
         {
-			UnityEngine.Profiling.Profiler.BeginSample("InvokeAtomic");
+            UnityEngine.Profiling.Profiler.BeginSample("InvokeAtomic");
 
             if (!mb.IsInvoking(strName))
             {
                 mb.Invoke(strName, fDelay);
             }
 
-			UnityEngine.Profiling.Profiler.EndSample();
+            UnityEngine.Profiling.Profiler.EndSample();
         }
 
         //

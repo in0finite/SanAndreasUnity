@@ -14,7 +14,8 @@ namespace System.Reflection
 
             if (mParams.Length != dParams.Length) return false;
 
-            for (var i = 0; i < mParams.Length; ++i) {
+            for (var i = 0; i < mParams.Length; ++i)
+            {
                 if (!dParams[i].ParameterType.IsAssignableFrom(mParams[i].ParameterType)) return false;
             }
 
@@ -30,7 +31,7 @@ namespace System.Reflection
         public static TAttribute GetAttribute<TAttribute>(this ICustomAttributeProvider obj, bool inherit)
             where TAttribute : Attribute
         {
-            return (TAttribute) obj.GetCustomAttributes(typeof(TAttribute), inherit).FirstOrDefault();
+            return (TAttribute)obj.GetCustomAttributes(typeof(TAttribute), inherit).FirstOrDefault();
         }
 
         public static IEnumerable<TAttribute> GetAttributes<TAttribute>(this ICustomAttributeProvider obj, bool inherit)

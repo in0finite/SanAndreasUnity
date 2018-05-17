@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+
 //using Facepunch.Networking;
 
 namespace Facepunch.Editor
@@ -7,8 +8,9 @@ namespace Facepunch.Editor
     {
         public static string[] OnWillSaveAssets(string[] paths)
         {
-            if (paths.Contains(UnityEditor.EditorApplication.currentScene)) {
-            //    Server.AssignEditorIds();
+            if (paths.Contains(UnityEditor.EditorApplication.currentScene))
+            {
+                //    Server.AssignEditorIds();
             }
 
             return paths;

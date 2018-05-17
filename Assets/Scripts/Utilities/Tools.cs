@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using UnityEngine;
-using Random = System.Random;
 
 namespace SanAndreasUnity.Utilities
 {
@@ -11,11 +9,12 @@ namespace SanAndreasUnity.Utilities
         public static byte[] ReadBytes(this Stream self, int count)
         {
             var data = new byte[count];
-            for (var i = 0; i < count; ++i) {
+            for (var i = 0; i < count; ++i)
+            {
                 var bt = self.ReadByte();
                 if (bt == -1) throw new EndOfStreamException();
 
-                data[i] = (byte) bt;
+                data[i] = (byte)bt;
             }
 
             return data;

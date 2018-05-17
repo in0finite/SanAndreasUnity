@@ -20,12 +20,15 @@ namespace SanAndreasUnity.Importing.Collision
 
         public Surface(BinaryReader reader, bool simple = false)
         {
-            if (!simple) {
+            if (!simple)
+            {
                 Material = reader.ReadByte();
-                Flags = (SurfaceFlags) reader.ReadByte();
+                Flags = (SurfaceFlags)reader.ReadByte();
                 Brightness = reader.ReadByte();
                 Light = reader.ReadByte();
-            } else {
+            }
+            else
+            {
                 Material = reader.ReadByte();
                 Flags = SurfaceFlags.None;
                 Brightness = 0;

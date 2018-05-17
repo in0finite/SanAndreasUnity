@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.IO;
-using UnityEngine;
 
 namespace SanAndreasUnity.Importing.RenderWareStream
 {
@@ -21,7 +19,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             Textures = new TextureNative[TextureCount];
             reader.ReadUInt16(); // Unknown
 
-            for (var i = 0; i < TextureCount; ++i) {
+            for (var i = 0; i < TextureCount; ++i)
+            {
                 Textures[i] = ReadSection<TextureNative>();
             }
         }

@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using SanAndreasUnity.Importing.Vehicles;
+﻿using SanAndreasUnity.Importing.Vehicles;
+using System.Linq;
 using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
 
@@ -19,9 +19,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         All = Front | Rear
     }
 
-	public partial class Vehicle : MonoBehaviour
+    public partial class Vehicle : MonoBehaviour
     {
         private static int _sLayer = -1;
+
         public static int Layer
         {
             get { return _sLayer == -1 ? _sLayer = UnityEngine.LayerMask.NameToLayer("Vehicle") : _sLayer; }
@@ -30,6 +31,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public static int LayerMask { get { return 1 << Layer; } }
 
         private static int _sLightsId = -1;
+
         protected static int LightsId
         {
             get
@@ -39,6 +41,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         }
 
         private static int[] _sCarColorIds;
+
         protected static int[] CarColorIds
         {
             get
@@ -58,7 +61,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public void SetColors(params int[] clrIndices)
         {
-            for (var i = 0; i < 4 && i < clrIndices.Length; ++i) {
+            for (var i = 0; i < 4 && i < clrIndices.Length; ++i)
+            {
                 if (_colors[i].Equals(clrIndices[i])) continue;
                 _colors[i] = clrIndices[i];
                 _colorsChanged = true;
@@ -69,9 +73,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             brightness = Mathf.Clamp01(brightness);
 
-            for (var i = 0; i < 4; ++i) {
+            for (var i = 0; i < 4; ++i)
+            {
                 var bit = 1 << i;
-                if (((int) light & bit) == bit) {
+                if (((int)light & bit) == bit)
+                {
                     SetLight(i, brightness);
                 }
             }
@@ -132,13 +138,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             _colorsChanged = false;
 
             var indices = CarColors.FromIndices(_colors);
-            for (var i = 0; i < 4; ++i) {
+            for (var i = 0; i < 4; ++i)
+            {
                 _props.SetColor(CarColorIds[i], indices[i]);
             }
 
             _props.SetVector(LightsId, new Vector4(_lights[0], _lights[1], _lights[2], _lights[3]));
 
-            foreach (var frame in _frames) {
+            foreach (var frame in _frames)
+            {
                 var mr = frame.GetComponent<MeshRenderer>();
                 if (mr == null) continue;
                 mr.SetPropertyBlock(_props);
@@ -147,14 +155,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Update()
         {
-            foreach (var wheel in _wheels) {
+            foreach (var wheel in _wheels)
+            {
                 Vector3 position = Vector3.zero;
 
                 WheelHit wheelHit;
 
-                if (wheel.Collider.GetGroundHit(out wheelHit)) {
+                if (wheel.Collider.GetGroundHit(out wheelHit))
+                {
                     position.y = (wheelHit.point.y - wheel.Collider.transform.position.y) + wheel.Collider.radius;
-                } else {
+                }
+                else
+                {
                     position.y -= wheel.Collider.suspensionDistance;
                 }
 
@@ -171,27 +183,34 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Child.localRotation = Quaternion.AngleAxis(wheel.Collider.steerAngle, Vector3.up) * wheel.Roll;
             }
 
-            if (HasDriver) {
+            if (HasDriver)
+            {
                 SetLight(VehicleLight.Front, 1f);
 
-                if (Braking > 0.125f) {
+                if (Braking > 0.125f)
+                {
                     SetLight(VehicleLight.Rear, 1f);
-                } else {
+                }
+                else
+                {
                     SetLight(VehicleLight.Rear, 0f);
                 }
-            } else {
+            }
+            else
+            {
                 SetLight(VehicleLight.All, 0f);
                 Braking = 1f;
             }
 
-            if (_colorsChanged) {
+            if (_colorsChanged)
+            {
                 UpdateColors();
             }
         }
 
         private void FixedUpdate()
         {
-        //    NetworkingFixedUpdate();
+            //    NetworkingFixedUpdate();
             PhysicsFixedUpdate();
         }
     }

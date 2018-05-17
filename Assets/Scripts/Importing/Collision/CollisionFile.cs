@@ -1,10 +1,10 @@
-﻿using System;
+﻿using SanAndreasUnity.Importing.Archive;
+using SanAndreasUnity.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Linq;
-using SanAndreasUnity.Importing.Archive;
-using SanAndreasUnity.Utilities;
+using System.Text;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Collision
@@ -38,7 +38,8 @@ namespace SanAndreasUnity.Importing.Collision
 
             private CollisionFile Load()
             {
-                using (var stream = ArchiveManager.ReadFile(FileName)) {
+                using (var stream = ArchiveManager.ReadFile(FileName))
+                {
                     return new CollisionFile(this, stream);
                 }
             }
@@ -51,30 +52,38 @@ namespace SanAndreasUnity.Importing.Collision
         {
             var thisFile = new List<CollisionFileInfo>();
 
-            using (var stream = ArchiveManager.ReadFile(fileName)) {
+            using (var stream = ArchiveManager.ReadFile(fileName))
+            {
                 var versBuffer = new byte[4];
                 var reader = new BinaryReader(stream);
-                while (stream.Position < stream.Length && stream.Read(versBuffer, 0, 4) == 4) {
+                while (stream.Position < stream.Length && stream.Read(versBuffer, 0, 4) == 4)
+                {
                     if (versBuffer.All(x => x == 0)) break;
 
                     Version version;
 
-                    try {
+                    try
+                    {
                         var versString = Encoding.ASCII.GetString(versBuffer);
-                        version = (Version) Enum.Parse(typeof (Version), versString);
-					} catch (Exception e) {
+                        version = (Version)Enum.Parse(typeof(Version), versString);
+                    }
+                    catch (Exception e)
+                    {
                         Debug.LogWarningFormat("Error while reading {0} at 0x{1:x} ({2}%)",
                             fileName, stream.Position - 4, (stream.Position - 4) * 100 / stream.Length);
-						Debug.LogWarning (e.Message);
+                        Debug.LogWarning(e.Message);
 
-						// The length of 'male01', 'fatmale02' and 'b_wom1' in peds.col seems to be off by 1 in my version. So 'fix' for this case:
-						if ((versBuffer [0] == 'O') && (versBuffer [1] == 'L') && (versBuffer [2] == 'L') && ((versBuffer [3] == 0xD0) || (versBuffer [3] == 0xA4) || (versBuffer [3] == 0x8C))) {
-							Debug.Log ("Known problem (size off by one). Attempting to fix by adjusting read pointer...");
-							stream.Position -= 5;
-							continue;
-						} else {
-							Debug.LogError ("Unknown problem. Please report an issue for this!");
-						}
+                        // The length of 'male01', 'fatmale02' and 'b_wom1' in peds.col seems to be off by 1 in my version. So 'fix' for this case:
+                        if ((versBuffer[0] == 'O') && (versBuffer[1] == 'L') && (versBuffer[2] == 'L') && ((versBuffer[3] == 0xD0) || (versBuffer[3] == 0xA4) || (versBuffer[3] == 0x8C)))
+                        {
+                            Debug.Log("Known problem (size off by one). Attempting to fix by adjusting read pointer...");
+                            stream.Position -= 5;
+                            continue;
+                        }
+                        else
+                        {
+                            Debug.LogError("Unknown problem. Please report an issue for this!");
+                        }
 
                         break;
                     }
@@ -82,16 +91,22 @@ namespace SanAndreasUnity.Importing.Collision
                     var modelInfo = new CollisionFileInfo(reader, fileName, version);
                     thisFile.Add(modelInfo);
 
-					try {
-                    	_sModelNameDict.Add(modelInfo.Name, modelInfo);
-					} catch (System.ArgumentException e) {
-						// The collision file for 'ct_man2' is appearing two times consecutively in my game files. Ignore second one.
-						if (modelInfo.Name != "ct_man2") {
-							Debug.LogError (e.Message);
-						} else {
-							Debug.Log ("Known problem (duplicate ct_man2 collision). Skipping...");
-						}
-					}
+                    try
+                    {
+                        _sModelNameDict.Add(modelInfo.Name, modelInfo);
+                    }
+                    catch (System.ArgumentException e)
+                    {
+                        // The collision file for 'ct_man2' is appearing two times consecutively in my game files. Ignore second one.
+                        if (modelInfo.Name != "ct_man2")
+                        {
+                            Debug.LogError(e.Message);
+                        }
+                        else
+                        {
+                            Debug.Log("Known problem (duplicate ct_man2 collision). Skipping...");
+                        }
+                    }
                 }
             }
         }
@@ -99,7 +114,7 @@ namespace SanAndreasUnity.Importing.Collision
         public static CollisionFile Load(Stream stream)
         {
             var reader = new BinaryReader(stream);
-            var version = (Version) Enum.Parse(typeof(Version), reader.ReadString(4));
+            var version = (Version)Enum.Parse(typeof(Version), reader.ReadString(4));
             var info = new CollisionFileInfo(reader, null, version);
 
             return new CollisionFile(info, stream);
@@ -139,57 +154,63 @@ namespace SanAndreasUnity.Importing.Collision
             long spheresOffset, boxesOffset, vertsOffset,
                 facesOffset, faceGroupsOffset;
 
-            switch (version) {
-                case Version.COLL: {
-                    spheres = reader.ReadInt32();
-                    spheresOffset = stream.Position;
-                    stream.Seek(spheres * Sphere.Size, SeekOrigin.Current);
+            switch (version)
+            {
+                case Version.COLL:
+                    {
+                        spheres = reader.ReadInt32();
+                        spheresOffset = stream.Position;
+                        stream.Seek(spheres * Sphere.Size, SeekOrigin.Current);
 
-                    reader.ReadInt32();
+                        reader.ReadInt32();
 
-                    boxes = reader.ReadInt32();
-                    boxesOffset = stream.Position;
-                    stream.Seek(boxes * Box.Size, SeekOrigin.Current);
+                        boxes = reader.ReadInt32();
+                        boxesOffset = stream.Position;
+                        stream.Seek(boxes * Box.Size, SeekOrigin.Current);
 
-                    verts = reader.ReadInt32();
-                    vertsOffset = stream.Position;
-                    stream.Seek(verts * Vertex.SizeV1, SeekOrigin.Current);
+                        verts = reader.ReadInt32();
+                        vertsOffset = stream.Position;
+                        stream.Seek(verts * Vertex.SizeV1, SeekOrigin.Current);
 
-                    faces = reader.ReadInt32();
-                    facesOffset = stream.Position;
+                        faces = reader.ReadInt32();
+                        facesOffset = stream.Position;
 
-                    faceGroups = 0;
-                    faceGroupsOffset = 0;
-
-                    break;
-                }
-                default: {
-                    spheres = reader.ReadUInt16();
-                    boxes = reader.ReadUInt16();
-                    faces = reader.ReadUInt16();
-                    reader.ReadInt16();
-
-                    Flags = (Flags) reader.ReadInt32();
-
-                    spheresOffset = reader.ReadUInt32() + info.Offset;
-                    boxesOffset = reader.ReadUInt32() + info.Offset;
-                    reader.ReadUInt32();
-                    vertsOffset = reader.ReadUInt32() + info.Offset;
-                    facesOffset = reader.ReadUInt32() + info.Offset;
-
-                    if (faces > 0 && (Flags & Flags.HasFaceGroups) == Flags.HasFaceGroups) {
-                        stream.Seek(facesOffset - 4, SeekOrigin.Begin);
-                        faceGroups = reader.ReadInt32();
-                        faceGroupsOffset = facesOffset - 4 - FaceGroup.Size * faceGroups;
-                    } else {
                         faceGroups = 0;
                         faceGroupsOffset = 0;
+
+                        break;
                     }
+                default:
+                    {
+                        spheres = reader.ReadUInt16();
+                        boxes = reader.ReadUInt16();
+                        faces = reader.ReadUInt16();
+                        reader.ReadInt16();
 
-                    verts = -1;
+                        Flags = (Flags)reader.ReadInt32();
 
-                    break;
-                }
+                        spheresOffset = reader.ReadUInt32() + info.Offset;
+                        boxesOffset = reader.ReadUInt32() + info.Offset;
+                        reader.ReadUInt32();
+                        vertsOffset = reader.ReadUInt32() + info.Offset;
+                        facesOffset = reader.ReadUInt32() + info.Offset;
+
+                        if (faces > 0 && (Flags & Flags.HasFaceGroups) == Flags.HasFaceGroups)
+                        {
+                            stream.Seek(facesOffset - 4, SeekOrigin.Begin);
+                            faceGroups = reader.ReadInt32();
+                            faceGroupsOffset = facesOffset - 4 - FaceGroup.Size * faceGroups;
+                        }
+                        else
+                        {
+                            faceGroups = 0;
+                            faceGroupsOffset = 0;
+                        }
+
+                        verts = -1;
+
+                        break;
+                    }
             }
 
             Spheres = new Sphere[spheres];
@@ -197,44 +218,56 @@ namespace SanAndreasUnity.Importing.Collision
             Faces = new Face[faces];
             FaceGroups = new FaceGroup[faceGroups];
 
-            if (spheres > 0) {
+            if (spheres > 0)
+            {
                 stream.Seek(spheresOffset, SeekOrigin.Begin);
-                for (var i = 0; i < spheres; ++i) {
+                for (var i = 0; i < spheres; ++i)
+                {
                     Spheres[i] = new Sphere(reader, version);
                 }
             }
 
-            if (boxes > 0) {
+            if (boxes > 0)
+            {
                 stream.Seek(boxesOffset, SeekOrigin.Begin);
-                for (var i = 0; i < boxes; ++i) {
+                for (var i = 0; i < boxes; ++i)
+                {
                     Boxes[i] = new Box(reader, version);
                 }
             }
 
-            if (faces > 0) {
+            if (faces > 0)
+            {
                 stream.Seek(facesOffset, SeekOrigin.Begin);
-                for (var i = 0; i < faces; ++i) {
+                for (var i = 0; i < faces; ++i)
+                {
                     Faces[i] = new Face(reader, version);
                 }
 
-                if (verts == -1) {
+                if (verts == -1)
+                {
                     verts = Faces.Max(x => x.GetIndices().Max()) + 1;
                 }
 
                 Vertices = new Vertex[verts];
 
                 stream.Seek(vertsOffset, SeekOrigin.Begin);
-                for (var i = 0; i < verts; ++i) {
+                for (var i = 0; i < verts; ++i)
+                {
                     Vertices[i] = new Vertex(reader, version);
                 }
 
-                if (faceGroups > 0) {
+                if (faceGroups > 0)
+                {
                     stream.Seek(faceGroupsOffset, SeekOrigin.Begin);
-                    for (var i = 0; i < faceGroups; ++i) {
+                    for (var i = 0; i < faceGroups; ++i)
+                    {
                         FaceGroups[i] = new FaceGroup(reader);
                     }
                 }
-            } else {
+            }
+            else
+            {
                 Vertices = new Vertex[0];
             }
         }

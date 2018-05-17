@@ -15,18 +15,21 @@ namespace UnityEngine
         // ReSharper disable once UnusedMember.Local
         private void Awake()
         {
-            if (FindObjectsOfType<TComponent>().Any(x => x != this && x.isActiveAndEnabled)) {
+            if (FindObjectsOfType<TComponent>().Any(x => x != this && x.isActiveAndEnabled))
+            {
                 DestroyImmediate(this);
                 return;
             }
 
-            _sInstance = (TComponent) this;
+            _sInstance = (TComponent)this;
 
             DontDestroyOnLoad(gameObject);
 
             OnAwake();
         }
 
-        protected virtual void OnAwake() { }
+        protected virtual void OnAwake()
+        {
+        }
     }
 }

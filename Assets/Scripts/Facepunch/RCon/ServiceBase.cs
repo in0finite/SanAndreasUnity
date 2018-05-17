@@ -1,6 +1,6 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -18,7 +18,7 @@ namespace Facepunch.RCon
 
         public void Send(String type, JToken data)
         {
-            Send(new JObject {{"type", type}, {"data", data}}.ToString(Formatting.None));
+            Send(new JObject { { "type", type }, { "data", data } }.ToString(Formatting.None));
         }
 
         public JObject FormatError(Exception e)
@@ -45,14 +45,19 @@ namespace Facepunch.RCon
         {
             if (e.Type != Opcode.Text) return;
 
-            try {
+            try
+            {
                 var obj = JObject.Parse(e.Data);
-                OnMessage((String) obj["type"], obj["data"]);
-            } catch (Exception ex) {
+                OnMessage((String)obj["type"], obj["data"]);
+            }
+            catch (Exception ex)
+            {
                 Send("error", FormatError(ex));
             }
         }
 
-        protected virtual void OnMessage(String type, JToken data) { }
+        protected virtual void OnMessage(String type, JToken data)
+        {
+        }
     }
 }

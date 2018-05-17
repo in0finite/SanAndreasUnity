@@ -1,5 +1,5 @@
-﻿using System.IO;
-using SanAndreasUnity.Importing.Collision;
+﻿using SanAndreasUnity.Importing.Collision;
+using System.IO;
 
 namespace SanAndreasUnity.Importing.RenderWareStream
 {

@@ -13,13 +13,15 @@ namespace SanAndreasUnity.Importing.Collision
 
         public Bounds(BinaryReader reader, Version version)
         {
-            switch (version) {
+            switch (version)
+            {
                 case Version.COLL:
                     Radius = reader.ReadSingle();
                     Center = new Vector3(reader);
                     Min = new Vector3(reader);
                     Max = new Vector3(reader);
                     break;
+
                 default:
                     Min = new Vector3(reader);
                     Max = new Vector3(reader);

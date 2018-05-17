@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using SanAndreasUnity.Importing.Items.Placements;
+using System.Collections.Generic;
 using System.IO;
-using SanAndreasUnity.Importing.Items.Placements;
 
 namespace SanAndreasUnity.Importing.Items
 {
@@ -12,8 +12,11 @@ namespace SanAndreasUnity.Importing.Items
         {
             var faces = new List<WaterFace>();
 
-            using (var reader = File.OpenText(path)) {string line;
-                while ((line = reader.ReadLine()) != null) {
+            using (var reader = File.OpenText(path))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
                     line = line.Trim();
 
                     if (line.Length == 0) continue;
@@ -24,7 +27,7 @@ namespace SanAndreasUnity.Importing.Items
                 }
             }
 
-			UnityEngine.Debug.Log ("Loading water file: \"" + path + "\" with " + faces.Count + " faces");
+            UnityEngine.Debug.Log("Loading water file: \"" + path + "\" with " + faces.Count + " faces");
 
             Faces = faces.ToArray();
         }

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ParseSharp
 {
@@ -8,7 +8,8 @@ namespace ParseSharp
     {
         private static int SkipWhitespace(String input, int offset)
         {
-            while (offset < input.Length && char.IsWhiteSpace(input[offset])) {
+            while (offset < input.Length && char.IsWhiteSpace(input[offset]))
+            {
                 ++offset;
             }
 
@@ -69,13 +70,15 @@ namespace ParseSharp
             if (result == null || !result.Success) return result;
 
             var dest = result.Index + result.Length;
-            if (dest < Offset) {
+            if (dest < Offset)
+            {
                 throw new ArgumentException("Cannot apply a match that occured earlier in the input.", "result");
             }
 
             Offset = result.Index + result.Length;
 
-            if (WhitespacePolicy == WhitespacePolicy.Ignore) {
+            if (WhitespacePolicy == WhitespacePolicy.Ignore)
+            {
                 Offset = SkipWhitespace(Input, Offset);
             }
 
@@ -84,7 +87,8 @@ namespace ParseSharp
 
         public void Advance(int amount)
         {
-            if (amount < 0) {
+            if (amount < 0)
+            {
                 throw new ArgumentOutOfRangeException("amount");
             }
 
@@ -98,7 +102,7 @@ namespace ParseSharp
 
         public SymbolExpectedError Expected(Regex expected)
         {
-            return new SymbolExpectedError(this, new []{ expected.ToString() }, -1);
+            return new SymbolExpectedError(this, new[] { expected.ToString() }, -1);
         }
 
         public SymbolExpectedError Expected(params Parser[] expected)
@@ -129,7 +133,8 @@ namespace ParseSharp
         {
             var result = regex.Match(Input, Offset);
 
-            if (result.Success) {
+            if (result.Success)
+            {
                 Offset += result.Length;
             }
 
@@ -140,8 +145,9 @@ namespace ParseSharp
         {
             if (Remaining < literal.Length) return false;
 
-// ReSharper disable once LoopCanBeConvertedToQuery
-            for (var i = 0; i < literal.Length; ++i) {
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            for (var i = 0; i < literal.Length; ++i)
+            {
                 if (Input[Offset + i] != literal[i]) return false;
             }
 

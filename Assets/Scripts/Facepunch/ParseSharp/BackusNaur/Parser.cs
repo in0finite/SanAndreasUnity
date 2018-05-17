@@ -35,7 +35,7 @@ namespace ParseSharp.BackusNaur
             parser.Definition = (rule.Repeated + EndOfInput).IgnoreWhitespace;
 
             rule.Definition = ("(*" + ruleOption.Repeated + "*)").Optional + ident + "=" + expr + ";";
-            ruleOption.Definition = (Parser) "collapse" | "match-whitespace" | "skip-whitespace" | "omit-from-hierarchy";
+            ruleOption.Definition = (Parser)"collapse" | "match-whitespace" | "skip-whitespace" | "omit-from-hierarchy";
             ident.Definition = identWord + identWord.Repeated;
             identWord.Definition = Pattern(@"[A-Za-z][A-Za-z0-9]+").MatchWhitespace;
 
@@ -66,13 +66,16 @@ namespace ParseSharp.BackusNaur
             return parser;
         }
 
-        public ExtendedBackusNaurFormParser() : base(_sRootParser) { }
+        public ExtendedBackusNaurFormParser() : base(_sRootParser)
+        {
+        }
 
         public new ParserGenerator Parse(string input, int offset = 0)
         {
             var result = base.Parse(input, offset);
 
-            if (!result.Success) {
+            if (!result.Success)
+            {
                 throw new Exception(result.Error.ToString());
             }
 

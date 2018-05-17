@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Authentication;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using WebSocketSharp.Server;
 using Logger = WebSocketSharp.Logger;
@@ -14,12 +14,14 @@ namespace Facepunch.RCon
         private readonly WebSocketServer _socketServer;
 
         private readonly Dictionary<String, RConSession> _sessions
-            = new Dictionary<string, RConSession>(); 
+            = new Dictionary<string, RConSession>();
 
         public delegate bool VerifyCredentialsPredicate(RConCredentials creds);
+
         public event VerifyCredentialsPredicate VerifyCredentials;
 
         public delegate String ExecuteCommandDelegate(RConCredentials creds, String command);
+
         public event ExecuteCommandDelegate ExecuteCommand;
 
         internal event UnityEngine.Application.LogCallback BroadcastedLog;
@@ -39,22 +41,27 @@ namespace Facepunch.RCon
 
         public void BroadcastLog(String condition, String stackTrace, LogType type)
         {
-            if (BroadcastedLog != null) {
+            if (BroadcastedLog != null)
+            {
                 BroadcastedLog(condition, stackTrace, type);
             }
         }
 
         internal RConSession TryCreateSession(RConCredentials creds)
         {
-            if (VerifyCredentials == null || !VerifyCredentials(creds)) {
+            if (VerifyCredentials == null || !VerifyCredentials(creds))
+            {
                 throw new AuthenticationException("Invalid credentials");
             }
 
             var session = new RConSession(creds, SessionTimeout);
 
-            if (_sessions.ContainsKey(creds.Name)) {
+            if (_sessions.ContainsKey(creds.Name))
+            {
                 _sessions[creds.Name] = session;
-            } else {
+            }
+            else
+            {
                 _sessions.Add(creds.Name, session);
             }
 
@@ -63,7 +70,7 @@ namespace Facepunch.RCon
 
         internal RConSession TryGetSession(IPAddress address, JObject sessionData)
         {
-            var name = (String) sessionData["name"];
+            var name = (String)sessionData["name"];
             if (name == null || !_sessions.ContainsKey(name)) return null;
 
             var session = _sessions[name];
@@ -79,9 +86,12 @@ namespace Facepunch.RCon
         {
             Debug.LogFormat("[rcon] Starting rcon listener on port {0}", _socketServer.Port);
 
-            try {
+            try
+            {
                 _socketServer.Start();
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Debug.LogErrorFormat("[rcon] Unable to start listener: {0}", e);
             }
         }

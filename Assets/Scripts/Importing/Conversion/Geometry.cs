@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SanAndreasUnity.Behaviours;
+﻿using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Importing.Collision;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.RenderWareStream;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Conversion
@@ -23,30 +23,35 @@ namespace SanAndreasUnity.Importing.Conversion
     public class Geometry
     {
         private static int _sMainTexId = -1;
+
         protected static int MainTexId
         {
             get { return _sMainTexId == -1 ? _sMainTexId = Shader.PropertyToID("_MainTex") : _sMainTexId; }
         }
 
         private static int _sMaskTexId = -1;
+
         protected static int MaskTexId
         {
             get { return _sMaskTexId == -1 ? _sMaskTexId = Shader.PropertyToID("_MaskTex") : _sMaskTexId; }
         }
 
         private static int _sMetallicId = -1;
+
         protected static int MetallicId
         {
             get { return _sMetallicId == -1 ? _sMetallicId = Shader.PropertyToID("_Metallic") : _sMetallicId; }
         }
 
         private static int _sSmoothnessId = -1;
+
         protected static int SmoothnessId
         {
             get { return _sSmoothnessId == -1 ? _sSmoothnessId = Shader.PropertyToID("_Smoothness") : _sSmoothnessId; }
         }
 
         private static int _sCarColorIndexId = -1;
+
         protected static int CarColorIndexId
         {
             get { return _sCarColorIndexId == -1 ? _sCarColorIndexId = Shader.PropertyToID("_CarColorIndex") : _sCarColorIndexId; }
@@ -56,7 +61,8 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             var dst = new List<int>((indices.Count - 2) * 3);
 
-            for (var i = 0; i < indices.Count - 2; ++i) {
+            for (var i = 0; i < indices.Count - 2; ++i)
+            {
                 var a = indices[i];
                 var b = indices[i + 1 + (i & 1)];
                 var c = indices[i + 2 - (i & 1)];
@@ -75,7 +81,8 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             var norms = new UnityEngine.Vector3[src.VertexCount];
 
-            for (var i = 0; i < src.FaceCount; ++i) {
+            for (var i = 0; i < src.FaceCount; ++i)
+            {
                 var face = src.Faces[i];
 
                 var a = verts[face.Vertex0];
@@ -91,14 +98,18 @@ namespace SanAndreasUnity.Importing.Conversion
                     v.x * w.y - v.y * w.x).normalized;
 
                 norms[face.Vertex0] -= norm;
-                norms[face.Vertex1] -= norm;    
+                norms[face.Vertex1] -= norm;
                 norms[face.Vertex2] -= norm;
             }
 
-            for (var i = 0; i < src.VertexCount; ++i) {
-                if (norms[i].sqrMagnitude <= 0f) {
+            for (var i = 0; i < src.VertexCount; ++i)
+            {
+                if (norms[i].sqrMagnitude <= 0f)
+                {
                     norms[i] = UnityEngine.Vector3.up;
-                } else {
+                }
+                else
+                {
                     norms[i] = norms[i].normalized;
                 }
             }
@@ -115,23 +126,28 @@ namespace SanAndreasUnity.Importing.Conversion
             var alpha = (flags & MaterialFlags.Alpha) == MaterialFlags.Alpha;
             var vehicle = (flags & MaterialFlags.Vehicle) == MaterialFlags.Vehicle;
 
-            if (vehicle && alpha) {
+            if (vehicle && alpha)
+            {
                 return Shader.Find("SanAndreasUnity/VehicleTransparent");
             }
 
-            if (vehicle) {
+            if (vehicle)
+            {
                 return Shader.Find("SanAndreasUnity/Vehicle");
             }
 
-            if (noBackCull && alpha) {
+            if (noBackCull && alpha)
+            {
                 return Shader.Find("SanAndreasUnity/TransparentNoBackCull");
             }
 
-            if (noBackCull) {
+            if (noBackCull)
+            {
                 return Shader.Find("SanAndreasUnity/NoBackCull");
             }
 
-            if (alpha) {
+            if (alpha)
+            {
                 return Shader.Find("SanAndreasUnity/Transparent");
             }
 
@@ -180,32 +196,42 @@ namespace SanAndreasUnity.Importing.Conversion
             var overrideAlpha = (flags & MaterialFlags.OverrideAlpha) == MaterialFlags.OverrideAlpha;
             var vehicle = (flags & MaterialFlags.Vehicle) == MaterialFlags.Vehicle;
 
-            if (!overrideAlpha && src.Colour.A != 255) {
+            if (!overrideAlpha && src.Colour.A != 255)
+            {
                 flags |= MaterialFlags.Alpha;
             }
 
-            if (src.TextureCount > 0) {
+            if (src.TextureCount > 0)
+            {
                 var tex = src.Textures[0];
                 diffuse = txds.GetDiffuse(tex.TextureName);
 
-                if (src.TextureCount > 1) {
+                if (src.TextureCount > 1)
+                {
                     Debug.LogFormat("Something has {0} textures!", src.TextureCount);
                 }
 
-                if (diffuse == null) {
+                if (diffuse == null)
+                {
                     Debug.LogWarningFormat("Unable to find texture {0}", tex.TextureName);
                 }
 
-                if (!string.IsNullOrEmpty(tex.MaskName)) {
+                if (!string.IsNullOrEmpty(tex.MaskName))
+                {
                     mask = txds.GetAlpha(tex.MaskName) ?? diffuse;
-                } else if (vehicle) {
+                }
+                else if (vehicle)
+                {
                     mask = diffuse;
                 }
 
-                if (!overrideAlpha && mask != null && mask.HasAlpha) {
+                if (!overrideAlpha && mask != null && mask.HasAlpha)
+                {
                     flags |= MaterialFlags.Alpha;
                 }
-            } else {
+            }
+            else
+            {
                 diffuse = WhiteTex;
             }
 
@@ -214,9 +240,11 @@ namespace SanAndreasUnity.Importing.Conversion
 
             var clr = Types.Convert(src.Colour);
 
-            if (vehicle) {
+            if (vehicle)
+            {
                 var found = false;
-                for (var i = 1; i < _sKeyColors.Length; ++i) {
+                for (var i = 1; i < _sKeyColors.Length; ++i)
+                {
                     var key = _sKeyColors[i];
                     if (key.r != clr.r || key.g != clr.g || key.b != clr.b) continue;
                     mat.SetInt(CarColorIndexId, i);
@@ -224,12 +252,17 @@ namespace SanAndreasUnity.Importing.Conversion
                     break;
                 }
 
-                if (found) {
+                if (found)
+                {
                     mat.color = Color.white;
-                } else {
+                }
+                else
+                {
                     mat.color = clr;
                 }
-            } else {
+            }
+            else
+            {
                 mat.color = clr;
             }
 
@@ -246,32 +279,37 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             var mesh = new Mesh();
 
-// ReSharper disable ConvertClosureToMethodGroup
+            // ReSharper disable ConvertClosureToMethodGroup
             mesh.vertices = src.Vertices.Select(x => Types.Convert(x)).ToArray();
 
-            if (src.Normals != null) {
+            if (src.Normals != null)
+            {
                 mesh.normals = src.Normals.Select(x => Types.Convert(x)).ToArray();
             }
 
-            if (src.Colours != null) {
+            if (src.Colours != null)
+            {
                 mesh.colors32 = src.Colours.Select(x => Types.Convert(x)).ToArray();
             }
 
-            if (src.TexCoords != null && src.TexCoords.Length > 0) {
+            if (src.TexCoords != null && src.TexCoords.Length > 0)
+            {
                 mesh.uv = src.TexCoords[0].Select(x => Types.Convert(x)).ToArray();
             }
-// ReSharper restore ConvertClosureToMethodGroup
+            // ReSharper restore ConvertClosureToMethodGroup
 
-            if (src.Normals == null) {
+            if (src.Normals == null)
+            {
                 mesh.normals = CalculateNormals(src, mesh.vertices);
             }
-            
+
             mesh.subMeshCount = src.MaterialSplits.Length;
 
             var isTriangleStrip = (src.Flags & GeometryFlag.TriangleStrips) == GeometryFlag.TriangleStrips;
 
             var subMesh = 0;
-            foreach (var split in src.MaterialSplits) {
+            foreach (var split in src.MaterialSplits)
+            {
                 var indices = isTriangleStrip
                     ? FromTriangleStrip(split.FaceIndices)
                     : split.FaceIndices;
@@ -344,7 +382,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 Geometry = clump.GeometryList.Geometry
                     .Select(x => new Geometry(x, Convert(x), txds))
                     .ToArray();
-                
+
                 Frames = clump.FrameList.Frames
                     .Select(x => Convert(x, clump.Atomics))
                     .ToArray();
@@ -354,16 +392,20 @@ namespace SanAndreasUnity.Importing.Conversion
 
             public void AttachCollisionModel(Transform destParent, bool forceConvex = false)
             {
-                if (_collisions != null) {
+                if (_collisions != null)
+                {
                     CollisionModel.Load(_collisions, destParent, forceConvex);
-                } else {
+                }
+                else
+                {
                     CollisionModel.Load(Name, destParent, forceConvex);
                 }
             }
 
             public FrameContainer AttachFrames(Transform destParent, MaterialFlags flags)
             {
-                var transforms = Frames.ToDictionary(x => x, x => {
+                var transforms = Frames.ToDictionary(x => x, x =>
+                {
                     var trans = new GameObject(x.Name).transform;
                     trans.localPosition = x.Position;
                     trans.localRotation = x.Rotation;
@@ -372,21 +414,28 @@ namespace SanAndreasUnity.Importing.Conversion
 
                 var container = destParent.gameObject.AddComponent<FrameContainer>();
 
-                foreach (var frame in Frames) {
-                    if (frame.ParentIndex != -1) {
+                foreach (var frame in Frames)
+                {
+                    if (frame.ParentIndex != -1)
+                    {
                         transforms[frame].SetParent(transforms[Frames[frame.ParentIndex]], false);
-                    } else {
+                    }
+                    else
+                    {
                         transforms[frame].SetParent(destParent, false);
                     }
 
-                    if (frame.GeometryIndex != -1) {
+                    if (frame.GeometryIndex != -1)
+                    {
                         var gobj = transforms[frame].gameObject;
                         var geometry = Geometry[frame.GeometryIndex];
 
                         HierarchyAnimation hAnim = null;
                         var parent = frame;
-                        while ((hAnim = parent.Source.HAnim) == null || hAnim.NodeCount == 0) {
-                            if (parent.ParentIndex == -1) {
+                        while ((hAnim = parent.Source.HAnim) == null || hAnim.NodeCount == 0)
+                        {
+                            if (parent.ParentIndex == -1)
+                            {
                                 hAnim = null;
                                 break;
                             }
@@ -394,7 +443,8 @@ namespace SanAndreasUnity.Importing.Conversion
                         }
 
                         Renderer renderer;
-                        if (hAnim != null) {
+                        if (hAnim != null)
+                        {
                             var smr = gobj.AddComponent<SkinnedMeshRenderer>();
 
                             var bones = Convert(hAnim, transforms, Frames);
@@ -404,14 +454,17 @@ namespace SanAndreasUnity.Importing.Conversion
 
                             smr.sharedMesh = geometry.Mesh;
 
-                            if (smr.sharedMesh != null) {
+                            if (smr.sharedMesh != null)
+                            {
                                 smr.sharedMesh.bindposes = geometry.SkinToBoneMatrices
                                     .Select(x => x.transpose)
                                     .ToArray();
                             }
 
                             renderer = smr;
-                        } else {
+                        }
+                        else
+                        {
                             var mf = gobj.AddComponent<MeshFilter>();
                             mf.sharedMesh = geometry.Mesh;
 
@@ -422,7 +475,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
                         // filter these out for now
                         if (frame.Name.EndsWith("_vlo") ||
-                            frame.Name.EndsWith("_dam")) {
+                            frame.Name.EndsWith("_dam"))
+                        {
                             gobj.SetActive(false);
                         }
                     }
@@ -436,7 +490,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static readonly Dictionary<string, GeometryParts> _sLoaded
             = new Dictionary<string, GeometryParts>();
-		public	static	int	NumGeometryPartsLoaded { get { return _sLoaded.Count; } }
+
+        public static int NumGeometryPartsLoaded { get { return _sLoaded.Count; } }
 
         public static GeometryParts Load(string modelName, params string[] texDictNames)
         {
@@ -447,13 +502,15 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             modelName = modelName.ToLower();
 
-            if (_sLoaded.ContainsKey(modelName)) {
+            if (_sLoaded.ContainsKey(modelName))
+            {
                 return _sLoaded[modelName];
             }
 
             var clump = ArchiveManager.ReadFile<Clump>(modelName + ".dff");
 
-            if (clump.GeometryList == null) {
+            if (clump.GeometryList == null)
+            {
                 throw new Exception("Invalid mesh");
             }
 
@@ -476,7 +533,8 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             Mesh = mesh;
 
-            if (geom.Skinning != null) {
+            if (geom.Skinning != null)
+            {
                 Mesh.boneWeights = Types.Convert(geom.Skinning.VertexBoneIndices, geom.Skinning.VertexBoneWeights);
                 SkinToBoneMatrices = Types.Convert(geom.Skinning.SkinToBoneMatrices);
             }
@@ -488,7 +546,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public UnityEngine.Material[] GetMaterials(ObjectFlag flags)
         {
-            return GetMaterials(flags, x => {});
+            return GetMaterials(flags, x => { });
         }
 
         public UnityEngine.Material[] GetMaterials(ObjectFlag flags,
@@ -496,12 +554,14 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             var matFlags = MaterialFlags.Default | MaterialFlags.OverrideAlpha;
 
-            if ((flags & ObjectFlag.NoBackCull) == ObjectFlag.NoBackCull) {
+            if ((flags & ObjectFlag.NoBackCull) == ObjectFlag.NoBackCull)
+            {
                 matFlags |= MaterialFlags.NoBackCull;
             }
 
             if ((flags & (ObjectFlag.Alpha1 | ObjectFlag.Alpha2)) != 0
-                && (flags & ObjectFlag.DisableShadowMesh) == ObjectFlag.DisableShadowMesh) {
+                && (flags & ObjectFlag.DisableShadowMesh) == ObjectFlag.DisableShadowMesh)
+            {
                 matFlags |= MaterialFlags.Alpha;
             }
 
@@ -510,17 +570,19 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public UnityEngine.Material[] GetMaterials(MaterialFlags flags)
         {
-            return GetMaterials(flags, x => {});
+            return GetMaterials(flags, x => { });
         }
 
         public UnityEngine.Material[] GetMaterials(MaterialFlags flags,
             Action<UnityEngine.Material> setupMaterial)
         {
-            if (_materials.ContainsKey(flags)) {
+            if (_materials.ContainsKey(flags))
+            {
                 return _materials[flags];
             }
 
-            var mats = _geom.Materials.Select(x => {
+            var mats = _geom.Materials.Select(x =>
+            {
                 var mat = Convert(x, _textureDictionaries, flags);
                 setupMaterial(mat);
                 return mat;

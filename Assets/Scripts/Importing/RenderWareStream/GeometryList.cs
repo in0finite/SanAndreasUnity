@@ -17,7 +17,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             GeometryCount = BitConverter.ToUInt32(data.Value, 0);
             Geometry = new Geometry[GeometryCount];
 
-            for (var i = 0; i < GeometryCount; ++i) {
+            for (var i = 0; i < GeometryCount; ++i)
+            {
                 Geometry[i] = ReadSection<Geometry>();
             }
         }
