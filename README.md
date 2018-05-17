@@ -32,6 +32,8 @@ delete - fly down
 
 Z - fly very fast
 
+E - Enter/exit vehicles
+
 ## Here is a list of what I think should be done next
 
 * Animations must be loaded/played by index – because different anim definition groups (man, woman, etc) use different anim names ( walk_civi, woman_walknorm, respectively).
