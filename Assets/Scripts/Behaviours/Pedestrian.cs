@@ -51,6 +51,8 @@ namespace SanAndreasUnity.Behaviours
         private Transform m_leftFinger = null;
         private Transform m_rightFinger = null;
 
+        private Player _player;
+
         public bool Walking
         {
             set
@@ -104,6 +106,8 @@ namespace SanAndreasUnity.Behaviours
 
             //	Load (PedestrianId);
             //	PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle, PlayMode.StopAll);
+
+            _player = transform.parent.gameObject.GetComponent<Player>();
         }
 
         private void LateUpdate()
@@ -137,6 +141,8 @@ namespace SanAndreasUnity.Behaviours
             {
                 if (!loadedModelOnStartup)
                 {
+                    _player.OnSpawn();
+
                     // load model on startup
                     Debug.Log("Loading pedestrian model after startup.");
                     Load(PedestrianId);
@@ -348,10 +354,18 @@ namespace SanAndreasUnity.Behaviours
 
             if (!_loadedAnims.ContainsKey(animName))
             {
-                var clip = Importing.Conversion.Animation.Load(animGroup.FileName, animName, _frames);
-                _loadedAnims.Add(animName, clip);
-                _anim.AddClip(clip.Clip, animName);
-                state = _anim[animName];
+                var clip = Anim.Load(animGroup.FileName, animName, _frames);
+                if (clip != null)
+                {
+                    _loadedAnims.Add(animName, clip);
+                    _anim.AddClip(clip.Clip, animName);
+                    state = _anim[animName];
+                }
+                else
+                {
+                    state = null;
+                    Debug.LogWarning(string.Format("File '{0}' doesn't exists!", animGroup.FileName));
+                }
             }
             else
             {

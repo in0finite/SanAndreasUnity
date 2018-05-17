@@ -6,12 +6,19 @@ using SanAndreasUnity.Importing.Animation;
 using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace SanAndreasUnity.Behaviours
 {
     [RequireComponent(typeof(CharacterController))]
     public partial class Player : MonoBehaviour
     {
+        #region Private Fields
+
+        private int jumpTimer;
+
+        #endregion Private Fields
+
         #region Inspector Fields
 
         public Camera Camera;
@@ -28,6 +35,14 @@ namespace SanAndreasUnity.Behaviours
 
         public CharacterController characterController;
 
+        public float jumpSpeed = 8.0f;
+
+        // Small amounts of this results in bumping when walking down slopes, but large amounts results in falling too fast
+        public float antiBumpFactor = .75f;
+
+        // Player must be grounded for at least this many physics frames before being able to jump again; set to 0 to allow bunny hopping
+        public int antiBunnyHopFactor = 1;
+
         #endregion Inspector Fields
 
         #region Properties
@@ -38,6 +53,14 @@ namespace SanAndreasUnity.Behaviours
         {
             get { return transform.localPosition; }
             set { transform.localPosition = value; }
+        }
+
+        public bool IsGrounded
+        {
+            get
+            {
+                return characterController.isGrounded;
+            }
         }
 
         public Vector3 Velocity { get; private set; }
@@ -53,6 +76,20 @@ namespace SanAndreasUnity.Behaviours
         private Vehicle.SeatAlignment _currentVehicleSeatAlignment;
 
         #endregion Properties
+
+#if UNITY_EDITOR
+
+        private void OnApplicationQuit()
+        {
+            // Patch... (I have to search deeper what's going on, I think that the Editor is preserving changes with flags)
+
+            var unnamedBug = transform.Find("unnamed");
+
+            if (unnamedBug != null)
+                Destroy(unnamedBug);
+        }
+
+#endif
 
         //     protected override void OnAwake()
         protected void Awake()
@@ -78,6 +115,49 @@ namespace SanAndreasUnity.Behaviours
             Cell.PreviewCamera.gameObject.SetActive(false);
 
             gameObject.AddComponent<PlayerController>();
+        }
+
+        public void OnSpawn()
+        {
+            // Note: Spawn is performed here.
+
+            jumpTimer = antiBunnyHopFactor;
+
+            if (!IsGrounded)
+                // Find the ground (instead of falling)
+                FindGround(false);
+        }
+
+        public void FindGround(bool debug = false)
+        {
+            StartCoroutine(_FindGround(debug));
+        }
+
+        private IEnumerator _FindGround(bool debug = false)
+        {
+            //First, we have to go to an operative range
+
+            if (transform.position.y > 150)
+            {
+                Vector3 t = transform.position;
+                transform.position = new Vector3(t.x, 150, t.z);
+            }
+
+            // Review: Maybe this can cause a bug due to CPU perfomance
+            yield return new WaitForSeconds(1);
+
+            //Then, when evetrything is loaded, then...
+
+            RaycastHit hit;
+            if (Physics.Raycast(new Ray(transform.position - Vector3.up * characterController.height, Vector3.down), out hit))
+            {
+                if (!debug)
+                    transform.position = hit.point + Vector3.up * characterController.height / 2;
+                else
+                    Debug.Log(string.Format("Ground found at {0}!", hit.point));
+            }
+            else if (debug)
+                Debug.Log("Nothing found yet!!");
         }
 
 #if CLIENT
@@ -358,6 +438,15 @@ namespace SanAndreasUnity.Behaviours
                 Velocity += vDiff;
                 Velocity = new Vector3(Velocity.x, characterController.isGrounded
                     ? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
+
+                // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
+                if (!Input.GetButton("Jump"))
+                    jumpTimer++;
+                else if (jumpTimer >= antiBunnyHopFactor)
+                {
+                    Velocity += Vector3.up * jumpSpeed;
+                    jumpTimer = 0;
+                }
 
                 characterController.Move(Velocity * Time.fixedDeltaTime);
             }
