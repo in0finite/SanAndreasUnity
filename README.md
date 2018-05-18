@@ -36,6 +36,8 @@ E - Enter/exit vehicles
 
 Space - Jump
 
+F10 - Toggle FPS 
+
 ## Here is a list of what I think should be done next
 
 * Animations must be loaded/played by index – because different anim definition groups (man, woman, etc) use different anim names ( walk_civi, woman_walknorm, respectively).
@@ -112,7 +114,9 @@ Space - Jump
 
 - Weird circular shadow appears when drving and the car passes next to a building that projects a shadow (low quality)
 
-- Block cmare when Escape is pressed
+- Block camera when Escape is pressed
+
+- Car moves when the player is still getting inside it
 
 ## Media
 
