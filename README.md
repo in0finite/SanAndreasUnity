@@ -66,6 +66,8 @@ F9 - Toggle velocimeter
 
 - See the entire map (pressing M)
 
+- Work on a menu like MTA:SA (F1)
+
 - Dev profiles (for paths) and for the keyboard & mouse controls
 
 - Health, stats (stamina, stength), money & armor system
@@ -117,6 +119,8 @@ F9 - Toggle velocimeter
     - Map editor
     - Ragdoll effects (like GTA IV) when falling and dying
     - Broke car windshield on hard impact
+    - Animals (mobs)
+    - Terrain modificable through digging & explosions
 
 ### Fixes
 
@@ -131,6 +135,14 @@ F9 - Toggle velocimeter
 - If you regenerate scripts while running Unity Editor crashes (patch it?)
 
 - Unnamed bug reappeared
+
+- Some cars have its suppension to low to allow them to move
+
+- Cars sometimes spawn under other cars, this makes that the cars jumps
+
+- Make cars spawn appropiate for each zone
+
+- Idk why frame rate is fixed in 50 fps
 
 ## Media
 

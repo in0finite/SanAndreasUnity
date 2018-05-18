@@ -32,7 +32,7 @@ public class UIVehicleSpawner : MonoBehaviour
 
     private void OnGUI()
     {
-        if (_playerController.CursorLocked)
+        if (!PlayerController._showMenu)
             return;
 
         windowRect = GUILayout.Window(windowID, windowRect, spawnWindow, "Utilities");

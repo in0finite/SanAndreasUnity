@@ -183,7 +183,7 @@ namespace SanAndreasUnity.Behaviours.World
             if (!Loader.HasLoaded)
                 return;
 
-            if (_playerController.CursorLocked)
+            if (!PlayerController._showMenu)
                 return;
 
             windowRect = GUILayout.Window(windowID, windowRect, showWindow, "World statistics");

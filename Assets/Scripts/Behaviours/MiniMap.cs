@@ -50,8 +50,10 @@ namespace SanAndreasUnity.Behaviours
 
         private static void drawTexturePart(Texture2D tex, Vector2 pos, Vector2 tileStart, Vector2 tileSize, float zoom = 1)
         {
-            GUI.DrawTextureWithTexCoords(new Rect(pos, tileSize * zoom), tex,
-                new Rect(tileStart.x / ((float)tex.width * zoom), (tileSize.y - tileStart.y) / ((float)tex.height * zoom), tileSize.x / ((float)tex.width * zoom), -tileSize.y / ((float)tex.height * zoom)));
+            GUI.DrawTextureWithTexCoords(new Rect(pos, tileSize), tex,
+                new Rect(tileStart.x / (float)tex.width, (tileSize.y - tileStart.y) / (float)tex.height, tileSize.x / (float)tex.width, -tileSize.y / (float)tex.height));
+            //GUI.DrawTextureWithTexCoords(new Rect(pos, tileSize * zoom), tex,
+            //    new Rect(tileStart.x / ((float)tex.width * zoom), (tileSize.y - tileStart.y) / ((float)tex.height * zoom), tileSize.x / ((float)tex.width * zoom), -tileSize.y / ((float)tex.height * zoom)));
             //GUI.DrawTexture(new Rect(pos, tileSize), tex);
         }
 
@@ -118,29 +120,30 @@ namespace SanAndreasUnity.Behaviours
 
             GUI.BeginGroup(GUIUtils.GetCornerRect(ScreenCorner.BottomLeft, texSizeDim * zoom, new Vector2(5, 5)));
 
-            Vector2 rot = Vector2.zero;
-            Matrix4x4 matrixBackup = GUI.matrix;
+            //Vector2 rot = Vector2.zero;
+            //Matrix4x4 matrixBackup = GUI.matrix;
 
             for (int i = -1; i <= 1; ++i)
                 for (int j = -1; j <= 1; ++j)
                 {
-                    Vector2 v = new Vector2(rTexSize * i, rTexSize * j);
-                    rot = screenPos - tilePos + v + texSizeDim / 2 - playerBlipDim / 2;
+                    Vector2 v = new Vector2(rTexSize * i, rTexSize * j),
+                            pos = screenPos - tilePos + v + texSizeDim / 2 - playerBlipDim / 2;
 
                     // WIP: I have to rotate the tiles
                     //GUIUtility.RotateAroundPivot(player.transform.rotation.eulerAngles.y, rot);
 
                     int ii = coordinatesToTileNumber(pxPos + v);
 
-                    drawTilePart(ii, rot - playerBlipDim / 2, Vector2.zero, texSizeDim, zoom);
+                    // - playerBlipDim / 2
+                    drawTilePart(ii, pos, Vector2.zero, texSizeDim, zoom);
                 }
 
-            GUI.matrix = matrixBackup;
+            //GUI.matrix = matrixBackup;
 
             //GUI.Label(new Rect(Screen.width / 2 - 500 / 2, 5, 500, 100), string.Format("PxPos: {0}\nTilePos: {1}\nScreenPos: {2}", pxPos, tilePos, screenPos), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
 
-            matrixBackup = GUI.matrix;
-            rot = screenPos + (texSizeDim * zoom) / 2 - playerBlipDim / 2;
+            Matrix4x4 matrixBackup = GUI.matrix;
+            Vector2 rot = screenPos + (texSizeDim * zoom) / 2 - playerBlipDim / 2;
 
             GUIUtility.RotateAroundPivot(player.transform.rotation.eulerAngles.y, rot);
             drawTexturePart(playerBlip, rot - playerBlipDim / 2, Vector2.zero, playerBlipDim);

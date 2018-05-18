@@ -10,6 +10,8 @@ namespace SanAndreasUnity.Behaviours
     {
         #region Private fields
 
+        private static PlayerController me;
+
         private Player _player;
 
         private float _pitch;
@@ -32,6 +34,24 @@ namespace SanAndreasUnity.Behaviours
 
         private static bool _showFPS = true,
                             _showVel = true;
+
+        private static bool __menu;
+
+        public static bool _showMenu
+        {
+            get
+            {
+                return __menu;
+            }
+            set
+            {
+                __menu = value;
+
+                // Fix: This is weird
+                if (me.CursorLocked)
+                    me.ChangeCursorState(false);
+            }
+        }
 
         // Alpha speedometer
         private const float velTimer = 1 / 4f;
@@ -96,6 +116,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Awake()
         {
+            me = this;
             _player = GetComponent<Player>();
 
             CursorLocked = true;
@@ -124,11 +145,11 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnGUI()
         {
+            Event e = Event.current;
+
             // Show buttons for teleport to player spawn locations
-            if ((!CursorLocked) && (!_player.IsInVehicle) && (_spawns.Count() > 1))
-            {
+            if (_showMenu && (_spawns.Count() > 1))
                 teleportWindowRect = GUILayout.Window(teleportWindowID, teleportWindowRect, teleportWindow, "Teleport to a location:");
-            }
 
             // Shohw flying / noclip states
             if (_player.enableFlying || _player.enableNoclip)
@@ -261,18 +282,11 @@ namespace SanAndreasUnity.Behaviours
                 Cursor.visible = false;
             }
 
-            if (!CursorLocked && Input.GetKeyDown(KeyCode.Q))
-            {
-                CursorLocked = true;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-            else if (CursorLocked && Input.GetKeyDown(KeyCode.Q))
-            {
-                CursorLocked = false;
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+                ChangeCursorState(!CursorLocked);
+
+            if (Input.GetKeyDown(KeyCode.F1))
+                _showMenu = !_showMenu;
 
             if (CursorLocked)
             {
@@ -327,6 +341,7 @@ namespace SanAndreasUnity.Behaviours
             if (_player.enableFlying || _player.enableNoclip)
             {
                 var up_down = 0.0f;
+
                 if (Input.GetKey(KeyCode.Backspace))
                 {
                     up_down = 1.0f;
@@ -335,10 +350,14 @@ namespace SanAndreasUnity.Behaviours
                 {
                     up_down = -1.0f;
                 }
+
                 var inputMove = new Vector3(Input.GetAxis("Horizontal"), up_down, Input.GetAxis("Vertical"));
+
                 _player.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
                     new Vector3(1f, 1f, 1f)).normalized;
+
                 _player.Movement *= 10.0f;
+
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
                     _player.Movement *= 10.0f;
@@ -347,6 +366,7 @@ namespace SanAndreasUnity.Behaviours
                 {
                     _player.Movement *= 100.0f;
                 }
+
                 return;
             }
 
@@ -496,6 +516,13 @@ namespace SanAndreasUnity.Behaviours
             state.weight = this.animationBlendWeight;
 
             //	PlayerModel._anim.Blend( );
+        }
+
+        private void ChangeCursorState(bool locked)
+        {
+            CursorLocked = locked;
+            Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = !locked;
         }
     }
 }
