@@ -72,6 +72,10 @@ F10 - Toggle FPS
 
 - Peds (and worker peds)
 
+- Cars can be damaged
+
+- Cars & fuel stations can explode
+
 ### Effects & Enhancements
 
 * Jump, swim & fall animations

@@ -100,6 +100,20 @@ namespace SanAndreasUnity.Behaviours
             set { transform.localPosition = value; }
         }
 
+#if UNITY_EDITOR
+
+        private void OnApplicationQuit()
+        {
+            // Patch... (I have to search deeper what's going on, I think that the Editor is preserving changes with flags)
+
+            var unnamedBug = transform.Find("unnamed");
+
+            if (unnamedBug != null)
+                Destroy(unnamedBug);
+        }
+
+#endif
+
         private void Start()
         {
             // can not use these functions because Loader has not finished loading

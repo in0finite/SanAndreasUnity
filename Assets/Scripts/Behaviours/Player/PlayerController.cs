@@ -162,8 +162,6 @@ namespace SanAndreasUnity.Behaviours
                 // Append to history storage
                 fpsHistory[fpsIndex] = fps;
 
-                //fpsMaximum = fpsHistory.Max();
-
                 int f = fpsIndex;
 
                 // Draw graph into texture
@@ -172,7 +170,6 @@ namespace SanAndreasUnity.Behaviours
                     float graphVal = (fpsHistory[f] > fpsMaximum) ? fpsMaximum : fpsHistory[f]; //Clamps
                     int height = (int)(graphVal * fpsTexture.height / (fpsMaximum + 0.1f)); //Returns the height of the desired point with a padding of 0.1f units
 
-                    //Color c = (fpsHistory[f] >= fpsGreen) ? cGreen : ((fpsHistory[f] <= fpsRed) ? cRed : cYellow);
                     float p = fpsHistory[f] / fpsMaximum,
                           r = Mathf.Lerp(1, 1 - p, p),
                           g = Mathf.Lerp(p * 2, p, p);

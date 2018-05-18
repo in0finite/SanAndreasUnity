@@ -79,20 +79,6 @@ namespace SanAndreasUnity.Behaviours
 
         #endregion Properties
 
-#if UNITY_EDITOR
-
-        private void OnApplicationQuit()
-        {
-            // Patch... (I have to search deeper what's going on, I think that the Editor is preserving changes with flags)
-
-            var unnamedBug = transform.Find("unnamed");
-
-            if (unnamedBug != null)
-                Destroy(unnamedBug);
-        }
-
-#endif
-
         //     protected override void OnAwake()
         protected void Awake()
         {
@@ -396,6 +382,14 @@ namespace SanAndreasUnity.Behaviours
 
                 weapons[(int)WeaponSlot.Machine] = Weapon.Load(355);
                 this.SwitchWeapon((int)WeaponSlot.Machine);
+            }
+
+            //If player falls from the map
+            if (IsGrounded && transform.position.y < -50)
+            {
+                Vector3 t = transform.position;
+                transform.position = new Vector3(t.x, 150, t.z);
+                FindGround();
             }
         }
 
