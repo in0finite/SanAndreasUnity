@@ -19,7 +19,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         All = Front | Rear
     }
 
+#if CLIENT
+    public partial class Vehicle : Networking.Networkable
+#else
+
     public partial class Vehicle : MonoBehaviour
+#endif
     {
         private static int _sLayer = -1;
 
@@ -58,6 +63,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private bool _colorsChanged;
 
         private VehicleController _controller;
+
+#if CLIENT
+        protected override void OnAwake()
+        {
+            _props = new MaterialPropertyBlock();
+
+            base.OnAwake();
+        }
+#endif
 
         public void SetColors(params int[] clrIndices)
         {

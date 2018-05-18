@@ -1,9 +1,22 @@
-﻿//using Facepunch.Networking;
-//using ProtoBuf.Player;
+﻿using Facepunch.Networking;
+using ProtoBuf.Player;
+
+#if CLIENT
+using SanAndreasUnity.Behaviours.Vehicles;
+using System.Collections.Generic;
+using System.Linq;
+#endif
+
+using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public partial class Player
+#if CLIENT
+    public partial class Player : Networking.Networkable
+#else
+
+    public partial class Player : MonoBehaviour
+#endif
     {
 #if PROTOBUF
 
@@ -60,16 +73,16 @@ namespace SanAndreasUnity.Behaviours
 
         #region Private fields
 
-        //     private readonly SnapshotBuffer<PlayerPedestrianState> _snapshots
-        //         = new SnapshotBuffer<PlayerPedestrianState>(.25);
+        private readonly SnapshotBuffer<PlayerPedestrianState> _snapshots
+            = new SnapshotBuffer<PlayerPedestrianState>(.25);
 
-        //     private PlayerPassengerState _lastPassengerState;
+        private PlayerPassengerState _lastPassengerState;
 
         #endregion Private fields
 
         #region Properties
 
-        //        public IRemote Remote { get; private set; }
+        public IRemote Remote { get; private set; }
         public ulong UserId { get; private set; }
 
         public string Username { get; private set; }
@@ -78,83 +91,97 @@ namespace SanAndreasUnity.Behaviours
 
         #endregion Properties
 
-        /*    internal void ServerSideInit(IRemote remote, ulong userId, string username, int modelId)
+#if CLIENT
+        internal void ServerSideInit(IRemote remote, ulong userId, string username, int modelId)
+        {
+            Remote = remote;
+            UserId = userId;
+            Username = username;
+            PlayerModel.PedestrianId = modelId;
+
+            remote.Disconnected += (sender, reason) => Destroy(gameObject);
+
+            name = string.Format("Player ({0})", Username);
+        }
+
+        private PlayerPedestrianState GetPedestrianSnapshot()
+        {
+            if (IsInVehicle) return null;
+
+            return new PlayerPedestrianState
             {
-                Remote = remote;
-                UserId = userId;
-                Username = username;
-                PlayerModel.PedestrianId = modelId;
+                Position = Position,
+                Movement = Movement,
+                Yaw = Quaternion.FromToRotation(Vector3.forward, Heading).eulerAngles.y,
+                Running = PlayerModel.Running,
+                Timestamp = NetTime
+            };
+        }
+#endif
 
-                remote.Disconnected += (sender, reason) => Destroy(gameObject);
+        private void UpdateFromPedestrianSnapshot(PlayerPedestrianState message)
+        {
+            if (IsLocalPlayer) return;
+            if (transform.parent != null) return;
 
-                name = string.Format("Player ({0})", Username);
-            }
+            Position = message.Position;
+            Movement = message.Movement;
+            Heading = Quaternion.AngleAxis(message.Yaw, Vector3.up) * Vector3.forward;
 
-            private PlayerPedestrianState GetPedestrianSnapshot()
+            if (Movement.sqrMagnitude > 0f)
             {
-                if (IsInVehicle) return null;
-
-                return new PlayerPedestrianState {
-                    Position = Position,
-                    Movement = Movement,
-                    Yaw = Quaternion.FromToRotation(Vector3.forward, Heading).eulerAngles.y,
-                    Running = PlayerModel.Running,
-                    Timestamp = NetTime
-                };
-            }
-
-            private void UpdateFromPedestrianSnapshot(PlayerPedestrianState message)
-            {
-                if (IsLocalPlayer) return;
-                if (transform.parent != null) return;
-
-                Position = message.Position;
-                Movement = message.Movement;
-                Heading = Quaternion.AngleAxis(message.Yaw, Vector3.up) * Vector3.forward;
-
-                if (Movement.sqrMagnitude > 0f) {
-                    if (message.Running) {
-                        PlayerModel.Running = message.Running;
-                    } else {
-                        PlayerModel.Walking = true;
-                    }
-                } else {
-                    PlayerModel.Walking = false;
+                if (message.Running)
+                {
+                    PlayerModel.Running = message.Running;
+                }
+                else
+                {
+                    PlayerModel.Walking = true;
                 }
             }
-
-        //    private PlayerPassengerState _pendingPassenger;
-
-            private void UpdateFromPassengerSnapshot(PlayerPassengerState message)
+            else
             {
-                if (IsLocalPlayer) return;
-                if (!IsInVehicle && message.Vechicle == null) return;
-                if (IsInVehicle && CurrentVehicle.Info.Equals(message.Vechicle)) return;
-
-                _pendingPassenger = null;
-
-                if (message.Vechicle == null) {
-                    ExitVehicle();
-                } else {
-                    var vehicle = Client.GetNetworkable<Vehicle>(message.Vechicle);
-
-                    if (vehicle == null) {
-                        _pendingPassenger = message;
-                        return;
-                    }
-
-                    if (!IsInVehicle) {
-                        EnterVehicle(vehicle,
-                            (Vehicle.SeatAlignment) message.SeatAlignment);
-                    } else {
-                        ExitVehicle(true);
-                        EnterVehicle(vehicle, (Vehicle.SeatAlignment) message.SeatAlignment, true);
-                    }
-                }
+                PlayerModel.Walking = false;
             }
-        */
+        }
 
 #if CLIENT
+        private PlayerPassengerState _pendingPassenger;
+
+        private void UpdateFromPassengerSnapshot(PlayerPassengerState message)
+        {
+            if (IsLocalPlayer) return;
+            if (!IsInVehicle && message.Vechicle == null) return;
+            if (IsInVehicle && CurrentVehicle.Info.Equals(message.Vechicle)) return;
+
+            _pendingPassenger = null;
+
+            if (message.Vechicle == null)
+            {
+                ExitVehicle();
+            }
+            else
+            {
+                var vehicle = Client.GetNetworkable<Vehicle>(message.Vechicle);
+
+                if (vehicle == null)
+                {
+                    _pendingPassenger = message;
+                    return;
+                }
+
+                if (!IsInVehicle)
+                {
+                    EnterVehicle(vehicle,
+                        (Vehicle.SeatAlignment)message.SeatAlignment);
+                }
+                else
+                {
+                    ExitVehicle(true);
+                    EnterVehicle(vehicle, (Vehicle.SeatAlignment)message.SeatAlignment, true);
+                }
+            }
+        }
 
         [ClientSpawnMethod]
         private static Player Spawn(PlayerSpawn message)
@@ -171,13 +198,17 @@ namespace SanAndreasUnity.Behaviours
 
             name = string.Format("Player ({0})", Username);
 
-            if (message.PedestrianState != null) {
+            if (message.PedestrianState != null)
+            {
                 UpdateFromPedestrianSnapshot(message.PedestrianState);
-            } else {
+            }
+            else
+            {
                 UpdateFromPassengerSnapshot(message.PassengerState);
             }
 
-            if (message.IsLocal) {
+            if (message.IsLocal)
+            {
                 IsLocalPlayer = true;
                 SetupLocalPlayer();
             }
@@ -187,7 +218,8 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!IsLocalPlayer) return;
 
-            if (!IsInVehicle && transform.parent == null) {
+            if (!IsInVehicle && transform.parent == null)
+            {
                 SendToServer(GetPedestrianSnapshot(), DeliveryMethod.UnreliableSequenced, 2);
             }
         }
@@ -207,71 +239,70 @@ namespace SanAndreasUnity.Behaviours
 
             UpdateFromPassengerSnapshot(message);
         }
+
+        private void NetworkingFixedUpdate()
+        {
+            if (_pendingPassenger != null)
+            {
+                UpdateFromPassengerSnapshot(_pendingPassenger);
+            }
+
+            if (IsInVehicle) return;
+            if (IsLocalPlayer) return;
+
+            if (_snapshots.Update()) UpdateFromPedestrianSnapshot(_snapshots.Current);
+        }
+
+        protected override void OnFirstObserve(IEnumerable<IRemote> clients)
+        {
+            var msg = new PlayerSpawn
+            {
+                Player = new PlayerInfo
+                {
+                    UserId = UserId,
+                    Username = Username,
+                    Modelid = PlayerModel.PedestrianId
+                },
+                PedestrianState = GetPedestrianSnapshot(),
+                PassengerState = _lastPassengerState
+            };
+
+            SendToClients(msg, clients.Where(x => x != Remote), DeliveryMethod.ReliableOrdered, 1);
+
+            if (!clients.Contains(Remote)) return;
+
+            msg.IsLocal = true;
+
+            SendToClient(msg, Remote, DeliveryMethod.ReliableOrdered, 1);
+        }
+
+        [MessageHandler(Domain.Server)]
+        private void OnReceiveMessageFromClient(IRemote sender, PlayerPedestrianState message)
+        {
+            if (sender != Remote) return;
+
+            if (!IsClient)
+            {
+                _snapshots.Add(message);
+            }
+
+            SendToClients(message, Group.Subscribers.Where(x => x != Remote),
+                DeliveryMethod.UnreliableSequenced, 2);
+        }
+
+        [MessageHandler(Domain.Server)]
+        private void OnReceiveMessageFromClient(IRemote sender, PlayerPassengerState message)
+        {
+            if (sender != Remote) return;
+
+            if (!IsClient)
+            {
+                UpdateFromPassengerSnapshot(message);
+            }
+
+            SendToClients(message, Group.Subscribers.Where(x => x != Remote),
+                DeliveryMethod.ReliableOrdered, 1);
+        }
 #endif
-
-        /*
-                private void NetworkingFixedUpdate()
-                {
-                    if (_pendingPassenger != null) {
-                        UpdateFromPassengerSnapshot(_pendingPassenger);
-                    }
-
-                    if (IsInVehicle) return;
-                    if (IsLocalPlayer) return;
-
-                    if (_snapshots.Update()) UpdateFromPedestrianSnapshot(_snapshots.Current);
-                }
-
-                protected override void OnFirstObserve(IEnumerable<IRemote> clients)
-                {
-                    var msg = new PlayerSpawn {
-                        Player = new PlayerInfo {
-                            UserId = UserId,
-                            Username = Username,
-                            Modelid = PlayerModel.PedestrianId
-                        },
-                        PedestrianState = GetPedestrianSnapshot(),
-                        PassengerState = _lastPassengerState
-                    };
-
-                    SendToClients(msg, clients.Where(x => x != Remote), DeliveryMethod.ReliableOrdered, 1);
-
-                    if (!clients.Contains(Remote)) return;
-
-                    msg.IsLocal = true;
-
-                    SendToClient(msg, Remote, DeliveryMethod.ReliableOrdered, 1);
-                }
-
-                [MessageHandler(Domain.Server)]
-                private void OnReceiveMessageFromClient(IRemote sender, PlayerPedestrianState message)
-                {
-                    if (sender != Remote) return;
-
-        #if CLIENT
-                    if (!IsClient) {
-                        _snapshots.Add(message);
-                    }
-        #endif
-
-                    SendToClients(message, Group.Subscribers.Where(x => x != Remote),
-                        DeliveryMethod.UnreliableSequenced, 2);
-                }
-
-                [MessageHandler(Domain.Server)]
-                private void OnReceiveMessageFromClient(IRemote sender, PlayerPassengerState message)
-                {
-                    if (sender != Remote) return;
-
-        #if CLIENT
-                    if (!IsClient) {
-                        UpdateFromPassengerSnapshot(message);
-                    }
-        #endif
-
-                    SendToClients(message, Group.Subscribers.Where(x => x != Remote),
-                        DeliveryMethod.ReliableOrdered, 1);
-                }
-        */
     }
 }

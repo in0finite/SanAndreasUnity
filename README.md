@@ -106,6 +106,7 @@ Space - Jump
     - GMOD physics and prop menu
     - Map editor
     - Ragdoll effects (like GTA IV) when falling and dying
+    - Broke car windshield on hard impact
 
 ### Fixes
 

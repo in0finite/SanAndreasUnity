@@ -122,7 +122,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             inst.transform.position = position - Vector3.up * inst.AverageWheelHeight;
             inst.transform.localRotation = rotation;
 
-            //    Networking.Server.Instance.GlobalGroup.Add(inst);
+#if CLIENT
+            if (Networking.Server.Instance != null)
+            {
+                Networking.Server.Instance.GlobalGroup.Add(inst);
+            }
+#endif
 
             OutOfRangeDestroyer destroyer = inst.gameObject.AddComponent<OutOfRangeDestroyer>();
             destroyer.timeUntilDestroyed = 5;

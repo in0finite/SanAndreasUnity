@@ -1,9 +1,23 @@
-﻿//using Facepunch.Networking;
-//using ProtoBuf.Vehicle;
+﻿using Facepunch.Networking;
+using ProtoBuf.Vehicle;
+
+#if CLIENT
+using SanAndreasUnity.Importing.Items;
+using SanAndreasUnity.Importing.Items.Definitions;
+#endif
+
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
-    public partial class Vehicle
+#if CLIENT
+    public partial class Vehicle : Networking.Networkable
+#else
+
+    public partial class Vehicle : MonoBehaviour
+#endif
     {
 #if PROTOBUF
 
@@ -96,63 +110,70 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
 #endif
 
-        /*
-                private VehicleState GetSnapshot()
+#if CLIENT
+        private VehicleState GetSnapshot()
+        {
+            return new VehicleState
+            {
+                Position = transform.position,
+                Rotation = transform.rotation,
+                Velocity = _rigidBody != null ? _rigidBody.velocity : Vector3.zero,
+                AngularVelocity = _rigidBody != null ? _rigidBody.angularVelocity : Vector3.zero,
+                Steering = Steering,
+                Accelerator = Accelerator,
+                Braking = Braking,
+                Timestamp = NetTime
+            };
+        }
+#endif
+
+        private void UpdateFromSnapshot(VehicleState state)
+        {
+            transform.position = state.Position;
+            transform.rotation = state.Rotation;
+
+            Steering = state.Steering;
+            Accelerator = state.Accelerator;
+            Braking = state.Braking;
+
+            if (_rigidBody != null)
+            {
+                _rigidBody.velocity = state.Velocity;
+                _rigidBody.angularVelocity = state.AngularVelocity;
+            }
+        }
+
+#if CLIENT
+        protected override void OnFirstObserve(IEnumerable<IRemote> clients)
+        {
+            SendToClients(new VehicleSpawn
+            {
+                Info = new VehicleInfo
                 {
-                    return new VehicleState {
-                        Position = transform.position,
-                        Rotation = transform.rotation,
-                        Velocity = _rigidBody != null ? _rigidBody.velocity : Vector3.zero,
-                        AngularVelocity = _rigidBody != null ? _rigidBody.angularVelocity : Vector3.zero,
-                        Steering = Steering,
-                        Accelerator = Accelerator,
-                        Braking = Braking,
-                        Timestamp = NetTime
-                    };
-                }
+                    VehicleId = Definition.Id,
+                    Colors = _colors.ToList()
+                },
+                State = GetSnapshot()
+            }, clients, DeliveryMethod.ReliableOrdered, 1);
+        }
 
-                private void UpdateFromSnapshot(VehicleState state)
-                {
-                    transform.position = state.Position;
-                    transform.rotation = state.Rotation;
+        private void NetworkingFixedUpdate()
+        {
+            if (!IsClient) return;
+            if (!IsControlling && _snapshots.Update())
+            {
+                UpdateFromSnapshot(_snapshots.Current);
+            }
+        }
 
-                    Steering = state.Steering;
-                    Accelerator = state.Accelerator;
-                    Braking = state.Braking;
+        [MessageHandler(Domain.Server)]
+        private void OnReceiveMessageFromClient(IRemote sender, VehicleState message)
+        {
+            // TODO: Check to see if controller is driver
 
-                    if (_rigidBody != null) {
-                        _rigidBody.velocity = state.Velocity;
-                        _rigidBody.angularVelocity = state.AngularVelocity;
-                    }
-                }
-
-                protected override void OnFirstObserve(IEnumerable<IRemote> clients)
-                {
-                    SendToClients(new VehicleSpawn {
-                        Info = new VehicleInfo {
-                            VehicleId = Definition.Id,
-                            Colors = _colors.ToList()
-                        },
-                        State = GetSnapshot()
-                    }, clients, DeliveryMethod.ReliableOrdered, 1);
-                }
-
-                private void NetworkingFixedUpdate()
-                {
-                    if (!IsClient) return;
-                    if (!IsControlling && _snapshots.Update()) {
-                        UpdateFromSnapshot(_snapshots.Current);
-                    }
-                }
-
-                [MessageHandler(Domain.Server)]
-                private void OnReceiveMessageFromClient(IRemote sender, VehicleState message)
-                {
-                    // TODO: Check to see if controller is driver
-
-                    SendToClients(message, Group.Subscribers.Where(x => x != sender),
-                        DeliveryMethod.UnreliableSequenced, 2);
-                }
-        */
+            SendToClients(message, Group.Subscribers.Where(x => x != sender),
+                DeliveryMethod.UnreliableSequenced, 2);
+        }
+#endif
     }
 }

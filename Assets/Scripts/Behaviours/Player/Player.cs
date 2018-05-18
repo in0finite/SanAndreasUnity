@@ -1,6 +1,4 @@
-﻿//using Facepunch.Networking;
-//using ProtoBuf.Player;
-using SanAndreasUnity.Behaviours.Vehicles;
+﻿using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Animation;
 using System.Collections;
@@ -11,7 +9,11 @@ using Debug = UnityEngine.Debug;
 namespace SanAndreasUnity.Behaviours
 {
     [RequireComponent(typeof(CharacterController))]
+#if CLIENT
+    public partial class Player : Networking.Networkable
+#else
     public partial class Player : MonoBehaviour
+#endif
     {
         #region Private Fields
 
