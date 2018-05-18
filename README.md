@@ -60,8 +60,6 @@ Space - Jump
 
 - See the entire map (pressing M)
 
-- Fall animation
-
 - Dev profiles (for paths) and for the keyboard & mouse controls
 
 - Health, money & armor system
@@ -70,7 +68,9 @@ Space - Jump
 
 - Peds (and worker peds)
 
-### Effects
+### Effects & Enhancements
+
+* Jump, swim & fall animations
 
 * Water effects (Swim, bouyancy, get darker and blurry the deeper you get)
 
@@ -101,14 +101,11 @@ Space - Jump
 ### Mods system
 
 * Integrate a mod system that is capable of reading source files and managed compiled assemblies, some exaples of mods:
-
-- Access to all interiors (without any yellow marker) generating them
-
-- Speedometer and rpm meter (like FO2) + fuel
-
-- GMOD physics and prop menu
-
-- Map editor
+    - Access to all interiors (without any yellow marker) generating them
+    - Speedometer and rpm meter (like FO2) + fuel
+    - GMOD physics and prop menu
+    - Map editor
+    - Ragdoll effects (like GTA IV) when falling and dying
 
 ### Fixes
 
