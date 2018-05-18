@@ -27,6 +27,8 @@ namespace SanAndreasUnity.Behaviours
             huds = TextureDictionary.Load("hud");
             northBlip = huds.GetDiffuse("radar_north").Texture;
             playerBlip = huds.GetDiffuse("radar_centre").Texture;
+
+            Debug.Log(new Vector2(playerBlip.width, playerBlip.height));
         }
 
         private static Texture2D getTile(int i)
@@ -73,13 +75,11 @@ namespace SanAndreasUnity.Behaviours
         private static Vector2 coordinatesInTile(Vector2 pos)
         {
             if (pos.x >= mapSize)
-            {
                 pos.x = mapSize - 1;
-            }
+
             if (pos.y >= mapSize)
-            {
                 pos.y = mapSize - 1;
-            }
+
             return new Vector2(pos.x % texSize, pos.y % texSize);
         }
 
@@ -100,19 +100,41 @@ namespace SanAndreasUnity.Behaviours
 
         private void drawMapWindow(Vector2 screenPos, Vector2 mapPos)
         {
-            // Draw current map tile
-            Vector2 pxPos = coordinatesWorldToPixel(mapPos);
-            drawTilePart(coordinatesToTileNumber(pxPos), screenPos, new Vector2(0, 0), new Vector2(texSize, texSize));
+            float rTexSize = texSize;
 
+            // Draw current map tile
+            Vector2 pxPos = coordinatesWorldToPixel(mapPos),
             // Draw player blip
-            Vector2 tilePos = coordinatesInTile(pxPos);
+                    tilePos = coordinatesInTile(pxPos),
+                    texSizeDim = new Vector2(rTexSize, rTexSize),
+                    playerBlipDim = new Vector2(playerBlip.width, playerBlip.height);
+
+            GUI.BeginGroup(new Rect(5, Screen.height - rTexSize - 5, rTexSize, rTexSize));
+
+            for (int i = -1; i <= 1; ++i)
+                for (int j = -1; j <= 1; ++j)
+                {
+                    Vector2 v = new Vector2(rTexSize * i, rTexSize * j);
+                    int ii = coordinatesToTileNumber(pxPos + v);
+                    drawTilePart(ii, screenPos - tilePos + v + texSizeDim / 2 - playerBlipDim / 2, Vector2.zero, texSizeDim);
+                    //Debug.Log(string.Format("{0}: {1}", ii, screenPos - tilePos + v));
+                }
+
+            GUI.Label(new Rect(Screen.width / 2 - 500 / 2, 5, 500, 100), string.Format("PxPos: {0}\nTilePos: {1}\nScreenPos: {2}", pxPos, tilePos, screenPos), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
+
+            //Debug.Break();
+
             Matrix4x4 matrixBackup = GUI.matrix;
-            GUIUtility.RotateAroundPivot(player.transform.rotation.eulerAngles.y, new Vector2(screenPos.x + tilePos.x, screenPos.y + tilePos.y));
-            drawTexturePart(playerBlip, new Vector2(screenPos.x + tilePos.x - (playerBlip.width / 2), screenPos.y + tilePos.y - (playerBlip.height / 8)), new Vector2(0, 0), new Vector2(playerBlip.width, playerBlip.height));
+            Vector2 rot = screenPos + texSizeDim / 2 - playerBlipDim / 2;
+
+            GUIUtility.RotateAroundPivot(player.transform.rotation.eulerAngles.y, rot);
+            drawTexturePart(playerBlip, rot - playerBlipDim / 2, Vector2.zero, playerBlipDim);
             GUI.matrix = matrixBackup;
 
             // Draw 'N' north marker at top of map
-            drawTexturePart(northBlip, new Vector2(screenPos.x + ((texSize - northBlip.width) / 2), screenPos.y - (northBlip.height / 2)), new Vector2(0, 0), new Vector2(northBlip.width, northBlip.height));
+            drawTexturePart(northBlip, new Vector2(screenPos.x + ((rTexSize - northBlip.width) / 2), screenPos.y - (northBlip.height / 2)), Vector2.zero, new Vector2(northBlip.width, northBlip.height));
+
+            GUI.EndGroup();
         }
 
         private void OnGUI()

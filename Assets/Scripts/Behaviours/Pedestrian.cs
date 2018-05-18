@@ -355,7 +355,7 @@ namespace SanAndreasUnity.Behaviours
             if (!_loadedAnims.ContainsKey(animName))
             {
                 var clip = Anim.Load(animGroup.FileName, animName, _frames);
-                if (clip != null)
+                if (clip.Clip != null)
                 {
                     _loadedAnims.Add(animName, clip);
                     _anim.AddClip(clip.Clip, animName);
