@@ -288,9 +288,7 @@ namespace SanAndreasUnity.Behaviours
                 animState.wrapMode = WrapMode.Once;
 
                 while (animState.enabled)
-                {
                     yield return new WaitForEndOfFrame();
-                }
             }
 
             PlayerModel.IsInVehicle = false;
@@ -363,9 +361,7 @@ namespace SanAndreasUnity.Behaviours
             }
 
             if (IsInVehicle && IsDrivingVehicle)
-            {
                 UpdateWheelTurning();
-            }
 
             // switch weapons - does not work
             if (!IsInVehicle)

@@ -20,12 +20,17 @@ namespace SanAndreasUnity.Behaviours
         private static int fpsTextureWidth = 75;
         private static int fpsTextureHeight = 25;
         private static float fpsMaximum = 60.0f;
-        private static float fpsGreen = 50.0f;
-        private static float fpsRed = 23.0f;
+        /*private static float fpsGreen = 50.0f;
+        private static float fpsRed = 23.0f;*/
         private float fpsDeltaTime = 0.0f;
         private Texture2D fpsTexture = null;
         private float[] fpsHistory = new float[fpsTextureWidth];
         private int fpsIndex = 0;
+
+        private static Rect teleportWindowRect;
+        private const int teleportWindowID = 1;
+
+        private static bool _showFPS = true;
 
         #endregion Private fields
 
@@ -94,9 +99,6 @@ namespace SanAndreasUnity.Behaviours
             teleportWindowRect = new Rect(Screen.width - 260, 10, 250, 10 + (25 * _spawns.Count()));
         }
 
-        private static Rect teleportWindowRect;
-        private const int teleportWindowID = 1;
-
         private void teleportWindow(int windowID)
         {
             for (int i = 1; i < _spawns.Count(); i++)
@@ -124,65 +126,80 @@ namespace SanAndreasUnity.Behaviours
             {
                 int height = (_player.enableFlying && _player.enableNoclip) ? 50 : 25;
                 GUILayout.BeginArea(new Rect(Screen.width - 140, Screen.height - height, 140, height));
+
                 if (_player.enableFlying)
-                {
                     GUILayout.Label("Flying-mode enabled!");
-                }
+
                 if (_player.enableNoclip)
-                {
                     GUILayout.Label("Noclip-mode enabled!");
-                }
+
                 GUILayout.EndArea();
             }
 
-            // Show FPS counter
-            float msec = fpsDeltaTime * 1000.0f;
-            float fps = 1.0f / fpsDeltaTime;
-            GUILayout.BeginArea(new Rect(15 + fpsTexture.width, Screen.height - 25, 100, 25));
-            GUILayout.Label(string.Format("{0:0.}fps ({1:0.0}ms)", fps, msec));
-            GUILayout.EndArea();
-
-            if (fpsTexture == null) return;
-
-            // Show FPS history
-            Color[] colors = new Color[fpsTexture.width * fpsTexture.height];
-            Color cRed = new Color(1.0f, 0.0f, 0.0f, 1.0f);
-            Color cYellow = new Color(1.0f, 1.0f, 0.0f, 1.0f);
-            Color cGreen = new Color(0.0f, 1.0f, 0.0f, 1.0f);
-            for (int i = 0; i < (fpsTexture.width * fpsTexture.height); i++)
+            if (_showFPS)
             {
-                colors[i] = new Color(0.0f, 0.0f, 0.0f, 0.66f); // Half-transparent background for FPS graph
-            }
-            fpsTexture.SetPixels(colors);
-            // Append to history storage
-            fpsHistory[fpsIndex] = fps;
-            int f = fpsIndex;
-            // Draw graph into texture
-            for (int i = fpsTexture.width - 1; i >= 0; i--)
-            {
-                float graphVal = (fpsHistory[f] > fpsMaximum) ? fpsMaximum : fpsHistory[f];
-                int height = (int)(graphVal * fpsTexture.height / (fpsMaximum + 0.1f));
-                Color c = (fpsHistory[f] >= fpsGreen) ? cGreen : ((fpsHistory[f] <= fpsRed) ? cRed : cYellow);
-                fpsTexture.SetPixel(i, height, c);
-                f--;
-                if (f < 0)
+                float msec = fpsDeltaTime * 1000.0f;
+                float fps = 1.0f / fpsDeltaTime;
+
+                // Show FPS counter
+                GUILayout.BeginArea(GUIUtils.GetCornerRect(ScreenCorner.BottomRight, 100, 25, new Vector2(15 + fpsTexture.width, 10)));
+                GUILayout.Label(string.Format("{0:0.}fps ({1:0.0}ms)", fps, msec), new GUIStyle("label") { alignment = TextAnchor.MiddleLeft });
+                GUILayout.EndArea();
+
+                if (fpsTexture == null) return;
+
+                // Show FPS history
+                Color[] colors = new Color[fpsTexture.width * fpsTexture.height];
+                /*Color cRed = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+                Color cYellow = new Color(1.0f, 1.0f, 0.0f, 1.0f);
+                Color cGreen = new Color(0.0f, 1.0f, 0.0f, 1.0f);*/
+
+                for (int i = 0; i < (fpsTexture.width * fpsTexture.height); i++)
+                    colors[i] = new Color(0.0f, 0.0f, 0.0f, 0.66f); // Half-transparent background for FPS graph
+
+                fpsTexture.SetPixels(colors);
+
+                // Append to history storage
+                fpsHistory[fpsIndex] = fps;
+
+                //fpsMaximum = fpsHistory.Max();
+
+                int f = fpsIndex;
+
+                // Draw graph into texture
+                for (int i = fpsTexture.width - 1; i >= 0; i--)
                 {
-                    f = fpsHistory.Length - 1;
+                    float graphVal = (fpsHistory[f] > fpsMaximum) ? fpsMaximum : fpsHistory[f]; //Clamps
+                    int height = (int)(graphVal * fpsTexture.height / (fpsMaximum + 0.1f)); //Returns the height of the desired point with a padding of 0.1f units
+
+                    //Color c = (fpsHistory[f] >= fpsGreen) ? cGreen : ((fpsHistory[f] <= fpsRed) ? cRed : cYellow);
+                    float p = fpsHistory[f] / fpsMaximum,
+                          r = Mathf.Lerp(1, 1 - p, p),
+                          g = Mathf.Lerp(p * 2, p, p);
+
+                    fpsTexture.SetPixel(i, height, new Color(r, g, 0));
+                    f--;
+
+                    if (f < 0)
+                        f = fpsHistory.Length - 1;
                 }
+
+                // Next entry in rolling history buffer
+                fpsIndex++;
+                if (fpsIndex >= fpsHistory.Length)
+                    fpsIndex = 0;
+
+                // Draw texture on GUI
+                fpsTexture.Apply(false, false);
+                GUI.DrawTexture(GUIUtils.GetCornerRect(ScreenCorner.BottomRight, fpsTexture.width, fpsTexture.height, new Vector2(5, fpsTexture.height - 15)), fpsTexture);
             }
-            // Next entry in rolling history buffer
-            fpsIndex++;
-            if (fpsIndex >= fpsHistory.Length)
-            {
-                fpsIndex = 0;
-            }
-            // Draw texture on GUI
-            fpsTexture.Apply(false, false);
-            GUI.DrawTexture(new Rect(5, Screen.height - fpsTexture.height - 5, fpsTexture.width, fpsTexture.height), fpsTexture);
         }
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.F10))
+                _showFPS = !_showFPS;
+
             // FPS counting
             fpsDeltaTime += (Time.deltaTime - fpsDeltaTime) * 0.1f;
 

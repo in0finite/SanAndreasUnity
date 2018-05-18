@@ -60,6 +60,8 @@ F10 - Toggle FPS
 
 ### Features
 
+- Two driving camera modes (aim to front and free look)
+
 - See the entire map (pressing M)
 
 - Dev profiles (for paths) and for the keyboard & mouse controls
@@ -117,6 +119,8 @@ F10 - Toggle FPS
 - Block camera when Escape is pressed
 
 - Car moves when the player is still getting inside it
+
+- Auto-zoom with big vehicles
 
 ## Media
 
