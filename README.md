@@ -54,6 +54,67 @@ Space - Jump
 
 * Make everything networked.
 
+## TODO
+
+### Features
+
+- See the entire map (pressing M)
+
+- Fall animation
+
+- Dev profiles (for paths) and for the keyboard & mouse controls
+
+- Health, money & armor system
+
+- AI System for Peds
+
+- Peds (and worker peds)
+
+### Effects
+
+* Water effects (Swim, bouyancy, get darker and blurry the deeper you get)
+
+* Work on props (lampposts, fences, etc)
+
+* Decay system for Weapons
+
+* Burnout trace
+
+* Vehicle damage
+
+* Dust and water particles with vehicles (cars travelling through dirt and boats, respectively)
+
+### Environment
+
+* Daylight cycle
+
+* Weather
+
+### Vehicles
+
+* Enhance car lights, turning, doors and braking
+
+* Gear system (to make cars keep stoped on slopes)
+
+* Boats, airplanes and bikes (+ fall)
+
+### Mods system
+
+* Integrate a mod system that is capable of reading source files and managed compiled assemblies, some exaples of mods:
+
+- Access to all interiors (without any yellow marker) generating them
+
+- Speedometer and rpm meter (like FO2) + fuel
+
+- GMOD physics and prop menu
+
+- Map editor
+
+### Fixes
+
+- Weird circular shadow appears when drving and the car passes next to a building that projects a shadow (low quality)
+
+- Block cmare when Escape is pressed
 
 ## Media
 
