@@ -68,7 +68,7 @@ F9 - Toggle velocimeter
 
 - Dev profiles (for paths) and for the keyboard & mouse controls
 
-- Health, money & armor system
+- Health, stats (stamina, stength), money & armor system
 
 - AI System for Peds
 
@@ -127,6 +127,10 @@ F9 - Toggle velocimeter
 - Car moves when the player is still getting inside it
 
 - Auto-zoom with big vehicles
+
+- If you regenerate scripts while running Unity Editor crashes (patch it?)
+
+- Unnamed bug reappeared
 
 ## Media
 

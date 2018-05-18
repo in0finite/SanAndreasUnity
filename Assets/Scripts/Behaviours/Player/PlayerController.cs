@@ -226,6 +226,9 @@ namespace SanAndreasUnity.Behaviours
             if (Input.GetKeyDown(KeyCode.F10))
                 _showFPS = !_showFPS;
 
+            if (Input.GetKeyDown(KeyCode.F9))
+                _showVel = !_showVel;
+
             if (!Loader.HasLoaded)
                 return;
 

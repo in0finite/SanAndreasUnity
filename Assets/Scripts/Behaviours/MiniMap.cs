@@ -107,7 +107,7 @@ namespace SanAndreasUnity.Behaviours
         private void drawMapWindow(Vector2 screenPos, Vector2 mapPos)
         {
             float zoom = 1,
-                  rTexSize = texSize; // There is a problem when you increase the size (because of the tiling)
+                  rTexSize = texSize; // WIP: There is a problem when you increase the size (because of the tiling)
 
             // Draw current map tile
             Vector2 pxPos = coordinatesWorldToPixel(mapPos),
@@ -127,22 +127,20 @@ namespace SanAndreasUnity.Behaviours
                     Vector2 v = new Vector2(rTexSize * i, rTexSize * j);
                     rot = screenPos - tilePos + v + texSizeDim / 2 - playerBlipDim / 2;
 
+                    // WIP: I have to rotate the tiles
                     //GUIUtility.RotateAroundPivot(player.transform.rotation.eulerAngles.y, rot);
 
                     int ii = coordinatesToTileNumber(pxPos + v);
 
                     drawTilePart(ii, rot - playerBlipDim / 2, Vector2.zero, texSizeDim, zoom);
-                    //Debug.Log(string.Format("{0}: {1}", ii, screenPos - tilePos + v));
                 }
 
             GUI.matrix = matrixBackup;
 
             //GUI.Label(new Rect(Screen.width / 2 - 500 / 2, 5, 500, 100), string.Format("PxPos: {0}\nTilePos: {1}\nScreenPos: {2}", pxPos, tilePos, screenPos), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
 
-            //Debug.Break();
-
             matrixBackup = GUI.matrix;
-            rot = screenPos + (texSizeDim * zoom) / 2 + playerBlipDim / 2;
+            rot = screenPos + (texSizeDim * zoom) / 2 - playerBlipDim / 2;
 
             GUIUtility.RotateAroundPivot(player.transform.rotation.eulerAngles.y, rot);
             drawTexturePart(playerBlip, rot - playerBlipDim / 2, Vector2.zero, playerBlipDim);

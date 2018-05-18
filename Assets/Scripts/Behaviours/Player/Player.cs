@@ -92,6 +92,8 @@ namespace SanAndreasUnity.Behaviours
         private void Start()
         {
             //	MySetupLocalPlayer ();
+
+            Debug.Log(string.Format("Max FPS: {0}", Application.targetFrameRate));
         }
 
         private void MySetupLocalPlayer()
