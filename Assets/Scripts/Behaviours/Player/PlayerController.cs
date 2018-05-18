@@ -30,7 +30,16 @@ namespace SanAndreasUnity.Behaviours
         private static Rect teleportWindowRect;
         private const int teleportWindowID = 1;
 
-        private static bool _showFPS = true;
+        private static bool _showFPS = true,
+                            _showVel = true;
+
+        // Alpha speedometer
+        private const float velTimer = 1 / 4f;
+
+        private static float velCounter = velTimer;
+
+        private static Vector3 lastPos = Vector3.zero,
+                               deltaPos = Vector3.zero;
 
         #endregion Private fields
 
@@ -136,6 +145,9 @@ namespace SanAndreasUnity.Behaviours
                 GUILayout.EndArea();
             }
 
+            if (_showVel && Loader.HasLoaded)
+                GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(5, 5)), string.Format("{0:0.0} km/h", deltaPos.magnitude * 3.6f / velTimer), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
+
             if (_showFPS)
             {
                 float msec = fpsDeltaTime * 1000.0f;
@@ -192,13 +204,27 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
+        private void FixedUpdate()
+        {
+            // FPS counting
+            fpsDeltaTime += (Time.deltaTime - fpsDeltaTime) * 0.1f;
+
+            velCounter -= Time.deltaTime;
+            if (velCounter <= 0)
+            {
+                Vector3 t = new Vector3(transform.position.x, 0, transform.position.z);
+
+                deltaPos = t - lastPos;
+                lastPos = t;
+
+                velCounter = velTimer;
+            }
+        }
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F10))
                 _showFPS = !_showFPS;
-
-            // FPS counting
-            fpsDeltaTime += (Time.deltaTime - fpsDeltaTime) * 0.1f;
 
             if (!Loader.HasLoaded)
                 return;

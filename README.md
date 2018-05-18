@@ -36,7 +36,9 @@ E - Enter/exit vehicles
 
 Space - Jump
 
-F10 - Toggle FPS 
+F10 - Toggle FPS
+
+F9 - Toggle velocimeter
 
 ## Here is a list of what I think should be done next
 
