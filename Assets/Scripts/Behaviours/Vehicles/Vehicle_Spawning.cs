@@ -2,6 +2,7 @@
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Vehicles;
+using SanAndreasUnity.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -125,11 +126,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             var dam = inst.gameObject.AddComponent<VehicleDamage>();
             dam.damageParts = new Transform[] { inst.transform.GetChild(0).Find("engine") };
             dam.deformMeshes = inst.gameObject.GetComponentsInChildren<MeshFilter>();
-            dam.deformColliders = inst.gameObject.GetComponentsInChildren<MeshCollider>();
             dam.displaceParts = inst.gameObject.GetComponentsInChildren<Transform>().Where(x => x.GetComponent<Frame>() != null || x.GetComponent<FrameContainer>() != null).ToArray();
             dam.damageFactor = 2f;
             dam.collisionIgnoreHeight = -.4f;
             dam.collisionTimeGap = .1f;
+
+            //inst.OptimizeVehicle();
+
+            dam.deformColliders = inst.gameObject.GetComponentsInChildren<MeshCollider>();
 
 #if CLIENT
             if (Networking.Server.Instance != null)

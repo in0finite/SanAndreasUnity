@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SanAndreasUnity.Utilities;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -52,11 +53,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public MeshFilter[] deformMeshes;
 
         private bool[] damagedMeshes;
+        private DamageLogger[] damageLogger;
         private Mesh[] tempMeshes;
         private meshVerts[] meshVertices;
 
         [Tooltip("Mesh colliders that are deformed (Poor performance, must be convex)")]
-        public Collider[] deformColliders;
+        public MeshCollider[] deformColliders;
+
+        // WIP: Collider
 
         private bool[] damagedCols;
         private Mesh[] tempCols;
@@ -86,6 +90,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 //Set up mesh data
                 tempMeshes = new Mesh[deformMeshes.Length];
                 damagedMeshes = new bool[deformMeshes.Length];
+                damageLogger = new DamageLogger[deformMeshes.Length];
                 meshVertices = new meshVerts[deformMeshes.Length];
                 for (int i = 0; i < deformMeshes.Length; i++)
                 {
@@ -314,9 +319,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         }
                     }
 
-                    //Debug.Log(translation.sqrMagnitude);
-                    //Debug.Break();
-
                     //Actual deformation
                     if (translation.sqrMagnitude > 0 && strength < 1)
                     {
@@ -338,7 +340,29 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                                     seamLocalPoint = seamKeeper.InverseTransformPoint(curDamageMesh.transform.TransformPoint(meshVertices[i].verts[j]));
                                     meshVertices[i].verts[j] += (clampedTranslation - Vector3.Project(normalizedVel, seamLocalPoint) * (usePerlinNoise ? 1 + Mathf.PerlinNoise(seamLocalPoint.x * 100, seamLocalPoint.y * 100) : 1)) * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
                                 }
+
+                                if (damageLogger[i] == null)
+                                    damageLogger[i] = new DamageLogger(meshVertices[i].verts.Select(x => x.sqrMagnitude).ToArray());
+                                else
+                                    damageLogger[i].UpdateVertice(j, meshVertices[i].verts[j].sqrMagnitude);
                             }
+                        }
+
+                        //Affect handling
+                        float avg = damageLogger[i] != null ? damageLogger[i].DamageAverage() : 0;
+
+                        // WIP: Name could be the same
+                        // WIP: I will not use "me" more
+                        //if (Mathf.Abs(avg) > 0 && curDamageMesh.name.Contains("wheel"))
+                        //    Debug.Log(string.Format("Damage Avg: {0} (Name: {1} from {2})", avg, curDamageMesh.transform.parent.name, vp.name));
+
+                        if (Mathf.Abs(avg) > .01f && curDamageMesh.transform.parent != null && curDamageMesh.transform.parent.name.Contains("wheel") && curDamageMesh.GetComponent<MeshCollider>() == null)
+                        {
+                            curDamageMesh.transform.parent.GetComponent<WheelCollider>().enabled = false;
+                            var col = curDamageMesh.gameObject.AddComponent<MeshCollider>();
+                            col.convex = true;
+
+                            // WIP: Explode wheel
                         }
                     }
                 }
@@ -500,7 +524,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 }
             }
 
-#if RVP
             if (deformColliders != null && deformColliders.Length > 0)
             {
                 //Apply vertices to actual mesh colliders
@@ -516,7 +539,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     damagedCols[i] = false;
                 }
             }
-#endif
         }
 
         public void Repair()
@@ -567,7 +589,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     }
                 }
 
-#if RVP
             if (deformColliders != null && deformColliders.Length > 0)
                 //Restore deformed mesh colliders
                 for (int i = 0; i < deformColliders.Length; i++)
@@ -581,7 +602,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     deformColliders[i].sharedMesh = null;
                     deformColliders[i].sharedMesh = tempCols[i];
                 }
-#endif
 
 #if RVP
             //Fix displaced parts
@@ -673,5 +693,45 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         public Vector3[] verts;//Current mesh vertices
         public Vector3[] initialVerts;//Original mesh vertices
+    }
+
+    internal class DamageLogger
+    {
+        private float[] verticePosition;
+        private float[] lastVerticePosition;
+
+        public float[] sumVertices;
+
+        public DamageLogger(float[] firstRead)
+        {
+            int len = firstRead.Length;
+
+            sumVertices = new float[len];
+
+            verticePosition = new float[len];
+            lastVerticePosition = new float[len];
+
+            // Set first read
+            int i = 0;
+            foreach (float v in firstRead)
+            {
+                UpdateVertice(i, v);
+                ++i;
+            }
+        }
+
+        public void UpdateVertice(int index, float value)
+        {
+            verticePosition[index] = value;
+
+            sumVertices[index] = value - lastVerticePosition[index];
+
+            lastVerticePosition[index] = verticePosition[index];
+        }
+
+        public float DamageAverage()
+        {
+            return sumVertices.Average();
+        }
     }
 }

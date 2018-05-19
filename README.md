@@ -80,6 +80,8 @@ F9 - Toggle velocimeter
 
 - Cars & fuel stations can explode
 
+- Wheel explosion (I have to convert colliders, from a capsule collider generate a mesh collider with the shape of a capsule)
+
 ### Effects & Enhancements
 
 * Jump, swim & fall animations
@@ -142,7 +144,13 @@ F9 - Toggle velocimeter
 
 - Make cars spawn appropiate for each zone
 
-- Idk why frame rate is fixed in 50 fps
+- When vehicles are damanged light goes weird
+
+- Once vehicles are despawned they don't re-spawn
+
+- Find in the project for "me" keywords and delete them
+
+- Keys stucks when Escape is pressed
 
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is going to **Assets > Reimport all**
 

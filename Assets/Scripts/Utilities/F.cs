@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using SanAndreasUnity.Behaviours.Vehicles;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SanAndreasUnity.Utilities
@@ -41,6 +43,30 @@ namespace SanAndreasUnity.Utilities
             return getting;
         }
 
+        // WIP: This causes Unity to crash
+        /*public static void OptimizeVehicle(this Vehicle v)
+        {
+            foreach (var col in v.gameObject.GetComponentsInChildren<Collider>())
+            {
+                if (!(col is MeshCollider))
+                    Object.Destroy(col);
+            }
+
+            foreach (var go in v.gameObject.GetComponentsInChildren<MeshFilter>())
+                go.gameObject.AddComponent<MeshCollider>();
+        }*/
+
+        public static void OptimizeVehicle(this Vehicle v)
+        {
+            var cols = v.gameObject.GetComponentsInChildren<Collider>().Where(x => x.GetType() != typeof(MeshCollider));
+            foreach (var col in cols)
+                col.enabled = false;
+
+            var filters = v.gameObject.GetComponentsInChildren<MeshFilter>().Where(x => x.sharedMesh != null);
+            foreach (var filter in filters)
+                filter.gameObject.AddComponent<MeshCollider>();
+        }
+
         public static Mesh GetSharedMesh(this Collider col)
         {
             if (col is MeshCollider)
@@ -49,6 +75,7 @@ namespace SanAndreasUnity.Utilities
             }
             else
             {
+                // WIP: Depending on the collider generate a diferent shape
                 MeshFilter f = col.gameObject.GetComponent<MeshFilter>();
                 return f != null ? f.sharedMesh : null;
             }

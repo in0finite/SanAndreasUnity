@@ -79,10 +79,14 @@ namespace SanAndreasUnity.Behaviours
 
         #endregion Properties
 
+        public static Player me;
+
         //     protected override void OnAwake()
         protected void Awake()
         {
             //    base.OnAwake();
+
+            me = this;
 
             characterController = GetComponent<CharacterController>();
 
