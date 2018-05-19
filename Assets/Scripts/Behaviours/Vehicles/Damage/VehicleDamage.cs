@@ -56,7 +56,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private meshVerts[] meshVertices;
 
         [Tooltip("Mesh colliders that are deformed (Poor performance, must be convex)")]
-        public MeshCollider[] deformColliders;
+        public Collider[] deformColliders;
 
         private bool[] damagedCols;
         private Mesh[] tempCols;
@@ -81,39 +81,46 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             vp.playCrashSparks = false;
 #endif
 
-            if (deformMeshes == null || (deformMeshes != null && deformMeshes.Length == 0)) return;
-
-            //Set up mesh data
-            tempMeshes = new Mesh[deformMeshes.Length];
-            damagedMeshes = new bool[deformMeshes.Length];
-            meshVertices = new meshVerts[deformMeshes.Length];
-            for (int i = 0; i < deformMeshes.Length; i++)
+            if (deformMeshes != null && deformMeshes.Length > 0)
             {
-                tempMeshes[i] = deformMeshes[i].mesh;
-                meshVertices[i] = new meshVerts();
-                meshVertices[i].verts = deformMeshes[i].mesh.vertices;
-                meshVertices[i].initialVerts = deformMeshes[i].mesh.vertices;
-                damagedMeshes[i] = false;
+                //Set up mesh data
+                tempMeshes = new Mesh[deformMeshes.Length];
+                damagedMeshes = new bool[deformMeshes.Length];
+                meshVertices = new meshVerts[deformMeshes.Length];
+                for (int i = 0; i < deformMeshes.Length; i++)
+                {
+                    tempMeshes[i] = deformMeshes[i].mesh;
+                    meshVertices[i] = new meshVerts();
+                    meshVertices[i].verts = deformMeshes[i].mesh.vertices;
+                    meshVertices[i].initialVerts = deformMeshes[i].mesh.vertices;
+                    damagedMeshes[i] = false;
+                }
             }
 
-            //Set up mesh collider data
-            tempCols = new Mesh[deformColliders.Length];
-            damagedCols = new bool[deformColliders.Length];
-            colVertices = new meshVerts[deformColliders.Length];
-            for (int i = 0; i < deformColliders.Length; i++)
+            if (deformColliders != null && deformColliders.Length > 0)
             {
-                tempCols[i] = (Mesh)Instantiate(deformColliders[i].sharedMesh);
-                colVertices[i] = new meshVerts();
-                colVertices[i].verts = deformColliders[i].sharedMesh.vertices;
-                colVertices[i].initialVerts = deformColliders[i].sharedMesh.vertices;
-                damagedCols[i] = false;
+                //Set up mesh collider data
+                tempCols = new Mesh[deformColliders.Length];
+                damagedCols = new bool[deformColliders.Length];
+                colVertices = new meshVerts[deformColliders.Length];
+                for (int i = 0; i < deformColliders.Length; i++)
+                {
+                    tempCols[i] = (Mesh)Instantiate(deformColliders[i].GetSharedMesh());
+                    colVertices[i] = new meshVerts();
+                    colVertices[i].verts = deformColliders[i].GetSharedMesh().vertices;
+                    colVertices[i].initialVerts = deformColliders[i].GetSharedMesh().vertices;
+                    damagedCols[i] = false;
+                }
             }
 
-            //Set initial positions for displaced parts
-            initialPartPositions = new Vector3[displaceParts.Length];
-            for (int i = 0; i < displaceParts.Length; i++)
+            if (displaceParts != null && displaceParts.Length > 0)
             {
-                initialPartPositions[i] = displaceParts[i].localPosition;
+                //Set initial positions for displaced parts
+                initialPartPositions = new Vector3[displaceParts.Length];
+                for (int i = 0; i < displaceParts.Length; i++)
+                {
+                    initialPartPositions[i] = displaceParts[i].localPosition;
+                }
             }
         }
 
@@ -137,8 +144,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 hitTime = collisionTimeGap;
 
                 foreach (ContactPoint curCol in col.contacts)
-                {
-                    if (tr.InverseTransformPoint(curCol.point).y > collisionIgnoreHeight && GlobalControl.damageMaskStatic == (GlobalControl.damageMaskStatic | (1 << curCol.otherCollider.gameObject.layer)))
+                { // WIP: Look deeper into GlobalControl
+                    if (tr.InverseTransformPoint(curCol.point).y > collisionIgnoreHeight) //&& GlobalControl.damageMaskStatic == (GlobalControl.damageMaskStatic | (1 << curCol.otherCollider.gameObject.layer)))
                     {
                         colsChecked++;
 
@@ -287,117 +294,106 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
 #endif
 
-            //Deform meshes
-            for (int i = 0; i < deformMeshes.Length; i++)
-            {
-                curDamageMesh = deformMeshes[i];
-                localPos = curDamageMesh.transform.InverseTransformPoint(damagePoint);
-                translation = curDamageMesh.transform.InverseTransformDirection(clampedVel);
-                clampedTranslation = Vector3.ClampMagnitude(translation, clampedColMag);
-
-                //Shatter parts that can shatter
-                ShatterPart shattered = curDamageMesh.GetComponent<ShatterPart>();
-                if (shattered)
+            if (deformMeshes != null && deformMeshes.Length > 0)
+                //Deform meshes
+                for (int i = 0; i < deformMeshes.Length; i++)
                 {
-                    seamKeeper = shattered.seamKeeper;
-                    if (Vector3.Distance(curDamageMesh.transform.position, damagePoint) < colMag * surfaceDot * 0.1f * massFactor && colMag * surfaceDot * massFactor > shattered.breakForce)
-                    {
-                        shattered.Shatter();
-                    }
-                }
+                    curDamageMesh = deformMeshes[i];
+                    localPos = curDamageMesh.transform.InverseTransformPoint(damagePoint);
+                    translation = curDamageMesh.transform.InverseTransformDirection(clampedVel);
+                    clampedTranslation = Vector3.ClampMagnitude(translation, clampedColMag);
 
-                //Actual deformation
-                if (translation.sqrMagnitude > 0 && strength < 1)
-                {
-                    for (int j = 0; j < meshVertices[i].verts.Length; j++)
+                    //Shatter parts that can shatter
+                    ShatterPart shattered = curDamageMesh.GetComponent<ShatterPart>();
+                    if (shattered != null)
                     {
-                        vertDist = Vector3.Distance(meshVertices[i].verts[j], localPos);
-                        distClamp = (clampedColMag * 0.001f) / Mathf.Pow(vertDist, clampedColMag);
-
-                        if (distClamp > 0.001f)
+                        seamKeeper = shattered.seamKeeper;
+                        if (Vector3.Distance(curDamageMesh.transform.position, damagePoint) < colMag * surfaceDot * 0.1f * massFactor && colMag * surfaceDot * massFactor > shattered.breakForce)
                         {
-                            damagedMeshes[i] = true;
-                            if (seamKeeper == null || seamlessDeform)
+                            shattered.Shatter();
+                        }
+                    }
+
+                    //Debug.Log(translation.sqrMagnitude);
+                    //Debug.Break();
+
+                    //Actual deformation
+                    if (translation.sqrMagnitude > 0 && strength < 1)
+                    {
+                        for (int j = 0; j < meshVertices[i].verts.Length; j++)
+                        {
+                            vertDist = Vector3.Distance(meshVertices[i].verts[j], localPos);
+                            distClamp = (clampedColMag * 0.001f) / Mathf.Pow(vertDist, clampedColMag);
+
+                            if (distClamp > 0.001f)
                             {
-                                vertProjection = seamlessDeform ? Vector3.zero : Vector3.Project(normalizedVel, meshVertices[i].verts[j]);
-                                meshVertices[i].verts[j] += (clampedTranslation - vertProjection * (usePerlinNoise ? 1 + Mathf.PerlinNoise(meshVertices[i].verts[j].x * 100, meshVertices[i].verts[j].y * 100) : 1)) * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
-                            }
-                            else
-                            {
-                                seamLocalPoint = seamKeeper.InverseTransformPoint(curDamageMesh.transform.TransformPoint(meshVertices[i].verts[j]));
-                                meshVertices[i].verts[j] += (clampedTranslation - Vector3.Project(normalizedVel, seamLocalPoint) * (usePerlinNoise ? 1 + Mathf.PerlinNoise(seamLocalPoint.x * 100, seamLocalPoint.y * 100) : 1)) * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
+                                damagedMeshes[i] = true;
+                                if (seamKeeper == null || seamlessDeform)
+                                {
+                                    vertProjection = seamlessDeform ? Vector3.zero : Vector3.Project(normalizedVel, meshVertices[i].verts[j]);
+                                    meshVertices[i].verts[j] += (clampedTranslation - vertProjection * (usePerlinNoise ? 1 + Mathf.PerlinNoise(meshVertices[i].verts[j].x * 100, meshVertices[i].verts[j].y * 100) : 1)) * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
+                                }
+                                else
+                                {
+                                    seamLocalPoint = seamKeeper.InverseTransformPoint(curDamageMesh.transform.TransformPoint(meshVertices[i].verts[j]));
+                                    meshVertices[i].verts[j] += (clampedTranslation - Vector3.Project(normalizedVel, seamLocalPoint) * (usePerlinNoise ? 1 + Mathf.PerlinNoise(seamLocalPoint.x * 100, seamLocalPoint.y * 100) : 1)) * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
+                                }
                             }
                         }
                     }
                 }
-            }
 
             seamKeeper = null;
 
-            //Deform mesh colliders
-            for (int i = 0; i < deformColliders.Length; i++)
-            {
-                localPos = deformColliders[i].transform.InverseTransformPoint(damagePoint);
-                translation = deformColliders[i].transform.InverseTransformDirection(clampedVel);
-                clampedTranslation = Vector3.ClampMagnitude(translation, clampedColMag);
-
-                if (translation.sqrMagnitude > 0 && strength < 1)
+            if (deformColliders != null && deformColliders.Length > 0)
+                //Deform mesh colliders
+                for (int i = 0; i < deformColliders.Length; i++)
                 {
-                    for (int j = 0; j < colVertices[i].verts.Length; j++)
+                    localPos = deformColliders[i].transform.InverseTransformPoint(damagePoint);
+                    translation = deformColliders[i].transform.InverseTransformDirection(clampedVel);
+                    clampedTranslation = Vector3.ClampMagnitude(translation, clampedColMag);
+
+                    if (translation.sqrMagnitude > 0 && strength < 1)
                     {
-                        vertDist = Vector3.Distance(colVertices[i].verts[j], localPos);
+                        for (int j = 0; j < colVertices[i].verts.Length; j++)
+                        {
+                            vertDist = Vector3.Distance(colVertices[i].verts[j], localPos);
+                            distClamp = (clampedColMag * 0.001f) / Mathf.Pow(vertDist, clampedColMag);
+
+                            if (distClamp > 0.001f)
+                            {
+                                damagedCols[i] = true;
+                                colVertices[i].verts[j] += clampedTranslation * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
+                            }
+                        }
+                    }
+                }
+
+            if (displaceParts != null && displaceParts.Length > 0)
+                //Displace parts
+                for (int i = 0; i < displaceParts.Length; i++)
+                {
+                    curDisplacePart = displaceParts[i];
+                    translation = clampedVel;
+                    clampedTranslation = Vector3.ClampMagnitude(translation, clampedColMag);
+
+                    if (translation.sqrMagnitude > 0 && strength < 1)
+                    {
+                        vertDist = Vector3.Distance(curDisplacePart.position, damagePoint);
                         distClamp = (clampedColMag * 0.001f) / Mathf.Pow(vertDist, clampedColMag);
 
                         if (distClamp > 0.001f)
                         {
-                            damagedCols[i] = true;
-                            colVertices[i].verts[j] += clampedTranslation * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
-                        }
-                    }
-                }
-            }
+                            curDisplacePart.position += clampedTranslation * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
 
-            //Displace parts
-            for (int i = 0; i < displaceParts.Length; i++)
-            {
-                curDisplacePart = displaceParts[i];
-                translation = clampedVel;
-                clampedTranslation = Vector3.ClampMagnitude(translation, clampedColMag);
-
-                if (translation.sqrMagnitude > 0 && strength < 1)
-                {
-                    vertDist = Vector3.Distance(curDisplacePart.position, damagePoint);
-                    distClamp = (clampedColMag * 0.001f) / Mathf.Pow(vertDist, clampedColMag);
-
-                    if (distClamp > 0.001f)
-                    {
-                        curDisplacePart.position += clampedTranslation * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
-
-                        //Detach detachable parts
-                        if (curDisplacePart.GetComponent<DetachablePart>())
-                        {
-                            detachedPart = curDisplacePart.GetComponent<DetachablePart>();
-
-                            if (colMag * surfaceDot * massFactor > detachedPart.looseForce && detachedPart.looseForce >= 0)
+                            //Detach detachable parts
+                            if (curDisplacePart.GetComponent<DetachablePart>())
                             {
-                                detachedPart.initialPos = curDisplacePart.localPosition;
-                                detachedPart.Detach(true);
-                            }
-                            else if (colMag * surfaceDot * massFactor > detachedPart.breakForce)
-                            {
-                                detachedPart.Detach(false);
-                            }
-                        }
-                        //Maybe the parent of this part is what actually detaches, useful for displacing compound colliders that represent single detachable objects
-                        else if (curDisplacePart.parent.GetComponent<DetachablePart>())
-                        {
-                            detachedPart = curDisplacePart.parent.GetComponent<DetachablePart>();
+                                detachedPart = curDisplacePart.GetComponent<DetachablePart>();
 
-                            if (!detachedPart.detached)
-                            {
                                 if (colMag * surfaceDot * massFactor > detachedPart.looseForce && detachedPart.looseForce >= 0)
                                 {
-                                    detachedPart.initialPos = curDisplacePart.parent.localPosition;
+                                    detachedPart.initialPos = curDisplacePart.localPosition;
                                     detachedPart.Detach(true);
                                 }
                                 else if (colMag * surfaceDot * massFactor > detachedPart.breakForce)
@@ -405,11 +401,28 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                                     detachedPart.Detach(false);
                                 }
                             }
-                            else if (detachedPart.hinge)
+                            //Maybe the parent of this part is what actually detaches, useful for displacing compound colliders that represent single detachable objects
+                            else if (curDisplacePart.parent != null && curDisplacePart.parent.GetComponent<DetachablePart>())
                             {
-                                detachedPart.displacedAnchor += curDisplacePart.parent.InverseTransformDirection(clampedTranslation * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor);
+                                detachedPart = curDisplacePart.parent.GetComponent<DetachablePart>();
+
+                                if (!detachedPart.detached)
+                                {
+                                    if (colMag * surfaceDot * massFactor > detachedPart.looseForce && detachedPart.looseForce >= 0)
+                                    {
+                                        detachedPart.initialPos = curDisplacePart.parent.localPosition;
+                                        detachedPart.Detach(true);
+                                    }
+                                    else if (colMag * surfaceDot * massFactor > detachedPart.breakForce)
+                                    {
+                                        detachedPart.Detach(false);
+                                    }
+                                }
+                                else if (detachedPart.hinge)
+                                {
+                                    detachedPart.displacedAnchor += curDisplacePart.parent.InverseTransformDirection(clampedTranslation * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor);
+                                }
                             }
-                        }
 
 #if RVP
                         //Damage suspensions and wheels
@@ -458,44 +471,52 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                             }
                         }
 #endif
+                        }
                     }
                 }
-            }
         }
 
         //Apply damage to meshes
         private void FinalizeDamage()
         {
-            //Apply vertices to actual meshes
-            for (int i = 0; i < deformMeshes.Length; i++)
+            if (deformMeshes != null && deformMeshes.Length > 0)
             {
-                if (damagedMeshes[i])
+                //Apply vertices to actual meshes
+                for (int i = 0; i < deformMeshes.Length; i++)
                 {
-                    tempMeshes[i].vertices = meshVertices[i].verts;
-
-                    if (calculateNormals)
+                    if (damagedMeshes[i])
                     {
-                        tempMeshes[i].RecalculateNormals();
+                        tempMeshes[i].vertices = meshVertices[i].verts;
+
+                        if (calculateNormals)
+                        {
+                            tempMeshes[i].RecalculateNormals();
+                        }
+
+                        tempMeshes[i].RecalculateBounds();
                     }
 
-                    tempMeshes[i].RecalculateBounds();
+                    damagedMeshes[i] = false;
                 }
-
-                damagedMeshes[i] = false;
             }
 
-            //Apply vertices to actual mesh colliders
-            for (int i = 0; i < deformColliders.Length; i++)
+#if RVP
+            if (deformColliders != null && deformColliders.Length > 0)
             {
-                if (damagedCols[i])
+                //Apply vertices to actual mesh colliders
+                for (int i = 0; i < deformColliders.Length; i++)
                 {
-                    tempCols[i].vertices = colVertices[i].verts;
-                    deformColliders[i].sharedMesh = null;
-                    deformColliders[i].sharedMesh = tempCols[i];
-                }
+                    if (damagedCols[i])
+                    {
+                        tempCols[i].vertices = colVertices[i].verts;
+                        deformColliders[i].sharedMesh = null;
+                        deformColliders[i].sharedMesh = tempCols[i];
+                    }
 
-                damagedCols[i] = false;
+                    damagedCols[i] = false;
+                }
             }
+#endif
         }
 
         public void Repair()
@@ -516,47 +537,51 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
 #endif
 
-            //Restore deformed meshes
-            for (int i = 0; i < deformMeshes.Length; i++)
-            {
-                for (int j = 0; j < meshVertices[i].verts.Length; j++)
+            if (deformMeshes != null && deformMeshes.Length > 0)
+                //Restore deformed meshes
+                for (int i = 0; i < deformMeshes.Length; i++)
                 {
-                    meshVertices[i].verts[j] = meshVertices[i].initialVerts[j];
-                }
-
-                tempMeshes[i].vertices = meshVertices[i].verts;
-                tempMeshes[i].RecalculateNormals();
-                tempMeshes[i].RecalculateBounds();
-
-                //Fix shattered parts
-                ShatterPart fixedShatter = deformMeshes[i].GetComponent<ShatterPart>();
-                if (fixedShatter)
-                {
-                    fixedShatter.shattered = false;
-
-                    if (fixedShatter.brokenMaterial)
+                    for (int j = 0; j < meshVertices[i].verts.Length; j++)
                     {
-                        fixedShatter.rend.sharedMaterial = fixedShatter.initialMat;
+                        meshVertices[i].verts[j] = meshVertices[i].initialVerts[j];
                     }
-                    else
+
+                    tempMeshes[i].vertices = meshVertices[i].verts;
+                    tempMeshes[i].RecalculateNormals();
+                    tempMeshes[i].RecalculateBounds();
+
+                    //Fix shattered parts
+                    ShatterPart fixedShatter = deformMeshes[i].GetComponent<ShatterPart>();
+                    if (fixedShatter)
                     {
-                        fixedShatter.rend.enabled = true;
+                        fixedShatter.shattered = false;
+
+                        if (fixedShatter.brokenMaterial)
+                        {
+                            fixedShatter.rend.sharedMaterial = fixedShatter.initialMat;
+                        }
+                        else
+                        {
+                            fixedShatter.rend.enabled = true;
+                        }
                     }
                 }
-            }
 
-            //Restore deformed mesh colliders
-            for (int i = 0; i < deformColliders.Length; i++)
-            {
-                for (int j = 0; j < colVertices[i].verts.Length; j++)
+#if RVP
+            if (deformColliders != null && deformColliders.Length > 0)
+                //Restore deformed mesh colliders
+                for (int i = 0; i < deformColliders.Length; i++)
                 {
-                    colVertices[i].verts[j] = colVertices[i].initialVerts[j];
-                }
+                    for (int j = 0; j < colVertices[i].verts.Length; j++)
+                    {
+                        colVertices[i].verts[j] = colVertices[i].initialVerts[j];
+                    }
 
-                tempCols[i].vertices = colVertices[i].verts;
-                deformColliders[i].sharedMesh = null;
-                deformColliders[i].sharedMesh = tempCols[i];
-            }
+                    tempCols[i].vertices = colVertices[i].verts;
+                    deformColliders[i].sharedMesh = null;
+                    deformColliders[i].sharedMesh = tempCols[i];
+                }
+#endif
 
 #if RVP
             //Fix displaced parts
@@ -628,7 +653,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (displaceParts != null)
                 foreach (Transform curPart in displaceParts)
                 {
-                    if (curPart)
+                    if (curPart != null && curPart.GetComponent<DetachablePart>() != null && curPart.parent == null)
                     {
                         if (curPart.GetComponent<DetachablePart>() && curPart.parent == null)
                         {

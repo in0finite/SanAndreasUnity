@@ -108,6 +108,9 @@ namespace SanAndreasUnity.Behaviours
 
             var unnamedBug = transform.Find("unnamed");
 
+            foreach (var go in gameObject.GetComponents<FrameContainer>())
+                Destroy(go);
+
             if (unnamedBug != null)
                 Destroy(unnamedBug);
         }

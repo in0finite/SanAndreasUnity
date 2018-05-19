@@ -106,7 +106,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public static Vehicle Create(int carId, int[] colors, Vector3 position, Quaternion rotation)
         {
             var inst = new GameObject().AddComponent<Vehicle>();
-            var dam = inst.gameObject.AddComponent<VehicleDamage>();
 
             VehicleDef def;
             if (carId == -1)
@@ -122,6 +121,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             inst.transform.position = position - Vector3.up * inst.AverageWheelHeight;
             inst.transform.localRotation = rotation;
+
+            var dam = inst.gameObject.AddComponent<VehicleDamage>();
+            dam.damageParts = new Transform[] { inst.transform.GetChild(0).Find("engine") };
+            dam.deformMeshes = inst.gameObject.GetComponentsInChildren<MeshFilter>();
+            dam.deformColliders = inst.gameObject.GetComponentsInChildren<MeshCollider>();
+            dam.displaceParts = inst.gameObject.GetComponentsInChildren<Transform>().Where(x => x.GetComponent<Frame>() != null || x.GetComponent<FrameContainer>() != null).ToArray();
+            dam.damageFactor = 2f;
+            dam.collisionIgnoreHeight = -.4f;
+            dam.collisionTimeGap = .1f;
 
 #if CLIENT
             if (Networking.Server.Instance != null)

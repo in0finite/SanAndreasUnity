@@ -40,5 +40,18 @@ namespace SanAndreasUnity.Utilities
 
             return getting;
         }
+
+        public static Mesh GetSharedMesh(this Collider col)
+        {
+            if (col is MeshCollider)
+            {
+                return ((MeshCollider)col).sharedMesh;
+            }
+            else
+            {
+                MeshFilter f = col.gameObject.GetComponent<MeshFilter>();
+                return f != null ? f.sharedMesh : null;
+            }
+        }
     }
 }
