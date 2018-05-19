@@ -20,7 +20,7 @@ L shift - run / fly fast
 
 mouse scroll - zoom in/out
 
-Q - toggle debug menu
+F1 - toggle debug menu
 
 T - enable debug flying mode
 

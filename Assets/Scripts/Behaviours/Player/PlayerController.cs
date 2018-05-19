@@ -227,9 +227,6 @@ namespace SanAndreasUnity.Behaviours
 
         private void FixedUpdate()
         {
-            // FPS counting
-            fpsDeltaTime += (Time.deltaTime - fpsDeltaTime) * 0.1f;
-
             velCounter -= Time.deltaTime;
             if (velCounter <= 0)
             {
@@ -244,6 +241,9 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
+            // FPS counting
+            fpsDeltaTime += (Time.deltaTime - fpsDeltaTime) * 0.1f;
+
             if (Input.GetKeyDown(KeyCode.F10))
                 _showFPS = !_showFPS;
 
