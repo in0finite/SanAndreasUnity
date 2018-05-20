@@ -105,7 +105,7 @@ internal class ConsoleGUI : MonoBehaviour
             var lines = Console.Instance.Lines;
             // display last 10 lines
             for (int i = lines.Count() - Mathf.Min(linesVisible, lines.Count()) - historyScrollValue; i < lines.Count() - historyScrollValue; i++)
-            {
+            { // WIP: Display color if this a debug msg
                 GUILayout.Label(lines.GetItemAt(i));
             }
             GUILayout.EndVertical();
@@ -263,7 +263,7 @@ internal class ConsoleGUI : MonoBehaviour
         }
 #endif
 
-        if (!isOpen && Event.current.type == EventType.KeyUp && Event.current.keyCode == Console.Instance.m_openKey)
+        if (!escPressed && !isOpen && Event.current.type == EventType.KeyUp && Event.current.keyCode == Console.Instance.m_openKey)
         {
             isOpen = true;
             Event.current.Use();
@@ -271,7 +271,7 @@ internal class ConsoleGUI : MonoBehaviour
             wasCursorVisible = Cursor.visible;
         }
 
-        if (isOpen)
+        if (isOpen && !Cursor.visible)
             Cursor.visible = true;
 
         if (isOpen && escPressed)

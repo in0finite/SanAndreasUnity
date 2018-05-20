@@ -689,6 +689,11 @@ Prefab:
       propertyPath: m_Name
       value: Console
       objectReference: {fileID: 0}
+    - target: {fileID: 114285992222575242, guid: ea6123feedb51e547bee19b53a96d87b,
+        type: 2}
+      propertyPath: m_closeKey
+      value: 44
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ea6123feedb51e547bee19b53a96d87b, type: 2}
   m_IsPrefabParent: 0
