@@ -158,6 +158,10 @@ F9 - Toggle velocimeter
 
 - When console is opened cursor ticks
 
+- If you put the same close & open key for console, it never closes
+
+- Colors for debug messages in console
+
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is going to **Assets > Reimport all**
 
 ## Media
