@@ -915,21 +915,21 @@ public class Console : MonoBehaviour
             sb.AppendLine(string.Format("Message #{0}", i));
             sb.AppendLine();
 
-            span.InnerHtml = sb.ToString().Nl2Br();
+            span.InnerHtml = sb.ToString().OptimizeHTML();
             sb.Clear();
 
             span.SetAttributeValue("style", "color:black!important;");
             div.AppendChild(span);
 
             HtmlNode logDiv = doc.CreateElement("div");
-            logDiv.InnerHtml = el.logString.Nl2Br();
+            logDiv.InnerHtml = el.logString.OptimizeHTML();
 
             HtmlNode stDiv = doc.CreateElement("div");
 
             sb.AppendLine("Stacktrace:");
-            sb.AppendLine(el.stackTrace.Nl2Br());
+            sb.AppendLine(el.stackTrace.OptimizeHTML());
 
-            stDiv.InnerHtml = sb.ToString().Nl2Br();
+            stDiv.InnerHtml = sb.ToString().OptimizeHTML();
 
             sb.Clear();
 
@@ -938,17 +938,19 @@ public class Console : MonoBehaviour
 
             node.AppendChild(div);
 
-            var br = doc.CreateElement("br");
+            /*var br = doc.CreateElement("br");
             node.AppendChild(br);
             node.AppendChild(doc.CreateElement("hr"));
-            node.AppendChild(br);
+            node.AppendChild(br);*/
+
+            node.InnerHtml += "[br][hr][br]";
 
             ++i;
         }
 
         doc.DocumentNode.AppendChild(node);
 
-        return doc.DocumentNode.OuterHtml;
+        return doc.DocumentNode.IndentHtml();
     }
 
     private string GetHTMLColor(LogType type)

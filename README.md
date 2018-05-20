@@ -86,6 +86,8 @@ F9 - Toggle velocimeter
 
 - In-game input manager
 
+- Flip & repair cars
+
 ### Effects & Enhancements
 
 * Jump, swim & fall animations
