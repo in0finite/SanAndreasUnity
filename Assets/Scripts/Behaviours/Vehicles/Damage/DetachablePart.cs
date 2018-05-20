@@ -1,6 +1,5 @@
-using UnityEngine;
-using System.Collections;
 using SanAndreasUnity.Utilities;
+using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {

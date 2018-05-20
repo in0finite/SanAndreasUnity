@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {

@@ -1,11 +1,4 @@
-﻿using Facepunch.Networking;
-using ProtoBuf;
-using ProtoBuf.Player;
-using SanAndreasUnity.Utilities;
-using System;
-using UnityEngine;
-
-namespace SanAndreasUnity.Behaviours.Networking
+﻿namespace SanAndreasUnity.Behaviours.Networking
 {
 #if CLIENT
 

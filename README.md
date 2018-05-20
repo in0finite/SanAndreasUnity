@@ -22,6 +22,8 @@ mouse scroll - zoom in/out
 
 F1 - toggle debug menu
 
+F2 - Open console
+
 T - enable debug flying mode
 
 R - enable debug noclip mode

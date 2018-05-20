@@ -35,7 +35,7 @@ namespace SanAndreasUnity.Behaviours
             northBlip = huds.GetDiffuse("radar_north").Texture;
             playerBlip = huds.GetDiffuse("radar_centre").Texture;
 
-            Debug.Log(new Vector2(playerBlip.width, playerBlip.height));
+            //Debug.Log(new Vector2(playerBlip.width, playerBlip.height));
         }
 
         private static Texture2D getTile(int i)

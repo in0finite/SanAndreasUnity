@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace SanAndreasUnity.Utilities
 {
@@ -18,6 +18,7 @@ namespace SanAndreasUnity.Utilities
         }
 
         /* singleton constructor */
+
         private TextGizmo()
         {
             editorCamera = Camera.current;
@@ -29,6 +30,7 @@ namespace SanAndreasUnity.Utilities
         }
 
         /* only call this method from a OnGizmos() method */
+
         public static void Draw(Vector3 position, string text)
         {
             if (tg == null) Init();
