@@ -30,7 +30,7 @@ namespace SanAndreasUnity.Behaviours.World
         private Division _childB;
 
         private List<MapObject> _objects;
-        public int NumObjects { get { return this._objects.Count; } }
+        public int NumObjects { get { return _objects.Count; } }
 
         public int NumObjectsIncludingChildren
         {

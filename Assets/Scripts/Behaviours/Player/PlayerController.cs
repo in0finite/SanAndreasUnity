@@ -283,11 +283,15 @@ namespace SanAndreasUnity.Behaviours
                 Cursor.visible = false;
             }
 
-            if (!_showMenu && Input.GetKeyDown(KeyCode.Escape))
-                ChangeCursorState(!CursorLocked);
-
             if (Input.GetKeyDown(KeyCode.F1))
                 _showMenu = !_showMenu;
+
+            bool isConsoleStateChanged = Console.Instance.m_openKey != Console.Instance.m_closeKey ?
+                Input.GetKeyDown(Console.Instance.m_openKey) || Input.GetKeyDown(Console.Instance.m_closeKey) :
+                Input.GetKeyDown(Console.Instance.m_openKey);
+
+            if (!_showMenu && (Input.GetKeyDown(KeyCode.Escape) || isConsoleStateChanged || Input.GetKeyDown(KeyCode.F1)))
+                ChangeCursorState(!CursorLocked);
 
             if (CursorLocked)
             {
@@ -303,15 +307,20 @@ namespace SanAndreasUnity.Behaviours
             float distance;
             Vector3 castFrom;
 
+            float scrollValue = Input.mouseScrollDelta.y;
+
+            if (Console.Instance.IsOpened)
+                scrollValue = 0;
+
             if (_player.IsInVehicle)
             {
-                CarCameraDistance = Mathf.Clamp(CarCameraDistance - Input.mouseScrollDelta.y, 2.0f, 32.0f);
+                CarCameraDistance = Mathf.Clamp(CarCameraDistance - scrollValue, 2.0f, 32.0f);
                 distance = CarCameraDistance;
                 castFrom = _player.CurrentVehicle.transform.position;
             }
             else
             {
-                PlayerCameraDistance = Mathf.Clamp(PlayerCameraDistance - Input.mouseScrollDelta.y, 2.0f, 32.0f);
+                PlayerCameraDistance = Mathf.Clamp(PlayerCameraDistance - scrollValue, 2.0f, 32.0f);
                 distance = PlayerCameraDistance;
                 castFrom = transform.position + Vector3.up * .5f;
             }
@@ -393,7 +402,7 @@ namespace SanAndreasUnity.Behaviours
                         {
                             // player is holding a weapon
 
-                            this.Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
+                            Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
                                 AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
                         }
                         else
@@ -409,7 +418,7 @@ namespace SanAndreasUnity.Behaviours
                         // player is walking
                         if (_player.currentWeaponSlot > 0)
                         {
-                            this.Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
+                            Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
                                 AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
                         }
                         else
@@ -424,7 +433,7 @@ namespace SanAndreasUnity.Behaviours
                     // player is standing
                     if (_player.currentWeaponSlot > 0)
                     {
-                        this.Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
+                        Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
                             AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
                         //	PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, PlayMode.StopAll);
                     }
@@ -514,7 +523,7 @@ namespace SanAndreasUnity.Behaviours
                 state.AddMixingTransform(f.transform, true);
                 //	state.wrapMode = WrapMode.Loop;
             }
-            state.weight = this.animationBlendWeight;
+            state.weight = animationBlendWeight;
 
             //	PlayerModel._anim.Blend( );
         }

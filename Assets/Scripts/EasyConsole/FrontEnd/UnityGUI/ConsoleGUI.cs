@@ -16,12 +16,13 @@ internal class ConsoleGUI : MonoBehaviour
     public GUISkin skin = null;
     public int linesVisible = 17;
 
-    private bool isOpen = false;
+    internal bool isOpen = false;
     private string partialCommand = "";
 
     private bool moveCursorToEnd;
 
     public bool showHierarchy = true;
+    public float m_scrollMult = 10;
 
     private string[] displayObjects = null;
     private string[] displayComponents = null;
@@ -36,6 +37,7 @@ internal class ConsoleGUI : MonoBehaviour
     private bool wasCursorVisible;
 
     private int hierarchyWidth = 150;
+    private int actualMax;
 
     private void Start()
     {
@@ -95,6 +97,10 @@ internal class ConsoleGUI : MonoBehaviour
             Event.current.Use();
         }
 
+        string focused = GUI.GetNameOfFocusedControl();
+
+        //Debug.LogFormat("Focused: {0}", focused);
+
         if (isOpen)
         {
             GUI.depth = -100;
@@ -105,12 +111,15 @@ internal class ConsoleGUI : MonoBehaviour
             var lines = Console.Instance.Lines;
             // display last 10 lines
             for (int i = lines.Count() - Mathf.Min(linesVisible, lines.Count()) - historyScrollValue; i < lines.Count() - historyScrollValue; i++)
-            { // WIP: Display color if this a debug msg
-                GUILayout.Label(lines.GetItemAt(i));
+            { // WIP: Display color if this a debug msg (improve)
+                string str = lines.GetItemAt(i);
+                GUILayout.Label(str, new GUIStyle("label") { normal = new GUIStyleState() { textColor = GetColor(str) } });
             }
             GUILayout.EndVertical();
             if (lines.Count() > linesVisible)
                 historyScrollValue = (int)GUILayout.VerticalScrollbar(historyScrollValue, linesVisible, lines.Count(), 0, GUILayout.ExpandHeight(true));
+
+            actualMax = lines.Count();
 
             if (showHierarchy)
             {
@@ -208,7 +217,7 @@ internal class ConsoleGUI : MonoBehaviour
                 moveCursorToEnd = false;
             }
 
-            if (GUI.GetNameOfFocusedControl() == "CommandTextField" && returnPressed)
+            if (focused == "CommandTextField" && returnPressed)
             {
                 Console.Instance.Print("> " + command);
                 Console.Instance.Eval(command);
@@ -218,7 +227,7 @@ internal class ConsoleGUI : MonoBehaviour
                 displayComponents = Console.Instance.GetComponentsOfGameobject(command);
             }
 
-            if (GUI.GetNameOfFocusedControl() == "CommandTextField" && upPressed)
+            if (focused == "CommandTextField" && upPressed)
             {
                 if (commandIndex == 0)
                     partialCommand = command;
@@ -235,7 +244,7 @@ internal class ConsoleGUI : MonoBehaviour
                 }
             }
 
-            if (GUI.GetNameOfFocusedControl() == "CommandTextField" && downPressed)
+            if (focused == "CommandTextField" && downPressed)
             {
                 commandIndex--;
                 var commandsCount = Console.Instance.Commands.Count();
@@ -271,8 +280,9 @@ internal class ConsoleGUI : MonoBehaviour
             wasCursorVisible = Cursor.visible;
         }
 
-        if (isOpen && !Cursor.visible)
-            Cursor.visible = true;
+        // Fix: Now this is made by PlayerController
+        //if (isOpen && !Cursor.visible)
+        //    Cursor.visible = true;
 
         if (isOpen && escPressed)
         {
@@ -281,7 +291,7 @@ internal class ConsoleGUI : MonoBehaviour
         }
 
         // refocus the textfield if focus is lost
-        if (isOpen && Event.current.type == EventType.Layout && GUI.GetNameOfFocusedControl() != "CommandTextField")
+        if (isOpen && Event.current.type == EventType.Layout && focused != "CommandTextField")
         {
             GUI.FocusControl("CommandTextField");
             TextEditor te = (TextEditor)GUIUtility.GetStateObject(typeof(TextEditor), GUIUtility.keyboardControl);
@@ -290,6 +300,37 @@ internal class ConsoleGUI : MonoBehaviour
                 //te.pos = commandLastPos;
                 //te.selectPos = commandLastSelectPos;
             }
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        // Implementing: Scroll wheel for the history
+        if (Input.mouseScrollDelta != Vector2.zero)
+            NavigateChat(ref historyScrollValue, (int)(-Input.mouseScrollDelta.y * m_scrollMult), actualMax);
+    }
+
+    private Color GetColor(string str)
+    {
+        if (!string.IsNullOrEmpty(str))
+            if (str.ToLower().Contains("warning"))
+                return Color.yellow;
+            else if (str.ToLower().Contains("error"))
+                return Color.red;
+        return Color.white;
+    }
+
+    internal static void NavigateChat(ref int scroll, int d, int max)
+    {
+        if (d < 0)
+        {
+            if (scroll > 0)
+                scroll -= Mathf.Abs(d);
+        }
+        else
+        {
+            if (scroll < max)
+                scroll += d;
         }
     }
 

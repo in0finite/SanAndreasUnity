@@ -45,15 +45,28 @@ public class Console : MonoBehaviour
     [SerializeField]
     private bool printDebug = true;
 
-    private Dictionary<Type, global::Console.ParserCallback> parsers = new Dictionary<Type, global::Console.ParserCallback>();
+    private Dictionary<Type, ParserCallback> parsers = new Dictionary<Type, ParserCallback>();
 
     private Component selectedComponent = null;
+
+    // WIP: Maybe we will need to implement support for ConsoleNGUI
+    private ConsoleGUI consoleGUI;
+
+    public bool IsOpened
+    {
+        get
+        {
+            if (consoleGUI != null)
+                return consoleGUI.isOpen;
+            return false;
+        }
+    }
 
     public static global::Console Instance
     {
         get
         {
-            return global::Console.instance;
+            return instance;
         }
     }
 
@@ -61,7 +74,7 @@ public class Console : MonoBehaviour
     {
         get
         {
-            return this.lines;
+            return lines;
         }
     }
 
@@ -69,33 +82,35 @@ public class Console : MonoBehaviour
     {
         get
         {
-            return this.commands;
+            return commands;
         }
     }
 
     private void Awake()
     {
-        if (global::Console.instance != null)
+        if (instance != null)
         {
             Debug.LogError("only one instance is allowed to exist");
         }
-        global::Console.instance = this;
-        this.lines = new CircularBuffer<string>(this.linesOfHistory, true);
-        this.commands = new CircularBuffer<string>(this.commandHistory, true);
+        instance = this;
+        lines = new CircularBuffer<string>(linesOfHistory, true);
+        commands = new CircularBuffer<string>(commandHistory, true);
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-        if (this.printDebug)
+        if (printDebug)
         {
-            Application.logMessageReceived += this.PrintDebug;
+            Application.logMessageReceived += PrintDebug;
             //Application.RegisterLogCallback(new Application.LogCallback(this.PrintDebug));
         }
-        this.RegisterCommand("help", this, "Help");
-        this.RegisterCommand("list", this, "List");
-        this.RegisterCommand("listComponents", this, "ListComponents");
-        this.RegisterCommand("printTree", this, "PrintTree");
-        this.RegisterCommand("select", this, "Select");
-        this.RegisterParser(typeof(int), new global::Console.ParserCallback(this.parseInt));
-        this.RegisterParser(typeof(float), new global::Console.ParserCallback(this.parseFloat));
-        this.RegisterParser(typeof(string), new global::Console.ParserCallback(this.parseString));
+        RegisterCommand("help", this, "Help");
+        RegisterCommand("list", this, "List");
+        RegisterCommand("listComponents", this, "ListComponents");
+        RegisterCommand("printTree", this, "PrintTree");
+        RegisterCommand("select", this, "Select");
+        RegisterParser(typeof(int), new ParserCallback(parseInt));
+        RegisterParser(typeof(float), new ParserCallback(parseFloat));
+        RegisterParser(typeof(string), new ParserCallback(parseString));
+
+        consoleGUI = GetComponent<ConsoleGUI>();
     }
 
     /*private void OnLevelWasLoaded(int id)
@@ -117,7 +132,7 @@ public class Console : MonoBehaviour
     private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode mode)
     {
         List<string> list = new List<string>();
-        foreach (KeyValuePair<string, global::Console.DirectCommand> current in this.directCommands)
+        foreach (KeyValuePair<string, global::Console.DirectCommand> current in directCommands)
         {
             if (!current.Value.instance.IsAlive || current.Value.instance.Target == null)
             {
@@ -126,7 +141,7 @@ public class Console : MonoBehaviour
         }
         foreach (string current2 in list)
         {
-            this.directCommands.Remove(current2);
+            directCommands.Remove(current2);
         }
     }
 
@@ -145,7 +160,7 @@ public class Console : MonoBehaviour
                 ")"
             }));
         }
-        this.RegisterCommand(command, instance, method);
+        RegisterCommand(command, instance, method);
     }
 
     public void RegisterCommand(string command, object instance, MethodInfo method)
@@ -166,20 +181,20 @@ public class Console : MonoBehaviour
                 break;
             }
         }
-        this.directCommands[command] = value;
+        directCommands[command] = value;
     }
 
     public void RemoveCommand(string command)
     {
-        if (this.directCommands.ContainsKey(command))
+        if (directCommands.ContainsKey(command))
         {
-            this.directCommands.Remove(command);
+            directCommands.Remove(command);
         }
     }
 
-    public void RegisterParser(Type type, global::Console.ParserCallback func)
+    public void RegisterParser(Type type, ParserCallback func)
     {
-        this.parsers[type] = func;
+        parsers[type] = func;
     }
 
     public void Print(string line)
@@ -193,27 +208,27 @@ public class Console : MonoBehaviour
         {
             string text = array2[i];
             string text2 = text;
-            while (text2.Length > this.maxLineWidth)
+            while (text2.Length > maxLineWidth)
             {
-                int num = text2.LastIndexOf(' ', this.maxLineWidth);
-                if (num >= this.maxLineWidth / 2)
+                int num = text2.LastIndexOf(' ', maxLineWidth);
+                if (num >= maxLineWidth / 2)
                 {
-                    this.lines.Enqueue(text2.Substring(0, num));
+                    lines.Enqueue(text2.Substring(0, num));
                     text2 = text2.Substring(num + 1);
                 }
                 else
                 {
-                    this.lines.Enqueue(text2.Substring(0, this.maxLineWidth));
-                    text2 = text2.Substring(this.maxLineWidth + 1);
+                    lines.Enqueue(text2.Substring(0, maxLineWidth));
+                    text2 = text2.Substring(maxLineWidth + 1);
                 }
             }
-            this.lines.Enqueue(text2);
+            lines.Enqueue(text2);
         }
     }
 
     public void Eval(string line)
     {
-        this.commands.Enqueue(line);
+        commands.Enqueue(line);
         string text;
         string[] hierarchy;
         string componentName;
@@ -223,45 +238,45 @@ public class Console : MonoBehaviour
         if (text != null)
         {
             global::Console.DirectCommand directCommand;
-            if (this.directCommands.TryGetValue(text, out directCommand))
+            if (directCommands.TryGetValue(text, out directCommand))
             {
                 if (directCommand.instance.IsAlive && directCommand.instance.Target != null)
                 {
-                    this.CheckParametersAndInvoke(args, directCommand.instance.Target, directCommand.method);
+                    CheckParametersAndInvoke(args, directCommand.instance.Target, directCommand.method);
                 }
                 else
                 {
-                    this.Print("Instance has been removed. Removing command");
-                    this.directCommands.Remove(text);
+                    Print("Instance has been removed. Removing command");
+                    directCommands.Remove(text);
                 }
             }
-            else if (this.selectedComponent != null)
+            else if (selectedComponent != null)
             {
                 MethodInfo methodInfo;
-                if (this.GetMethodOnComponent(text, this.selectedComponent, out methodInfo))
+                if (GetMethodOnComponent(text, selectedComponent, out methodInfo))
                 {
                     if (methodInfo == null)
                     {
-                        this.Print("Unkown Command! Type \"help\" for help.");
+                        Print("Unkown Command! Type \"help\" for help.");
                     }
                     else
                     {
-                        this.CheckParametersAndInvoke(args, this.selectedComponent, methodInfo);
+                        CheckParametersAndInvoke(args, selectedComponent, methodInfo);
                     }
                 }
             }
             else
             {
-                this.Print("Unkown Command! Type \"help\" for help.");
+                Print("Unkown Command! Type \"help\" for help.");
             }
         }
         else if (text2 != null)
         {
-            this.InvokeMethodOnComponent(args, hierarchy, componentName, text2);
+            InvokeMethodOnComponent(args, hierarchy, componentName, text2);
         }
         else
         {
-            this.Print("Unkown Command! Type \"help\" for help.");
+            Print("Unkown Command! Type \"help\" for help.");
         }
     }
 
@@ -276,7 +291,7 @@ public class Console : MonoBehaviour
         GameObject gameObject = GameObject.Find(text);
         if (gameObject == null)
         {
-            this.Print("Unknown GameObject");
+            Print("Unknown GameObject");
         }
         else
         {
@@ -284,17 +299,17 @@ public class Console : MonoBehaviour
             MethodInfo methodInfo;
             if (component == null)
             {
-                this.Print("Unknown Component");
+                Print("Unknown Component");
             }
-            else if (this.GetMethodOnComponent(ocf[2], component, out methodInfo))
+            else if (GetMethodOnComponent(ocf[2], component, out methodInfo))
             {
                 if (methodInfo == null)
                 {
-                    this.Print("Unknown Method");
+                    Print("Unknown Method");
                 }
                 else
                 {
-                    this.CheckParametersAndInvoke(args, component, methodInfo);
+                    CheckParametersAndInvoke(args, component, methodInfo);
                 }
             }
         }
@@ -306,7 +321,7 @@ public class Console : MonoBehaviour
         GameObject gameObject = GameObject.Find(name);
         if (gameObject == null)
         {
-            this.Print("Unknown GameObject");
+            Print("Unknown GameObject");
         }
         else
         {
@@ -314,17 +329,17 @@ public class Console : MonoBehaviour
             MethodInfo methodInfo;
             if (component == null)
             {
-                this.Print("Unknown Component");
+                Print("Unknown Component");
             }
-            else if (this.GetMethodOnComponent(methodName, component, out methodInfo))
+            else if (GetMethodOnComponent(methodName, component, out methodInfo))
             {
                 if (methodInfo == null)
                 {
-                    this.Print("Unknown Method");
+                    Print("Unknown Method");
                 }
                 else
                 {
-                    this.CheckParametersAndInvoke(args, component, methodInfo);
+                    CheckParametersAndInvoke(args, component, methodInfo);
                 }
             }
         }
@@ -351,7 +366,7 @@ public class Console : MonoBehaviour
         }
         catch (AmbiguousMatchException)
         {
-            this.Print("Overloaded Method Found. Unable to invoke");
+            Print("Overloaded Method Found. Unable to invoke");
             result = false;
             return result;
         }
@@ -373,8 +388,8 @@ public class Console : MonoBehaviour
             {
                 type = type.GetElementType();
             }
-            global::Console.ParserCallback parserCallback;
-            if (this.parsers.TryGetValue(type, out parserCallback))
+            ParserCallback parserCallback;
+            if (parsers.TryGetValue(type, out parserCallback))
             {
                 if (flag)
                 {
@@ -394,7 +409,7 @@ public class Console : MonoBehaviour
                 {
                     if (i >= args.Length)
                     {
-                        this.Print(string.Concat(new object[]
+                        Print(string.Concat(new object[]
                         {
                             "Mismatched arguments: Expected ",
                             parameters.Length,
@@ -411,7 +426,7 @@ public class Console : MonoBehaviour
                 i++;
                 continue;
             }
-            this.Print(string.Concat(new object[]
+            Print(string.Concat(new object[]
             {
                 "Invalid Parameter Type: Parameter ",
                 i,
@@ -431,7 +446,7 @@ public class Console : MonoBehaviour
 
     private void PrintDebug(string condition, string stackTrace, LogType type)
     {
-        this.Print(type.ToString() + ": " + condition);
+        Print(type.ToString() + ": " + condition);
         string[] array = stackTrace.Split(new char[]
         {
             '\n'
@@ -439,7 +454,7 @@ public class Console : MonoBehaviour
         for (int i = 0; i < array.Length; i++)
         {
             string str = array[i];
-            this.Print("\t" + str);
+            Print("\t" + str);
         }
     }
 
@@ -669,7 +684,7 @@ public class Console : MonoBehaviour
         bool result;
         if (!int.TryParse(i, out num))
         {
-            this.Print("Invalid Parameter: Parameter \"" + i + "\" needs to be an integer");
+            Print("Invalid Parameter: Parameter \"" + i + "\" needs to be an integer");
             obj = null;
             result = false;
         }
@@ -687,7 +702,7 @@ public class Console : MonoBehaviour
         bool result;
         if (!float.TryParse(i, out num))
         {
-            this.Print("Invalid Parameter: Parameter \"" + i + "\" needs to be an float");
+            Print("Invalid Parameter: Parameter \"" + i + "\" needs to be an float");
             obj = null;
             result = false;
         }
@@ -710,31 +725,31 @@ public class Console : MonoBehaviour
         if (arg.Length > 0)
         {
             global::Console.DirectCommand directCommand;
-            if (this.directCommands.TryGetValue(arg[0], out directCommand))
+            if (directCommands.TryGetValue(arg[0], out directCommand))
             {
                 HelpAttribute[] array = directCommand.method.GetCustomAttributes(typeof(HelpAttribute), true) as HelpAttribute[];
                 HelpAttribute[] array2 = array;
                 for (int i = 0; i < array2.Length; i++)
                 {
                     HelpAttribute helpAttribute = array2[i];
-                    this.Print(helpAttribute.helpText);
+                    Print(helpAttribute.helpText);
                 }
             }
             else
             {
-                this.Print("Unknown command");
+                Print("Unknown command");
             }
         }
         else
         {
             string text = "";
-            foreach (string current in this.directCommands.Keys)
+            foreach (string current in directCommands.Keys)
             {
                 text = text + ", " + current;
             }
             text = text.Substring(2);
-            this.Print("Type \"help [command]\" to get additional help");
-            this.Print("Known commands: " + text);
+            Print("Type \"help [command]\" to get additional help");
+            Print("Known commands: " + text);
         }
     }
 
@@ -749,7 +764,7 @@ public class Console : MonoBehaviour
             Transform transform = (Transform)@object;
             if (transform.parent == null)
             {
-                this.Print(transform.name);
+                Print(transform.name);
             }
         }
     }
@@ -760,7 +775,7 @@ public class Console : MonoBehaviour
         GameObject gameObject = GameObject.Find(goPath);
         if (gameObject == null)
         {
-            this.Print("Object not found: " + goPath);
+            Print("Object not found: " + goPath);
         }
         else
         {
@@ -769,7 +784,7 @@ public class Console : MonoBehaviour
             for (int i = 0; i < array.Length; i++)
             {
                 Component component = array[i];
-                this.Print(component.GetType().ToString());
+                Print(component.GetType().ToString());
             }
         }
     }
@@ -780,11 +795,11 @@ public class Console : MonoBehaviour
         GameObject gameObject = GameObject.Find(goPath);
         if (gameObject == null)
         {
-            this.Print("Object not found: " + goPath);
+            Print("Object not found: " + goPath);
         }
         else
         {
-            this.PrintTreeInternal(gameObject.transform, 0);
+            PrintTreeInternal(gameObject.transform, 0);
         }
     }
 
@@ -795,10 +810,10 @@ public class Console : MonoBehaviour
         {
             str += "\t";
         }
-        this.Print(str + go.name);
+        Print(str + go.name);
         foreach (Transform go2 in go)
         {
-            this.PrintTreeInternal(go2, depth + 1);
+            PrintTreeInternal(go2, depth + 1);
         }
     }
 
@@ -807,8 +822,8 @@ public class Console : MonoBehaviour
     {
         if (path.Length != 1)
         {
-            this.selectedComponent = null;
-            this.Print("Component deselected");
+            selectedComponent = null;
+            Print("Component deselected");
         }
         string[] hierarchy;
         string text;
@@ -816,29 +831,29 @@ public class Console : MonoBehaviour
         global::Console.parseGameObjectString(path[0], out hierarchy, out text, out text2);
         if (text2 != null)
         {
-            this.Print("Invalid path. You can not add a method or field identifier to the path");
+            Print("Invalid path. You can not add a method or field identifier to the path");
         }
         if (text == null)
         {
-            this.Print("Invalid path. Component is not present");
+            Print("Invalid path. Component is not present");
         }
         string text3 = global::Console.BuildGameObjectPath(hierarchy);
         GameObject gameObject = GameObject.Find(text3);
         if (gameObject == null)
         {
-            this.Print("Object not found: " + text3);
+            Print("Object not found: " + text3);
         }
         else
         {
             Component component = gameObject.GetComponent(text);
             if (component == null)
             {
-                this.Print("Component not found: " + text);
+                Print("Component not found: " + text);
             }
             else
             {
-                this.selectedComponent = component;
-                this.Print("Component selected: " + this.selectedComponent);
+                selectedComponent = component;
+                Print("Component selected: " + selectedComponent);
             }
         }
     }

@@ -37,12 +37,12 @@ namespace SanAndreasUnity.Behaviours
         // Update is called once per frame
         private void Update()
         {
-            this.CheckForChanges();
+            CheckForChanges();
         }
 
         private void OnValidate()
         {
-            this.CheckForChanges();
+            CheckForChanges();
         }
 
         private void CheckForChanges()
@@ -52,13 +52,13 @@ namespace SanAndreasUnity.Behaviours
 
             if (m_modelLoadType != modelLoadType)
             {
-                this.Load();
+                Load();
                 return;
             }
 
             if (m_currentModelId != modelId)
             {
-                this.Load();
+                Load();
                 return;
             }
 
@@ -66,7 +66,7 @@ namespace SanAndreasUnity.Behaviours
             {
                 if (m_currentTextureDictionaryName != textureDictionaryName)
                 {
-                    this.Load();
+                    Load();
                 }
             }
         }

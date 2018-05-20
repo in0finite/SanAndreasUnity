@@ -123,7 +123,7 @@ namespace SanAndreasUnity.Importing.Animation
         }
 
         private readonly string[] _animations;
-        public string[] Animations { get { return this._animations; } }
+        public string[] Animations { get { return _animations; } }
 
         public readonly string Name;
         public readonly string FileName;

@@ -21,9 +21,9 @@ public class UIVehicleSpawner : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetKeyDown(this.spawnKey))
+        if (Input.GetKeyDown(spawnKey))
         {
-            this.SpawnVehicle();
+            SpawnVehicle();
         }
     }
 
@@ -45,7 +45,7 @@ public class UIVehicleSpawner : MonoBehaviour
 
         if (GUILayout.Button("Spawn vehicle"))
         {
-            this.SpawnVehicle();
+            SpawnVehicle();
         }
 
         if (GUILayout.Button("Change player model"))
@@ -67,8 +67,8 @@ public class UIVehicleSpawner : MonoBehaviour
         }
         else
         {
-            Vector3 pos = cont.transform.position + cont.transform.forward * this.spawnOffset.z + cont.transform.up * this.spawnOffset.y
-                + cont.transform.right * this.spawnOffset.x;
+            Vector3 pos = cont.transform.position + cont.transform.forward * spawnOffset.z + cont.transform.up * spawnOffset.y
+                + cont.transform.right * spawnOffset.x;
             Quaternion rotation = Quaternion.LookRotation(-cont.transform.right, Vector3.up);
 
             //	SanAndreasUnity.Behaviours.Vehicles.VehicleSpawner.Create ();

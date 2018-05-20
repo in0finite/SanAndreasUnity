@@ -389,7 +389,7 @@ namespace SanAndreasUnity.Behaviours
                 UpdateWheelTurning();
 
             // switch weapons - does not work
-            if (!IsInVehicle)
+            if (!IsInVehicle && !Console.Instance.IsOpened)
             {
                 if (Input.mouseScrollDelta.y != 0)
                 {
@@ -407,7 +407,7 @@ namespace SanAndreasUnity.Behaviours
 
                         if (weapons[i] != null)
                         {
-                            this.SwitchWeapon(i);
+                            SwitchWeapon(i);
                             break;
                         }
                     }
@@ -420,7 +420,7 @@ namespace SanAndreasUnity.Behaviours
                 // player has no weapons
 
                 weapons[(int)WeaponSlot.Machine] = Weapon.Load(355);
-                this.SwitchWeapon((int)WeaponSlot.Machine);
+                SwitchWeapon((int)WeaponSlot.Machine);
             }
 
             //If player falls from the map

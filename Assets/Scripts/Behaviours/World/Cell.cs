@@ -57,7 +57,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void Start()
         {
-            this.InvokeRepeating("UpdateDivisions", 0f, 0.1f);
+            InvokeRepeating("UpdateDivisions", 0f, 0.1f);
         }
 
         private void Update()
@@ -83,7 +83,7 @@ namespace SanAndreasUnity.Behaviours.World
                     }
 
                     //    if (NetConfig.IsServer) {
-                    if (this.loadParkedVehicles)
+                    if (loadParkedVehicles)
                     {
                         var parkedVehicles = Item.GetPlacements<ParkedVehicle>(CellIds.ToArray());
                         var cars = parkedVehicles.Select(x => VehicleSpawner.Create(x))

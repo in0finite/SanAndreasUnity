@@ -11,10 +11,10 @@ public class OutOfRangeDestroyer : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        if (null == this.targetObject)
+        if (null == targetObject)
         {
             if (Camera.current != null)
-                this.targetObject = Camera.current.transform;
+                targetObject = Camera.current.transform;
         }
     }
 
@@ -23,13 +23,13 @@ public class OutOfRangeDestroyer : MonoBehaviour
     {
         timeSinceOutOfRange += Time.deltaTime;
 
-        if (null == this.targetObject)
+        if (null == targetObject)
         {
             if (Camera.current != null)
-                this.targetObject = Camera.current.transform;
+                targetObject = Camera.current.transform;
         }
 
-        if (null != this.targetObject)
+        if (null != targetObject)
         {
             float distanceSq = (transform.position - targetObject.position).sqrMagnitude;
             if (distanceSq <= range * range)
@@ -40,7 +40,7 @@ public class OutOfRangeDestroyer : MonoBehaviour
 
         if (timeSinceOutOfRange >= timeUntilDestroyed)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 }

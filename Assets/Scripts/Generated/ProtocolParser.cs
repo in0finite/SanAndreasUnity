@@ -503,7 +503,7 @@ namespace SilentOrbit.ProtocolBuffers
         /// </param>
         public PositionStream(Stream baseStream)
         {
-            this.stream = baseStream;
+            stream = baseStream;
         }
 
         public override void Flush()
@@ -576,7 +576,7 @@ namespace SilentOrbit.ProtocolBuffers
         {
             get
             {
-                return this.BytesRead;
+                return BytesRead;
             }
             set
             {
@@ -778,8 +778,8 @@ namespace SilentOrbit.ProtocolBuffers
 
         public Key(uint field, Wire wireType)
         {
-            this.Field = field;
-            this.WireType = wireType;
+            Field = field;
+            WireType = wireType;
         }
 
         public override string ToString()
@@ -799,8 +799,8 @@ namespace SilentOrbit.ProtocolBuffers
 
         public KeyValue(Key key, byte[] value)
         {
-            this.Key = key;
-            this.Value = value;
+            Key = key;
+            Value = value;
         }
 
         public override string ToString()

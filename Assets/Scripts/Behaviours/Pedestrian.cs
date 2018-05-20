@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Behaviours
         public UnityEngine.Animation _anim { get; private set; }
 
         private FrameContainer _frames;
-        public FrameContainer Frames { get { return this._frames; } }
+        public FrameContainer Frames { get { return _frames; } }
         private Frame _root;
 
         private readonly Dictionary<string, Anim> _loadedAnims
@@ -59,7 +59,7 @@ namespace SanAndreasUnity.Behaviours
             {
                 AnimGroup = AnimGroup.WalkCycle;
                 animIndex = value ? AnimIndex.Walk : AnimIndex.Idle;
-                this.PlayAnim(AnimGroup, animIndex, PlayMode.StopAll);
+                PlayAnim(AnimGroup, animIndex, PlayMode.StopAll);
             }
             get
             {
@@ -83,7 +83,7 @@ namespace SanAndreasUnity.Behaviours
             {
                 AnimGroup = AnimGroup.WalkCycle;
                 animIndex = value ? AnimIndex.Run : AnimIndex.Walk;
-                this.PlayAnim(AnimGroup, animIndex, PlayMode.StopAll);
+                PlayAnim(AnimGroup, animIndex, PlayMode.StopAll);
             }
             get
             {

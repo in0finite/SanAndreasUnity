@@ -23,72 +23,72 @@ namespace Homans.Containers
         public CircularBuffer(int maxCapacity, bool overwrite)
         {
             this.maxCapacity = maxCapacity;
-            this.buffer = new T[maxCapacity];
-            this.head = 0;
-            this.tail = 0;
+            buffer = new T[maxCapacity];
+            head = 0;
+            tail = 0;
             this.overwrite = overwrite;
         }
 
         public void Enqueue(T item)
         {
-            if (this.full && !this.overwrite)
+            if (full && !overwrite)
             {
                 throw new IndexOutOfRangeException("Buffer is full");
             }
-            if (this.full && ++this.head >= this.maxCapacity)
+            if (full && ++head >= maxCapacity)
             {
-                this.head = 0;
+                head = 0;
             }
-            int num = this.tail;
-            if (++this.tail >= this.maxCapacity)
+            int num = tail;
+            if (++tail >= maxCapacity)
             {
-                this.tail = 0;
+                tail = 0;
             }
-            if (this.tail == this.head)
+            if (tail == head)
             {
-                this.full = true;
+                full = true;
             }
-            this.buffer[num] = item;
-            this.empty = false;
+            buffer[num] = item;
+            empty = false;
         }
 
         public T Dequeue()
         {
-            if (this.empty)
+            if (empty)
             {
                 throw new IndexOutOfRangeException("Buffer is empty");
             }
-            T result = this.buffer[this.head];
-            if (++this.head >= this.maxCapacity)
+            T result = buffer[head];
+            if (++head >= maxCapacity)
             {
-                this.tail = 0;
+                tail = 0;
             }
-            if (this.head == this.tail)
+            if (head == tail)
             {
-                this.empty = true;
+                empty = true;
             }
-            this.full = false;
+            full = false;
             return result;
         }
 
         public int Count()
         {
             int result;
-            if (this.full)
+            if (full)
             {
-                result = this.maxCapacity;
+                result = maxCapacity;
             }
-            else if (this.empty)
+            else if (empty)
             {
                 result = 0;
             }
-            else if (this.head > this.tail)
+            else if (head > tail)
             {
-                result = this.tail + this.maxCapacity - this.head;
+                result = tail + maxCapacity - head;
             }
             else
             {
-                result = this.tail - this.head;
+                result = tail - head;
             }
             return result;
         }
@@ -96,18 +96,18 @@ namespace Homans.Containers
         public T GetItemAt(int index)
         {
             T result;
-            if (this.empty)
+            if (empty)
             {
                 result = default(T);
             }
             else
             {
-                index = this.head + index;
-                if (index >= this.maxCapacity)
+                index = head + index;
+                if (index >= maxCapacity)
                 {
-                    index -= this.maxCapacity;
+                    index -= maxCapacity;
                 }
-                result = this.buffer[index];
+                result = buffer[index];
             }
             return result;
         }
@@ -115,15 +115,15 @@ namespace Homans.Containers
         public IEnumerator<T> GetEnumerator()
         {
             int i = 0;
-            int num = this.head;
-            int num2 = this.tail;
-            while (i < this.Count())
+            int num = head;
+            int num2 = tail;
+            while (i < Count())
             {
-                if (num != this.head || num2 != this.tail)
+                if (num != head || num2 != tail)
                 {
                     throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
                 }
-                yield return this.GetItemAt(i);
+                yield return GetItemAt(i);
                 i++;
             }
             yield break;
@@ -132,15 +132,15 @@ namespace Homans.Containers
         IEnumerator IEnumerable.GetEnumerator()
         {
             int i = 0;
-            int num = this.head;
-            int num2 = this.tail;
-            while (i < this.Count())
+            int num = head;
+            int num2 = tail;
+            while (i < Count())
             {
-                if (num != this.head || num2 != this.tail)
+                if (num != head || num2 != tail)
                 {
                     throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
                 }
-                yield return this.GetItemAt(i);
+                yield return GetItemAt(i);
                 i++;
             }
             yield break;

@@ -84,6 +84,8 @@ F9 - Toggle velocimeter
 
 - Wheel explosion (I have to convert colliders, from a capsule collider generate a mesh collider with the shape of a capsule)
 
+- In-game input manager
+
 ### Effects & Enhancements
 
 * Jump, swim & fall animations
@@ -138,7 +140,7 @@ F9 - Toggle velocimeter
 
 - If you regenerate scripts while running Unity Editor crashes (patch it?)
 
-- Unnamed bug reappeared
+- Unnamed bug reappeared (I have checked HiddeFlags and created a new scene (that bring the bug of old GPU))
 
 - Some cars have its suppension to low to allow them to move
 

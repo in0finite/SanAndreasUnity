@@ -13,7 +13,7 @@ public class CharacterModelChanger : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (Input.GetKeyDown(this.actionKey))
+        if (Input.GetKeyDown(actionKey))
         {
             ChangePedestrianModel();
         }
