@@ -938,11 +938,6 @@ public class Console : MonoBehaviour
 
             node.AppendChild(div);
 
-            /*var br = doc.CreateElement("br");
-            node.AppendChild(br);
-            node.AppendChild(doc.CreateElement("hr"));
-            node.AppendChild(br);*/
-
             node.InnerHtml += "[br][hr][br]";
 
             ++i;

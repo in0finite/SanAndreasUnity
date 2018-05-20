@@ -166,6 +166,8 @@ F9 - Toggle velocimeter
 
 - Colors for debug messages in console
 
+- HTML (from logger) indent is not perfect
+
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is going to **Assets > Reimport all**
 
 ## Media
