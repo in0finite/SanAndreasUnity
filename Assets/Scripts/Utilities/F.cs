@@ -1,5 +1,7 @@
 ﻿using SanAndreasUnity.Behaviours.Vehicles;
+using System;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace SanAndreasUnity.Utilities
@@ -87,6 +89,23 @@ namespace SanAndreasUnity.Utilities
         public static bool BetweenExclusive(this float v, float min, float max)
         {
             return v > min && v < max;
+        }
+
+        public static double DateTimeToUnixTimestamp(this DateTime dateTime)
+        {
+            return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -
+                     new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+        }
+
+        public static string Nl2Br(this string str)
+        {
+            return str.Replace(Environment.NewLine, "<br>");
+        }
+
+        public static void Clear(this StringBuilder value)
+        {
+            value.Length = 0;
+            value.Capacity = 0;
         }
     }
 }

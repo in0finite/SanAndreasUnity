@@ -1,8 +1,12 @@
 using Homans.Console;
 using Homans.Containers;
+using HtmlAgilityPack;
+using SanAndreasUnity.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -23,10 +27,11 @@ public class Console : MonoBehaviour
 
     public KeyCode m_openKey = KeyCode.F2;
     public KeyCode m_closeKey = KeyCode.Comma;
+    public bool m_handleLog = true;
 
     public delegate bool ParserCallback(string str, out object obj);
 
-    private static global::Console instance;
+    private static Console instance;
 
     private CircularBuffer<string> lines;
 
@@ -52,6 +57,9 @@ public class Console : MonoBehaviour
     // WIP: Maybe we will need to implement support for ConsoleNGUI
     private ConsoleGUI consoleGUI;
 
+    private static List<ConsoleLog> l_consoleLog = new List<ConsoleLog>();
+    private static string logPath = "";
+
     public bool IsOpened
     {
         get
@@ -62,7 +70,7 @@ public class Console : MonoBehaviour
         }
     }
 
-    public static global::Console Instance
+    public static Console Instance
     {
         get
         {
@@ -856,5 +864,131 @@ public class Console : MonoBehaviour
                 Print("Component selected: " + selectedComponent);
             }
         }
+    }
+
+    private void OnEnable()
+    {
+        if (m_handleLog)
+            Application.logMessageReceived += HandleLog;
+    }
+
+    private void OnDisable()
+    {
+        if (m_handleLog)
+            Application.logMessageReceived -= HandleLog;
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (m_handleLog)
+        {
+            if (string.IsNullOrEmpty(logPath))
+                logPath = Path.Combine(Application.streamingAssetsPath, string.Format("debug_{0}.html", DateTime.Now.DateTimeToUnixTimestamp()));
+
+            string dir = Path.GetDirectoryName(logPath);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            File.WriteAllText(logPath, GenerateHTML());
+        }
+    }
+
+    private void HandleLog(string logString, string stackTrace, LogType type)
+    {
+        l_consoleLog.Add(new ConsoleLog(logString, stackTrace, type));
+    }
+
+    private string GenerateHTML()
+    {
+        var doc = new HtmlDocument();
+        var node = HtmlNode.CreateNode("<html><head></head><body></body></html>");
+
+        StringBuilder sb = new StringBuilder();
+
+        int i = 0;
+        foreach (var el in l_consoleLog)
+        {
+            HtmlNode div = doc.CreateElement("div");
+            div.SetAttributeValue("style", GetHTMLColor(el.logType));
+
+            HtmlNode span = doc.CreateElement("span");
+            sb.AppendLine(string.Format("Message #{0}", i));
+            sb.AppendLine();
+
+            span.InnerHtml = sb.ToString().Nl2Br();
+            sb.Clear();
+
+            span.SetAttributeValue("style", "color:black!important;");
+            div.AppendChild(span);
+
+            HtmlNode logDiv = doc.CreateElement("div");
+            logDiv.InnerHtml = el.logString.Nl2Br();
+
+            HtmlNode stDiv = doc.CreateElement("div");
+
+            sb.AppendLine("Stacktrace:");
+            sb.AppendLine(el.stackTrace.Nl2Br());
+
+            stDiv.InnerHtml = sb.ToString().Nl2Br();
+
+            sb.Clear();
+
+            div.AppendChild(logDiv);
+            div.AppendChild(stDiv);
+
+            node.AppendChild(div);
+
+            var br = doc.CreateElement("br");
+            node.AppendChild(br);
+            node.AppendChild(doc.CreateElement("hr"));
+            node.AppendChild(br);
+
+            ++i;
+        }
+
+        doc.DocumentNode.AppendChild(node);
+
+        return doc.DocumentNode.OuterHtml;
+    }
+
+    private string GetHTMLColor(LogType type)
+    {
+        switch (type)
+        {
+            case LogType.Assert:
+                return "color:darkcyan;";
+
+            case LogType.Error:
+                return "color:darkred;";
+
+            case LogType.Exception:
+                return "color:red;";
+
+            case LogType.Log:
+                return "";
+
+            case LogType.Warning:
+                return "color:darkgoldenrod;";
+        }
+        return "";
+    }
+}
+
+public class ConsoleLog
+{
+    public string logString;
+    public string stackTrace;
+    public LogType logType;
+
+    private ConsoleLog()
+    {
+    }
+
+    public ConsoleLog(string logString, string stackTrace, LogType logType)
+
+    {
+        this.logString = logString;
+        this.stackTrace = stackTrace;
+        this.logType = logType;
     }
 }

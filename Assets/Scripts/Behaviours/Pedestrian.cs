@@ -359,6 +359,7 @@ namespace SanAndreasUnity.Behaviours
                 return null;
             }
 
+            if (Definition == null || (Definition != null && string.IsNullOrEmpty(Definition.AnimGroupName))) return null;
             var animGroup = AnimationGroup.Get(Definition.AnimGroupName, group);
             if (null == animGroup)
                 return null;
