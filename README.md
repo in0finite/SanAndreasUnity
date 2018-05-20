@@ -156,6 +156,8 @@ F9 - Toggle velocimeter
 
 - In some cases damages to vehicles aren't performed at first collision
 
+- When console is opened cursor ticks
+
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is going to **Assets > Reimport all**
 
 ## Media
