@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Cryptography;
+using UnityEngine;
 
 // ReSharper disable once RedundantUsingDirective
 
@@ -98,10 +101,7 @@ namespace Facepunch.Networking
         {
             ServerName = "Unnamed Server";
 
-#if UNITY_EDITOR
-            RconPassword = "password";
-            ListenServer(Application.DefaultPort, Application.DefaultRconPort, 8);
-#else
+            //#else
             Port = Application.DefaultPort;
             RconPort = 0;
             RemoteHostname = "localhost";
@@ -113,8 +113,10 @@ namespace Facepunch.Networking
             RconPassword = String.Join("", bytes.Select(x => x.ToString("x2")).ToArray());
 
             var args = Environment.GetCommandLineArgs();
-            for (var i = 1; i < args.Length - 1; ++i) {
-                switch (args[i]) {
+            for (var i = 1; i < args.Length - 1; ++i)
+            {
+                switch (args[i])
+                {
                     case "--client":
                         IsClient = true;
                         IsDefinedByCommandLine = true;
@@ -127,7 +129,8 @@ namespace Facepunch.Networking
 
                     case "--port":
                         int port;
-                        if (int.TryParse(args[++i], out port)) {
+                        if (int.TryParse(args[++i], out port))
+                        {
                             Port = port;
                             break;
                         }
@@ -137,7 +140,8 @@ namespace Facepunch.Networking
 
                     case "--rcon-port":
                         int rconPort;
-                        if (int.TryParse(args[++i], out rconPort)) {
+                        if (int.TryParse(args[++i], out rconPort))
+                        {
                             RconPort = rconPort;
                             break;
                         }
@@ -152,7 +156,8 @@ namespace Facepunch.Networking
 
                     case "--max-connections":
                         int maxConnections;
-                        if (int.TryParse(args[++i], out maxConnections)) {
+                        if (int.TryParse(args[++i], out maxConnections))
+                        {
                             MaxConnections = maxConnections;
                             break;
                         }
@@ -181,6 +186,10 @@ namespace Facepunch.Networking
                         break;
                 }
             }
+
+#if UNITY_EDITOR
+            RconPassword = "password";
+            ListenServer(Application.DefaultPort, Application.DefaultRconPort, 8);
 #endif
         }
     }

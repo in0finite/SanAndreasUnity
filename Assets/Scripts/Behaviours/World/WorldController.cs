@@ -110,7 +110,7 @@ namespace SanAndreasUnity.Behaviours.World
                     break;
             }
 
-            Debug.Log(string.Format("Time set to {0}! ({1})", time.ToString(), dayTimeCounter));
+            Debug.LogFormat("Time set to {0}! ({1})", time.ToString(), dayTimeCounter);
         }
 
         private static float GetNearestWholeMultiple(float input, float X)

@@ -97,11 +97,11 @@ namespace SanAndreasUnity.Behaviours
             // Only debug
 
             foreach (var go in gameObject.GetComponentsInChildren<Component>())
-                Debug.Log(string.Format("Name: {0} => {1}", go.name, go.hideFlags));
+                Debug.LogFormat("Name: {0} => {1}", go.name, go.hideFlags);
 
-            Debug.Log(string.Format("DirectX: {0}", SystemInfo.graphicsShaderLevel));
+            Debug.LogFormat("DirectX: {0}", SystemInfo.graphicsShaderLevel);
 
-            Debug.Log(string.Format("Max FPS: {0}", Application.targetFrameRate));
+            Debug.LogFormat("Max FPS: {0}", Application.targetFrameRate);
 
             StartCoroutine(GPUAdjust());
         }
@@ -181,7 +181,7 @@ namespace SanAndreasUnity.Behaviours
                 if (!debug)
                     transform.position = hit.point + Vector3.up * characterController.height / 2;
                 else
-                    Debug.Log(string.Format("Ground found at {0}!", hit.point));
+                    Debug.LogFormat("Ground found at {0}!", hit.point);
             }
             else if (debug)
                 Debug.Log("Nothing found yet!!");

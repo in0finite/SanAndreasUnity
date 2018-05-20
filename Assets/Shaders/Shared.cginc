@@ -36,7 +36,7 @@ struct Input
 void surf(Input IN, inout SurfaceOutputStandard o)
 {
 #ifdef FADE
-    fixed noise = tex2D(_NoiseTex, IN.screenPos.xy / IN.screenPos.w).a * .99;
+    fixed noise = tex2D(_NoiseTex, IN.screenPos.xy / (IN.screenPos.w == 0 ? 1 : IN.screenPos.w)).a * .99;
     fixed fade = fixed(_Fade < 0 ? noise > 1 + _Fade : noise < _Fade);
 #else
     fixed fade = 1;

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using SanAndreasUnity.Utilities;
 using System.Linq;
 using System.Collections.Generic;
@@ -73,6 +72,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private Vector3[] initialPartPositions;
 
         private ContactPoint nullContact = new ContactPoint();
+
+        private void Awake()
+        {
+            TextGizmo.Init();
+        }
 
         private void Start()
         {
@@ -355,7 +359,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         // WIP: Name could be the same
                         // WIP: I will not use "me" more
                         //if (Mathf.Abs(avg) > 0 && curDamageMesh.name.Contains("wheel"))
-                        //    Debug.Log(string.Format("Damage Avg: {0} (Name: {1} from {2})", avg, curDamageMesh.transform.parent.name, vp.name));
+                        //    Debug.LogFormat("Damage Avg: {0} (Name: {1} from {2})", avg, curDamageMesh.transform.parent.name, vp.name));
 
                         if (false)
                             if (Mathf.Abs(avg) > .01f && curDamageMesh.transform.parent != null && curDamageMesh.transform.parent.name.Contains("wheel") && curDamageMesh.GetComponent<MeshCollider>() == null)
@@ -671,7 +675,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             foreach (var t in gameObject.GetComponentsInChildren<Transform>().Where(x => x.name.Contains("wheel")))
                 try
                 {
-                    GUIUtils.drawString(damageLogger[System.Array.IndexOf(deformMeshes.Select(x => x.name).ToArray(), t.name)].ToString(), t.position); //Buscar con un indexOf cual es el index del nombre del mesh
+                    TextGizmo.Draw(t.position, damageLogger[System.Array.IndexOf(deformMeshes.Select(x => x.name).ToArray(), t.name)].ToString());
                 }
                 catch
                 {
