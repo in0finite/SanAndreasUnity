@@ -7,14 +7,14 @@ QualitySettings:
   m_CurrentQuality: 1
   m_QualitySettings:
   - serializedVersion: 2
-    name: Very Low
+    name: Fastest
     pixelLightCount: 0
     shadows: 0
     shadowResolution: 0
     shadowProjection: 1
     shadowCascades: 1
     shadowDistance: 15
-    shadowNearPlaneOffset: 3
+    shadowNearPlaneOffset: 2
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
     shadowmaskMode: 0
@@ -35,14 +35,14 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
-    name: Low
+    name: Fast
     pixelLightCount: 0
     shadows: 0
     shadowResolution: 0
     shadowProjection: 1
     shadowCascades: 1
     shadowDistance: 20
-    shadowNearPlaneOffset: 3
+    shadowNearPlaneOffset: 2
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
     shadowmaskMode: 0
@@ -63,14 +63,14 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
-    name: Medium
+    name: Simple
     pixelLightCount: 1
     shadows: 1
     shadowResolution: 0
     shadowProjection: 1
     shadowCascades: 1
     shadowDistance: 20
-    shadowNearPlaneOffset: 3
+    shadowNearPlaneOffset: 2
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
     shadowmaskMode: 0
@@ -82,7 +82,7 @@ QualitySettings:
     softVegetation: 0
     realtimeReflectionProbes: 0
     billboardsFaceCameraPosition: 0
-    vSyncCount: 1
+    vSyncCount: 0
     lodBias: 0.7
     maximumLODLevel: 0
     particleRaycastBudget: 64
@@ -91,14 +91,14 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
-    name: High
+    name: Good
     pixelLightCount: 2
     shadows: 2
     shadowResolution: 1
     shadowProjection: 1
     shadowCascades: 2
     shadowDistance: 40
-    shadowNearPlaneOffset: 3
+    shadowNearPlaneOffset: 2
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
     shadowmaskMode: 1
@@ -119,14 +119,14 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
-    name: Very High
+    name: Beautiful
     pixelLightCount: 3
     shadows: 2
     shadowResolution: 2
     shadowProjection: 1
     shadowCascades: 2
     shadowDistance: 70
-    shadowNearPlaneOffset: 3
+    shadowNearPlaneOffset: 2
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
     shadowmaskMode: 1
@@ -134,7 +134,7 @@ QualitySettings:
     textureQuality: 0
     anisotropicTextures: 2
     antiAliasing: 2
-    softParticles: 1
+    softParticles: 0
     softVegetation: 1
     realtimeReflectionProbes: 1
     billboardsFaceCameraPosition: 1
@@ -147,24 +147,24 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   - serializedVersion: 2
-    name: Ultra
+    name: Fantastic
     pixelLightCount: 4
-    shadows: 2
+    shadows: 1
     shadowResolution: 2
     shadowProjection: 1
     shadowCascades: 4
     shadowDistance: 150
-    shadowNearPlaneOffset: 3
+    shadowNearPlaneOffset: 2
     shadowCascade2Split: 0.33333334
-    shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
+    shadowCascade4Split: {x: 0.06666667, y: 0.19999999, z: 0.46666664}
     shadowmaskMode: 1
     blendWeights: 4
     textureQuality: 0
     anisotropicTextures: 2
     antiAliasing: 2
-    softParticles: 1
+    softParticles: 0
     softVegetation: 1
-    realtimeReflectionProbes: 1
+    realtimeReflectionProbes: 0
     billboardsFaceCameraPosition: 1
     vSyncCount: 1
     lodBias: 2
@@ -175,15 +175,12 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
   m_PerPlatformDefaultQuality:
-    Android: 2
-    Nintendo 3DS: 5
-    Nintendo Switch: 5
-    PS4: 5
-    PSP2: 2
+    Android: 0
+    BlackBerry: 0
+    Samsung TV: 0
     Standalone: 5
-    Tizen: 2
-    WebGL: 3
-    Windows Store Apps: 5
-    XboxOne: 5
-    iPhone: 2
-    tvOS: 2
+    WP8: 0
+    Web: 5
+    WebGL: 0
+    Windows Store Apps: 0
+    iPhone: 0

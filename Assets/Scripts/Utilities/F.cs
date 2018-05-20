@@ -80,5 +80,15 @@ namespace SanAndreasUnity.Utilities
                 return f != null ? f.sharedMesh : null;
             }
         }
+
+        public static bool BetweenInclusive(this float v, float min, float max)
+        {
+            return v >= min && v <= max;
+        }
+
+        public static bool BetweenExclusive(this float v, float min, float max)
+        {
+            return v > min && v < max;
+        }
     }
 }

@@ -77,6 +77,8 @@ namespace SanAndreasUnity.Behaviours
 
         private Vehicle.SeatAlignment _currentVehicleSeatAlignment;
 
+        private static bool makeGPUAdjustments;
+
         #endregion Properties
 
         public static Player me;
@@ -91,13 +93,44 @@ namespace SanAndreasUnity.Behaviours
             characterController = GetComponent<CharacterController>();
 
             IsLocalPlayer = true;
+
+            // Only debug
+
+            foreach (var go in gameObject.GetComponentsInChildren<Component>())
+                Debug.Log(string.Format("Name: {0} => {1}", go.name, go.hideFlags));
+
+            Debug.Log(string.Format("DirectX: {0}", SystemInfo.graphicsShaderLevel));
+
+            Debug.Log(string.Format("Max FPS: {0}", Application.targetFrameRate));
+
+            StartCoroutine(GPUAdjust());
         }
 
         private void Start()
         {
             //	MySetupLocalPlayer ();
+        }
 
-            Debug.Log(string.Format("Max FPS: {0}", Application.targetFrameRate));
+        private IEnumerator GPUAdjust()
+        {
+            // Wait to everything to load
+            yield return new WaitForSeconds(1);
+
+            if (SystemInfo.graphicsShaderLevel <= 40)
+                try
+                {
+                    Camera.main.allowMSAA = false;
+                    Camera.main.allowHDR = false;
+
+                    foreach (var mat in transform.root.GetComponentsInChildren<Material>())
+                    {
+                        mat.EnableKeyword("_SPECULARHIGHLIGHTS_OFF");
+                        mat.SetFloat("_SpecularHighlights", 0f);
+                    }
+                }
+                catch
+                {
+                }
         }
 
         private void MySetupLocalPlayer()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SanAndreasUnity.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,12 +15,14 @@ namespace SanAndreasUnity.Behaviours.World
 
         private static float dayTimeCounter;
 
+        public AnimationCurve lightCurve;
         public Transform dirLight;
+        private Light light;
 
         private static Rect windowRect = new Rect(10, 350, 250, 200);
         private const int windowID = 3;
 
-        public static float AngleFactor
+        public static float TimeFactor
         {
             get
             {
@@ -27,7 +30,7 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
-        public static float TimeFactor
+        public static float AngleFactor
         {
             get
             {
@@ -35,10 +38,15 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
+        private void Awake()
+        {
+            light = dirLight.GetComponent<Light>();
+        }
+
         // Use this for initialization
         private void Start()
         {
-            dayTimeCounter = 50 * AngleFactor;
+            dayTimeCounter = 50 * TimeFactor;
         }
 
         // Update is called once per frame
@@ -49,8 +57,13 @@ namespace SanAndreasUnity.Behaviours.World
 
             if (dirLight != null)
             {
-                dirLight.rotation = Quaternion.Euler((dayTimeCounter * TimeFactor) % 360, -130, 0);
-                dayTimeCounter += TimeFactor;
+                float angle = (dayTimeCounter * AngleFactor) % 360;
+
+                dirLight.rotation = Quaternion.Euler(angle, -130, 0);
+                dayTimeCounter += AngleFactor;
+
+                // Range: Dusk .. Dawn
+                if (angle.BetweenInclusive(180, 360)) light.intensity = lightCurve.Evaluate(Mathf.InverseLerp(180, 360, angle));
             }
         }
 
@@ -81,19 +94,19 @@ namespace SanAndreasUnity.Behaviours.World
             switch (time)
             {
                 case TimeState.Dawn:
-                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, AngleFactor);
+                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, TimeFactor);
                     break;
 
                 case TimeState.Noon:
-                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, 90 * AngleFactor);
+                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, 90 * TimeFactor);
                     break;
 
                 case TimeState.Dusk:
-                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, 180 * AngleFactor);
+                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, 180 * TimeFactor);
                     break;
 
                 case TimeState.Midnight:
-                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, 270 * AngleFactor);
+                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, 270 * TimeFactor);
                     break;
             }
 

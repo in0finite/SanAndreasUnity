@@ -282,7 +282,7 @@ namespace SanAndreasUnity.Behaviours
                 Cursor.visible = false;
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (!_showMenu && Input.GetKeyDown(KeyCode.Escape))
                 ChangeCursorState(!CursorLocked);
 
             if (Input.GetKeyDown(KeyCode.F1))

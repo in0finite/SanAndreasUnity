@@ -2,6 +2,7 @@
 using System.Collections;
 using SanAndreasUnity.Utilities;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -342,9 +343,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                                 }
 
                                 if (damageLogger[i] == null)
-                                    damageLogger[i] = new DamageLogger(meshVertices[i].verts.Select(x => x.sqrMagnitude).ToArray());
+                                    damageLogger[i] = new DamageLogger(meshVertices[i].verts);
                                 else
-                                    damageLogger[i].UpdateVertice(j, meshVertices[i].verts[j].sqrMagnitude);
+                                    damageLogger[i].UpdateVertice(j, meshVertices[i].verts[j]);
                             }
                         }
 
@@ -356,14 +357,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         //if (Mathf.Abs(avg) > 0 && curDamageMesh.name.Contains("wheel"))
                         //    Debug.Log(string.Format("Damage Avg: {0} (Name: {1} from {2})", avg, curDamageMesh.transform.parent.name, vp.name));
 
-                        if (Mathf.Abs(avg) > .01f && curDamageMesh.transform.parent != null && curDamageMesh.transform.parent.name.Contains("wheel") && curDamageMesh.GetComponent<MeshCollider>() == null)
-                        {
-                            curDamageMesh.transform.parent.GetComponent<WheelCollider>().enabled = false;
-                            var col = curDamageMesh.gameObject.AddComponent<MeshCollider>();
-                            col.convex = true;
+                        if (false)
+                            if (Mathf.Abs(avg) > .01f && curDamageMesh.transform.parent != null && curDamageMesh.transform.parent.name.Contains("wheel") && curDamageMesh.GetComponent<MeshCollider>() == null)
+                            {
+                                curDamageMesh.transform.parent.GetComponent<WheelCollider>().enabled = false;
+                                var col = curDamageMesh.gameObject.AddComponent<MeshCollider>();
+                                col.convex = true;
 
-                            // WIP: Explode wheel
-                        }
+                                // WIP: Explode wheel
+                            }
                     }
                 }
 
@@ -665,6 +667,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             Gizmos.DrawRay(startPoint, -transform.forward);
             Gizmos.DrawRay(startPoint, transform.right);
             Gizmos.DrawRay(startPoint, -transform.right);
+
+            foreach (var t in gameObject.GetComponentsInChildren<Transform>().Where(x => x.name.Contains("wheel")))
+                try
+                {
+                    GUIUtils.drawString(damageLogger[System.Array.IndexOf(deformMeshes.Select(x => x.name).ToArray(), t.name)].ToString(), t.position); //Buscar con un indexOf cual es el index del nombre del mesh
+                }
+                catch
+                {
+                }
         }
 
         //Destroy loose parts
@@ -697,41 +708,40 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
     internal class DamageLogger
     {
-        private float[] verticePosition;
-        private float[] lastVerticePosition;
+        private Vector3[] verticePosition;
+        private Vector3[] lastVerticePosition;
 
-        public float[] sumVertices;
-
-        public DamageLogger(float[] firstRead)
+        public DamageLogger(Vector3[] firstRead)
         {
             int len = firstRead.Length;
 
-            sumVertices = new float[len];
-
-            verticePosition = new float[len];
-            lastVerticePosition = new float[len];
+            verticePosition = new Vector3[len];
+            lastVerticePosition = new Vector3[len];
 
             // Set first read
-            int i = 0;
-            foreach (float v in firstRead)
-            {
-                UpdateVertice(i, v);
-                ++i;
-            }
+            for (int i = 0; i < len; ++i)
+                verticePosition[i] = new Vector3(firstRead[i].x, firstRead[i].y, firstRead[i].z);
         }
 
-        public void UpdateVertice(int index, float value)
+        public void UpdateVertice(int index, Vector3 value)
         {
-            verticePosition[index] = value;
-
-            sumVertices[index] = value - lastVerticePosition[index];
-
-            lastVerticePosition[index] = verticePosition[index];
+            lastVerticePosition[index] = value;
         }
 
         public float DamageAverage()
         {
-            return sumVertices.Average();
+            return GetDistances().Average();
+        }
+
+        private IEnumerable<float> GetDistances()
+        {
+            for (int i = 0; i < verticePosition.Length; ++i)
+                yield return Vector3.Distance(verticePosition[i], lastVerticePosition[i]);
+        }
+
+        public string ToString()
+        {
+            return string.Format("Damage Avg: {0}", DamageAverage());
         }
     }
 }

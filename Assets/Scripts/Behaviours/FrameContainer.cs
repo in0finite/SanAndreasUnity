@@ -64,6 +64,8 @@ namespace SanAndreasUnity.Behaviours
 
             foreach (var frame in _frames)
             {
+                if (frame == null) return;
+
                 Gizmos.color = Color.white;
                 Gizmos.DrawWireSphere(frame.transform.position, 0.02f);
 
