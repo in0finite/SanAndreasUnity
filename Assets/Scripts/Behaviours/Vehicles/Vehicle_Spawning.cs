@@ -2,6 +2,7 @@
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Vehicles;
+using SanAndreasUnity.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -133,6 +134,32 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             //inst.OptimizeVehicle();
 
             dam.deformColliders = inst.gameObject.GetComponentsInChildren<MeshCollider>();
+
+            // Implemented: Add lights
+
+            Transform headlights = inst.GetComponentWithName<Transform>("headlights");
+
+            Transform rightLight = new GameObject("rightLight").transform;
+            rightLight.parent = headlights;
+
+            rightLight.localPosition = new Vector3(-headlights.localPosition.x * 2, 0, 0);
+            rightLight.localRotation = Quaternion.identity;
+
+            Light lr = rightLight.gameObject.AddComponent<Light>();
+            lr.type = LightType.Spot;
+            lr.range = 20;
+            lr.spotAngle = 50;
+
+            Transform leftLight = new GameObject("leftLight").transform;
+            leftLight.parent = headlights;
+
+            leftLight.localPosition = Vector3.zero;
+            leftLight.localRotation = Quaternion.identity;
+
+            Light ll = leftLight.gameObject.AddComponent<Light>();
+            ll.type = LightType.Spot;
+            ll.range = 20;
+            ll.spotAngle = 50;
 
 #if CLIENT
             if (Networking.Server.Instance != null)

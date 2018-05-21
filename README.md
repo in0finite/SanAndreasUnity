@@ -197,6 +197,8 @@ F9 - Toggle velocimeter
 
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is running Unity Editor undr `--force-glcore` and going to **Assets > Reimport all**
 
+- Running with `--force-glcore` makes Unity Editor slower when near objects has to be rendered
+
 ## Media
 
 ![screen shot 2017-04-01 at 00 01 31](https://cloud.githubusercontent.com/assets/557828/24571347/d95f11a0-1670-11e7-9e8e-d2a511d9f929.png)

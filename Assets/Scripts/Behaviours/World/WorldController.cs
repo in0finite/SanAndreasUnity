@@ -6,6 +6,7 @@ namespace SanAndreasUnity.Behaviours.World
 {
     public enum TimeState { Dawn, Noon, Dusk, Midnight }
 
+    // TODO: TimeFactor -> AngleFactor
     public class WorldController : MonoBehaviour
     {
         public const float dayCycleMins = 24,
@@ -15,6 +16,9 @@ namespace SanAndreasUnity.Behaviours.World
 
         public AnimationCurve lightCurve;
         public Transform dirLight;
+
+        public TimeState startTimeState;
+
         private Light light;
 
         private static Rect windowRect = new Rect(10, 350, 250, 200);
@@ -44,7 +48,7 @@ namespace SanAndreasUnity.Behaviours.World
         // Use this for initialization
         private void Start()
         {
-            dayTimeCounter = 50 * TimeFactor;
+            SetTime(startTimeState);
         }
 
         // Update is called once per frame
@@ -92,19 +96,19 @@ namespace SanAndreasUnity.Behaviours.World
             switch (time)
             {
                 case TimeState.Dawn:
-                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, TimeFactor);
+                    dayTimeCounter = dayTimeCounter > 0 ? GetNearestWholeMultiple(dayTimeCounter, TimeFactor) : 0;
                     break;
 
                 case TimeState.Noon:
-                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, 90 * TimeFactor);
+                    dayTimeCounter = dayTimeCounter > 0 ? GetNearestWholeMultiple(dayTimeCounter, 90 * TimeFactor) : TimeFactor * 90;
                     break;
 
                 case TimeState.Dusk:
-                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, 180 * TimeFactor);
+                    dayTimeCounter = dayTimeCounter > 0 ? GetNearestWholeMultiple(dayTimeCounter, 180 * TimeFactor) : TimeFactor * 180;
                     break;
 
                 case TimeState.Midnight:
-                    dayTimeCounter = GetNearestWholeMultiple(dayTimeCounter, 270 * TimeFactor);
+                    dayTimeCounter = dayTimeCounter > 0 ? GetNearestWholeMultiple(dayTimeCounter, 270 * TimeFactor) : TimeFactor * 270;
                     break;
             }
 

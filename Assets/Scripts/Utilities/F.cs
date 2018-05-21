@@ -152,5 +152,10 @@ namespace SanAndreasUnity.Utilities
         {
             return typeof(T).ToString();
         }
+
+        public static T GetComponentWithName<T>(this Component root, string name) where T : Component
+        {
+            return root.GetComponentsInChildren<T>().FirstOrDefault(x => x.name == name);
+        }
     }
 }
