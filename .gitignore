@@ -46,6 +46,7 @@ SonarQube/
 Build/Build_Data/StreamingAssets/
 Assets/StreamingAssets/*.log
 Assets/StreamingAssets/*.html
+Assets/StreamingAssets/*.meta
 
 # I have to except one html & log as example
 
