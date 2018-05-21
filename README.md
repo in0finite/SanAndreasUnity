@@ -100,6 +100,8 @@ F9 - Toggle velocimeter
 
 - CLI for Console app to know where to connect
 
+- Collapse message logs
+
 - Maybe I will use my sockets implementation to do a server system (I will made a paid assets with [examples from Unity Forums](https://github.com/ZZona-Dummies/UnityForumsMultiplayer)
 
 - HUGE REFACTOR (compiling Assembly into DLLs will some most problems)

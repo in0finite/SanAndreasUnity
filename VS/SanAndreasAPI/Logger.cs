@@ -197,7 +197,8 @@ namespace SanAndreasAPI
             message = IndentLog(message, str.Length);
 
             return string.Format("{0}{1}{2}", str,
-                message.LastIndexOf(Environment.NewLine) == message.Length - 1 ? message.TrimEnd('\n') : message,
+                message, //message.LastIndexOf(Environment.NewLine) == message.Length - 1 ? message.TrimEnd('\n') : message, // Fix: Delete the new line that is between stacktrace and message end
+                         // https://i.gyazo.com/411b0c374eb8e953c2d8ccb3b47eea26.png
                 printStackTrace ? Environment.NewLine + stack : "");
         }
 
