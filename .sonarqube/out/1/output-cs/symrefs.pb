@@ -1,13 +1,0 @@
-À
-yC:\Users\√Ålvaro\AppData\Local\Unity\cache\packages\packages.unity.com\com.unity.standardevents@1.0.13\Editor\Importer.cs
-
- '
-
-
-
-  
-
- %
-
-B H
-   
