@@ -14,27 +14,28 @@ public class Sockets : MonoBehaviour
 {
     private static TcpClientExample client;
 
-    private static bool available = false,
-                        startCApp;
+    private static bool available = false;
 
-    // Use this for initialization
-    private void Awake()
+    public bool m_startConsoleApp = true;
+
+    // Fixed: We use this because is called before Awake (where += handleLog occurs)
+    private void OnEnable()
     {
-        //#if UNITY_EDITOR
-        startCApp = true;
-        /*#else
+#if UNITY_EDITOR
+        m_startConsoleApp = true;
+#else
                 var p = new FluentCommandLineParser();
 
-                p.Setup<bool>('c', "console").Callback(x => startCApp = x);
+                p.Setup<bool>('c', "console").Callback(x => m_startConsoleApp = x);
 
                 p.Parse(Environment.GetCommandLineArgs());
-        #endif*/
+#endif
 
         string consoleApp = Path.Combine(Application.streamingAssetsPath, "SanAndreasConsole.exe");
 
         //Debug.LogFormat("Exists Console App: {0}", File.Exists(consoleApp));
 
-        if (startCApp && File.Exists(consoleApp))
+        if (m_startConsoleApp && File.Exists(consoleApp))
         {
             Process.Start(consoleApp);
 
@@ -46,8 +47,6 @@ public class Sockets : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        //if (client == null)
-        //    Debug.LogWarning("Null client!");
     }
 
     private void OnDisable()

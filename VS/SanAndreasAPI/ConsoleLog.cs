@@ -7,7 +7,7 @@ namespace SanAndreasAPI
     public class ConsoleLog
     {
         public string logString;
-        public string stackTrace;
+        public string[] stackTrace = new string[0];
         public LogType logType;
 
         private ConsoleLog()
@@ -18,7 +18,7 @@ namespace SanAndreasAPI
 
         {
             this.logString = logString;
-            this.stackTrace = stackTrace;
+            this.stackTrace = stackTrace.Split('\n');
             this.logType = logType;
         }
     }

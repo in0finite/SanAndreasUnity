@@ -98,13 +98,6 @@ public class Console : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        if (m_handleLog)
-            Application.logMessageReceived += PrintDebug;
-        //Application.RegisterLogCallback(new Application.LogCallback(this.PrintDebug));
-    }
-
     private void OnDisable()
     {
         if (m_handleLog)
@@ -118,6 +111,11 @@ public class Console : MonoBehaviour
             Debug.LogError("only one instance is allowed to exist");
         }
         instance = this;
+
+        if (m_handleLog)
+            Application.logMessageReceived += PrintDebug;
+        //Application.RegisterLogCallback(new Application.LogCallback(this.PrintDebug));
+
         lines = new CircularBuffer<string>(linesOfHistory, true);
         commands = new CircularBuffer<string>(commandHistory, true);
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;

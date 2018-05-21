@@ -116,7 +116,7 @@ namespace MFatihMAR.EasySockets.Examples
             catch (Exception ex)
             {
                 if (ex.Message.Length + ex.StackTrace.Length < _client.BufferSize)
-                    logger.LogError(ex.Message, ex.StackTrace);
+                    logger.LogError(ex.Message, ex.StackTrace.GetLines());
                 else
                     logger.LogError("Exception ocurred while sending data though socket client!");
             }
@@ -131,7 +131,7 @@ namespace MFatihMAR.EasySockets.Examples
             catch (Exception ex)
             {
                 if (ex.Message.Length + ex.StackTrace.Length < _client.BufferSize)
-                    logger.LogError(ex.Message, ex.StackTrace);
+                    logger.LogError(ex.Message, ex.StackTrace.GetLines());
                 else
                     logger.LogError("Exception ocurred while sending data though socket client!");
             }

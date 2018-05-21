@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Cadenza.Collections;
+using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using UnityEngine;
@@ -50,11 +52,12 @@ namespace SanAndreasAPI
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="pars">The pars.</param>
-        public void Log(string message, params object[] pars)
+        public void Log(string message, string[] stack = null, params object[] pars)
         {
-            bool parsNotNull = pars != null && pars.Length > 0;
-            string str = parsNotNull ? message.TryFormat(pars) : message,
-                   msg = !parsNotNull ? str.DetailedMessage("", LogType.Log) : str.DetailedMessage(pars[0].ToString(), LogType.Log);
+            bool stackNotNull = stack != null && stack.Length > 0;
+            string str = stackNotNull ? string.Format(message, pars) : message,
+                   msg = !stackNotNull ? str.DetailedMessage(null, LogType.Log) : str.DetailedMessage(stack, LogType.Log);
+
             try
             { //Probamos a hacer un debug...
                 if (!isUnity)
@@ -74,11 +77,12 @@ namespace SanAndreasAPI
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="pars">The pars.</param>
-        public void LogWarning(string message, params object[] pars)
+        public void LogWarning(string message, string[] stack = null, params object[] pars)
         {
-            bool parsNotNull = pars != null && pars.Length > 0;
-            string str = parsNotNull ? message.TryFormat(pars) : message,
-                   msg = !parsNotNull ? str.DetailedMessage("", LogType.Warning) : str.DetailedMessage(pars[0].ToString(), LogType.Warning);
+            bool stackNotNull = stack != null && stack.Length > 0;
+            string str = stackNotNull ? string.Format(message, pars) : message,
+                   msg = !stackNotNull ? str.DetailedMessage(null, LogType.Warning) : str.DetailedMessage(stack, LogType.Warning);
+
             try
             {
                 if (!isUnity)
@@ -104,11 +108,12 @@ namespace SanAndreasAPI
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="pars">The pars.</param>
-        public void LogError(string message, params object[] pars)
+        public void LogError(string message, string[] stack = null, params object[] pars)
         {
-            bool parsNotNull = pars != null && pars.Length > 0;
-            string str = parsNotNull ? message.TryFormat(pars) : message,
-                   msg = !parsNotNull ? str.DetailedMessage("", LogType.Error) : str.DetailedMessage(pars[0].ToString(), LogType.Error);
+            bool stackNotNull = stack != null && stack.Length > 0;
+            string str = stackNotNull ? string.Format(message, pars) : message,
+                   msg = !stackNotNull ? str.DetailedMessage(null, LogType.Error) : str.DetailedMessage(stack, LogType.Error);
+
             try
             {
                 if (!isUnity)
@@ -176,34 +181,74 @@ namespace SanAndreasAPI
     {
         public static string DetailedMessage(this ConsoleLog log)
         {
-            string message = log.logString,
-                   stacktrace = log.stackTrace;
+            return DetailedMessage(log.logString, log.stackTrace, log.logType);
+        }
 
-            LogType t = log.logType;
-
-            StringBuilder stackTrace = new StringBuilder();
+        public static string DetailedMessage(this string message, string[] stacktrace, LogType t)
+        {
+            bool stackNotNull = stacktrace != null && stacktrace.Length > 0 && !stacktrace.All(x => string.IsNullOrEmpty(x));
 
             string name = Thread.CurrentThread.Name;
             string str = string.Format("[{0}] {1}/{2}: ", DateTime.Now.ToString("hh:mm:ss"), string.IsNullOrEmpty(name) ? "Main" : name, t.ToString());
 
-            foreach (string line in log.stackTrace.Split('\n'))
-                stackTrace.AppendLine(string.Format("{0}{1}", new string(' ', str.Length), line));
+            bool printStackTrace = stackNotNull && t != LogType.Log;
 
-            bool printStackTrace = !string.IsNullOrEmpty(stacktrace) && t != LogType.Log;
-            str += message + (printStackTrace ? '\n' : new char());
+            string stack = printStackTrace ? IndentLog(stacktrace, str.Length, "StackTrace: ") : "";
+            message = IndentLog(message, str.Length);
 
-            return string.Format("{0}{1}", str, printStackTrace ? string.Format("\n{0}\n", stackTrace.ToString()) : "");
+            return string.Format("{0}{1}{2}", str,
+                message.LastIndexOf(Environment.NewLine) == message.Length - 1 ? message.TrimEnd('\n') : message,
+                printStackTrace ? Environment.NewLine + stack : "");
         }
 
-        public static string DetailedMessage(this string message, string stacktrace, LogType t)
+        private static string IndentLog(string str, int len)
         {
-            string name = Thread.CurrentThread.Name;
-            return string.Format("[{0}] {1}/{2}: {3}{4}", DateTime.Now.ToString("hh:mm:ss"), string.IsNullOrEmpty(name) ? "Main" : name, t.ToString(), message, !string.IsNullOrEmpty(stacktrace) && t != LogType.Log ? string.Format("{0}\n", stacktrace) : "");
+            if (str.Contains(Environment.NewLine))
+            {
+                StringBuilder sb = new StringBuilder();
+
+                str.Split('\n').ForEach((x, i) =>
+                {
+                    if (!string.IsNullOrEmpty(x))
+                        sb.AppendLine(string.Format("{0}{1}", i > 0 ? new string(' ', len) : "", x));
+                });
+
+                return sb.ToString();
+            }
+            return str;
         }
 
-        public static string TryFormat(this string message, params object[] pars)
+        private static string IndentLog(string[] strs, int len, string firstLine = "")
         {
-            return message.Contains("{0}") ? string.Format(message, pars) : message;
+            StringBuilder sb = new StringBuilder();
+
+            strs.ForEach((x, i) =>
+            {
+                if (!string.IsNullOrEmpty(x))
+                    sb.AppendLine(string.Format("{0}{1}", i > 0 ? new string(' ', len) : "", x));
+            });
+
+            int l = len - firstLine.Length;
+            return (string.IsNullOrEmpty(firstLine) ? "" : ((l > 0 ? new string(' ', l) : "") + firstLine)) + sb.ToString();
+        }
+
+        public static string[] GetLines(this string str)
+        {
+            if (str.Contains(Environment.NewLine))
+                return str.Split('\n');
+            return new string[1] { str };
+        }
+    }
+
+    public class LoggerMessage
+    {
+        public string message;
+        public string[] stacktrace;
+
+        public LoggerMessage(string str, string[] stc)
+        {
+            message = str;
+            stacktrace = stc;
         }
     }
 }
