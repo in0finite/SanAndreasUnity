@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 1430544495}
   m_IndirectSpecularColor: {r: 0.44657862, g: 0.496413, b: 0.5748154, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
@@ -65,8 +65,8 @@ LightmapSettings:
     m_CompAOExponentDirect: 0
     m_Padding: 2
     m_LightmapParameters: {fileID: 0}
-    m_LightmapsBakeMode: 1
-    m_TextureCompression: 1
+    m_LightmapsBakeMode: 0
+    m_TextureCompression: 0
     m_FinalGather: 0
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 256
@@ -646,6 +646,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c16e4a02d730abb40a82e801954132f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &592530391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 592530379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c16e4a02d730abb40a82e801954132f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &626797644
 Prefab:
   m_ObjectHideFlags: 0
@@ -694,6 +705,12 @@ Prefab:
       propertyPath: m_closeKey
       value: 44
       objectReference: {fileID: 0}
+    - target: {fileID: 114577400640561530, guid: ea6123feedb51e547bee19b53a96d87b,
+        type: 2}
+      propertyPath: skin
+      value: 
+      objectReference: {fileID: 11400000, guid: b7d4c010151e661409756f352e80791f,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ea6123feedb51e547bee19b53a96d87b, type: 2}
   m_IsPrefabParent: 0
@@ -804,6 +821,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   dirLight: {fileID: 1430544493}
+--- !u!108 &1430544495 stripped
+Light:
+  m_PrefabParentObject: {fileID: 10808534, guid: b6900baf9f552ba46ad27d4ada4d5489,
+    type: 2}
+  m_PrefabInternal: {fileID: 1430544491}
 --- !u!1001 &1631170488
 Prefab:
   m_ObjectHideFlags: 0
