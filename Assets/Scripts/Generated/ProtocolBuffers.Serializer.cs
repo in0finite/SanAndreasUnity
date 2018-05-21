@@ -51,7 +51,7 @@ namespace UnityEngine
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static Vector2 Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static Vector2 Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             Vector2 instance = new Vector2();
             Deserialize(obj, ref instance);
@@ -62,7 +62,7 @@ namespace UnityEngine
         public static Vector2 Deserialize(string json)
         {
             Vector2 instance = new Vector2();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), ref instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), ref instance);
             return instance;
         }
 
@@ -98,15 +98,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -120,7 +120,7 @@ namespace UnityEngine
             BinaryReader br = new BinaryReader(stream);
             instance.x = 0f;
             instance.y = 0f;
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -129,7 +129,7 @@ namespace UnityEngine
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -147,15 +147,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -177,7 +177,7 @@ namespace UnityEngine
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -195,15 +195,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -212,7 +212,7 @@ namespace UnityEngine
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static UnityEngine.Vector2 Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ref UnityEngine.Vector2 instance)
+        public static UnityEngine.Vector2 Deserialize(Newtonsoft.Json.Linq.JObject obj, ref UnityEngine.Vector2 instance)
         {
             instance.x = 0f;
             instance.y = 0f;
@@ -238,14 +238,14 @@ namespace UnityEngine
         public static void Serialize(Stream stream, Vector2 instance)
         {
             BinaryWriter bw = new BinaryWriter(stream);
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, Fixed32
             stream.WriteByte(13);
             bw.Write(instance.x);
             // Key for field: 2, Fixed32
             stream.WriteByte(21);
             bw.Write(instance.y);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
@@ -262,7 +262,7 @@ namespace UnityEngine
         public static void SerializeLengthDelimited(Stream stream, Vector2 instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -315,7 +315,7 @@ namespace UnityEngine
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static Vector3 Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static Vector3 Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             Vector3 instance = new Vector3();
             Deserialize(obj, ref instance);
@@ -326,7 +326,7 @@ namespace UnityEngine
         public static Vector3 Deserialize(string json)
         {
             Vector3 instance = new Vector3();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), ref instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), ref instance);
             return instance;
         }
 
@@ -367,15 +367,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -390,7 +390,7 @@ namespace UnityEngine
             instance.x = 0f;
             instance.y = 0f;
             instance.z = 0f;
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -399,7 +399,7 @@ namespace UnityEngine
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -421,15 +421,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -452,7 +452,7 @@ namespace UnityEngine
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -474,15 +474,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -491,7 +491,7 @@ namespace UnityEngine
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static UnityEngine.Vector3 Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ref UnityEngine.Vector3 instance)
+        public static UnityEngine.Vector3 Deserialize(Newtonsoft.Json.Linq.JObject obj, ref UnityEngine.Vector3 instance)
         {
             instance.x = 0f;
             instance.y = 0f;
@@ -522,7 +522,7 @@ namespace UnityEngine
         public static void Serialize(Stream stream, Vector3 instance)
         {
             BinaryWriter bw = new BinaryWriter(stream);
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, Fixed32
             stream.WriteByte(13);
             bw.Write(instance.x);
@@ -532,7 +532,7 @@ namespace UnityEngine
             // Key for field: 3, Fixed32
             stream.WriteByte(29);
             bw.Write(instance.z);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
@@ -549,7 +549,7 @@ namespace UnityEngine
         public static void SerializeLengthDelimited(Stream stream, Vector3 instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -605,7 +605,7 @@ namespace UnityEngine
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static Color Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static Color Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             Color instance = new Color();
             Deserialize(obj, ref instance);
@@ -616,7 +616,7 @@ namespace UnityEngine
         public static Color Deserialize(string json)
         {
             Color instance = new Color();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), ref instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), ref instance);
             return instance;
         }
 
@@ -662,15 +662,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -686,7 +686,7 @@ namespace UnityEngine
             instance.g = 0f;
             instance.b = 0f;
             instance.a = 0f;
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -695,7 +695,7 @@ namespace UnityEngine
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -721,15 +721,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -753,7 +753,7 @@ namespace UnityEngine
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -779,15 +779,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -796,7 +796,7 @@ namespace UnityEngine
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static UnityEngine.Color Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ref UnityEngine.Color instance)
+        public static UnityEngine.Color Deserialize(Newtonsoft.Json.Linq.JObject obj, ref UnityEngine.Color instance)
         {
             instance.r = 0f;
             instance.g = 0f;
@@ -832,7 +832,7 @@ namespace UnityEngine
         public static void Serialize(Stream stream, Color instance)
         {
             BinaryWriter bw = new BinaryWriter(stream);
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, Fixed32
             stream.WriteByte(13);
             bw.Write(instance.r);
@@ -845,7 +845,7 @@ namespace UnityEngine
             // Key for field: 4, Fixed32
             stream.WriteByte(37);
             bw.Write(instance.a);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
@@ -862,7 +862,7 @@ namespace UnityEngine
         public static void SerializeLengthDelimited(Stream stream, Color instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -921,7 +921,7 @@ namespace UnityEngine
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static Quaternion Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static Quaternion Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             Quaternion instance = new Quaternion();
             Deserialize(obj, ref instance);
@@ -932,7 +932,7 @@ namespace UnityEngine
         public static Quaternion Deserialize(string json)
         {
             Quaternion instance = new Quaternion();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), ref instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), ref instance);
             return instance;
         }
 
@@ -978,15 +978,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1002,7 +1002,7 @@ namespace UnityEngine
             instance.y = 0f;
             instance.z = 0f;
             instance.w = 0f;
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -1011,7 +1011,7 @@ namespace UnityEngine
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -1037,15 +1037,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1069,7 +1069,7 @@ namespace UnityEngine
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -1095,15 +1095,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1112,7 +1112,7 @@ namespace UnityEngine
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static UnityEngine.Quaternion Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ref UnityEngine.Quaternion instance)
+        public static UnityEngine.Quaternion Deserialize(Newtonsoft.Json.Linq.JObject obj, ref UnityEngine.Quaternion instance)
         {
             instance.x = 0f;
             instance.y = 0f;
@@ -1148,7 +1148,7 @@ namespace UnityEngine
         public static void Serialize(Stream stream, Quaternion instance)
         {
             BinaryWriter bw = new BinaryWriter(stream);
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, Fixed32
             stream.WriteByte(13);
             bw.Write(instance.x);
@@ -1161,7 +1161,7 @@ namespace UnityEngine
             // Key for field: 4, Fixed32
             stream.WriteByte(37);
             bw.Write(instance.w);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
@@ -1178,7 +1178,7 @@ namespace UnityEngine
         public static void SerializeLengthDelimited(Stream stream, Quaternion instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -1237,7 +1237,7 @@ namespace UnityEngine
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static Ray Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static Ray Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             Ray instance = new Ray();
             Deserialize(obj, ref instance);
@@ -1248,7 +1248,7 @@ namespace UnityEngine
         public static Ray Deserialize(string json)
         {
             Ray instance = new Ray();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), ref instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), ref instance);
             return instance;
         }
 
@@ -1287,15 +1287,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1306,7 +1306,7 @@ namespace UnityEngine
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static UnityEngine.Ray DeserializeLengthDelimited(Stream stream, ref UnityEngine.Ray instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -1315,7 +1315,7 @@ namespace UnityEngine
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -1339,15 +1339,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1366,7 +1366,7 @@ namespace UnityEngine
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -1390,15 +1390,15 @@ namespace UnityEngine
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1407,7 +1407,7 @@ namespace UnityEngine
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static UnityEngine.Ray Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ref UnityEngine.Ray instance)
+        public static UnityEngine.Ray Deserialize(Newtonsoft.Json.Linq.JObject obj, ref UnityEngine.Ray instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -1416,14 +1416,14 @@ namespace UnityEngine
                     case "origin":
                         {
                             var a = instance.origin;
-                            instance.origin = UnityEngine.Vector3Serialized.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), ref a);
+                            instance.origin = UnityEngine.Vector3Serialized.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), ref a);
                         }
                         break;
 
                     case "direction":
                         {
                             var a = instance.direction;
-                            instance.direction = UnityEngine.Vector3Serialized.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), ref a);
+                            instance.direction = UnityEngine.Vector3Serialized.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), ref a);
                         }
                         break;
                 }
@@ -1435,14 +1435,14 @@ namespace UnityEngine
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, Ray instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, LengthDelimited
             stream.WriteByte(10);
             msField.SetLength(0);
             UnityEngine.Vector3Serialized.Serialize(msField, instance.origin);
             // Length delimited byte array
             uint length1 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
             stream.Write(msField.GetBuffer(), 0, (int)length1);
 
             // Key for field: 2, LengthDelimited
@@ -1451,10 +1451,10 @@ namespace UnityEngine
             UnityEngine.Vector3Serialized.Serialize(msField, instance.direction);
             // Length delimited byte array
             uint length2 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
             stream.Write(msField.GetBuffer(), 0, (int)length2);
 
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Helper: Serialize into a MemoryStream and return its byte array</summary>
@@ -1471,7 +1471,7 @@ namespace UnityEngine
         public static void SerializeLengthDelimited(Stream stream, Ray instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -1530,7 +1530,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static ConnectRequestData Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static ConnectRequestData Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             ConnectRequestData instance = new ConnectRequestData();
             Deserialize(obj, instance);
@@ -1541,7 +1541,7 @@ namespace ProtoBuf
         public static ConnectRequestData Deserialize(string json)
         {
             ConnectRequestData instance = new ConnectRequestData();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -1552,7 +1552,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -1578,19 +1578,19 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.ModelId = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.ModelId = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1601,7 +1601,7 @@ namespace ProtoBuf
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static ProtoBuf.ConnectRequestData DeserializeLengthDelimited(Stream stream, ProtoBuf.ConnectRequestData instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -1610,7 +1610,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -1620,19 +1620,19 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.ModelId = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.ModelId = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1651,7 +1651,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -1661,19 +1661,19 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.ModelId = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.ModelId = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1682,7 +1682,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.ConnectRequestData Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.ConnectRequestData instance)
+        public static ProtoBuf.ConnectRequestData Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.ConnectRequestData instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -1700,11 +1700,11 @@ namespace ProtoBuf
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, ConnectRequestData instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, Varint
             stream.WriteByte(8);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.ModelId);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.ModelId);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -1722,7 +1722,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -1741,7 +1741,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, ConnectRequestData instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -1792,7 +1792,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static PlayerConnected Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static PlayerConnected Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             PlayerConnected instance = new PlayerConnected();
             Deserialize(obj, instance);
@@ -1803,7 +1803,7 @@ namespace ProtoBuf
         public static PlayerConnected Deserialize(string json)
         {
             PlayerConnected instance = new PlayerConnected();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -1814,7 +1814,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -1847,15 +1847,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1866,7 +1866,7 @@ namespace ProtoBuf
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static ProtoBuf.PlayerConnected DeserializeLengthDelimited(Stream stream, ProtoBuf.PlayerConnected instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -1875,7 +1875,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -1892,15 +1892,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1919,7 +1919,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -1936,15 +1936,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -1953,7 +1953,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.PlayerConnected Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.PlayerConnected instance)
+        public static ProtoBuf.PlayerConnected Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.PlayerConnected instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -1961,9 +1961,9 @@ namespace ProtoBuf
                 {
                     case "Player":
                         if (instance.Player == null)
-                            instance.Player = ProtoBuf.Player.PlayerInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.Player = ProtoBuf.Player.PlayerInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.Player.PlayerInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.Player);
+                            ProtoBuf.Player.PlayerInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.Player);
                         break;
                 }
             }
@@ -1974,7 +1974,7 @@ namespace ProtoBuf
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, PlayerConnected instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             if (instance.Player != null)
             {
                 // Key for field: 1, LengthDelimited
@@ -1983,10 +1983,10 @@ namespace ProtoBuf
                 ProtoBuf.Player.PlayerInfo.Serialize(msField, instance.Player);
                 // Length delimited byte array
                 uint length1 = (uint)msField.Length;
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
                 stream.Write(msField.GetBuffer(), 0, (int)length1);
             }
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -2004,7 +2004,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -2023,7 +2023,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, PlayerConnected instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -2081,7 +2081,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static PlayerDisconnected Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static PlayerDisconnected Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             PlayerDisconnected instance = new PlayerDisconnected();
             Deserialize(obj, instance);
@@ -2092,7 +2092,7 @@ namespace ProtoBuf
         public static PlayerDisconnected Deserialize(string json)
         {
             PlayerDisconnected instance = new PlayerDisconnected();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -2103,7 +2103,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -2136,19 +2136,19 @@ namespace ProtoBuf
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.Reason = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Reason = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -2159,7 +2159,7 @@ namespace ProtoBuf
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static ProtoBuf.PlayerDisconnected DeserializeLengthDelimited(Stream stream, ProtoBuf.PlayerDisconnected instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -2168,7 +2168,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -2185,19 +2185,19 @@ namespace ProtoBuf
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.Reason = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Reason = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -2216,7 +2216,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -2233,19 +2233,19 @@ namespace ProtoBuf
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.Reason = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Reason = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -2254,7 +2254,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.PlayerDisconnected Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.PlayerDisconnected instance)
+        public static ProtoBuf.PlayerDisconnected Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.PlayerDisconnected instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -2262,9 +2262,9 @@ namespace ProtoBuf
                 {
                     case "Player":
                         if (instance.Player == null)
-                            instance.Player = ProtoBuf.Player.PlayerInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.Player = ProtoBuf.Player.PlayerInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.Player.PlayerInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.Player);
+                            ProtoBuf.Player.PlayerInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.Player);
                         break;
 
                     case "Reason":
@@ -2279,7 +2279,7 @@ namespace ProtoBuf
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, PlayerDisconnected instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             if (instance.Player != null)
             {
                 // Key for field: 1, LengthDelimited
@@ -2288,16 +2288,16 @@ namespace ProtoBuf
                 ProtoBuf.Player.PlayerInfo.Serialize(msField, instance.Player);
                 // Length delimited byte array
                 uint length1 = (uint)msField.Length;
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
                 stream.Write(msField.GetBuffer(), 0, (int)length1);
             }
             if (instance.Reason != null)
             {
                 // Key for field: 2, LengthDelimited
                 stream.WriteByte(18);
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Reason));
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Reason));
             }
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -2315,7 +2315,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -2334,7 +2334,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, PlayerDisconnected instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -2355,7 +2355,7 @@ namespace ProtoBuf
             writer.Write("\"Reason\":");
             if (instance.Reason != null)
             {
-                writer.Write(new global::Newtonsoft.Json.Linq.JValue(instance.Reason).ToString(global::Newtonsoft.Json.Formatting.None));
+                writer.Write(new Newtonsoft.Json.Linq.JValue(instance.Reason).ToString(Newtonsoft.Json.Formatting.None));
             }
             else
             {
@@ -2402,7 +2402,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static ServerChat Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static ServerChat Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             ServerChat instance = new ServerChat();
             Deserialize(obj, instance);
@@ -2413,7 +2413,7 @@ namespace ProtoBuf
         public static ServerChat Deserialize(string json)
         {
             ServerChat instance = new ServerChat();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -2424,7 +2424,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -2450,19 +2450,19 @@ namespace ProtoBuf
                 {
                     // Field 1 LengthDelimited
                     case 10:
-                        instance.Message = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Message = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -2473,7 +2473,7 @@ namespace ProtoBuf
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static ProtoBuf.ServerChat DeserializeLengthDelimited(Stream stream, ProtoBuf.ServerChat instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -2482,7 +2482,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -2492,19 +2492,19 @@ namespace ProtoBuf
                 {
                     // Field 1 LengthDelimited
                     case 10:
-                        instance.Message = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Message = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -2523,7 +2523,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -2533,19 +2533,19 @@ namespace ProtoBuf
                 {
                     // Field 1 LengthDelimited
                     case 10:
-                        instance.Message = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Message = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -2554,7 +2554,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.ServerChat Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.ServerChat instance)
+        public static ProtoBuf.ServerChat Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.ServerChat instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -2572,14 +2572,14 @@ namespace ProtoBuf
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, ServerChat instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             if (instance.Message != null)
             {
                 // Key for field: 1, LengthDelimited
                 stream.WriteByte(10);
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Message));
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Message));
             }
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -2597,7 +2597,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -2616,7 +2616,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, ServerChat instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -2627,7 +2627,7 @@ namespace ProtoBuf
             writer.Write("\"Message\":");
             if (instance.Message != null)
             {
-                writer.Write(new global::Newtonsoft.Json.Linq.JValue(instance.Message).ToString(global::Newtonsoft.Json.Formatting.None));
+                writer.Write(new Newtonsoft.Json.Linq.JValue(instance.Message).ToString(Newtonsoft.Json.Formatting.None));
             }
             else
             {
@@ -2677,7 +2677,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static PlayerInfo Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static PlayerInfo Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             PlayerInfo instance = new PlayerInfo();
             Deserialize(obj, instance);
@@ -2688,7 +2688,7 @@ namespace ProtoBuf.Player
         public static PlayerInfo Deserialize(string json)
         {
             PlayerInfo instance = new PlayerInfo();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -2699,7 +2699,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -2725,27 +2725,27 @@ namespace ProtoBuf.Player
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.UserId = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.UserId = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.Username = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Username = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 3 Varint
                     case 24:
-                        instance.Modelid = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.Modelid = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -2756,7 +2756,7 @@ namespace ProtoBuf.Player
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static ProtoBuf.Player.PlayerInfo DeserializeLengthDelimited(Stream stream, ProtoBuf.Player.PlayerInfo instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -2765,7 +2765,7 @@ namespace ProtoBuf.Player
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -2775,27 +2775,27 @@ namespace ProtoBuf.Player
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.UserId = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.UserId = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.Username = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Username = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 3 Varint
                     case 24:
-                        instance.Modelid = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.Modelid = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -2814,7 +2814,7 @@ namespace ProtoBuf.Player
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -2824,27 +2824,27 @@ namespace ProtoBuf.Player
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.UserId = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.UserId = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.Username = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Username = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 3 Varint
                     case 24:
-                        instance.Modelid = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.Modelid = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -2853,7 +2853,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.Player.PlayerInfo Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Player.PlayerInfo instance)
+        public static ProtoBuf.Player.PlayerInfo Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Player.PlayerInfo instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -2879,20 +2879,20 @@ namespace ProtoBuf.Player
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, PlayerInfo instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, Varint
             stream.WriteByte(8);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.UserId);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.UserId);
             if (instance.Username != null)
             {
                 // Key for field: 2, LengthDelimited
                 stream.WriteByte(18);
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Username));
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Username));
             }
             // Key for field: 3, Varint
             stream.WriteByte(24);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.Modelid);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.Modelid);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -2910,7 +2910,7 @@ namespace ProtoBuf.Player
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -2929,7 +2929,7 @@ namespace ProtoBuf.Player
         public static void SerializeLengthDelimited(Stream stream, PlayerInfo instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -2943,7 +2943,7 @@ namespace ProtoBuf.Player
             writer.Write("\"Username\":");
             if (instance.Username != null)
             {
-                writer.Write(new global::Newtonsoft.Json.Linq.JValue(instance.Username).ToString(global::Newtonsoft.Json.Formatting.None));
+                writer.Write(new Newtonsoft.Json.Linq.JValue(instance.Username).ToString(Newtonsoft.Json.Formatting.None));
             }
             else
             {
@@ -2993,7 +2993,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static PlayerSpawn Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static PlayerSpawn Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             PlayerSpawn instance = new PlayerSpawn();
             Deserialize(obj, instance);
@@ -3004,7 +3004,7 @@ namespace ProtoBuf.Player
         public static PlayerSpawn Deserialize(string json)
         {
             PlayerSpawn instance = new PlayerSpawn();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -3015,7 +3015,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -3069,19 +3069,19 @@ namespace ProtoBuf.Player
                         continue;
                     // Field 4 Varint
                     case 32:
-                        instance.IsLocal = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        instance.IsLocal = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -3092,7 +3092,7 @@ namespace ProtoBuf.Player
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static ProtoBuf.Player.PlayerSpawn DeserializeLengthDelimited(Stream stream, ProtoBuf.Player.PlayerSpawn instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -3101,7 +3101,7 @@ namespace ProtoBuf.Player
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -3139,19 +3139,19 @@ namespace ProtoBuf.Player
                         continue;
                     // Field 4 Varint
                     case 32:
-                        instance.IsLocal = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        instance.IsLocal = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -3170,7 +3170,7 @@ namespace ProtoBuf.Player
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -3208,19 +3208,19 @@ namespace ProtoBuf.Player
                         continue;
                     // Field 4 Varint
                     case 32:
-                        instance.IsLocal = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        instance.IsLocal = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -3229,7 +3229,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.Player.PlayerSpawn Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Player.PlayerSpawn instance)
+        public static ProtoBuf.Player.PlayerSpawn Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Player.PlayerSpawn instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -3237,30 +3237,30 @@ namespace ProtoBuf.Player
                 {
                     case "Networkable":
                         if (instance.Networkable == null)
-                            instance.Networkable = ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.Networkable = ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.Networkable);
+                            ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.Networkable);
                         break;
 
                     case "Player":
                         if (instance.Player == null)
-                            instance.Player = ProtoBuf.Player.PlayerInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.Player = ProtoBuf.Player.PlayerInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.Player.PlayerInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.Player);
+                            ProtoBuf.Player.PlayerInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.Player);
                         break;
 
                     case "PedestrianState":
                         if (instance.PedestrianState == null)
-                            instance.PedestrianState = ProtoBuf.Player.PlayerPedestrianState.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.PedestrianState = ProtoBuf.Player.PlayerPedestrianState.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.Player.PlayerPedestrianState.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.PedestrianState);
+                            ProtoBuf.Player.PlayerPedestrianState.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.PedestrianState);
                         break;
 
                     case "PassengerState":
                         if (instance.PassengerState == null)
-                            instance.PassengerState = ProtoBuf.Player.PlayerPassengerState.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.PassengerState = ProtoBuf.Player.PlayerPassengerState.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.Player.PlayerPassengerState.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.PassengerState);
+                            ProtoBuf.Player.PlayerPassengerState.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.PassengerState);
                         break;
 
                     case "IsLocal":
@@ -3275,7 +3275,7 @@ namespace ProtoBuf.Player
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, PlayerSpawn instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             if (instance.Networkable == null)
                 throw new ArgumentNullException("Networkable", "Required by proto specification.");
             // Key for field: 1, LengthDelimited
@@ -3284,7 +3284,7 @@ namespace ProtoBuf.Player
             ProtoBuf.NetworkableInfo.Serialize(msField, instance.Networkable);
             // Length delimited byte array
             uint length1 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
             stream.Write(msField.GetBuffer(), 0, (int)length1);
 
             if (instance.Player != null)
@@ -3295,7 +3295,7 @@ namespace ProtoBuf.Player
                 ProtoBuf.Player.PlayerInfo.Serialize(msField, instance.Player);
                 // Length delimited byte array
                 uint length2 = (uint)msField.Length;
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
                 stream.Write(msField.GetBuffer(), 0, (int)length2);
             }
             if (instance.PedestrianState != null)
@@ -3306,7 +3306,7 @@ namespace ProtoBuf.Player
                 ProtoBuf.Player.PlayerPedestrianState.Serialize(msField, instance.PedestrianState);
                 // Length delimited byte array
                 uint length3 = (uint)msField.Length;
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
                 stream.Write(msField.GetBuffer(), 0, (int)length3);
             }
             if (instance.PassengerState != null)
@@ -3317,13 +3317,13 @@ namespace ProtoBuf.Player
                 ProtoBuf.Player.PlayerPassengerState.Serialize(msField, instance.PassengerState);
                 // Length delimited byte array
                 uint length5 = (uint)msField.Length;
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length5);
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length5);
                 stream.Write(msField.GetBuffer(), 0, (int)length5);
             }
             // Key for field: 4, Varint
             stream.WriteByte(32);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.IsLocal);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.IsLocal);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -3341,7 +3341,7 @@ namespace ProtoBuf.Player
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -3360,7 +3360,7 @@ namespace ProtoBuf.Player
         public static void SerializeLengthDelimited(Stream stream, PlayerSpawn instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -3447,7 +3447,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static PlayerPedestrianState Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static PlayerPedestrianState Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             PlayerPedestrianState instance = new PlayerPedestrianState();
             Deserialize(obj, instance);
@@ -3458,7 +3458,7 @@ namespace ProtoBuf.Player
         public static PlayerPedestrianState Deserialize(string json)
         {
             PlayerPedestrianState instance = new PlayerPedestrianState();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -3469,7 +3469,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -3519,19 +3519,19 @@ namespace ProtoBuf.Player
                         continue;
                     // Field 6 Varint
                     case 48:
-                        instance.Running = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        instance.Running = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -3543,7 +3543,7 @@ namespace ProtoBuf.Player
         public static ProtoBuf.Player.PlayerPedestrianState DeserializeLengthDelimited(Stream stream, ProtoBuf.Player.PlayerPedestrianState instance)
         {
             BinaryReader br = new BinaryReader(stream);
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -3552,7 +3552,7 @@ namespace ProtoBuf.Player
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -3585,19 +3585,19 @@ namespace ProtoBuf.Player
                         continue;
                     // Field 6 Varint
                     case 48:
-                        instance.Running = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        instance.Running = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -3617,7 +3617,7 @@ namespace ProtoBuf.Player
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -3650,19 +3650,19 @@ namespace ProtoBuf.Player
                         continue;
                     // Field 6 Varint
                     case 48:
-                        instance.Running = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
+                        instance.Running = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBool(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -3671,7 +3671,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.Player.PlayerPedestrianState Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Player.PlayerPedestrianState instance)
+        public static ProtoBuf.Player.PlayerPedestrianState Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Player.PlayerPedestrianState instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -3679,9 +3679,9 @@ namespace ProtoBuf.Player
                 {
                     case "Networkable":
                         if (instance.Networkable == null)
-                            instance.Networkable = ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.Networkable = ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.Networkable);
+                            ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.Networkable);
                         break;
 
                     case "Timestamp":
@@ -3689,11 +3689,11 @@ namespace ProtoBuf.Player
                         break;
 
                     case "Position":
-                        UnityEngine.Vector3Serialized.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Position);
+                        UnityEngine.Vector3Serialized.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Position);
                         break;
 
                     case "Movement":
-                        UnityEngine.Vector3Serialized.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Movement);
+                        UnityEngine.Vector3Serialized.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Movement);
                         break;
 
                     case "Yaw":
@@ -3713,7 +3713,7 @@ namespace ProtoBuf.Player
         public static void Serialize(Stream stream, PlayerPedestrianState instance)
         {
             BinaryWriter bw = new BinaryWriter(stream);
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             if (instance.Networkable != null)
             {
                 // Key for field: 1, LengthDelimited
@@ -3722,7 +3722,7 @@ namespace ProtoBuf.Player
                 ProtoBuf.NetworkableInfo.Serialize(msField, instance.Networkable);
                 // Length delimited byte array
                 uint length1 = (uint)msField.Length;
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
                 stream.Write(msField.GetBuffer(), 0, (int)length1);
             }
             // Key for field: 2, Fixed64
@@ -3734,7 +3734,7 @@ namespace ProtoBuf.Player
             UnityEngine.Vector3Serialized.Serialize(msField, instance.Position);
             // Length delimited byte array
             uint length3 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
             stream.Write(msField.GetBuffer(), 0, (int)length3);
 
             // Key for field: 4, LengthDelimited
@@ -3743,7 +3743,7 @@ namespace ProtoBuf.Player
             UnityEngine.Vector3Serialized.Serialize(msField, instance.Movement);
             // Length delimited byte array
             uint length4 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length4);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length4);
             stream.Write(msField.GetBuffer(), 0, (int)length4);
 
             // Key for field: 5, Fixed32
@@ -3751,8 +3751,8 @@ namespace ProtoBuf.Player
             bw.Write(instance.Yaw);
             // Key for field: 6, Varint
             stream.WriteByte(48);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.Running);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBool(stream, instance.Running);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -3770,7 +3770,7 @@ namespace ProtoBuf.Player
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -3789,7 +3789,7 @@ namespace ProtoBuf.Player
         public static void SerializeLengthDelimited(Stream stream, PlayerPedestrianState instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -3864,7 +3864,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static PlayerPassengerState Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static PlayerPassengerState Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             PlayerPassengerState instance = new PlayerPassengerState();
             Deserialize(obj, instance);
@@ -3875,7 +3875,7 @@ namespace ProtoBuf.Player
         public static PlayerPassengerState Deserialize(string json)
         {
             PlayerPassengerState instance = new PlayerPassengerState();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -3886,7 +3886,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -3927,19 +3927,19 @@ namespace ProtoBuf.Player
                         continue;
                     // Field 3 Varint
                     case 24:
-                        instance.SeatAlignment = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.SeatAlignment = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -3951,7 +3951,7 @@ namespace ProtoBuf.Player
         public static ProtoBuf.Player.PlayerPassengerState DeserializeLengthDelimited(Stream stream, ProtoBuf.Player.PlayerPassengerState instance)
         {
             instance.SeatAlignment = 0;
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -3960,7 +3960,7 @@ namespace ProtoBuf.Player
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -3984,19 +3984,19 @@ namespace ProtoBuf.Player
                         continue;
                     // Field 3 Varint
                     case 24:
-                        instance.SeatAlignment = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.SeatAlignment = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -4016,7 +4016,7 @@ namespace ProtoBuf.Player
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -4040,19 +4040,19 @@ namespace ProtoBuf.Player
                         continue;
                     // Field 3 Varint
                     case 24:
-                        instance.SeatAlignment = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.SeatAlignment = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -4061,7 +4061,7 @@ namespace ProtoBuf.Player
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.Player.PlayerPassengerState Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Player.PlayerPassengerState instance)
+        public static ProtoBuf.Player.PlayerPassengerState Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Player.PlayerPassengerState instance)
         {
             instance.SeatAlignment = 0;
 
@@ -4071,16 +4071,16 @@ namespace ProtoBuf.Player
                 {
                     case "Networkable":
                         if (instance.Networkable == null)
-                            instance.Networkable = ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.Networkable = ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.Networkable);
+                            ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.Networkable);
                         break;
 
                     case "Vechicle":
                         if (instance.Vechicle == null)
-                            instance.Vechicle = ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.Vechicle = ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.Vechicle);
+                            ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.Vechicle);
                         break;
 
                     case "SeatAlignment":
@@ -4095,7 +4095,7 @@ namespace ProtoBuf.Player
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, PlayerPassengerState instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             if (instance.Networkable != null)
             {
                 // Key for field: 1, LengthDelimited
@@ -4104,7 +4104,7 @@ namespace ProtoBuf.Player
                 ProtoBuf.NetworkableInfo.Serialize(msField, instance.Networkable);
                 // Length delimited byte array
                 uint length1 = (uint)msField.Length;
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
                 stream.Write(msField.GetBuffer(), 0, (int)length1);
             }
             if (instance.Vechicle != null)
@@ -4115,13 +4115,13 @@ namespace ProtoBuf.Player
                 ProtoBuf.NetworkableInfo.Serialize(msField, instance.Vechicle);
                 // Length delimited byte array
                 uint length2 = (uint)msField.Length;
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
                 stream.Write(msField.GetBuffer(), 0, (int)length2);
             }
             // Key for field: 3, Varint
             stream.WriteByte(24);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.SeatAlignment);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.SeatAlignment);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -4139,7 +4139,7 @@ namespace ProtoBuf.Player
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -4158,7 +4158,7 @@ namespace ProtoBuf.Player
         public static void SerializeLengthDelimited(Stream stream, PlayerPassengerState instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -4232,7 +4232,7 @@ namespace ProtoBuf.Vehicle
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static VehicleInfo Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static VehicleInfo Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             VehicleInfo instance = new VehicleInfo();
             Deserialize(obj, instance);
@@ -4243,7 +4243,7 @@ namespace ProtoBuf.Vehicle
         public static VehicleInfo Deserialize(string json)
         {
             VehicleInfo instance = new VehicleInfo();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -4254,7 +4254,7 @@ namespace ProtoBuf.Vehicle
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -4282,24 +4282,24 @@ namespace ProtoBuf.Vehicle
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.VehicleId = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.VehicleId = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 Varint
                     case 16:
                         // repeated
-                        instance.Colors.Add((int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream));
+                        instance.Colors.Add((int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream));
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -4312,7 +4312,7 @@ namespace ProtoBuf.Vehicle
         {
             if (instance.Colors == null)
                 instance.Colors = new List<int>();
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -4321,7 +4321,7 @@ namespace ProtoBuf.Vehicle
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -4331,24 +4331,24 @@ namespace ProtoBuf.Vehicle
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.VehicleId = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.VehicleId = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 Varint
                     case 16:
                         // repeated
-                        instance.Colors.Add((int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream));
+                        instance.Colors.Add((int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream));
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -4369,7 +4369,7 @@ namespace ProtoBuf.Vehicle
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -4379,24 +4379,24 @@ namespace ProtoBuf.Vehicle
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.VehicleId = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.VehicleId = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 Varint
                     case 16:
                         // repeated
-                        instance.Colors.Add((int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream));
+                        instance.Colors.Add((int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream));
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -4405,7 +4405,7 @@ namespace ProtoBuf.Vehicle
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.Vehicle.VehicleInfo Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Vehicle.VehicleInfo instance)
+        public static ProtoBuf.Vehicle.VehicleInfo Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Vehicle.VehicleInfo instance)
         {
             if (instance.Colors == null)
                 instance.Colors = new List<int>();
@@ -4420,7 +4420,7 @@ namespace ProtoBuf.Vehicle
 
                     case "Colors":
                         // repeated
-                        foreach (var val in ((global::Newtonsoft.Json.Linq.JArray)property.Value))
+                        foreach (var val in ((Newtonsoft.Json.Linq.JArray)property.Value))
                         {
                             instance.Colors.Add((int)(val));
                         }
@@ -4434,20 +4434,20 @@ namespace ProtoBuf.Vehicle
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, VehicleInfo instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, Varint
             stream.WriteByte(8);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.VehicleId);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.VehicleId);
             if (instance.Colors != null)
             {
                 foreach (var i2 in instance.Colors)
                 {
                     // Key for field: 2, Varint
                     stream.WriteByte(16);
-                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)i2);
+                    SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)i2);
                 }
             }
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -4465,7 +4465,7 @@ namespace ProtoBuf.Vehicle
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -4484,7 +4484,7 @@ namespace ProtoBuf.Vehicle
         public static void SerializeLengthDelimited(Stream stream, VehicleInfo instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -4554,7 +4554,7 @@ namespace ProtoBuf.Vehicle
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static VehicleSpawn Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static VehicleSpawn Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             VehicleSpawn instance = new VehicleSpawn();
             Deserialize(obj, instance);
@@ -4565,7 +4565,7 @@ namespace ProtoBuf.Vehicle
         public static VehicleSpawn Deserialize(string json)
         {
             VehicleSpawn instance = new VehicleSpawn();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -4576,7 +4576,7 @@ namespace ProtoBuf.Vehicle
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -4623,15 +4623,15 @@ namespace ProtoBuf.Vehicle
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -4642,7 +4642,7 @@ namespace ProtoBuf.Vehicle
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static ProtoBuf.Vehicle.VehicleSpawn DeserializeLengthDelimited(Stream stream, ProtoBuf.Vehicle.VehicleSpawn instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -4651,7 +4651,7 @@ namespace ProtoBuf.Vehicle
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -4682,15 +4682,15 @@ namespace ProtoBuf.Vehicle
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -4709,7 +4709,7 @@ namespace ProtoBuf.Vehicle
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -4740,15 +4740,15 @@ namespace ProtoBuf.Vehicle
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -4757,7 +4757,7 @@ namespace ProtoBuf.Vehicle
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.Vehicle.VehicleSpawn Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Vehicle.VehicleSpawn instance)
+        public static ProtoBuf.Vehicle.VehicleSpawn Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Vehicle.VehicleSpawn instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -4765,23 +4765,23 @@ namespace ProtoBuf.Vehicle
                 {
                     case "Networkable":
                         if (instance.Networkable == null)
-                            instance.Networkable = ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.Networkable = ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.Networkable);
+                            ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.Networkable);
                         break;
 
                     case "Info":
                         if (instance.Info == null)
-                            instance.Info = ProtoBuf.Vehicle.VehicleInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.Info = ProtoBuf.Vehicle.VehicleInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.Vehicle.VehicleInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.Info);
+                            ProtoBuf.Vehicle.VehicleInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.Info);
                         break;
 
                     case "State":
                         if (instance.State == null)
-                            instance.State = ProtoBuf.Vehicle.VehicleState.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.State = ProtoBuf.Vehicle.VehicleState.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.Vehicle.VehicleState.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.State);
+                            ProtoBuf.Vehicle.VehicleState.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.State);
                         break;
                 }
             }
@@ -4792,7 +4792,7 @@ namespace ProtoBuf.Vehicle
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, VehicleSpawn instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             if (instance.Networkable == null)
                 throw new ArgumentNullException("Networkable", "Required by proto specification.");
             // Key for field: 1, LengthDelimited
@@ -4801,7 +4801,7 @@ namespace ProtoBuf.Vehicle
             ProtoBuf.NetworkableInfo.Serialize(msField, instance.Networkable);
             // Length delimited byte array
             uint length1 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
             stream.Write(msField.GetBuffer(), 0, (int)length1);
 
             if (instance.Info == null)
@@ -4812,7 +4812,7 @@ namespace ProtoBuf.Vehicle
             ProtoBuf.Vehicle.VehicleInfo.Serialize(msField, instance.Info);
             // Length delimited byte array
             uint length2 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
             stream.Write(msField.GetBuffer(), 0, (int)length2);
 
             if (instance.State == null)
@@ -4823,10 +4823,10 @@ namespace ProtoBuf.Vehicle
             ProtoBuf.Vehicle.VehicleState.Serialize(msField, instance.State);
             // Length delimited byte array
             uint length3 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
             stream.Write(msField.GetBuffer(), 0, (int)length3);
 
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -4844,7 +4844,7 @@ namespace ProtoBuf.Vehicle
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -4863,7 +4863,7 @@ namespace ProtoBuf.Vehicle
         public static void SerializeLengthDelimited(Stream stream, VehicleSpawn instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -4929,7 +4929,7 @@ namespace ProtoBuf.Vehicle
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static VehicleState Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static VehicleState Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             VehicleState instance = new VehicleState();
             Deserialize(obj, instance);
@@ -4940,7 +4940,7 @@ namespace ProtoBuf.Vehicle
         public static VehicleState Deserialize(string json)
         {
             VehicleState instance = new VehicleState();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -4951,7 +4951,7 @@ namespace ProtoBuf.Vehicle
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -5017,15 +5017,15 @@ namespace ProtoBuf.Vehicle
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -5037,7 +5037,7 @@ namespace ProtoBuf.Vehicle
         public static ProtoBuf.Vehicle.VehicleState DeserializeLengthDelimited(Stream stream, ProtoBuf.Vehicle.VehicleState instance)
         {
             BinaryReader br = new BinaryReader(stream);
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -5046,7 +5046,7 @@ namespace ProtoBuf.Vehicle
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -5095,15 +5095,15 @@ namespace ProtoBuf.Vehicle
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -5123,7 +5123,7 @@ namespace ProtoBuf.Vehicle
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -5172,15 +5172,15 @@ namespace ProtoBuf.Vehicle
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -5189,7 +5189,7 @@ namespace ProtoBuf.Vehicle
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.Vehicle.VehicleState Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Vehicle.VehicleState instance)
+        public static ProtoBuf.Vehicle.VehicleState Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Vehicle.VehicleState instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -5197,9 +5197,9 @@ namespace ProtoBuf.Vehicle
                 {
                     case "Networkable":
                         if (instance.Networkable == null)
-                            instance.Networkable = ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.Networkable = ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.Networkable);
+                            ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.Networkable);
                         break;
 
                     case "Timestamp":
@@ -5207,19 +5207,19 @@ namespace ProtoBuf.Vehicle
                         break;
 
                     case "Position":
-                        UnityEngine.Vector3Serialized.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Position);
+                        UnityEngine.Vector3Serialized.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Position);
                         break;
 
                     case "Rotation":
-                        UnityEngine.QuaternionSerialized.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Rotation);
+                        UnityEngine.QuaternionSerialized.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Rotation);
                         break;
 
                     case "Velocity":
-                        UnityEngine.Vector3Serialized.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Velocity);
+                        UnityEngine.Vector3Serialized.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Velocity);
                         break;
 
                     case "AngularVelocity":
-                        UnityEngine.Vector3Serialized.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.AngularVelocity);
+                        UnityEngine.Vector3Serialized.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.AngularVelocity);
                         break;
 
                     case "Steering":
@@ -5243,7 +5243,7 @@ namespace ProtoBuf.Vehicle
         public static void Serialize(Stream stream, VehicleState instance)
         {
             BinaryWriter bw = new BinaryWriter(stream);
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             if (instance.Networkable != null)
             {
                 // Key for field: 1, LengthDelimited
@@ -5252,7 +5252,7 @@ namespace ProtoBuf.Vehicle
                 ProtoBuf.NetworkableInfo.Serialize(msField, instance.Networkable);
                 // Length delimited byte array
                 uint length1 = (uint)msField.Length;
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
                 stream.Write(msField.GetBuffer(), 0, (int)length1);
             }
             // Key for field: 2, Fixed64
@@ -5264,7 +5264,7 @@ namespace ProtoBuf.Vehicle
             UnityEngine.Vector3Serialized.Serialize(msField, instance.Position);
             // Length delimited byte array
             uint length3 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
             stream.Write(msField.GetBuffer(), 0, (int)length3);
 
             // Key for field: 4, LengthDelimited
@@ -5273,7 +5273,7 @@ namespace ProtoBuf.Vehicle
             UnityEngine.QuaternionSerialized.Serialize(msField, instance.Rotation);
             // Length delimited byte array
             uint length4 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length4);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length4);
             stream.Write(msField.GetBuffer(), 0, (int)length4);
 
             // Key for field: 5, LengthDelimited
@@ -5282,7 +5282,7 @@ namespace ProtoBuf.Vehicle
             UnityEngine.Vector3Serialized.Serialize(msField, instance.Velocity);
             // Length delimited byte array
             uint length5 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length5);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length5);
             stream.Write(msField.GetBuffer(), 0, (int)length5);
 
             // Key for field: 9, LengthDelimited
@@ -5291,7 +5291,7 @@ namespace ProtoBuf.Vehicle
             UnityEngine.Vector3Serialized.Serialize(msField, instance.AngularVelocity);
             // Length delimited byte array
             uint length9 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length9);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length9);
             stream.Write(msField.GetBuffer(), 0, (int)length9);
 
             // Key for field: 6, Fixed32
@@ -5303,7 +5303,7 @@ namespace ProtoBuf.Vehicle
             // Key for field: 8, Fixed32
             stream.WriteByte(69);
             bw.Write(instance.Braking);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -5321,7 +5321,7 @@ namespace ProtoBuf.Vehicle
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -5340,7 +5340,7 @@ namespace ProtoBuf.Vehicle
         public static void SerializeLengthDelimited(Stream stream, VehicleState instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -5432,7 +5432,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static ConnectRequest Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static ConnectRequest Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             ConnectRequest instance = new ConnectRequest();
             Deserialize(obj, instance);
@@ -5443,7 +5443,7 @@ namespace ProtoBuf
         public static ConnectRequest Deserialize(string json)
         {
             ConnectRequest instance = new ConnectRequest();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -5454,7 +5454,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -5480,35 +5480,35 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Protocol = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.Protocol = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 Varint
                     case 16:
-                        instance.UserId = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.UserId = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 3 LengthDelimited
                     case 26:
-                        instance.Username = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Username = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 4 LengthDelimited
                     case 34:
-                        instance.Os = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Os = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 5 LengthDelimited
                     case 42:
-                        instance.Data = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream);
+                        instance.Data = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -5519,7 +5519,7 @@ namespace ProtoBuf
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static ProtoBuf.ConnectRequest DeserializeLengthDelimited(Stream stream, ProtoBuf.ConnectRequest instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -5528,7 +5528,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -5538,35 +5538,35 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Protocol = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.Protocol = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 Varint
                     case 16:
-                        instance.UserId = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.UserId = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 3 LengthDelimited
                     case 26:
-                        instance.Username = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Username = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 4 LengthDelimited
                     case 34:
-                        instance.Os = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Os = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 5 LengthDelimited
                     case 42:
-                        instance.Data = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream);
+                        instance.Data = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -5585,7 +5585,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -5595,35 +5595,35 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Protocol = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.Protocol = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 Varint
                     case 16:
-                        instance.UserId = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.UserId = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 3 LengthDelimited
                     case 26:
-                        instance.Username = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Username = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 4 LengthDelimited
                     case 34:
-                        instance.Os = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Os = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 5 LengthDelimited
                     case 42:
-                        instance.Data = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream);
+                        instance.Data = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -5632,7 +5632,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.ConnectRequest Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.ConnectRequest instance)
+        public static ProtoBuf.ConnectRequest Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.ConnectRequest instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -5655,7 +5655,7 @@ namespace ProtoBuf
                         break;
 
                     case "Data":
-                        instance.Data = global::System.Convert.FromBase64String((string)(property.Value));
+                        instance.Data = System.Convert.FromBase64String((string)(property.Value));
                         break;
                 }
             }
@@ -5666,30 +5666,30 @@ namespace ProtoBuf
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, ConnectRequest instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, Varint
             stream.WriteByte(8);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.Protocol);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.Protocol);
             // Key for field: 2, Varint
             stream.WriteByte(16);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.UserId);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, instance.UserId);
             if (instance.Username == null)
                 throw new ArgumentNullException("Username", "Required by proto specification.");
             // Key for field: 3, LengthDelimited
             stream.WriteByte(26);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Username));
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Username));
             if (instance.Os == null)
                 throw new ArgumentNullException("Os", "Required by proto specification.");
             // Key for field: 4, LengthDelimited
             stream.WriteByte(34);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Os));
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Os));
             if (instance.Data != null)
             {
                 // Key for field: 5, LengthDelimited
                 stream.WriteByte(42);
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, instance.Data);
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, instance.Data);
             }
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -5707,7 +5707,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -5726,7 +5726,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, ConnectRequest instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -5743,17 +5743,17 @@ namespace ProtoBuf
             writer.Write("\"Username\":");
             if (instance.Username == null)
                 throw new ArgumentNullException("Username", "Required by proto specification.");
-            writer.Write(new global::Newtonsoft.Json.Linq.JValue(instance.Username).ToString(global::Newtonsoft.Json.Formatting.None));
+            writer.Write(new Newtonsoft.Json.Linq.JValue(instance.Username).ToString(Newtonsoft.Json.Formatting.None));
             writer.Write(",");
             writer.Write("\"Os\":");
             if (instance.Os == null)
                 throw new ArgumentNullException("Os", "Required by proto specification.");
-            writer.Write(new global::Newtonsoft.Json.Linq.JValue(instance.Os).ToString(global::Newtonsoft.Json.Formatting.None));
+            writer.Write(new Newtonsoft.Json.Linq.JValue(instance.Os).ToString(Newtonsoft.Json.Formatting.None));
             writer.Write(",");
             writer.Write("\"Data\":");
             if (instance.Data != null)
             {
-                writer.Write(instance.Data == null ? "null" : ("\"" + global::System.Convert.ToBase64String(instance.Data) + "\""));
+                writer.Write(instance.Data == null ? "null" : ("\"" + System.Convert.ToBase64String(instance.Data) + "\""));
             }
             else
             {
@@ -5800,7 +5800,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static NetworkablesRemoved Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static NetworkablesRemoved Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             NetworkablesRemoved instance = new NetworkablesRemoved();
             Deserialize(obj, instance);
@@ -5811,7 +5811,7 @@ namespace ProtoBuf
         public static NetworkablesRemoved Deserialize(string json)
         {
             NetworkablesRemoved instance = new NetworkablesRemoved();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -5822,7 +5822,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -5855,15 +5855,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -5876,7 +5876,7 @@ namespace ProtoBuf
         {
             if (instance.Networkables == null)
                 instance.Networkables = new List<ProtoBuf.NetworkableInfo>();
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -5885,7 +5885,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -5900,15 +5900,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -5929,7 +5929,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -5944,15 +5944,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -5961,7 +5961,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.NetworkablesRemoved Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.NetworkablesRemoved instance)
+        public static ProtoBuf.NetworkablesRemoved Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.NetworkablesRemoved instance)
         {
             if (instance.Networkables == null)
                 instance.Networkables = new List<ProtoBuf.NetworkableInfo>();
@@ -5972,9 +5972,9 @@ namespace ProtoBuf
                 {
                     case "Networkables":
                         // repeated
-                        foreach (var val in ((global::Newtonsoft.Json.Linq.JArray)property.Value))
+                        foreach (var val in ((Newtonsoft.Json.Linq.JArray)property.Value))
                         {
-                            instance.Networkables.Add(ProtoBuf.NetworkableInfo.Deserialize((global::Newtonsoft.Json.Linq.JObject)(val)));
+                            instance.Networkables.Add(ProtoBuf.NetworkableInfo.Deserialize((Newtonsoft.Json.Linq.JObject)(val)));
                         }
                         break;
                 }
@@ -5986,7 +5986,7 @@ namespace ProtoBuf
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, NetworkablesRemoved instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             if (instance.Networkables != null)
             {
                 foreach (var i1 in instance.Networkables)
@@ -5997,11 +5997,11 @@ namespace ProtoBuf
                     ProtoBuf.NetworkableInfo.Serialize(msField, i1);
                     // Length delimited byte array
                     uint length1 = (uint)msField.Length;
-                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+                    SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
                     stream.Write(msField.GetBuffer(), 0, (int)length1);
                 }
             }
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -6019,7 +6019,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -6038,7 +6038,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, NetworkablesRemoved instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -6105,7 +6105,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static MessageTableSchema Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static MessageTableSchema Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             MessageTableSchema instance = new MessageTableSchema();
             Deserialize(obj, instance);
@@ -6116,7 +6116,7 @@ namespace ProtoBuf
         public static MessageTableSchema Deserialize(string json)
         {
             MessageTableSchema instance = new MessageTableSchema();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -6127,7 +6127,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -6160,15 +6160,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -6181,7 +6181,7 @@ namespace ProtoBuf
         {
             if (instance.Entries == null)
                 instance.Entries = new List<ProtoBuf.MessageTableEntry>();
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -6190,7 +6190,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -6205,15 +6205,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -6234,7 +6234,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -6249,15 +6249,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -6266,7 +6266,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.MessageTableSchema Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.MessageTableSchema instance)
+        public static ProtoBuf.MessageTableSchema Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.MessageTableSchema instance)
         {
             if (instance.Entries == null)
                 instance.Entries = new List<ProtoBuf.MessageTableEntry>();
@@ -6277,9 +6277,9 @@ namespace ProtoBuf
                 {
                     case "Entries":
                         // repeated
-                        foreach (var val in ((global::Newtonsoft.Json.Linq.JArray)property.Value))
+                        foreach (var val in ((Newtonsoft.Json.Linq.JArray)property.Value))
                         {
-                            instance.Entries.Add(ProtoBuf.MessageTableEntry.Deserialize((global::Newtonsoft.Json.Linq.JObject)(val)));
+                            instance.Entries.Add(ProtoBuf.MessageTableEntry.Deserialize((Newtonsoft.Json.Linq.JObject)(val)));
                         }
                         break;
                 }
@@ -6291,7 +6291,7 @@ namespace ProtoBuf
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, MessageTableSchema instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             if (instance.Entries != null)
             {
                 foreach (var i1 in instance.Entries)
@@ -6302,11 +6302,11 @@ namespace ProtoBuf
                     ProtoBuf.MessageTableEntry.Serialize(msField, i1);
                     // Length delimited byte array
                     uint length1 = (uint)msField.Length;
-                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+                    SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
                     stream.Write(msField.GetBuffer(), 0, (int)length1);
                 }
             }
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -6324,7 +6324,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -6343,7 +6343,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, MessageTableSchema instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -6410,7 +6410,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static MessageTableEntry Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static MessageTableEntry Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             MessageTableEntry instance = new MessageTableEntry();
             Deserialize(obj, instance);
@@ -6421,7 +6421,7 @@ namespace ProtoBuf
         public static MessageTableEntry Deserialize(string json)
         {
             MessageTableEntry instance = new MessageTableEntry();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -6432,7 +6432,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -6458,23 +6458,23 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Ident = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+                        instance.Ident = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.TypeName = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.TypeName = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -6485,7 +6485,7 @@ namespace ProtoBuf
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static ProtoBuf.MessageTableEntry DeserializeLengthDelimited(Stream stream, ProtoBuf.MessageTableEntry instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -6494,7 +6494,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -6504,23 +6504,23 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Ident = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+                        instance.Ident = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.TypeName = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.TypeName = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -6539,7 +6539,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -6549,23 +6549,23 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Ident = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+                        instance.Ident = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.TypeName = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.TypeName = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -6574,7 +6574,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.MessageTableEntry Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.MessageTableEntry instance)
+        public static ProtoBuf.MessageTableEntry Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.MessageTableEntry instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -6596,16 +6596,16 @@ namespace ProtoBuf
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, MessageTableEntry instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, Varint
             stream.WriteByte(8);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)instance.Ident);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)instance.Ident);
             if (instance.TypeName == null)
                 throw new ArgumentNullException("TypeName", "Required by proto specification.");
             // Key for field: 2, LengthDelimited
             stream.WriteByte(18);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.TypeName));
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.TypeName));
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -6623,7 +6623,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -6642,7 +6642,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, MessageTableEntry instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -6656,7 +6656,7 @@ namespace ProtoBuf
             writer.Write("\"TypeName\":");
             if (instance.TypeName == null)
                 throw new ArgumentNullException("TypeName", "Required by proto specification.");
-            writer.Write(new global::Newtonsoft.Json.Linq.JValue(instance.TypeName).ToString(global::Newtonsoft.Json.Formatting.None));
+            writer.Write(new Newtonsoft.Json.Linq.JValue(instance.TypeName).ToString(Newtonsoft.Json.Formatting.None));
             writer.Write("}");
         }
     }
@@ -6698,7 +6698,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static NetworkableInfo Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static NetworkableInfo Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             NetworkableInfo instance = new NetworkableInfo();
             Deserialize(obj, instance);
@@ -6709,7 +6709,7 @@ namespace ProtoBuf
         public static NetworkableInfo Deserialize(string json)
         {
             NetworkableInfo instance = new NetworkableInfo();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -6720,7 +6720,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -6746,19 +6746,19 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Ident = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+                        instance.Ident = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -6769,7 +6769,7 @@ namespace ProtoBuf
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static ProtoBuf.NetworkableInfo DeserializeLengthDelimited(Stream stream, ProtoBuf.NetworkableInfo instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -6778,7 +6778,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -6788,19 +6788,19 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Ident = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+                        instance.Ident = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -6819,7 +6819,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -6829,19 +6829,19 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Ident = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+                        instance.Ident = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -6850,7 +6850,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.NetworkableInfo Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.NetworkableInfo instance)
+        public static ProtoBuf.NetworkableInfo Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.NetworkableInfo instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -6868,11 +6868,11 @@ namespace ProtoBuf
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, NetworkableInfo instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, Varint
             stream.WriteByte(8);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)instance.Ident);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)instance.Ident);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -6890,7 +6890,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -6909,7 +6909,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, NetworkableInfo instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -6960,7 +6960,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static Transform Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static Transform Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             Transform instance = new Transform();
             Deserialize(obj, instance);
@@ -6971,7 +6971,7 @@ namespace ProtoBuf
         public static Transform Deserialize(string json)
         {
             Transform instance = new Transform();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -6982,7 +6982,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -7020,15 +7020,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -7039,7 +7039,7 @@ namespace ProtoBuf
         /// <summary>Read the VarInt length prefix and the given number of bytes from the stream and deserialze it into the instance.</summary>
         public static ProtoBuf.Transform DeserializeLengthDelimited(Stream stream, ProtoBuf.Transform instance)
         {
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -7048,7 +7048,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -7070,15 +7070,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -7097,7 +7097,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -7119,15 +7119,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -7136,22 +7136,22 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.Transform Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Transform instance)
+        public static ProtoBuf.Transform Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.Transform instance)
         {
             foreach (var property in obj.Properties())
             {
                 switch (property.Name)
                 {
                     case "Position":
-                        UnityEngine.Vector3Serialized.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Position);
+                        UnityEngine.Vector3Serialized.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Position);
                         break;
 
                     case "Rotation":
-                        UnityEngine.QuaternionSerialized.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Rotation);
+                        UnityEngine.QuaternionSerialized.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Rotation);
                         break;
 
                     case "Scale":
-                        UnityEngine.Vector3Serialized.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Scale);
+                        UnityEngine.Vector3Serialized.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), ref instance.Scale);
                         break;
                 }
             }
@@ -7162,14 +7162,14 @@ namespace ProtoBuf
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, Transform instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, LengthDelimited
             stream.WriteByte(10);
             msField.SetLength(0);
             UnityEngine.Vector3Serialized.Serialize(msField, instance.Position);
             // Length delimited byte array
             uint length1 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
             stream.Write(msField.GetBuffer(), 0, (int)length1);
 
             // Key for field: 2, LengthDelimited
@@ -7178,7 +7178,7 @@ namespace ProtoBuf
             UnityEngine.QuaternionSerialized.Serialize(msField, instance.Rotation);
             // Length delimited byte array
             uint length2 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length2);
             stream.Write(msField.GetBuffer(), 0, (int)length2);
 
             // Key for field: 3, LengthDelimited
@@ -7187,10 +7187,10 @@ namespace ProtoBuf
             UnityEngine.Vector3Serialized.Serialize(msField, instance.Scale);
             // Length delimited byte array
             uint length3 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length3);
             stream.Write(msField.GetBuffer(), 0, (int)length3);
 
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -7208,7 +7208,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -7227,7 +7227,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, Transform instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -7287,7 +7287,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static NetworkableSave Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static NetworkableSave Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             NetworkableSave instance = new NetworkableSave();
             Deserialize(obj, instance);
@@ -7298,7 +7298,7 @@ namespace ProtoBuf
         public static NetworkableSave Deserialize(string json)
         {
             NetworkableSave instance = new NetworkableSave();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -7309,7 +7309,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -7345,19 +7345,19 @@ namespace ProtoBuf
                     // Field 2 LengthDelimited
                     case 18:
                         // repeated
-                        instance.Entries.Add(global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream));
+                        instance.Entries.Add(SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream));
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -7370,7 +7370,7 @@ namespace ProtoBuf
         {
             if (instance.Entries == null)
                 instance.Entries = new List<byte[]>();
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -7379,7 +7379,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -7397,19 +7397,19 @@ namespace ProtoBuf
                     // Field 2 LengthDelimited
                     case 18:
                         // repeated
-                        instance.Entries.Add(global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream));
+                        instance.Entries.Add(SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream));
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -7430,7 +7430,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -7448,19 +7448,19 @@ namespace ProtoBuf
                     // Field 2 LengthDelimited
                     case 18:
                         // repeated
-                        instance.Entries.Add(global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream));
+                        instance.Entries.Add(SilentOrbit.ProtocolBuffers.ProtocolParser.ReadBytes(stream));
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -7469,7 +7469,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.NetworkableSave Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.NetworkableSave instance)
+        public static ProtoBuf.NetworkableSave Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.NetworkableSave instance)
         {
             if (instance.Entries == null)
                 instance.Entries = new List<byte[]>();
@@ -7480,16 +7480,16 @@ namespace ProtoBuf
                 {
                     case "Schema":
                         if (instance.Schema == null)
-                            instance.Schema = ProtoBuf.MessageTableSchema.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.Schema = ProtoBuf.MessageTableSchema.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.MessageTableSchema.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.Schema);
+                            ProtoBuf.MessageTableSchema.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.Schema);
                         break;
 
                     case "Entries":
                         // repeated
-                        foreach (var val in ((global::Newtonsoft.Json.Linq.JArray)property.Value))
+                        foreach (var val in ((Newtonsoft.Json.Linq.JArray)property.Value))
                         {
-                            instance.Entries.Add(global::System.Convert.FromBase64String((string)(val)));
+                            instance.Entries.Add(System.Convert.FromBase64String((string)(val)));
                         }
                         break;
                 }
@@ -7501,7 +7501,7 @@ namespace ProtoBuf
         /// <summary>Serialize the instance into the stream</summary>
         public static void Serialize(Stream stream, NetworkableSave instance)
         {
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             if (instance.Schema == null)
                 throw new ArgumentNullException("Schema", "Required by proto specification.");
             // Key for field: 1, LengthDelimited
@@ -7510,7 +7510,7 @@ namespace ProtoBuf
             ProtoBuf.MessageTableSchema.Serialize(msField, instance.Schema);
             // Length delimited byte array
             uint length1 = (uint)msField.Length;
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length1);
             stream.Write(msField.GetBuffer(), 0, (int)length1);
 
             if (instance.Entries != null)
@@ -7519,10 +7519,10 @@ namespace ProtoBuf
                 {
                     // Key for field: 2, LengthDelimited
                     stream.WriteByte(18);
-                    global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, i2);
+                    SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, i2);
                 }
             }
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -7540,7 +7540,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -7559,7 +7559,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, NetworkableSave instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -7583,7 +7583,7 @@ namespace ProtoBuf
                 {
                     if (!first) writer.Write(",");
                     else first = false;
-                    writer.Write(i2 == null ? "null" : ("\"" + global::System.Convert.ToBase64String(i2) + "\""));
+                    writer.Write(i2 == null ? "null" : ("\"" + System.Convert.ToBase64String(i2) + "\""));
                 }
                 writer.Write("]");
             }
@@ -7635,7 +7635,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Helper: create a new instance when deserializing a JObject</summary>
-        public static ConnectResponse Deserialize(global::Newtonsoft.Json.Linq.JObject obj)
+        public static ConnectResponse Deserialize(Newtonsoft.Json.Linq.JObject obj)
         {
             ConnectResponse instance = new ConnectResponse();
             Deserialize(obj, instance);
@@ -7646,7 +7646,7 @@ namespace ProtoBuf
         public static ConnectResponse Deserialize(string json)
         {
             ConnectResponse instance = new ConnectResponse();
-            Deserialize(global::Newtonsoft.Json.Linq.JObject.Parse(json), instance);
+            Deserialize(Newtonsoft.Json.Linq.JObject.Parse(json), instance);
             return instance;
         }
 
@@ -7657,7 +7657,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Load this value from a json object</summary>
-        public void FromJson(global::Newtonsoft.Json.Linq.JObject obj)
+        public void FromJson(Newtonsoft.Json.Linq.JObject obj)
         {
             Deserialize(obj, this);
         }
@@ -7684,19 +7684,19 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Flags = (ProtoBuf.ConnectResponseFlags)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.Flags = (ProtoBuf.ConnectResponseFlags)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.Message = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Message = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 3 LengthDelimited
                     case 26:
-                        instance.HostName = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.HostName = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 5 Varint
                     case 40:
-                        instance.UpdateRate = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.UpdateRate = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 6 Fixed64
                     case 49:
@@ -7711,15 +7711,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -7731,7 +7731,7 @@ namespace ProtoBuf
         public static ProtoBuf.ConnectResponse DeserializeLengthDelimited(Stream stream, ProtoBuf.ConnectResponse instance)
         {
             BinaryReader br = new BinaryReader(stream);
-            long limit = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
+            long limit = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt32(stream);
             limit += stream.Position;
             while (true)
             {
@@ -7740,7 +7740,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -7750,19 +7750,19 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Flags = (ProtoBuf.ConnectResponseFlags)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.Flags = (ProtoBuf.ConnectResponseFlags)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.Message = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Message = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 3 LengthDelimited
                     case 26:
-                        instance.HostName = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.HostName = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 5 Varint
                     case 40:
-                        instance.UpdateRate = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.UpdateRate = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 6 Fixed64
                     case 49:
@@ -7777,15 +7777,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -7805,7 +7805,7 @@ namespace ProtoBuf
                     if (stream.Position == limit)
                         break;
                     else
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Read past max limit");
                 }
                 int keyByte = stream.ReadByte();
                 if (keyByte == -1)
@@ -7815,19 +7815,19 @@ namespace ProtoBuf
                 {
                     // Field 1 Varint
                     case 8:
-                        instance.Flags = (ProtoBuf.ConnectResponseFlags)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.Flags = (ProtoBuf.ConnectResponseFlags)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 2 LengthDelimited
                     case 18:
-                        instance.Message = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.Message = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 3 LengthDelimited
                     case 26:
-                        instance.HostName = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
+                        instance.HostName = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadString(stream);
                         continue;
                     // Field 5 Varint
                     case 40:
-                        instance.UpdateRate = (int)global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
+                        instance.UpdateRate = (int)SilentOrbit.ProtocolBuffers.ProtocolParser.ReadUInt64(stream);
                         continue;
                     // Field 6 Fixed64
                     case 49:
@@ -7842,15 +7842,15 @@ namespace ProtoBuf
                         continue;
                 }
 
-                var key = global::SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
+                var key = SilentOrbit.ProtocolBuffers.ProtocolParser.ReadKey((byte)keyByte, stream);
 
                 // Reading field ID > 16 and unknown field ID/wire type combinations
                 switch (key.Field)
                 {
                     case 0:
-                        throw new global::SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
+                        throw new SilentOrbit.ProtocolBuffers.ProtocolBufferException("Invalid field id: 0, something went wrong in the stream");
                     default:
-                        global::SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
+                        SilentOrbit.ProtocolBuffers.ProtocolParser.SkipKey(stream, key);
                         break;
                 }
             }
@@ -7859,7 +7859,7 @@ namespace ProtoBuf
         }
 
         /// <summary>Deserializes an instance from a JSON object.</summary>
-        public static ProtoBuf.ConnectResponse Deserialize(global::Newtonsoft.Json.Linq.JObject obj, ProtoBuf.ConnectResponse instance)
+        public static ProtoBuf.ConnectResponse Deserialize(Newtonsoft.Json.Linq.JObject obj, ProtoBuf.ConnectResponse instance)
         {
             foreach (var property in obj.Properties())
             {
@@ -7887,9 +7887,9 @@ namespace ProtoBuf
 
                     case "MessageTable":
                         if (instance.MessageTable == null)
-                            instance.MessageTable = ProtoBuf.MessageTableSchema.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value));
+                            instance.MessageTable = ProtoBuf.MessageTableSchema.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value));
                         else
-                            ProtoBuf.MessageTableSchema.Deserialize((global::Newtonsoft.Json.Linq.JObject)(property.Value), instance.MessageTable);
+                            ProtoBuf.MessageTableSchema.Deserialize((Newtonsoft.Json.Linq.JObject)(property.Value), instance.MessageTable);
                         break;
                 }
             }
@@ -7901,25 +7901,25 @@ namespace ProtoBuf
         public static void Serialize(Stream stream, ConnectResponse instance)
         {
             BinaryWriter bw = new BinaryWriter(stream);
-            var msField = global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
+            var msField = SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Pop();
             // Key for field: 1, Varint
             stream.WriteByte(8);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.Flags);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.Flags);
             if (instance.Message != null)
             {
                 // Key for field: 2, LengthDelimited
                 stream.WriteByte(18);
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Message));
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.Message));
             }
             if (instance.HostName != null)
             {
                 // Key for field: 3, LengthDelimited
                 stream.WriteByte(26);
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.HostName));
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteBytes(stream, Encoding.UTF8.GetBytes(instance.HostName));
             }
             // Key for field: 5, Varint
             stream.WriteByte(40);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.UpdateRate);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt64(stream, (ulong)instance.UpdateRate);
             // Key for field: 6, Fixed64
             stream.WriteByte(49);
             bw.Write(instance.ServerTime);
@@ -7931,10 +7931,10 @@ namespace ProtoBuf
                 ProtoBuf.MessageTableSchema.Serialize(msField, instance.MessageTable);
                 // Length delimited byte array
                 uint length4 = (uint)msField.Length;
-                global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length4);
+                SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, length4);
                 stream.Write(msField.GetBuffer(), 0, (int)length4);
             }
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.Stack.Push(msField);
         }
 
         /// <summary>Serialize and return data as a byte array (use this sparingly)</summary>
@@ -7952,7 +7952,7 @@ namespace ProtoBuf
         /// <summary>Serialize to a JSON string</summary>
         public string ToJson()
         {
-            var writer = new global::System.IO.StringWriter();
+            var writer = new System.IO.StringWriter();
             SerializeJson(writer, this);
             return writer.ToString();
         }
@@ -7971,7 +7971,7 @@ namespace ProtoBuf
         public static void SerializeLengthDelimited(Stream stream, ConnectResponse instance)
         {
             var data = SerializeToBytes(instance);
-            global::SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
+            SilentOrbit.ProtocolBuffers.ProtocolParser.WriteUInt32(stream, (uint)data.Length);
             stream.Write(data, 0, data.Length);
         }
 
@@ -7985,7 +7985,7 @@ namespace ProtoBuf
             writer.Write("\"Message\":");
             if (instance.Message != null)
             {
-                writer.Write(new global::Newtonsoft.Json.Linq.JValue(instance.Message).ToString(global::Newtonsoft.Json.Formatting.None));
+                writer.Write(new Newtonsoft.Json.Linq.JValue(instance.Message).ToString(Newtonsoft.Json.Formatting.None));
             }
             else
             {
@@ -7995,7 +7995,7 @@ namespace ProtoBuf
             writer.Write("\"HostName\":");
             if (instance.HostName != null)
             {
-                writer.Write(new global::Newtonsoft.Json.Linq.JValue(instance.HostName).ToString(global::Newtonsoft.Json.Formatting.None));
+                writer.Write(new Newtonsoft.Json.Linq.JValue(instance.HostName).ToString(Newtonsoft.Json.Formatting.None));
             }
             else
             {

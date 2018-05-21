@@ -4,7 +4,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
+
+#if !UNITY_EDITOR
+using Fclp;
+using System;
+#endif
 
 public class Sockets : MonoBehaviour
 {
@@ -16,15 +20,15 @@ public class Sockets : MonoBehaviour
     // Use this for initialization
     private void Awake()
     {
-#if UNITY_EDITOR
+        //#if UNITY_EDITOR
         startCApp = true;
-#else
-        var p = new FluentCommandLineParser();
+        /*#else
+                var p = new FluentCommandLineParser();
 
-        p.Setup<bool>('c', "console").Callback(x => startCApp = x);
+                p.Setup<bool>('c', "console").Callback(x => startCApp = x);
 
-        p.Parse(Environment.GetCommandLineArgs());
-#endif
+                p.Parse(Environment.GetCommandLineArgs());
+        #endif*/
 
         string consoleApp = Path.Combine(Application.streamingAssetsPath, "SanAndreasConsole.exe");
 

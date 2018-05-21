@@ -39,7 +39,7 @@ public static class XmlUtil
 
     public static string XmlBeautifier(XmlDocument xmlDoc, string indentChars = "", bool indentOnAttributes = false, Encoding enc = null)
     {
-        global::System.Text.StringBuilder sb = new global::System.Text.StringBuilder();
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
         XmlWriterSettings settings = new XmlWriterSettings()
         {
             Indent = true,

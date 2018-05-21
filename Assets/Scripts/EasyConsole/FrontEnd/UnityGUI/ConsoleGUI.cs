@@ -322,7 +322,7 @@ internal class ConsoleGUI : MonoBehaviour
 
     internal static void NavigateChat(ref int scroll, int d, int max)
     {
-        if (d < 0)
+        if (d > 0)
         {
             if (scroll > 0)
                 scroll -= Mathf.Abs(d);

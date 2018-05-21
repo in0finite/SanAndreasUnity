@@ -48,6 +48,7 @@ namespace MFatihMAR.EasySockets.Examples
                             }
                         }
                         break;
+
                     case "stop": _peer.Stop(); break;
                     case "exit":
                         {

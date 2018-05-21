@@ -44,9 +44,13 @@ F9 - Toggle velocimeter
 
 ## CLI
 
-* -handlelog // -h => Enables log handling (in HTML)
+* --handlelog // --h => Enables log handling (in HTML)
 
-* -console // -c => Display a console to see what is Unity outputting
+* --console // --c => Display a console to see what is Unity outputting
+
+* --stopdebug // --s => Stop debug when reached x messages
+
+* --html => Output log in html instead of text
 
 ## Here is a list of what I think should be done next
 
@@ -93,6 +97,8 @@ F9 - Toggle velocimeter
 - In-game input manager
 
 - Flip & repair cars
+
+- CLI for Console app to know where to connect
 
 - Maybe I will use my sockets implementation to do a server system (I will made a paid assets with [examples from Unity Forums](https://github.com/ZZona-Dummies/UnityForumsMultiplayer)
 

@@ -1,3 +1,4 @@
+using Cadenza.Collections;
 using Fclp;
 using Homans.Console;
 using Homans.Containers;
@@ -48,10 +49,7 @@ public class Console : MonoBehaviour
     [SerializeField]
     private int commandHistory = 100;
 
-    private Dictionary<string, global::Console.DirectCommand> directCommands = new Dictionary<string, global::Console.DirectCommand>();
-
-    [SerializeField]
-    private bool printDebug = true;
+    private Dictionary<string, DirectCommand> directCommands = new Dictionary<string, DirectCommand>();
 
     private Dictionary<Type, ParserCallback> parsers = new Dictionary<Type, ParserCallback>();
 
@@ -60,8 +58,11 @@ public class Console : MonoBehaviour
     // WIP: Maybe we will need to implement support for ConsoleNGUI
     private ConsoleGUI consoleGUI;
 
-    private static List<ConsoleLog> l_consoleLog = new List<ConsoleLog>();
+    private static StringBuilder consoleLog = new StringBuilder();
     private static string logPath = "";
+
+    private static int DebugStop, MessagesSended;
+    private static bool printHtml;
 
     public bool IsOpened
     {
@@ -97,6 +98,19 @@ public class Console : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        if (m_handleLog)
+            Application.logMessageReceived += PrintDebug;
+        //Application.RegisterLogCallback(new Application.LogCallback(this.PrintDebug));
+    }
+
+    private void OnDisable()
+    {
+        if (m_handleLog)
+            Application.logMessageReceived -= PrintDebug;
+    }
+
     private void Awake()
     {
         if (instance != null)
@@ -107,11 +121,6 @@ public class Console : MonoBehaviour
         lines = new CircularBuffer<string>(linesOfHistory, true);
         commands = new CircularBuffer<string>(commandHistory, true);
         SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-        if (printDebug)
-        {
-            Application.logMessageReceived += PrintDebug;
-            //Application.RegisterLogCallback(new Application.LogCallback(this.PrintDebug));
-        }
         RegisterCommand("help", this, "Help");
         RegisterCommand("list", this, "List");
         RegisterCommand("listComponents", this, "ListComponents");
@@ -127,21 +136,21 @@ public class Console : MonoBehaviour
     private void Start()
     {
         string[] args = Environment.GetCommandLineArgs();
+        var p = new FluentCommandLineParser();
 
         if (args.Any(x => x.Contains("-h") || x.Contains("-handlelog")))
-        {
-            var p = new FluentCommandLineParser();
-
             p.Setup<bool>('h', "handlelog").Callback(x => m_handleLog = x);
 
-            p.Parse(args);
-        }
+        p.Setup<int>('s', "stopdebug").Callback(x => DebugStop = x);
+        p.Setup<bool>("html").Callback(x => printHtml = x);
+
+        p.Parse(args);
     }
 
     /*private void OnLevelWasLoaded(int id)
     {
         List<string> list = new List<string>();
-        foreach (KeyValuePair<string, global::Console.DirectCommand> current in this.directCommands)
+        foreach (KeyValuePair<string, Console.DirectCommand> current in this.directCommands)
         {
             if (!current.Value.instance.IsAlive || current.Value.instance.Target == null)
             {
@@ -157,7 +166,7 @@ public class Console : MonoBehaviour
     private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode mode)
     {
         List<string> list = new List<string>();
-        foreach (KeyValuePair<string, global::Console.DirectCommand> current in directCommands)
+        foreach (KeyValuePair<string, DirectCommand> current in directCommands)
         {
             if (!current.Value.instance.IsAlive || current.Value.instance.Target == null)
             {
@@ -190,7 +199,7 @@ public class Console : MonoBehaviour
 
     public void RegisterCommand(string command, object instance, MethodInfo method)
     {
-        global::Console.DirectCommand value = default(global::Console.DirectCommand);
+        DirectCommand value = default(DirectCommand);
         value.command = command;
         value.instance = new WeakReference(instance, false);
         value.method = method;
@@ -259,10 +268,10 @@ public class Console : MonoBehaviour
         string componentName;
         string text2;
         string[] args;
-        global::Console.parseCommand(line, out text, out hierarchy, out componentName, out text2, out args);
+        parseCommand(line, out text, out hierarchy, out componentName, out text2, out args);
         if (text != null)
         {
-            global::Console.DirectCommand directCommand;
+            DirectCommand directCommand;
             if (directCommands.TryGetValue(text, out directCommand))
             {
                 if (directCommand.instance.IsAlive && directCommand.instance.Target != null)
@@ -342,7 +351,7 @@ public class Console : MonoBehaviour
 
     private void InvokeMethodOnComponent(string[] args, string[] hierarchy, string componentName, string methodName)
     {
-        string name = global::Console.BuildGameObjectPath(hierarchy);
+        string name = Console.BuildGameObjectPath(hierarchy);
         GameObject gameObject = GameObject.Find(name);
         if (gameObject == null)
         {
@@ -464,14 +473,25 @@ public class Console : MonoBehaviour
         object obj2 = method.Invoke(instance, array);
         if (obj2 != null)
         {
-            global::Console.Instance.Print(obj2.ToString());
+            Instance.Print(obj2.ToString());
             return;
         }
     }
 
-    private void PrintDebug(string condition, string stackTrace, LogType type)
+    private void PrintDebug(string logString, string stackTrace, LogType type)
     {
-        Print(type.ToString() + ": " + condition);
+        if (DebugStop > 0 && MessagesSended >= DebugStop)
+        {
+            Application.logMessageReceived -= PrintDebug;
+            return;
+        }
+        ++MessagesSended;
+
+        ConsoleLog log = new ConsoleLog(logString, stackTrace, type);
+        consoleLog.AppendLine(log.DetailedMessage());
+        Sockets.SendLog(log);
+
+        Print(type.ToString() + ": " + logString);
         string[] array = stackTrace.Split(new char[]
         {
             '\n'
@@ -524,7 +544,7 @@ public class Console : MonoBehaviour
             if (list[0].Contains(".") || list[0].Contains("/"))
             {
                 command = null;
-                global::Console.parseGameObjectString(list[0], out gameobjectPath, out componentName, out methodName);
+                parseGameObjectString(list[0], out gameobjectPath, out componentName, out methodName);
                 list.RemoveAt(0);
                 parameters = list.ToArray();
             }
@@ -749,7 +769,7 @@ public class Console : MonoBehaviour
     {
         if (arg.Length > 0)
         {
-            global::Console.DirectCommand directCommand;
+            DirectCommand directCommand;
             if (directCommands.TryGetValue(arg[0], out directCommand))
             {
                 HelpAttribute[] array = directCommand.method.GetCustomAttributes(typeof(HelpAttribute), true) as HelpAttribute[];
@@ -853,7 +873,7 @@ public class Console : MonoBehaviour
         string[] hierarchy;
         string text;
         string text2;
-        global::Console.parseGameObjectString(path[0], out hierarchy, out text, out text2);
+        parseGameObjectString(path[0], out hierarchy, out text, out text2);
         if (text2 != null)
         {
             Print("Invalid path. You can not add a method or field identifier to the path");
@@ -862,7 +882,7 @@ public class Console : MonoBehaviour
         {
             Print("Invalid path. Component is not present");
         }
-        string text3 = global::Console.BuildGameObjectPath(hierarchy);
+        string text3 = Console.BuildGameObjectPath(hierarchy);
         GameObject gameObject = GameObject.Find(text3);
         if (gameObject == null)
         {
@@ -883,38 +903,19 @@ public class Console : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        if (m_handleLog)
-            Application.logMessageReceived += HandleLog;
-    }
-
-    private void OnDisable()
-    {
-        if (m_handleLog)
-            Application.logMessageReceived -= HandleLog;
-    }
-
     private void OnApplicationQuit()
     {
         if (m_handleLog)
         {
             if (string.IsNullOrEmpty(logPath))
-                logPath = Path.Combine(Application.streamingAssetsPath, string.Format("debug_{0}.html", DateTime.Now.DateTimeToUnixTimestamp()));
+                logPath = Path.Combine(Application.streamingAssetsPath, string.Format("debug_{0}.{1}", DateTime.Now.DateTimeToUnixTimestamp(), printHtml ? "html" : "log"));
 
             string dir = Path.GetDirectoryName(logPath);
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
-            File.WriteAllText(logPath, GenerateHTML());
+            File.WriteAllText(logPath, printHtml ? GenerateHTML() : consoleLog.ToString());
         }
-    }
-
-    private void HandleLog(string logString, string stackTrace, LogType type)
-    {
-        ConsoleLog log = new ConsoleLog(logString, stackTrace, type);
-        l_consoleLog.Add(log);
-        Sockets.SendLog(log);
     }
 
     private string GenerateHTML(bool indent = false)
@@ -923,12 +924,12 @@ public class Console : MonoBehaviour
         var node = HtmlNode.CreateNode("<html><head></head><body></body></html>");
 
         StringBuilder sb = new StringBuilder();
-
+        string[] lines = consoleLog.ToString().Split('\n');
         int i = 0;
-        foreach (var el in l_consoleLog)
+        foreach (string str in lines)
         {
             HtmlNode div = doc.CreateElement("div");
-            div.SetAttributeValue("style", GetHTMLColor(el.logType));
+            div.SetAttributeValue("style", GetHTMLColor(str));
 
             HtmlNode span = doc.CreateElement("span");
             sb.AppendLine(string.Format("Message #{0}", i));
@@ -940,24 +941,14 @@ public class Console : MonoBehaviour
             span.SetAttributeValue("style", "color:black!important;");
             div.AppendChild(span);
 
-            HtmlNode logDiv = doc.CreateElement("div");
-            logDiv.InnerHtml = el.logString.OptimizeHTML();
-
-            HtmlNode stDiv = doc.CreateElement("div");
-
-            sb.AppendLine("Stacktrace:");
-            sb.AppendLine(el.stackTrace.OptimizeHTML());
-
-            stDiv.InnerHtml = sb.ToString().OptimizeHTML();
-
-            sb.Clear();
-
-            div.AppendChild(logDiv);
-            div.AppendChild(stDiv);
+            div.InnerHtml += str.OptimizeHTML();
 
             node.AppendChild(div);
 
-            node.InnerHtml += "[br][hr][br]";
+            if (indent)
+                node.InnerHtml += "[br][hr][br]";
+            else
+                node.InnerHtml += "\n<hr>\n";
 
             ++i;
         }
@@ -967,28 +958,22 @@ public class Console : MonoBehaviour
         if (indent)
             return doc.DocumentNode.IndentHtml();
 
-        return doc.DocumentNode.OuterHtml;
+        return doc.DocumentNode.OuterHtml.Nl2Br();
     }
 
-    private string GetHTMLColor(LogType type)
+    private string GetHTMLColor(string str)
     {
-        switch (type)
-        {
-            case LogType.Assert:
-                return "color:darkcyan;";
-
-            case LogType.Error:
-                return "color:darkred;";
-
-            case LogType.Exception:
-                return "color:red;";
-
-            case LogType.Log:
-                return "";
-
-            case LogType.Warning:
-                return "color:darkgoldenrod;";
-        }
-        return "";
+        if (str.Contains("/Assert"))
+            return "color:darkcyan;";
+        else if (str.Contains("/Exception"))
+            return "color:darkred;";
+        else if (str.Contains("/Error"))
+            return "color:red;";
+        else if (str.Contains("/Log"))
+            return "";
+        else if (str.Contains("/Warning"))
+            return "color:darkgoldenrod;";
+        else
+            return "";
     }
 }

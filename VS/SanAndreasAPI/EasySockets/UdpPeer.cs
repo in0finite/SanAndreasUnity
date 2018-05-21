@@ -8,11 +8,15 @@ namespace MFatihMAR.EasySockets
     public class UdpPeer
     {
         public delegate void StartEvent();
+
         public delegate void DataEvent(IPEndPoint remoteIPEP, byte[] data);
+
         public delegate void StopEvent(Exception exception = null);
 
         public event StartEvent OnStart;
+
         public event DataEvent OnData;
+
         public event StopEvent OnStop;
 
         private ValueWrapper<bool> _isOpen;

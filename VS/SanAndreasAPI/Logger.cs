@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using UnityEngine;
@@ -176,6 +174,11 @@ namespace SanAndreasAPI
 
     public static class LoggerExtensions
     {
+        public static string DetailedMessage(this ConsoleLog log)
+        {
+            return DetailedMessage(log.logString, log.stackTrace, log.logType);
+        }
+
         public static string DetailedMessage(this string message, string stacktrace, LogType t)
         {
             string name = Thread.CurrentThread.Name;
