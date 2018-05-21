@@ -191,11 +191,11 @@ F9 - Toggle velocimeter
 
 - Console Application is not launching on build (CLI was checked and work properly)
 
-- StackTrace has a little bug where first line of ArgumentNullExceptions prints on the same line
+- Stacktrace has a little bug where first line of ArgumentNullExceptions prints on the same line
 
 - Log extension is printed in hexadecimal on Sublime Text (change extension)
 
-- Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is going to **Assets > Reimport all**
+- Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is running Unity Editor undr `--force-glcore` and going to **Assets > Reimport all**
 
 ## Media
 

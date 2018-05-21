@@ -193,7 +193,7 @@ namespace SanAndreasAPI
 
             bool printStackTrace = stackNotNull && t != LogType.Log;
 
-            string stack = printStackTrace ? IndentLog(stacktrace, str.Length, "StackTrace: ") : "";
+            string stack = printStackTrace ? IndentLog(stacktrace, str.Length, "Stacktrace: ") : "";
             message = IndentLog(message, str.Length);
 
             return string.Format("{0}{1}{2}", str,
