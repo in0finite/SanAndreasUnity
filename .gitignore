@@ -40,6 +40,8 @@ sysinfo.txt
 
 **UnityVS**
 
+Assets/*.xml
+
 #Assets/Standard Assets
 #Assets/Standard Assets.meta
 #Assets/Editor/ImageEffects
