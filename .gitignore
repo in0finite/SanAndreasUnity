@@ -38,7 +38,7 @@ Thumbs.db
 #Unity3D Generated File On Crash Reports
 sysinfo.txt
 
-Assets/*.xml
+*.xml
 
 **UnityVS**
 
