@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SanAndreasAPI;
+using System;
 using System.Net;
 using System.Text;
 
@@ -8,10 +9,16 @@ namespace MFatihMAR.EasySockets.Examples
     {
         private TcpServer _server;
         private bool flagStart, flagConnect, flagData, flagDisconnect, flagStop;
+        public Logger logger;
 
-        public void Init()
+        public static TcpServerExample Init(bool isUnity, string logPath)
         {
-            _server = new TcpServer();
+            TcpServerExample s = new TcpServerExample();
+
+            s._server = new TcpServer();
+            s.logger = new Logger(logPath, isUnity);
+
+            return s;
         }
 
         public void SetOnStart(Action start)
@@ -60,21 +67,21 @@ namespace MFatihMAR.EasySockets.Examples
 
                 switch (blocks[0])
                 {
-                    default: Console.WriteLine("commands: isListening / start / send <ipep> <message> / disconnect <ipep> / stop / exit"); break;
+                    default: logger.Log("commands: isListening / start / send <ipep> <message> / disconnect <ipep> / stop / exit"); break;
                     case "start": _server.Start(new IPEndPoint(IPAddress.Any, port)); break;
-                    case "isListening": Console.WriteLine(_server.IsListening ? "server listening" : "server not listening"); break;
+                    case "isListening": logger.Log(_server.IsListening ? "server listening" : "server not listening"); break;
                     case "send":
                         {
                             if (blocks.Length < 3)
                             {
-                                Console.WriteLine("usage: send <ipep> <message>");
+                                logger.Log("usage: send <ipep> <message>");
                             }
                             else
                             {
                                 var ipep = blocks[1].ToIPEP();
                                 if (ipep == null)
                                 {
-                                    Console.WriteLine("bad ipendpoint");
+                                    logger.Log("bad ipendpoint");
                                 }
                                 else
                                 {
@@ -103,29 +110,34 @@ namespace MFatihMAR.EasySockets.Examples
             }
         }
 
+        public void Stop()
+        {
+            _server.Stop();
+        }
+
         public void _OnStart()
         {
-            Console.WriteLine("[start] " + _server.LocalIPEP);
+            logger.Log("[start] " + _server.LocalIPEP);
         }
 
         public void _OnConnect(IPEndPoint remoteIPEP)
         {
-            Console.WriteLine("[connect] " + remoteIPEP);
+            logger.Log("[connect] " + remoteIPEP);
         }
 
         public void _OnData(IPEndPoint remoteIPEP, byte[] data)
         {
-            Console.WriteLine($"[data] {remoteIPEP} ({data.Length}) {Encoding.UTF8.GetString(data)}");
+            logger.Log($"[data] {remoteIPEP} ({data.Length}) {Encoding.UTF8.GetString(data)}");
         }
 
         public void _OnDisconnect(IPEndPoint remoteIPEP, Exception exception)
         {
-            Console.WriteLine($"[disconnect] {remoteIPEP} exception: {exception?.Message ?? "null"}");
+            logger.Log($"[disconnect] {remoteIPEP} exception: {exception?.Message ?? "null"}");
         }
 
         public void _OnStop(Exception exception)
         {
-            Console.WriteLine($"[stop] exception: {exception?.Message ?? "null"}");
+            logger.Log($"[stop] exception: {exception?.Message ?? "null"}");
         }
     }
 }

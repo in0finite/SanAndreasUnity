@@ -63,15 +63,23 @@ namespace MFatihMAR.EasySockets
         }
 
         public delegate void StartEvent();
+
         public delegate void ConnectEvent(IPEndPoint remoteIPEP);
+
         public delegate void DataEvent(IPEndPoint remoteIPEP, byte[] data);
+
         public delegate void DisconnectEvent(IPEndPoint remoteIPEP, Exception exception = null);
+
         public delegate void StopEvent(Exception exception = null);
 
         public event StartEvent OnStart;
+
         public event ConnectEvent OnConnect;
+
         public event DataEvent OnData;
+
         public event DisconnectEvent OnDisconnect;
+
         public event StopEvent OnStop;
 
         public bool IsListening => _isListening?.Value ?? false;
@@ -85,21 +93,15 @@ namespace MFatihMAR.EasySockets
         private Dictionary<IPEndPoint, _Client> _connections;
         private Dictionary<IPEndPoint, _Client> _connectionsCached;
 
-        public void Start(IPEndPoint localIPEP, ushort bufferSize = 512)
+        public void Start(IPEndPoint localIPEP, ushort bufferSize = 8 * 1024) // 8KB
         {
             _Cleanup();
-
-            if (localIPEP == null)
-            {
-                throw new ArgumentNullException(nameof(localIPEP));
-            }
-
             if (bufferSize < 64)
             {
                 throw new ArgumentOutOfRangeException(nameof(bufferSize));
             }
 
-            LocalIPEP = localIPEP;
+            LocalIPEP = localIPEP ?? throw new ArgumentNullException(nameof(localIPEP));
             BufferSize = bufferSize;
 
             _isListening = new ValueWrapper<bool>(true);
@@ -108,6 +110,10 @@ namespace MFatihMAR.EasySockets
             _connectionsCached = new Dictionary<IPEndPoint, _Client>();
 
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            _socket.ReceiveBufferSize = bufferSize;
+            _socket.SendBufferSize = bufferSize;
+
             _socket.Bind(localIPEP);
             _socket.Listen(64);
 
@@ -186,10 +192,9 @@ namespace MFatihMAR.EasySockets
                     }
                 }
 
-                foreach (var conn in _connectionsCached)
-                {
-                    conn.Value.Close();
-                }
+                if (_connectionsCached != null && _connectionsCached.Count > 0)
+                    foreach (var conn in _connectionsCached)
+                        conn.Value.Close();
             }
             catch (Exception e)
             {

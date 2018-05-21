@@ -52,10 +52,7 @@ namespace Cadenza.Collections
         /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <c>null</c>.</exception>
         public DelegatedEqualityComparer(Func<TSource, T> selector)
         {
-            if (selector == null)
-                throw new ArgumentNullException("selector");
-
-            this.selector = selector;
+            this.selector = selector ?? throw new ArgumentNullException("selector");
         }
 
         public bool Equals(TSource x, TSource y)
@@ -85,13 +82,8 @@ namespace Cadenza.Collections
         /// <param name="hashCodeGetter">The <see cref="IEqualityComparer{T}.GetHashCode(T)"/> implementation.</param>
         public DelegatedEqualityComparer(Func<T, T, bool> equalsGetter, Func<T, int> hashCodeGetter)
         {
-            if (equalsGetter == null)
-                throw new ArgumentNullException("equalsGetter");
-            if (hashCodeGetter == null)
-                throw new ArgumentNullException("hashCodeGetter");
-
-            this.getEquals = equalsGetter;
-            this.getHashCode = hashCodeGetter;
+            this.getEquals = equalsGetter ?? throw new ArgumentNullException("equalsGetter");
+            this.getHashCode = hashCodeGetter ?? throw new ArgumentNullException("hashCodeGetter");
         }
 
         public bool Equals(T x, T y)

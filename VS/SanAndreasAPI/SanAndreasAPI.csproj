@@ -119,6 +119,7 @@
     <Compile Include="EasySockets\TcpServer.cs" />
     <Compile Include="EasySockets\UdpPeer.cs" />
     <Compile Include="EasySockets\ValueWrapper.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializeExtensions.cs" />
   </ItemGroup>

@@ -94,7 +94,7 @@ F9 - Toggle velocimeter
 
 - Flip & repair cars
 
-- Maybe I will use my sockets implementation to do a server system (I will made a paid assets with (examples from Unity Forums)[https://github.com/ZZona-Dummies/UnityForumsMultiplayer])
+- Maybe I will use my sockets implementation to do a server system (I will made a paid assets with [examples from Unity Forums](https://github.com/ZZona-Dummies/UnityForumsMultiplayer)
 
 - HUGE REFACTOR (compiling Assembly into DLLs will some most problems)
 
@@ -178,6 +178,10 @@ F9 - Toggle velocimeter
 - Colors for debug messages in console
 
 - HTML (from logger) indent is not perfect
+
+- I'm not sure if CLI is running properly
+
+- Curent socket system only allows messages of 8KBs
 
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is going to **Assets > Reimport all**
 

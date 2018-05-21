@@ -125,8 +125,6 @@ namespace Cadenza.ComponentModel
         {
             if (propertyExpression == null)
                 throw new ArgumentNullException("propertyExpression");
-            if (notifier == null)
-                throw new ArgumentNullException("notifier");
             if (propertyExpression.NodeType != ExpressionType.Lambda)
                 throw new ArgumentException("'propertyExpression' must be a lamda expression.", "propertyExpression");
             var m = propertyExpression.Body as MemberExpression;
@@ -134,7 +132,7 @@ namespace Cadenza.ComponentModel
                 throw new ArgumentException("The body of the expression must be a MemberExpression.", "propertyExpression");
 
             this.value = default(TValue);
-            this.notifier = notifier;
+            this.notifier = notifier ?? throw new ArgumentNullException("notifier");
             this.propertyName = m.Member.Name;
         }
     }

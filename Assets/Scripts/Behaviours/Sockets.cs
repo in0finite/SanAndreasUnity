@@ -1,4 +1,5 @@
-﻿using SanAndreasAPI;
+﻿using MFatihMAR.EasySockets.Examples;
+using SanAndreasAPI;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -7,13 +8,13 @@ using Debug = UnityEngine.Debug;
 
 public class Sockets : MonoBehaviour
 {
-    private static SocketClient client;
+    private static TcpClientExample client;
 
     private static bool available = false,
                         startCApp;
 
     // Use this for initialization
-    private void Start()
+    private void Awake()
     {
 #if UNITY_EDITOR
         startCApp = true;
@@ -33,26 +34,27 @@ public class Sockets : MonoBehaviour
         {
             Process.Start(consoleApp);
 
-            client = new SocketClient(SocketExtensions.GetLocalIPAddress(), SocketServer.DefPort); //192.168.1.38
-
-            client.OnConnectedCallback = () =>
-            {
-                Debug.Log("San Andreas Unity Sockets connected sucesfully!");
-                available = true;
-            };
-
-            client.DoConnection();
+            client = TcpClientExample.Init(true, "");
+            client.Run(IPAddress.Loopback, Consts.TcpPort);
         }
     }
 
     // Update is called once per frame
     private void Update()
     {
+        //if (client == null)
+        //    Debug.LogWarning("Null client!");
+    }
+
+    private void OnDisable()
+    {
+        client.Disconnect();
     }
 
     // From console
     public static void SendLog(ConsoleLog log)
     {
-        client.Send(SocketGlobals.SocketManager.SendObject(log, client.Id));
+        if (client != null)
+            client.Send(log);
     }
 }

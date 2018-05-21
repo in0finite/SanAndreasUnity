@@ -8,13 +8,19 @@ namespace MFatihMAR.EasySockets
     public class TcpClient
     {
         public delegate void OpenEvent();
+
         public delegate void ConnectEvent();
+
         public delegate void DataEvent(byte[] data);
+
         public delegate void DisconnectEvent(Exception exception = null);
 
         public event OpenEvent OnOpen;
+
         public event ConnectEvent OnConnect;
+
         public event DataEvent OnData;
+
         public event DisconnectEvent OnDisconnect;
 
         private ValueWrapper<bool> _isOpen;
@@ -30,26 +36,24 @@ namespace MFatihMAR.EasySockets
         private Socket _socket;
         private Thread _thread;
 
-        public void Connect(IPEndPoint serverIPEP, ushort bufferSize = 512)
+        public void Connect(IPEndPoint serverIPEP, ushort bufferSize = 8 * 1024) // 8KB
         {
             _Cleanup();
-
-            if (serverIPEP == null)
-            {
-                throw new ArgumentNullException(nameof(serverIPEP));
-            }
-
             if (bufferSize < 64)
             {
                 throw new ArgumentOutOfRangeException(nameof(bufferSize));
             }
 
-            ServerIPEP = serverIPEP;
+            ServerIPEP = serverIPEP ?? throw new ArgumentNullException(nameof(serverIPEP));
             BufferSize = bufferSize;
 
             _isOpen = new ValueWrapper<bool>(true);
 
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            _socket.ReceiveBufferSize = bufferSize;
+            _socket.SendBufferSize = bufferSize;
+
             _socket.Bind(new IPEndPoint(IPAddress.Any, 0));
 
             _thread = new Thread(_ReceiveThread);

@@ -37,10 +37,7 @@ namespace Cadenza.IO
     {
         internal SystemStreamConverter(Stream stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException("stream");
-
-            BaseStream = stream;
+            BaseStream = stream ?? throw new ArgumentNullException("stream");
             buffer = new byte[8];
         }
 

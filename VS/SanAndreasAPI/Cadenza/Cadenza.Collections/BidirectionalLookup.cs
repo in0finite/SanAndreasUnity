@@ -61,13 +61,8 @@ namespace Cadenza.Collections
         /// </exception>
         public BidirectionalLookup(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TElement> valueComparer)
         {
-            if (keyComparer == null)
-                throw new ArgumentNullException("keyComparer");
-            if (valueComparer == null)
-                throw new ArgumentNullException("valueComparer");
-
-            this.keyComparer = keyComparer;
-            this.valueComparer = valueComparer;
+            this.keyComparer = keyComparer ?? throw new ArgumentNullException("keyComparer");
+            this.valueComparer = valueComparer ?? throw new ArgumentNullException("valueComparer");
             this.keysToElements = new MutableLookup<TKey, TElement>(this.keyComparer);
             this.elementsToKeys = new MutableLookup<TElement, TKey>(this.valueComparer);
             this.inverse = new BidirectionalLookup<TElement, TKey>(this);

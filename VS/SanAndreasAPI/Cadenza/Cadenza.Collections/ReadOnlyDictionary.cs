@@ -36,10 +36,7 @@ namespace Cadenza.Collections
     {
         public ReadOnlyDictionary(IDictionary<TKey, TValue> dict)
         {
-            if (dict == null)
-                throw new ArgumentNullException("dict");
-
-            this.dict = dict;
+            this.dict = dict ?? throw new ArgumentNullException("dict");
         }
 
         #region IDictionary<TKey,TValue> Members

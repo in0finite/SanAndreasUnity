@@ -73,10 +73,7 @@ namespace Cadenza
 
         public Maybe(T value)
         {
-            if (value == null)
-                throw new ArgumentNullException("value");
-
-            this.value = value;
+            this.value = value != null ? value : throw new ArgumentNullException("value");
             has_value = true;
         }
 

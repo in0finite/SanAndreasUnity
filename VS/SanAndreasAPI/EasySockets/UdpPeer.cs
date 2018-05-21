@@ -26,18 +26,12 @@ namespace MFatihMAR.EasySockets
         public void Start(IPEndPoint localIPEP, ushort bufferSize = 512)
         {
             _Cleanup();
-
-            if (localIPEP == null)
-            {
-                throw new ArgumentNullException(nameof(localIPEP));
-            }
-
             if (bufferSize < 64)
             {
                 throw new ArgumentOutOfRangeException(nameof(bufferSize));
             }
 
-            LocalIPEP = localIPEP;
+            LocalIPEP = localIPEP ?? throw new ArgumentNullException(nameof(localIPEP));
             BufferSize = bufferSize;
 
             _isOpen = new ValueWrapper<bool>(true);
