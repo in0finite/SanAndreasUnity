@@ -94,6 +94,10 @@ F9 - Toggle velocimeter
 
 - Flip & repair cars
 
+- Maybe I will use my sockets implementation to do a server system (I will made a paid assets with (examples from Unity Forums)[https://github.com/ZZona-Dummies/UnityForumsMultiplayer])
+
+- HUGE REFACTOR (compiling Assembly into DLLs will some most problems)
+
 ### Effects & Enhancements
 
 * Jump, swim & fall animations
@@ -135,6 +139,7 @@ F9 - Toggle velocimeter
     - Broke car windshield on hard impact
     - Animals (mobs)
     - Terrain modificable through digging & explosions
+    - Territory (gan wars) on Multiplayer
 
 ### Bugs to fix
 

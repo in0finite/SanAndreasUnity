@@ -1,62 +1,64 @@
 ﻿#region License
+
 // ICommandLineOptionFluent.cs
 // Copyright (c) 2013, Simon Williams
 // All rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without modification, are permitted provide
 // d that the following conditions are met:
-// 
+//
 // Redistributions of source code must retain the above copyright notice, this list of conditions and the
 // following disclaimer.
-// 
+//
 // Redistributions in binary form must reproduce the above copyright notice, this list of conditions and
 // the following disclaimer in the documentation and/or other materials provided with the distribution.
-// 
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED 
-// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
 // PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
 // ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
 // TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+// HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
-#endregion
+
+#endregion License
 
 using System;
 
 namespace Fclp
 {
-	/// <summary>
-	/// Provides the fluent interface for a <see cref="ICommandLineOptionFluent{T}"/> object.
-	/// </summary>
-	public interface ICommandLineOptionFluent<T>
-	{
-		/// <summary>
-		/// Adds the specified description to the <see cref="ICommandLineOptionFluent{T}"/>.
-		/// </summary>
-		/// <param name="description">The <see cref="System.String"/> representing the description to use. This should be localised text.</param>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		ICommandLineOptionFluent<T> WithDescription(string description);
+    /// <summary>
+    /// Provides the fluent interface for a <see cref="ICommandLineOptionFluent{T}"/> object.
+    /// </summary>
+    public interface ICommandLineOptionFluent<T>
+    {
+        /// <summary>
+        /// Adds the specified description to the <see cref="ICommandLineOptionFluent{T}"/>.
+        /// </summary>
+        /// <param name="description">The <see cref="System.String"/> representing the description to use. This should be localised text.</param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        ICommandLineOptionFluent<T> WithDescription(string description);
 
-		/// <summary>
-		/// Declares that this <see cref="ICommandLineOptionFluent{T}"/> is required.
-		/// </summary>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		ICommandLineOptionFluent<T> Required();
+        /// <summary>
+        /// Declares that this <see cref="ICommandLineOptionFluent{T}"/> is required.
+        /// </summary>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        ICommandLineOptionFluent<T> Required();
 
-		/// <summary>
-		/// Specifies the method to invoke when the <see cref="ICommandLineOptionFluent{T}"/>. 
-		/// is parsed. If a callback is not required either do not call it, or specify <c>null</c>.
-		/// </summary>
-		/// <param name="callback">The return callback to execute with the parsed value of the Option.</param>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		ICommandLineOptionFluent<T> Callback(Action<T> callback);
+        /// <summary>
+        /// Specifies the method to invoke when the <see cref="ICommandLineOptionFluent{T}"/>.
+        /// is parsed. If a callback is not required either do not call it, or specify <c>null</c>.
+        /// </summary>
+        /// <param name="callback">The return callback to execute with the parsed value of the Option.</param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        ICommandLineOptionFluent<T> Callback(Action<T> callback);
 
-		/// <summary>
-		/// Specifies the default value to use if no value is found whilst parsing this <see cref="ICommandLineOptionFluent{T}"/>.
-		/// </summary>
-		/// <param name="value">The value to use.</param>
-		/// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
-		ICommandLineOptionFluent<T> SetDefault(T value);
-	}
+        /// <summary>
+        /// Specifies the default value to use if no value is found whilst parsing this <see cref="ICommandLineOptionFluent{T}"/>.
+        /// </summary>
+        /// <param name="value">The value to use.</param>
+        /// <returns>A <see cref="ICommandLineOptionFluent{T}"/>.</returns>
+        ICommandLineOptionFluent<T> SetDefault(T value);
+    }
 }

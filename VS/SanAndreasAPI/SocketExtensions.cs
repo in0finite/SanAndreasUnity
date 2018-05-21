@@ -134,14 +134,14 @@ namespace SanAndreasAPI
 
             foreach (object num in list)
             {
-                b = ExpressionMath<T>.Default.GreaterThan(ExpressionMath<T>.Default.Subtract((T)num, n), 1.ConvertGeneric<T>());
+                b = ExpressionMath<object>.Default.GreaterThan(ExpressionMath<object>.Default.Subtract(num, n), 1);
                 if (b)
                     break;
                 else
                     n = (T)num;
             }
 
-            n = ExpressionMath<T>.Default.Add(n, 1.ConvertGeneric<T>());
+            n = (T)ExpressionMath<object>.Default.Add(n, 1);
 
             return b;
         }

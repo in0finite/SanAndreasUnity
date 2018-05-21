@@ -1,6 +1,4 @@
-﻿using Fclp;
-using SanAndreasAPI;
-using System;
+﻿using SanAndreasAPI;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -16,11 +14,15 @@ public class Sockets : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
+#if UNITY_EDITOR
+        startCApp = true;
+#else
         var p = new FluentCommandLineParser();
 
         p.Setup<bool>('c', "console").Callback(x => startCApp = x);
 
         p.Parse(Environment.GetCommandLineArgs());
+#endif
 
         string consoleApp = Path.Combine(Application.streamingAssetsPath, "SanAndreasConsole.exe");
 

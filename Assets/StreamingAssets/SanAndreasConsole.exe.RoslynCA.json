@@ -1,0 +1,225 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Microsoft (R) Visual C# Compiler",
+        "version": "2.6.0.0",
+        "fileVersion": "2.6.0.62329 (5429b35d)",
+        "semanticVersion": "2.6.0",
+        "language": "es-ES"
+      },
+      "results": [
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 55,
+                  "endLine": 11,
+                  "endColumn": 180
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 55,
+                  "endLine": 12,
+                  "endColumn": 256
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3247",
+          "level": "warning",
+          "message": "Replace this type-check-and-cast sequence with an 'as' and a null check.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
+                "region": {
+                  "startLine": 38,
+                  "startColumn": 21,
+                  "endLine": 38,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
+                "region": {
+                  "startLine": 40,
+                  "startColumn": 36,
+                  "endLine": 40,
+                  "endColumn": 49
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1118",
+          "level": "warning",
+          "message": "Add a 'protected' constructor or the 'static' keyword to the class declaration.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 20,
+                  "endLine": 9,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1450",
+          "level": "warning",
+          "message": "Remove the 'controllerServer' field and declare it as a local variable in the relevant methods.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 37,
+                  "endLine": 12,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1450",
+          "level": "warning",
+          "message": "Remove the 'workerObject' field and declare it as a local variable in the relevant methods.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 41,
+                  "endLine": 14,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "S1118": {
+          "id": "S1118",
+          "shortDescription": "Utility classes should not have public constructors",
+          "fullDescription": "Utility classes, which are collections of static members, are not meant to be instantiated. Even abstract utility classes, which can be extended, should not have public constructors.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1118",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S125": {
+          "id": "S125",
+          "shortDescription": "Sections of code should not be \"commented out\"",
+          "fullDescription": "Programmers should not comment out code as it bloats programs and reduces readability.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-125",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S1450": {
+          "id": "S1450",
+          "shortDescription": "Private fields only used as local variables in methods should become local variables",
+          "fullDescription": "When the value of a private field is always assigned to in a class' methods before being read, then it is not being used to store class information. Therefore, it should become a local variable in the relevant methods to prevent any misunderstanding.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1450",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope"
+            ]
+          }
+        },
+        "S3247": {
+          "id": "S3247",
+          "shortDescription": "Duplicate casts should not be made",
+          "fullDescription": "Because the is operator performs a cast if the object is not null, using is to check type and then casting the same argument to that type, necessarily performs two casts. The same result can be achieved more efficiently with a single cast using as, followed by a null-check.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3247",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

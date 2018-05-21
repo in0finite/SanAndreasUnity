@@ -26,6 +26,8 @@ namespace SanAndreasConsole
 
             controllerServer.StartServer();    //First, we make the socket server connection
             workerObject.RunWorkerAsync();
+
+            Console.Read();
         }
 
         private static Action<object, Socket> DataReceived()

@@ -1,0 +1,3752 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Microsoft (R) Visual C# Compiler",
+        "version": "2.6.0.0",
+        "fileVersion": "2.6.0.62329 (5429b35d)",
+        "semanticVersion": "2.6.0",
+        "language": "es-ES"
+      },
+      "results": [
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'EnumerableCoda.ToValueReader(IEnumerable<string>)' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 521,
+                  "startColumn": 39,
+                  "endLine": 521,
+                  "endColumn": 52
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'EnumerableCoda.ToValueReader<TSource>(IEnumerable<TSource>)' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 529,
+                  "startColumn": 54,
+                  "endLine": 529,
+                  "endColumn": 67
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'UInt64Coda' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/UInt64Coda.cs",
+                "region": {
+                  "startLine": 36,
+                  "startColumn": 25,
+                  "endLine": 36,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'UInt16Coda' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/UInt16Coda.cs",
+                "region": {
+                  "startLine": 36,
+                  "startColumn": 25,
+                  "endLine": 36,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'UInt32Coda' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/UInt32Coda.cs",
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 25,
+                  "endLine": 37,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'EnumerableValueReader<T>' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/EnumerableValueReader.cs",
+                "region": {
+                  "startLine": 34,
+                  "startColumn": 25,
+                  "endLine": 34,
+                  "endColumn": 46
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'IValueReader' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/IValueReader.cs",
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 22,
+                  "endLine": 33,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'IValueWriter' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/IValueWriter.cs",
+                "region": {
+                  "startLine": 33,
+                  "startColumn": 22,
+                  "endLine": 33,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'EnumerableValueReader<T>.ToUInt16(T)' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/EnumerableValueReader.cs",
+                "region": {
+                  "startLine": 108,
+                  "startColumn": 35,
+                  "endLine": 108,
+                  "endColumn": 43
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'EnumerableValueReader<T>.ToUInt64(T)' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/EnumerableValueReader.cs",
+                "region": {
+                  "startLine": 120,
+                  "startColumn": 34,
+                  "endLine": 120,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'EnumerableValueReader<T>.ToUInt32(T)' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/EnumerableValueReader.cs",
+                "region": {
+                  "startLine": 114,
+                  "startColumn": 33,
+                  "endLine": 114,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'StreamConverter' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/StreamConverter.cs",
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 27,
+                  "endLine": 37,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'StreamCoda.WithSystemConverter(Stream)' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/StreamCoda.cs",
+                "region": {
+                  "startLine": 38,
+                  "startColumn": 39,
+                  "endLine": 38,
+                  "endColumn": 58
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'StreamConverterCoda' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/StreamConverter.cs",
+                "region": {
+                  "startLine": 172,
+                  "startColumn": 25,
+                  "endLine": 172,
+                  "endColumn": 44
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'TextValueReader' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/TextValueReader.cs",
+                "region": {
+                  "startLine": 34,
+                  "startColumn": 25,
+                  "endLine": 34,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'ValueReader<T>' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/ValueReader.cs",
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 27,
+                  "endLine": 35,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'ValueReaderCoda' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/ValueReader.cs",
+                "region": {
+                  "startLine": 199,
+                  "startColumn": 25,
+                  "endLine": 199,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'Math<T>.ToIConvertible(T)' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 386,
+                  "startColumn": 37,
+                  "endLine": 386,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS3021",
+          "level": "warning",
+          "message": "'Math<T>.FromIConvertible(IConvertible)' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 334,
+                  "startColumn": 26,
+                  "endLine": 334,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "S1168",
+          "level": "warning",
+          "message": "Return an empty collection instead of null.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/CachedSequence.cs",
+                "region": {
+                  "startLine": 100,
+                  "startColumn": 21,
+                  "endLine": 100,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2933",
+          "level": "warning",
+          "message": "Make 'head' 'readonly'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/CachedSequence.cs",
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 19,
+                  "endLine": 37,
+                  "endColumn": 23
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1450",
+          "level": "warning",
+          "message": "Remove the 'valueComparer' field and declare it as a local variable in the relevant methods.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/BidirectionalDictionary.cs",
+                "region": {
+                  "startLine": 38,
+                  "startColumn": 52,
+                  "endLine": 38,
+                  "endColumn": 65
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2933",
+          "level": "warning",
+          "message": "Make 'value' 'readonly'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/Maybe.cs",
+                "region": {
+                  "startLine": 71,
+                  "startColumn": 19,
+                  "endLine": 71,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2933",
+          "level": "warning",
+          "message": "Make 'has_value' 'readonly'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/Maybe.cs",
+                "region": {
+                  "startLine": 72,
+                  "startColumn": 22,
+                  "endLine": 72,
+                  "endColumn": 31
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1450",
+          "level": "warning",
+          "message": "Remove the 'keyComparer' field and declare it as a local variable in the relevant methods.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/BidirectionalLookup.cs",
+                "region": {
+                  "startLine": 154,
+                  "startColumn": 50,
+                  "endLine": 154,
+                  "endColumn": 61
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1450",
+          "level": "warning",
+          "message": "Remove the 'valueComparer' field and declare it as a local variable in the relevant methods.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/BidirectionalLookup.cs",
+                "region": {
+                  "startLine": 155,
+                  "startColumn": 54,
+                  "endLine": 155,
+                  "endColumn": 67
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 8,
+                  "endLine": 41,
+                  "endColumn": 12
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 42,
+                  "startColumn": 8,
+                  "endLine": 42,
+                  "endColumn": 12
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 585,
+                  "startColumn": 12,
+                  "endLine": 585,
+                  "endColumn": 16
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 813,
+                  "startColumn": 96,
+                  "endLine": 813,
+                  "endColumn": 100
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1079,
+                  "startColumn": 59,
+                  "endLine": 1079,
+                  "endColumn": 63
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1345,
+                  "startColumn": 57,
+                  "endLine": 1345,
+                  "endColumn": 61
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1507,
+                  "startColumn": 14,
+                  "endLine": 1507,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1644,
+                  "startColumn": 14,
+                  "endLine": 1644,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1781,
+                  "startColumn": 14,
+                  "endLine": 1781,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1918,
+                  "startColumn": 14,
+                  "endLine": 1918,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2055,
+                  "startColumn": 14,
+                  "endLine": 2055,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2192,
+                  "startColumn": 14,
+                  "endLine": 2192,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2329,
+                  "startColumn": 14,
+                  "endLine": 2329,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1135",
+          "level": "warning",
+          "message": "Complete the task associated to this 'TODO' comment.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2466,
+                  "startColumn": 14,
+                  "endLine": 2466,
+                  "endColumn": 18
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S125",
+          "level": "warning",
+          "message": "Remove this commented out code.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/Either.cs",
+                "region": {
+                  "startLine": 62,
+                  "startColumn": 17,
+                  "endLine": 62,
+                  "endColumn": 78
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2933",
+          "level": "warning",
+          "message": "Make 'notifier' 'readonly'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.ComponentModel/NotifyingProperty.cs",
+                "region": {
+                  "startLine": 101,
+                  "startColumn": 51,
+                  "endLine": 101,
+                  "endColumn": 59
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2933",
+          "level": "warning",
+          "message": "Make 'propertyName' 'readonly'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.ComponentModel/NotifyingProperty.cs",
+                "region": {
+                  "startLine": 102,
+                  "startColumn": 24,
+                  "endLine": 102,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2933",
+          "level": "warning",
+          "message": "Make 'items' 'readonly'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/ValueReader.cs",
+                "region": {
+                  "startLine": 37,
+                  "startColumn": 32,
+                  "endLine": 37,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3881",
+          "level": "warning",
+          "message": "Fix this implementation of 'IDisposable' to conform to the dispose pattern.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/ValueReader.cs",
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 27,
+                  "endLine": 35,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/ValueReader.cs",
+                "region": {
+                  "startLine": 97,
+                  "startColumn": 21,
+                  "endLine": 97,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "0": "'ValueReader.Dispose()' should only invoke 'Dispose(true)' and 'GC.SuppressFinalize(this)'."
+            }
+          }
+        },
+        {
+          "ruleId": "S2743",
+          "level": "warning",
+          "message": "A static field in a generic type is not shared among instances of different close constructed types.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 61,
+                  "startColumn": 47,
+                  "endLine": 61,
+                  "endColumn": 63
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2743",
+          "level": "warning",
+          "message": "A static field in a generic type is not shared among instances of different close constructed types.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 75,
+                  "startColumn": 34,
+                  "endLine": 75,
+                  "endColumn": 54
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name 'dependents' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.ComponentModel/NotifyingProperty.cs",
+                "region": {
+                  "startLine": 53,
+                  "startColumn": 23,
+                  "endLine": 53,
+                  "endColumn": 111
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name 'dependents' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.ComponentModel/NotifyingProperty.cs",
+                "region": {
+                  "startLine": 64,
+                  "startColumn": 23,
+                  "endLine": 64,
+                  "endColumn": 117
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3442",
+          "level": "warning",
+          "message": "Change the visibility of this constructor to 'protected'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/ValueReader.cs",
+                "region": {
+                  "startLine": 39,
+                  "startColumn": 9,
+                  "endLine": 39,
+                  "endColumn": 15
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3247",
+          "level": "warning",
+          "message": "Replace this type-check-and-cast sequence with an 'as' and a null check.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.ComponentModel/NotifyingProperty.cs",
+                "region": {
+                  "startLine": 56,
+                  "startColumn": 21,
+                  "endLine": 56,
+                  "endColumn": 51
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.ComponentModel/NotifyingProperty.cs",
+                "region": {
+                  "startLine": 57,
+                  "startColumn": 35,
+                  "endLine": 57,
+                  "endColumn": 63
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3247",
+          "level": "warning",
+          "message": "Replace this type-check-and-cast sequence with an 'as' and a null check.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.ComponentModel/NotifyingProperty.cs",
+                "region": {
+                  "startLine": 58,
+                  "startColumn": 26,
+                  "endLine": 58,
+                  "endColumn": 55
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.ComponentModel/NotifyingProperty.cs",
+                "region": {
+                  "startLine": 59,
+                  "startColumn": 35,
+                  "endLine": 59,
+                  "endColumn": 62
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1125",
+          "level": "warning",
+          "message": "Remove the unnecessary Boolean literal(s).",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/TypeCoda.cs",
+                "region": {
+                  "startLine": 44,
+                  "startColumn": 19,
+                  "endLine": 44,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2234",
+          "level": "warning",
+          "message": "Parameters to 'TryGetValue' have the same names but not the same order as the method arguments.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/BidirectionalDictionary.cs",
+                "region": {
+                  "startLine": 132,
+                  "startColumn": 33,
+                  "endLine": 132,
+                  "endColumn": 44
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2234",
+          "level": "warning",
+          "message": "Parameters to 'Add' have the same names but not the same order as the method arguments.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/BidirectionalLookup.cs",
+                "region": {
+                  "startLine": 109,
+                  "startColumn": 33,
+                  "endLine": 109,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/MutableLookup.cs",
+                "region": {
+                  "startLine": 82,
+                  "startColumn": 21,
+                  "endLine": 82,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2234",
+          "level": "warning",
+          "message": "Parameters to 'Add' have the same names but not the same order as the method arguments.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/BidirectionalLookup.cs",
+                "region": {
+                  "startLine": 121,
+                  "startColumn": 37,
+                  "endLine": 121,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/MutableLookup.cs",
+                "region": {
+                  "startLine": 82,
+                  "startColumn": 21,
+                  "endLine": 82,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2234",
+          "level": "warning",
+          "message": "Parameters to 'Remove' have the same names but not the same order as the method arguments.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/BidirectionalLookup.cs",
+                "region": {
+                  "startLine": 127,
+                  "startColumn": 40,
+                  "endLine": 127,
+                  "endColumn": 46
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/MutableLookup.cs",
+                "region": {
+                  "startLine": 119,
+                  "startColumn": 21,
+                  "endLine": 119,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2234",
+          "level": "warning",
+          "message": "Parameters to 'Add' have the same names but not the same order as the method arguments.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/BidirectionalDictionary.cs",
+                "region": {
+                  "startLine": 200,
+                  "startColumn": 26,
+                  "endLine": 200,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2234",
+          "level": "warning",
+          "message": "Parameters to 'Remove' have the same names but not the same order as the method arguments.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/BidirectionalLookup.cs",
+                "region": {
+                  "startLine": 133,
+                  "startColumn": 37,
+                  "endLine": 133,
+                  "endColumn": 43
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/MutableLookup.cs",
+                "region": {
+                  "startLine": 119,
+                  "startColumn": 21,
+                  "endLine": 119,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2391,
+                  "startColumn": 29,
+                  "endLine": 2391,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2396,
+                  "startColumn": 29,
+                  "endLine": 2396,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2415,
+                  "startColumn": 29,
+                  "endLine": 2415,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2420,
+                  "startColumn": 29,
+                  "endLine": 2420,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2425,
+                  "startColumn": 29,
+                  "endLine": 2425,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "ArgumentException constructor arguments have been inverted.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/TextReaderCoda.cs",
+                "region": {
+                  "startLine": 63,
+                  "startColumn": 23,
+                  "endLine": 63,
+                  "endColumn": 83
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2450,
+                  "startColumn": 29,
+                  "endLine": 2450,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2455,
+                  "startColumn": 29,
+                  "endLine": 2455,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2470,
+                  "startColumn": 34,
+                  "endLine": 2470,
+                  "endColumn": 39
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2470,
+                  "startColumn": 66,
+                  "endLine": 2470,
+                  "endColumn": 71
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2460,
+                  "startColumn": 21,
+                  "endLine": 2460,
+                  "endColumn": 26
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2460,
+                  "startColumn": 53,
+                  "endLine": 2460,
+                  "endColumn": 58
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2480,
+                  "startColumn": 21,
+                  "endLine": 2480,
+                  "endColumn": 26
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'ulong'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2485,
+                  "startColumn": 29,
+                  "endLine": 2485,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "ArgumentException constructor arguments have been inverted.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/TextReaderCoda.cs",
+                "region": {
+                  "startLine": 89,
+                  "startColumn": 23,
+                  "endLine": 89,
+                  "endColumn": 96
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "ArgumentException constructor arguments have been inverted.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.IO/TextReaderCoda.cs",
+                "region": {
+                  "startLine": 99,
+                  "startColumn": 23,
+                  "endLine": 99,
+                  "endColumn": 96
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name 'creator' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/Check.cs",
+                "region": {
+                  "startLine": 68,
+                  "startColumn": 23,
+                  "endLine": 68,
+                  "endColumn": 59
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2254,
+                  "startColumn": 29,
+                  "endLine": 2254,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2259,
+                  "startColumn": 29,
+                  "endLine": 2259,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2278,
+                  "startColumn": 29,
+                  "endLine": 2278,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2283,
+                  "startColumn": 29,
+                  "endLine": 2283,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2288,
+                  "startColumn": 29,
+                  "endLine": 2288,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2313,
+                  "startColumn": 29,
+                  "endLine": 2313,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2318,
+                  "startColumn": 29,
+                  "endLine": 2318,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2323,
+                  "startColumn": 21,
+                  "endLine": 2323,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2323,
+                  "startColumn": 52,
+                  "endLine": 2323,
+                  "endColumn": 56
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2333,
+                  "startColumn": 34,
+                  "endLine": 2333,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2333,
+                  "startColumn": 65,
+                  "endLine": 2333,
+                  "endColumn": 69
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2343,
+                  "startColumn": 21,
+                  "endLine": 2343,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'uint'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2348,
+                  "startColumn": 29,
+                  "endLine": 2348,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name 'widths' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/StringCoda.cs",
+                "region": {
+                  "startLine": 113,
+                  "startColumn": 27,
+                  "endLine": 114,
+                  "endColumn": 106
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2589",
+          "level": "warning",
+          "message": "Change this condition so that it does not always evaluate to 'true'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/StringCoda.cs",
+                "region": {
+                  "startLine": 107,
+                  "startColumn": 38,
+                  "endLine": 107,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1121",
+          "level": "warning",
+          "message": "Extract the assignment of 'eValid' from this expression.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/StringCoda.cs",
+                "region": {
+                  "startLine": 109,
+                  "startColumn": 36,
+                  "endLine": 109,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'sbyte'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 2024,
+                  "startColumn": 21,
+                  "endLine": 2024,
+                  "endColumn": 26
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1843,
+                  "startColumn": 29,
+                  "endLine": 1843,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1848,
+                  "startColumn": 29,
+                  "endLine": 1848,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1867,
+                  "startColumn": 29,
+                  "endLine": 1867,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1872,
+                  "startColumn": 29,
+                  "endLine": 1872,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name '`index` cannot be negative.' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/LinkedListCoda.cs",
+                "region": {
+                  "startLine": 40,
+                  "startColumn": 23,
+                  "endLine": 40,
+                  "endColumn": 85
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name '`index` cannot be larger than self.Count' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/LinkedListCoda.cs",
+                "region": {
+                  "startLine": 42,
+                  "startColumn": 23,
+                  "endLine": 42,
+                  "endColumn": 98
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1877,
+                  "startColumn": 29,
+                  "endLine": 1877,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1882,
+                  "startColumn": 29,
+                  "endLine": 1882,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1887,
+                  "startColumn": 29,
+                  "endLine": 1887,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1902,
+                  "startColumn": 29,
+                  "endLine": 1902,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1907,
+                  "startColumn": 29,
+                  "endLine": 1907,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1912,
+                  "startColumn": 21,
+                  "endLine": 1912,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1912,
+                  "startColumn": 52,
+                  "endLine": 1912,
+                  "endColumn": 56
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1917,
+                  "startColumn": 21,
+                  "endLine": 1917,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1922,
+                  "startColumn": 34,
+                  "endLine": 1922,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1922,
+                  "startColumn": 65,
+                  "endLine": 1922,
+                  "endColumn": 69
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1927,
+                  "startColumn": 24,
+                  "endLine": 1927,
+                  "endColumn": 28
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1932,
+                  "startColumn": 21,
+                  "endLine": 1932,
+                  "endColumn": 25
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'long'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1937,
+                  "startColumn": 29,
+                  "endLine": 1937,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name 'null' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/DictionaryCoda.cs",
+                "region": {
+                  "startLine": 71,
+                  "startColumn": 23,
+                  "endLine": 71,
+                  "endColumn": 56
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1121",
+          "level": "warning",
+          "message": "Extract the assignment of 'value' from this expression.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/DictionaryCoda.cs",
+                "region": {
+                  "startLine": 110,
+                  "startColumn": 37,
+                  "endLine": 110,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1121",
+          "level": "warning",
+          "message": "Extract the assignment of 'value' from this expression.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/DictionaryCoda.cs",
+                "region": {
+                  "startLine": 124,
+                  "startColumn": 37,
+                  "endLine": 124,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1905",
+          "level": "warning",
+          "message": "Remove this unnecessary cast to 'short'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Numerics/Math.cs",
+                "region": {
+                  "startLine": 1613,
+                  "startColumn": 29,
+                  "endLine": 1613,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name 'path' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 165,
+                  "startColumn": 27,
+                  "endLine": 165,
+                  "endColumn": 60
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1121",
+          "level": "warning",
+          "message": "Extract the assignment of 'r' from this expression.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/Sequence.cs",
+                "region": {
+                  "startLine": 66,
+                  "startColumn": 23,
+                  "endLine": 66,
+                  "endColumn": 24
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3776",
+          "level": "warning",
+          "message": "Refactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 153,
+                  "startColumn": 30,
+                  "endLine": 153,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 162,
+                  "startColumn": 13,
+                  "endLine": 162,
+                  "endColumn": 20
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 164,
+                  "startColumn": 17,
+                  "endLine": 164,
+                  "endColumn": 19
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 166,
+                  "startColumn": 17,
+                  "endLine": 166,
+                  "endColumn": 19
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 168,
+                  "startColumn": 17,
+                  "endLine": 168,
+                  "endColumn": 19
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 171,
+                  "startColumn": 17,
+                  "endLine": 171,
+                  "endColumn": 19
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 176,
+                  "startColumn": 17,
+                  "endLine": 176,
+                  "endColumn": 21
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 178,
+                  "startColumn": 21,
+                  "endLine": 178,
+                  "endColumn": 23
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 185,
+                  "startColumn": 21,
+                  "endLine": 185,
+                  "endColumn": 23
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 192,
+                  "startColumn": 33,
+                  "endLine": 192,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "0": "+1",
+              "1": "+2 (incl 1 for nesting)",
+              "2": "+2 (incl 1 for nesting)",
+              "3": "+2 (incl 1 for nesting)",
+              "4": "+2 (incl 1 for nesting)",
+              "5": "+1",
+              "6": "+3 (incl 2 for nesting)",
+              "7": "+3 (incl 2 for nesting)",
+              "8": "+1"
+            }
+          }
+        },
+        {
+          "ruleId": "S2368",
+          "level": "warning",
+          "message": "Make this method private or simplify its parameters to not use multidimensional arrays.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/JaggedArrayCoda.cs",
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 57,
+                  "endLine": 35,
+                  "endColumn": 61
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2219",
+          "level": "warning",
+          "message": "Use the 'IsInstanceOfType()' method instead.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/Sequence.Tools.cs",
+                "region": {
+                  "startLine": 62,
+                  "startColumn": 33,
+                  "endLine": 62,
+                  "endColumn": 64
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "ShouldRemoveGetType": "True",
+              "UseIsOperator": "False"
+            }
+          }
+        },
+        {
+          "ruleId": "S2368",
+          "level": "warning",
+          "message": "Make this method private or simplify its parameters to not use multidimensional arrays.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/RectangularArrayCoda.cs",
+                "region": {
+                  "startLine": 35,
+                  "startColumn": 57,
+                  "endLine": 35,
+                  "endColumn": 61
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1121",
+          "level": "warning",
+          "message": "Extract the assignment of 'have_s' from this expression.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 279,
+                  "startColumn": 32,
+                  "endLine": 279,
+                  "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1125",
+          "level": "warning",
+          "message": "Remove the unnecessary Boolean literal(s).",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/Maybe.cs",
+                "region": {
+                  "startLine": 103,
+                  "startColumn": 36,
+                  "endLine": 103,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S927",
+          "level": "warning",
+          "message": "Rename parameter 'obj' to 'other' to match the interface declaration.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza/Maybe.cs",
+                "region": {
+                  "startLine": 109,
+                  "startColumn": 37,
+                  "endLine": 109,
+                  "endColumn": 40
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3776",
+          "level": "warning",
+          "message": "Refactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 453,
+                  "startColumn": 45,
+                  "endLine": 453,
+                  "endColumn": 65
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 463,
+                  "startColumn": 49,
+                  "endLine": 463,
+                  "endColumn": 50
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 465,
+                  "startColumn": 39,
+                  "endLine": 465,
+                  "endColumn": 40
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 472,
+                  "startColumn": 13,
+                  "endLine": 472,
+                  "endColumn": 20
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 475,
+                  "startColumn": 17,
+                  "endLine": 475,
+                  "endColumn": 19
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 475,
+                  "startColumn": 37,
+                  "endLine": 475,
+                  "endColumn": 39
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 477,
+                  "startColumn": 17,
+                  "endLine": 477,
+                  "endColumn": 21
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 479,
+                  "startColumn": 21,
+                  "endLine": 479,
+                  "endColumn": 23
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 487,
+                  "startColumn": 17,
+                  "endLine": 487,
+                  "endColumn": 21
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 495,
+                  "startColumn": 21,
+                  "endLine": 495,
+                  "endColumn": 23
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 498,
+                  "startColumn": 17,
+                  "endLine": 498,
+                  "endColumn": 21
+                }
+              }
+            },
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 504,
+                  "startColumn": 13,
+                  "endLine": 504,
+                  "endColumn": 15
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1,
+            "customProperties": {
+              "0": "+3 (incl 2 for nesting)",
+              "1": "+3 (incl 2 for nesting)",
+              "10": "+1",
+              "2": "+1",
+              "3": "+2 (incl 1 for nesting)",
+              "4": "+1",
+              "5": "+1",
+              "6": "+3 (incl 2 for nesting)",
+              "7": "+1",
+              "8": "+3 (incl 2 for nesting)",
+              "9": "+1"
+            }
+          }
+        },
+        {
+          "ruleId": "S2436",
+          "level": "warning",
+          "message": "Reduce the number of generic parameters in the 'EnumerableCoda.SelectFromEach' method to no more than the 3 authorized.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 692,
+                  "startColumn": 13,
+                  "endLine": 692,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "ArgumentException constructor arguments have been inverted.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 780,
+                  "startColumn": 23,
+                  "endLine": 780,
+                  "endColumn": 69
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2436",
+          "level": "warning",
+          "message": "Reduce the number of generic parameters in the 'EnumerableCoda.CreateSelectFromEachIterator' method to no more than the 3 authorized.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 710,
+                  "startColumn": 13,
+                  "endLine": 710,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2436",
+          "level": "warning",
+          "message": "Reduce the number of generic parameters in the 'EnumerableCoda.CreateSelectFromEachIterator' method to no more than the 3 authorized.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 751,
+                  "startColumn": 13,
+                  "endLine": 751,
+                  "endColumn": 41
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name 'lists' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 828,
+                  "startColumn": 23,
+                  "endLine": 828,
+                  "endColumn": 57
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2436",
+          "level": "warning",
+          "message": "Reduce the number of generic parameters in the 'EnumerableCoda.SelectFromEach' method to no more than the 3 authorized.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 729,
+                  "startColumn": 13,
+                  "endLine": 729,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2971",
+          "level": "warning",
+          "message": "Drop 'ToList' from the middle of the call chain.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 842,
+                  "startColumn": 53,
+                  "endLine": 842,
+                  "endColumn": 59
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3966",
+          "level": "warning",
+          "message": "Refactor this code to make sure 'enumerator' is disposed only once.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 1015,
+                  "startColumn": 24,
+                  "endLine": 1015,
+                  "endColumn": 57
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1121",
+          "level": "warning",
+          "message": "Extract the assignment of 'result' from this expression.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 1061,
+                  "startColumn": 52,
+                  "endLine": 1061,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1121",
+          "level": "warning",
+          "message": "Extract the assignment of 'result' from this expression.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 1124,
+                  "startColumn": 52,
+                  "endLine": 1124,
+                  "endColumn": 53
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1168",
+          "level": "warning",
+          "message": "Return an empty collection instead of null.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 1240,
+                  "startColumn": 17,
+                  "endLine": 1240,
+                  "endColumn": 29
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1121",
+          "level": "warning",
+          "message": "Extract the assignment of 'have_s' from this expression.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 1237,
+                  "startColumn": 34,
+                  "endLine": 1237,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1121",
+          "level": "warning",
+          "message": "Extract the assignment of 'have_p' from this expression.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 1237,
+                  "startColumn": 61,
+                  "endLine": 1237,
+                  "endColumn": 62
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2436",
+          "level": "warning",
+          "message": "Reduce the number of generic parameters in the 'EnumerableCoda.Zip' method to no more than the 3 authorized.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 1397,
+                  "startColumn": 58,
+                  "endLine": 1397,
+                  "endColumn": 61
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S3928",
+          "level": "warning",
+          "message": "The parameter name 'count < 0' is not declared in the argument list.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 1461,
+                  "startColumn": 23,
+                  "endLine": 1461,
+                  "endColumn": 67
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2436",
+          "level": "warning",
+          "message": "Reduce the number of generic parameters in the 'EnumerableCoda.Unzip' method to no more than the 3 authorized.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 1424,
+                  "startColumn": 97,
+                  "endLine": 1424,
+                  "endColumn": 102
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2234",
+          "level": "warning",
+          "message": "Parameters to 'Compare' have the same names but not the same order as the method arguments.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/Cadenza/Cadenza.Collections/EnumerableCoda.cs",
+                "region": {
+                  "startLine": 1647,
+                  "startColumn": 88,
+                  "endLine": 1647,
+                  "endColumn": 95
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        }
+      ],
+      "rules": {
+        "CS3021": {
+          "id": "CS3021",
+          "shortDescription": "Type or member does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute",
+          "defaultLevel": "warning",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry"
+            ]
+          }
+        },
+        "S1121": {
+          "id": "S1121",
+          "shortDescription": "Assignments should not be made from within sub-expressions",
+          "fullDescription": "Assignments within sub-expressions are hard to spot and therefore make the code less readable. Ideally, sub-expressions should not have side-effects.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1121",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S1125": {
+          "id": "S1125",
+          "shortDescription": "Boolean literals should not be redundant",
+          "fullDescription": "Redundant Boolean literals should be removed from expressions to improve readability.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1125",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S1135": {
+          "id": "S1135",
+          "shortDescription": "Track uses of \"TODO\" tags",
+          "fullDescription": "TODO tags are commonly used to mark places where some more code is required, but which the developer wants to implement later.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1135",
+          "properties": {
+            "category": "Info Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S1168": {
+          "id": "S1168",
+          "shortDescription": "Empty arrays and collections should be returned instead of null",
+          "fullDescription": "Returning null instead of an actual array or collection forces callers of the method to explicitly test for nullity, making them more complex and less readable.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1168",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope"
+            ]
+          }
+        },
+        "S125": {
+          "id": "S125",
+          "shortDescription": "Sections of code should not be \"commented out\"",
+          "fullDescription": "Programmers should not comment out code as it bloats programs and reduces readability.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-125",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S1450": {
+          "id": "S1450",
+          "shortDescription": "Private fields only used as local variables in methods should become local variables",
+          "fullDescription": "When the value of a private field is always assigned to in a class' methods before being read, then it is not being used to store class information. Therefore, it should become a local variable in the relevant methods to prevent any misunderstanding.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1450",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope"
+            ]
+          }
+        },
+        "S1905": {
+          "id": "S1905",
+          "shortDescription": "Redundant casts should not be used",
+          "fullDescription": "Unnecessary casting expressions make the code harder to read and understand.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1905",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S2219": {
+          "id": "S2219",
+          "shortDescription": "Runtime type checking should be simplified",
+          "fullDescription": "To check the type of an object there are several options:",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2219",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S2234": {
+          "id": "S2234",
+          "shortDescription": "Parameters should be passed in the correct order",
+          "fullDescription": "When the names of parameters in a method call match the names of the method arguments, it contributes to clearer, more readable code. However, when the names match, but are passed in a different order than the method arguments, it indicates a mistake in the parameter order which will likely lead to unexpected results.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2234",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S2368": {
+          "id": "S2368",
+          "shortDescription": "Public methods should not have multidimensional array parameters",
+          "fullDescription": "Exposing methods with multidimensional array parameters requires developers to have advanced knowledge about the language in order to be able to use them. Moreover, what exactly to pass to such parameters is not intuitive. Therefore, such methods should not be exposed, but can be used internally.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2368",
+          "properties": {
+            "category": "Blocker Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope"
+            ]
+          }
+        },
+        "S2436": {
+          "id": "S2436",
+          "shortDescription": "Classes and methods should not have too many generic parameters",
+          "fullDescription": "A method or class with too many type parameters has likely aggregated too many responsibilities and should be split.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2436",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": false,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S2589": {
+          "id": "S2589",
+          "shortDescription": "Boolean expressions should not be gratuitous",
+          "fullDescription": "If a boolean expression doesn't change the evaluation of the condition, then it is entirely unnecessary, and can be removed. If it is gratuitous because it does not match the programmer's intent, then it's a bug and the expression should be fixed.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2589",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S2743": {
+          "id": "S2743",
+          "shortDescription": "Static fields should not be used in generic types",
+          "fullDescription": "A static field in a generic type is not shared among instances of different closed constructed types, thus LengthLimitedSingletonCollection<int>.instances and LengthLimitedSingletonCollection<string>.instances will point to different objects, even though instances is seemingly shared among all LengthLimitedSingletonCollection<> generic classes.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2743",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S2933": {
+          "id": "S2933",
+          "shortDescription": "Fields that are only assigned in the constructor should be \"readonly\"",
+          "fullDescription": "readonly fields can only be assigned in a class constructor. If a class has a field that's not marked readonly but is only set in the constructor, it could cause confusion about the field's intended use. To avoid confusion, such fields should be marked readonly to make their intended use explicit, and to prevent future maintainers from inadvertently changing their use.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2933",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S2971": {
+          "id": "S2971",
+          "shortDescription": "\"IEnumerable\" LINQs should be simplified",
+          "fullDescription": "In the interests of readability, code that can be simplified should be simplified. To that end, there are several ways IEnumerable language integrated queries (LINQ) can be simplified",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-2971",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S3247": {
+          "id": "S3247",
+          "shortDescription": "Duplicate casts should not be made",
+          "fullDescription": "Because the is operator performs a cast if the object is not null, using is to check type and then casting the same argument to that type, necessarily performs two casts. The same result can be achieved more efficiently with a single cast using as, followed by a null-check.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3247",
+          "properties": {
+            "category": "Minor Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S3442": {
+          "id": "S3442",
+          "shortDescription": "\"abstract\" classes should not have \"public\" constructors",
+          "fullDescription": "Since abstract classes can't be instantiated, there's no point in their having public or internal constructors. If there is basic initialization logic that should run when an extending class instance is created, you can by all means put it in a constructor, but make that constructor private or protected.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3442",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S3776": {
+          "id": "S3776",
+          "shortDescription": "Cognitive Complexity of methods should not be too high",
+          "fullDescription": "Cognitive Complexity is a measure of how hard the control flow of a method is to understand. Methods with high Cognitive Complexity will be difficult to maintain.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3776",
+          "properties": {
+            "category": "Critical Code Smell",
+            "isEnabledByDefault": false,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S3881": {
+          "id": "S3881",
+          "shortDescription": "\"IDisposable\" should be implemented correctly",
+          "fullDescription": "The IDisposable interface is a mechanism to release unmanaged resources, if not implemented correctly this could result in resource leaks or more severe bugs.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3881",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S3928": {
+          "id": "S3928",
+          "shortDescription": "Parameter names used into ArgumentException constructors should match an existing one ",
+          "fullDescription": "Some constructors of the ArgumentException, ArgumentNullException, ArgumentOutOfRangeException and DuplicateWaitObjectException classes must be fed with a valid parameter name. This rule raises an issue in two cases:",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3928",
+          "properties": {
+            "category": "Major Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S3966": {
+          "id": "S3966",
+          "shortDescription": "Objects should not be disposed more than once",
+          "fullDescription": "A proper implementation of IDisposable.Dispose should allow for it to be called multiple times on the same object, however this is not guaranteed and could result in an exception being thrown.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3966",
+          "properties": {
+            "category": "Critical Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        },
+        "S927": {
+          "id": "S927",
+          "shortDescription": "parameter names should match base declaration and other partial definitions",
+          "fullDescription": "The name of a parameter in an externally visible method override does not match the name of the parameter in the base declaration of the method, or the name of the parameter in the interface declaration of the method or the name of any other partial definition.",
+          "defaultLevel": "warning",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-927",
+          "properties": {
+            "category": "Critical Code Smell",
+            "isEnabledByDefault": true,
+            "tags": [
+              "C#",
+              "SonarWay",
+              "MainSourceScope",
+              "TestSourceScope"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
