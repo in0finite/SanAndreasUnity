@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace SanAndreasAPI
 {
+    [Serializable]
     public class ConsoleLog
     {
         public string logString;

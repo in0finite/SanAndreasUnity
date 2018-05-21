@@ -14,78 +14,6 @@
         {
           "ruleId": "CS0618",
           "level": "warning",
-          "message": "'SocketServer._endpoint' is obsolete: 'Use IPEnd instead.'",
-          "suppressionStates": [
-            "suppressedInSource"
-          ],
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 98,
-                  "startColumn": 25,
-                  "endLine": 98,
-                  "endColumn": 34
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 2
-          }
-        },
-        {
-          "ruleId": "CS0618",
-          "level": "warning",
-          "message": "'SocketServer._endpoint' is obsolete: 'Use IPEnd instead.'",
-          "suppressionStates": [
-            "suppressedInSource"
-          ],
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 99,
-                  "startColumn": 25,
-                  "endLine": 99,
-                  "endColumn": 34
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 2
-          }
-        },
-        {
-          "ruleId": "CS0618",
-          "level": "warning",
-          "message": "'SocketServer._endpoint' is obsolete: 'Use IPEnd instead.'",
-          "suppressionStates": [
-            "suppressedInSource"
-          ],
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 100,
-                  "startColumn": 28,
-                  "endLine": 100,
-                  "endColumn": 37
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 2
-          }
-        },
-        {
-          "ruleId": "CS0618",
-          "level": "warning",
           "message": "'SocketClient._endpoint' is obsolete: 'Use IPEnd instead.'",
           "suppressionStates": [
             "suppressedInSource"
@@ -146,6 +74,78 @@
                   "startLine": 67,
                   "startColumn": 28,
                   "endLine": 67,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS0618",
+          "level": "warning",
+          "message": "'SocketServer._endpoint' is obsolete: 'Use IPEnd instead.'",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "region": {
+                  "startLine": 98,
+                  "startColumn": 25,
+                  "endLine": 98,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS0618",
+          "level": "warning",
+          "message": "'SocketServer._endpoint' is obsolete: 'Use IPEnd instead.'",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "region": {
+                  "startLine": 99,
+                  "startColumn": 25,
+                  "endLine": 99,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 2
+          }
+        },
+        {
+          "ruleId": "CS0618",
+          "level": "warning",
+          "message": "'SocketServer._endpoint' is obsolete: 'Use IPEnd instead.'",
+          "suppressionStates": [
+            "suppressedInSource"
+          ],
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "region": {
+                  "startLine": 100,
+                  "startColumn": 28,
+                  "endLine": 100,
                   "endColumn": 37
                 }
               }
@@ -429,6 +429,27 @@
           }
         },
         {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketCommand.cs",
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 31,
+                  "endLine": 8,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
           "ruleId": "S125",
           "level": "warning",
           "message": "Remove this commented out code.",
@@ -504,27 +525,6 @@
                   "startColumn": 1,
                   "endLine": 177,
                   "endColumn": 10
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketCommand.cs",
-                "region": {
-                  "startLine": 8,
-                  "startColumn": 31,
-                  "endLine": 8,
-                  "endColumn": 38
                 }
               }
             }
@@ -618,27 +618,6 @@
           }
         },
         {
-          "ruleId": "S1135",
-          "level": "warning",
-          "message": "Complete the task associated to this 'TODO' comment.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
-                "region": {
-                  "startLine": 404,
-                  "startColumn": 20,
-                  "endLine": 404,
-                  "endColumn": 24
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
           "ruleId": "S1104",
           "level": "warning",
           "message": "Make this field 'private' and encapsulate it in a 'public' property.",
@@ -660,18 +639,18 @@
           }
         },
         {
-          "ruleId": "S125",
+          "ruleId": "S1135",
           "level": "warning",
-          "message": "Remove this commented out code.",
+          "message": "Complete the task associated to this 'TODO' comment.",
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketCommandData.cs",
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
                 "region": {
-                  "startLine": 61,
-                  "startColumn": 13,
-                  "endLine": 61,
-                  "endColumn": 111
+                  "startLine": 404,
+                  "startColumn": 20,
+                  "endLine": 404,
+                  "endColumn": 24
                 }
               }
             }
@@ -708,12 +687,12 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketExtensions.cs",
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketCommandData.cs",
                 "region": {
-                  "startLine": 48,
-                  "startColumn": 1,
-                  "endLine": 48,
-                  "endColumn": 6
+                  "startLine": 61,
+                  "startColumn": 13,
+                  "endLine": 61,
+                  "endColumn": 111
                 }
               }
             }
@@ -786,60 +765,18 @@
           }
         },
         {
-          "ruleId": "S1104",
+          "ruleId": "S125",
           "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "message": "Remove this commented out code.",
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketMessage.cs",
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketExtensions.cs",
                 "region": {
-                  "startLine": 54,
-                  "startColumn": 22,
-                  "endLine": 54,
-                  "endColumn": 36
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1123",
-          "level": "warning",
-          "message": "Add an explanation.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketMessage.cs",
-                "region": {
-                  "startLine": 42,
-                  "startColumn": 10,
-                  "endLine": 42,
-                  "endColumn": 18
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketMessage.cs",
-                "region": {
-                  "startLine": 56,
-                  "startColumn": 24,
-                  "endLine": 56,
-                  "endColumn": 65
+                  "startLine": 48,
+                  "startColumn": 1,
+                  "endLine": 48,
+                  "endColumn": 6
                 }
               }
             }
@@ -975,48 +912,6 @@
           }
         },
         {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketMessage.cs",
-                "region": {
-                  "startLine": 71,
-                  "startColumn": 23,
-                  "endLine": 71,
-                  "endColumn": 26
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
-                "region": {
-                  "startLine": 16,
-                  "startColumn": 36,
-                  "endLine": 16,
-                  "endColumn": 72
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
           "ruleId": "S125",
           "level": "warning",
           "message": "Remove this commented out code.",
@@ -1050,6 +945,27 @@
                   "startColumn": 13,
                   "endLine": 219,
                   "endColumn": 150
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1123",
+          "level": "warning",
+          "message": "Add an explanation.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketMessage.cs",
+                "region": {
+                  "startLine": 42,
+                  "startColumn": 10,
+                  "endLine": 42,
+                  "endColumn": 18
                 }
               }
             }
@@ -1122,18 +1038,18 @@
           }
         },
         {
-          "ruleId": "S1104",
+          "ruleId": "S1135",
           "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "message": "Complete the task associated to this 'TODO' comment.",
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
                 "region": {
-                  "startLine": 21,
-                  "startColumn": 23,
-                  "endLine": 21,
-                  "endColumn": 35
+                  "startLine": 368,
+                  "startColumn": 20,
+                  "endLine": 368,
+                  "endColumn": 24
                 }
               }
             }
@@ -1170,12 +1086,12 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketMessage.cs",
                 "region": {
-                  "startLine": 26,
-                  "startColumn": 26,
-                  "endLine": 26,
-                  "endColumn": 28
+                  "startLine": 54,
+                  "startColumn": 22,
+                  "endLine": 54,
+                  "endColumn": 36
                 }
               }
             }
@@ -1185,18 +1101,39 @@
           }
         },
         {
-          "ruleId": "S1135",
+          "ruleId": "S1104",
           "level": "warning",
-          "message": "Complete the task associated to this 'TODO' comment.",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
                 "region": {
-                  "startLine": 368,
-                  "startColumn": 20,
-                  "endLine": 368,
-                  "endColumn": 24
+                  "startLine": 16,
+                  "startColumn": 36,
+                  "endLine": 16,
+                  "endColumn": 72
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketGlobals.cs",
+                "region": {
+                  "startLine": 108,
+                  "startColumn": 46,
+                  "endLine": 108,
+                  "endColumn": 52
                 }
               }
             }
@@ -1218,6 +1155,153 @@
                   "startColumn": 23,
                   "endLine": 8,
                   "endColumn": 33
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketMessage.cs",
+                "region": {
+                  "startLine": 56,
+                  "startColumn": 24,
+                  "endLine": 56,
+                  "endColumn": 65
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketGlobals.cs",
+                "region": {
+                  "startLine": 111,
+                  "startColumn": 27,
+                  "endLine": 111,
+                  "endColumn": 38
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
+                "region": {
+                  "startLine": 21,
+                  "startColumn": 23,
+                  "endLine": 21,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketGlobals.cs",
+                "region": {
+                  "startLine": 113,
+                  "startColumn": 24,
+                  "endLine": 113,
+                  "endColumn": 32
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/ConsoleLog.cs",
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 24,
+                  "endLine": 9,
+                  "endColumn": 31
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketMessage.cs",
+                "region": {
+                  "startLine": 71,
+                  "startColumn": 23,
+                  "endLine": 71,
+                  "endColumn": 26
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
+                "region": {
+                  "startLine": 26,
+                  "startColumn": 26,
+                  "endLine": 26,
+                  "endColumn": 28
                 }
               }
             }
@@ -1275,117 +1359,12 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/ConsoleLog.cs",
-                "region": {
-                  "startLine": 9,
-                  "startColumn": 24,
-                  "endLine": 9,
-                  "endColumn": 31
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
                 "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketGlobals.cs",
                 "region": {
-                  "startLine": 108,
-                  "startColumn": 46,
-                  "endLine": 108,
-                  "endColumn": 52
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketGlobals.cs",
-                "region": {
-                  "startLine": 111,
-                  "startColumn": 27,
-                  "endLine": 111,
-                  "endColumn": 38
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketGlobals.cs",
-                "region": {
-                  "startLine": 113,
-                  "startColumn": 24,
-                  "endLine": 113,
-                  "endColumn": 32
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
-                "region": {
-                  "startLine": 40,
-                  "startColumn": 39,
-                  "endLine": 40,
-                  "endColumn": 68
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
-                "region": {
-                  "startLine": 41,
-                  "startColumn": 23,
-                  "endLine": 41,
-                  "endColumn": 42
+                  "startLine": 168,
+                  "startColumn": 45,
+                  "endLine": 168,
+                  "endColumn": 86
                 }
               }
             }
@@ -1422,33 +1401,12 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketGlobals.cs",
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
                 "region": {
-                  "startLine": 168,
-                  "startColumn": 45,
-                  "endLine": 168,
-                  "endColumn": 86
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketCommandData.cs",
-                "region": {
-                  "startLine": 12,
-                  "startColumn": 23,
-                  "endLine": 12,
-                  "endColumn": 32
+                  "startLine": 18,
+                  "startColumn": 36,
+                  "endLine": 18,
+                  "endColumn": 72
                 }
               }
             }
@@ -1470,27 +1428,6 @@
                   "startColumn": 23,
                   "endLine": 28,
                   "endColumn": 35
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 18,
-                  "startColumn": 36,
-                  "endLine": 18,
-                  "endColumn": 72
                 }
               }
             }
@@ -1563,6 +1500,48 @@
           }
         },
         {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
+                "region": {
+                  "startLine": 40,
+                  "startColumn": 39,
+                  "endLine": 40,
+                  "endColumn": 68
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
+                "region": {
+                  "startLine": 41,
+                  "startColumn": 23,
+                  "endLine": 41,
+                  "endColumn": 42
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
           "ruleId": "S2223",
           "level": "warning",
           "message": "Change the visibility of 'allDone' or make it 'const' or 'readonly'.",
@@ -1584,48 +1563,6 @@
           }
         },
         {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 51,
-                  "startColumn": 40,
-                  "endLine": 51,
-                  "endColumn": 77
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1104",
-          "level": "warning",
-          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 58,
-                  "startColumn": 39,
-                  "endLine": 58,
-                  "endColumn": 68
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
           "ruleId": "S2223",
           "level": "warning",
           "message": "Change the visibility of 'routingTable' or make it 'const' or 'readonly'.",
@@ -1638,6 +1575,27 @@
                   "startColumn": 49,
                   "endLine": 56,
                   "endColumn": 61
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "region": {
+                  "startLine": 51,
+                  "startColumn": 40,
+                  "endLine": 51,
+                  "endColumn": 77
                 }
               }
             }
@@ -1689,6 +1647,27 @@
           }
         },
         {
+          "ruleId": "S1104",
+          "level": "warning",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "region": {
+                  "startLine": 58,
+                  "startColumn": 39,
+                  "endLine": 58,
+                  "endColumn": 68
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
           "ruleId": "S1144",
           "level": "warning",
           "message": "Remove the unused private method 'SendToAllClients'.",
@@ -1731,18 +1710,18 @@
           }
         },
         {
-          "ruleId": "S1450",
+          "ruleId": "S1104",
           "level": "warning",
-          "message": "Remove the 'dispose' field and declare it as a local variable in the relevant methods.",
+          "message": "Make this field 'private' and encapsulate it in a 'public' property.",
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketCommandData.cs",
                 "region": {
-                  "startLine": 60,
-                  "startColumn": 29,
-                  "endLine": 60,
-                  "endColumn": 36
+                  "startLine": 12,
+                  "startColumn": 23,
+                  "endLine": 12,
+                  "endColumn": 32
                 }
               }
             }
@@ -1764,6 +1743,27 @@
                   "startColumn": 38,
                   "endLine": 60,
                   "endColumn": 43
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1450",
+          "level": "warning",
+          "message": "Remove the 'dispose' field and declare it as a local variable in the relevant methods.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "region": {
+                  "startLine": 60,
+                  "startColumn": 29,
+                  "endLine": 60,
+                  "endColumn": 36
                 }
               }
             }
@@ -1815,6 +1815,27 @@
           }
         },
         {
+          "ruleId": "S1186",
+          "level": "warning",
+          "message": "Add a nested comment explaining why this method is empty, throw a 'NotSupportedException' or complete the implementation.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "region": {
+                  "startLine": 161,
+                  "startColumn": 21,
+                  "endLine": 161,
+                  "endColumn": 37
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
           "ruleId": "S3010",
           "level": "warning",
           "message": "Remove this assignment of 'debug' or initialize it statically.",
@@ -1840,27 +1861,6 @@
                   "startColumn": 38,
                   "endLine": 60,
                   "endColumn": 43
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1186",
-          "level": "warning",
-          "message": "Add a nested comment explaining why this method is empty, throw a 'NotSupportedException' or complete the implementation.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 161,
-                  "startColumn": 21,
-                  "endLine": 161,
-                  "endColumn": 37
                 }
               }
             }
@@ -1929,6 +1929,48 @@
                   "startColumn": 30,
                   "endLine": 333,
                   "endColumn": 48
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1854",
+          "level": "warning",
+          "message": "Remove this useless assignment to local variable 'mState'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
+                "region": {
+                  "startLine": 322,
+                  "startColumn": 24,
+                  "endLine": 322,
+                  "endColumn": 30
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1854",
+          "level": "warning",
+          "message": "Remove this useless assignment to local variable 'mState'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
+                "region": {
+                  "startLine": 401,
+                  "startColumn": 28,
+                  "endLine": 401,
+                  "endColumn": 34
                 }
               }
             }
@@ -2012,164 +2054,12 @@
           "locations": [
             {
               "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
-                "region": {
-                  "startLine": 322,
-                  "startColumn": 24,
-                  "endLine": 322,
-                  "endColumn": 30
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1854",
-          "level": "warning",
-          "message": "Remove this useless assignment to local variable 'mState'.",
-          "locations": [
-            {
-              "resultFile": {
                 "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
                 "region": {
                   "startLine": 305,
                   "startColumn": 24,
                   "endLine": 305,
                   "endColumn": 30
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1854",
-          "level": "warning",
-          "message": "Remove this useless assignment to local variable 'mState'.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketClient.cs",
-                "region": {
-                  "startLine": 401,
-                  "startColumn": 28,
-                  "endLine": 401,
-                  "endColumn": 34
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1854",
-          "level": "warning",
-          "message": "Remove this useless assignment to local variable 'mState'.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 423,
-                  "startColumn": 28,
-                  "endLine": 423,
-                  "endColumn": 34
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1764",
-          "level": "warning",
-          "message": "Correct one of the identical expressions on both sides of operator '=='.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 576,
-                  "startColumn": 39,
-                  "endLine": 576,
-                  "endColumn": 57
-                }
-              }
-            }
-          ],
-          "relatedLocations": [
-            {
-              "physicalLocation": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 576,
-                  "startColumn": 17,
-                  "endLine": 576,
-                  "endColumn": 35
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1481",
-          "level": "warning",
-          "message": "Remove this unused 'b' local variable.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 457,
-                  "startColumn": 34,
-                  "endLine": 457,
-                  "endColumn": 35
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S2696",
-          "level": "warning",
-          "message": "Make the enclosing instance method 'static' or remove this set on the 'static' field.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 582,
-                  "startColumn": 13,
-                  "endLine": 582,
-                  "endColumn": 22
-                }
-              }
-            }
-          ],
-          "relatedLocations": [
-            {
-              "physicalLocation": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
-                "region": {
-                  "startLine": 60,
-                  "startColumn": 29,
-                  "endLine": 60,
-                  "endColumn": 36
                 }
               }
             }
@@ -2355,6 +2245,82 @@
               "9": "+4 (incl 3 for nesting)"
             }
           }
+        },
+        {
+          "ruleId": "S1854",
+          "level": "warning",
+          "message": "Remove this useless assignment to local variable 'mState'.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "region": {
+                  "startLine": 423,
+                  "startColumn": 28,
+                  "endLine": 423,
+                  "endColumn": 34
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1481",
+          "level": "warning",
+          "message": "Remove this unused 'b' local variable.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "region": {
+                  "startLine": 457,
+                  "startColumn": 34,
+                  "endLine": 457,
+                  "endColumn": 35
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S2696",
+          "level": "warning",
+          "message": "Make the enclosing instance method 'static' or remove this set on the 'static' field.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "region": {
+                  "startLine": 582,
+                  "startColumn": 13,
+                  "endLine": 582,
+                  "endColumn": 22
+                }
+              }
+            }
+          ],
+          "relatedLocations": [
+            {
+              "physicalLocation": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasAPI/SocketServer.cs",
+                "region": {
+                  "startLine": 60,
+                  "startColumn": 29,
+                  "endLine": 60,
+                  "endColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
         }
       ],
       "rules": {
@@ -2525,23 +2491,6 @@
           "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1481",
           "properties": {
             "category": "Minor Code Smell",
-            "isEnabledByDefault": true,
-            "tags": [
-              "C#",
-              "SonarWay",
-              "MainSourceScope",
-              "TestSourceScope"
-            ]
-          }
-        },
-        "S1764": {
-          "id": "S1764",
-          "shortDescription": "Identical expressions should not be used on both sides of a binary operator",
-          "fullDescription": "Using the same value on either side of a binary operator is almost always a mistake. In the case of logical operators, it is either a copy/paste error and therefore a bug, or it is simply wasted code, and should be simplified. In the case of bitwise operators and most binary mathematical operators, having the same value on both sides of an operator yields predictable results, and should be simplified.",
-          "defaultLevel": "warning",
-          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1764",
-          "properties": {
-            "category": "Major Bug",
             "isEnabledByDefault": true,
             "tags": [
               "C#",

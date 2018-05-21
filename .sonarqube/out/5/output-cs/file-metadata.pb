@@ -1,7 +1,10 @@
-i
-gD:\UNITY\Unity Projects\SanAndreasUnity\VS\Cadenza.Core\Cadenza.ComponentModel\SynchronizeInvokeCoda.csZ
-XD:\UNITY\Unity Projects\SanAndreasUnity\VS\Cadenza.Core\Cadenza.Constraints\Arguments.cs\
-ZD:\UNITY\Unity Projects\SanAndreasUnity\VS\Cadenza.Core\Cadenza.Numerics\ExpressionMath.cs_
-]D:\UNITY\Unity Projects\SanAndreasUnity\VS\Cadenza.Core\Cadenza.Reflection\ILGeneratorCoda.csg
-eD:\UNITY\Unity Projects\SanAndreasUnity\VS\Cadenza.Core\Cadenza.Threading\ReaderWriterLockSlimCoda.csT
-RD:\UNITY\Unity Projects\SanAndreasUnity\VS\Cadenza.Core\Properties\AssemblyInfo.cs
+H
+FD:\UNITY\Unity Projects\SanAndreasUnity\VS\SanAndreasAPI\ConsoleLog.csU
+SD:\UNITY\Unity Projects\SanAndreasUnity\VS\SanAndreasAPI\Properties\AssemblyInfo.csJ
+HD:\UNITY\Unity Projects\SanAndreasUnity\VS\SanAndreasAPI\SocketClient.csK
+ID:\UNITY\Unity Projects\SanAndreasUnity\VS\SanAndreasAPI\SocketCommand.csO
+MD:\UNITY\Unity Projects\SanAndreasUnity\VS\SanAndreasAPI\SocketCommandData.csN
+LD:\UNITY\Unity Projects\SanAndreasUnity\VS\SanAndreasAPI\SocketExtensions.csK
+ID:\UNITY\Unity Projects\SanAndreasUnity\VS\SanAndreasAPI\SocketGlobals.csK
+ID:\UNITY\Unity Projects\SanAndreasUnity\VS\SanAndreasAPI\SocketMessage.csJ
+HD:\UNITY\Unity Projects\SanAndreasUnity\VS\SanAndreasAPI\SocketServer.cs

@@ -3,5 +3,5 @@ projectKey=sanandreasunity
 serverUrl=https://sonarcloud.io
 serverVersion=7.2.0.12086
 dashboardUrl=https://sonarcloud.io/dashboard/index/sanandreasunity
-ceTaskId=AWOAcXUHbWxfSOeOaqIB
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AWOAcXUHbWxfSOeOaqIB
+ceTaskId=AWOAiEFqbWxfSOeOaqIP
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AWOAiEFqbWxfSOeOaqIP

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class Sockets : MonoBehaviour
 {
@@ -26,14 +27,17 @@ public class Sockets : MonoBehaviour
 
         string consoleApp = Path.Combine(Application.streamingAssetsPath, "SanAndreasConsole.exe");
 
+        //Debug.LogFormat("Exists Console App: {0}", File.Exists(consoleApp));
+
         if (startCApp && File.Exists(consoleApp))
         {
             Process.Start(consoleApp);
 
-            client = new SocketClient(IPAddress.Loopback, 7776); //192.168.1.38
+            client = new SocketClient(SocketExtensions.GetLocalIPAddress(), SocketServer.DefPort); //192.168.1.38
 
             client.OnConnectedCallback = () =>
             {
+                Debug.Log("San Andreas Unity Sockets connected sucesfully!");
                 available = true;
             };
 
