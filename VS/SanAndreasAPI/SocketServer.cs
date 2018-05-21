@@ -573,7 +573,7 @@ namespace SanAndreasAPI
 
         private void CloseServerAfterClientsClose(bool dis)
         {
-            if (routingTable.Count == routingTable.Count)
+            if (routingTable.Count == 0)
                 Stop(dis); //Close the server, when all the clients has been closed.
         }
 
