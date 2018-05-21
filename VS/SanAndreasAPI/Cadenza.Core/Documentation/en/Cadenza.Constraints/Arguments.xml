@@ -1,0 +1,46 @@
+<Type Name="Arguments" FullName="Cadenza.Constraints.Arguments">
+  <TypeSignature Language="C#" Value="public static class Arguments" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi abstract sealed beforefieldinit Arguments extends System.Object" />
+  <AssemblyInfo>
+    <AssemblyName>Cadenza.Core</AssemblyName>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName="AreNotNull&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public static void AreNotNull&lt;T&gt; (T container) where T : class;" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void AreNotNull&lt;class T&gt;(!!T container) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.1.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T">
+          <Constraints>
+            <ParameterAttribute>ReferenceTypeConstraint</ParameterAttribute>
+          </Constraints>
+        </TypeParameter>
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="container" Type="T" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="container">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+        <exception cref="T:System.ArgumentNullException">To be added; from: <see cref="M:Cadenza.Constraints.Arguments.AreNotNull``1(``0)" /></exception>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

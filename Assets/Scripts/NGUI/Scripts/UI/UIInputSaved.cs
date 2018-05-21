@@ -26,9 +26,9 @@ public class UIInputSaved : UIInput
 
     private void OnApplicationQuit()
     {
-        if (!string.IsNullOrEmpty(playerPrefsField))
+        /*if (!string.IsNullOrEmpty(playerPrefsField))
         {
             PlayerPrefs.SetString(playerPrefsField, text);
-        }
+        }*/
     }
 }

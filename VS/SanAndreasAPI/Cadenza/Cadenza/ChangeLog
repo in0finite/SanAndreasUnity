@@ -1,0 +1,850 @@
+2009-11-17  Jonathan Pryor  <jpryor@novell.com>
+
+	* String.cs: Add .WrappedLines() extension method, a 
+	  generalized version of Options.GetLines() (from Mono.Options).  In 
+	  short, given a long string, it'll break it into "line-sized" chunks 
+	  of a given width so that you can have e.g. nicely line-wrapped help 
+	  text.  Only really suitable for console/fixed-width-font output.
+
+2009-11-12  Eric Maupin  <me@ermau.com>
+
+	* String.cs: Added IsNullorWhitespace
+
+2009-11-11  Eric Maupin  <me@ermau.com>
+
+	* MutableLookup.cs: Added .Clear()
+
+2009-11-06  Eric Maupin  <me@ermau.com>
+
+	* MutableLookup.cs: Mutable implementation of ILookup<TKey,TElement>
+
+2009-11-03  Jonathan Pryor  <jpryor@novell.com>
+
+	* Delegates.cs, Eithers.cs, Lamdas.cs, Tuples.cs: Flush header.
+
+2009-09-17  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Add .Cache() extension method.
+	* CachedSequence.cs: Resuscitated from
+	  rocks-playground/Mono.Rocks/Cons.cs@r112950; an immutable, 
+	  thread-safe, singly-linked list.  Improvements include less 
+	  memory overhead (down to one pointer from two), a better name, and a
+	  reason to exist (to sanely cope with potentially infinite sequences
+	  which change each time you call .GetEnumerator() on them).
+
+2009-09-23  Eric Maupin  <me@ermau.com>
+
+	* OrderedDictionary.cs: Added a dictionary that maintains insertion
+	  order without losing hashing speed benefits.
+
+2009-09-17  Jonathan Pryor  <jpryor@novell.com>
+
+	* String.cs: Add .Remove(string[]) extension method.  Patch thanks to
+	  Eric Maupin <me@ermau.com>.
+
+2009-06-23  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Add .ContiguousSubsequences().  Extension method
+	  courtesy of Distilled Brilliance / John Feminella.
+
+2009-06-11  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Add .ToReadOnlyDictionary() extension methods.
+	  Contributed by Eric Maupin  <me@ermau.com>.
+
+2009-06-11  Jonathan Pryor  <jpryor@novell.com>
+
+	* ReadOnlyDictionary.cs: Added; implementation thanks to 
+	  Eric Maupin  <me@ermau.com>.
+
+2009-04-16  Jonathan Pryor  <jpryor@novell.com>
+
+	* EnumerableValueReader.cs, TextValueReader.cs: Use ValueReader<T> as 
+	  the implementation helper.  Mark types [CLSCompliant(false)].
+	* IEnumerable.cs: Mark ToValueReader() [CLSCompliant(false)].
+	* IValueReader.cs, IValueWriter.cs: Simplify (KISS!).  Don't make them
+	  generic (and return the generic type), as this complicates calling
+	  the methods.  (It also means you can't have type-specific methods
+	  which are accessible after an IValueReader/IValueWriter method
+	  invocation, but as soon as you introduce actual types you hit the
+	  same issue...)  It also complicates writing additional Read/Write
+	  extension methods.  Read() methods now return IValueReader, and
+	  Write() methods now return IValueWriter.
+	* Stream.cs: Mark .WithSystemConverter() [CLSCompliant(false)].
+	* StreamConverter.cs, System.StreamConverter.cs: Support new 
+	  IValueReader and IValueWriter.  Mark types [CLSCompliant(false)].
+	* ValueReader.cs: Added; helper class to implement IValueReader.
+
+2009-03-29  Jonathan Pryor  <jpryor@novell.com>
+
+	* Tuple.cs: Don't check for null Tuple<T1,T2>, as Tuples are structs
+	  and thus can't be null.
+
+2009-03-14  Jonathan Pryor  <jpryor@novell.com>
+
+	* Eithers.cs: Flush (updates <exception/> XML comments).
+
+2009-03-14  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add ChildrenSelector(), ValueSelector().
+	* IEnumerable.cs: Add SelectBreadthFirst(), SelectDepthFirst(), for
+	  dealing with tree structures.
+	* Object.cs: Add TraverseBreadthFirst(),
+	  TraverseBreadthFirstWithParent(), TraverseDepthFirst(),
+	  TraverseDepthFirstWithParent().  Idea and most code courtesy of
+	  leppie: http://xacc.wordpress.com/2009/03/05/tree-traversal-extension-methods
+
+2008-12-26  Jonathan Pryor  <jpryor@novell.com>
+
+	* Delegates.cs: Flush (update .Timings() methods).
+
+2008-12-12  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Rename .Apply<T>(Action<T>) to .Each<T>(Action<T>).
+	  Add .Each<T>(Action<T,int>), .ForEach<T>(Action<T>), and
+	  .ForEach<T>(Action<T, int>).  The .ForEach() overloads are a
+	  shortened version of .Each(...).Apply(), and provides compatibility
+	  with List<T>.ForEach().
+
+2008-12-08  Jonathan Pryor  <jpryor@novell.com>
+
+	* Delegates.cs: Flush (adds .Timings() methods).
+
+2008-12-04  Jonathan Pryor  <jpryor@novell.com>
+
+	* Maybe.cs: Equals() should compare Value==obj.Value, otherwise the
+	  result will always be true.
+
+2008-10-04  Jonathan Pryor  <jpryor@novell.com>
+
+	* Delegates.cs: Flush (adds "traditional" .Curry() methods).
+
+2008-10-04  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: The TypeLoadException-generating gmcs bug has been
+	  fixed, so now (1) the .Tokens() unit test can run, and (2) it found
+	  some bugs (unsurprisingly).  Fix them.  In particular, if we hit an
+	  element where acumulate(seed, s) returns false AND we already have
+	  an element, then we should return the previous element, reset the
+	  seed, and try accumulate(seed, s) again.  This way we don't "lose"
+	  elements during processing.
+	* TextReader.cs: .Tokens() can now use IEnumerableRocks.Tokens().
+
+2008-09-30  Jonathan Pryor  <jpryor@novell.com>
+
+	* TextReader.cs: Change the default semantics of .Lines(), .Words(),
+	  and .Tokens() so that the TextReader *is* disposed by default.
+
+2008-09-27  Jonathan Pryor  <jpryor@novell.com>
+
+	* Either.cs: Finish the "expend all efforts to convert values"
+	  approach by using IConvertable to convert the source value to the
+	  destination value, in this case by using Convert.ChangeType().
+	  Now allows EnumerableValueReader.Read() to perform "implicit"
+	  conversions, e.g. int->bool, which TypeDescriptor doesn't support.
+	  Consistently return NotSupportedException if the conversion throws
+	  an exception (as Convert.ChangeType() throws InvalidCastException if
+	  it fails, which makes for an ambiguous error condition).
+	* EnumerableValueReader.cs: Don't bother witih IConvertible changes,
+	  as Either.TryParse() now does this.
+
+2008-09-27  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Change .Tokens() categories from Func<TSource,bool>
+	  to Func<TAggregate, TSource, bool>, so that the callback can be
+	  "smarter" about category detection.
+	* String.cs: Add .Tokens() extension method on strings.
+	* TextReader.cs: Revert .Words() semantic changes so that .Words() now
+	  just returns whitespace-separated words (as before).  Add .Tokens()
+	  to return tokens extracted from the input stream (the newer .Words()
+	  semantics).  .Tokens() takes a different delegate type from
+	  IEnumerable<T>.Tokens(), so we need to map them (for the `#if false`
+	  block), as a non-translated version would require "exposing" the
+	  internal StringBuilder to public users.
+
+2008-09-27  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.Value().
+	* Stream.cs: .WithSystemConverter() should return SystemConverter.
+	* StreamConverter.cs: Re-add, as I had forgotten the point to
+	  StreamConverter, which was to have a single Stream-oriented
+	  IValueReader/IValueWriter base class (though this was before there
+	  was IValueReader & IValueWriter), which could have multiple
+	  different "backends" -- BitConverter version, Mono.DataConvert, etc.
+	  Alas, CLS-noncompliant members can't be abstract, so provide (dumb)
+	  virtual versions instead.
+	* SystemStreamConverter.cs: Make an implementation of StreamConverter.
+
+2008-09-27  Jonathan Pryor  <jpryor@novell.com>
+
+	* IValueReader.cs, IValueWriter.cs: Add methods so that IValueReader
+	  and IValueWriter support all the types of IConvertible.
+	* EnumerableValueReader.cs, TextValueReader.cs,
+	  SystemStreamConverter.cs: Support new IValueReader & IValueWriter
+	  methods.
+	* EnumerableValueReader.cs: Read() methods now fallback to using
+	  IConvertible.To*() methods for type conversion purposes.  This way
+	  if TypeDescriptor doesn't support a conversion (e.g. int->bool), the
+	  conversion can still be supported.
+	* SystemStreamConverter.cs: Provide a basic working implementation of
+	  Read(string) and Write(string) using length-prefixed UTF-8.
+
+2008-09-27  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add .Accumulate(), .Categories().
+	* Either.cs: Add .TryParse<S,R>() overload; improve TypeConverter
+	  usage to check for conversions both from the source type and to the
+	  destination type (in case they differ).
+	* EnumerableValueReader.cs: Added; IValueReader implementation for
+	  IEnumerable<T> types.
+	* IEnumerable.cs: Remove .Convert(), which is replaced by
+	  .ToValueReader().  So:
+	        "a b".Words ().Convert (out a, out b);
+	  can be replaced with:
+	        "a b".Words ().ToValueReader ().Read (out a).Read (out b);
+	  Add .Tokens(), a generalized version of TextReader.Words().
+	* IValueReader.cs, IValueWriter.cs: Added; brainstorm: the 
+	  Read/Write-style API from StreamConverter doesn't need to be 
+	  restricted to binary data, it could apply equally well to textual
+	  data, layered atop TextReader/TextWriter.  Must be interfaces so
+	  that both can be supported by SystemStreamConverter.  Generic types
+	  so that the .Read/.Write return types are of the "most-derived"
+	  type, allowing easy & correct, lossless method chaining.
+	* Maybe.cs: Add .TryParse<S,R>() overload; use Either.TryParse() for
+	  the implementation.
+	* Stream.cs: .WithSystemConverter() returns SystemStreamConverter.
+	* StreamConverter.cs: Rename to SystemStreamConverter.cs.
+	* SystemStreamConverter.cs: Remove StreamConverter type, make
+	  SystemStreamConverter public, and make SystemStreamConverter
+	  implement IValueReader and IValueWriter interfaces.
+	* TextValueReader.cs: Added; IValueReader implementation for
+	  IEnumerable<string> (see IEnumerable.cs for example).
+	* TextReader.cs: "categories" seems better than "levels" for .Words(),
+	  and matches .Tokens(); provide alternate implementation
+	  that uses .Tokens() for implementation (unused because of compiler
+	  runtime bug).
+
+2008-09-26  Jonathan Pryor  <jpryor@novell.com>
+
+	* Type.cs: Added; .IsNullable() extension method.
+
+2008-09-26  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.Levels().
+	* TextReader.cs: Rework .Words() to be a more general-purpose lexer,
+	  returning strings made up from "levels" of input characters.
+
+2008-09-25  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.Destination() method.
+	* Stream.cs: Add .WriteTo() method, which copies data between streams.
+
+2008-09-25  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs (Transpose): Don't insert default(TSource) when a row
+	  doesn't have enough elements for the transposed row, just skip it.
+	  This is Haskell's behavior.
+
+2008-09-23  Jonathan Pryor  <jpryor@novell.com>
+
+	* JaggedArray.cs, RectangularArray.cs: Added; extension methods for
+	  jagged and rectangular arrays.
+
+2008-09-22  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Change the return type of .ToTuple() to IList<object>;
+	  .SplitAt() should throw if firstLength is negative; rename .Span()'s
+	  Func<TSource,bool> parameter to `predicate`.
+
+2008-09-22  Jonathan Pryor  <jpryor@novell.com>
+
+	* Either.cs: Added; static `Either` utility class.
+
+2008-09-20  Jonathan Pryor  <jpryor@novell.com>
+
+	* Eithers.cs: Added; type safe "tagged" union types.
+
+2008-09-18  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Rename .SelectFromEach() type parameters for
+	  consistency: s/TFirstSource/T1/g, s/TSecondSource/T2/g,
+	  s/TThirdSource/T3/g, s/TFourthSource/T4/g.
+
+2008-09-18  Jonathan Pryor  <jpryor@novell.com>
+
+	* NaturalStringComparer.cs: Fix typo.
+
+2008-09-17  Jonathan Pryor  <jpryor@novell.com>
+
+	* Maybe.cs: 
+	  - TryParse() should use .CanConvertFrom() in addition to catching the
+	    exception, as exceptions are slow.
+	  - Rename MaybeRocks.SelectMany<TSource,TResult>(...) to
+	    MaybeRocks.Select<TSource,TResult>(...), as this more closely
+	    matches the semantics and the documented pattern at:
+	    http://msdn.microsoft.com/en-us/library/bb308966.aspx
+	  - .Select() and .SelectMany() should call .ToMaybe() on their return
+	    values, not .Just(), as returning Maybe<T>.Nothing is already part
+	    of their contract, so this is more sensible.
+
+2008-09-16  Jonathan Pryor  <jpryor@novell.com>
+
+	* Sequence.cs: Update parameter names for consistency.
+
+2008-09-14  Jonathan Pryor  <jpryor@novell.com>
+
+	* Cons.cs: Remove.  There doesn't seem to be much point to it.
+
+2008-09-12  Jonathan Pryor  <jpryor@novell.com>
+
+	* Tuples.cs: Flush (adds .Match() method).
+
+2008-09-10  Jonathan Pryor  <jpryor@novell.com>
+
+	* TextReader.cs: Add .Words(TextReaderRocksOptions) overload, and change
+	  .Lines(TextRederLineOptions) to .Lines(TextReaderRocksOptions).
+
+2008-09-09  Jonathan Pryor  <jpryor@novell.com>
+
+	* Cons.cs: Insert a MemoryBarrier() around the double-checked locking.
+	  Fix gendarme-alerted ArgumentOutOfRangeException usage.
+	* Maybe.cs: Provide operator== and operator!= on Maybe<T>.
+
+2008-09-09  Jonathan Pryor  <jpryor@novell.com>
+
+	* Maybe.cs:
+	  - Alter the semantics of Maybe<T>: Maybe<T> should not be able to 
+	    hold null values, so the constructor now throws 
+	    ArgumentNullException if this is attempted, i.e.
+	    `new Maybe<string>(null)` now throws.  
+	  - Remove Maybe.Create() in lieu of the .Just() extension method (see
+	    Object.cs).
+	  - Add Maybe.TryParse(), which uses System.ComponentModel.TypeConverter
+	    to convert a string to an arbitrary type.  If it fails, then
+	    Maybe<T>.Nothing is returned instead of throwing an exception.
+	  - Maybe.When() now requires non-null values.
+	* Nullable.cs: Remove .ToNullable(), as it's primary purpose was to
+	  make Sequence.GenerateReverse() livable, but GenerateReverse() now
+	  uses Maybe<T>.  Add .Just() and .ToMaybe() for nullable types.
+	* Object.cs: Add .Just() extension method, which converts a value to a
+	  Maybe<T> but throws an ArgumentNullException if the value is null,
+	  and alter .ToMaybe() to return Maybe<T>.Nothing if value is null.
+
+2008-09-08  Jonathan Pryor  <jpryor@novell.com>
+
+	* TextReader.cs: Add a .Lines(TextReaderLineOptions) overload, to control
+	  whether the TextReader is disposed at the end of iteration.  See:
+	  http://blogs.msdn.com/ericlippert/archive/2008/09/08/high-maintenance.aspx
+
+2008-09-07  Jonathan Pryor  <jpryor@novell.com>
+
+	* Cons.cs: Added; an immutable singly-linked list.
+	* IEnumerable.cs: Add .ToCons().
+	* Sequence.cs: Rename GenerateReverse()'s `func' parameter to `selector'.
+
+2008-09-07  Jonathan Pryor  <jpryor@novell.com>
+
+	* Object.cs: Add .Match(), an expression-oriented replacement for a sequence
+	  of `if' statements.
+
+2008-09-06  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.ResultSelector().
+	* Maybe.cs: Added.
+	* Object.cs: Add .ToMaybe().
+	* Sequence.cs: Change Sequence.GenerateReverse() to use Maybe<Tuple<...>> 
+	  instead of Nullable<Tuple<...>>, as using Maybe.When() is shorter than
+	  using Tuple.Create(...).ToNullable().
+
+2008-09-04  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.Composer() method.
+	* Curry.cs: Rename to Delegates.cs.
+	* Delegates.cs: Add .Compose() extension methods.
+
+2008-09-03  Jonathan Pryor  <jpryor@novell.com>
+
+	* Tuples.cs: Fix doc typo.
+
+2008-09-03  Jonathan Pryor  <jpryor@novell.com>
+
+	* Object.cs: Rename .Let() to .With().
+
+2008-09-02  Jonathan Pryor  <jpryor@novell.com>
+
+	* Object.cs: Added; adds .Let() extension method.
+
+2008-09-02  Jonathan Pryor  <jpryor@novell.com>
+
+	* Nullable.cs: Remove .Select().
+
+2008-09-01  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: .ToTuple() should take an IEnumerable, not an
+	  IEnumerable<T>, as the type parameter really isn't needed.
+	* Nullable.cs: Added; Extension methods for manipulating nullable values.
+	* Tuples.cs: Remove the CreateNullable() methods, as we can use
+	  Tuple.Create(...).ToNullable() now for the same result.
+
+2008-08-31  Jonathan Pryor  <jpryor@novell.com>
+
+	* Curry.cs: Add XML documentation; remove Tuple null checks.
+	* IEnumerable.cs: .ToTuple() now returns object, not Tuple.
+	* Lambdas.cs: Flush doc changes.
+	* Sequence.cs (GenerateReverse): Use Func<S,Tuple<R,S>?> instead of
+	  Func<S,Tuple<R,S>> as Tuple is a struct now.
+	* Tuple.cs: Major changes: Tuples are now structs, not classes; remove
+	  interface member implementations.
+	* Tuples.cs: Flush (major alterations; see mktuples description).
+
+2008-08-28  Jonathan Pryor  <jpryor@novell.com>
+
+	* Lambdas.cs: Flush doc updates.
+
+2008-08-28  Jonathan Pryor  <jpryor@novell.com>
+
+	* Lambdas.cs: Flush (changes method names; see mklambda description).
+
+2008-08-27  Jonathan Pryor  <jpryor@novell.com>
+
+	* AssemblyInfo.cs: Enable CLS Compliance checking.
+	* Tuples.cs: Flush (adds [CLSCompliant(false)] to _N members).
+	* StreamConverter.cs, UInt16.cs, UInt32.cs, UInt64.cs: Mark these types 
+	  as [CLSCompliant(false)].
+	* Stream.cs: Disable CLS compliance on StreamConverter-using members.
+
+2008-08-27  Jonathan Pryor  <jpryor@novell.com>
+
+	* StreamConverter.cs: Added; move the StreamRocks.Read() and
+	  StreamRocks.Write() methods into StreamConverter and
+	  SystemStreamConverter.  This (unfortunately) means that "external"
+	  extension methods need to be on StreamConverter and not Stream, but it
+	  allows conversion to be *much* faster.  On a cursory test, just removing
+	  the constant array creation required by StreamRocks.Read() sped things up,
+	  and going the current abstract class approach gets execution to less than
+	  half the original execution time (for that test).
+	* Stream.cs: Move .Read()/.Write() into StreamConverter; add a
+	  .WithSystemConverter() extension method which returns a StreamConverter
+	  for a given stream.  This allows the previous "cute" chaining to continue,
+	  while only requiring an additional (extension) method call, e.g.
+	  stream.WithSystemConverter().Read(out a).Read(out b)....
+
+2008-08-27  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.Selector().
+	* IEnumerable.cs: Profiling/testing showed that (incredibly?) using
+	  string.Join() was faster than using StringBuilder, so do that.  
+	  The Array.Resize() usage is required because some iterators can only be
+	  iterated over once (e.g. see the Sequence.Iterate() tests (?!)), so we
+	  can't use the .Count() extension method to get the proper array size.
+	  Testing also showed this to be faster than using List<string>.
+	  Remove .Implode<T>(IEnumerable<T>, string, Action<StringBuilder,T>).
+
+2008-08-26  Jonathan Pryor  <jpryor@novell.com>
+
+	* Lambdas.cs: Flush (adds inline XML documentation; changes some method
+	  parameter names for consistency/easier code/doc generation).
+
+2008-08-22  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.Random().
+	* IEnumerable.cs: Add .Shuffle().  Thanks to Kim Johansson and 
+	  Bojan Rajkovic for the idea and helping with the implementation.
+
+2008-08-20  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.Comparer(), Check.List().
+	* IEnumerable.cs: Add SequenceCompare(), based on an idea from 
+	  Cory Nelson <phrosty@gmail.com>.
+
+2008-08-19  Jonathan Pryor  <jpryor@novell.com>
+
+	* Curry.cs: *Actually* Add the file.
+
+2008-08-19  Jonathan Pryor  <jpryor@novell.com>
+
+	* Lambda.cs: Oops; *actually* add Lambda.cs.
+
+2008-08-19  Jonathan Pryor  <jpryor@novell.com>
+
+	* Lambda.cs: Remove RecFunc(), as mklamba now generates it.
+
+2008-08-19  Jonathan Pryor  <jpryor@novell.com>
+
+	* Lambda.cs: Rename to Lambdas.cs, and add a new Lambda.cs which
+	  contains a new hand-written Lambda helper, RecFunc().
+
+2008-08-19  Jonathan Pryor  <jpryor@novell.com>
+
+	* Curry.cs: Added; currying extension methods for Action, Func.
+	* Lambda.cs, Tuples.cs: Flush (minor changes due to rewrites of 
+	  mklambda and mktuple
+
+2008-08-18  Jonathan Pryor  <jpryor@novell.com>
+
+	* String.cs: Rename Matches() to .MatchValues(), and add a .Matches()
+	  extension method which returns System.Text.RegularExpressions.Match
+	  instances.
+
+2008-08-17  Jonathan Pryor  <jpryor@novell.com>
+
+	* Lambda.cs: Added; helpers to create "standard" delegate types.
+
+2008-08-17  Jonathan Pryor  <jpryor@novell.com>
+
+	* String.cs: Rename NamedCaptures to CaptureNamedGroups.
+
+2008-08-17  Jonathan Pryor  <jpryor@novell.com>
+
+	* Int16.cs, Int64.cs, UInt16.cs, UInt32.cs, UInt64.cs: Added; extension
+	  methods .IsEven() and .IsOdd() for short, ushort, uint, long, ulong.
+	  Patch courtesy of Kim Johansson.
+	* Int32.cs: Add .IsEven() and .IsOdd().
+
+2008-08-14  Jonathan Pryor  <jpryor@novell.com>
+
+	* Tuple.cs, Tuples.cs: Remove some Gendarme warnings.
+
+2008-08-14  Bojan Rajkovic  <bojanr@brandeis.edu>
+
+	* String.cs: Added convenience regex methods: Matches,
+	  Captures and NamedCaptures.
+
+2008-08-08  Jonathan Pryor  <jpryor@novell.com>
+
+	* Stream.cs: Change Stream.Read(out string, int, Encoding) to
+	  Stream.Read(int, Encoding, out string) to conform to FxDG.
+
+2008-08-08  Jonathan Pryor  <jpryor@novell.com>
+
+	* Stream.cs: Add Stream.Write(byte[]) extension method.
+
+2008-08-08  Jonathan Pryor  <jpryor@novell.com>
+
+	* Stream.cs: Assert Steam.CanRead/Stream.CanWrite, as appropriate.
+
+2008-08-08  Jonathan Pryor  <jpryor@novell.com>
+
+	* Stream.cs: Add .Read() extension methods to extract a value from a stream.
+	  Thanks to Bojan Rajkovic for the patch.
+
+2008-08-08  Jonathan Pryor  <jpryor@novell.com>
+
+	* Stream.cs: Remove the Stream.AsEnumerable() extension
+	  method, as the semantics were incorrect.  Consider:
+	    IEnumerable<byte> b = stream.AsEnumerable(); 
+	    b.Skip(2).Apply(); 
+	    b.Skip(2).Apply();
+	  With Stream.AsEnumerable(), it would increase stream.Position by 4,
+	  thus the `b.Skip()` calls are remembered.  If you use _any_ other
+	  IEnumerable<T> type, the first .Skip() has no effect on the second
+	  .Skip().
+
+	  I couldn't think of a decent workaround, thus while it's "cute" the
+	  semantics of a Stream-backed IEnumerable<byte> don't match the
+	  semantics of other IEnumerable<byte>s, so I removed it.
+
+	  As a replacement, we'll add Stream.Read() and Stream.Write()
+	  extension methods, which will permit "cute" chaining (in the manner
+	  of C++ operator<< and operator>>), e.g.
+	  stream.Write(1).Write('a').Write(3.14);
+
+2008-08-07  Jonathan Pryor  <jpryor@novell.com>
+
+	* Stream.cs: use Stream.ReadByte() instead of Stream.Read() so that things
+	  behave sanely when calling .Skip() or .Take() (etc.) methods -- we don't
+	  want to consume too much of the stream.
+
+2008-08-07  Jonathan Pryor  <jpryor@novell.com>
+
+	* Stream.cs: Don't allocate extra memory for the stream buffer.
+
+2008-08-07  Jonathan Pryor  <jpryor@novell.com>
+
+	* Stream.cs: Added; .AsEnumerable() extension method for System.IO.Stream.
+
+2008-08-05  Jonathan Pryor  <jpryor@novell.com>
+
+	* Tuple.cs: Rename TupleExtensions to TupleRocks, for consistency with other
+	  extension method-containing types.
+
+2008-08-04  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Add Haskell-inspired (and related) methods:
+	  - (delete) .RemoveFirstOccurrence<A>(IEnumerable<A>,A)
+	  -          .RemoveFirstOccurrences<A>(IEnumerable<A>,A,int)
+
+2008-08-04  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Add Haskell-inspired (and related) methods:
+	  - (insert)    .Insert<A>(IEnumerable<A>,A)
+	  - (insertBy)  .Insert<A>(IEnumerable<A>,A,Func<A,A,int>)
+
+2008-08-04  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Add Haskell-inspired (and related) methods:
+	  - (zip)    .Zip<A,B>(IEnumerable<A>,IEnumerable<B>)
+	  - (zip3)   .Zip<A,B,C>(IEnumerable<A>,IEnumerable<B>,IEnumerable<C>)
+	  - (zip4)   .Zip<A,B,C,D>(IEnumerable<A>,IEnumerable<B>,IEnumerable<C>,IEnumerable<D>)
+	  - (unzip)  .Unzip<A,B>(IEnumerable<Tuple<A,B>>)
+	  - (unzip3) .Unzip<A,B,C>(IEnumerable<Tuple<A,B,C>>)
+	  - (unzip4) .Unzip<A,B,C,D>(IEnumerable<Tuple<A,B,C,D>>)
+
+2008-08-03  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.Values() method.
+	* IEnumerable.cs: Add Haskell-inspired (and related) methods:
+	  - (elemIndex)   .IndexOf<S>(IEnumerable<S>, S)
+	  -               .IndexOfAny<S>(IEnumerable<S>, params S[])
+	  -               .IndexOfAny<S>(IEnumerable<S>, IEnumerable<S>)
+	  - (elemIndices) .IndicesOf<S>(IEnumerable<S>, S)
+	  -               .IndicesOfAny<S>(IEnumerable<S>, params S[])
+	  -               .IndicesOfAny<S>(IEnumerable<S>, IEnumerable<S>)
+	  - (findIndex)   .FindIndex<S>(IEnumerable<S>, Func<S,bool>)
+	  - (findIndices) .FindIndices<S>(IEnumerable<S>, Func<S,bool>)
+
+2008-07-29  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.Predicate() method.
+	* IEnumerable.cs: Add .ToTuple() from Tuple.cs; add Haskell-inspired method:
+	  - (partition) .Partition<S>(IEnumerable<S>, Func<S,bool>)
+	* Tuple.cs: Move TupleExtensions.ToTuple() to IEnumerableRocks.
+
+2008-07-26  Jonathan Pryor  <jpryor@novell.com>
+
+	* Tuple.cs: Change extension method parameters names to `self` for
+	  consistency; improve parameter checking, exception types & messages.
+	* Tuples.cs: Add static Tuple.MaxValues readonly field, so that external
+	  code can determine the maximum number of supported Tuple values.  This is
+	  used by TuplesTest.ToTuple_TooManyValues().
+
+2008-07-25  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Add more Haskell-inspired extension methods:
+	  - (splitAt) .SplitAt<S>(IEnumerable<S>, int)
+		- (span) .Span<S>(IEnumerable<S>, Func<S, bool>)
+		- (break) .Break<S>(IEnumerable<S>, Func<S, bool>)
+		- (stripPrefix) .SkipPrefix<S>(IEnumerable<S>, IEnumerable<S>)
+		- (group) .HaskellGroup<S>(IEnumerable<S>)
+		- (inits) .InitialSegments<S>(IEnumerable<S>)
+		- (tails) .TrailingSegments<S>(IEnumerable<S>)
+		- (groupBy) .HaskellGroupBy<S>(IEnumerable<S>, Func<S,S,bool>)
+
+2008-07-25  Jonathan Pryor  <jpryor@novell.com>
+
+	* KeyValuePair.cs: Remove KeyValuePair type.
+	* IEnumerable.cs, Sequence.cs: Use Tuple`2 instead of KeyValuePair`2, for
+	  several reasons:
+	  - Future Haskell functions require tuples of up to 7 elements, e.g.
+	    unzip7, so (if these are to be supported) we need a Tuple type.
+	  - If we're going to have Tuples, then they should be integrated elsewhere
+	    and used consistently.
+	  - Tuple.Create(a,b) is *much* shorter than `new KeyValuePair<TA,TB>(a,b)`,
+	    simplifying the tests and the use of Sequence.GenerateReverse().
+	  - It removes the need for a potential future ambiguity, the static
+	    KeyValuePair class (added to contain .Create() and .Just() static
+	    methods to simplify KeyValuePair usage in the Sequence.GenerateReverse()
+	    tests).  Since KeyValuePair`2 is controlled by Microsoft, and nothing
+	    stops them from overriding this type in the future, `KeyValuePair` could
+	    result in compilation errors in the future.
+
+2008-07-25  Jonathan Pryor  <jpryor@novell.com>
+
+	* Tuple.cs, Tuples.cs: Added; implementation of Tuples and related types 
+	  of arity up to 4.
+	* KeyValuePair.cs: Add a .ToTuple() extension method.
+
+2008-07-25  Jonathan Pryor  <jpryor@novell.com>
+
+	* KeyValuePair.cs: Add a new KeyValuePair class to simplify the creation of
+	  KeyValuePair<TKey, TValue> instances (more type inferencing!);
+	  KeyValuePair.Create(K,V) creates a KeyValuePair<K,V>, while
+	  KeyValuePair.Just(K,V) creates a Nullable<KeyValuePair<K,V>> (the name
+	  "Just" comes from the Haskell Maybe type).
+	* Sequence.cs: Add more Haskell-inspired methods:
+	  - (unfoldr) .GenerateReverse<S,R>(S,Func<S,KeyValuePair<R,S>?>) -> IEnumerable<R>
+
+2008-07-24  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.Func().
+	* IEnumerable.cs: Add more Haskell-inspired extension methods:
+	  - (cycle) .Cycle<S>(IEnumerable<S>)
+	* Sequence.cs: Added; more Haskell-inspired methods that don't yet make
+	  sense as extension methods:
+	  - (iterate) Iterate<TSource>(TSource, Func<TSource, TSource>)
+	  - (repeat) Repeat<TSource>(TSource)
+
+2008-07-11  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Add .Convert(), which is a simpler interface for
+	  scanf(3)-like behavior than .ApplyPairs(), and also more limiting.
+	  Allows usage such as `"w 1 1.5".Words().Convert(out a, out b, out c)`
+	  where the default TypeConverter is used to perform the type
+	  conversion based on the target type, so 
+	    DateTime d; "1977-01-1".Scan (out d);
+	  properly converts the string to a DateTime instance.
+
+2008-07-11  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Add .ApplyPairs(), which is a pair-wise application of
+	  elements from an IEnumerable<T> to correspondingly indexed elements
+	  from an Action<T> array.  The scenario is in the spirit of scanf(3),
+	  where of sequence of values must be "scanned", converted, and stored
+	  into a series of variables.  .ApplyPairs() uses delegates for the
+	  conversion and storage portion.  So:
+	    char buf[10]; int n; double d;
+	    sscanf("w 1 1.5", "%s %d %lf", buf, &n, &d);
+	  would become:
+	    string s; int n; double d;
+	    "w 1 1.5".Words().ApplyPairs (
+	      v => s = v, 
+	      v => n = int.Parse (v), 
+	      v => d = double.Parse (v)
+	    ).Apply ();
+	  In this fashion the actual parsing of the input string is kept
+	  separate from conversion & storage, so any routine to split a string
+	  into a sequence could be used (e.g. string.Split(), regex, etc.).
+
+2008-06-25  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: 
+	  - Add additional Implode() overloads, so that we can efficiently 
+	    perform per-node selection/modification.  In particular, to
+	    convert {"foo","bar"} into the string "'foo', 'bar'" (helpful for
+	    SQL and debugging), we previously could do:
+	      list.Select(e => "'" + e + "'").Implode (", ")
+	    Which, while it works, has bad memory implications (extraneous
+	    temporary strings).  Instead, we can now do:
+	      list.Implode(", ", (b, e) => {b.Append("'").Append(e).Append("'");});
+	    which maintains the StringBuilder internally, so no garbage
+	    strings need be created.
+	  - Change .SelectAggregated() and .SelectReverseAggregated() to drop
+	    the `resultSelector` argument and instead return a
+	    KeyValuePair<TAccumulate, List<TResult>> directly.  This
+	    simplifies usage, removing a method parameter.
+	* KeyValuePair.cs: Added; extension methods for KeyValuePair<TKey, TValue>,
+	  in particular .Aggregate() so that we can easily chain the KeyValuePair`2
+	  return value of .SelectAggregated()/.SelectReverseAggregated() for test
+	  purposes.
+
+2008-06-23  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Add more Haskell-inspired extension methods:
+	  - (mapAccumL) .SelectAggregated<S,A,AR,R>(A,Func<A,S,KVP<A,AR>>,Func<A,List<AR>,R>)
+	  - (mapAccumR) .SelectReverseAggregated<S,A,AR,R>(A,Func<A,S,KVP<A,AR>,Func<A,List<AR>,R>)
+
+2008-06-23  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Add OrderByNatural() to allow easy "natural" ordering,
+	  and SortNatural() to allow easy "natural" sorting.
+	* NaturalStringComparer.cs: Added; IComparer<string> implementation 
+	  which sorts strings "naturaly", i.e. sorting embedded numbers 
+	  numerically instead of lexicographically.  This allows "1 2 10" to be 
+	  sorted as "1 2 10" instead of as "1 10 2" (lexicographic comparison).
+
+2008-06-19  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Remove Source() and rename SourceAndFunc() to
+	  SelfAndFunc().
+	* IEnumerable.cs, String.cs, TextReader.cs: s/source/self/g.
+
+2008-06-19  Jonathan Pryor  <jpryor@novell.com>
+
+	* String.cs: Remove EachLine(), re-implement Lines() in terms of
+	  TextReaderRocks.Lines(), and add a Words() extension method.
+	* TextReader.cs: Added; extension methods Lines() and Words() for
+	  TextReader instances.
+
+2008-06-18  Jonathan Pryor  <jpryor@novell.com>
+
+	* Int32.cs: Remove [Obsolete] methods.
+
+2008-06-18  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Rename AggregateWithHistory() to AggregateHistory()
+	  and AggregateReverseWithHistory() to AggregateReverseHistory().
+
+2008-06-18  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: 
+	  - Change semantics of AggregateReverse(), AggregateWithHistory(), 
+	    AggregateReverseWithHistory() so that an empty sequence is invalid 
+	    only if a seed value isn't provided.  This matches the semantics 
+	    of Aggregate().  
+	  - Fix AggregateWithHistory() and AggregateReverseWithHistory() so that
+	    parameter-checking exceptions are emitted immediately, not delayed.
+	  - Fix *WithHistory() so they don't return too many elements.
+	  - Parameter name cleanup/consistency.
+
+2008-06-18  Jonathan Pryor  <jpryor@novell.com>
+
+	* IEnumerable.cs: Rename Join() to Implode(), as .NET already provides a
+	  Join() function with completely different semantics (SQL JOIN, i.e. list
+	  intersection), so this should remove ambiguity/confusion.
+
+2008-06-17  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.Source().
+	* IEnumerable.cs: Add error checking to .Sort() methods.  Add
+	  .SelectFromEach() overloads to accept up to 4 lists (i.e. Haskell zip, 
+	  zip3, and zip4 are now supported).  Change semantics of .SelectFromEach()
+	  to accept empty lists (previously this would throw an
+	  InvalidOperationException, but Haskell permits empty lists so why not?).
+
+2008-06-17  Jonathan Pryor  <jpryor@novell.com>
+
+	* Check.cs: Add Check.SourceAndFunc().
+	* Int32.cs: Obsolete Times(int,Action<int>), UpTo(int,int,Action<int>),
+	  DownTo(int,int,Action<int>), Step(int,int,int,Action<int>), and replace
+	  with overloads that don't take an Action<int> parameter but instead return
+	  an IEnumerable<int> which can be used with
+	  Apply<T>(IEnumerable<T>,Action<T>).
+	* String.cs: Add `IEnumerable<string> Lines (string self)` and overloads.
+	  Obsolete EachLine().
+	* IEnumerable.cs: 
+	  - Fix Repeat() so that it does the null check before .MoveNext() is 
+	    called on the iterator.
+	  - Add Apply(IEnumerable,Action) and Apply() methods to allow inserting
+	    "side-effect" methods into an extension method "chain", e.g.
+	      1.UpTo(5)
+	        .Apply (Console.WriteLine)  // original
+	        .Select (n => 2*n)          // multiply by 2
+	        .Apply (Connsole.WriteLine) // final
+	        .Apply ();                  // do it now, not later.
+	  - It was pointed out that, to sort an IEnumerable<int> with 20million 
+	    elements, adding them to a List<int> + sorting was faster than using
+	    .OrderBy(n=>n) (~2s vs. 9s), so provide a Sort extension method for
+	    simple sorting needs.
+	  - Add `List<List<T>> ToList<T>(IEnumerable<IEnumerable<T>>) (to help with
+	    testing Transpose(), below).
+	  - Add slew of Haskell-inspired extension methods:
+	    - (zip) .SelectFromEach<T1,T2,TR>(IEnumerable<T2>,Func<T1,T2,TR>)
+	    - (init) .ExceptLast(), .ExceptLast(int)
+	    - (intersperse) .Intersperse<TSource>(TSource)
+	    - (intercalate) Intersperse<TSource>(IEnumerable<IEnumerable<TSource>>,IEnumerable<TSource>)
+	    - (transpose) Transpose<TSource>(IEnumerable<IEnumerable<TSource>>)
+	    - (foldr1) .AggregateReverse<T>(Func<T,T,T>)
+	    - (foldr) .AggregateReverse<TS,TA>(TA,Func<TA,TS,TA>)
+	    - .AggregateReverse<TS,TA,TR>(TA,Func<TA,TS,TA>,Func<TA,TR>)
+	    - (concat) .Concat<TSource>(params IEnumerable<TSource>[])
+	    - .Concat<TSource>(IEnumerable<IEnumerable<TSource>>)
+	    - (and) And(IEnumerable<bool>)
+	    - (or) Or(IEnumerable<bool>)
+	    - (scanl1) .AggregateWithHistory<T>(Func<T,T,T>)
+	    - (scanl) .AggregateWithHistory<TS,TA>(TA,Func<T,T,T>)
+	    - .AggregateWithHistory<TS,TA,TR>(TA,Func<TA,TS,TA>, Func<TA,TR>)
+	    - (scanr1) .AggregateReverseWithHistory<T>(Func<T,T,T>)
+	    - (scanr) .AggregateReverseWithHistory<TS,TA>(TA,Func<TA,TS,TA>)
+	    - .AggregateReverseWithHistory<TS,TA,TR>(TA,Func<TA,TS,TA>, Func<TA,TR>)
+
+2007-11-17  Jb Evain  <jbevain@novell.com>
+
+	* String.cs: Add ToEnum.
+
+	* ICustomAttributeProvider.cs: Add generic versions of GetCustomAttributes
+	and GetCustomAttribute.
+
+2007-11-15  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* IEnumerable.cs: Replaced PathCombine with a version that reduce
+	the number of validation and temporary string allocations.

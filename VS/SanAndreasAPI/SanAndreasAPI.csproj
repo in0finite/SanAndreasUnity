@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{40A18E42-4CC5-4F09-9C1F-CC200CB6A6A8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SanAndreasAPI</RootNamespace>
+    <AssemblyName>SanAndreasAPI</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Assets\Plugins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>C:\Program Files\Unity\Editor\Data\Managed\UnityEngine\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cadenza.Core\Cadenza.ComponentModel\SynchronizeInvokeCoda.cs" />
+    <Compile Include="Cadenza.Core\Cadenza.Constraints\Arguments.cs" />
+    <Compile Include="Cadenza.Core\Cadenza.Numerics\ExpressionMath.cs" />
+    <Compile Include="Cadenza.Core\Cadenza.Reflection\ILGeneratorCoda.cs" />
+    <Compile Include="Cadenza.Core\Cadenza.Threading\ReaderWriterLockSlimCoda.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\BidirectionalDictionary.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\BidirectionalLookup.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\CachedSequence.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\CollectionCoda.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\DelegatedEqualityComparer.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\DictionaryCoda.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\EnumerableCoda.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\IMutableLookup.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\KeyValuePairCoda.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\LambdaComparer.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\LinkedListCoda.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\ListCoda.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\MutableLookup.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\OrderedDictionary.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\QueueCoda.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\ReadOnlyDictionary.cs" />
+    <Compile Include="Cadenza\Cadenza.Collections\SequenceComparison.cs" />
+    <Compile Include="Cadenza\Cadenza.ComponentModel\NotifyingProperty.cs" />
+    <Compile Include="Cadenza\Cadenza.IO\EnumerableValueReader.cs" />
+    <Compile Include="Cadenza\Cadenza.IO\IValueReader.cs" />
+    <Compile Include="Cadenza\Cadenza.IO\IValueWriter.cs" />
+    <Compile Include="Cadenza\Cadenza.IO\StreamCoda.cs" />
+    <Compile Include="Cadenza\Cadenza.IO\StreamConverter.cs" />
+    <Compile Include="Cadenza\Cadenza.IO\SystemStreamConverter.cs" />
+    <Compile Include="Cadenza\Cadenza.IO\TextReaderCoda.cs" />
+    <Compile Include="Cadenza\Cadenza.IO\TextValueReader.cs" />
+    <Compile Include="Cadenza\Cadenza.IO\ValueReader.cs" />
+    <Compile Include="Cadenza\Cadenza.Numerics\Math.cs" />
+    <Compile Include="Cadenza\Cadenza.Reflection\CustomAttributeProviderCoda.cs" />
+    <Compile Include="Cadenza\Cadenza\ActionCoda.cs" />
+    <Compile Include="Cadenza\Cadenza\ActionCoda.g.cs" />
+    <Compile Include="Cadenza\Cadenza\Check.cs" />
+    <Compile Include="Cadenza\Cadenza\Either.cs" />
+    <Compile Include="Cadenza\Cadenza\Either.g.cs" />
+    <Compile Include="Cadenza\Cadenza\EventHandlerCoda.cs" />
+    <Compile Include="Cadenza\Cadenza\FuncCoda.cs" />
+    <Compile Include="Cadenza\Cadenza\FuncCoda.g.cs" />
+    <Compile Include="Cadenza\Cadenza\Int16Coda.cs" />
+    <Compile Include="Cadenza\Cadenza\Int32Coda.cs" />
+    <Compile Include="Cadenza\Cadenza\Int64Coda.cs" />
+    <Compile Include="Cadenza\Cadenza\JaggedArrayCoda.cs" />
+    <Compile Include="Cadenza\Cadenza\Lambda.cs" />
+    <Compile Include="Cadenza\Cadenza\Lambda.g.cs" />
+    <Compile Include="Cadenza\Cadenza\Maybe.cs" />
+    <Compile Include="Cadenza\Cadenza\NaturalStringComparer.cs" />
+    <Compile Include="Cadenza\Cadenza\NullableCoda.cs" />
+    <Compile Include="Cadenza\Cadenza\ObjectCoda.cs" />
+    <Compile Include="Cadenza\Cadenza\RectangularArrayCoda.cs" />
+    <Compile Include="Cadenza\Cadenza\Sequence.cs" />
+    <Compile Include="Cadenza\Cadenza\Sequence.Tools.cs" />
+    <Compile Include="Cadenza\Cadenza\StringCoda.cs" />
+    <Compile Include="Cadenza\Cadenza\Tuple.cs" />
+    <Compile Include="Cadenza\Cadenza\Tuple.g.cs" />
+    <Compile Include="Cadenza\Cadenza\TupleCoda.cs" />
+    <Compile Include="Cadenza\Cadenza\TupleCoda.g.cs" />
+    <Compile Include="Cadenza\Cadenza\TypeCoda.cs" />
+    <Compile Include="Cadenza\Cadenza\UInt16Coda.cs" />
+    <Compile Include="Cadenza\Cadenza\UInt32Coda.cs" />
+    <Compile Include="Cadenza\Cadenza\UInt64Coda.cs" />
+    <Compile Include="Cadenza\Cadenza\WeakReference.cs" />
+    <Compile Include="ConsoleLog.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SocketClient.cs" />
+    <Compile Include="SocketCommand.cs" />
+    <Compile Include="SocketCommandData.cs" />
+    <Compile Include="SocketExtensions.cs" />
+    <Compile Include="SocketGlobals.cs" />
+    <Compile Include="SocketMessage.cs" />
+    <Compile Include="SocketServer.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

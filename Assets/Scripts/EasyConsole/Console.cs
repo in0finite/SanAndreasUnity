@@ -1,10 +1,13 @@
+using Fclp;
 using Homans.Console;
 using Homans.Containers;
 using HtmlAgilityPack;
+using SanAndreasAPI;
 using SanAndreasUnity.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
@@ -119,6 +122,20 @@ public class Console : MonoBehaviour
         RegisterParser(typeof(string), new ParserCallback(parseString));
 
         consoleGUI = GetComponent<ConsoleGUI>();
+    }
+
+    private void Start()
+    {
+        string[] args = Environment.GetCommandLineArgs();
+
+        if (args.Any(x => x.Contains("-h") || x.Contains("-handlelog")))
+        {
+            var p = new FluentCommandLineParser();
+
+            p.Setup<bool>('h', "handlelog").Callback(x => m_handleLog = x);
+
+            p.Parse(args);
+        }
     }
 
     /*private void OnLevelWasLoaded(int id)
@@ -895,10 +912,12 @@ public class Console : MonoBehaviour
 
     private void HandleLog(string logString, string stackTrace, LogType type)
     {
-        l_consoleLog.Add(new ConsoleLog(logString, stackTrace, type));
+        ConsoleLog log = new ConsoleLog(logString, stackTrace, type);
+        l_consoleLog.Add(log);
+        Sockets.SendLog(log);
     }
 
-    private string GenerateHTML()
+    private string GenerateHTML(bool indent = false)
     {
         var doc = new HtmlDocument();
         var node = HtmlNode.CreateNode("<html><head></head><body></body></html>");
@@ -945,7 +964,10 @@ public class Console : MonoBehaviour
 
         doc.DocumentNode.AppendChild(node);
 
-        return doc.DocumentNode.IndentHtml();
+        if (indent)
+            return doc.DocumentNode.IndentHtml();
+
+        return doc.DocumentNode.OuterHtml;
     }
 
     private string GetHTMLColor(LogType type)
@@ -968,24 +990,5 @@ public class Console : MonoBehaviour
                 return "color:darkgoldenrod;";
         }
         return "";
-    }
-}
-
-public class ConsoleLog
-{
-    public string logString;
-    public string stackTrace;
-    public LogType logType;
-
-    private ConsoleLog()
-    {
-    }
-
-    public ConsoleLog(string logString, string stackTrace, LogType logType)
-
-    {
-        this.logString = logString;
-        this.stackTrace = stackTrace;
-        this.logType = logType;
     }
 }

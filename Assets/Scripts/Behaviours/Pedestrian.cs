@@ -100,22 +100,22 @@ namespace SanAndreasUnity.Behaviours
             set { transform.localPosition = value; }
         }
 
-#if UNITY_EDITOR
+        /*#if UNITY_EDITOR
 
-        private void OnApplicationQuit()
-        {
-            // Patch... (I have to search deeper what's going on, I think that the Editor is preserving changes with flags)
+                private void OnApplicationQuit()
+                {
+                    // Patch... (I have to search deeper what's going on, I think that the Editor is preserving changes with flags)
 
-            var unnamedBug = transform.Find("unnamed");
+                    var unnamedBug = transform.Find("unnamed");
 
-            foreach (var go in gameObject.GetComponents<FrameContainer>())
-                Destroy(go);
+                    foreach (var go in gameObject.GetComponents<FrameContainer>())
+                        Destroy(go);
 
-            if (unnamedBug != null)
-                Destroy(unnamedBug);
-        }
+                    if (unnamedBug != null)
+                        Destroy(unnamedBug);
+                }
 
-#endif
+        #endif*/
 
         private void Start()
         {

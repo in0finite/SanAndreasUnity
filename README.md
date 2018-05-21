@@ -42,6 +42,12 @@ F10 - Toggle FPS
 
 F9 - Toggle velocimeter
 
+## CLI
+
+* -handlelog // -h => Enables log handling (in HTML)
+
+* -console // -c => Display a console to see what is Unity outputting
+
 ## Here is a list of what I think should be done next
 
 * Animations must be loaded/played by index – because different anim definition groups (man, woman, etc) use different anim names ( walk_civi, woman_walknorm, respectively).
@@ -130,7 +136,7 @@ F9 - Toggle velocimeter
     - Animals (mobs)
     - Terrain modificable through digging & explosions
 
-### Fixes
+### Bugs to fix
 
 - Weird circular shadow appears when drving and the car passes next to a building that projects a shadow (low quality)
 

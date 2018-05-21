@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{37880451-3753-44B1-81DE-03C21E5D603B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cadenza.Tests</RootNamespace>
+    <AssemblyName>Cadenza-Tests</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <HintPath>..\..\..\lib\nunit\nunit.framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cadenza.Collections\BidirectionalDictionaryTest.cs" />
+    <Compile Include="Cadenza.Collections\BidirectionalLookupTest.cs" />
+    <Compile Include="Cadenza.Collections\CachedSequenceTest.cs" />
+    <Compile Include="Cadenza.Collections\CollectionCodaTests.cs" />
+    <Compile Include="Cadenza.Collections\CollectionContract.cs" />
+    <Compile Include="Cadenza.Collections\DelegatedEqualityComparerTest.cs" />
+    <Compile Include="Cadenza.Collections\DictionaryCodaTest.cs" />
+    <Compile Include="Cadenza.Collections\DictionaryContract.cs" />
+    <Compile Include="Cadenza.Collections\EnumerableCodaTest.cs" />
+    <Compile Include="Cadenza.Collections\EnumerableContract.cs" />
+    <Compile Include="Cadenza.Collections\KeyValuePairCodaTest.cs" />
+    <Compile Include="Cadenza.Collections\LinkedListCodaTest.cs" />
+    <Compile Include="Cadenza.Collections\ListCodaTest.cs" />
+    <Compile Include="Cadenza.Collections\ListContract.cs" />
+    <Compile Include="Cadenza.Collections\MutableLookupContract.cs" />
+    <Compile Include="Cadenza.Collections\MutableLookupTest.cs" />
+    <Compile Include="Cadenza.Collections\OrderedDictionaryTest.cs" />
+    <Compile Include="Cadenza.Collections\QueueCodaTest.cs" />
+    <Compile Include="Cadenza.Collections\ReadOnlyDictionaryTest.cs" />
+    <Compile Include="Cadenza.ComponentModel\NotifyingPropertyTest.cs" />
+    <Compile Include="Cadenza.IO\EnumerableValueReaderTest.cs" />
+    <Compile Include="Cadenza.IO\StreamCodaTest.cs" />
+    <Compile Include="Cadenza.IO\SystemStreamConverterTest.cs" />
+    <Compile Include="Cadenza.IO\TextReaderCodaTest.cs" />
+    <Compile Include="Cadenza.IO\TextValueReaderTest.cs" />
+    <Compile Include="Cadenza.Numerics\MathTest.cs" />
+    <Compile Include="Cadenza.Numerics\MathContract.cs" />
+    <Compile Include="Cadenza.Reflection\CustomAttributeProviderCodaTest.cs" />
+    <Compile Include="Cadenza\ActionCodaTest.cs" />
+    <Compile Include="Cadenza\AssemblyInfo.cs" />
+    <Compile Include="Cadenza\BaseRocksFixture.cs" />
+    <Compile Include="Cadenza\EitherTest.cs" />
+    <Compile Include="Cadenza\EquatableContract.cs" />
+    <Compile Include="Cadenza\FuncCodaTest.cs" />
+    <Compile Include="Cadenza\Int16CodaTest.cs" />
+    <Compile Include="Cadenza\Int32CodaTest.cs" />
+    <Compile Include="Cadenza\Int64CodaTest.cs" />
+    <Compile Include="Cadenza\JaggedArrayCodaTest.cs" />
+    <Compile Include="Cadenza\LambdaTest.cs" />
+    <Compile Include="Cadenza\MaybeTest.cs" />
+    <Compile Include="Cadenza\NaturalStringComparerTest.cs" />
+    <Compile Include="Cadenza\NullableCodaTest.cs" />
+    <Compile Include="Cadenza\ObjectCodaTest.cs" />
+    <Compile Include="Cadenza\RectangularArrayCodaTest.cs" />
+    <Compile Include="Cadenza\SequenceTest.cs" />
+    <Compile Include="Cadenza\StringCodaTest.cs" />
+    <Compile Include="Cadenza\TupleCodaTest.cs" />
+    <Compile Include="Cadenza\TypeCodaTest.cs" />
+    <Compile Include="Cadenza\UInt16CodaTest.cs" />
+    <Compile Include="Cadenza\UInt32CodaTest.cs" />
+    <Compile Include="Cadenza\UInt64CodaTest.cs" />
+    <Compile Include="Cadenza.Collections\SequenceComparisonTests.cs" />
+    <Compile Include="Cadenza\WeakReferenceTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cadenza.csproj">
+      <Project>{F656F792-2CDE-4E17-BB5F-6A6F1C266CB8}</Project>
+      <Name>Cadenza</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

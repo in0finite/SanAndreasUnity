@@ -1,0 +1,218 @@
+<Overview>
+  <Assemblies>
+    <Assembly Name="Cadenza.Core" Version="0.1.0.0">
+      <Attributes>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyCompany("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyConfiguration("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyCopyright("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyDescription("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyProduct("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyTitle("Cadenza.Constraints")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyTrademark("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Runtime.CompilerServices.RuntimeCompatibility(WrapNonExceptionThrows=true)</AttributeName>
+        </Attribute>
+      </Attributes>
+    </Assembly>
+  </Assemblies>
+  <Remarks>To be added.</Remarks>
+  <Copyright>To be added.</Copyright>
+  <Types>
+    <Namespace Name="Cadenza.ComponentModel">
+      <Type Name="SynchronizeInvokeCoda" Kind="Class" />
+    </Namespace>
+    <Namespace Name="Cadenza.Constraints">
+      <Type Name="Arguments" Kind="Class" />
+    </Namespace>
+    <Namespace Name="Cadenza.Numerics">
+      <Type Name="ExpressionMath`1" DisplayName="ExpressionMath&lt;T&gt;" Kind="Class" />
+    </Namespace>
+    <Namespace Name="Cadenza.Reflection">
+      <Type Name="ILGeneratorCoda" Kind="Class" />
+    </Namespace>
+    <Namespace Name="Cadenza.Threading">
+      <Type Name="ReaderWriterLockSlimCoda" Kind="Class" />
+      <Type Name="ReaderWriterLockSlimCoda+LockHandle" Kind="Structure" />
+    </Namespace>
+  </Types>
+  <Title>Cadenza.Constraints</Title>
+  <ExtensionMethods>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.ComponentModel.ISynchronizeInvoke" />
+      </Targets>
+      <Member MemberName="AutoInvoke">
+        <MemberSignature Language="C#" Value="public static void AutoInvoke (this System.ComponentModel.ISynchronizeInvoke self, Action action);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig void AutoInvoke(class System.ComponentModel.ISynchronizeInvoke self, class System.Action action) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Void</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="self" Type="System.ComponentModel.ISynchronizeInvoke" RefType="this" />
+          <Parameter Name="action" Type="System.Action" />
+        </Parameters>
+        <Docs>
+          <param name="self">To be added.</param>
+          <param name="action">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Cadenza.ComponentModel.SynchronizeInvokeCoda" Member="M:Cadenza.ComponentModel.SynchronizeInvokeCoda.AutoInvoke(System.ComponentModel.ISynchronizeInvoke,System.Action)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.ComponentModel.ISynchronizeInvoke" />
+      </Targets>
+      <Member MemberName="AutoInvoke">
+        <MemberSignature Language="C#" Value="public static object AutoInvoke (this System.ComponentModel.ISynchronizeInvoke self, Delegate method, object[] args);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig object AutoInvoke(class System.ComponentModel.ISynchronizeInvoke self, class System.Delegate method, object[] args) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Object</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="self" Type="System.ComponentModel.ISynchronizeInvoke" RefType="this" />
+          <Parameter Name="method" Type="System.Delegate" />
+          <Parameter Name="args" Type="System.Object[]">
+            <Attributes>
+              <Attribute>
+                <AttributeName>System.ParamArray</AttributeName>
+              </Attribute>
+            </Attributes>
+          </Parameter>
+        </Parameters>
+        <Docs>
+          <param name="self">To be added.</param>
+          <param name="method">To be added.</param>
+          <param name="args">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Cadenza.ComponentModel.SynchronizeInvokeCoda" Member="M:Cadenza.ComponentModel.SynchronizeInvokeCoda.AutoInvoke(System.ComponentModel.ISynchronizeInvoke,System.Delegate,System.Object[])" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.AsyncCallback" />
+      </Targets>
+      <Member MemberName="Invoked">
+        <MemberSignature Language="C#" Value="public static AsyncCallback Invoked (this AsyncCallback self, System.ComponentModel.ISynchronizeInvoke obj);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class System.AsyncCallback Invoked(class System.AsyncCallback self, class System.ComponentModel.ISynchronizeInvoke obj) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.AsyncCallback</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="self" Type="System.AsyncCallback" RefType="this" />
+          <Parameter Name="obj" Type="System.ComponentModel.ISynchronizeInvoke" />
+        </Parameters>
+        <Docs>
+          <param name="self">To be added.</param>
+          <param name="obj">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Cadenza.ComponentModel.SynchronizeInvokeCoda" Member="M:Cadenza.ComponentModel.SynchronizeInvokeCoda.Invoked(System.AsyncCallback,System.ComponentModel.ISynchronizeInvoke)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Reflection.Emit.ILGenerator" />
+      </Targets>
+      <Member MemberName="EmitTypeof">
+        <MemberSignature Language="C#" Value="public static void EmitTypeof (this System.Reflection.Emit.ILGenerator self, Type type);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig void EmitTypeof(class System.Reflection.Emit.ILGenerator self, class System.Type type) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Void</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="self" Type="System.Reflection.Emit.ILGenerator" RefType="this" />
+          <Parameter Name="type" Type="System.Type" />
+        </Parameters>
+        <Docs>
+          <param name="self">To be added.</param>
+          <param name="type">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Cadenza.Reflection.ILGeneratorCoda" Member="M:Cadenza.Reflection.ILGeneratorCoda.EmitTypeof(System.Reflection.Emit.ILGenerator,System.Type)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Threading.ReaderWriterLockSlim" />
+      </Targets>
+      <Member MemberName="Read">
+        <MemberSignature Language="C#" Value="public static Cadenza.Threading.ReaderWriterLockSlimCoda.LockHandle Read (this System.Threading.ReaderWriterLockSlim self);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig valuetype Cadenza.Threading.ReaderWriterLockSlimCoda/LockHandle Read(class System.Threading.ReaderWriterLockSlim self) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Cadenza.Threading.ReaderWriterLockSlimCoda+LockHandle</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="self" Type="System.Threading.ReaderWriterLockSlim" RefType="this" />
+        </Parameters>
+        <Docs>
+          <param name="self">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Cadenza.Threading.ReaderWriterLockSlimCoda" Member="M:Cadenza.Threading.ReaderWriterLockSlimCoda.Read(System.Threading.ReaderWriterLockSlim)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Threading.ReaderWriterLockSlim" />
+      </Targets>
+      <Member MemberName="UpgradeableRead">
+        <MemberSignature Language="C#" Value="public static Cadenza.Threading.ReaderWriterLockSlimCoda.LockHandle UpgradeableRead (this System.Threading.ReaderWriterLockSlim self);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig valuetype Cadenza.Threading.ReaderWriterLockSlimCoda/LockHandle UpgradeableRead(class System.Threading.ReaderWriterLockSlim self) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Cadenza.Threading.ReaderWriterLockSlimCoda+LockHandle</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="self" Type="System.Threading.ReaderWriterLockSlim" RefType="this" />
+        </Parameters>
+        <Docs>
+          <param name="self">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Cadenza.Threading.ReaderWriterLockSlimCoda" Member="M:Cadenza.Threading.ReaderWriterLockSlimCoda.UpgradeableRead(System.Threading.ReaderWriterLockSlim)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Threading.ReaderWriterLockSlim" />
+      </Targets>
+      <Member MemberName="Write">
+        <MemberSignature Language="C#" Value="public static Cadenza.Threading.ReaderWriterLockSlimCoda.LockHandle Write (this System.Threading.ReaderWriterLockSlim self);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig valuetype Cadenza.Threading.ReaderWriterLockSlimCoda/LockHandle Write(class System.Threading.ReaderWriterLockSlim self) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Cadenza.Threading.ReaderWriterLockSlimCoda+LockHandle</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="self" Type="System.Threading.ReaderWriterLockSlim" RefType="this" />
+        </Parameters>
+        <Docs>
+          <param name="self">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Cadenza.Threading.ReaderWriterLockSlimCoda" Member="M:Cadenza.Threading.ReaderWriterLockSlimCoda.Write(System.Threading.ReaderWriterLockSlim)" />
+      </Member>
+    </ExtensionMethod>
+  </ExtensionMethods>
+</Overview>
