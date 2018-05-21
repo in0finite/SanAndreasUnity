@@ -150,7 +150,7 @@ public class Console : MonoBehaviour
     /*private void OnLevelWasLoaded(int id)
     {
         List<string> list = new List<string>();
-        foreach (KeyValuePair<string, Console.DirectCommand> current in this.directCommands)
+        foreach (KeyValuePair<string, DirectCommand> current in this.directCommands)
         {
             if (!current.Value.instance.IsAlive || current.Value.instance.Target == null)
             {
@@ -351,7 +351,7 @@ public class Console : MonoBehaviour
 
     private void InvokeMethodOnComponent(string[] args, string[] hierarchy, string componentName, string methodName)
     {
-        string name = Console.BuildGameObjectPath(hierarchy);
+        string name = BuildGameObjectPath(hierarchy);
         GameObject gameObject = GameObject.Find(name);
         if (gameObject == null)
         {
@@ -882,7 +882,7 @@ public class Console : MonoBehaviour
         {
             Print("Invalid path. Component is not present");
         }
-        string text3 = Console.BuildGameObjectPath(hierarchy);
+        string text3 = BuildGameObjectPath(hierarchy);
         GameObject gameObject = GameObject.Find(text3);
         if (gameObject == null)
         {

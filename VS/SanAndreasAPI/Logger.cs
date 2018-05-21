@@ -176,13 +176,29 @@ namespace SanAndreasAPI
     {
         public static string DetailedMessage(this ConsoleLog log)
         {
-            return DetailedMessage(log.logString, log.stackTrace, log.logType);
+            string message = log.logString,
+                   stacktrace = log.stackTrace;
+
+            LogType t = log.logType;
+
+            StringBuilder stackTrace = new StringBuilder();
+
+            string name = Thread.CurrentThread.Name;
+            string str = string.Format("[{0}] {1}/{2}: ", DateTime.Now.ToString("hh:mm:ss"), string.IsNullOrEmpty(name) ? "Main" : name, t.ToString());
+
+            foreach (string line in log.stackTrace.Split('\n'))
+                stackTrace.AppendLine(string.Format("{0}{1}", new string(' ', str.Length), line));
+
+            bool printStackTrace = !string.IsNullOrEmpty(stacktrace) && t != LogType.Log;
+            str += message + (printStackTrace ? '\n' : new char());
+
+            return string.Format("{0}{1}", str, printStackTrace ? string.Format("\n{0}\n", stackTrace.ToString()) : "");
         }
 
         public static string DetailedMessage(this string message, string stacktrace, LogType t)
         {
             string name = Thread.CurrentThread.Name;
-            return string.Format("[{0}] {1}/{2}: {3}{4}", DateTime.Now.ToString("hh:mm:ss"), string.IsNullOrEmpty(name) ? "Main" : name, t.ToString(), message, !string.IsNullOrEmpty(stacktrace) && t != LogType.Log ? string.Format("\n{0}\n", stacktrace) : "");
+            return string.Format("[{0}] {1}/{2}: {3}{4}", DateTime.Now.ToString("hh:mm:ss"), string.IsNullOrEmpty(name) ? "Main" : name, t.ToString(), message, !string.IsNullOrEmpty(stacktrace) && t != LogType.Log ? string.Format("{0}\n", stacktrace) : "");
         }
 
         public static string TryFormat(this string message, params object[] pars)

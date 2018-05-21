@@ -185,9 +185,9 @@ F9 - Toggle velocimeter
 
 - HTML (from logger) indent is not perfect
 
-- I'm not sure if CLI is running properly
-
 - Curent socket system only allows messages of 8KBs
+
+- Console Application is not launching on build (CLI was checked and work properly)
 
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is going to **Assets > Reimport all**
 
