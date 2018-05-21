@@ -44,6 +44,10 @@ sysinfo.txt
 .sonarqube/
 SonarQube/
 Build/Build_Data/StreamingAssets/
+Assets/StreamingAssets/*.log
+Assets/StreamingAssets/*.html
+
+# I have to except one html & log as example
 
 **UnityVS**
 
