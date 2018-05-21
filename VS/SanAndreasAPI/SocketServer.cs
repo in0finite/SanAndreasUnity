@@ -454,7 +454,7 @@ namespace SanAndreasAPI
                             ulong genID = 1;
 
                             //Give id in a range...
-                            bool b = routingTable.Keys.FindFirstMissingNumberFromSequence(out genID, new MinMax<ulong>(1, (ulong)routingTable.Count));
+                            bool b = routingTable.Keys.FindFirstMissingNumberFromSequenceUlong(out genID, new MinMax<ulong>(1, (ulong)routingTable.Count));
                             myLogger.Log("Adding #{0} client to routing table!", genID); //Esto ni parece funcionar bien
 
                             SendToClient(SocketManager.SendConnId(genID), handler);

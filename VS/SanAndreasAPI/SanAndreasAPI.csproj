@@ -55,10 +55,6 @@
     <Compile Include="SocketServer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cadenza.Core\Cadenza.Core.csproj">
-      <Project>{1166a378-160e-4735-bf14-6354401031e3}</Project>
-      <Name>Cadenza.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cadenza\Cadenza.csproj">
       <Project>{47E72C4F-9F32-48AA-96A3-FE422DEB1ED6}</Project>
       <Name>Cadenza</Name>

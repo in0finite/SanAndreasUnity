@@ -109,10 +109,11 @@ namespace Cadenza.Numerics
                 defaultProvider = (Math<T>)Activator.CreateInstance(defaultType);
             else
             {
-                Assembly a = Assembly.Load("Cadenza.Core");
+                /*Assembly a = Assembly.Load("Cadenza.Core");
                 Type gem = a.GetType("Cadenza.Numerics.ExpressionMath`1");
                 Type em = gem.MakeGenericType(typeof(T));
-                defaultProvider = (Math<T>)Activator.CreateInstance(em);
+                defaultProvider = (Math<T>)Activator.CreateInstance(em);*/
+                defaultProvider = new ExpressionMath<T>();
             }
         }
 

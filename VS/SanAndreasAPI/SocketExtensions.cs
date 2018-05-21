@@ -108,6 +108,37 @@ namespace SanAndreasAPI
             }
         }
 
+        public static bool FindFirstMissingNumberFromSequenceUlong(this IEnumerable<ulong> arr, out ulong n, MinMax<ulong> mnmx = null)
+        {
+            //Dupe
+
+            if (mnmx != null)
+            {
+                arr.Add(mnmx.min);
+                arr.Add(mnmx.max);
+            }
+
+            IOrderedEnumerable<ulong> list = arr.OrderBy(x => x);
+
+            //End dupe
+
+            bool b = false;
+            n = 0;
+
+            foreach (ulong num in list)
+            {
+                b = num - n > 1;
+                if (b)
+                    break;
+                else
+                    n = num;
+            }
+
+            n += 1;
+
+            return b;
+        }
+
         public static bool FindFirstMissingNumberFromSequence<T>(this IEnumerable<T> arr, out T n, MinMax<T> mnmx = null)
         {
             //Dupe
@@ -130,18 +161,19 @@ namespace SanAndreasAPI
             //End dupe
 
             bool b = false;
-            n = default(T);
+            object n1 = null;
 
             foreach (object num in list)
             {
-                b = ExpressionMath<object>.Default.GreaterThan(ExpressionMath<object>.Default.Subtract(num, n), 1);
+                b = ExpressionMath<object>.Default.GreaterThan(ExpressionMath<object>.Default.Subtract(num, n1 == null ? 0 : n1), 1);
                 if (b)
                     break;
                 else
-                    n = (T)num;
+                    n1 = (T)num;
             }
 
-            n = (T)ExpressionMath<object>.Default.Add(n, 1);
+            n1 = (T)ExpressionMath<object>.Default.Add(n1, 1);
+            n = (T)n1;
 
             return b;
         }
