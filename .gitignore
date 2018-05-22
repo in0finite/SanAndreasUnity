@@ -47,6 +47,8 @@ Build/Build_Data/StreamingAssets/
 Assets/StreamingAssets/*.log
 Assets/StreamingAssets/*.html
 Assets/StreamingAssets/*.meta
+Assets/FromAssetStore/LlamaSoftware/LightLod/Demo/
+Assets/FromAssetStore/SpriteLights/Scenes/
 
 # I have to except one html & log as example
 
