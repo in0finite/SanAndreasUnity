@@ -1,4 +1,5 @@
 ﻿using SanAndreasUnity.Importing.Vehicles;
+using SanAndreasUnity.Utilities;
 using System.Linq;
 using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
@@ -27,6 +28,64 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 #endif
     {
         private static int _sLayer = -1;
+
+        [HideInInspector]
+        public Light m_frontLeftLight, m_frontRightLight, m_rearLeftLight, m_rearRightLight;
+
+        private bool frontLeftLightOk = true, frontRightLightOk = true, rearLeftLightOk = true, rearRightLightOk = true,
+                    m_frontLeftLightPowered = true, m_frontRightLightPowered = true, m_rearLeftLightPowered = true, m_rearRightLightPowered = true;
+
+        public bool m_frontLeftLightOk
+        {
+            get
+            {
+                return frontLeftLightOk;
+            }
+            set
+            {
+                frontLeftLightOk = value;
+                SetLight(VehicleLight.FrontLeft, value ? 1 : 0);
+            }
+        }
+
+        public bool m_frontRightLightOk
+        {
+            get
+            {
+                return frontRightLightOk;
+            }
+            set
+            {
+                frontRightLightOk = value;
+                SetLight(VehicleLight.FrontRight, value ? 1 : 0);
+            }
+        }
+
+        public bool m_rearLeftLightOk
+        {
+            get
+            {
+                return rearLeftLightOk;
+            }
+            set
+            {
+                rearLeftLightOk = value;
+                SetLight(VehicleLight.RearLeft, value ? 1 : 0);
+            }
+        }
+
+        public bool m_rearRightLightOk
+        {
+            get
+            {
+                return rearRightLightOk;
+            }
+            set
+            {
+                rearRightLightOk = value;
+                SetLight(VehicleLight.RearRight, value ? 1 : 0);
+            }
+        }
 
         public static int Layer
         {
@@ -94,6 +153,119 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 {
                     SetLight(i, brightness);
                 }
+            }
+
+            switch (light)
+            {
+                case VehicleLight.All:
+                    if (brightness > 0)
+                    {
+                        if (m_frontLeftLight != null && !m_frontLeftLight.enabled)
+                            m_frontLeftLight.enabled = true;
+                        if (m_frontRightLight != null && !m_frontRightLight.enabled)
+                            m_frontRightLight.enabled = true;
+                        if (m_rearLeftLight != null && !m_rearLeftLight.enabled)
+                            m_rearLeftLight.enabled = true;
+                        if (m_rearRightLight != null && !m_rearRightLight.enabled)
+                            m_rearRightLight.enabled = true;
+
+                        if (m_frontLeftLight != null) m_frontLeftLight.intensity = brightness;
+                        if (m_frontRightLight != null) m_frontRightLight.intensity = brightness;
+                        if (m_rearLeftLight != null) m_rearLeftLight.intensity = brightness;
+                        if (m_rearRightLight != null) m_rearRightLight.intensity = brightness;
+                    }
+                    else
+                    {
+                        if (m_frontLeftLight != null) m_frontLeftLight.enabled = false;
+                        if (m_frontRightLight != null) m_frontRightLight.enabled = false;
+                        if (m_rearLeftLight != null) m_rearLeftLight.enabled = false;
+                        if (m_rearRightLight != null) m_rearRightLight.enabled = false;
+                    }
+                    break;
+
+                case VehicleLight.Front:
+                    if (brightness > 0)
+                    {
+                        if (m_frontLeftLight != null && !m_frontLeftLight.enabled)
+                            m_frontLeftLight.enabled = true;
+                        if (m_frontRightLight != null && !m_frontRightLight.enabled)
+                            m_frontRightLight.enabled = true;
+
+                        if (m_frontLeftLight != null) m_frontLeftLight.intensity = brightness;
+                        if (m_frontRightLight != null) m_frontRightLight.intensity = brightness;
+                    }
+                    else
+                    {
+                        if (m_frontLeftLight != null) m_frontLeftLight.enabled = false;
+                        if (m_frontRightLight != null) m_frontRightLight.enabled = false;
+                    }
+                    break;
+
+                case VehicleLight.FrontLeft:
+                    if (brightness > 0)
+                    {
+                        if (m_frontLeftLight != null && !m_frontLeftLight.enabled)
+                            m_frontLeftLight.enabled = true;
+
+                        if (m_frontLeftLight != null) m_frontLeftLight.intensity = brightness;
+                    }
+                    else
+                       if (m_frontLeftLight != null) m_frontLeftLight.enabled = false;
+                    break;
+
+                case VehicleLight.FrontRight:
+                    if (brightness > 0)
+                    {
+                        if (m_frontRightLight != null && !m_frontRightLight.enabled)
+                            m_frontRightLight.enabled = true;
+
+                        if (m_frontRightLight != null) m_frontRightLight.intensity = brightness;
+                    }
+                    else
+                       if (m_frontRightLight != null) m_frontRightLight.enabled = false;
+                    break;
+
+                case VehicleLight.Rear:
+                    if (brightness > 0)
+                    {
+                        if (m_rearLeftLight != null && !m_rearLeftLight.enabled)
+                            m_rearLeftLight.enabled = true;
+                        if (m_rearRightLight != null && !m_rearRightLight.enabled)
+                            m_rearRightLight.enabled = true;
+
+                        if (m_rearLeftLight != null) m_rearLeftLight.intensity = brightness;
+                        if (m_rearRightLight != null) m_rearRightLight.intensity = brightness;
+                    }
+                    else
+                    {
+                        if (m_rearLeftLight != null) m_rearLeftLight.enabled = false;
+                        if (m_rearRightLight != null) m_rearRightLight.enabled = false;
+                    }
+                    break;
+
+                case VehicleLight.RearLeft:
+                    if (brightness > 0)
+                    {
+                        if (m_rearLeftLight != null && !m_rearLeftLight.enabled)
+                            m_rearLeftLight.enabled = true;
+
+                        if (m_rearLeftLight != null) m_rearLeftLight.intensity = brightness;
+                    }
+                    else
+                       if (m_rearLeftLight != null) m_rearLeftLight.enabled = false;
+                    break;
+
+                case VehicleLight.RearRight:
+                    if (brightness > 0)
+                    {
+                        if (m_rearRightLight != null && !m_rearRightLight.enabled)
+                            m_rearRightLight.enabled = true;
+
+                        if (m_rearRightLight != null) m_rearRightLight.intensity = brightness;
+                    }
+                    else
+                       if (m_rearRightLight != null) m_rearRightLight.enabled = false;
+                    break;
             }
         }
 
@@ -172,6 +344,107 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             _props = new MaterialPropertyBlock();
         }
 
+        private void Start()
+        {
+            // Add vehicle damage
+
+            var dam = gameObject.AddComponent<VehicleDamage>();
+            dam.damageParts = new Transform[] { transform.GetChild(0).Find("engine") };
+            dam.deformMeshes = gameObject.GetComponentsInChildren<MeshFilter>();
+            dam.displaceParts = gameObject.GetComponentsInChildren<Transform>().Where(x => x.GetComponent<Frame>() != null || x.GetComponent<FrameContainer>() != null).ToArray();
+            dam.damageFactor = 2f;
+            dam.collisionIgnoreHeight = -.4f;
+            dam.collisionTimeGap = .1f;
+
+            //OptimizeVehicle();
+
+            dam.deformColliders = gameObject.GetComponentsInChildren<MeshCollider>();
+
+            // Implemented: Add lights
+
+            Transform headlights = this.GetComponentWithName<Transform>("headlights"),
+                      taillights = this.GetComponentWithName<Transform>("taillights");
+
+            if (headlights != null)
+            {
+                Transform f_rightLight = new GameObject("rightLight").transform;
+                f_rightLight.parent = headlights;
+
+                f_rightLight.localPosition = new Vector3(-headlights.localPosition.x * 2, 0, -.5f);
+                f_rightLight.localRotation = Quaternion.identity;
+
+                // Front light props
+                m_frontRightLight = f_rightLight.gameObject.AddComponent<Light>();
+                SetLightProps(VehicleLight.Front, ref m_frontRightLight);
+
+                Transform f_leftLight = new GameObject("leftLight").transform;
+                f_leftLight.parent = headlights;
+
+                f_leftLight.localPosition = new Vector3(0, 0, -.5f);
+                f_leftLight.localRotation = Quaternion.identity;
+
+                // Front light props
+                m_frontLeftLight = f_leftLight.gameObject.AddComponent<Light>();
+                SetLightProps(VehicleLight.Front, ref m_frontLeftLight);
+            }
+
+            if (taillights != null)
+            {
+                Transform r_rightLight = new GameObject("rightLight").transform;
+                r_rightLight.parent = taillights;
+
+                Quaternion rot = Quaternion.Euler(Vector3.right * 180);
+
+                r_rightLight.localPosition = new Vector3(-taillights.localPosition.x * 2, 0, 0);
+                r_rightLight.localRotation = rot;
+
+                // Rear light props
+                m_rearRightLight = r_rightLight.gameObject.AddComponent<Light>();
+                SetLightProps(VehicleLight.Rear, ref m_rearRightLight);
+
+                Transform r_leftLight = new GameObject("leftLight").transform;
+                r_leftLight.parent = taillights;
+
+                r_leftLight.localPosition = Vector3.zero;
+                r_leftLight.localRotation = rot;
+
+                // Rear light props
+                m_rearLeftLight = r_leftLight.gameObject.AddComponent<Light>();
+                SetLightProps(VehicleLight.Rear, ref m_rearLeftLight);
+            }
+
+            m_frontLeftLightOk = m_frontLeftLight != null;
+            m_frontRightLightOk = m_frontRightLight != null;
+            m_rearLeftLightOk = m_rearLeftLight != null;
+            m_rearRightLightOk = m_rearRightLight != null;
+        }
+
+        private void SetLightProps(VehicleLight vehicleLight, ref Light light)
+        {
+            if (light == null) return;
+            switch (vehicleLight)
+            {
+                case VehicleLight.Front:
+                case VehicleLight.FrontLeft:
+                case VehicleLight.FrontRight:
+                    light.type = LightType.Spot;
+                    light.range = 60;
+                    light.spotAngle = 90;
+                    light.intensity = 2;
+                    break;
+
+                case VehicleLight.Rear:
+                case VehicleLight.RearLeft:
+                case VehicleLight.RearRight:
+                    light.type = LightType.Spot;
+                    light.range = 20;
+                    light.spotAngle = 50;
+                    light.intensity = 1;
+                    light.color = Color.red;
+                    break;
+            }
+        }
+
         private void Update()
         {
             foreach (var wheel in _wheels)
@@ -204,11 +477,25 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (HasDriver)
             {
-                SetLight(VehicleLight.Front, 1f);
+                if (m_frontLeftLightPowered && m_frontLeftLightOk)
+                    SetLight(VehicleLight.FrontLeft, 1f);
+
+                if (m_frontRightLightPowered && m_frontRightLightOk)
+                    SetLight(VehicleLight.FrontRight, 1f);
+
+                if (Input.GetKeyDown(KeyCode.L))
+                {
+                    m_frontLeftLightPowered = !m_frontLeftLight;
+                    m_frontRightLightPowered = !m_frontRightLightPowered;
+                }
 
                 if (Braking > 0.125f)
                 {
-                    SetLight(VehicleLight.Rear, 1f);
+                    if (m_frontLeftLightOk)
+                        SetLight(VehicleLight.RearLeft, 1f);
+
+                    if (m_frontRightLightOk)
+                        SetLight(VehicleLight.RearRight, 1f);
                 }
                 else
                 {

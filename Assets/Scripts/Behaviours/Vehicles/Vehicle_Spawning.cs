@@ -123,46 +123,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             inst.transform.position = position - Vector3.up * inst.AverageWheelHeight;
             inst.transform.localRotation = rotation;
 
-            var dam = inst.gameObject.AddComponent<VehicleDamage>();
-            dam.damageParts = new Transform[] { inst.transform.GetChild(0).Find("engine") };
-            dam.deformMeshes = inst.gameObject.GetComponentsInChildren<MeshFilter>();
-            dam.displaceParts = inst.gameObject.GetComponentsInChildren<Transform>().Where(x => x.GetComponent<Frame>() != null || x.GetComponent<FrameContainer>() != null).ToArray();
-            dam.damageFactor = 2f;
-            dam.collisionIgnoreHeight = -.4f;
-            dam.collisionTimeGap = .1f;
-
-            //inst.OptimizeVehicle();
-
-            dam.deformColliders = inst.gameObject.GetComponentsInChildren<MeshCollider>();
-
-            // Implemented: Add lights
-
-            Transform headlights = inst.GetComponentWithName<Transform>("headlights");
-
-            Transform rightLight = new GameObject("rightLight").transform;
-            rightLight.parent = headlights;
-
-            rightLight.localPosition = new Vector3(-headlights.localPosition.x * 2, 0, -.5f);
-            rightLight.localRotation = Quaternion.identity;
-
-            Light lr = rightLight.gameObject.AddComponent<Light>();
-            lr.type = LightType.Spot;
-            lr.range = 60;
-            lr.spotAngle = 90;
-            lr.intensity = 2;
-
-            Transform leftLight = new GameObject("leftLight").transform;
-            leftLight.parent = headlights;
-
-            leftLight.localPosition = new Vector3(0, 0, -5f);
-            leftLight.localRotation = Quaternion.identity;
-
-            Light ll = leftLight.gameObject.AddComponent<Light>();
-            ll.type = LightType.Spot;
-            ll.range = 60;
-            ll.spotAngle = 90;
-            lr.intensity = 2;
-
 #if CLIENT
             if (Networking.Server.Instance != null)
             {

@@ -73,6 +73,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private ContactPoint nullContact = new ContactPoint();
 
+        private const float lightContactDistance = 5;
+
+        //Only for debug
+        public Vector3 lastContact = Vector3.zero;
+
         private void Awake()
         {
             TextGizmo.Init();
@@ -350,6 +355,26 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                                     damageLogger[i] = new DamageLogger(meshVertices[i].verts);
                                 else
                                     damageLogger[i].UpdateVertice(j, meshVertices[i].verts[j]);
+
+                                // Implemented: Broke light on impact
+
+                                if (lastContact != damagePoint)
+                                {
+                                    //Debug.Log("Impact from left side: " + (damagePoint - vp.m_frontLeftLight.transform.position).sqrMagnitude);
+                                    lastContact = damagePoint;
+                                }
+
+                                if (vp.m_frontLeftLightOk && (damagePoint - vp.m_frontLeftLight.transform.position).sqrMagnitude < lightContactDistance)
+                                    vp.m_frontLeftLightOk = false;
+
+                                if (vp.m_frontRightLightOk && (damagePoint - vp.m_frontRightLight.transform.position).sqrMagnitude < lightContactDistance)
+                                    vp.m_frontRightLightOk = false;
+
+                                if (vp.m_rearLeftLightOk && (damagePoint - vp.m_rearLeftLight.transform.position).sqrMagnitude < lightContactDistance)
+                                    vp.m_rearLeftLightOk = false;
+
+                                if (vp.m_rearRightLightOk && (damagePoint - vp.m_rearRightLight.transform.position).sqrMagnitude < lightContactDistance)
+                                    vp.m_rearRightLightOk = false;
                             }
                         }
 

@@ -16,6 +16,8 @@ V - spawn vehicle
 
 P - change pedestrian model
 
+L - turn off / on car lights
+
 L shift - run / fly fast
 
 mouse scroll - zoom in/out
