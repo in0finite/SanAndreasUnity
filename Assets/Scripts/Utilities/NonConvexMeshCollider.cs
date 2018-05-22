@@ -13,11 +13,8 @@ Anyhow: if you want to use it to provide non-convex mesh colliding in your own u
 
 using System;
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 #if UNITY_EDITOR
 

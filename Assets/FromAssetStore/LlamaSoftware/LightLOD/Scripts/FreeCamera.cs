@@ -6,13 +6,16 @@ namespace LlamaSoftware
     {
         [SerializeField]
         private bool EnableInputCapture = true;
+
         [SerializeField]
         private bool HoldRightMouseCapture = false;
 
         [SerializeField]
         private float lookSpeed = 3f;
+
         [SerializeField]
         private float moveSpeed = 3f;
+
         [SerializeField]
         private float FastMoveSpeed = 10f;
 
@@ -26,7 +29,7 @@ namespace LlamaSoftware
         private float Right;
         private float Up;
 
-        void Start()
+        private void Start()
         {
             enabled = EnableInputCapture;
         }
@@ -48,7 +51,7 @@ namespace LlamaSoftware
             InputCaptured = false;
         }
 
-        void Update()
+        private void Update()
         {
             if (!InputCaptured)
             {
@@ -95,5 +98,4 @@ namespace LlamaSoftware
             transform.position += (transform.forward * Forward) + (transform.right * Right) + (Vector3.up * Up);
         }
     }
-
 }

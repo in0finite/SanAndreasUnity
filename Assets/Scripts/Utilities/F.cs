@@ -157,5 +157,20 @@ namespace SanAndreasUnity.Utilities
         {
             return root.GetComponentsInChildren<T>().FirstOrDefault(x => x.name == name);
         }
+
+        public static void MakeChild(this Transform parent, GameObject[] children)
+        {
+            MakeChild(parent, children, null);
+        }
+
+        //Make the game objects children of the parent.
+        public static void MakeChild(this Transform parent, GameObject[] children, Action<Transform, GameObject> actionPerLoop)
+        {
+            foreach (GameObject child in children)
+            {
+                child.transform.parent = parent;
+                if (actionPerLoop != null) actionPerLoop(parent, child);
+            }
+        }
     }
 }

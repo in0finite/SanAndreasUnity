@@ -1,8 +1,10 @@
 ﻿using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
+using LightData = SpriteLights.LightData;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -48,6 +50,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private bool frontLeftLightOk = true, frontRightLightOk = true, rearLeftLightOk = true, rearRightLightOk = true,
                     m_frontLeftLightPowered = true, m_frontRightLightPowered = true, m_rearLeftLightPowered = true, m_rearRightLightPowered = true;
+
+        private Material directionalLightsMat;
 
         public bool m_frontLeftLightOk
         {
@@ -283,6 +287,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
+        private IEnumerable<GameObject> GetLightObjects()
+        {
+            return gameObject.GetComponentsInChildren<Light>().Select(x => x.gameObject);
+        }
+
         private void SetLight(int index, float brightness)
         {
             if (_lights[index] == brightness) return;
@@ -391,10 +400,45 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_rearRightLight = SetCarLight(taillights, VehicleLight.RearRight);
             }
 
+            // Apply Light sources
+
+            directionalLightsMat = Resources.Load<Material>("Materials/directionalLight");
+            SetLightSources();
+
             m_frontLeftLightOk = m_frontLeftLight != null;
             m_frontRightLightOk = m_frontRightLight != null;
             m_rearLeftLightOk = m_rearLeftLight != null;
             m_rearRightLightOk = m_rearRightLight != null;
+        }
+
+        private void SetLightSources()
+        {
+            List<LightData> datas = new List<LightData>();
+            var objs = GetLightObjects();
+
+            //Map object with an index
+            //Debug.LogFormat("Objs: {0}", objs.Count());
+
+            foreach (var go in objs)
+            {
+                LightData lightData = new LightData();
+
+                lightData.position = go.transform.position;
+                lightData.brightness = 1;
+                lightData.size = 1;
+
+                datas.Add(lightData);
+            }
+
+            var obj = SpriteLights.CreateLights(gameObject.name.ToLower() + "-LD", datas.ToArray(), directionalLightsMat);
+
+            Debug.LogFormat("Obj Count: {0}", obj.Count());
+
+            gameObject.transform.MakeChild(obj, (p, o) =>
+            {
+                // Check the index and them set where is has to be generated
+                o.transform.position = m_frontLeftLight.transform.position;
+            });
         }
 
         private Light SetCarLight(Transform parent, VehicleLight light, Vector3? pos = null)

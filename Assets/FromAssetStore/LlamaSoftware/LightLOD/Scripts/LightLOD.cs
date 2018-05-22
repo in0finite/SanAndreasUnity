@@ -10,33 +10,41 @@ namespace LlamaSoftware
     public class LightLOD : MonoBehaviour
     {
         private new Light light;
+
         [SerializeField]
         [Tooltip("For static (uncontrolled by script) lights, this should be true. If you have interactable lights, you should also adjust this with light.enabed")]
         public bool LightShouldBeOn = true;
+
         [SerializeField]
         [Tooltip("The lower you set this, the faster the light will respond to player locations, and the higher the CPU usage")]
         [Range(0, 1f)]
         private float UpdateDelay = 0.1f;
+
         //Replace this with your "Player" object
         private FreeCamera LocalPlayer;
+
         [SerializeField]
         public List<LODAdjustment> ShadowQualityLods;
 
         [SerializeField]
         [Tooltip("For Debugging - If you check this, the light color will be changed to the debug color defined on each LOD quality")]
         private bool ShowLightColorAsDebugColor;
+
         [SerializeField]
         [Tooltip("For Debugging - displays how far player is from the light source")]
         private float DistanceFromPlayer;
+
         [SerializeField]
         [Tooltip("For Debugging - displays if the Light's Shadow Resolution is clamped to Quality Settings")]
         private bool IsClamped;
+
         [SerializeField]
         private int LOD;
+
         private Color CurrentDebugColor;
         private LightShadows DesiredLightShadowQuality;
 
-        void Start()
+        private void Start()
         {
             light = GetComponent<Light>();
             DesiredLightShadowQuality = light.shadows;
@@ -48,6 +56,7 @@ namespace LlamaSoftware
         }
 
 #if UNITY_EDITOR
+
         private void Update()
         {
             if (LocalPlayer != null)
@@ -57,9 +66,10 @@ namespace LlamaSoftware
                 Debug.DrawLine(this.transform.position, LocalPlayer.transform.position, CurrentDebugColor);
             }
         }
+
 #endif
 
-        IEnumerator AdjustLODQuality()
+        private IEnumerator AdjustLODQuality()
         {
             float delay = UpdateDelay + UnityEngine.Random.value / 20f; //this randomization is to prevent all lights updating at the same time causing frame spikes
             int i = 0;
