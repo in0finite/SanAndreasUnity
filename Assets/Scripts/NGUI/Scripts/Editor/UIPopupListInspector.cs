@@ -9,7 +9,6 @@ using UnityEngine;
 /// <summary>
 /// Inspector class used to edit UIPopupLists.
 /// </summary>
-
 [CustomEditor(typeof(UIPopupList))]
 public class UIPopupListInspector : Editor
 {

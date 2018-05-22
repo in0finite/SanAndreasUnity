@@ -249,17 +249,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         //Where the damage is actually applied
         private void DamageApplication(Vector3 damagePoint, Vector3 damageForce, float damageForceLimit, Vector3 surfaceNormal, ContactPoint colPoint, bool useContactPoint)
         {
-            float colMag = Mathf.Min(damageForce.magnitude, maxCollisionMagnitude) * (1 - strength) * damageFactor;//Magnitude of collision
-            float clampedColMag = Mathf.Pow(Mathf.Sqrt(colMag) * 0.5f, 1.5f);//Clamped magnitude of collision
-            Vector3 clampedVel = Vector3.ClampMagnitude(damageForce, damageForceLimit);//Clamped velocity of collision
+            float colMag = Mathf.Min(damageForce.magnitude, maxCollisionMagnitude) * (1 - strength) * damageFactor; //Magnitude of collision
+            float clampedColMag = Mathf.Pow(Mathf.Sqrt(colMag) * 0.5f, 1.5f); //Clamped magnitude of collision
+            Vector3 clampedVel = Vector3.ClampMagnitude(damageForce, damageForceLimit); //Clamped velocity of collision
             Vector3 normalizedVel = damageForce.normalized;
-            float surfaceDot;//Dot production of collision velocity and surface normal
-            float massFactor = 1;//Multiplier for damage based on mass of other rigidbody
+            float surfaceDot; //Dot production of collision velocity and surface normal
+            float massFactor = 1; //Multiplier for damage based on mass of other rigidbody
             Transform curDamagePart;
             float damagePartFactor;
             MeshFilter curDamageMesh;
             Transform curDisplacePart;
-            Transform seamKeeper = null;//Transform for maintaining seams on shattered parts
+            Transform seamKeeper = null; //Transform for maintaining seams on shattered parts
             Vector3 seamLocalPoint;
             Vector3 vertProjection;
             Vector3 translation;
@@ -731,8 +731,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     //Class for easier mesh data manipulation
     internal class meshVerts
     {
-        public Vector3[] verts;//Current mesh vertices
-        public Vector3[] initialVerts;//Original mesh vertices
+        public Vector3[] verts; //Current mesh vertices
+        public Vector3[] initialVerts; //Original mesh vertices
     }
 
     internal class DamageLogger

@@ -9,14 +9,12 @@ using UnityEngine;
 /// <summary>
 /// Inspector class used to edit UISpriteAnimations.
 /// </summary>
-
 [CustomEditor(typeof(UISpriteAnimation))]
 public class UISpriteAnimationInspector : Editor
 {
     /// <summary>
     /// Draw the inspector widget.
     /// </summary>
-
     public override void OnInspectorGUI()
     {
         NGUIEditorTools.DrawSeparator();

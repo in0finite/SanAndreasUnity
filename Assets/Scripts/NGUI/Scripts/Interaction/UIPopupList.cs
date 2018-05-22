@@ -9,7 +9,6 @@ using UnityEngine;
 /// <summary>
 /// Popup list can be used to display pop-up menus and drop-down lists.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/Interaction/Popup List")]
 public class UIPopupList : MonoBehaviour
@@ -26,97 +25,81 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Atlas used by the sprites.
     /// </summary>
-
     public UIAtlas atlas;
 
     /// <summary>
     /// Font used by the labels.
     /// </summary>
-
     public UIFont font;
 
     /// <summary>
     /// Label with text to auto-update, if any.
     /// </summary>
-
     public UILabel textLabel;
 
     /// <summary>
     /// Name of the sprite used to create the popup's background.
     /// </summary>
-
     public string backgroundSprite;
 
     /// <summary>
     /// Name of the sprite used to highlight items.
     /// </summary>
-
     public string highlightSprite;
 
     /// <summary>
     /// Popup list's display style.
     /// </summary>
-
     public Position position = Position.Auto;
 
     /// <summary>
     /// New line-delimited list of items.
     /// </summary>
-
     public List<string> items = new List<string>();
 
     /// <summary>
     /// Amount of padding added to labels.
     /// </summary>
-
     public Vector2 padding = new Vector3(4f, 4f);
 
     /// <summary>
     /// Scaling factor applied to labels within the drop-down menu.
     /// </summary>
-
     public float textScale = 1f;
 
     /// <summary>
     /// Color tint applied to labels inside the list.
     /// </summary>
-
     public Color textColor = Color.white;
 
     /// <summary>
     /// Color tint applied to the background.
     /// </summary>
-
     public Color backgroundColor = Color.white;
 
     /// <summary>
     /// Color tint applied to the highlighter.
     /// </summary>
-
     public Color highlightColor = new Color(152f / 255f, 1f, 51f / 255f, 1f);
 
     /// <summary>
     /// Whether the popup list is animated or not. Disable for better performance.
     /// </summary>
-
     public bool isAnimated = true;
 
     /// <summary>
     /// Whether the popup list's values will be localized.
     /// </summary>
-
     public bool isLocalized = false;
 
     /// <summary>
     /// Target game object that will be notified when selection changes.
     /// </summary>
-
     public GameObject eventReceiver;
 
     /// <summary>
     /// Function to call when the selection changes. Function prototype: void OnSelectionChange (string selectedItemName);
     /// </summary>
-
     public string functionName = "OnSelectionChange";
 
     [HideInInspector] [SerializeField] private string mSelectedItem;
@@ -131,13 +114,11 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Whether the popup list is currently open.
     /// </summary>
-
     public bool isOpen { get { return mChild != null; } }
 
     /// <summary>
     /// Current selection.
     /// </summary>
-
     public string selection
     {
         get
@@ -169,7 +150,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Whether the popup list will be handling keyboard, joystick and controller events.
     /// </summary>
-
     private bool handleEvents
     {
         get
@@ -187,7 +167,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Send out the selection message on start.
     /// </summary>
-
     private void Start()
     {
         // Automatically choose the first item
@@ -208,7 +187,6 @@ public class UIPopupList : MonoBehaviour
     /// Add a sprite appropriate for the specified atlas sprite.
     /// It will be a UIBaseSlicedSprite if the sprite has an inner rect, and a regular sprite otherwise.
     /// </summary>
-
     private UISprite AddSprite(GameObject go, UIAtlas atlas, string spriteName)
     {
         UIAtlas.Sprite sp = (atlas != null) ? atlas.GetSprite(spriteName) : null;
@@ -221,7 +199,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Localize the text label.
     /// </summary>
-
     private void OnLocalize(Localization loc)
     {
         if (isLocalized && textLabel != null)
@@ -233,7 +210,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Visibly highlight the specified transform by moving the highlight sprite to be over it.
     /// </summary>
-
     private void Highlight(UILabel lbl, bool instant)
     {
         if (mHighlight != null)
@@ -264,7 +240,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Event function triggered when the mouse hovers over an item.
     /// </summary>
-
     private void OnItemHover(GameObject go, bool isOver)
     {
         if (isOver)
@@ -277,7 +252,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Select the specified label.
     /// </summary>
-
     private void Select(UILabel lbl, bool instant)
     {
         Highlight(lbl, instant);
@@ -301,14 +275,12 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Event function triggered when the drop-down list item gets clicked on.
     /// </summary>
-
     private void OnItemPress(GameObject go, bool isPressed)
     { if (isPressed) Select(go.GetComponent<UILabel>(), true); }
 
     /// <summary>
     /// React to key-based input.
     /// </summary>
-
     private void OnKey(KeyCode key)
     {
         if (enabled && gameObject.active && handleEvents)
@@ -339,7 +311,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Get rid of the popup dialog when the selection gets lost.
     /// </summary>
-
     private void OnSelect(bool isSelected)
     {
         if (!isSelected && mChild != null)
@@ -377,7 +348,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Helper function that causes the widget to smoothly fade in.
     /// </summary>
-
     private void AnimateColor(UIWidget widget)
     {
         Color c = widget.color;
@@ -388,7 +358,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Helper function that causes the widget to smoothly move into position.
     /// </summary>
-
     private void AnimatePosition(UIWidget widget, bool placeAbove, float bottom)
     {
         Vector3 target = widget.cachedTransform.localPosition;
@@ -403,7 +372,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Helper function that causes the widget to smoothly grow until it reaches its original size.
     /// </summary>
-
     private void AnimateScale(UIWidget widget, bool placeAbove, float bottom)
     {
         GameObject go = widget.gameObject;
@@ -425,7 +393,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Helper function used to animate widgets.
     /// </summary>
-
     private void Animate(UIWidget widget, bool placeAbove, float bottom)
     {
         AnimateColor(widget);
@@ -435,7 +402,6 @@ public class UIPopupList : MonoBehaviour
     /// <summary>
     /// Display the drop-down list when the game object gets clicked on.
     /// </summary>
-
     private void OnClick()
     {
         if (mChild == null && atlas != null && font != null && items.Count > 1)

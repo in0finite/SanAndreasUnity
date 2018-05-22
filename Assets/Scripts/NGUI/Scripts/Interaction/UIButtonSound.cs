@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Plays the specified sound.
 /// </summary>
-
 [AddComponentMenu("NGUI/Interaction/Button Sound")]
 public class UIButtonSound : MonoBehaviour
 {

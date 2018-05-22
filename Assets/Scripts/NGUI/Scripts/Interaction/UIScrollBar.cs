@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Scroll bar functionality.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/Interaction/Scroll Bar")]
 public class UIScrollBar : MonoBehaviour
@@ -36,37 +35,31 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Delegate triggered when the scroll bar has changed visibly.
     /// </summary>
-
     public OnScrollBarChange onChange;
 
     /// <summary>
     /// Cached for speed.
     /// </summary>
-
     public Transform cachedTransform { get { if (mTrans == null) mTrans = transform; return mTrans; } }
 
     /// <summary>
     /// Camera used to draw the scroll bar.
     /// </summary>
-
     public Camera cachedCamera { get { if (mCam == null) mCam = NGUITools.FindCameraForLayer(gameObject.layer); return mCam; } }
 
     /// <summary>
     /// Sprite used for the background.
     /// </summary>
-
     public UISprite background { get { return mBG; } set { if (mBG != value) { mBG = value; mIsDirty = true; } } }
 
     /// <summary>
     /// Sprite used for the foreground.
     /// </summary>
-
     public UISprite foreground { get { return mFG; } set { if (mFG != value) { mFG = value; mIsDirty = true; } } }
 
     /// <summary>
     /// The scroll bar's direction.
     /// </summary>
-
     public Direction direction
     {
         get
@@ -107,13 +100,11 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Whether the movement direction is flipped.
     /// </summary>
-
     public bool inverted { get { return mInverted; } set { if (mInverted != value) { mInverted = value; mIsDirty = true; } } }
 
     /// <summary>
     /// Modifiable value for the scroll bar, 0-1 range.
     /// </summary>
-
     public float scrollValue
     {
         get
@@ -136,7 +127,6 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// The size of the foreground bar in percent (0-1 range).
     /// </summary>
-
     public float barSize
     {
         get
@@ -159,7 +149,6 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Allows to easily change the scroll bar's alpha, affecting both the foreground and the background sprite at once.
     /// </summary>
-
     public float alpha
     {
         get
@@ -187,7 +176,6 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Move the scroll bar to be centered on the specified position.
     /// </summary>
-
     private void CenterOnPos(Vector2 localPos)
     {
         if (mBG == null || mFG == null) return;
@@ -217,7 +205,6 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Drag the scroll bar by the specified on-screen amount.
     /// </summary>
-
     private void Reposition(Vector2 screenPos)
     {
         // Create a plane
@@ -236,7 +223,6 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Position the scroll bar to be under the current touch.
     /// </summary>
-
     private void OnPressBackground(GameObject go, bool isPressed)
     {
         mCam = UICamera.currentCamera;
@@ -246,7 +232,6 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Position the scroll bar to be under the current touch.
     /// </summary>
-
     private void OnDragBackground(GameObject go, Vector2 delta)
     {
         mCam = UICamera.currentCamera;
@@ -256,7 +241,6 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Save the position of the foreground on press.
     /// </summary>
-
     private void OnPressForeground(GameObject go, bool isPressed)
     {
         if (isPressed)
@@ -270,7 +254,6 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Drag the scroll bar in the specified direction.
     /// </summary>
-
     private void OnDragForeground(GameObject go, Vector2 delta)
     {
         mCam = UICamera.currentCamera;
@@ -280,7 +263,6 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Register the event listeners.
     /// </summary>
-
     private void Start()
     {
         if (background != null && background.GetComponent<Collider>() != null)
@@ -302,14 +284,12 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Update the value of the scroll bar if necessary.
     /// </summary>
-
     private void Update()
     { if (mIsDirty) ForceUpdate(); }
 
     /// <summary>
     /// Update the value of the scroll bar.
     /// </summary>
-
     public void ForceUpdate()
     {
         mIsDirty = false;

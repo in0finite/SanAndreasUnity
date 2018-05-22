@@ -10,7 +10,6 @@ using UnityEngine;
 /// All children added to the game object with this script will be repositioned to be on a grid of specified dimensions.
 /// If you want the cells to automatically set their scale based on the dimensions of their content, take a look at UITable.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/Interaction/Grid")]
 public class UIGrid : MonoBehaviour
@@ -54,7 +53,6 @@ public class UIGrid : MonoBehaviour
     /// <summary>
     /// Recalculate the position of all elements within the grid, sorting them alphabetically if necessary.
     /// </summary>
-
     public void Reposition()
     {
         if (!mStarted)

@@ -10,7 +10,6 @@ using UnityEngine;
 /// Keep in mind though that this will create an extra draw call with each UITexture present, so it's
 /// best to use it only for backgrounds or temporary visible widgets.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Texture")]
 public class UITexture : UIWidget
@@ -18,13 +17,11 @@ public class UITexture : UIWidget
     /// <summary>
     /// UI textures should keep the material reference.
     /// </summary>
-
     public override bool keepMaterial { get { return true; } }
 
     /// <summary>
     /// Adjust the scale of the widget to make it pixel-perfect.
     /// </summary>
-
     override public void MakePixelPerfect()
     {
         Texture tex = mainTexture;
@@ -43,7 +40,6 @@ public class UITexture : UIWidget
     /// <summary>
     /// Virtual function called by the UIScreen that fills the buffers.
     /// </summary>
-
     override public void OnFill(BetterList<Vector3> verts, BetterList<Vector2> uvs, BetterList<Color> cols)
     {
         verts.Add(new Vector3(1f, 0f, 0f));

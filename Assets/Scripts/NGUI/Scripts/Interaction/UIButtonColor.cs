@@ -8,32 +8,27 @@ using UnityEngine;
 /// <summary>
 /// Simple example script of how a button can be colored when the mouse hovers over it or it gets pressed.
 /// </summary>
-
 [AddComponentMenu("NGUI/Interaction/Button Color")]
 public class UIButtonColor : MonoBehaviour
 {
     /// <summary>
     /// Target with a widget, renderer, or light that will have its color tweened.
     /// </summary>
-
     public GameObject tweenTarget;
 
     /// <summary>
     /// Color to apply on hover event (mouse only).
     /// </summary>
-
     public Color hover = new Color(0.6f, 1f, 0.2f, 1f);
 
     /// <summary>
     /// Color to apply on the pressed event.
     /// </summary>
-
     public Color pressed = Color.grey;
 
     /// <summary>
     /// Duration of the tween process.
     /// </summary>
-
     public float duration = 0.2f;
 
     protected Color mColor;
@@ -44,7 +39,6 @@ public class UIButtonColor : MonoBehaviour
     /// <summary>
     /// UIButtonColor's default (starting) color. It's useful to be able to change it, just in case.
     /// </summary>
-
     public Color defaultColor { get { return mColor; } set { mColor = value; } }
 
     private void Start()

@@ -9,7 +9,6 @@ using UnityEngine;
 /// <summary>
 /// Inspector class used to edit UILabels.
 /// </summary>
-
 [CustomEditor(typeof(UILabel))]
 public class UILabelInspector : UIWidgetInspector
 {
@@ -18,14 +17,12 @@ public class UILabelInspector : UIWidgetInspector
     /// <summary>
     /// Register an Undo command with the Unity editor.
     /// </summary>
-
     private void RegisterUndo()
     { NGUIEditorTools.RegisterUndo("Label Change", mLabel); }
 
     /// <summary>
     /// Font selection callback.
     /// </summary>
-
     private void OnSelectFont(MonoBehaviour obj)
     {
         if (mLabel != null)

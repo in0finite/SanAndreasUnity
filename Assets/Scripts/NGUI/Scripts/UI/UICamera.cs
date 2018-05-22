@@ -23,7 +23,6 @@ using UnityEngine;
 /// - OnScroll (float delta) is sent out when the mouse scroll wheel is moved.
 /// - OnKey (KeyCode key) is sent when keyboard or controller input is used.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Camera")]
 [RequireComponent(typeof(Camera))]

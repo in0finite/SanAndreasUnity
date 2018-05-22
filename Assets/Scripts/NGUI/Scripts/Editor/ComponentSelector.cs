@@ -10,7 +10,6 @@ using UnityEngine;
 /// EditorGUILayout.ObjectField doesn't support custom components, so a custom wizard saves the day.
 /// Unfortunately this tool only shows components that are being used by the scene, so it's a "recently used" selection tool.
 /// </summary>
-
 public class ComponentSelector : ScriptableWizard
 {
     public delegate void OnSelectionCallback(MonoBehaviour obj);
@@ -22,7 +21,6 @@ public class ComponentSelector : ScriptableWizard
     /// <summary>
     /// Draw a button + object selection combo filtering specified types.
     /// </summary>
-
     static public void Draw<T>(string buttonName, T obj, OnSelectionCallback cb, params GUILayoutOption[] options) where T : MonoBehaviour
     {
         GUILayout.BeginHorizontal();
@@ -43,7 +41,6 @@ public class ComponentSelector : ScriptableWizard
     /// <summary>
     /// Draw a button + object selection combo filtering specified types.
     /// </summary>
-
     static public void Draw<T>(T obj, OnSelectionCallback cb, params GUILayoutOption[] options) where T : MonoBehaviour
     {
         Draw<T>(NGUITools.GetName<T>(), obj, cb, options);
@@ -52,7 +49,6 @@ public class ComponentSelector : ScriptableWizard
     /// <summary>
     /// Show the selection wizard.
     /// </summary>
-
     private static void Show<T>(OnSelectionCallback cb) where T : MonoBehaviour
     {
         System.Type type = typeof(T);
@@ -65,7 +61,6 @@ public class ComponentSelector : ScriptableWizard
     /// <summary>
     /// Draw the custom wizard.
     /// </summary>
-
     private void OnGUI()
     {
         EditorGUIUtility.LookLikeControls(80f);
@@ -100,7 +95,6 @@ public class ComponentSelector : ScriptableWizard
     /// <summary>
     /// Draw details about the specified monobehavior in column format.
     /// </summary>
-
     private bool DrawObject(MonoBehaviour mb)
     {
         bool retVal = false;

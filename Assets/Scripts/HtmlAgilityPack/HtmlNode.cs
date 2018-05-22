@@ -701,7 +701,7 @@ namespace HtmlAgilityPack
             HtmlNode node = ParentNode;
             if (node != null)
             {
-                yield return node;//return the immediate parent node
+                yield return node; //return the immediate parent node
 
                 //now look at it's parent and walk up the tree of parents
                 while (node.ParentNode != null)

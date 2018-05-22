@@ -9,68 +9,57 @@ using UnityEngine;
 /// <summary>
 /// Attaching this to an object lets you activate tweener components on other objects.
 /// </summary>
-
 [AddComponentMenu("NGUI/Interaction/Button Tween")]
 public class UIButtonTween : MonoBehaviour
 {
     /// <summary>
     /// Target on which there is one or more tween.
     /// </summary>
-
     public GameObject tweenTarget;
 
     /// <summary>
     /// If there are multiple tweens, you can choose which ones get activated by changing their group.
     /// </summary>
-
     public int tweenGroup = 0;
 
     /// <summary>
     /// Which event will trigger the tween.
     /// </summary>
-
     public Trigger trigger = Trigger.OnClick;
 
     /// <summary>
     /// Direction to tween in.
     /// </summary>
-
     public Direction playDirection = Direction.Forward;
 
     /// <summary>
     /// Whether the tween will be reset to the start or end when activated. If not, it will continue from where it currently is.
     /// </summary>
-
     public bool resetOnPlay = false;
 
     /// <summary>
     /// What to do if the tweenTarget game object is currently disabled.
     /// </summary>
-
     public EnableCondition ifDisabledOnPlay = EnableCondition.DoNothing;
 
     /// <summary>
     /// What to do with the tweenTarget after the tween finishes.
     /// </summary>
-
     public DisableCondition disableWhenFinished = DisableCondition.DoNotDisable;
 
     /// <summary>
     /// Whether the tweens on the child game objects will be considered.
     /// </summary>
-
     public bool includeChildren = false;
 
     /// <summary>
     /// Target used with 'callWhenFinished', or this game object if none was specified.
     /// </summary>
-
     public GameObject eventReceiver;
 
     /// <summary>
     /// Name of the function to call when the tween finishes.
     /// </summary>
-
     public string callWhenFinished;
 
     private UITweener[] mTweens;
@@ -164,7 +153,6 @@ public class UIButtonTween : MonoBehaviour
     /// <summary>
     /// Activate the tweeners.
     /// </summary>
-
     public void Play(bool forward)
     {
         GameObject go = (tweenTarget == null) ? gameObject : tweenTarget;

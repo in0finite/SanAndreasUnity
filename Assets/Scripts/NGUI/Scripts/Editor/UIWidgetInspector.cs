@@ -9,7 +9,6 @@ using UnityEngine;
 /// <summary>
 /// Inspector class used to edit UIWidgets.
 /// </summary>
-
 [CustomEditor(typeof(UIWidget))]
 public class UIWidgetInspector : Editor
 {
@@ -22,7 +21,6 @@ public class UIWidgetInspector : Editor
     /// <summary>
     /// Register an Undo command with the Unity editor.
     /// </summary>
-
     private void RegisterUndo()
     {
         NGUIEditorTools.RegisterUndo("Widget Change", mWidget);
@@ -31,7 +29,6 @@ public class UIWidgetInspector : Editor
     /// <summary>
     /// Draw the inspector widget.
     /// </summary>
-
     public override void OnInspectorGUI()
     {
         EditorGUIUtility.LookLikeControls(80f);
@@ -56,7 +53,6 @@ public class UIWidgetInspector : Editor
     /// <summary>
     /// All widgets have depth, color and make pixel-perfect options
     /// </summary>
-
     protected void DrawCommonProperties()
     {
 #if UNITY_3_4
@@ -151,7 +147,6 @@ public class UIWidgetInspector : Editor
     /// <summary>
     /// Any and all derived functionality.
     /// </summary>
-
     protected virtual void OnInit()
     {
     }

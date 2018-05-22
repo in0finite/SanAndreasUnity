@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Attach this script to the parent of a group of checkboxes, or to a checkbox itself to save its state.
 /// </summary>
-
 [AddComponentMenu("NGUI/Interaction/Saved Option")]
 public class UISavedOption : MonoBehaviour
 {
@@ -20,7 +19,6 @@ public class UISavedOption : MonoBehaviour
     /// <summary>
     /// Load and set the state of the checkboxes.
     /// </summary>
-
     private void OnEnable()
     {
         string s = PlayerPrefs.GetString(key);
@@ -52,14 +50,12 @@ public class UISavedOption : MonoBehaviour
     /// <summary>
     /// Save the state on destroy.
     /// </summary>
-
     private void OnDisable()
     { Save(null); }
 
     /// <summary>
     /// Save the state.
     /// </summary>
-
     private void Save(GameObject go)
     {
         UICheckbox c = GetComponent<UICheckbox>();

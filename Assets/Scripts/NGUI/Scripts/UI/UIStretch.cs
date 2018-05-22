@@ -9,7 +9,6 @@ using UnityEngine;
 /// This script can be used to stretch objects relative to the screen's width and height.
 /// The most obvious use would be to create a full-screen background by attaching it to a sprite.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Stretch")]
 public class UIStretch : MonoBehaviour

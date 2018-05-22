@@ -9,7 +9,6 @@ using UnityEngine;
 /// <summary>
 /// Inspector class used to edit UITextures.
 /// </summary>
-
 [CustomEditor(typeof(UITexture))]
 public class UITextureInspector : UIWidgetInspector
 {

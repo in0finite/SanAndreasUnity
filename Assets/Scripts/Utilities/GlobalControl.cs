@@ -36,7 +36,7 @@ namespace SanAndreasUnity.Utilities
 
         public static PhysicMaterial frictionlessMatStatic;
 
-        public static Vector3 worldUpDir;//Global up direction, opposite of normalized gravity direction
+        public static Vector3 worldUpDir; //Global up direction, opposite of normalized gravity direction
 
         [Tooltip("Maximum segments per tire mark")]
         public int tireMarkLength;

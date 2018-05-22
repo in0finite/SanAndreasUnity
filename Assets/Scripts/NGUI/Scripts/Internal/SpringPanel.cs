@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Similar to SpringPosition, but also moves the panel's clipping.
 /// </summary>
-
 [RequireComponent(typeof(UIPanel))]
 [AddComponentMenu("NGUI/Internal/Spring Panel")]
 public class SpringPanel : IgnoreTimeScale
@@ -24,7 +23,6 @@ public class SpringPanel : IgnoreTimeScale
     /// <summary>
     /// Cache the transform.
     /// </summary>
-
     private void Start()
     {
         mPanel = GetComponent<UIPanel>();
@@ -35,7 +33,6 @@ public class SpringPanel : IgnoreTimeScale
     /// <summary>
     /// Advance toward the target position.
     /// </summary>
-
     private void Update()
     {
         float delta = UpdateRealTimeDelta();
@@ -58,7 +55,6 @@ public class SpringPanel : IgnoreTimeScale
     /// <summary>
     /// Start the tweening process.
     /// </summary>
-
     static public SpringPanel Begin(GameObject go, Vector3 pos, float strength)
     {
         SpringPanel sp = go.GetComponent<SpringPanel>();

@@ -362,7 +362,7 @@ Shader "Hidden/Post FX/Screen Space Reflection"
             float2 tsP = i.uv2.xy;
 
             float weightSum = 0.0;
-            float gaussWeights[5] = { 0.225, 0.150, 0.110, 0.075, 0.0525 };//{0.225, 0.150, 0.110, 0.075, 0.0525};
+            float gaussWeights[5] = { 0.225, 0.150, 0.110, 0.075, 0.0525 }; //{0.225, 0.150, 0.110, 0.075, 0.0525};
             float4 resultSum = float4(0.0, 0.0, 0.0, 0.0);
             float4 unweightedResultSum = float4(0.0, 0.0, 0.0, 0.0);
             float4 nAndRough = tex2D(_NormalAndRoughnessTexture, tsP);

@@ -163,7 +163,7 @@ CGINCLUDE
 		o.normalInterpolator.xyz = nrml;
 		
 		o.viewInterpolator.w = saturate(offsets.y);
-		o.normalInterpolator.w = 1;//GetDistanceFadeout(o.screenPos.w, DISTANCE_SCALE);
+		o.normalInterpolator.w = 1; //GetDistanceFadeout(o.screenPos.w, DISTANCE_SCALE);
 		
 		UNITY_TRANSFER_FOG(o,o.pos);
 		return o;
@@ -265,7 +265,7 @@ CGINCLUDE
 		o.screenPos = ComputeNonStereoScreenPos(o.pos);
 		
 		o.normalInterpolator.xyz = nrml;
-		o.normalInterpolator.w = 1;//GetDistanceFadeout(o.screenPos.w, DISTANCE_SCALE);
+		o.normalInterpolator.w = 1; //GetDistanceFadeout(o.screenPos.w, DISTANCE_SCALE);
 		
 		UNITY_TRANSFER_FOG(o,o.pos);
 		return o;
@@ -332,7 +332,7 @@ CGINCLUDE
 		
 		o.pos = UnityObjectToClipPos( v.vertex);
 		
-		o.viewInterpolator.w = 1;//GetDistanceFadeout(ComputeNonStereoScreenPos(o.pos).w, DISTANCE_SCALE);
+		o.viewInterpolator.w = 1; //GetDistanceFadeout(ComputeNonStereoScreenPos(o.pos).w, DISTANCE_SCALE);
 		
 		UNITY_TRANSFER_FOG(o,o.pos);
 		return o;

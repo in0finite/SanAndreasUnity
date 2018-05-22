@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Tween the object's color.
 /// </summary>
-
 [AddComponentMenu("NGUI/Tween/Color")]
 public class TweenColor : UITweener
 {
@@ -23,7 +22,6 @@ public class TweenColor : UITweener
     /// <summary>
     /// Current color.
     /// </summary>
-
     public Color color
     {
         get
@@ -49,7 +47,6 @@ public class TweenColor : UITweener
     /// <summary>
     /// Find all needed components.
     /// </summary>
-
     private void Awake()
     {
         mWidget = GetComponentInChildren<UIWidget>();
@@ -61,7 +58,6 @@ public class TweenColor : UITweener
     /// <summary>
     /// Interpolate and update the color.
     /// </summary>
-
     override protected void OnUpdate(float factor)
     {
         color = from * (1f - factor) + to * factor;
@@ -70,7 +66,6 @@ public class TweenColor : UITweener
     /// <summary>
     /// Start the tweening operation.
     /// </summary>
-
     static public TweenColor Begin(GameObject go, float duration, Color color)
     {
         TweenColor comp = UITweener.Begin<TweenColor>(go, duration);

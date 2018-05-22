@@ -9,7 +9,6 @@ using UnityEngine;
 /// Widget that tiles the sprite repeatedly, fully filling the area.
 /// Used best with repeating tileable backgrounds.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Sprite (Tiled)")]
 public class UITiledSprite : UISlicedSprite
@@ -17,13 +16,11 @@ public class UITiledSprite : UISlicedSprite
     /// <summary>
     /// Tiled sprites don't have a border.
     /// </summary>
-
     public override Vector4 border { get { return Vector4.zero; } }
 
     /// <summary>
     /// Tiled sprite shouldn't inherit the sprite's changes to this function.
     /// </summary>
-
     override public void MakePixelPerfect()
     {
         Vector3 pos = cachedTransform.localPosition;
@@ -42,7 +39,6 @@ public class UITiledSprite : UISlicedSprite
     /// <summary>
     /// Fill the draw buffers.
     /// </summary>
-
     public override void OnFill(BetterList<Vector3> verts, BetterList<Vector2> uvs, BetterList<Color> cols)
     {
         Texture tex = material.mainTexture;

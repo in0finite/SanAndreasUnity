@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Editable text input field.
 /// </summary>
-
 [AddComponentMenu("NGUI/UI/Input (Basic)")]
 public class UIInput : UIBaseInput
 {

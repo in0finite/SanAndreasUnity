@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Sends a message to the remote object when something happens.
 /// </summary>
-
 [AddComponentMenu("NGUI/Interaction/Button Message")]
 public class UIButtonMessage : MonoBehaviour
 {

@@ -10,7 +10,6 @@ using UnityEngine;
 /// Text list can be used with a UILabel to create a scrollable multi-line text field that's
 /// easy to add new entries to. Optimal use: chat window.
 /// </summary>
-
 [AddComponentMenu("NGUI/UI/Text List")]
 public class UITextList : MonoBehaviour
 {
@@ -43,7 +42,6 @@ public class UITextList : MonoBehaviour
     /// <summary>
     /// Clear the text.
     /// </summary>
-
     public void Clear()
     {
         mParagraphs.Clear();
@@ -53,7 +51,6 @@ public class UITextList : MonoBehaviour
     /// <summary>
     /// Add a new paragraph.
     /// </summary>
-
     public void Add(string text)
     {
         Add(text, true);
@@ -62,7 +59,6 @@ public class UITextList : MonoBehaviour
     /// <summary>
     /// Add a new paragraph.
     /// </summary>
-
     protected void Add(string text, bool updateVisible)
     {
         Paragraph ce = null;
@@ -98,7 +94,6 @@ public class UITextList : MonoBehaviour
     /// <summary>
     /// Automatically find the values if none were specified.
     /// </summary>
-
     private void Awake()
     {
         if (textLabel == null) textLabel = GetComponentInChildren<UILabel>();
@@ -117,14 +112,12 @@ public class UITextList : MonoBehaviour
     /// <summary>
     /// Remember whether the widget is selected.
     /// </summary>
-
     private void OnSelect(bool selected)
     { mSelected = selected; }
 
     /// <summary>
     /// Refill the text label based on what's currently visible.
     /// </summary>
-
     protected void UpdateVisibleText()
     {
         if (textLabel != null)
@@ -181,7 +174,6 @@ public class UITextList : MonoBehaviour
     /// <summary>
     /// Allow scrolling of the text list.
     /// </summary>
-
     private void OnScroll(float val)
     {
         if (mSelected && supportScrollWheel)

@@ -124,7 +124,7 @@ public class Math3d : MonoBehaviour
     {
         //Note: comments are in case all inputs are in World Space.
         Quaternion Q = SubtractRotation(to, from);              //Output is in object space.
-        Vector3 A = InverseTransformDirectionMath(from, vector);//Output is in object space.
+        Vector3 A = InverseTransformDirectionMath(from, vector); //Output is in object space.
         Vector3 B = Q * A;                                      //Output is in local space.
         Vector3 C = TransformDirectionMath(from, B);            //Output is in world space.
         return C;

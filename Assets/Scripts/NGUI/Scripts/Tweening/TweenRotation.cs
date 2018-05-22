@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Tween the object's rotation.
 /// </summary>
-
 [AddComponentMenu("NGUI/Tween/Rotation")]
 public class TweenRotation : UITweener
 {
@@ -28,7 +27,6 @@ public class TweenRotation : UITweener
     /// <summary>
     /// Start the tweening operation.
     /// </summary>
-
     static public TweenRotation Begin(GameObject go, float duration, Quaternion rot)
     {
         TweenRotation comp = UITweener.Begin<TweenRotation>(go, duration);

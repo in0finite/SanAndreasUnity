@@ -3,7 +3,6 @@ using UnityEngine;
 /// <summary>
 /// Basic input validator with a few presets. I suggest making your own validator if you need new functionality.
 /// </summary>
-
 [RequireComponent(typeof(UIInput))]
 [AddComponentMenu("NGUI/Interaction/Input Validator")]
 public class UIInputValidator : MonoBehaviour
@@ -21,20 +20,17 @@ public class UIInputValidator : MonoBehaviour
     /// <summary>
     /// Validation logic, choose one of the presets.
     /// </summary>
-
     public Validation logic;
 
     /// <summary>
     /// Assign the validator.
     /// </summary>
-
     private void Start()
     { GetComponent<UIInput>().validator = Validate; }
 
     /// <summary>
     /// Validate the specified input.
     /// </summary>
-
     private char Validate(string text, char ch)
     {
         // Validation is disabled

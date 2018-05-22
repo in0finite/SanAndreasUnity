@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Works together with UIDragCamera script, allowing you to drag a secondary camera while keeping it constrained to a certain area.
 /// </summary>
-
 [RequireComponent(typeof(Camera))]
 [AddComponentMenu("NGUI/Interaction/Draggable Camera")]
 public class UIDraggableCamera : IgnoreTimeScale
@@ -16,31 +15,26 @@ public class UIDraggableCamera : IgnoreTimeScale
     /// <summary>
     /// Root object that will be used for drag-limiting bounds.
     /// </summary>
-
     public Transform rootForBounds;
 
     /// <summary>
     /// Scale value applied to the drag delta. Set X or Y to 0 to disallow dragging in that direction.
     /// </summary>
-
     public Vector2 scale = Vector2.one;
 
     /// <summary>
     /// Effect the scroll wheel will have on the momentum.
     /// </summary>
-
     public float scrollWheelFactor = 0f;
 
     /// <summary>
     /// Effect to apply when dragging.
     /// </summary>
-
     public UIDragObject.DragEffect dragEffect = UIDragObject.DragEffect.MomentumAndSpring;
 
     /// <summary>
     /// How much momentum gets applied when the press is released after dragging.
     /// </summary>
-
     public float momentumAmount = 35f;
 
     private Camera mCam;
@@ -54,13 +48,11 @@ public class UIDraggableCamera : IgnoreTimeScale
     /// <summary>
     /// Current momentum, exposed just in case it's needed.
     /// </summary>
-
     public Vector2 currentMomentum { get { return mMomentum; } set { mMomentum = value; } }
 
     /// <summary>
     /// Cache the common components.
     /// </summary>
-
     private void Awake()
     {
         mCam = GetComponent<Camera>();
@@ -76,14 +68,12 @@ public class UIDraggableCamera : IgnoreTimeScale
     /// <summary>
     /// Cache the root.
     /// </summary>
-
     private void Start()
     { mRoot = NGUITools.FindInParents<UIRoot>(gameObject); }
 
     /// <summary>
     /// Calculate the offset needed to be constrained within the panel's bounds.
     /// </summary>
-
     private Vector3 CalculateConstrainOffset()
     {
         if (rootForBounds == null || rootForBounds.childCount == 0) return Vector3.zero;
@@ -103,7 +93,6 @@ public class UIDraggableCamera : IgnoreTimeScale
     /// <summary>
     /// Constrain the current camera's position to be within the viewable area's bounds.
     /// </summary>
-
     public bool ConstrainToBounds(bool immediate)
     {
         if (mTrans != null && rootForBounds != null)
@@ -131,7 +120,6 @@ public class UIDraggableCamera : IgnoreTimeScale
     /// <summary>
     /// Calculate the bounds of all widgets under this game object.
     /// </summary>
-
     public void Press(bool isPressed)
     {
         if (rootForBounds != null)
@@ -161,7 +149,6 @@ public class UIDraggableCamera : IgnoreTimeScale
     /// <summary>
     /// Drag event receiver.
     /// </summary>
-
     public void Drag(Vector2 delta)
     {
         UICamera.currentTouch.clickNotification = UICamera.ClickNotification.BasedOnDelta;
@@ -185,7 +172,6 @@ public class UIDraggableCamera : IgnoreTimeScale
     /// <summary>
     /// If the object should support the scroll wheel, do it.
     /// </summary>
-
     public void Scroll(float delta)
     {
         if (enabled && gameObject.active)
@@ -198,7 +184,6 @@ public class UIDraggableCamera : IgnoreTimeScale
     /// <summary>
     /// Apply the dragging momentum.
     /// </summary>
-
     private void Update()
     {
         float delta = UpdateRealTimeDelta();

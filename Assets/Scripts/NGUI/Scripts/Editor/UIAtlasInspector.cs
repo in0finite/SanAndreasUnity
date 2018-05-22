@@ -9,7 +9,6 @@ using UnityEngine;
 /// <summary>
 /// Inspector class used to edit the UIAtlas.
 /// </summary>
-
 [CustomEditor(typeof(UIAtlas))]
 public class UIAtlasInspector : Editor
 {
@@ -38,7 +37,6 @@ public class UIAtlasInspector : Editor
     /// <summary>
     /// Convenience function -- mark all widgets using the sprite as changed.
     /// </summary>
-
     private void MarkSpriteAsDirty()
     {
         if (mSprite == null) return;
@@ -72,7 +70,6 @@ public class UIAtlasInspector : Editor
     /// <summary>
     /// Replacement atlas selection callback.
     /// </summary>
-
     private void OnSelectAtlas(MonoBehaviour obj)
     {
         if (mReplacement != obj)
@@ -91,7 +88,6 @@ public class UIAtlasInspector : Editor
     /// <summary>
     /// Draw the inspector widget.
     /// </summary>
-
     public override void OnInspectorGUI()
     {
         EditorGUIUtility.LookLikeControls(80f);

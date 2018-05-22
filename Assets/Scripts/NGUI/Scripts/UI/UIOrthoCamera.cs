@@ -11,7 +11,6 @@ using UnityEngine;
 /// to create the UI that stays proportional as the screen scales. If that is what you
 /// want, you don't need this script (or at least don't need it to be active).
 /// </summary>
-
 [ExecuteInEditMode]
 [RequireComponent(typeof(Camera))]
 [AddComponentMenu("NGUI/UI/Orthographic Camera")]

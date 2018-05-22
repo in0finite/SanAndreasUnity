@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// This script, when attached to a panel allows dragging of the said panel's contents efficiently by using UIDragPanelContents.
 /// </summary>
-
 [ExecuteInEditMode]
 [RequireComponent(typeof(UIPanel))]
 [AddComponentMenu("NGUI/Interaction/Draggable Panel")]
@@ -31,67 +30,56 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Whether the dragging will be restricted to be within the parent panel's bounds.
     /// </summary>
-
     public bool restrictWithinPanel = true;
 
     /// <summary>
     /// Whether dragging will be disabled if the contents fit.
     /// </summary>
-
     public bool disableDragIfFits = false;
 
     /// <summary>
     /// Effect to apply when dragging.
     /// </summary>
-
     public DragEffect dragEffect = DragEffect.MomentumAndSpring;
 
     /// <summary>
     /// Scale value applied to the drag delta. Set X or Y to 0 to disallow dragging in that direction.
     /// </summary>
-
     public Vector3 scale = Vector3.one;
 
     /// <summary>
     /// Effect the scroll wheel will have on the momentum.
     /// </summary>
-
     public float scrollWheelFactor = 0f;
 
     /// <summary>
     /// How much momentum gets applied when the press is released after dragging.
     /// </summary>
-
     public float momentumAmount = 35f;
 
     /// <summary>
     /// Starting position of the clipped area. (0, 0) means top-left corner, (1, 1) means bottom-right.
     /// </summary>
-
     public Vector2 relativePositionOnReset = Vector2.zero;
 
     /// <summary>
     /// Whether the position will be reset to the 'startingDragAmount'. Inspector-only value.
     /// </summary>
-
     public bool repositionClipping = false;
 
     /// <summary>
     /// Horizontal scrollbar used for visualization.
     /// </summary>
-
     public UIScrollBar horizontalScrollBar;
 
     /// <summary>
     /// Vertical scrollbar used for visualization.
     /// </summary>
-
     public UIScrollBar verticalScrollBar;
 
     /// <summary>
     /// Condition that must be met for the scroll bars to become visible.
     /// </summary>
-
     public ShowCondition showScrollBars = ShowCondition.OnlyIfNeeded;
 
     private Transform mTrans;
@@ -110,7 +98,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Calculate the bounds used by the widgets.
     /// </summary>
-
     public Bounds bounds
     {
         get
@@ -127,7 +114,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Whether the panel should be able to move horizontally (contents don't fit).
     /// </summary>
-
     public bool shouldMoveHorizontally
     {
         get
@@ -141,7 +127,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Whether the panel should be able to move vertically (contents don't fit).
     /// </summary>
-
     public bool shouldMoveVertically
     {
         get
@@ -155,7 +140,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Whether the contents of the panel should actually be draggable depends on whether they currently fit or not.
     /// </summary>
-
     private bool shouldMove
     {
         get
@@ -187,13 +171,11 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Current momentum, exposed just in case it's needed.
     /// </summary>
-
     public Vector3 currentMomentum { get { return mMomentum; } set { mMomentum = value; } }
 
     /// <summary>
     /// Cache the transform and the panel.
     /// </summary>
-
     private void Awake()
     {
         mTrans = transform;
@@ -203,7 +185,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Set the initial drag value and register the listener delegates.
     /// </summary>
-
     private void Start()
     {
         UpdateScrollbars(true);
@@ -224,7 +205,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Restrict the panel's contents to be within the panel's bounds.
     /// </summary>
-
     public void RestrictWithinBounds(bool instant)
     {
         Vector3 constraint = mPanel.CalculateConstrainOffset(bounds.min, bounds.max);
@@ -254,7 +234,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Disable the spring movement.
     /// </summary>
-
     public void DisableSpring()
     {
         SpringPanel sp = GetComponent<SpringPanel>();
@@ -264,7 +243,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Update the values of the associated scroll bars.
     /// </summary>
-
     public void UpdateScrollbars(bool recalculateBounds)
     {
         if (mPanel == null) return;
@@ -345,7 +323,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// Changes the drag amount of the panel to the specified 0-1 range values.
     /// (0, 0) is the top-left corner, (1, 1) is the bottom-right.
     /// </summary>
-
     public void SetDragAmount(float x, float y, bool updateScrollbars)
     {
         DisableSpring();
@@ -396,7 +373,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// It's recommended to call this function before AND after you re-populate the panel's contents (ex: switching window tabs).
     /// Another option is to populate the panel's contents, reset its position, then call this function to reposition the clipping.
     /// </summary>
-
     public void ResetPosition()
     {
         // Invalidate the bounds
@@ -412,7 +388,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Triggered by the horizontal scroll bar when it changes.
     /// </summary>
-
     private void OnHorizontalBar(UIScrollBar sb)
     {
         if (!mIgnoreCallbacks)
@@ -426,7 +401,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Triggered by the vertical scroll bar when it changes.
     /// </summary>
-
     private void OnVerticalBar(UIScrollBar sb)
     {
         if (!mIgnoreCallbacks)
@@ -440,7 +414,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Move the panel by the specified amount.
     /// </summary>
-
     private void MoveRelative(Vector3 relative)
     {
         mTrans.localPosition += relative;
@@ -454,7 +427,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Move the panel by the specified amount.
     /// </summary>
-
     private void MoveAbsolute(Vector3 absolute)
     {
         Vector3 a = mTrans.InverseTransformPoint(absolute);
@@ -465,7 +437,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Create a plane on which we will be performing the dragging.
     /// </summary>
-
     public void Press(bool pressed)
     {
         if (enabled && gameObject.active)
@@ -501,7 +472,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Drag the object along the plane.
     /// </summary>
-
     public void Drag(Vector2 delta)
     {
         if (enabled && gameObject.active && mShouldMove)
@@ -544,7 +514,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// If the object should support the scroll wheel, do it.
     /// </summary>
-
     public void Scroll(float delta)
     {
         if (enabled && gameObject.active)
@@ -558,7 +527,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Apply the dragging momentum.
     /// </summary>
-
     private void LateUpdate()
     {
         // If the panel's geometry changed, recalculate the bounds
@@ -634,7 +602,6 @@ public class UIDraggablePanel : IgnoreTimeScale
     /// <summary>
     /// Draw a visible orange outline of the bounds.
     /// </summary>
-
     private void OnDrawGizmos()
     {
         if (mPanel != null && mPanel.debugInfo == UIPanel.DebugInfo.Gizmos)

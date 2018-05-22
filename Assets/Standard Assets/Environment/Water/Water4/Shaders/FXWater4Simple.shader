@@ -156,7 +156,7 @@ CGINCLUDE
 		
 		o.normalInterpolator.xyz = nrml;
 		
-		o.normalInterpolator.w = 1;//GetDistanceFadeout(o.screenPos.w, DISTANCE_SCALE);
+		o.normalInterpolator.w = 1; //GetDistanceFadeout(o.screenPos.w, DISTANCE_SCALE);
 		
 		UNITY_TRANSFER_FOG(o,o.pos);
 		return o;
@@ -254,7 +254,7 @@ CGINCLUDE
 		
 		o.normalInterpolator.xyz = nrml;
 		
-		o.normalInterpolator.w = 1;//GetDistanceFadeout(o.screenPos.w, DISTANCE_SCALE);
+		o.normalInterpolator.w = 1; //GetDistanceFadeout(o.screenPos.w, DISTANCE_SCALE);
 		
 		UNITY_TRANSFER_FOG(o,o.pos);
 		return o;
@@ -292,7 +292,7 @@ CGINCLUDE
 		#ifdef WATER_REFLECTIVE
 			baseColor = lerp (baseColor, lerp (rtReflections,_ReflectionColor,_ReflectionColor.a), saturate(refl2Refr * 1.0));
 		#else
-			baseColor = _ReflectionColor;//lerp (baseColor, _ReflectionColor, saturate(refl2Refr * 2.0));
+			baseColor = _ReflectionColor; //lerp (baseColor, _ReflectionColor, saturate(refl2Refr * 2.0));
 		#endif
 		
 		baseColor = baseColor + spec * _SpecularColor;

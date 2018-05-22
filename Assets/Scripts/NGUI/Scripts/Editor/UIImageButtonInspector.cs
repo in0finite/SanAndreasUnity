@@ -9,7 +9,6 @@ using UnityEngine;
 /// <summary>
 /// Inspector class used to edit UISprites.
 /// </summary>
-
 [CustomEditor(typeof(UIImageButton))]
 public class UIImageButtonInspector : Editor
 {
@@ -18,7 +17,6 @@ public class UIImageButtonInspector : Editor
     /// <summary>
     /// Atlas selection callback.
     /// </summary>
-
     private void OnSelectAtlas(MonoBehaviour obj)
     {
         if (mButton.target != null)

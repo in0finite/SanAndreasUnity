@@ -3,7 +3,6 @@ using UnityEngine;
 /// <summary>
 /// Attaching this script to a widget makes it react to key events such as tab, up, down, etc.
 /// </summary>
-
 [RequireComponent(typeof(Collider))]
 [AddComponentMenu("NGUI/Interaction/Button Keys")]
 public class UIButtonKeys : MonoBehaviour

@@ -8,7 +8,6 @@ using UnityEditor;
 /// <summary>
 /// Inspector class used to edit UIFilledSprites.
 /// </summary>
-
 [CustomEditor(typeof(UIFilledSprite))]
 public class UIFilledSpriteInspector : UISpriteInspector
 {

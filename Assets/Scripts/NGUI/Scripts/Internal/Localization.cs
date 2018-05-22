@@ -12,7 +12,6 @@ using UnityEngine;
 /// you should implement "void Localize (Localization loc)" functions in your classes.
 /// Take a look at UILocalize to see how it's used.
 /// </summary>
-
 [AddComponentMenu("NGUI/Internal/Localization")]
 public class Localization : MonoBehaviour
 {
@@ -21,7 +20,6 @@ public class Localization : MonoBehaviour
     /// <summary>
     /// The instance of the localization class. Will create it if one isn't already around.
     /// </summary>
-
     static public Localization instance
     {
         get
@@ -44,13 +42,11 @@ public class Localization : MonoBehaviour
     /// <summary>
     /// Language the localization manager will start with.
     /// </summary>
-
     public string startingLanguage;
 
     /// <summary>
     /// Available list of languages.
     /// </summary>
-
     public TextAsset[] languages;
 
     private Dictionary<string, string> mDictionary = new Dictionary<string, string>();
@@ -59,7 +55,6 @@ public class Localization : MonoBehaviour
     /// <summary>
     /// Name of the currently active language.
     /// </summary>
-
     public string currentLanguage
     {
         get
@@ -121,28 +116,24 @@ public class Localization : MonoBehaviour
     /// <summary>
     /// Determine the starting language.
     /// </summary>
-
     private void Awake()
     { if (mInst == null) { mInst = this; DontDestroyOnLoad(gameObject); } else Destroy(gameObject); }
 
     /// <summary>
     /// Oddly enough... sometimes if there is no OnEnable function in Localization, it can get the Awake call after UILocalize's OnEnable.
     /// </summary>
-
     private void OnEnable()
     { if (mInst == null) mInst = this; }
 
     /// <summary>
     /// Remove the instance reference.
     /// </summary>
-
     private void OnDestroy()
     { if (mInst == this) mInst = null; }
 
     /// <summary>
     /// Load the specified asset and activate the localization.
     /// </summary>
-
     private void Load(TextAsset asset)
     {
         mLanguage = asset.name;
@@ -155,7 +146,6 @@ public class Localization : MonoBehaviour
     /// <summary>
     /// Localize the specified value.
     /// </summary>
-
     public string Get(string key)
     {
         string val;

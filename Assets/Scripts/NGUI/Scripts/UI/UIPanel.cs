@@ -11,7 +11,6 @@ using UnityEngine;
 /// <summary>
 /// UI Panel is responsible for collecting, sorting and updating widgets in addition to generating widgets' geometry.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Panel")]
 public class UIPanel : UIBasePanel
@@ -19,7 +18,6 @@ public class UIPanel : UIBasePanel
     /// <summary>
     /// Helper function that recursively sets all childrens' game objects layers to the specified value, stopping when it hits another UIBasePanel.
     /// </summary>
-
     private static void SetChildLayer(Transform t, int layer)
     {
         for (int i = 0; i < t.childCount; ++i)
@@ -37,7 +35,6 @@ public class UIPanel : UIBasePanel
     /// <summary>
     /// Find the UIBasePanel responsible for handling the specified transform.
     /// </summary>
-
     new static public UIPanel Find(Transform trans, bool createIfMissing)
     {
         Transform origin = trans;
@@ -62,7 +59,6 @@ public class UIPanel : UIBasePanel
     /// <summary>
     /// Find the UIBasePanel responsible for handling the specified transform, creating a new one if necessary.
     /// </summary>
-
     new static public UIPanel Find(Transform trans)
     {
         return Find(trans, true);

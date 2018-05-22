@@ -15,7 +15,6 @@ namespace SanAndreasAPI
         }
 
         public ConsoleLog(string logString, string stackTrace, LogType logType)
-
         {
             this.logString = logString;
             this.stackTrace = stackTrace.Split('\n');

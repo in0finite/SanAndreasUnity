@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Sample script showing how easy it is to implement a standard button that swaps sprites.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Image Button")]
 public class UIImageButton : MonoBehaviour

@@ -9,7 +9,6 @@ using UnityEngine;
 /// This script can be used to anchor an object to the side of the screen,
 /// or scale an object to always match the dimensions of the screen.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Anchor")]
 public class UIAnchor : MonoBehaviour
@@ -44,14 +43,12 @@ public class UIAnchor : MonoBehaviour
     /// <summary>
     /// Cache the transform.
     /// </summary>
-
     private void Awake()
     { mTrans = transform; }
 
     /// <summary>
     /// Legacy support.
     /// </summary>
-
     private void Start()
     {
         if (stretchToFill)
@@ -67,7 +64,6 @@ public class UIAnchor : MonoBehaviour
     /// <summary>
     /// Automatically find the camera responsible for drawing the widgets under this object.
     /// </summary>
-
     private void OnEnable()
     {
         mIsWindows = (Application.platform == RuntimePlatform.WindowsPlayer ||
@@ -80,7 +76,6 @@ public class UIAnchor : MonoBehaviour
     /// <summary>
     /// Anchor the object to the appropriate point.
     /// </summary>
-
     private void Update()
     {
         if (uiCamera != null)

@@ -12,7 +12,6 @@ public class NGUITransformInspector : Editor
     /// <summary>
     /// Draw the inspector widget.
     /// </summary>
-
     public override void OnInspectorGUI()
     {
         Transform trans = target as Transform;
@@ -71,7 +70,6 @@ public class NGUITransformInspector : Editor
     /// <summary>
     /// Helper function that draws a button in an enabled or disabled state.
     /// </summary>
-
     private static bool DrawButton(string title, string tooltip, bool enabled, float width)
     {
         if (enabled)
@@ -93,7 +91,6 @@ public class NGUITransformInspector : Editor
     /// <summary>
     /// Helper function that draws a field of 3 floats.
     /// </summary>
-
     private static Vector3 DrawVector3(Vector3 value)
     {
         GUILayoutOption opt = GUILayout.MinWidth(30f);
@@ -106,7 +103,6 @@ public class NGUITransformInspector : Editor
     /// <summary>
     /// Helper function that determines whether its worth it to show the reset position button.
     /// </summary>
-
     private static bool IsResetPositionValid(Transform targetTransform)
     {
         Vector3 v = targetTransform.localPosition;
@@ -116,7 +112,6 @@ public class NGUITransformInspector : Editor
     /// <summary>
     /// Helper function that determines whether its worth it to show the reset rotation button.
     /// </summary>
-
     private static bool IsResetRotationValid(Transform targetTransform)
     {
         Vector3 v = targetTransform.localEulerAngles;
@@ -126,7 +121,6 @@ public class NGUITransformInspector : Editor
     /// <summary>
     /// Helper function that determines whether its worth it to show the reset scale button.
     /// </summary>
-
     private static bool IsResetScaleValid(Transform targetTransform)
     {
         Vector3 v = targetTransform.localScale;
@@ -136,7 +130,6 @@ public class NGUITransformInspector : Editor
     /// <summary>
     /// Helper function that removes not-a-number values from the vector.
     /// </summary>
-
     private static Vector3 Validate(Vector3 vector)
     {
         vector.x = float.IsNaN(vector.x) ? 0f : vector.x;

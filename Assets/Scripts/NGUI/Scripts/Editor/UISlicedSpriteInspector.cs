@@ -9,14 +9,12 @@ using UnityEngine;
 /// <summary>
 /// Inspector class used to edit UISlicedSprites.
 /// </summary>
-
 [CustomEditor(typeof(UISlicedSprite))]
 public class UISlicedSpriteInspector : UISpriteInspector
 {
     /// <summary>
     /// Draw the atlas and sprite selection fields.
     /// </summary>
-
     override protected bool OnDrawProperties()
     {
         if (base.OnDrawProperties())
@@ -38,7 +36,6 @@ public class UISlicedSpriteInspector : UISpriteInspector
     /// <summary>
     /// Any and all derived functionality.
     /// </summary>
-
     protected override void OnDrawTexture()
     {
         UISlicedSprite sprite = mWidget as UISlicedSprite;

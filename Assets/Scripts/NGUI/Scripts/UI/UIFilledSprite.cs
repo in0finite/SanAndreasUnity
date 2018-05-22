@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Similar to a regular UISprite, but lets you only display a part of it. Great for progress bars, sliders, timers, etc.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Sprite (Filled)")]
 public class UIFilledSprite : UISprite
@@ -29,7 +28,6 @@ public class UIFilledSprite : UISprite
     /// <summary>
     /// Direction of the cut procedure.
     /// </summary>
-
     public FillDirection fillDirection
     {
         get
@@ -49,7 +47,6 @@ public class UIFilledSprite : UISprite
     /// <summary>
     /// Amount of the sprite shown. 0-1 range with 0 being nothing shown, and 1 being the full sprite.
     /// </summary>
-
     public float fillAmount
     {
         get
@@ -71,7 +68,6 @@ public class UIFilledSprite : UISprite
     /// <summary>
     /// Whether the sprite should be filled in the opposite direction.
     /// </summary>
-
     public bool invert
     {
         get
@@ -91,7 +87,6 @@ public class UIFilledSprite : UISprite
     /// <summary>
     /// Adjust the specified quad, making it be radially filled instead.
     /// </summary>
-
     private bool AdjustRadial(Vector2[] xy, Vector2[] uv, float fill, bool invert)
     {
         // Nothing to fill
@@ -160,7 +155,6 @@ public class UIFilledSprite : UISprite
     /// <summary>
     /// Helper function that copies the contents of the array, rotated by the specified offset.
     /// </summary>
-
     private void Rotate(Vector2[] v, int offset)
     {
         for (int i = 0; i < offset; ++i)
@@ -184,7 +178,6 @@ public class UIFilledSprite : UISprite
     /// <summary>
     /// Virtual function called by the UIScreen that fills the buffers.
     /// </summary>
-
     override public void OnFill(BetterList<Vector3> verts, BetterList<Vector2> uvs, BetterList<Color> cols)
     {
         float x0 = 0f;

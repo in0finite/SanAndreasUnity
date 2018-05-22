@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// 9-sliced widget component used to draw large widgets using small textures.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Sprite (Sliced)")]
 public class UISlicedSprite : UISprite
@@ -22,19 +21,16 @@ public class UISlicedSprite : UISprite
     /// <summary>
     /// Inner set of UV coordinates.
     /// </summary>
-
     public Rect innerUV { get { UpdateUVs(false); return mInnerUV; } }
 
     /// <summary>
     /// Whether the center part of the sprite will be filled or not. Turn it off if you want only to borders to show up.
     /// </summary>
-
     public bool fillCenter { get { return mFillCenter; } set { if (mFillCenter != value) { mFillCenter = value; MarkAsChanged(); } } }
 
     /// <summary>
     /// Sliced sprites generally have a border.
     /// </summary>
-
     public override Vector4 border
     {
         get
@@ -59,7 +55,6 @@ public class UISlicedSprite : UISprite
     /// <summary>
     /// Update the texture UVs used by the widget.
     /// </summary>
-
     override public void UpdateUVs(bool force)
     {
         if (cachedTransform.localScale != mScale)
@@ -92,7 +87,6 @@ public class UISlicedSprite : UISprite
     /// <summary>
     /// Sliced sprite shouldn't inherit the sprite's changes to this function.
     /// </summary>
-
     override public void MakePixelPerfect()
     {
         Vector3 pos = cachedTransform.localPosition;
@@ -111,7 +105,6 @@ public class UISlicedSprite : UISprite
     /// <summary>
     /// Draw the widget.
     /// </summary>
-
     override public void OnFill(BetterList<Vector3> verts, BetterList<Vector2> uvs, BetterList<Color> cols)
     {
         if (mOuterUV == mInnerUV)

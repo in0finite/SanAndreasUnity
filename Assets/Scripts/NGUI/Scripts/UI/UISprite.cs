@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Very simple UI sprite -- a simple quad of specified size, drawn using a part of the texture atlas.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Sprite (Basic)")]
 public class UISprite : UIBaseSprite

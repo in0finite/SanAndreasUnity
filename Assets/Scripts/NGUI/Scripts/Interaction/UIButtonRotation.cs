@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Simple example script of how a button can be rotated visibly when the mouse hovers over it or it gets pressed.
 /// </summary>
-
 [AddComponentMenu("NGUI/Interaction/Button Rotation")]
 public class UIButtonRotation : MonoBehaviour
 {

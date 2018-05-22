@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Turns the popup list it's attached to into a language selection list.
 /// </summary>
-
 [RequireComponent(typeof(UIPopupList))]
 [AddComponentMenu("NGUI/Interaction/Language Selection")]
 public class LanguageSelection : MonoBehaviour

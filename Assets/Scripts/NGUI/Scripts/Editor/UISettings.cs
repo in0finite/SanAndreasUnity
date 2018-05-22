@@ -10,7 +10,6 @@ using UnityEngine;
 /// Unity doesn't keep the values of static variables after scripts change get recompiled. One way around this
 /// is to store the references in EditorPrefs -- retrieve them at start, and save them whenever something changes.
 /// </summary>
-
 public class UISettings
 {
     private static bool mLoaded = false;
@@ -60,7 +59,6 @@ public class UISettings
     /// <summary>
     /// Default font used by NGUI.
     /// </summary>
-
     static public UIFont font
     {
         get
@@ -82,7 +80,6 @@ public class UISettings
     /// <summary>
     /// Default atlas used by NGUI.
     /// </summary>
-
     static public UIAtlas atlas
     {
         get
@@ -104,42 +101,35 @@ public class UISettings
     /// <summary>
     /// Name of the font, used by the Font Maker.
     /// </summary>
-
     static public string fontName { get { if (!mLoaded) Load(); return mFontName; } set { if (mFontName != value) { mFontName = value; Save(); } } }
 
     /// <summary>
     /// Data used to create the font, used by the Font Maker.
     /// </summary>
-
     static public TextAsset fontData { get { if (!mLoaded) Load(); return mFontData; } set { if (mFontData != value) { mFontData = value; Save(); } } }
 
     /// <summary>
     /// Texture used to create the font, used by the Font Maker.
     /// </summary>
-
     static public Texture2D fontTexture { get { if (!mLoaded) Load(); return mFontTexture; } set { if (mFontTexture != value) { mFontTexture = value; Save(); } } }
 
     /// <summary>
     /// Name of the atlas, used by the Atlas maker.
     /// </summary>
-
     static public string atlasName { get { if (!mLoaded) Load(); return mAtlasName; } set { if (mAtlasName != value) { mAtlasName = value; Save(); } } }
 
     /// <summary>
     /// Whether the texture preview will be shown.
     /// </summary>
-
     static public bool texturePreview { get { if (!mLoaded) Load(); return mPreview; } set { if (mPreview != value) { mPreview = value; Save(); } } }
 
     /// <summary>
     /// Added padding in-between of sprites when creating an atlas.
     /// </summary>
-
     static public int atlasPadding { get { if (!mLoaded) Load(); return mAtlasPadding; } set { if (mAtlasPadding != value) { mAtlasPadding = value; Save(); } } }
 
     /// <summary>
     /// Whether the transparent pixels will be trimmed away when creating an atlas.
     /// </summary>
-
     static public bool atlasTrimming { get { if (!mLoaded) Load(); return mAtlasTrimming; } set { if (mAtlasTrimming != value) { mAtlasTrimming = value; Save(); } } }
 }

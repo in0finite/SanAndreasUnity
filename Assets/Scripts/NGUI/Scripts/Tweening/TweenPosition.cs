@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Tween the object's position.
 /// </summary>
-
 [AddComponentMenu("NGUI/Tween/Position")]
 public class TweenPosition : UITweener
 {
@@ -28,7 +27,6 @@ public class TweenPosition : UITweener
     /// <summary>
     /// Start the tweening operation.
     /// </summary>
-
     static public TweenPosition Begin(GameObject go, float duration, Vector3 pos)
     {
         TweenPosition comp = UITweener.Begin<TweenPosition>(go, duration);

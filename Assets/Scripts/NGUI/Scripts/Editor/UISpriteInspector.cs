@@ -10,7 +10,6 @@ using UnityEngine;
 /// <summary>
 /// Inspector class used to edit UISprites.
 /// </summary>
-
 [CustomEditor(typeof(UISprite))]
 public class UISpriteInspector : UIWidgetInspector
 {
@@ -19,7 +18,6 @@ public class UISpriteInspector : UIWidgetInspector
     /// <summary>
     /// Atlas selection callback.
     /// </summary>
-
     private void OnSelectAtlas(MonoBehaviour obj)
     {
         if (mSprite != null)
@@ -35,7 +33,6 @@ public class UISpriteInspector : UIWidgetInspector
     /// <summary>
     /// Convenience function that displays a list of sprites and returns the selected value.
     /// </summary>
-
     static public string SpriteField(UIAtlas atlas, string field, string name, params GUILayoutOption[] options)
     {
         List<string> sprites = atlas.GetListOfSprites();
@@ -45,7 +42,6 @@ public class UISpriteInspector : UIWidgetInspector
     /// <summary>
     /// Convenience function that displays a list of sprites and returns the selected value.
     /// </summary>
-
     static public string SpriteField(UIAtlas atlas, string name, params GUILayoutOption[] options)
     {
         return SpriteField(atlas, "Sprite", name, options);
@@ -54,7 +50,6 @@ public class UISpriteInspector : UIWidgetInspector
     /// <summary>
     /// Draw the atlas and sprite selection fields.
     /// </summary>
-
     override protected bool OnDrawProperties()
     {
         mSprite = mWidget as UISprite;
@@ -76,7 +71,6 @@ public class UISpriteInspector : UIWidgetInspector
     /// <summary>
     /// Draw the sprite texture.
     /// </summary>
-
     override protected void OnDrawTexture()
     {
         Texture2D tex = mSprite.mainTexture as Texture2D;

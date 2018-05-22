@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Tween the object's local scale.
 /// </summary>
-
 [AddComponentMenu("NGUI/Tween/Scale")]
 public class TweenScale : UITweener
 {
@@ -41,7 +40,6 @@ public class TweenScale : UITweener
     /// <summary>
     /// Start the tweening operation.
     /// </summary>
-
     static public TweenScale Begin(GameObject go, float duration, Vector3 scale)
     {
         TweenScale comp = UITweener.Begin<TweenScale>(go, duration);

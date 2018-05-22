@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Simple slider functionality.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/Interaction/Slider")]
 public class UISlider : IgnoreTimeScale
@@ -22,49 +21,41 @@ public class UISlider : IgnoreTimeScale
     /// <summary>
     /// Current slider. This value is set prior to the callback function being triggered.
     /// </summary>
-
     static public UISlider current;
 
     /// <summary>
     /// Object used for the foreground.
     /// </summary>
-
     public Transform foreground;
 
     /// <summary>
     /// Object that acts as a thumb.
     /// </summary>
-
     public Transform thumb;
 
     /// <summary>
     /// Direction the slider will expand in.
     /// </summary>
-
     public Direction direction = Direction.Horizontal;
 
     /// <summary>
     /// When at 100%, this will be the size of the foreground object.
     /// </summary>
-
     public Vector2 fullSize = Vector2.zero;
 
     /// <summary>
     /// Event receiver that will be notified of the value changes.
     /// </summary>
-
     public GameObject eventReceiver;
 
     /// <summary>
     /// Function on the event receiver that will receive the value changes.
     /// </summary>
-
     public string functionName = "OnSliderChange";
 
     /// <summary>
     /// Number of steps the slider should be divided into. For example 5 means possible values of 0, 0.25, 0.5, 0.75, and 1.0.
     /// </summary>
-
     public int numberOfSteps = 0;
 
     // Used to be public prior to 1.87
@@ -81,13 +72,11 @@ public class UISlider : IgnoreTimeScale
     /// <summary>
     /// Value of the slider.
     /// </summary>
-
     public float sliderValue { get { return mStepValue; } set { Set(value, false); } }
 
     /// <summary>
     /// Initialize the cached values.
     /// </summary>
-
     private void Init()
     {
         mInitDone = true;
@@ -112,7 +101,6 @@ public class UISlider : IgnoreTimeScale
     /// <summary>
     /// Ensure that we have a background and a foreground object to work with.
     /// </summary>
-
     private void Awake()
     {
         mTrans = transform;
@@ -122,7 +110,6 @@ public class UISlider : IgnoreTimeScale
     /// <summary>
     /// We want to receive drag events from the thumb.
     /// </summary>
-
     private void Start()
     {
         Init();
@@ -139,35 +126,30 @@ public class UISlider : IgnoreTimeScale
     /// <summary>
     /// Update the slider's position on press.
     /// </summary>
-
     private void OnPress(bool pressed)
     { if (pressed) UpdateDrag(); }
 
     /// <summary>
     /// When dragged, figure out where the mouse is and calculate the updated value of the slider.
     /// </summary>
-
     private void OnDrag(Vector2 delta)
     { UpdateDrag(); }
 
     /// <summary>
     /// Callback from the thumb.
     /// </summary>
-
     private void OnPressThumb(GameObject go, bool pressed)
     { if (pressed) UpdateDrag(); }
 
     /// <summary>
     /// Callback from the thumb.
     /// </summary>
-
     private void OnDragThumb(GameObject go, Vector2 delta)
     { UpdateDrag(); }
 
     /// <summary>
     /// Watch for key events and adjust the value accordingly.
     /// </summary>
-
     private void OnKey(KeyCode key)
     {
         float step = (numberOfSteps > 1f) ? 1f / (numberOfSteps - 1) : 0.125f;
@@ -187,7 +169,6 @@ public class UISlider : IgnoreTimeScale
     /// <summary>
     /// Update the slider's position based on the mouse.
     /// </summary>
-
     private void UpdateDrag()
     {
         // Create a plane for the slider
@@ -219,7 +200,6 @@ public class UISlider : IgnoreTimeScale
     /// <summary>
     /// Update the visible slider.
     /// </summary>
-
     private void Set(float input, bool force)
     {
         if (!mInitDone) Init();
@@ -303,7 +283,6 @@ public class UISlider : IgnoreTimeScale
     /// <summary>
     /// Force-update the slider. Useful if you've changed the properties and want it to update visually.
     /// </summary>
-
     public void ForceUpdate()
     {
         Set(rawValue, true);

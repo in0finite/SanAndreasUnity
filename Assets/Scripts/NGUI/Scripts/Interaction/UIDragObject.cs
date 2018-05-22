@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Allows dragging of the specified target object by mouse or touch, optionally limiting it to be within the UIPanel's clipped rectangle.
 /// </summary>
-
 [AddComponentMenu("NGUI/Interaction/Drag Object")]
 public class UIDragObject : IgnoreTimeScale
 {
@@ -22,37 +21,31 @@ public class UIDragObject : IgnoreTimeScale
     /// <summary>
     /// Target object that will be dragged.
     /// </summary>
-
     public Transform target;
 
     /// <summary>
     /// Scale value applied to the drag delta. Set X or Y to 0 to disallow dragging in that direction.
     /// </summary>
-
     public Vector3 scale = Vector3.one;
 
     /// <summary>
     /// Effect the scroll wheel will have on the momentum.
     /// </summary>
-
     public float scrollWheelFactor = 0f;
 
     /// <summary>
     /// Whether the dragging will be restricted to be within the parent panel's bounds.
     /// </summary>
-
     public bool restrictWithinPanel = false;
 
     /// <summary>
     /// Effect to apply when dragging.
     /// </summary>
-
     public DragEffect dragEffect = DragEffect.MomentumAndSpring;
 
     /// <summary>
     /// How much momentum gets applied when the press is released after dragging.
     /// </summary>
-
     public float momentumAmount = 35f;
 
     private Plane mPlane;
@@ -66,7 +59,6 @@ public class UIDragObject : IgnoreTimeScale
     /// <summary>
     /// Find the panel responsible for this object.
     /// </summary>
-
     private void FindPanel()
     {
         mPanel = (target != null) ? UIPanel.Find(target.transform, false) : null;
@@ -76,7 +68,6 @@ public class UIDragObject : IgnoreTimeScale
     /// <summary>
     /// Create a plane on which we will be performing the dragging.
     /// </summary>
-
     private void OnPress(bool pressed)
     {
         if (enabled && gameObject.active && target != null)
@@ -115,7 +106,6 @@ public class UIDragObject : IgnoreTimeScale
     /// <summary>
     /// Drag the object along the plane.
     /// </summary>
-
     private void OnDrag(Vector2 delta)
     {
         if (enabled && gameObject.active && target != null)
@@ -169,7 +159,6 @@ public class UIDragObject : IgnoreTimeScale
     /// <summary>
     /// Apply the dragging momentum.
     /// </summary>
-
     private void LateUpdate()
     {
         float delta = UpdateRealTimeDelta();
@@ -219,7 +208,6 @@ public class UIDragObject : IgnoreTimeScale
     /// <summary>
     /// If the object should support the scroll wheel, do it.
     /// </summary>
-
     private void OnScroll(float delta)
     {
         if (enabled && gameObject.active)

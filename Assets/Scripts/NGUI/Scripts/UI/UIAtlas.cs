@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// UI Atlas contains a collection of sprites inside one large texture atlas.
 /// </summary>
-
 [AddComponentMenu("NGUI/UI/Atlas")]
 public class UIAtlas : UIBaseAtlas
 {

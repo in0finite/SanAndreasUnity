@@ -3,7 +3,6 @@ using UnityEngine;
 /// <summary>
 /// Example script that can be used to show tooltips.
 /// </summary>
-
 [AddComponentMenu("Game/UI/Tooltip")]
 public class UITooltip : MonoBehaviour
 {
@@ -32,7 +31,6 @@ public class UITooltip : MonoBehaviour
     /// <summary>
     /// Get a list of widgets underneath the tooltip.
     /// </summary>
-
     private void Start()
     {
         mTrans = transform;
@@ -46,7 +44,6 @@ public class UITooltip : MonoBehaviour
     /// <summary>
     /// Update the tooltip's alpha based on the target value.
     /// </summary>
-
     private void Update()
     {
         if (mCurrent != mTarget)
@@ -72,7 +69,6 @@ public class UITooltip : MonoBehaviour
     /// <summary>
     /// Set the alpha of all widgets.
     /// </summary>
-
     private void SetAlpha(float val)
     {
         for (int i = 0, imax = mWidgets.Length; i < imax; ++i)
@@ -87,7 +83,6 @@ public class UITooltip : MonoBehaviour
     /// <summary>
     /// Set the tooltip's text to the specified string.
     /// </summary>
-
     private void SetText(string tooltipText)
     {
         if (text != null && !string.IsNullOrEmpty(tooltipText))
@@ -162,7 +157,6 @@ public class UITooltip : MonoBehaviour
     /// <summary>
     /// Show a tooltip with the specified text.
     /// </summary>
-
     static public void ShowText(string tooltipText)
     {
         if (mInstance != null)

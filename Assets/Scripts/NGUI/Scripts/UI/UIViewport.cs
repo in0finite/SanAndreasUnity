@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// This script can be used to restrict camera rendering to a specific part of the screen by specifying the two corners.
 /// </summary>
-
 [ExecuteInEditMode]
 [RequireComponent(typeof(Camera))]
 [AddComponentMenu("NGUI/UI/Viewport Camera")]

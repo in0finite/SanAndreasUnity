@@ -9,14 +9,12 @@ using UnityEngine;
 /// <summary>
 /// Inspector class used to view UIDrawCalls.
 /// </summary>
-
 [CustomEditor(typeof(UIDrawCall))]
 public class UIDrawCallInspector : Editor
 {
     /// <summary>
     /// Draw the inspector widget.
     /// </summary>
-
     public override void OnInspectorGUI()
     {
         if (Event.current.type == EventType.Repaint || Event.current.type == EventType.Layout)

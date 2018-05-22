@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// This script automatically changes the color of the specified sprite based on the value of the slider.
 /// </summary>
-
 [ExecuteInEditMode]
 [RequireComponent(typeof(UISlider))]
 [AddComponentMenu("NGUI/Examples/Slider Colors")]

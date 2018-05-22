@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Base class for all tweening operations.
 /// </summary>
-
 public abstract class UITweener : IgnoreTimeScale
 {
     public enum Method
@@ -29,43 +28,36 @@ public abstract class UITweener : IgnoreTimeScale
     /// <summary>
     /// Tweening method used.
     /// </summary>
-
     public Method method = Method.Linear;
 
     /// <summary>
     /// Does it play once? Does it loop?
     /// </summary>
-
     public Style style = Style.Once;
 
     /// <summary>
     /// How long is the duration of the tween?
     /// </summary>
-
     public float duration = 1f;
 
     /// <summary>
     /// Whether the tweener will use steeper curves for ease in / out style interpolation.
     /// </summary>
-
     public bool steeperCurves = false;
 
     /// <summary>
     /// Used by buttons and tween sequences. Group of '0' means not in a sequence.
     /// </summary>
-
     public int tweenGroup = 0;
 
     /// <summary>
     /// Target used with 'callWhenFinished', or this game object if none was specified.
     /// </summary>
-
     public GameObject eventReceiver;
 
     /// <summary>
     /// Name of the function to call when the tween finishes.
     /// </summary>
-
     public string callWhenFinished;
 
     private float mDuration = 0f;
@@ -75,7 +67,6 @@ public abstract class UITweener : IgnoreTimeScale
     /// <summary>
     /// Amount advanced per delta time.
     /// </summary>
-
     public float amountPerDelta
     {
         get
@@ -92,26 +83,22 @@ public abstract class UITweener : IgnoreTimeScale
     /// <summary>
     /// Tween factor, 0-1 range.
     /// </summary>
-
     public float factor { get { return mFactor; } }
 
     /// <summary>
     /// Direction in which the tween is currently playing.
     /// </summary>
-
     public AnimationOrTween.Direction direction { get { return mAmountPerDelta < 0f ? AnimationOrTween.Direction.Reverse : AnimationOrTween.Direction.Forward; } }
 
     /// <summary>
     /// Update on start, so there is no frame in-between.
     /// </summary>
-
     private void Start()
     { Update(); }
 
     /// <summary>
     /// Update the tweening factor and call the virtual update function.
     /// </summary>
-
     private void Update()
     {
         float delta = UpdateRealTimeDelta();
@@ -208,7 +195,6 @@ public abstract class UITweener : IgnoreTimeScale
     /// <summary>
     /// Manually activate the tweening process, reversing it if necessary.
     /// </summary>
-
     public void Play(bool forward)
     {
         mAmountPerDelta = Mathf.Abs(amountPerDelta);
@@ -222,7 +208,6 @@ public abstract class UITweener : IgnoreTimeScale
     /// <summary>
     /// Manually reset the tweener's state to the beginning.
     /// </summary>
-
     public void Reset()
     {
         mFactor = (mAmountPerDelta < 0f) ? 1f : 0f;
@@ -231,7 +216,6 @@ public abstract class UITweener : IgnoreTimeScale
     /// <summary>
     /// Manually start the tweening process, reversing its direction.
     /// </summary>
-
     public void Toggle()
     {
         if (mFactor > 0f)
@@ -248,13 +232,11 @@ public abstract class UITweener : IgnoreTimeScale
     /// <summary>
     /// Actual tweening logic should go here.
     /// </summary>
-
     abstract protected void OnUpdate(float factor);
 
     /// <summary>
     /// Starts the tweening operation.
     /// </summary>
-
     static public T Begin<T>(GameObject go, float duration) where T : UITweener
     {
         T comp = go.GetComponent<T>();

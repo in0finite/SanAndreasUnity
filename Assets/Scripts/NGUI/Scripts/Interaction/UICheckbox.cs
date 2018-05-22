@@ -9,7 +9,6 @@ using UnityEngine;
 /// <summary>
 /// Simple checkbox functionality. If 'option' is enabled, checking this checkbox will uncheck all other checkboxes with the same parent.
 /// </summary>
-
 [AddComponentMenu("NGUI/Interaction/Checkbox")]
 public class UICheckbox : MonoBehaviour
 {
@@ -33,7 +32,6 @@ public class UICheckbox : MonoBehaviour
     /// <summary>
     /// Whether the checkbox is checked.
     /// </summary>
-
     public bool isChecked
     {
         get { return mChecked; }
@@ -43,7 +41,6 @@ public class UICheckbox : MonoBehaviour
     /// <summary>
     /// Legacy functionality support -- set the radio button root if the 'option' value was 'true'.
     /// </summary>
-
     private void Awake()
     {
         mTrans = transform;
@@ -60,7 +57,6 @@ public class UICheckbox : MonoBehaviour
     /// <summary>
     /// Activate the initial state.
     /// </summary>
-
     private void Start()
     {
         if (eventReceiver == null) eventReceiver = gameObject;
@@ -72,14 +68,12 @@ public class UICheckbox : MonoBehaviour
     /// <summary>
     /// Check or uncheck on click.
     /// </summary>
-
     private void OnClick()
     { if (enabled) isChecked = !isChecked; }
 
     /// <summary>
     /// Fade out or fade in the checkmark and notify the target of OnChecked event.
     /// </summary>
-
     private void Set(bool state)
     {
         if (!mStarted)

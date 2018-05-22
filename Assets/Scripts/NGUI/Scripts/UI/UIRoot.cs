@@ -10,7 +10,6 @@ using UnityEngine;
 /// This is a script used to keep the game object scaled to 2/(Screen.height).
 /// If you use it, be sure to NOT use UIOrthoCamera at the same time.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Root")]
 public class UIRoot : MonoBehaviour
@@ -61,7 +60,6 @@ public class UIRoot : MonoBehaviour
     /// <summary>
     /// Broadcast the specified message to the entire UI.
     /// </summary>
-
     static public void Broadcast(string funcName)
     {
         for (int i = 0, imax = mRoots.Count; i < imax; ++i)
@@ -74,7 +72,6 @@ public class UIRoot : MonoBehaviour
     /// <summary>
     /// Broadcast the specified message to the entire UI.
     /// </summary>
-
     static public void Broadcast(string funcName, object param)
     {
         if (param == null)

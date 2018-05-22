@@ -10,7 +10,6 @@ using UnityEngine;
 /// In most cases you should use UIEventListener script instead. For example:
 /// UIEventListener.Get(gameObject).onClick += MyClickFunction;
 /// </summary>
-
 [AddComponentMenu("NGUI/Interaction/Forward Events")]
 public class UIForwardEvents : MonoBehaviour
 {

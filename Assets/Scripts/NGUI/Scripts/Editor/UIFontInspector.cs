@@ -10,7 +10,6 @@ using UnityEngine;
 /// <summary>
 /// Inspector class used to view and edit UIFonts.
 /// </summary>
-
 [CustomEditor(typeof(UIFont))]
 public class UIFontInspector : Editor
 {

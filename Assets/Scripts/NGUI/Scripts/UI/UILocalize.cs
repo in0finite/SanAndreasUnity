@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Simple script that lets you localize a UIWidget.
 /// </summary>
-
 [RequireComponent(typeof(UIWidget))]
 [AddComponentMenu("NGUI/UI/Localize")]
 public class UILocalize : MonoBehaviour
@@ -16,7 +15,6 @@ public class UILocalize : MonoBehaviour
     /// <summary>
     /// Localization key.
     /// </summary>
-
     public string key;
 
     private string mLanguage;
@@ -25,7 +23,6 @@ public class UILocalize : MonoBehaviour
     /// <summary>
     /// This function is called by the Localization manager via a broadcast SendMessage.
     /// </summary>
-
     private void OnLocalize(Localization loc)
     {
         if (mLanguage != loc.currentLanguage)
@@ -56,7 +53,6 @@ public class UILocalize : MonoBehaviour
     /// <summary>
     /// Localize the widget on enable, but only if it has been started already.
     /// </summary>
-
     private void OnEnable()
     {
         if (mStarted && Localization.instance != null) OnLocalize(Localization.instance);
@@ -65,7 +61,6 @@ public class UILocalize : MonoBehaviour
     /// <summary>
     /// Localize the widget on start.
     /// </summary>
-
     private void Start()
     {
         mStarted = true;

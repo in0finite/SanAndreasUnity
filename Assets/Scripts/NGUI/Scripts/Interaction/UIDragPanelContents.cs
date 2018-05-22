@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Allows dragging of the specified target panel's contents by mouse or touch.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/Interaction/Drag Panel Contents")]
 public class UIDragPanelContents : MonoBehaviour
@@ -16,7 +15,6 @@ public class UIDragPanelContents : MonoBehaviour
     /// <summary>
     /// This panel's contents will be dragged by the script.
     /// </summary>
-
     public UIDraggablePanel draggablePanel;
 
     // Version 1.92 and earlier referenced the panel instead of UIDraggablePanel script.
@@ -25,7 +23,6 @@ public class UIDragPanelContents : MonoBehaviour
     /// <summary>
     /// Backwards compatibility.
     /// </summary>
-
     private void Awake()
     {
         // Legacy functionality support for backwards compatibility
@@ -47,7 +44,6 @@ public class UIDragPanelContents : MonoBehaviour
     /// <summary>
     /// Automatically find the draggable panel if possible.
     /// </summary>
-
     private void Start()
     {
         if (draggablePanel == null)
@@ -59,7 +55,6 @@ public class UIDragPanelContents : MonoBehaviour
     /// <summary>
     /// Create a plane on which we will be performing the dragging.
     /// </summary>
-
     private void OnPress(bool pressed)
     {
         if (enabled && gameObject.active && draggablePanel != null)
@@ -71,7 +66,6 @@ public class UIDragPanelContents : MonoBehaviour
     /// <summary>
     /// Drag the object along the plane.
     /// </summary>
-
     private void OnDrag(Vector2 delta)
     {
         if (enabled && gameObject.active && draggablePanel != null)
@@ -83,7 +77,6 @@ public class UIDragPanelContents : MonoBehaviour
     /// <summary>
     /// If the object should support the scroll wheel, do it.
     /// </summary>
-
     private void OnScroll(float delta)
     {
         if (enabled && gameObject.active && draggablePanel != null)

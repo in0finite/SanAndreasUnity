@@ -11,7 +11,6 @@ using UnityEngine;
 /// with rows and columns automatically adjusting their size to fit their content
 /// (think "table" tag in HTML).
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/Interaction/Table")]
 public class UITable : MonoBehaviour
@@ -40,7 +39,6 @@ public class UITable : MonoBehaviour
     /// <summary>
     /// Function that sorts items by name.
     /// </summary>
-
     static public int SortByName(Transform a, Transform b)
     {
         return string.Compare(a.name, b.name);
@@ -49,7 +47,6 @@ public class UITable : MonoBehaviour
     /// <summary>
     /// Positions the grid items, taking their own size into consideration.
     /// </summary>
-
     private void RepositionVariableSize(List<Transform> children)
     {
         float xOffset = 0;
@@ -127,7 +124,6 @@ public class UITable : MonoBehaviour
     /// <summary>
     /// Recalculate the position of all elements within the table, sorting them alphabetically if necessary.
     /// </summary>
-
     public void Reposition()
     {
         if (mStarted)
@@ -151,7 +147,6 @@ public class UITable : MonoBehaviour
     /// <summary>
     /// Position the grid's contents when the script starts.
     /// </summary>
-
     private void Start()
     {
         mStarted = true;
@@ -167,7 +162,6 @@ public class UITable : MonoBehaviour
     /// <summary>
     /// Is it time to reposition? Do so now.
     /// </summary>
-
     private void LateUpdate()
     {
         if (repositionNow)

@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// UIFont contains everything needed to be able to print text.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/UI/Font")]
 public class UIFont : UIBaseFont

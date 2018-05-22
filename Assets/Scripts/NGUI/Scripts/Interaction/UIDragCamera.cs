@@ -8,7 +8,6 @@ using UnityEngine;
 /// <summary>
 /// Allows dragging of the camera object and restricts camera's movement to be within bounds of the area created by the rootForBounds colliders.
 /// </summary>
-
 [ExecuteInEditMode]
 [AddComponentMenu("NGUI/Interaction/Drag Camera")]
 public class UIDragCamera : IgnoreTimeScale
@@ -16,7 +15,6 @@ public class UIDragCamera : IgnoreTimeScale
     /// <summary>
     /// Target object that will be dragged.
     /// </summary>
-
     public UIDraggableCamera draggableCamera;
 
     // Version 1.92 and earlier referenced the target and had properties specified on every drag script.
@@ -25,7 +23,6 @@ public class UIDragCamera : IgnoreTimeScale
     /// <summary>
     /// Automatically find the draggable camera if possible.
     /// </summary>
-
     private void Awake()
     {
         // Legacy functionality support for backwards compatibility
@@ -51,7 +48,6 @@ public class UIDragCamera : IgnoreTimeScale
     /// <summary>
     /// Forward the press event to the draggable camera.
     /// </summary>
-
     private void OnPress(bool isPressed)
     {
         if (enabled && gameObject.active && draggableCamera != null)
@@ -63,7 +59,6 @@ public class UIDragCamera : IgnoreTimeScale
     /// <summary>
     /// Forward the drag event to the draggable camera.
     /// </summary>
-
     private void OnDrag(Vector2 delta)
     {
         if (enabled && gameObject.active && draggableCamera != null)
@@ -75,7 +70,6 @@ public class UIDragCamera : IgnoreTimeScale
     /// <summary>
     /// Forward the scroll event to the draggable camera.
     /// </summary>
-
     private void OnScroll(float delta)
     {
         if (enabled && gameObject.active && draggableCamera != null)
