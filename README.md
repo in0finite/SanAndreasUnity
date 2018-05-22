@@ -10,6 +10,16 @@ Before starting the game, create/edit config.user.json inside project folder to 
 
 Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data folder. The script which should do that, doesn't work right now.
 
+![CodeFactor](https://www.codefactor.io/repository/github/z3nth10n/sanandreasunity/badge/master)
+
+[![GitHub issues](https://img.shields.io/github/issues/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/issues)
+
+[![GitHub forks](https://img.shields.io/github/forks/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/network)
+
+[![GitHub license](https://img.shields.io/github/license/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/blob/master/LICENSE)
+
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/z3nth10n/SanAndreasUnity.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fz3nth10n%2FSanAndreasUnity)
+
 ## In game controls
 
 V - spawn vehicle
