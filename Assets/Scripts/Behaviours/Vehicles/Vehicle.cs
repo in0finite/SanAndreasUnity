@@ -381,8 +381,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (headlights != null)
             {
-                m_frontLeftLight = SetCarLight(taillights, VehicleLight.FrontLeft);
-                m_frontRightLight = SetCarLight(taillights, VehicleLight.FrontRight);
+                m_frontLeftLight = SetCarLight(headlights, VehicleLight.FrontLeft);
+                m_frontRightLight = SetCarLight(headlights, VehicleLight.FrontRight);
             }
 
             if (taillights != null)
@@ -400,7 +400,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private Light SetCarLight(Transform parent, VehicleLight light, Vector3? pos = null)
         {
             GameObject gameObject = null;
-            return SetCarLight(parent, light, pos.Value == null ? (IsLeftLight(light) ? Vector3.zero : new Vector3(-parent.localPosition.x * 2, 0, 0)) : pos.Value, out gameObject);
+            return SetCarLight(parent, light, pos == null ? (IsLeftLight(light) ? Vector3.zero : new Vector3(-parent.localPosition.x * 2, 0, 0)) : pos.Value, out gameObject);
         }
 
         private Light SetCarLight(Transform parent, VehicleLight light, Vector3 pos, out GameObject go)
@@ -418,6 +418,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             // Rear light props
             Light ret = lightObj.gameObject.AddComponent<Light>();
             SetLightProps(GetVehicleLightParent(light), ref ret);
+
+            // Now set its blinker
 
             go = lightObj.gameObject;
             return ret;

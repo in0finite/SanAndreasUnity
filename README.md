@@ -197,11 +197,15 @@ F9 - Toggle velocimeter
 
 - Log extension is printed in hexadecimal on Sublime Text (change extension)
 
-- Car light break on impact (turn off)
+- I think that car light break doesn't work fine
 
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is running Unity Editor undr `--force-glcore` and going to **Assets > Reimport all**
 
 - Running with `--force-glcore` makes Unity Editor slower when near objects has to be rendered
+
+### Leaks
+
+- With the new car light system batches has aumented 
 
 ## Media
 
