@@ -20,6 +20,20 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         All = Front | Rear
     }
 
+    public enum VehicleBlinker
+    {
+        FrontLeft = 1,
+        FrontRight = 2,
+
+        RearLeft = 4,
+        RearRight = 8,
+
+        Front = FrontLeft | FrontRight,
+        Rear = RearLeft | RearRight,
+
+        All = Front | Rear
+    }
+
 #if CLIENT
     public partial class Vehicle : Networking.Networkable
 #else
@@ -367,56 +381,72 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (headlights != null)
             {
-                Transform f_rightLight = new GameObject("rightLight").transform;
-                f_rightLight.parent = headlights;
-
-                f_rightLight.localPosition = new Vector3(-headlights.localPosition.x * 2, 0, -.5f);
-                f_rightLight.localRotation = Quaternion.identity;
-
-                // Front light props
-                m_frontRightLight = f_rightLight.gameObject.AddComponent<Light>();
-                SetLightProps(VehicleLight.Front, ref m_frontRightLight);
-
-                Transform f_leftLight = new GameObject("leftLight").transform;
-                f_leftLight.parent = headlights;
-
-                f_leftLight.localPosition = new Vector3(0, 0, -.5f);
-                f_leftLight.localRotation = Quaternion.identity;
-
-                // Front light props
-                m_frontLeftLight = f_leftLight.gameObject.AddComponent<Light>();
-                SetLightProps(VehicleLight.Front, ref m_frontLeftLight);
+                m_frontLeftLight = SetCarLight(taillights, VehicleLight.FrontLeft);
+                m_frontRightLight = SetCarLight(taillights, VehicleLight.FrontRight);
             }
 
             if (taillights != null)
             {
-                Transform r_rightLight = new GameObject("rightLight").transform;
-                r_rightLight.parent = taillights;
-
-                Quaternion rot = Quaternion.Euler(Vector3.right * 180);
-
-                r_rightLight.localPosition = new Vector3(-taillights.localPosition.x * 2, 0, 0);
-                r_rightLight.localRotation = rot;
-
-                // Rear light props
-                m_rearRightLight = r_rightLight.gameObject.AddComponent<Light>();
-                SetLightProps(VehicleLight.Rear, ref m_rearRightLight);
-
-                Transform r_leftLight = new GameObject("leftLight").transform;
-                r_leftLight.parent = taillights;
-
-                r_leftLight.localPosition = Vector3.zero;
-                r_leftLight.localRotation = rot;
-
-                // Rear light props
-                m_rearLeftLight = r_leftLight.gameObject.AddComponent<Light>();
-                SetLightProps(VehicleLight.Rear, ref m_rearLeftLight);
+                m_rearLeftLight = SetCarLight(taillights, VehicleLight.RearLeft);
+                m_rearRightLight = SetCarLight(taillights, VehicleLight.RearRight);
             }
 
             m_frontLeftLightOk = m_frontLeftLight != null;
             m_frontRightLightOk = m_frontRightLight != null;
             m_rearLeftLightOk = m_rearLeftLight != null;
             m_rearRightLightOk = m_rearRightLight != null;
+        }
+
+        private Light SetCarLight(Transform parent, VehicleLight light, Vector3? pos = null)
+        {
+            GameObject gameObject = null;
+            return SetCarLight(parent, light, pos.Value == null ? (IsLeftLight(light) ? Vector3.zero : new Vector3(-parent.localPosition.x * 2, 0, 0)) : pos.Value, out gameObject);
+        }
+
+        private Light SetCarLight(Transform parent, VehicleLight light, Vector3 pos, out GameObject go)
+        {
+            if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
+
+            Transform lightObj = new GameObject(GetLightName(light)).transform;
+            lightObj.parent = parent;
+
+            Quaternion rot = IsFrontLight(light) ? Quaternion.identity : Quaternion.Euler(Vector3.right * 180);
+
+            lightObj.localPosition = pos;
+            lightObj.localRotation = rot;
+
+            // Rear light props
+            Light ret = lightObj.gameObject.AddComponent<Light>();
+            SetLightProps(GetVehicleLightParent(light), ref ret);
+
+            go = lightObj.gameObject;
+            return ret;
+        }
+
+        private bool IsFrontLight(VehicleLight light)
+        {
+            return light == VehicleLight.Front || light == VehicleLight.FrontLeft || light == VehicleLight.FrontRight;
+        }
+
+        private bool IsLeftLight(VehicleLight light)
+        {
+            return light == VehicleLight.FrontLeft || light == VehicleLight.RearLeft;
+        }
+
+        private string GetLightName(VehicleLight light)
+        {
+            if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
+            string lightName = light.ToString();
+
+            return string.Format("{0}Light", IsFrontLight(light) ? lightName.Substring(5) : lightName.Substring(4));
+        }
+
+        private VehicleLight GetVehicleLightParent(VehicleLight light)
+        {
+            if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
+            string lightName = light.ToString();
+
+            return (VehicleLight)System.Enum.Parse(typeof(VehicleLight), IsFrontLight(light) ? lightName.Substring(0, 5) : lightName.Substring(0, 4));
         }
 
         private void SetLightProps(VehicleLight vehicleLight, ref Light light)
