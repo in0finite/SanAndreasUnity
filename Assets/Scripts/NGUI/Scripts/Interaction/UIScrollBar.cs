@@ -40,12 +40,26 @@ public class UIScrollBar : MonoBehaviour
     /// <summary>
     /// Cached for speed.
     /// </summary>
-    public Transform cachedTransform { get { if (mTrans == null) mTrans = transform; return mTrans; } }
+    public Transform cachedTransform
+    {
+        get
+        {
+            if (mTrans == null) mTrans = transform;
+            return mTrans;
+        }
+    }
 
     /// <summary>
     /// Camera used to draw the scroll bar.
     /// </summary>
-    public Camera cachedCamera { get { if (mCam == null) mCam = NGUITools.FindCameraForLayer(gameObject.layer); return mCam; } }
+    public Camera cachedCamera
+    {
+        get
+        {
+            if (mCam == null) mCam = NGUITools.FindCameraForLayer(gameObject.layer);
+            return mCam;
+        }
+    }
 
     /// <summary>
     /// Sprite used for the background.

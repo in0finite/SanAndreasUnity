@@ -12,132 +12,6 @@
       },
       "results": [
         {
-          "ruleId": "CS0169",
-          "level": "warning",
-          "message": "The field 'Program.workerObject' is never used",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
-                "region": {
-                  "startLine": 15,
-                  "startColumn": 41,
-                  "endLine": 15,
-                  "endColumn": 53
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 3
-          }
-        },
-        {
-          "ruleId": "CS0649",
-          "level": "warning",
-          "message": "Field 'Program.controllerServer' is never assigned to, and will always have its default value null",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
-                "region": {
-                  "startLine": 13,
-                  "startColumn": 41,
-                  "endLine": 13,
-                  "endColumn": 57
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 4
-          }
-        },
-        {
-          "ruleId": "S125",
-          "level": "warning",
-          "message": "Remove this commented out code.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
-                "region": {
-                  "startLine": 12,
-                  "startColumn": 9,
-                  "endLine": 12,
-                  "endColumn": 182
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S125",
-          "level": "warning",
-          "message": "Remove this commented out code.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
-                "region": {
-                  "startLine": 13,
-                  "startColumn": 59,
-                  "endLine": 13,
-                  "endColumn": 260
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S125",
-          "level": "warning",
-          "message": "Remove this commented out code.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
-                "region": {
-                  "startLine": 19,
-                  "startColumn": 13,
-                  "endLine": 19,
-                  "endColumn": 91
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S125",
-          "level": "warning",
-          "message": "Remove this commented out code.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
-                "region": {
-                  "startLine": 25,
-                  "startColumn": 13,
-                  "endLine": 25,
-                  "endColumn": 127
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
           "ruleId": "S125",
           "level": "warning",
           "message": "Remove this commented out code.",
@@ -150,69 +24,6 @@
                   "startColumn": 17,
                   "endLine": 41,
                   "endColumn": 51
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1144",
-          "level": "warning",
-          "message": "Remove the unused private field 'workerObject'.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
-                "region": {
-                  "startLine": 15,
-                  "startColumn": 9,
-                  "endLine": 15,
-                  "endColumn": 54
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S1118",
-          "level": "warning",
-          "message": "Add a 'protected' constructor or the 'static' keyword to the class declaration.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
-                "region": {
-                  "startLine": 10,
-                  "startColumn": 20,
-                  "endLine": 10,
-                  "endColumn": 27
-                }
-              }
-            }
-          ],
-          "properties": {
-            "warningLevel": 1
-          }
-        },
-        {
-          "ruleId": "S3459",
-          "level": "warning",
-          "message": "Remove unassigned field 'controllerServer', or set its value.",
-          "locations": [
-            {
-              "resultFile": {
-                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
-                "region": {
-                  "startLine": 13,
-                  "startColumn": 41,
-                  "endLine": 13,
-                  "endColumn": 57
                 }
               }
             }
@@ -243,10 +54,52 @@
               "physicalLocation": {
                 "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
                 "region": {
-                  "startLine": 47,
-                  "startColumn": 36,
-                  "endLine": 47,
-                  "endColumn": 49
+                  "startLine": 46,
+                  "startColumn": 54,
+                  "endLine": 46,
+                  "endColumn": 67
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S1118",
+          "level": "warning",
+          "message": "Add a 'protected' constructor or the 'static' keyword to the class declaration.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 20,
+                  "endLine": 11,
+                  "endColumn": 27
+                }
+              }
+            }
+          ],
+          "properties": {
+            "warningLevel": 1
+          }
+        },
+        {
+          "ruleId": "S4210",
+          "level": "warning",
+          "message": "Add the 'STAThread' attribute to this entry point.",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///D:/UNITY/Unity%20Projects/SanAndreasUnity/VS/SanAndreasConsole/Program.cs",
+                "region": {
+                  "startLine": 23,
+                  "startColumn": 29,
+                  "endLine": 23,
+                  "endColumn": 33
                 }
               }
             }
@@ -257,55 +110,12 @@
         }
       ],
       "rules": {
-        "CS0169": {
-          "id": "CS0169",
-          "shortDescription": "Field is never used",
-          "defaultLevel": "warning",
-          "properties": {
-            "category": "Compiler",
-            "isEnabledByDefault": true,
-            "tags": [
-              "Compiler",
-              "Telemetry"
-            ]
-          }
-        },
-        "CS0649": {
-          "id": "CS0649",
-          "shortDescription": "Field is never assigned to, and will always have its default value",
-          "defaultLevel": "warning",
-          "properties": {
-            "category": "Compiler",
-            "isEnabledByDefault": true,
-            "tags": [
-              "Compiler",
-              "Telemetry"
-            ]
-          }
-        },
         "S1118": {
           "id": "S1118",
           "shortDescription": "Utility classes should not have public constructors",
           "fullDescription": "Utility classes, which are collections of static members, are not meant to be instantiated. Even abstract utility classes, which can be extended, should not have public constructors.",
           "defaultLevel": "warning",
           "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1118",
-          "properties": {
-            "category": "Major Code Smell",
-            "isEnabledByDefault": true,
-            "tags": [
-              "C#",
-              "SonarWay",
-              "MainSourceScope",
-              "TestSourceScope"
-            ]
-          }
-        },
-        "S1144": {
-          "id": "S1144",
-          "shortDescription": "Unused private types or members should be removed",
-          "fullDescription": "private or internal types or private members that are never executed or referenced are dead code: unnecessary, inoperative code that should be removed. Cleaning out dead code decreases the size of the maintained codebase, making it easier to understand the program and preventing bugs from being introduced.",
-          "defaultLevel": "warning",
-          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-1144",
           "properties": {
             "category": "Major Code Smell",
             "isEnabledByDefault": true,
@@ -351,14 +161,14 @@
             ]
           }
         },
-        "S3459": {
-          "id": "S3459",
-          "shortDescription": "Unassigned members should be removed",
-          "fullDescription": "Fields and auto-properties that are never assigned to hold the default values for their types. They are either pointless code or, more likely, mistakes. ",
+        "S4210": {
+          "id": "S4210",
+          "shortDescription": "Windows Forms entry points should be marked with STAThread",
+          "fullDescription": "When an assembly uses Windows Forms (classes and interfaces from the System.Windows.Forms namespace) its entry point should be marked with the STAThreadAttribute to indicate that the threading model should be \"Single-Threaded Apartment\" (STA) which is the only one supported by Windows Forms.",
           "defaultLevel": "warning",
-          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-3459",
+          "helpUri": "https://rules.sonarsource.com/csharp/RSPEC-4210",
           "properties": {
-            "category": "Minor Code Smell",
+            "category": "Major Bug",
             "isEnabledByDefault": true,
             "tags": [
               "C#",

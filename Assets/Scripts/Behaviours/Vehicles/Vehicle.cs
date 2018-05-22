@@ -3,8 +3,8 @@ using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
 using LightData = SpriteLights.LightData;
+using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {

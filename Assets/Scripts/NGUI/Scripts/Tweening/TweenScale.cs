@@ -18,7 +18,14 @@ public class TweenScale : UITweener
     private Transform mTrans;
     private UITable mTable;
 
-    public Transform cachedTransform { get { if (mTrans == null) mTrans = transform; return mTrans; } }
+    public Transform cachedTransform
+    {
+        get
+        {
+            if (mTrans == null) mTrans = transform;
+            return mTrans;
+        }
+    }
 
     public Vector3 scale { get { return cachedTransform.localScale; } set { cachedTransform.localScale = value; } }
 
@@ -31,7 +38,11 @@ public class TweenScale : UITweener
             if (mTable == null)
             {
                 mTable = NGUITools.FindInParents<UITable>(gameObject);
-                if (mTable == null) { updateTable = false; return; }
+                if (mTable == null)
+                {
+                    updateTable = false;
+                    return;
+                }
             }
             mTable.repositionNow = true;
         }

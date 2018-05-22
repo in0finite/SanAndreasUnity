@@ -282,11 +282,25 @@ namespace UnityEditor.PostProcessing
             var channels = Vector4.zero;
             switch (m_MonitorSettings.histogramMode)
             {
-                case HistogramMode.Red: channels.x = 1f; break;
-                case HistogramMode.Green: channels.y = 1f; break;
-                case HistogramMode.Blue: channels.z = 1f; break;
-                case HistogramMode.Luminance: channels.w = 1f; break;
-                default: channels = new Vector4(1f, 1f, 1f, 0f); break;
+                case HistogramMode.Red:
+                    channels.x = 1f;
+                    break;
+
+                case HistogramMode.Green:
+                    channels.y = 1f;
+                    break;
+
+                case HistogramMode.Blue:
+                    channels.z = 1f;
+                    break;
+
+                case HistogramMode.Luminance:
+                    channels.w = 1f;
+                    break;
+
+                default:
+                    channels = new Vector4(1f, 1f, 1f, 0f);
+                    break;
             }
 
             var cs = m_ComputeShader;

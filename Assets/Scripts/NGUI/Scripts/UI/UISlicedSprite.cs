@@ -21,7 +21,14 @@ public class UISlicedSprite : UISprite
     /// <summary>
     /// Inner set of UV coordinates.
     /// </summary>
-    public Rect innerUV { get { UpdateUVs(false); return mInnerUV; } }
+    public Rect innerUV
+    {
+        get
+        {
+            UpdateUVs(false);
+            return mInnerUV;
+        }
+    }
 
     /// <summary>
     /// Whether the center part of the sprite will be filled or not. Turn it off if you want only to borders to show up.

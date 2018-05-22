@@ -86,10 +86,14 @@ namespace UnityEngine.PostProcessing
 
                 GL.Begin(GL.TRIANGLE_STRIP);
                 {
-                    GL.TexCoord2(0f, 0f); GL.Vertex3(0f, 0f, 0.1f);
-                    GL.TexCoord2(1f, 0f); GL.Vertex3(1f, 0f, 0.1f);
-                    GL.TexCoord2(0f, 1f); GL.Vertex3(0f, 1f, 0.1f);
-                    GL.TexCoord2(1f, 1f); GL.Vertex3(1f, 1f, 0.1f);
+                    GL.TexCoord2(0f, 0f);
+                    GL.Vertex3(0f, 0f, 0.1f);
+                    GL.TexCoord2(1f, 0f);
+                    GL.Vertex3(1f, 0f, 0.1f);
+                    GL.TexCoord2(0f, 1f);
+                    GL.Vertex3(0f, 1f, 0.1f);
+                    GL.TexCoord2(1f, 1f);
+                    GL.Vertex3(1f, 1f, 0.1f);
                 }
                 GL.End();
             }
@@ -111,10 +115,14 @@ namespace UnityEngine.PostProcessing
 
                 GL.Begin(GL.TRIANGLE_STRIP);
                 {
-                    GL.TexCoord2(0f, 0f); GL.Vertex3(0f, 0f, 0.1f);
-                    GL.TexCoord2(1f, 0f); GL.Vertex3(1f, 0f, 0.1f);
-                    GL.TexCoord2(0f, 1f); GL.Vertex3(0f, 1f, 0.1f);
-                    GL.TexCoord2(1f, 1f); GL.Vertex3(1f, 1f, 0.1f);
+                    GL.TexCoord2(0f, 0f);
+                    GL.Vertex3(0f, 0f, 0.1f);
+                    GL.TexCoord2(1f, 0f);
+                    GL.Vertex3(1f, 0f, 0.1f);
+                    GL.TexCoord2(0f, 1f);
+                    GL.Vertex3(0f, 1f, 0.1f);
+                    GL.TexCoord2(1f, 1f);
+                    GL.Vertex3(1f, 1f, 0.1f);
                 }
                 GL.End();
             }

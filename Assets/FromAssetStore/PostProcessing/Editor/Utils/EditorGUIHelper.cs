@@ -1,8 +1,8 @@
 using System;
-using UnityEngine;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
+using UnityEngine;
 using UnityEngine.PostProcessing;
 
 namespace UnityEditor.PostProcessing
@@ -16,7 +16,7 @@ namespace UnityEditor.PostProcessing
 
         #region GUIContent caching
 
-        static Dictionary<string, GUIContent> s_GUIContentCache;
+        private static Dictionary<string, GUIContent> s_GUIContentCache;
 
         public static GUIContent GetContent(string textAndTooltip)
         {
@@ -39,7 +39,7 @@ namespace UnityEditor.PostProcessing
             return content;
         }
 
-        #endregion
+        #endregion GUIContent caching
 
         public static bool Header(string title, SerializedProperty group, Action resetAction)
         {
@@ -157,7 +157,7 @@ namespace UnityEditor.PostProcessing
             return display;
         }
 
-        static void CopySettings(SerializedProperty settings)
+        private static void CopySettings(SerializedProperty settings)
         {
             var t = typeof(PostProcessingProfile);
             var settingsStruct = ReflectionUtils.GetFieldValueFromPath(settings.serializedObject.targetObject, ref t, settings.propertyPath);
@@ -165,7 +165,7 @@ namespace UnityEditor.PostProcessing
             EditorGUIUtility.systemCopyBuffer = serializedString;
         }
 
-        static bool CanPaste(SerializedProperty settings)
+        private static bool CanPaste(SerializedProperty settings)
         {
             var data = EditorGUIUtility.systemCopyBuffer;
 
@@ -181,7 +181,7 @@ namespace UnityEditor.PostProcessing
             return parts[0] == field.FieldType.ToString();
         }
 
-        static void PasteSettings(SerializedProperty settings)
+        private static void PasteSettings(SerializedProperty settings)
         {
             Undo.RecordObject(settings.serializedObject.targetObject, "Paste effect settings");
             var field = ReflectionUtils.GetFieldInfoFromPath(settings.serializedObject.targetObject, settings.propertyPath);

@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Xml;
+using UnityEngine;
 
 /*
 

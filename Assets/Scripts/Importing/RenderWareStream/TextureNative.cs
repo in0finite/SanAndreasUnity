@@ -50,9 +50,12 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                         break;
 
                     case "DXT3":
-                        Compression = CompressionMode.DXT3; break;
+                        Compression = CompressionMode.DXT3;
+                        break;
+
                     default:
-                        Compression = CompressionMode.None; break;
+                        Compression = CompressionMode.None;
+                        break;
                 }
             }
             else

@@ -8,7 +8,7 @@ namespace UnityEditor.PostProcessing
 {
     public static class ReflectionUtils
     {
-        static Dictionary<KeyValuePair<object, string>, FieldInfo> s_FieldInfoFromPaths = new Dictionary<KeyValuePair<object, string>, FieldInfo>();
+        private static Dictionary<KeyValuePair<object, string>, FieldInfo> s_FieldInfoFromPaths = new Dictionary<KeyValuePair<object, string>, FieldInfo>();
 
         public static FieldInfo GetFieldInfoFromPath(object source, string path)
         {
@@ -46,6 +46,7 @@ namespace UnityEditor.PostProcessing
                     var ue = expr.Body as UnaryExpression;
                     me = (ue != null ? ue.Operand : null) as MemberExpression;
                     break;
+
                 default:
                     me = expr.Body as MemberExpression;
                     break;

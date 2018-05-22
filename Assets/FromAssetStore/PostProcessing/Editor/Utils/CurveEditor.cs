@@ -8,21 +8,23 @@ namespace UnityEditor.PostProcessing
     {
         #region Enums
 
-        enum EditMode
+        private enum EditMode
         {
             None,
             Moving,
             TangentEdit
         }
 
-        enum Tangent
+        private enum Tangent
         {
             In,
             Out
         }
-        #endregion
+
+        #endregion Enums
 
         #region Structs
+
         public struct Settings
         {
             public Rect bounds;
@@ -122,27 +124,31 @@ namespace UnityEditor.PostProcessing
                 this.position = position;
             }
         }
-        #endregion
+
+        #endregion Structs
 
         #region Fields & properties
+
         public Settings settings { get; private set; }
 
-        Dictionary<SerializedProperty, CurveState> m_Curves;
-        Rect m_CurveArea;
+        private Dictionary<SerializedProperty, CurveState> m_Curves;
+        private Rect m_CurveArea;
 
-        SerializedProperty m_SelectedCurve;
-        int m_SelectedKeyframeIndex = -1;
+        private SerializedProperty m_SelectedCurve;
+        private int m_SelectedKeyframeIndex = -1;
 
-        EditMode m_EditMode = EditMode.None;
-        Tangent m_TangentEditMode;
+        private EditMode m_EditMode = EditMode.None;
+        private Tangent m_TangentEditMode;
 
-        bool m_Dirty;
-        #endregion
+        private bool m_Dirty;
+
+        #endregion Fields & properties
 
         #region Constructors & destructors
+
         public CurveEditor()
             : this(Settings.defaultSettings)
-        {}
+        { }
 
         public CurveEditor(Settings settings)
         {
@@ -150,9 +156,10 @@ namespace UnityEditor.PostProcessing
             m_Curves = new Dictionary<SerializedProperty, CurveState>();
         }
 
-        #endregion
+        #endregion Constructors & destructors
 
         #region Public API
+
         public void Add(params SerializedProperty[] curves)
         {
             foreach (var curve in curves)
@@ -247,11 +254,11 @@ namespace UnityEditor.PostProcessing
             return m_Dirty;
         }
 
-        #endregion
+        #endregion Public API
 
         #region UI & events
 
-        void OnCurveGUI(Rect rect, SerializedProperty curve, CurveState state)
+        private void OnCurveGUI(Rect rect, SerializedProperty curve, CurveState state)
         {
             // Discard invisible curves
             if (!state.visible)
@@ -494,7 +501,7 @@ namespace UnityEditor.PostProcessing
             SaveCurve(curve, animCurve);
         }
 
-        void OnGeneralUI(Rect rect)
+        private void OnGeneralUI(Rect rect)
         {
             var e = Event.current;
 
@@ -601,28 +608,28 @@ namespace UnityEditor.PostProcessing
             }
         }
 
-        void SaveCurve(SerializedProperty prop, AnimationCurve curve)
+        private void SaveCurve(SerializedProperty prop, AnimationCurve curve)
         {
             prop.animationCurveValue = curve;
         }
 
-        void Invalidate()
+        private void Invalidate()
         {
             m_Dirty = true;
         }
 
-        #endregion
+        #endregion UI & events
 
         #region Keyframe manipulations
 
-        void SelectKeyframe(SerializedProperty curve, int keyframeIndex)
+        private void SelectKeyframe(SerializedProperty curve, int keyframeIndex)
         {
             m_SelectedKeyframeIndex = keyframeIndex;
             m_SelectedCurve = curve;
             Invalidate();
         }
 
-        void ContextMenuAddKey(Vector3 hit, bool createOnCurve)
+        private void ContextMenuAddKey(Vector3 hit, bool createOnCurve)
         {
             SerializedObject serializedObject = null;
 
@@ -651,7 +658,7 @@ namespace UnityEditor.PostProcessing
             Invalidate();
         }
 
-        void EditCreateKeyframe(AnimationCurve curve, Vector3 position, bool createOnCurve, float zeroKeyConstantValue)
+        private void EditCreateKeyframe(AnimationCurve curve, Vector3 position, bool createOnCurve, float zeroKeyConstantValue)
         {
             float tangent = EvaluateTangent(curve, position.x);
 
@@ -665,24 +672,24 @@ namespace UnityEditor.PostProcessing
             AddKeyframe(curve, new Keyframe(position.x, position.y, tangent, tangent));
         }
 
-        void EditDeleteKeyframe(AnimationCurve curve, int keyframeIndex)
+        private void EditDeleteKeyframe(AnimationCurve curve, int keyframeIndex)
         {
             RemoveKeyframe(curve, keyframeIndex);
         }
 
-        void AddKeyframe(AnimationCurve curve, Keyframe newValue)
+        private void AddKeyframe(AnimationCurve curve, Keyframe newValue)
         {
             curve.AddKey(newValue);
             Invalidate();
         }
 
-        void RemoveKeyframe(AnimationCurve curve, int keyframeIndex)
+        private void RemoveKeyframe(AnimationCurve curve, int keyframeIndex)
         {
             curve.RemoveKey(keyframeIndex);
             Invalidate();
         }
 
-        void SetKeyframe(AnimationCurve curve, int keyframeIndex, Keyframe newValue)
+        private void SetKeyframe(AnimationCurve curve, int keyframeIndex, Keyframe newValue)
         {
             var keys = curve.keys;
 
@@ -696,7 +703,7 @@ namespace UnityEditor.PostProcessing
             Invalidate();
         }
 
-        void EditMoveKeyframe(AnimationCurve curve, Keyframe[] keys, int keyframeIndex)
+        private void EditMoveKeyframe(AnimationCurve curve, Keyframe[] keys, int keyframeIndex)
         {
             var key = CanvasToCurve(Event.current.mousePosition);
             float inTgt = keys[keyframeIndex].inTangent;
@@ -704,7 +711,7 @@ namespace UnityEditor.PostProcessing
             SetKeyframe(curve, keyframeIndex, new Keyframe(key.x, key.y, inTgt, outTgt));
         }
 
-        void EditMoveTangent(AnimationCurve curve, Keyframe[] keys, int keyframeIndex, Tangent targetTangent, bool linkTangents)
+        private void EditMoveTangent(AnimationCurve curve, Keyframe[] keys, int keyframeIndex, Tangent targetTangent, bool linkTangents)
         {
             var pos = CanvasToCurve(Event.current.mousePosition);
 
@@ -737,16 +744,16 @@ namespace UnityEditor.PostProcessing
             SetKeyframe(curve, keyframeIndex, new Keyframe(time, value, inTangent, outTangent));
         }
 
-        #endregion
+        #endregion Keyframe manipulations
 
         #region Maths utilities
 
-        Vector3 CurveToCanvas(Keyframe keyframe)
+        private Vector3 CurveToCanvas(Keyframe keyframe)
         {
             return CurveToCanvas(new Vector3(keyframe.time, keyframe.value));
         }
 
-        Vector3 CurveToCanvas(Vector3 position)
+        private Vector3 CurveToCanvas(Vector3 position)
         {
             var bounds = settings.bounds;
             var output = new Vector3((position.x - bounds.x) / (bounds.xMax - bounds.x), (position.y - bounds.y) / (bounds.yMax - bounds.y));
@@ -755,7 +762,7 @@ namespace UnityEditor.PostProcessing
             return output;
         }
 
-        Vector3 CanvasToCurve(Vector3 position)
+        private Vector3 CanvasToCurve(Vector3 position)
         {
             var bounds = settings.bounds;
             var output = position;
@@ -766,7 +773,7 @@ namespace UnityEditor.PostProcessing
             return output;
         }
 
-        Vector3 CurveTangentToCanvas(float tangent)
+        private Vector3 CurveTangentToCanvas(float tangent)
         {
             if (!float.IsInfinity(tangent))
             {
@@ -778,14 +785,14 @@ namespace UnityEditor.PostProcessing
             return float.IsPositiveInfinity(tangent) ? Vector3.up : Vector3.down;
         }
 
-        Vector3[] BezierSegment(Keyframe start, Keyframe end)
+        private Vector3[] BezierSegment(Keyframe start, Keyframe end)
         {
             var segment = new Vector3[4];
 
             segment[0] = CurveToCanvas(new Vector3(start.time, start.value));
             segment[3] = CurveToCanvas(new Vector3(end.time, end.value));
 
-            float middle  = start.time + ((end.time - start.time) * 0.333333f);
+            float middle = start.time + ((end.time - start.time) * 0.333333f);
             float middle2 = start.time + ((end.time - start.time) * 0.666666f);
 
             segment[1] = CurveToCanvas(new Vector3(middle, ProjectTangent(start.time, start.value, start.outTangent, middle)));
@@ -794,7 +801,7 @@ namespace UnityEditor.PostProcessing
             return segment;
         }
 
-        Vector3[] HardSegment(Keyframe start, Keyframe end)
+        private Vector3[] HardSegment(Keyframe start, Keyframe end)
         {
             var segment = new Vector3[3];
 
@@ -805,12 +812,12 @@ namespace UnityEditor.PostProcessing
             return segment;
         }
 
-        float ProjectTangent(float inPosition, float inValue, float inTangent, float projPosition)
+        private float ProjectTangent(float inPosition, float inValue, float inTangent, float projPosition)
         {
             return inValue + ((projPosition - inPosition) * inTangent);
         }
 
-        float EvaluateTangent(AnimationCurve curve, float time)
+        private float EvaluateTangent(AnimationCurve curve, float time)
         {
             int prev = -1, next = 0;
             for (int i = 0; i < curve.keys.Length; i++)
@@ -842,6 +849,6 @@ namespace UnityEditor.PostProcessing
             return (vn - vp) / (tn - tp);
         }
 
-        #endregion
+        #endregion Maths utilities
     }
 }

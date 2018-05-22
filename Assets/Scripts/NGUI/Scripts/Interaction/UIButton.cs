@@ -14,7 +14,6 @@ public class UIButton : UIButtonColor
     /// <summary>
     /// If the collider is disabled, assume the disabled color.
     /// </summary>
-
     protected override void OnEnable()
     {
         if (isEnabled) base.OnEnable();
@@ -24,7 +23,6 @@ public class UIButton : UIButtonColor
     /// <summary>
     /// Whether the button should be enabled.
     /// </summary>
-
     public bool isEnabled
     {
         get
@@ -48,7 +46,6 @@ public class UIButton : UIButtonColor
     /// <summary>
     /// Update the button's color to either enabled or disabled state.
     /// </summary>
-
     private void UpdateColor(bool shouldBeEnabled, bool immediate)
     {
         if (tweenTarget)

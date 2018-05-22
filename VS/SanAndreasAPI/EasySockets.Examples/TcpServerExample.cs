@@ -67,9 +67,12 @@ namespace MFatihMAR.EasySockets.Examples
 
                 switch (blocks[0])
                 {
-                    default: logger.Log("commands: isListening / start / send <ipep> <message> / disconnect <ipep> / stop / exit"); break;
-                    case "start": _server.Start(new IPEndPoint(IPAddress.Any, port)); break;
-                    case "isListening": logger.Log(_server.IsListening ? "server listening" : "server not listening"); break;
+                    default: logger.Log("commands: isListening / start / send <ipep> <message> / disconnect <ipep> / stop / exit");
+break;
+                    case "start": _server.Start(new IPEndPoint(IPAddress.Any, port));
+break;
+                    case "isListening": logger.Log(_server.IsListening ? "server listening" : "server not listening");
+break;
                     case "send":
                         {
                             if (blocks.Length < 3)
@@ -92,8 +95,10 @@ namespace MFatihMAR.EasySockets.Examples
                         }
                         break;
 
-                    case "disconnect": _server.Disconnect(blocks[1].ToIPEP()); break;
-                    case "stop": _server.Stop(); break;
+                    case "disconnect": _server.Disconnect(blocks[1].ToIPEP());
+break;
+                    case "stop": _server.Stop();
+break;
                     case "exit":
                         {
                             if (_server.IsListening)

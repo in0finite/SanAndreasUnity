@@ -68,9 +68,12 @@ namespace MFatihMAR.EasySockets.Examples
 
                 switch (blocks[0])
                 {
-                    default: logger.Log("commands: isOpen / isConnected / connect <ipep> / send <message> / disconnect / exit"); break;
-                    case "isOpen": logger.Log(_client.IsOpen ? "socket open" : "socket closed"); break;
-                    case "isConnected": logger.Log(_client.IsConnected ? "socket connected" : "socket disconnected"); break;
+                    default: logger.Log("commands: isOpen / isConnected / connect <ipep> / send <message> / disconnect / exit");
+break;
+                    case "isOpen": logger.Log(_client.IsOpen ? "socket open" : "socket closed");
+break;
+                    case "isConnected": logger.Log(_client.IsConnected ? "socket connected" : "socket disconnected");
+break;
                     case "connect":
                         {
                             var ipep = blocks[1].ToIPEP();
@@ -92,7 +95,8 @@ namespace MFatihMAR.EasySockets.Examples
                         }
                         break;
 
-                    case "disconnect": _client.Disconnect(); break;
+                    case "disconnect": _client.Disconnect();
+break;
                     case "exit":
                         {
                             if (_client.IsOpen)

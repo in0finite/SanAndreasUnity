@@ -205,7 +205,11 @@ namespace Facepunch.ConCommands
                         if (method.ReturnType == typeof(void))
                         {
                             var inner = (ConCommandSilentDelegate)Delegate.CreateDelegate(typeof(ConCommandSilentDelegate), method);
-                            deleg = args => { inner(args); return DefaultSuccessString; };
+                            deleg = args =>
+                            {
+                                inner(args);
+                                return DefaultSuccessString;
+                            };
                         }
                         else
                         {

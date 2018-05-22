@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.PostProcessing;
-using UnityStandardAssets.ImageEffects;
 
 [RequireComponent(typeof(Camera))]
 [RequireComponent(typeof(PostProcessingBehaviour))]

@@ -101,35 +101,91 @@ public class UISettings
     /// <summary>
     /// Name of the font, used by the Font Maker.
     /// </summary>
-    static public string fontName { get { if (!mLoaded) Load(); return mFontName; } set { if (mFontName != value) { mFontName = value; Save(); } } }
+    static public string fontName
+    {
+        get
+        {
+            if (!mLoaded) Load();
+            return mFontName;
+        }
+        set { if (mFontName != value) { mFontName = value; Save(); } }
+    }
 
     /// <summary>
     /// Data used to create the font, used by the Font Maker.
     /// </summary>
-    static public TextAsset fontData { get { if (!mLoaded) Load(); return mFontData; } set { if (mFontData != value) { mFontData = value; Save(); } } }
+    static public TextAsset fontData
+    {
+        get
+        {
+            if (!mLoaded) Load();
+            return mFontData;
+        }
+        set { if (mFontData != value) { mFontData = value; Save(); } }
+    }
 
     /// <summary>
     /// Texture used to create the font, used by the Font Maker.
     /// </summary>
-    static public Texture2D fontTexture { get { if (!mLoaded) Load(); return mFontTexture; } set { if (mFontTexture != value) { mFontTexture = value; Save(); } } }
+    static public Texture2D fontTexture
+    {
+        get
+        {
+            if (!mLoaded) Load();
+            return mFontTexture;
+        }
+        set { if (mFontTexture != value) { mFontTexture = value; Save(); } }
+    }
 
     /// <summary>
     /// Name of the atlas, used by the Atlas maker.
     /// </summary>
-    static public string atlasName { get { if (!mLoaded) Load(); return mAtlasName; } set { if (mAtlasName != value) { mAtlasName = value; Save(); } } }
+    static public string atlasName
+    {
+        get
+        {
+            if (!mLoaded) Load();
+            return mAtlasName;
+        }
+        set { if (mAtlasName != value) { mAtlasName = value; Save(); } }
+    }
 
     /// <summary>
     /// Whether the texture preview will be shown.
     /// </summary>
-    static public bool texturePreview { get { if (!mLoaded) Load(); return mPreview; } set { if (mPreview != value) { mPreview = value; Save(); } } }
+    static public bool texturePreview
+    {
+        get
+        {
+            if (!mLoaded) Load();
+            return mPreview;
+        }
+        set { if (mPreview != value) { mPreview = value; Save(); } }
+    }
 
     /// <summary>
     /// Added padding in-between of sprites when creating an atlas.
     /// </summary>
-    static public int atlasPadding { get { if (!mLoaded) Load(); return mAtlasPadding; } set { if (mAtlasPadding != value) { mAtlasPadding = value; Save(); } } }
+    static public int atlasPadding
+    {
+        get
+        {
+            if (!mLoaded) Load();
+            return mAtlasPadding;
+        }
+        set { if (mAtlasPadding != value) { mAtlasPadding = value; Save(); } }
+    }
 
     /// <summary>
     /// Whether the transparent pixels will be trimmed away when creating an atlas.
     /// </summary>
-    static public bool atlasTrimming { get { if (!mLoaded) Load(); return mAtlasTrimming; } set { if (mAtlasTrimming != value) { mAtlasTrimming = value; Save(); } } }
+    static public bool atlasTrimming
+    {
+        get
+        {
+            if (!mLoaded) Load();
+            return mAtlasTrimming;
+        }
+        set { if (mAtlasTrimming != value) { mAtlasTrimming = value; Save(); } }
+    }
 }

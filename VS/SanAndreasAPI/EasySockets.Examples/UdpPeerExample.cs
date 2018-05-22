@@ -24,9 +24,12 @@ namespace MFatihMAR.EasySockets.Examples
 
                 switch (blocks[0])
                 {
-                    default: Console.WriteLine("commands: isOpen / start / send <ipep> <message> / stop / exit"); break;
-                    case "isOpen": Console.WriteLine(_peer.IsOpen ? "socket open" : "socket closed"); break;
-                    case "start": _peer.Start(new IPEndPoint(IPAddress.Any, port)); break;
+                    default: Console.WriteLine("commands: isOpen / start / send <ipep> <message> / stop / exit");
+break;
+                    case "isOpen": Console.WriteLine(_peer.IsOpen ? "socket open" : "socket closed");
+break;
+                    case "start": _peer.Start(new IPEndPoint(IPAddress.Any, port));
+break;
                     case "send":
                         {
                             if (blocks.Length < 3)
@@ -49,7 +52,8 @@ namespace MFatihMAR.EasySockets.Examples
                         }
                         break;
 
-                    case "stop": _peer.Stop(); break;
+                    case "stop": _peer.Stop();
+break;
                     case "exit":
                         {
                             if (_peer.IsOpen)

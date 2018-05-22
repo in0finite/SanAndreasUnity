@@ -51,9 +51,17 @@ namespace SanAndreasUnity.Importing
 
                 switch (compression)
                 {
-                    case VectorCompression.Collision: compressionScale = 128.0f; break;
-                    case VectorCompression.Animation: compressionScale = 1024.0f; break;
-                    default: compressionScale = 1.0f; break;
+                    case VectorCompression.Collision:
+                        compressionScale = 128.0f;
+                        break;
+
+                    case VectorCompression.Animation:
+                        compressionScale = 1024.0f;
+                        break;
+
+                    default:
+                        compressionScale = 1.0f;
+                        break;
                 }
 
                 X = reader.ReadInt16() / compressionScale;

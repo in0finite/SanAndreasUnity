@@ -685,7 +685,8 @@ namespace Cadenza.Numerics
 
         public override decimal FromIConvertible(IConvertible value)
         {
-            Check.Value(value); return value.ToDecimal(null);
+            Check.Value(value);
+            return value.ToDecimal(null);
         }
 
         public override decimal Quotient(decimal x, decimal y)
@@ -710,12 +711,14 @@ namespace Cadenza.Numerics
 
         public override decimal QuotientRemainder(decimal x, decimal y, out decimal remainder)
         {
-            remainder = x % y; return (int)(x / y);
+            remainder = x % y;
+            return (int)(x / y);
         }
 
         public override decimal DivideIntegralModulus(decimal x, decimal y, out decimal modulus)
         {
-            modulus = Math.Abs(x % y); return DivideIntegral(x, y);
+            modulus = Math.Abs(x % y);
+            return DivideIntegral(x, y);
         }
 
         public override IConvertible
@@ -951,12 +954,14 @@ namespace Cadenza.Numerics
 
         public override double FromIConvertible(IConvertible value)
         {
-            Check.Value(value); return value.ToDouble(null);
+            Check.Value(value);
+            return value.ToDouble(null);
         }
 
         public override double Quotient(double x, double y)
         {
-            double q = (x / y); return IsNaN(q) || IsInfinite(q) ? q : (double)(int)q;
+            double q = (x / y);
+            return IsNaN(q) || IsInfinite(q) ? q : (double)(int)q;
         }  // truncates toward 0
 
         public override double Remainder(double x, double y)
@@ -976,12 +981,14 @@ namespace Cadenza.Numerics
 
         public override double QuotientRemainder(double x, double y, out double remainder)
         {
-            remainder = Remainder(x, y); return Quotient(x, y);
+            remainder = Remainder(x, y);
+            return Quotient(x, y);
         }
 
         public override double DivideIntegralModulus(double x, double y, out double modulus)
         {
-            modulus = Math.Abs(x % y); return DivideIntegral(x, y);
+            modulus = Math.Abs(x % y);
+            return DivideIntegral(x, y);
         }
 
         public override IConvertible
@@ -1217,12 +1224,14 @@ namespace Cadenza.Numerics
 
         public override float FromIConvertible(IConvertible value)
         {
-            Check.Value(value); return value.ToSingle(null);
+            Check.Value(value);
+            return value.ToSingle(null);
         }
 
         public override float Quotient(float x, float y)
         {
-            float q = (x / y); return IsNaN(q) || IsInfinite(q) ? q : (float)(int)q;
+            float q = (x / y);
+            return IsNaN(q) || IsInfinite(q) ? q : (float)(int)q;
         }  // truncates toward 0
 
         public override float Remainder(float x, float y)
@@ -1242,12 +1251,14 @@ namespace Cadenza.Numerics
 
         public override float QuotientRemainder(float x, float y, out float remainder)
         {
-            remainder = Remainder(x, y); return Quotient(x, y);
+            remainder = Remainder(x, y);
+            return Quotient(x, y);
         }
 
         public override float DivideIntegralModulus(float x, float y, out float modulus)
         {
-            modulus = Math.Abs(x % y); return DivideIntegral(x, y);
+            modulus = Math.Abs(x % y);
+            return DivideIntegral(x, y);
         }
 
         public override IConvertible
@@ -1483,7 +1494,8 @@ namespace Cadenza.Numerics
 
         public override byte FromIConvertible(IConvertible value)
         {
-            Check.Value(value); return value.ToByte(null);
+            Check.Value(value);
+            return value.ToByte(null);
         }
 
         public override byte Quotient(byte x, byte y)
@@ -1508,12 +1520,14 @@ namespace Cadenza.Numerics
 
         public override byte QuotientRemainder(byte x, byte y, out byte remainder)
         {
-            remainder = checked((byte)(x % y)); return checked((byte)(x / y));
+            remainder = checked((byte)(x % y));
+            return checked((byte)(x / y));
         }
 
         public override byte DivideIntegralModulus(byte x, byte y, out byte modulus)
         {
-            modulus = (byte)Math.Abs(x % y); return DivideIntegral(x, y);
+            modulus = (byte)Math.Abs(x % y);
+            return DivideIntegral(x, y);
         }
 
         public override byte Divide(byte x, byte y)
@@ -1620,7 +1634,8 @@ namespace Cadenza.Numerics
 
         public override short FromIConvertible(IConvertible value)
         {
-            Check.Value(value); return value.ToInt16(null);
+            Check.Value(value);
+            return value.ToInt16(null);
         }
 
         public override short Quotient(short x, short y)
@@ -1645,12 +1660,14 @@ namespace Cadenza.Numerics
 
         public override short QuotientRemainder(short x, short y, out short remainder)
         {
-            remainder = checked((short)(x % y)); return checked((short)(x / y));
+            remainder = checked((short)(x % y));
+            return checked((short)(x / y));
         }
 
         public override short DivideIntegralModulus(short x, short y, out short modulus)
         {
-            modulus = (short)Math.Abs(x % y); return DivideIntegral(x, y);
+            modulus = (short)Math.Abs(x % y);
+            return DivideIntegral(x, y);
         }
 
         public override short Divide(short x, short y)
@@ -1757,7 +1774,8 @@ namespace Cadenza.Numerics
 
         public override int FromIConvertible(IConvertible value)
         {
-            Check.Value(value); return value.ToInt32(null);
+            Check.Value(value);
+            return value.ToInt32(null);
         }
 
         public override int Quotient(int x, int y)
@@ -1782,12 +1800,14 @@ namespace Cadenza.Numerics
 
         public override int QuotientRemainder(int x, int y, out int remainder)
         {
-            remainder = x % y; return x / y;
+            remainder = x % y;
+            return x / y;
         }
 
         public override int DivideIntegralModulus(int x, int y, out int modulus)
         {
-            modulus = Math.Abs(x % y); return DivideIntegral(x, y);
+            modulus = Math.Abs(x % y);
+            return DivideIntegral(x, y);
         }
 
         public override int Divide(int x, int y)
@@ -1894,7 +1914,8 @@ namespace Cadenza.Numerics
 
         public override long FromIConvertible(IConvertible value)
         {
-            Check.Value(value); return value.ToInt64(null);
+            Check.Value(value);
+            return value.ToInt64(null);
         }
 
         public override long Quotient(long x, long y)
@@ -1919,12 +1940,14 @@ namespace Cadenza.Numerics
 
         public override long QuotientRemainder(long x, long y, out long remainder)
         {
-            remainder = checked((long)(x % y)); return checked((long)(x / y));
+            remainder = checked((long)(x % y));
+            return checked((long)(x / y));
         }
 
         public override long DivideIntegralModulus(long x, long y, out long modulus)
         {
-            modulus = (long)Math.Abs(x % y); return DivideIntegral(x, y);
+            modulus = (long)Math.Abs(x % y);
+            return DivideIntegral(x, y);
         }
 
         public override long Divide(long x, long y)
@@ -2031,7 +2054,8 @@ namespace Cadenza.Numerics
 
         public override sbyte FromIConvertible(IConvertible value)
         {
-            Check.Value(value); return value.ToSByte(null);
+            Check.Value(value);
+            return value.ToSByte(null);
         }
 
         public override sbyte Quotient(sbyte x, sbyte y)
@@ -2056,12 +2080,14 @@ namespace Cadenza.Numerics
 
         public override sbyte QuotientRemainder(sbyte x, sbyte y, out sbyte remainder)
         {
-            remainder = checked((sbyte)(x % y)); return checked((sbyte)(x / y));
+            remainder = checked((sbyte)(x % y));
+            return checked((sbyte)(x / y));
         }
 
         public override sbyte DivideIntegralModulus(sbyte x, sbyte y, out sbyte modulus)
         {
-            modulus = (sbyte)Math.Abs(x % y); return DivideIntegral(x, y);
+            modulus = (sbyte)Math.Abs(x % y);
+            return DivideIntegral(x, y);
         }
 
         public override sbyte Divide(sbyte x, sbyte y)
@@ -2168,7 +2194,8 @@ namespace Cadenza.Numerics
 
         public override ushort FromIConvertible(IConvertible value)
         {
-            Check.Value(value); return value.ToUInt16(null);
+            Check.Value(value);
+            return value.ToUInt16(null);
         }
 
         public override ushort Quotient(ushort x, ushort y)
@@ -2193,12 +2220,14 @@ namespace Cadenza.Numerics
 
         public override ushort QuotientRemainder(ushort x, ushort y, out ushort remainder)
         {
-            remainder = checked((ushort)(x % y)); return checked((ushort)(x / y));
+            remainder = checked((ushort)(x % y));
+            return checked((ushort)(x / y));
         }
 
         public override ushort DivideIntegralModulus(ushort x, ushort y, out ushort modulus)
         {
-            modulus = (ushort)Math.Abs(new decimal(x % y)); return DivideIntegral(x, y);
+            modulus = (ushort)Math.Abs(new decimal(x % y));
+            return DivideIntegral(x, y);
         }
 
         public override ushort Divide(ushort x, ushort y)
@@ -2305,7 +2334,8 @@ namespace Cadenza.Numerics
 
         public override uint FromIConvertible(IConvertible value)
         {
-            Check.Value(value); return value.ToUInt32(null);
+            Check.Value(value);
+            return value.ToUInt32(null);
         }
 
         public override uint Quotient(uint x, uint y)
@@ -2330,12 +2360,14 @@ namespace Cadenza.Numerics
 
         public override uint QuotientRemainder(uint x, uint y, out uint remainder)
         {
-            remainder = checked((uint)(x % y)); return checked((uint)(x / y));
+            remainder = checked((uint)(x % y));
+            return checked((uint)(x / y));
         }
 
         public override uint DivideIntegralModulus(uint x, uint y, out uint modulus)
         {
-            modulus = (uint)Math.Abs(x % y); return DivideIntegral(x, y);
+            modulus = (uint)Math.Abs(x % y);
+            return DivideIntegral(x, y);
         }
 
         public override uint Divide(uint x, uint y)
@@ -2427,7 +2459,8 @@ namespace Cadenza.Numerics
 
         public override ulong Negate(ulong value)
         {
-            if (value == 0UL) return value; throw new OverflowException();
+            if (value == 0UL) return value;
+            throw new OverflowException();
         }
 
         public override ulong Abs(ulong value)
@@ -2442,7 +2475,8 @@ namespace Cadenza.Numerics
 
         public override ulong FromIConvertible(IConvertible value)
         {
-            Check.Value(value); return value.ToUInt64(null);
+            Check.Value(value);
+            return value.ToUInt64(null);
         }
 
         public override ulong Quotient(ulong x, ulong y)
@@ -2467,12 +2501,14 @@ namespace Cadenza.Numerics
 
         public override ulong QuotientRemainder(ulong x, ulong y, out ulong remainder)
         {
-            remainder = checked((ulong)(x % y)); return checked((ulong)(x / y));
+            remainder = checked((ulong)(x % y));
+            return checked((ulong)(x / y));
         }
 
         public override ulong DivideIntegralModulus(ulong x, ulong y, out ulong modulus)
         {
-            modulus = (ulong)Math.Abs(new decimal(x % y)); return DivideIntegral(x, y);
+            modulus = (ulong)Math.Abs(new decimal(x % y));
+            return DivideIntegral(x, y);
         }
 
         public override ulong Divide(ulong x, ulong y)

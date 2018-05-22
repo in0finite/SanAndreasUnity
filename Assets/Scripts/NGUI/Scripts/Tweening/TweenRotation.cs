@@ -16,7 +16,15 @@ public class TweenRotation : UITweener
 
     private Transform mTrans;
 
-    public Transform cachedTransform { get { if (mTrans == null) mTrans = transform; return mTrans; } }
+    public Transform cachedTransform
+    {
+        get
+        {
+            if (mTrans == null) mTrans = transform;
+            return mTrans;
+        }
+    }
+
     public Quaternion rotation { get { return cachedTransform.localRotation; } set { cachedTransform.localRotation = value; } }
 
     override protected void OnUpdate(float factor)

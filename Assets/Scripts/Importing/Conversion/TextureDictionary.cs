@@ -59,9 +59,17 @@ namespace SanAndreasUnity.Importing.Conversion
 
                     switch (c)
                     {
-                        case 0: c = 1; break;
-                        case 7: c = 0; break;
-                        default: c = 8 - c; break;
+                        case 0:
+                            c = 1;
+                            break;
+
+                        case 7:
+                            c = 0;
+                            break;
+
+                        default:
+                            c = 8 - c;
+                            break;
                     }
 
                     packed |= ((ulong)c << (3 * j));

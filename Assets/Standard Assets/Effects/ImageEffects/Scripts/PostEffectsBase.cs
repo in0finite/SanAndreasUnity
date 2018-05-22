@@ -171,7 +171,8 @@ namespace UnityStandardAssets.ImageEffects
             {
                 material.SetPass(i);
 
-                float y1_; float y2_;
+                float y1_;
+                float y2_;
                 if (invertY)
                 {
                     y1_ = 1.0f; y2_ = 0.0f;
@@ -188,10 +189,14 @@ namespace UnityStandardAssets.ImageEffects
                 y2 = 1.0f;
                 GL.Begin(GL.QUADS);
 
-                GL.TexCoord2(0.0f, y1_); GL.Vertex3(x1, y1, 0.1f);
-                GL.TexCoord2(1.0f, y1_); GL.Vertex3(x2, y1, 0.1f);
-                GL.TexCoord2(1.0f, y2_); GL.Vertex3(x2, y2, 0.1f);
-                GL.TexCoord2(0.0f, y2_); GL.Vertex3(x1, y2, 0.1f);
+                GL.TexCoord2(0.0f, y1_);
+                GL.Vertex3(x1, y1, 0.1f);
+                GL.TexCoord2(1.0f, y1_);
+                GL.Vertex3(x2, y1, 0.1f);
+                GL.TexCoord2(1.0f, y2_);
+                GL.Vertex3(x2, y2, 0.1f);
+                GL.TexCoord2(0.0f, y2_);
+                GL.Vertex3(x1, y2, 0.1f);
 
                 // right
                 x1 = 1.0f - 1.0f / (dest.width * 1.0f);
@@ -199,10 +204,14 @@ namespace UnityStandardAssets.ImageEffects
                 y1 = 0.0f;
                 y2 = 1.0f;
 
-                GL.TexCoord2(0.0f, y1_); GL.Vertex3(x1, y1, 0.1f);
-                GL.TexCoord2(1.0f, y1_); GL.Vertex3(x2, y1, 0.1f);
-                GL.TexCoord2(1.0f, y2_); GL.Vertex3(x2, y2, 0.1f);
-                GL.TexCoord2(0.0f, y2_); GL.Vertex3(x1, y2, 0.1f);
+                GL.TexCoord2(0.0f, y1_);
+                GL.Vertex3(x1, y1, 0.1f);
+                GL.TexCoord2(1.0f, y1_);
+                GL.Vertex3(x2, y1, 0.1f);
+                GL.TexCoord2(1.0f, y2_);
+                GL.Vertex3(x2, y2, 0.1f);
+                GL.TexCoord2(0.0f, y2_);
+                GL.Vertex3(x1, y2, 0.1f);
 
                 // top
                 x1 = 0.0f;
@@ -210,10 +219,14 @@ namespace UnityStandardAssets.ImageEffects
                 y1 = 0.0f;
                 y2 = 0.0f + 1.0f / (dest.height * 1.0f);
 
-                GL.TexCoord2(0.0f, y1_); GL.Vertex3(x1, y1, 0.1f);
-                GL.TexCoord2(1.0f, y1_); GL.Vertex3(x2, y1, 0.1f);
-                GL.TexCoord2(1.0f, y2_); GL.Vertex3(x2, y2, 0.1f);
-                GL.TexCoord2(0.0f, y2_); GL.Vertex3(x1, y2, 0.1f);
+                GL.TexCoord2(0.0f, y1_);
+                GL.Vertex3(x1, y1, 0.1f);
+                GL.TexCoord2(1.0f, y1_);
+                GL.Vertex3(x2, y1, 0.1f);
+                GL.TexCoord2(1.0f, y2_);
+                GL.Vertex3(x2, y2, 0.1f);
+                GL.TexCoord2(0.0f, y2_);
+                GL.Vertex3(x1, y2, 0.1f);
 
                 // bottom
                 x1 = 0.0f;
@@ -221,10 +234,14 @@ namespace UnityStandardAssets.ImageEffects
                 y1 = 1.0f - 1.0f / (dest.height * 1.0f);
                 y2 = 1.0f;
 
-                GL.TexCoord2(0.0f, y1_); GL.Vertex3(x1, y1, 0.1f);
-                GL.TexCoord2(1.0f, y1_); GL.Vertex3(x2, y1, 0.1f);
-                GL.TexCoord2(1.0f, y2_); GL.Vertex3(x2, y2, 0.1f);
-                GL.TexCoord2(0.0f, y2_); GL.Vertex3(x1, y2, 0.1f);
+                GL.TexCoord2(0.0f, y1_);
+                GL.Vertex3(x1, y1, 0.1f);
+                GL.TexCoord2(1.0f, y1_);
+                GL.Vertex3(x2, y1, 0.1f);
+                GL.TexCoord2(1.0f, y2_);
+                GL.Vertex3(x2, y2, 0.1f);
+                GL.TexCoord2(0.0f, y2_);
+                GL.Vertex3(x1, y2, 0.1f);
 
                 GL.End();
             }

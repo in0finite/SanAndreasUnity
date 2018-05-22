@@ -16,7 +16,15 @@ public class TweenPosition : UITweener
 
     private Transform mTrans;
 
-    public Transform cachedTransform { get { if (mTrans == null) mTrans = transform; return mTrans; } }
+    public Transform cachedTransform
+    {
+        get
+        {
+            if (mTrans == null) mTrans = transform;
+            return mTrans;
+        }
+    }
+
     public Vector3 position { get { return cachedTransform.localPosition; } set { cachedTransform.localPosition = value; } }
 
     override protected void OnUpdate(float factor)

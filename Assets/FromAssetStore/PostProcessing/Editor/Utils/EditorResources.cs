@@ -4,9 +4,9 @@ namespace UnityEditor.PostProcessing
 {
     using UnityObject = Object;
 
-    static class EditorResources
+    internal static class EditorResources
     {
-        static string m_EditorResourcesPath = string.Empty;
+        private static string m_EditorResourcesPath = string.Empty;
 
         internal static string editorResourcesPath
         {
@@ -32,7 +32,7 @@ namespace UnityEditor.PostProcessing
             return AssetDatabase.LoadAssetAtPath<T>(editorResourcesPath + name);
         }
 
-        static bool SearchForEditorResourcesPath(out string path)
+        private static bool SearchForEditorResourcesPath(out string path)
         {
             path = string.Empty;
 
