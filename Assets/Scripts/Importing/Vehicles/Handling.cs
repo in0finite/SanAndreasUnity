@@ -113,7 +113,7 @@ namespace SanAndreasUnity.Importing.Vehicles
 
         private static Dictionary<char, Func<String, IEntry>> _sCtors;
 
-        private static readonly List<IEntry> _sEntries = new List<IEntry>();
+        private static IEnumerable<IEntry> _sEntries;
 
         private static void GenerateCtors()
         {
@@ -221,6 +221,11 @@ namespace SanAndreasUnity.Importing.Vehicles
 
         public static void Load(string path)
         {
+            _sEntries = LoadInternal(path);
+        }
+
+        private static IEnumerable<IEntry> LoadInternal(string path)
+        {
             if (_sCtors == null)
                 GenerateCtors();
 
@@ -240,14 +245,14 @@ namespace SanAndreasUnity.Importing.Vehicles
 
                     if (char.IsLetterOrDigit(prefix))
                     {
-                        _sEntries.Add(_sCtors['\0'](line));
+                        yield return _sCtors['\0'](line);
                         continue;
                     }
 
                     foreach (var pair in _sCtors)
                     {
                         if (pair.Key != prefix) continue;
-                        _sEntries.Add(pair.Value(line.Substring(1).TrimStart()));
+                        yield return pair.Value(line.Substring(1).TrimStart());
                         break;
                     }
                 }
