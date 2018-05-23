@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using SanAndreasUnity.Behaviours.Vehicles;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -174,40 +175,14 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
-        public static void SetPropertyValue(this object obj, string propertyName, object propertyValue)
+        public static object FromHex(this string hexString, Type type)
         {
-            if (obj == null || string.IsNullOrWhiteSpace(propertyName))
-                return;
+            bool signed = Convert.ToBoolean(type.GetField("MinValue").GetValue(null));
 
-            Type objectType = obj.GetType();
-
-            PropertyInfo propertyDetail = objectType.GetProperty(propertyName);
-
-            if (propertyDetail != null && propertyDetail.CanWrite)
-            {
-                Type propertyType = propertyDetail.PropertyType;
-
-                Type dataType = propertyType;
-
-                // Check for nullable types
-                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                {
-                    // Check for null or empty string value.
-                    if (propertyValue == null || string.IsNullOrWhiteSpace(propertyValue.ToString()))
-                    {
-                        propertyDetail.SetValue(obj, null);
-                        return;
-                    }
-                    else
-                    {
-                        dataType = propertyType.GetGenericArguments()[0];
-                    }
-                }
-
-                propertyValue = Convert.ChangeType(propertyValue, propertyType);
-
-                propertyDetail.SetValue(obj, propertyValue);
-            }
+            if (signed)
+                return long.Parse(hexString, NumberStyles.AllowHexSpecifier);
+            else
+                return ulong.Parse(hexString, NumberStyles.AllowHexSpecifier);
         }
     }
 }

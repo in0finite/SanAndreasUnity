@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SanAndreasUnity.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -74,37 +75,11 @@ namespace SanAndreasUnity.Importing.Vehicles
         {
             private static Dictionary<int, Action<string, object>> _sParsers;
 
-#if NET_4_6
-
-            private static Dictionary<Type, Func<string, NumberStyles?, CultureInfo, object>> dict = new Dictionary<Type, Func<string, NumberStyles?, CultureInfo, object>>
-                {
-                    { typeof(byte),   (s, n, c) => n == null ? byte.Parse(s, c) : byte.Parse(s, n.Value, c) },
-                    { typeof(sbyte),  (s, n, c) => n == null ? sbyte.Parse(s, c) : sbyte.Parse(s, n.Value, c) },
-                    { typeof(short),  (s, n, c) => n == null ? short.Parse(s, c) : short.Parse(s, n.Value, c) },
-                    { typeof(ushort), (s, n, c) => n == null ? ushort.Parse(s, c) : ushort.Parse(s, n.Value, c) },
-                    { typeof(int),    (s, n, c) => n == null ? int.Parse(s, c) : int.Parse(s, n.Value, c) },
-                    { typeof(uint),   (s, n, c) => n == null ? uint.Parse(s, c) : uint.Parse(s, n.Value, c) },
-                    { typeof(long),   (s, n, c) => n == null ? long.Parse(s, c) : long.Parse(s, n.Value, c) },
-                    { typeof(ulong),  (s, n, c) => n == null ? ulong.Parse(s, c) : ulong.Parse(s, n.Value, c) },
-                    { typeof(float),  (s, n, c) => n == null ? float.Parse(s, c) : float.Parse(s, n.Value, c) },
-                    { typeof(double),  (s, n, c) => n == null ? double.Parse(s, c) : double.Parse(s, n.Value, c) },
-                    { typeof(decimal),  (s, n, c) => n == null ? decimal.Parse(s, c) : decimal.Parse(s, n.Value, c) },
-                };
-
-#endif
-
-            private static string dd = "";
-
             private static void GenerateParsers()
             {
                 _sParsers = new Dictionary<int, Action<string, object>>();
 
                 var type = typeof(TEntry);
-
-                /*var selfParam = Expression.Parameter(type, "self");
-                var hexNumConst = Expression.Constant(NumberStyles.HexNumber);
-                var valParam = Expression.Parameter(typeof(String), "val");
-                var culture = Expression.Constant(CultureParser.enUs);*/
 
                 foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
@@ -117,7 +92,7 @@ namespace SanAndreasUnity.Importing.Vehicles
 
                     _sParsers.Add(attrib.Value, (s, instance) =>
                     {
-                        set.Invoke(instance, new object[] { prop.PropertyType != typeof(string) ? dict[prop.PropertyType](s, attrib.IsHexNumber ? NumberStyles.HexNumber : (NumberStyles?)null, CultureParser.enUs) : s });
+                        set.Invoke(instance, new object[] { prop.PropertyType != typeof(string) ? Convert.ChangeType(attrib.IsHexNumber ? s.FromHex(prop.PropertyType) : s, prop.PropertyType, CultureParser.enUs) : s });
                     });
                 }
             }
