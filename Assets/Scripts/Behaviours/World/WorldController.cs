@@ -40,7 +40,6 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
-        [Intercept]
         private void Awake()
         {
             light = dirLight.GetComponent<Light>();
