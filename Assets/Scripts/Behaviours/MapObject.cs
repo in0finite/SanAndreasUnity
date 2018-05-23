@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -110,6 +111,7 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!_loaded)
             {
+                //Debug.Log("-444");
                 _loaded = true;
                 OnLoad();
             }

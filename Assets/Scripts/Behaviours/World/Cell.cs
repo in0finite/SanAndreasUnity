@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 //using Facepunch.Networking;
 
@@ -85,6 +86,7 @@ namespace SanAndreasUnity.Behaviours.World
                     //    if (NetConfig.IsServer) {
                     if (loadParkedVehicles)
                     {
+                        //Debug.Log("-444");
                         var parkedVehicles = Item.GetPlacements<ParkedVehicle>(CellIds.ToArray());
                         var cars = parkedVehicles.Select(x => VehicleSpawner.Create(x))
                             .Cast<MapObject>()

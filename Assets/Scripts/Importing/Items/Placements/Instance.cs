@@ -33,8 +33,18 @@ namespace SanAndreasUnity.Importing.Items.Placements
 
         public bool IsLod { get; internal set; }
 
+        //private string DebugX, DebugY, DebugZ;
+
         public Instance(string line) : base(line)
         {
+            /*string strX = string.Format("X => Value: {0} - Parsed: {1}", GetString(3), GetSingle(3)),
+                   strY = string.Format("Y => Value: {0} - Parsed: {1}", GetString(5), GetSingle(5)),
+                   strZ = string.Format("Z => Value: {0} - Parsed: {1}", GetString(4), GetSingle(4));
+
+            DebugX = strX;
+            DebugY = strY;
+            DebugZ = strZ;*/
+
             ObjectId = GetInt(0);
             LodGeometry = GetString(1);
             CellId = GetInt(2);

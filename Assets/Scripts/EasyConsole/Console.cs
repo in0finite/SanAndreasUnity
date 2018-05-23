@@ -128,6 +128,10 @@ public class Console : MonoBehaviour
         RegisterParser(typeof(string), new ParserCallback(parseString));
 
         consoleGUI = GetComponent<ConsoleGUI>();
+
+        //UnityEngine.Profiling.Profiler.logFile = Path.Combine(Application.streamingAssetsPath, "profiling"); //Also supports passing "myLog.raw"
+        //UnityEngine.Profiling.Profiler.enableBinaryLog = true;
+        //UnityEngine.Profiling.Profiler.enabled = true;
     }
 
     private void Start()

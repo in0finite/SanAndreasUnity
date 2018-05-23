@@ -8,6 +8,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         public static VehicleSpawner Create(ParkedVehicle info)
         {
+            //Debug.Log("-333");
             var vs = new GameObject().AddComponent<VehicleSpawner>();
             vs.Initialize(info);
             return vs;
@@ -47,6 +48,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         protected override void OnLoad()
         {
+            Debug.Log("-222");
             Vehicle.Create(this);
         }
     }

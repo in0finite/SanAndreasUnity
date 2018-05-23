@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace SanAndreasUnity.Importing.Items
 {
@@ -72,7 +73,13 @@ namespace SanAndreasUnity.Importing.Items
 
         public float GetSingle(int index)
         {
-            return float.Parse(_parts[index]);
+            string parse = _parts[index];
+
+#if NET_4_6
+            parse = parse.Replace(".", ",");
+#endif
+
+            return float.Parse(parse);
         }
 
         public double GetDouble(int index)

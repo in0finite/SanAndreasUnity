@@ -432,7 +432,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             var obj = SpriteLights.CreateLights(gameObject.name.ToLower() + "-LD", datas.ToArray(), directionalLightsMat);
 
-            Debug.LogFormat("Obj Count: {0}", obj.Count());
+            //Debug.LogFormat("Obj Count: {0}", obj.Count());
 
             gameObject.transform.MakeChild(obj, (p, o) =>
             {

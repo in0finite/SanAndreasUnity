@@ -113,7 +113,11 @@ namespace SanAndreasUnity.Behaviours.World
 
         protected override void OnLoad()
         {
+            //Debug.Log("-444");
+
             if (!_canLoad) return;
+
+            //Debug.Log("-333");
 
             var geoms = Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName);
 
