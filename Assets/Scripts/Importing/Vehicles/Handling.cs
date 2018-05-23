@@ -115,55 +115,8 @@ namespace SanAndreasUnity.Importing.Vehicles
                     if (set == null)
                         throw new Exception("Set method is inaccessible");
 
-                    //Expression input = valParam;
-
-                    /*MethodInfo convert = null;
-
-                    if (prop.PropertyType != typeof(string))
-                    {
-                        var argTypes = attrib.IsHexNumber
-                            ? new[] { typeof(string), typeof(NumberStyles) }
-                            : new[] { typeof(string) };
-
-                        convert = prop.PropertyType.GetMethod("Parse",
-                            BindingFlags.Static | BindingFlags.Public,
-                            null, argTypes, null);
-
-                        if (convert == null)
-                            throw new Exception(String.Format("Cannot convert a string to {0}", prop.PropertyType.Name));
-
-                        /*input = attrib.IsHexNumber
-                            ? Expression.Call(convert, input, hexNumConst, culture)
-                            : Expression.Call(convert, input, culture);*/
-                    //}
-
-                    //var setCall = Expression.Call(selfParam, set, input);
-                    //var lambda = Expression.Lambda<Action<TEntry, string>>(
-                    //    setCall, selfParam, valParam).Compile();
-
                     _sParsers.Add(attrib.Value, (s, instance) =>
                     {
-                        /*catch (KeyNotFoundException ex)
-                        {
-                            string debug = string.Format("Type {0} not found!", prop.PropertyType.Name);
-                            dd = debug;
-                        }
-                        catch (FormatException ex)
-                        {
-                            string debug = string.Format("Parsing sitrng '{0}' into {1} failed!", s, prop.PropertyType.Name);
-                            dd = debug;
-                        }
-                        catch (TargetException ex)
-                        {
-                            string debug = string.Format("Instance passed has an invalid type!");
-                            dd = debug;
-                        }
-                        catch (Exception ex)
-                        {
-                            string debug = ex.ToString();
-                            dd = debug;
-                        }*/
-
                         set.Invoke(instance, new object[] { prop.PropertyType != typeof(string) ? dict[prop.PropertyType](s, attrib.IsHexNumber ? NumberStyles.HexNumber : (NumberStyles?)null, CultureParser.enUs) : s });
                     });
                 }
@@ -191,8 +144,6 @@ namespace SanAndreasUnity.Importing.Vehicles
         {
             _sCtors = new Dictionary<char, Func<string, IEntry>>();
 
-            //var param = Expression.Parameter(typeof(String), "line");
-
             foreach (var type in typeof(Handling).GetNestedTypes())
             {
                 if (type.IsAbstract) continue;
@@ -200,11 +151,6 @@ namespace SanAndreasUnity.Importing.Vehicles
                 if (!typeof(IEntry).IsAssignableFrom(type)) continue;
                 var attrib = (PrefixAttribute)type.GetCustomAttributes(typeof(PrefixAttribute), true).FirstOrDefault();
                 var prefix = attrib != null ? attrib.Value : '\0';
-
-                /*var ctor = type.GetConstructor(new[] { typeof(string) });
-                var ctorCall = Expression.New(ctor, param);
-                var cast = Expression.Convert(ctorCall, typeof(IEntry));
-                var lambda = Expression.Lambda<Func<String, IEntry>>(cast, param).Compile();*/
 
                 _sCtors.Add(prefix, s => { return (IEntry)Activator.CreateInstance(type, new object[] { s }); });
             }
