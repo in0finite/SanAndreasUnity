@@ -48,7 +48,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         protected override void OnLoad()
         {
-            Debug.Log("-222");
+            //Debug.Log("-222");
             Vehicle.Create(this);
         }
     }

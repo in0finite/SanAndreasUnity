@@ -2,6 +2,7 @@
 using SanAndreasUnity.Behaviours.Vehicles;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -170,6 +171,42 @@ namespace SanAndreasUnity.Utilities
             {
                 child.transform.parent = parent;
                 if (actionPerLoop != null) actionPerLoop(parent, child);
+            }
+        }
+
+        public static void SetPropertyValue(this object obj, string propertyName, object propertyValue)
+        {
+            if (obj == null || string.IsNullOrWhiteSpace(propertyName))
+                return;
+
+            Type objectType = obj.GetType();
+
+            PropertyInfo propertyDetail = objectType.GetProperty(propertyName);
+
+            if (propertyDetail != null && propertyDetail.CanWrite)
+            {
+                Type propertyType = propertyDetail.PropertyType;
+
+                Type dataType = propertyType;
+
+                // Check for nullable types
+                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    // Check for null or empty string value.
+                    if (propertyValue == null || string.IsNullOrWhiteSpace(propertyValue.ToString()))
+                    {
+                        propertyDetail.SetValue(obj, null);
+                        return;
+                    }
+                    else
+                    {
+                        dataType = propertyType.GetGenericArguments()[0];
+                    }
+                }
+
+                propertyValue = Convert.ChangeType(propertyValue, propertyType);
+
+                propertyDetail.SetValue(obj, propertyValue);
             }
         }
     }

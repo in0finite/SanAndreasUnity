@@ -99,14 +99,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static Vehicle Create(VehicleSpawner spawner)
         {
-            Debug.Log("-111");
+            //Debug.Log("-111");
             return Create(spawner.Info.CarId, spawner.Info.Colors, spawner.transform.position,
                 spawner.transform.rotation);
         }
 
         public static Vehicle Create(int carId, int[] colors, Vector3 position, Quaternion rotation)
         {
-            Debug.Log("-000");
+            //Debug.Log("-000");
             var inst = new GameObject().AddComponent<Vehicle>();
 
             VehicleDef def;

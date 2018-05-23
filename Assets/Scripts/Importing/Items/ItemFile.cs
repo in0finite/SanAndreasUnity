@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace SanAndreasUnity.Importing.Items
 {
@@ -23,17 +22,6 @@ namespace SanAndreasUnity.Importing.Items
 
     public abstract class ItemBase
     {
-        private static CultureInfo _enUs;
-
-        private static CultureInfo enUs
-        {
-            get
-            {
-                if (_enUs == null) _enUs = new CultureInfo("en-US");
-                return _enUs;
-            }
-        }
-
         private readonly string[] _parts;
 
         public int Parts { get { return _parts.Length; } }
@@ -69,12 +57,12 @@ namespace SanAndreasUnity.Importing.Items
 
         public byte GetByte(int index)
         {
-            return byte.Parse(_parts[index], enUs);
+            return byte.Parse(_parts[index], CultureParser.enUs);
         }
 
         public int GetInt(int index)
         {
-            return int.Parse(_parts[index], enUs);
+            return int.Parse(_parts[index], CultureParser.enUs);
         }
 
         public int GetInt(int index, NumberStyles numberStyles)
@@ -84,12 +72,12 @@ namespace SanAndreasUnity.Importing.Items
 
         public float GetSingle(int index)
         {
-            return float.Parse(_parts[index], enUs);
+            return float.Parse(_parts[index], CultureParser.enUs);
         }
 
         public double GetDouble(int index)
         {
-            return double.Parse(_parts[index], enUs);
+            return double.Parse(_parts[index], CultureParser.enUs);
         }
     }
 

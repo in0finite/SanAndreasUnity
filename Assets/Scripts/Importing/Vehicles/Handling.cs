@@ -72,17 +72,39 @@ namespace SanAndreasUnity.Importing.Vehicles
         public abstract class Entry<TEntry> : IEntry
             where TEntry : Entry<TEntry>
         {
-            private static Dictionary<int, Action<TEntry, string>> _sParsers;
+            private static Dictionary<int, Action<string, object>> _sParsers;
+
+#if NET_4_6
+
+            private static Dictionary<Type, Func<string, NumberStyles?, CultureInfo, object>> dict = new Dictionary<Type, Func<string, NumberStyles?, CultureInfo, object>>
+                {
+                    { typeof(byte),   (s, n, c) => n == null ? byte.Parse(s, c) : byte.Parse(s, n.Value, c) },
+                    { typeof(sbyte),  (s, n, c) => n == null ? sbyte.Parse(s, c) : sbyte.Parse(s, n.Value, c) },
+                    { typeof(short),  (s, n, c) => n == null ? short.Parse(s, c) : short.Parse(s, n.Value, c) },
+                    { typeof(ushort), (s, n, c) => n == null ? ushort.Parse(s, c) : ushort.Parse(s, n.Value, c) },
+                    { typeof(int),    (s, n, c) => n == null ? int.Parse(s, c) : int.Parse(s, n.Value, c) },
+                    { typeof(uint),   (s, n, c) => n == null ? uint.Parse(s, c) : uint.Parse(s, n.Value, c) },
+                    { typeof(long),   (s, n, c) => n == null ? long.Parse(s, c) : long.Parse(s, n.Value, c) },
+                    { typeof(ulong),  (s, n, c) => n == null ? ulong.Parse(s, c) : ulong.Parse(s, n.Value, c) },
+                    { typeof(float),  (s, n, c) => n == null ? float.Parse(s, c) : float.Parse(s, n.Value, c) },
+                    { typeof(double),  (s, n, c) => n == null ? double.Parse(s, c) : double.Parse(s, n.Value, c) },
+                    { typeof(decimal),  (s, n, c) => n == null ? decimal.Parse(s, c) : decimal.Parse(s, n.Value, c) },
+                };
+
+#endif
+
+            private static string dd = "";
 
             private static void GenerateParsers()
             {
-                _sParsers = new Dictionary<int, Action<TEntry, string>>();
+                _sParsers = new Dictionary<int, Action<string, object>>();
 
                 var type = typeof(TEntry);
 
-                var selfParam = Expression.Parameter(type, "self");
+                /*var selfParam = Expression.Parameter(type, "self");
                 var hexNumConst = Expression.Constant(NumberStyles.HexNumber);
                 var valParam = Expression.Parameter(typeof(String), "val");
+                var culture = Expression.Constant(CultureParser.enUs);*/
 
                 foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
@@ -91,11 +113,11 @@ namespace SanAndreasUnity.Importing.Vehicles
 
                     var set = prop.GetSetMethod(true);
                     if (set == null)
-                    {
                         throw new Exception("Set method is inaccessible");
-                    }
 
-                    Expression input = valParam;
+                    //Expression input = valParam;
+
+                    /*MethodInfo convert = null;
 
                     if (prop.PropertyType != typeof(string))
                     {
@@ -103,45 +125,61 @@ namespace SanAndreasUnity.Importing.Vehicles
                             ? new[] { typeof(string), typeof(NumberStyles) }
                             : new[] { typeof(string) };
 
-                        var convert = prop.PropertyType.GetMethod("Parse",
+                        convert = prop.PropertyType.GetMethod("Parse",
                             BindingFlags.Static | BindingFlags.Public,
                             null, argTypes, null);
 
                         if (convert == null)
+                            throw new Exception(String.Format("Cannot convert a string to {0}", prop.PropertyType.Name));
+
+                        /*input = attrib.IsHexNumber
+                            ? Expression.Call(convert, input, hexNumConst, culture)
+                            : Expression.Call(convert, input, culture);*/
+                    //}
+
+                    //var setCall = Expression.Call(selfParam, set, input);
+                    //var lambda = Expression.Lambda<Action<TEntry, string>>(
+                    //    setCall, selfParam, valParam).Compile();
+
+                    _sParsers.Add(attrib.Value, (s, instance) =>
+                    {
+                        /*catch (KeyNotFoundException ex)
                         {
-                            throw new Exception(String.Format("Cannot convert a string to {0}", prop.PropertyType));
+                            string debug = string.Format("Type {0} not found!", prop.PropertyType.Name);
+                            dd = debug;
                         }
+                        catch (FormatException ex)
+                        {
+                            string debug = string.Format("Parsing sitrng '{0}' into {1} failed!", s, prop.PropertyType.Name);
+                            dd = debug;
+                        }
+                        catch (TargetException ex)
+                        {
+                            string debug = string.Format("Instance passed has an invalid type!");
+                            dd = debug;
+                        }
+                        catch (Exception ex)
+                        {
+                            string debug = ex.ToString();
+                            dd = debug;
+                        }*/
 
-                        input = attrib.IsHexNumber
-                            ? Expression.Call(convert, input, hexNumConst)
-                            : Expression.Call(convert, input);
-                    }
-
-                    var setCall = Expression.Call(selfParam, set, input);
-                    var lambda = Expression.Lambda<Action<TEntry, string>>(
-                        setCall, selfParam, valParam).Compile();
-
-                    _sParsers.Add(attrib.Value, lambda);
+                        set.Invoke(instance, new object[] { prop.PropertyType != typeof(string) ? dict[prop.PropertyType](s, attrib.IsHexNumber ? NumberStyles.HexNumber : (NumberStyles?)null, CultureParser.enUs) : s });
+                    });
                 }
             }
 
             protected Entry(string line)
             {
                 if (_sParsers == null)
-                {
                     GenerateParsers();
-                }
 
                 var split = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 var self = (TEntry)this;
 
                 for (var i = 0; i < split.Length; ++i)
-                {
                     if (_sParsers.ContainsKey(i))
-                    {
-                        _sParsers[i](self, split[i]);
-                    }
-                }
+                        _sParsers[i](split[i], self);
             }
         }
 
@@ -153,7 +191,7 @@ namespace SanAndreasUnity.Importing.Vehicles
         {
             _sCtors = new Dictionary<char, Func<string, IEntry>>();
 
-            var param = Expression.Parameter(typeof(String), "line");
+            //var param = Expression.Parameter(typeof(String), "line");
 
             foreach (var type in typeof(Handling).GetNestedTypes())
             {
@@ -163,12 +201,12 @@ namespace SanAndreasUnity.Importing.Vehicles
                 var attrib = (PrefixAttribute)type.GetCustomAttributes(typeof(PrefixAttribute), true).FirstOrDefault();
                 var prefix = attrib != null ? attrib.Value : '\0';
 
-                var ctor = type.GetConstructor(new[] { typeof(string) });
+                /*var ctor = type.GetConstructor(new[] { typeof(string) });
                 var ctorCall = Expression.New(ctor, param);
                 var cast = Expression.Convert(ctorCall, typeof(IEntry));
-                var lambda = Expression.Lambda<Func<String, IEntry>>(cast, param).Compile();
+                var lambda = Expression.Lambda<Func<String, IEntry>>(cast, param).Compile();*/
 
-                _sCtors.Add(prefix, lambda);
+                _sCtors.Add(prefix, s => { return (IEntry)Activator.CreateInstance(type, new object[] { s }); });
             }
         }
 
@@ -263,9 +301,9 @@ namespace SanAndreasUnity.Importing.Vehicles
         public static void Load(string path)
         {
             if (_sCtors == null)
-            {
                 GenerateCtors();
-            }
+
+            //throw new Exception("Constructor count: " + _sCtors.Count);
 
             using (var reader = File.OpenText(path))
             {
@@ -298,7 +336,13 @@ namespace SanAndreasUnity.Importing.Vehicles
         public static TEntry Get<TEntry>(String id)
             where TEntry : IVehicleEntry
         {
-            return _sEntries.OfType<TEntry>().FirstOrDefault(x => x.Id == id);
+            //throw new Exception("Number of car loaded: " + _sEntries.Count);
+            var entries = _sEntries.OfType<TEntry>();
+
+            if (entries == null || (entries != null && (entries.Count() == 0 || entries.All(x => x == null))))
+                throw new Exception(string.Format("Cars didn't loaded!\nEntries null?: {0}\nEntries count: {1}\nIf this two vars are false & 0, that means that all car instances are null.", entries == null, entries.Count()));
+
+            return entries.FirstOrDefault(x => x.Id == id);
         }
     }
 }

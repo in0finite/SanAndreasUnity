@@ -41,6 +41,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 var front = (wheel.Alignment & WheelAlignment.Front) == WheelAlignment.Front;
 
+                //Debug.LogFormat("Handling is Null?: {0}", HandlingData == null);
+                /*b = HandlingData == null;
+                Debug.Log(b);
+                Debug.Break();*/
+
                 wheel.Parent.position -= Vector3.up * HandlingData.SuspensionLowerLimit;
 
                 var scale = front ? Definition.WheelScaleFront : Definition.WheelScaleRear;
@@ -142,6 +147,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 if (ShouldSteer(wheel))
                 {
+                    /*if (Steering != 0)
+                    {
+                        Debug.Log(HandlingData.SteeringLock);
+                        Debug.Break();
+                    }*/
                     wheel.Collider.steerAngle = HandlingData.SteeringLock * Steering;
                 }
 
