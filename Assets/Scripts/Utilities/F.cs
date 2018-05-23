@@ -3,10 +3,10 @@ using SanAndreasUnity.Behaviours.Vehicles;
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace SanAndreasUnity.Utilities
 {
@@ -183,6 +183,20 @@ namespace SanAndreasUnity.Utilities
                 return long.Parse(hexString, NumberStyles.AllowHexSpecifier);
             else
                 return ulong.Parse(hexString, NumberStyles.AllowHexSpecifier);
+        }
+
+        public static void SafeDestroy<T>(this T obj) where T : Object
+        {
+            if (Application.isEditor)
+                Object.DestroyImmediate(obj);
+            else
+                Object.Destroy(obj);
+        }
+
+        public static void SafeDestroyGameObject<T>(this T component) where T : Component
+        {
+            if (component != null)
+                SafeDestroy(component.gameObject);
         }
     }
 }
