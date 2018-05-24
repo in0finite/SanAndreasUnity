@@ -80,7 +80,11 @@ O - Toggle quality
 
 ### Features
 
+- Weapons
+
 - Two driving camera modes (aim to front and free look)
+
+- Multiple car cameras: exterior (3 distance switches), interior & cinematic
 
 - See the entire map (pressing M)
 
@@ -110,7 +114,7 @@ O - Toggle quality
 
 - Maybe I will use my sockets implementation to do a server system (I will made a paid assets with [examples from Unity Forums](https://github.com/ZZona-Dummies/UnityForumsMultiplayer)
 
-- HUGE REFACTOR (compiling Assembly into DLLs will some most problems)
+- HUGE REFACTOR (compiling Assembly into DLLs will solve most problems)
 
 ### Effects & Enhancements
 
@@ -128,9 +132,9 @@ O - Toggle quality
 
 * Dust and water particles with vehicles (cars travelling through dirt and boats, respectively)
 
-### Environment
+* Stars, clouds and enviroment enhances
 
-* Daylight cycle
+### Environment
 
 * Weather
 
@@ -159,15 +163,9 @@ O - Toggle quality
 
 - Weird circular shadow appears when drving and the car passes next to a building that projects a shadow (low quality)
 
-- Block camera when Escape is pressed
-
 - Car moves when the player is still getting inside it
 
 - Auto-zoom with big vehicles
-
-- If you regenerate scripts while running Unity Editor crashes (patch it?)
-
-- Unnamed bug reappeared (I have checked HiddeFlags and created a new scene (that bring the bug of old GPU))
 
 - Some cars have its suppension to low to allow them to move
 
@@ -179,10 +177,6 @@ O - Toggle quality
 
 - Once vehicles are despawned they don't re-spawn
 
-- Find in the project for "me" keywords and delete them
-
-- Keys stucks when Escape is pressed
-
 - In some cases damages to vehicles aren't performed at first collision
 
 - When console is opened cursor ticks
@@ -193,23 +187,31 @@ O - Toggle quality
 
 - HTML (from logger) indent is not perfect
 
-- Curent socket system only allows messages of 8KBs
-
 - Console Application is not launching on build (CLI was checked and work properly)
 
-- Stacktrace has a little bug where first line of ArgumentNullExceptions prints on the same line
-
-- Log extension is printed in hexadecimal on Sublime Text (change extension)
-
-- I think that car light break doesn't work fine
-
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is running Unity Editor undr `--force-glcore` and going to **Assets > Reimport all**
-
-- Running with `--force-glcore` makes Unity Editor slower when near objects has to be rendered
 
 ### Leaks
 
 - With the new car light system batches has aumented 
+
+### Inneficiencies
+
+- Curent socket system only allows messages of 8KBs
+
+- Log extension is printed in hexadecimal on Sublime Text (change extension)
+
+### Must review
+
+- If you regenerate scripts while running Unity Editor crashes (patch it?)
+
+- Unnamed bug reappeared (I have checked HiddeFlags and created a new scene (that bring the bug of old GPU))
+
+- Find in the project for "me" keywords and delete them
+
+- Running with `--force-glcore` makes Unity Editor slower when near objects has to be rendered
+
+- I think that car light break system doesn't work fine
 
 ## Media
 
