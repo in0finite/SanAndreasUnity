@@ -471,22 +471,24 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             Transform headlights = this.GetComponentWithName<Transform>("headlights"),
                       taillights = this.GetComponentWithName<Transform>("taillights");
 
+            Vehicle vh = gameObject.GetComponent<Vehicle>();
+
             if (headlights != null)
             {
-                m_frontLeftLight = SetCarLight(headlights, VehicleLight.FrontLeft);
-                m_frontRightLight = SetCarLight(headlights, VehicleLight.FrontRight);
+                m_frontLeftLight = VehicleAPI.SetCarLight(vh, headlights, VehicleLight.FrontLeft);
+                m_frontRightLight = VehicleAPI.SetCarLight(vh, headlights, VehicleLight.FrontRight);
             }
 
             if (taillights != null)
             {
-                m_rearLeftLight = SetCarLight(taillights, VehicleLight.RearLeft);
-                m_rearRightLight = SetCarLight(taillights, VehicleLight.RearRight);
+                m_rearLeftLight = VehicleAPI.SetCarLight(vh, taillights, VehicleLight.RearLeft);
+                m_rearRightLight = VehicleAPI.SetCarLight(vh, taillights, VehicleLight.RearRight);
             }
 
             // Apply Light sources
 
             directionalLightsMat = Resources.Load<Material>("Materials/directionalLight");
-            SetLightSources();
+            VehicleAPI.SetLightSources(gameObject, directionalLightsMat);
 
             m_frontLeftLightOk = m_frontLeftLight != null;
             m_frontRightLightOk = m_frontRightLight != null;

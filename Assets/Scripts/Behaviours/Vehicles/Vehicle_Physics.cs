@@ -1,4 +1,5 @@
 ﻿using SanAndreasUnity.Importing.Vehicles;
+using SanAndreasUnity.Utilities;
 using System.Linq;
 using UnityEngine;
 using VConsts = SanAndreasUnity.Behaviours.Vehicles.VehiclePhysicsConstants;
@@ -27,7 +28,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void InitializePhysics()
         {
+            //Debug.Log("aaa");
+
             _geometryParts.AttachCollisionModel(transform, true);
+
+            //Debug.Log("bbb");
 
             _rigidBody = gameObject.GetComponent<Rigidbody>();
 
@@ -129,6 +134,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void PhysicsFixedUpdate()
         {
+            //Debug.LogFormat("{0}?: {1}", _rigidBody == null, gameObject.GetGameObjectPath());
+            //Debug.Break();
+
             var groundRay = new Ray(transform.position + Vector3.up, -Vector3.up);
             //if (_rigidBody != null) // Must review: Why this is now null?
             if (!Physics.SphereCast(groundRay, 0.25f, transform.position.y + 256f, (-1) ^ LayerMask))

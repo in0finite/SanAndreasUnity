@@ -2,29 +2,45 @@
 using System;
 using UnityEngine;
 
-public class VehicleBlinker : Vehicle
+public class VehicleBlinker : MonoBehaviour
 {
+    #region "Fields"
+
+    #region "Init private fields"
+
+    private VehicleLight lightType;
+    private Transform parent;
+    private Vehicle vehicle;
+
+    #endregion "Init private fields"
+
+    #region "Ordinary private fields"
+
     private bool setAppart;
-
-    [HideInInspector]
-    public VehicleLight lightType;
-
-    [HideInInspector]
-    public Transform parent;
-
-    //private VehicleLight? lightSide;
-
     private float blinkerCounter = 0, defaultIntesity;
-
     private Light blinkerLight;
-
     private bool blinkerSwitch, success;
+
+    #endregion "Ordinary private fields"
+
+    #endregion "Fields"
+
+    public static VehicleBlinker Init(GameObject go, Transform par, VehicleLight light, Vehicle vh)
+    {
+        VehicleBlinker vehicleBlinker = go.AddComponent<VehicleBlinker>();
+
+        vehicleBlinker.parent = par;
+        vehicleBlinker.lightType = light;
+        vehicleBlinker.vehicle = vh;
+
+        return vehicleBlinker;
+    }
 
     private bool IsLeftSide
     {
         get
         {
-            return IsLeftLight(lightType);
+            return VehicleAPI.IsLeftLight(lightType);
         }
     }
 
@@ -33,7 +49,7 @@ public class VehicleBlinker : Vehicle
     {
         //lightSide = GetVehicleLightSide(lightType);
 
-        if (!IsValidIndividualLight(lightType)) throw new Exception("Light sides need to have a valid value, revise your code.");
+        if (!VehicleAPI.IsValidIndividualLight(lightType)) throw new Exception("Light sides need to have a valid value, revise your code.");
         success = true;
 
         setAppart = gameObject.GetComponent<Light>() != null;
@@ -49,7 +65,7 @@ public class VehicleBlinker : Vehicle
 
         blinkerLight = obj.AddComponent<Light>();
 
-        SetLightProps(lightType, ref blinkerLight, true);
+        VehicleAPI.SetLightProps(lightType, ref blinkerLight, true);
 
         defaultIntesity = blinkerLight.intensity;
     }
@@ -75,6 +91,6 @@ public class VehicleBlinker : Vehicle
     private bool ShouldBePowered(VehicleLight side)
     {
         //if (!side.HasValue) throw new Exception("Light sides need to have a value, revise your code.");
-        return IsLeftSide && (blinkerMode == VehicleBlinkerMode.Left || blinkerMode == VehicleBlinkerMode.Emergency);
+        return IsLeftSide && (vehicle.blinkerMode == VehicleBlinkerMode.Left || vehicle.blinkerMode == VehicleBlinkerMode.Emergency);
     }
 }
