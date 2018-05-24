@@ -22,18 +22,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         All = Front | Rear
     }
 
-    public enum VehicleBlinker
+    public enum VehicleBlinkerMode
     {
-        FrontLeft = 1,
-        FrontRight = 2,
-
-        RearLeft = 4,
-        RearRight = 8,
-
-        Front = FrontLeft | FrontRight,
-        Rear = RearLeft | RearRight,
-
-        All = Front | Rear
+        None, Left, Right, Emergency
     }
 
 #if CLIENT
@@ -52,6 +43,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     m_frontLeftLightPowered = true, m_frontRightLightPowered = true, m_rearLeftLightPowered = true, m_rearRightLightPowered = true;
 
         private Material directionalLightsMat;
+
+        protected VehicleBlinkerMode blinkerMode;
 
         public bool m_frontLeftLightOk
         {
@@ -369,52 +362,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Start()
         {
-            // Add vehicle damage
-
-            var dam = gameObject.AddComponent<VehicleDamage>();
-            dam.damageParts = new Transform[] { transform.GetChild(0).Find("engine") };
-            dam.deformMeshes = gameObject.GetComponentsInChildren<MeshFilter>();
-            dam.displaceParts = gameObject.GetComponentsInChildren<Transform>().Where(x => x.GetComponent<Frame>() != null || x.GetComponent<FrameContainer>() != null).ToArray();
-            dam.damageFactor = 2f;
-            dam.collisionIgnoreHeight = -.4f;
-            dam.collisionTimeGap = .1f;
-
-            //OptimizeVehicle();
-
-            dam.deformColliders = gameObject.GetComponentsInChildren<MeshCollider>();
-
-            // Implemented: Add lights
-
-            Transform headlights = this.GetComponentWithName<Transform>("headlights"),
-                      taillights = this.GetComponentWithName<Transform>("taillights");
-
-            if (headlights != null)
-            {
-                m_frontLeftLight = SetCarLight(headlights, VehicleLight.FrontLeft);
-                m_frontRightLight = SetCarLight(headlights, VehicleLight.FrontRight);
-            }
-
-            if (taillights != null)
-            {
-                m_rearLeftLight = SetCarLight(taillights, VehicleLight.RearLeft);
-                m_rearRightLight = SetCarLight(taillights, VehicleLight.RearRight);
-            }
-
-            // Apply Light sources
-
-            directionalLightsMat = Resources.Load<Material>("Materials/directionalLight");
-            SetLightSources();
-
-            m_frontLeftLightOk = m_frontLeftLight != null;
-            m_frontRightLightOk = m_frontRightLight != null;
-            m_rearLeftLightOk = m_rearLeftLight != null;
-            m_rearRightLightOk = m_rearRightLight != null;
         }
 
         private void SetLightSources()
         {
             List<LightData> datas = new List<LightData>();
             var objs = GetLightObjects();
+
+            float horAxis = Input.GetAxis("Horizontal");
 
             //Map object with an index
             //Debug.LogFormat("Objs: {0}", objs.Count());
@@ -439,15 +394,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 // Check the index and them set where is has to be generated
                 o.transform.position = m_frontLeftLight.transform.position;
             });
+
+            if (horAxis != 0)
+                blinkerMode = horAxis < 0 ? VehicleBlinkerMode.Left : VehicleBlinkerMode.Right;
         }
 
-        private Light SetCarLight(Transform parent, VehicleLight light, Vector3? pos = null)
+        private Light SetCarLight(Transform parent, VehicleLight light, Vector3? pos = null, bool setBlinker = true)
         {
             GameObject gameObject = null;
-            return SetCarLight(parent, light, pos == null ? (IsLeftLight(light) ? Vector3.zero : new Vector3(-parent.localPosition.x * 2, 0, 0)) : pos.Value, out gameObject);
+            return SetCarLight(parent, light, pos == null ? (IsLeftLight(light) ? Vector3.zero : new Vector3(-parent.localPosition.x * 2, 0, 0)) : pos.Value, out gameObject, setBlinker);
         }
 
-        private Light SetCarLight(Transform parent, VehicleLight light, Vector3 pos, out GameObject go)
+        private Light SetCarLight(Transform parent, VehicleLight light, Vector3 pos, out GameObject go, bool setBlinker = true)
         {
             if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
 
@@ -461,9 +419,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             // Rear light props
             Light ret = lightObj.gameObject.AddComponent<Light>();
-            SetLightProps(GetVehicleLightParent(light), ref ret);
+            SetLightProps(GetVehicleLightParent(light).Value, ref ret);
 
             // Now set its blinker
+            if (setBlinker)
+            {
+                VehicleBlinker blinker = lightObj.gameObject.AddComponent<VehicleBlinker>();
+                blinker.lightType = light;
+                blinker.parent = lightObj.transform;
+            }
 
             go = lightObj.gameObject;
             return ret;
@@ -474,7 +438,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return light == VehicleLight.Front || light == VehicleLight.FrontLeft || light == VehicleLight.FrontRight;
         }
 
-        private bool IsLeftLight(VehicleLight light)
+        protected bool IsLeftLight(VehicleLight light)
         {
             return light == VehicleLight.FrontLeft || light == VehicleLight.RearLeft;
         }
@@ -484,40 +448,54 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
             string lightName = light.ToString();
 
-            return string.Format("{0}Light", IsFrontLight(light) ? lightName.Substring(5) : lightName.Substring(4));
+            return string.Format("{0}Light", (IsFrontLight(light) ? lightName.Substring(5) : lightName.Substring(4)).ToLower());
         }
 
-        private VehicleLight GetVehicleLightParent(VehicleLight light)
+        private VehicleLight? GetVehicleLightParent(VehicleLight light)
         {
-            if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
+            if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) return null;
             string lightName = light.ToString();
 
             return (VehicleLight)System.Enum.Parse(typeof(VehicleLight), IsFrontLight(light) ? lightName.Substring(0, 5) : lightName.Substring(0, 4));
         }
 
-        private void SetLightProps(VehicleLight vehicleLight, ref Light light)
+        protected bool IsValidIndividualLight(VehicleLight light)
+        {
+            return !(light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear);
+        }
+
+        protected void SetLightProps(VehicleLight vehicleLight, ref Light light, bool isBlinker = false)
         {
             if (light == null) return;
-            switch (vehicleLight)
-            {
-                case VehicleLight.Front:
-                case VehicleLight.FrontLeft:
-                case VehicleLight.FrontRight:
-                    light.type = LightType.Spot;
-                    light.range = 60;
-                    light.spotAngle = 90;
-                    light.intensity = 2;
-                    break;
+            if (isBlinker)
+                switch (vehicleLight)
+                {
+                    case VehicleLight.Front:
+                    case VehicleLight.FrontLeft:
+                    case VehicleLight.FrontRight:
+                        light.type = LightType.Spot;
+                        light.range = 60;
+                        light.spotAngle = 90;
+                        light.intensity = 2;
+                        break;
 
-                case VehicleLight.Rear:
-                case VehicleLight.RearLeft:
-                case VehicleLight.RearRight:
-                    light.type = LightType.Spot;
-                    light.range = 20;
-                    light.spotAngle = 50;
-                    light.intensity = 1;
-                    light.color = Color.red;
-                    break;
+                    case VehicleLight.Rear:
+                    case VehicleLight.RearLeft:
+                    case VehicleLight.RearRight:
+                        light.type = LightType.Spot;
+                        light.range = 20;
+                        light.spotAngle = 50;
+                        light.intensity = 1;
+                        light.color = Color.red;
+                        break;
+                }
+            else
+            {
+                light.type = LightType.Spot;
+                light.range = 10;
+                light.spotAngle = 30;
+                light.intensity = .8f;
+                light.color = new Color(1, .5f, 0);
             }
         }
 

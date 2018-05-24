@@ -2,6 +2,7 @@
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Vehicles;
+using SanAndreasUnity.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -446,6 +447,51 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     AttachSeat(backSeat, SeatAlignment.BackLeft);
                 }
             }
+
+            // Add vehicle damage
+
+            //GameObject carObject = GameObject.Find(Definition.GameName.ToLower());
+
+            //Debug.Log(gameObject.name);
+
+            var dam = gameObject.AddComponent<VehicleDamage>();
+            dam.damageParts = new Transform[] { transform.GetChild(0).Find("engine") };
+            dam.deformMeshes = gameObject.GetComponentsInChildren<MeshFilter>();
+            dam.displaceParts = gameObject.GetComponentsInChildren<Transform>().Where(x => x.GetComponent<Frame>() != null || x.GetComponent<FrameContainer>() != null).ToArray();
+            dam.damageFactor = 2f;
+            dam.collisionIgnoreHeight = -.4f;
+            dam.collisionTimeGap = .1f;
+
+            //OptimizeVehicle();
+
+            dam.deformColliders = gameObject.GetComponentsInChildren<MeshCollider>();
+
+            // Implemented: Add lights
+
+            Transform headlights = this.GetComponentWithName<Transform>("headlights"),
+                      taillights = this.GetComponentWithName<Transform>("taillights");
+
+            if (headlights != null)
+            {
+                m_frontLeftLight = SetCarLight(headlights, VehicleLight.FrontLeft);
+                m_frontRightLight = SetCarLight(headlights, VehicleLight.FrontRight);
+            }
+
+            if (taillights != null)
+            {
+                m_rearLeftLight = SetCarLight(taillights, VehicleLight.RearLeft);
+                m_rearRightLight = SetCarLight(taillights, VehicleLight.RearRight);
+            }
+
+            // Apply Light sources
+
+            directionalLightsMat = Resources.Load<Material>("Materials/directionalLight");
+            SetLightSources();
+
+            m_frontLeftLightOk = m_frontLeftLight != null;
+            m_frontRightLightOk = m_frontRightLight != null;
+            m_rearLeftLightOk = m_rearLeftLight != null;
+            m_rearRightLightOk = m_rearRightLight != null;
 
             gameObject.SetLayerRecursive(Layer);
         }

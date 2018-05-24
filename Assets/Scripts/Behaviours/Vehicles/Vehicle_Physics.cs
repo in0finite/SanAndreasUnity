@@ -130,6 +130,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void PhysicsFixedUpdate()
         {
             var groundRay = new Ray(transform.position + Vector3.up, -Vector3.up);
+            //if (_rigidBody != null) // Must review: Why this is now null?
             if (!Physics.SphereCast(groundRay, 0.25f, transform.position.y + 256f, (-1) ^ LayerMask))
             {
                 _rigidBody.velocity = Vector3.zero;
