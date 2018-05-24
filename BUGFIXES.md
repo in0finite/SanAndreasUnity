@@ -15,3 +15,8 @@
 ### Bug #4 ###
 
 - Stacktrace has a little bug where first line of ArgumentNullExceptions prints on the same line
+
+### Bug #5 ###
+
+- Unnamed bug reappeared (I have checked HiddeFlags and created a new scene (that bring the bug of old GPU))
+    - Solved by: PedActions.cs

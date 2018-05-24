@@ -74,7 +74,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         internal static void SetLightProps(VehicleLight vehicleLight, ref Light light, bool isBlinker = false)
         {
             if (light == null) return;
-            if (isBlinker)
+            if (!isBlinker)
                 switch (vehicleLight)
                 {
                     case VehicleLight.Front:
@@ -100,7 +100,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 light.type = LightType.Spot;
                 light.range = 10;
-                light.spotAngle = 30;
+                light.spotAngle = 140;
                 light.intensity = .8f;
                 light.color = new Color(1, .5f, 0);
             }

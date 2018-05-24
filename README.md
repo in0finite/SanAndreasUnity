@@ -205,8 +205,6 @@ O - Toggle quality
 
 - If you regenerate scripts while running Unity Editor crashes (patch it?)
 
-- Unnamed bug reappeared (I have checked HiddeFlags and created a new scene (that bring the bug of old GPU))
-
 - Find in the project for "me" keywords and delete them
 
 - Running with `--force-glcore` makes Unity Editor slower when near objects has to be rendered

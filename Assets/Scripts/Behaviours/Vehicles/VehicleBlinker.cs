@@ -6,6 +6,12 @@ public class VehicleBlinker : MonoBehaviour
 {
     #region "Fields"
 
+    #region "Public Fields"
+
+    public float repeatInterval = 1;
+
+    #endregion "Public Fields"
+
     #region "Init private fields"
 
     private VehicleLight lightType;
@@ -16,10 +22,12 @@ public class VehicleBlinker : MonoBehaviour
 
     #region "Ordinary private fields"
 
-    private bool setAppart;
-    private float blinkerCounter = 0, defaultIntesity;
+    private float defaultIntensity;
+
     private Light blinkerLight;
-    private bool blinkerSwitch, success;
+
+    private bool blinkerSwitch,
+                 setAppart;
 
     #endregion "Ordinary private fields"
 
@@ -50,7 +58,6 @@ public class VehicleBlinker : MonoBehaviour
         //lightSide = GetVehicleLightSide(lightType);
 
         if (!VehicleAPI.IsValidIndividualLight(lightType)) throw new Exception("Light sides need to have a valid value, revise your code.");
-        success = true;
 
         setAppart = gameObject.GetComponent<Light>() != null;
 
@@ -61,30 +68,34 @@ public class VehicleBlinker : MonoBehaviour
             obj = new GameObject("Blinker");
             obj.transform.parent = parent;
             obj.transform.position = parent.position + Vector3.right * (IsLeftSide ? -1 : 1) * .2f;
+            obj.transform.localRotation = Quaternion.Euler(new Vector3(0, 30 * (IsLeftSide ? -1 : 1), 0));
         }
 
         blinkerLight = obj.AddComponent<Light>();
 
         VehicleAPI.SetLightProps(lightType, ref blinkerLight, true);
 
-        defaultIntesity = blinkerLight.intensity;
+        defaultIntensity = blinkerLight.intensity;
+
+        ToggleBlinker(false);
+
+        InvokeRepeating("Cycle", 0, repeatInterval);
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (!success) return;
+    }
+
+    private void Cycle()
+    {
+        bool lastSwitch = blinkerSwitch;
         if (ShouldBePowered(lightType))
         {
-            if ((int)blinkerCounter % 2 == 0)
-                blinkerSwitch = !blinkerSwitch;
+            if (lastSwitch != blinkerSwitch)
+                ToggleBlinker(blinkerSwitch);
 
-            blinkerLight.intensity = blinkerSwitch ? defaultIntesity : 0;
-
-            blinkerCounter += Time.deltaTime;
-
-            if (blinkerCounter > 1000)
-                blinkerCounter = 0; // Reset not overflow
+            blinkerSwitch = !blinkerSwitch;
         }
     }
 
@@ -92,5 +103,11 @@ public class VehicleBlinker : MonoBehaviour
     {
         //if (!side.HasValue) throw new Exception("Light sides need to have a value, revise your code.");
         return IsLeftSide && (vehicle.blinkerMode == VehicleBlinkerMode.Left || vehicle.blinkerMode == VehicleBlinkerMode.Emergency);
+    }
+
+    private void ToggleBlinker(bool active)
+    {
+        blinkerLight.intensity = active ? defaultIntensity : 0;
+        blinkerLight.enabled = active;
     }
 }

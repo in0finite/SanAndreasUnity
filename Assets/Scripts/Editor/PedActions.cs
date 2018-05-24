@@ -10,7 +10,7 @@ using UnityEngine;
 [InitializeOnLoad]
 public class PedActions
 {
-    private const bool onStateChanged = false;
+    //private const bool onStateChanged = false;
 
     static PedActions()
     {
@@ -19,14 +19,15 @@ public class PedActions
 
     private static void OnPlayModeChanged(PlayModeStateChange currentMode)
     {
-        if (onStateChanged && currentMode == PlayModeStateChange.EnteredEditMode)
-            RemoveUnnamed();
+        if (currentMode == PlayModeStateChange.EnteredEditMode)
+            AssetDatabase.Refresh();
     }
 
     [DidReloadScripts]
     private static void OnScriptsReloaded()
     {
-        RemoveUnnamed();
+        if (!Application.isPlaying)
+            RemoveUnnamed();
     }
 
     private static void RemoveUnnamed()
