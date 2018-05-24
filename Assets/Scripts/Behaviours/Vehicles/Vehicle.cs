@@ -356,6 +356,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             float horAxis = Input.GetAxis("Horizontal");
 
+            // Set car lights
+            if (HasDriver)
+            {
+                if (horAxis != 0)
+                    blinkerMode = horAxis < 0 ? VehicleBlinkerMode.Left : VehicleBlinkerMode.Right;
+                else if (horAxis == 0 && Steering == 0)
+                    blinkerMode = VehicleBlinkerMode.None;
+            }
+
             foreach (var wheel in _wheels)
             {
                 Vector3 position = Vector3.zero;
@@ -421,9 +430,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 UpdateColors();
             }
-
-            if (horAxis != 0)
-                blinkerMode = horAxis < 0 ? VehicleBlinkerMode.Left : VehicleBlinkerMode.Right;
         }
 
         private void FixedUpdate()

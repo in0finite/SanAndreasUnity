@@ -33,11 +33,11 @@ public class VehicleBlinker : MonoBehaviour
 
     #endregion "Fields"
 
-    public static VehicleBlinker Init(GameObject go, Transform par, VehicleLight light, Vehicle vh)
+    public static VehicleBlinker Init(Transform blinker, VehicleLight light, Vehicle vh)
     {
-        VehicleBlinker vehicleBlinker = go.AddComponent<VehicleBlinker>();
+        VehicleBlinker vehicleBlinker = blinker.gameObject.AddComponent<VehicleBlinker>();
 
-        vehicleBlinker.parent = par;
+        vehicleBlinker.parent = blinker;
         vehicleBlinker.lightType = light;
         vehicleBlinker.vehicle = vh;
 
@@ -89,12 +89,9 @@ public class VehicleBlinker : MonoBehaviour
 
     private void Cycle()
     {
-        bool lastSwitch = blinkerSwitch;
-        if (ShouldBePowered(lightType))
+        if ((vehicle.HasDriver && ShouldBePowered(lightType)) || blinkerSwitch)
         {
-            if (lastSwitch != blinkerSwitch)
-                ToggleBlinker(blinkerSwitch);
-
+            ToggleBlinker(blinkerSwitch);
             blinkerSwitch = !blinkerSwitch;
         }
     }
@@ -102,6 +99,7 @@ public class VehicleBlinker : MonoBehaviour
     private bool ShouldBePowered(VehicleLight side)
     {
         //if (!side.HasValue) throw new Exception("Light sides need to have a value, revise your code.");
+        Debug.LogFormat("Blinker Mode: {0}; Steering: {1}", vehicle.blinkerMode, vehicle.Steering);
         return IsLeftSide && (vehicle.blinkerMode == VehicleBlinkerMode.Left || vehicle.blinkerMode == VehicleBlinkerMode.Emergency);
     }
 

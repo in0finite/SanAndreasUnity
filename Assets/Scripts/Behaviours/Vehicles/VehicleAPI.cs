@@ -10,13 +10,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         #region "Lights"
 
-        internal static Light SetCarLight(Vehicle vehicle, Transform parent, VehicleLight light, Vector3? pos = null, bool setBlinker = true)
+        private const bool testing = true;
+
+        internal static Light SetCarLight(Vehicle vehicle, Transform parent, VehicleLight light, Vector3? pos = null)
         {
             GameObject gameObject = null;
-            return SetCarLight(vehicle, parent, light, pos == null ? (IsLeftLight(light) ? Vector3.zero : new Vector3(-parent.localPosition.x * 2, 0, 0)) : pos.Value, out gameObject, setBlinker);
+            return SetCarLight(vehicle, parent, light, pos == null ? (IsLeftLight(light) ? new Vector3(-parent.localPosition.x * 2, 0, 0) : Vector3.zero) : pos.Value, out gameObject);
         }
 
-        internal static Light SetCarLight(Vehicle vehicle, Transform parent, VehicleLight light, Vector3 pos, out GameObject go, bool setBlinker = true)
+        internal static Light SetCarLight(Vehicle vehicle, Transform parent, VehicleLight light, Vector3 pos, out GameObject go)
         {
             if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
 
@@ -33,8 +35,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             SetLightProps(GetVehicleLightParent(light).Value, ref ret);
 
             // Now set its blinker
-            if (setBlinker)
-                VehicleBlinker.Init(lightObj.gameObject, lightObj.transform, light, vehicle);
+            Transform blinker = vehicle.transform.FindChildRecursive(parent.name + "2");
+
+            // Note: If pixelLightCount is equal to 2 the blinker willnever show
+            if ((blinker != null && QualitySettings.pixelLightCount > 2) || testing)
+                VehicleBlinker.Init(testing ? lightObj.transform : blinker, light, vehicle);
 
             go = lightObj.gameObject;
             return ret;

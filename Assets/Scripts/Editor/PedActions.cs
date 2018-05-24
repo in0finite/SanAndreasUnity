@@ -20,7 +20,7 @@ public class PedActions
     private static void OnPlayModeChanged(PlayModeStateChange currentMode)
     {
         if (currentMode == PlayModeStateChange.EnteredEditMode)
-            AssetDatabase.Refresh();
+            RemoveUnnamed(); //AssetDatabase.Refresh();
     }
 
     [DidReloadScripts]
