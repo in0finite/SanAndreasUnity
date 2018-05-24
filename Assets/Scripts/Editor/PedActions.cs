@@ -1,36 +1,46 @@
 ﻿using Fclp.Internals.Extensions;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Callbacks;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 [InitializeOnLoad]
 public class PedActions
 {
+    private const bool onStateChanged = false;
+
     static PedActions()
     {
-        Debug.Log("SingleEntryPoint. Up and running");
         EditorApplication.playModeStateChanged += OnPlayModeChanged;
     }
 
     private static void OnPlayModeChanged(PlayModeStateChange currentMode)
     {
-        if (currentMode == PlayModeStateChange.ExitingPlayMode)
+        if (onStateChanged && currentMode == PlayModeStateChange.EnteredEditMode)
+            RemoveUnnamed();
+    }
+
+    [DidReloadScripts]
+    private static void OnScriptsReloaded()
+    {
+        RemoveUnnamed();
+    }
+
+    private static void RemoveUnnamed()
+    {
+        GameObject playerModel = GameObject.Find("PlayerModel");
+
+        playerModel.GetComponents<FrameContainer>().ForEach(x => x.SafeDestroy());
+
+        try
         {
-            GameObject playerModel = GameObject.Find("PlayerModel");
-
-            var frames = playerModel.GetComponents<FrameContainer>();
-
-            Debug.LogFormat("FrameContainer Count: {0}", frames.Count());
-
-            if (frames != null)
-                frames.ForEach(x => x.SafeDestroy());
-
-            IEnumerable<Component> unnamedChilds = playerModel.GetComponents<Component>().Where(x => x.GetType() != typeof(Transform) && x.transform.parent == playerModel.transform);
-            if (unnamedChilds != null)
-                unnamedChilds.ForEach(x => x.SafeDestroyGameObject());
+            playerModel.GetComponentsInChildren<Component>().Where(x => x.GetType() != typeof(Transform) && x.transform.parent == playerModel.transform).Select(x => x.gameObject).ForEach(x => x.SafeDestroy());
         }
+        catch { }
+
+        EditorSceneManager.SaveOpenScenes();
     }
 }
