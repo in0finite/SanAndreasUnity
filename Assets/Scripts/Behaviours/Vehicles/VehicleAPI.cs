@@ -10,6 +10,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         #region "Lights"
 
+        public const float constDamageFactor = 2;
         private const bool testing = true;
 
         internal static Light SetCarLight(Vehicle vehicle, Transform parent, VehicleLight light, Vector3? pos = null)
@@ -146,6 +147,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         internal static IEnumerable<GameObject> GetLightObjects(GameObject gameObject)
         {
             return gameObject.GetComponentsInChildren<Light>().Select(x => x.gameObject);
+        }
+
+        internal static VehicleLight ParseFromBit(int bit)
+        {
+            return (VehicleLight)((int)Mathf.Pow(2, bit));
         }
 
         #endregion "Lights"

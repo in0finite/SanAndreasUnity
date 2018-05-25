@@ -200,7 +200,7 @@ O - Toggle quality
 
 - Log extension is printed in hexadecimal on Sublime Text (change extension)
 
-### Must review
+### Must be reviewed
 
 - If you regenerate scripts while running Unity Editor crashes (patch it?)
 

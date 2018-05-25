@@ -458,7 +458,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             dam.damageParts = new Transform[] { transform.GetChild(0).Find("engine") };
             dam.deformMeshes = gameObject.GetComponentsInChildren<MeshFilter>();
             dam.displaceParts = gameObject.GetComponentsInChildren<Transform>().Where(x => x.GetComponent<Frame>() != null || x.GetComponent<FrameContainer>() != null).ToArray();
-            dam.damageFactor = 2f;
+            dam.damageFactor = VehicleAPI.constDamageFactor;
             dam.collisionIgnoreHeight = -.4f;
             dam.collisionTimeGap = .1f;
 

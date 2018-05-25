@@ -40,6 +40,14 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
+        public static bool IsNight
+        {
+            get
+            {
+                return ((dayTimeCounter * AngleFactor) % 360).BetweenInclusive(180, 360);
+            }
+        }
+
         private void Awake()
         {
             light = dirLight.GetComponent<Light>();
@@ -65,7 +73,7 @@ namespace SanAndreasUnity.Behaviours.World
                 dayTimeCounter += AngleFactor;
 
                 // Range: Dusk .. Dawn
-                if (angle.BetweenInclusive(180, 360)) light.intensity = lightCurve.Evaluate(Mathf.InverseLerp(180, 360, angle));
+                if (IsNight) light.intensity = lightCurve.Evaluate(Mathf.InverseLerp(180, 360, angle));
             }
         }
 

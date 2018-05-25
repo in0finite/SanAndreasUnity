@@ -1,4 +1,5 @@
-﻿using SanAndreasUnity.Importing.Vehicles;
+﻿using SanAndreasUnity.Behaviours.World;
+using SanAndreasUnity.Importing.Vehicles;
 using System.Linq;
 using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
@@ -127,7 +128,26 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private readonly int[] _colors = { 0, 0, 0, 0 };
         private readonly float[] _lights = { 1f, 1f, 1f, 1f };
         private MaterialPropertyBlock _props;
-        private bool _colorsChanged;
+        private bool _colorsChanged, _isNightToggled;
+
+        private const float constRearNightIntensity = .7f;
+
+        private bool IsNightToggled
+        {
+            get
+            {
+                return _isNightToggled;
+            }
+            set
+            {
+                _isNightToggled = value;
+
+                SetLight(VehicleLight.FrontLeft, _isNightToggled ? 1 : 0);
+                SetLight(VehicleLight.FrontRight, _isNightToggled ? 1 : 0);
+                SetLight(VehicleLight.RearLeft, _isNightToggled ? 1 : 0);
+                SetLight(VehicleLight.RearRight, _isNightToggled ? 1 : 0);
+            }
+        }
 
         private VehicleController _controller;
 
@@ -138,6 +158,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             base.OnAwake();
         }
+#else
+
+        // Must review
+        private void Awake()
+        {
+            _props = new MaterialPropertyBlock();
+        }
+
 #endif
 
         public void SetColors(params int[] clrIndices)
@@ -150,6 +178,54 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
+        private Light GetLight(VehicleLight light)
+        {
+            //if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
+            switch (light)
+            {
+                case VehicleLight.FrontLeft:
+                    return m_frontLeftLight;
+
+                case VehicleLight.FrontRight:
+                    return m_frontRightLight;
+
+                case VehicleLight.RearLeft:
+                    return m_rearLeftLight;
+
+                case VehicleLight.RearRight:
+                    return m_rearRightLight;
+            }
+
+            return null;
+        }
+
+        private bool IsLightOk(VehicleLight light)
+        {
+            switch (light)
+            {
+                case VehicleLight.FrontLeft:
+                    return m_frontLeftLightOk;
+
+                case VehicleLight.FrontRight:
+                    return m_frontRightLightOk;
+
+                case VehicleLight.RearLeft:
+                    return m_rearLeftLightOk;
+
+                case VehicleLight.RearRight:
+                    return m_rearRightLightOk;
+            }
+
+            return true;
+        }
+
+        private bool IsAnyLightPowered()
+        {
+            if (_lights != null)
+                return _lights.Any(x => x > 0);
+            return false;
+        }
+
         public void SetLight(VehicleLight light, float brightness)
         {
             brightness = Mathf.Clamp01(brightness);
@@ -159,121 +235,32 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 var bit = 1 << i;
                 if (((int)light & bit) == bit)
                 {
-                    SetLight(i, brightness);
+                    VehicleLight parsedLight = (VehicleLight)bit; //VehicleAPI.ParseFromBit(i);
+
+                    //Debug.LogFormat("ParsedLight: {0}\nReal Light: {1}", parsedLight.ToString(), light.ToString());
+                    //Debug.Break();
+
+                    if (IsLightOk(parsedLight))
+                    {
+                        Light lightObj = GetLight(parsedLight);
+                        bool mustRearPower = _isNightToggled && !VehicleAPI.IsFrontLight(light);
+
+                        if (brightness > 0 || mustRearPower)
+                        {
+                            if (lightObj != null && !lightObj.enabled)
+                            {
+                                lightObj.enabled = true;
+                                lightObj.intensity = mustRearPower ? constRearNightIntensity : brightness;
+                            }
+                        }
+                        else
+                        {
+                            if (lightObj != null) lightObj.enabled = false;
+                        }
+
+                        SetLight(i, mustRearPower ? 1 : brightness);
+                    }
                 }
-            }
-
-            switch (light)
-            {
-                case VehicleLight.All:
-                    if (brightness > 0)
-                    {
-                        if (m_frontLeftLight != null && !m_frontLeftLight.enabled)
-                            m_frontLeftLight.enabled = true;
-                        if (m_frontRightLight != null && !m_frontRightLight.enabled)
-                            m_frontRightLight.enabled = true;
-                        if (m_rearLeftLight != null && !m_rearLeftLight.enabled)
-                            m_rearLeftLight.enabled = true;
-                        if (m_rearRightLight != null && !m_rearRightLight.enabled)
-                            m_rearRightLight.enabled = true;
-
-                        if (m_frontLeftLight != null) m_frontLeftLight.intensity = brightness;
-                        if (m_frontRightLight != null) m_frontRightLight.intensity = brightness;
-                        if (m_rearLeftLight != null) m_rearLeftLight.intensity = brightness;
-                        if (m_rearRightLight != null) m_rearRightLight.intensity = brightness;
-                    }
-                    else
-                    {
-                        if (m_frontLeftLight != null) m_frontLeftLight.enabled = false;
-                        if (m_frontRightLight != null) m_frontRightLight.enabled = false;
-                        if (m_rearLeftLight != null) m_rearLeftLight.enabled = false;
-                        if (m_rearRightLight != null) m_rearRightLight.enabled = false;
-                    }
-                    break;
-
-                case VehicleLight.Front:
-                    if (brightness > 0)
-                    {
-                        if (m_frontLeftLight != null && !m_frontLeftLight.enabled)
-                            m_frontLeftLight.enabled = true;
-                        if (m_frontRightLight != null && !m_frontRightLight.enabled)
-                            m_frontRightLight.enabled = true;
-
-                        if (m_frontLeftLight != null) m_frontLeftLight.intensity = brightness;
-                        if (m_frontRightLight != null) m_frontRightLight.intensity = brightness;
-                    }
-                    else
-                    {
-                        if (m_frontLeftLight != null) m_frontLeftLight.enabled = false;
-                        if (m_frontRightLight != null) m_frontRightLight.enabled = false;
-                    }
-                    break;
-
-                case VehicleLight.FrontLeft:
-                    if (brightness > 0)
-                    {
-                        if (m_frontLeftLight != null && !m_frontLeftLight.enabled)
-                            m_frontLeftLight.enabled = true;
-
-                        if (m_frontLeftLight != null) m_frontLeftLight.intensity = brightness;
-                    }
-                    else
-                       if (m_frontLeftLight != null) m_frontLeftLight.enabled = false;
-                    break;
-
-                case VehicleLight.FrontRight:
-                    if (brightness > 0)
-                    {
-                        if (m_frontRightLight != null && !m_frontRightLight.enabled)
-                            m_frontRightLight.enabled = true;
-
-                        if (m_frontRightLight != null) m_frontRightLight.intensity = brightness;
-                    }
-                    else
-                       if (m_frontRightLight != null) m_frontRightLight.enabled = false;
-                    break;
-
-                case VehicleLight.Rear:
-                    if (brightness > 0)
-                    {
-                        if (m_rearLeftLight != null && !m_rearLeftLight.enabled)
-                            m_rearLeftLight.enabled = true;
-                        if (m_rearRightLight != null && !m_rearRightLight.enabled)
-                            m_rearRightLight.enabled = true;
-
-                        if (m_rearLeftLight != null) m_rearLeftLight.intensity = brightness;
-                        if (m_rearRightLight != null) m_rearRightLight.intensity = brightness;
-                    }
-                    else
-                    {
-                        if (m_rearLeftLight != null) m_rearLeftLight.enabled = false;
-                        if (m_rearRightLight != null) m_rearRightLight.enabled = false;
-                    }
-                    break;
-
-                case VehicleLight.RearLeft:
-                    if (brightness > 0)
-                    {
-                        if (m_rearLeftLight != null && !m_rearLeftLight.enabled)
-                            m_rearLeftLight.enabled = true;
-
-                        if (m_rearLeftLight != null) m_rearLeftLight.intensity = brightness;
-                    }
-                    else
-                       if (m_rearLeftLight != null) m_rearLeftLight.enabled = false;
-                    break;
-
-                case VehicleLight.RearRight:
-                    if (brightness > 0)
-                    {
-                        if (m_rearRightLight != null && !m_rearRightLight.enabled)
-                            m_rearRightLight.enabled = true;
-
-                        if (m_rearRightLight != null) m_rearRightLight.intensity = brightness;
-                    }
-                    else
-                       if (m_rearRightLight != null) m_rearRightLight.enabled = false;
-                    break;
             }
         }
 
@@ -333,9 +320,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             var indices = CarColors.FromIndices(_colors);
             for (var i = 0; i < 4; ++i)
-            {
                 _props.SetColor(CarColorIds[i], indices[i]);
-            }
 
             _props.SetVector(LightsId, new Vector4(_lights[0], _lights[1], _lights[2], _lights[3]));
 
@@ -345,11 +330,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (mr == null) continue;
                 mr.SetPropertyBlock(_props);
             }
-        }
-
-        private void Awake()
-        {
-            _props = new MaterialPropertyBlock();
         }
 
         private void Update()
@@ -363,6 +343,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     blinkerMode = horAxis < 0 ? VehicleBlinkerMode.Left : VehicleBlinkerMode.Right;
                 else if (horAxis == 0 && Steering == 0)
                     blinkerMode = VehicleBlinkerMode.None;
+
+                if (!_isNightToggled && WorldController.IsNight)
+                    IsNightToggled = true;
+                else if (_isNightToggled && !WorldController.IsNight)
+                    IsNightToggled = false;
             }
 
             foreach (var wheel in _wheels)
@@ -395,10 +380,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (HasDriver)
             {
-                if (m_frontLeftLightPowered && m_frontLeftLightOk)
+                if (m_frontLeftLightPowered)
                     SetLight(VehicleLight.FrontLeft, 1f);
 
-                if (m_frontRightLightPowered && m_frontRightLightOk)
+                if (m_frontRightLightPowered)
                     SetLight(VehicleLight.FrontRight, 1f);
 
                 if (Input.GetKeyDown(KeyCode.L))
@@ -408,21 +393,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 }
 
                 if (Braking > 0.125f)
-                {
-                    if (m_frontLeftLightOk)
-                        SetLight(VehicleLight.RearLeft, 1f);
-
-                    if (m_frontRightLightOk)
-                        SetLight(VehicleLight.RearRight, 1f);
-                }
+                    SetLight(VehicleLight.Rear, 1f);
                 else
-                {
                     SetLight(VehicleLight.Rear, 0f);
-                }
             }
             else
             {
-                SetLight(VehicleLight.All, 0f);
+                if (IsAnyLightPowered())
+                    SetLight(VehicleLight.All, 0f);
                 Braking = 1f;
             }
 
