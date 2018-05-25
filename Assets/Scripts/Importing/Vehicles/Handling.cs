@@ -1,10 +1,8 @@
 ﻿using SanAndreasUnity.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace SanAndreasUnity.Importing.Vehicles
@@ -92,7 +90,7 @@ namespace SanAndreasUnity.Importing.Vehicles
 
                     _sParsers.Add(attrib.Value, (s, instance) =>
                     {
-                        set.Invoke(instance, new object[] { prop.PropertyType != typeof(string) ? Convert.ChangeType(attrib.IsHexNumber ? s.FromHex(prop.PropertyType) : s, prop.PropertyType, CultureParser.enUs) : s });
+                        set.Invoke(instance, new object[] { prop.PropertyType != typeof(string) ? Convert.ChangeType(attrib.IsHexNumber ? s.FromHex(prop.PropertyType, CultureParser.enUs) : s, prop.PropertyType, CultureParser.enUs) : s });
                     });
                 }
             }

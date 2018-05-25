@@ -198,6 +198,9 @@ namespace SanAndreasUnity.Behaviours
 
                 int f = fpsIndex;
 
+                if (fps > fpsHistory.Average())
+                    fpsMaximum = fps;
+
                 // Draw graph into texture
                 for (int i = fpsTexture.width - 1; i >= 0; i--)
                 {

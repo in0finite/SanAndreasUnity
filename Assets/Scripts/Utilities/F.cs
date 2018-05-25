@@ -3,6 +3,7 @@ using SanAndreasUnity.Behaviours.Vehicles;
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -175,14 +176,15 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
-        public static object FromHex(this string hexString, Type type)
+        public static object FromHex(this string hexString, Type type, CultureInfo info)
         {
-            bool signed = Convert.ToBoolean(type.GetField("MinValue").GetValue(null));
+            var argTypes = new[] { typeof(string), typeof(NumberStyles), typeof(IFormatProvider) };
 
-            if (signed)
-                return long.Parse(hexString, NumberStyles.AllowHexSpecifier);
-            else
-                return ulong.Parse(hexString, NumberStyles.AllowHexSpecifier);
+            var convert = type.GetMethod("Parse",
+                            BindingFlags.Static | BindingFlags.Public,
+                            null, argTypes, null);
+
+            return convert.Invoke(null, new object[] { hexString, NumberStyles.HexNumber, info });
         }
 
         public static void SafeDestroy<T>(this T obj) where T : Object

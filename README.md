@@ -114,8 +114,6 @@ O - Toggle quality
 
 - Maybe I will use my sockets implementation to do a server system (I will made a paid assets with [examples from Unity Forums](https://github.com/ZZona-Dummies/UnityForumsMultiplayer)
 
-- HUGE REFACTOR (compiling Assembly into DLLs will solve most problems)
-
 ### Effects & Enhancements
 
 * Jump, swim & fall animations
@@ -124,7 +122,7 @@ O - Toggle quality
 
 * Work on props (lampposts, fences, etc)
 
-* Decay system for Weapons
+* Decal system for Weapons
 
 * Burnout trace
 
@@ -158,6 +156,7 @@ O - Toggle quality
     - Animals (mobs)
     - Terrain modificable through digging & explosions
     - Territory (gan wars) on Multiplayer
+    - Integration of UltraGTA
 
 ### Bugs to fix
 
@@ -210,6 +209,8 @@ O - Toggle quality
 - Running with `--force-glcore` makes Unity Editor slower when near objects has to be rendered
 
 - I think that car light break system doesn't work fine
+
+- HUGE REFACTOR (compiling Assembly into DLLs will solve most problems)
 
 ## Media
 
