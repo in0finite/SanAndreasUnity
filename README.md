@@ -6,7 +6,7 @@ This won't be a complete re-implementation of the game, but we're hoping to buil
 
 Please, contribute to this project to help it to continue its development on Liberapay (with the amount of 5€/week our goal (by the moment) will be accomplished)
 
-[![Gitter](https://img.shields.io/gitter/room/z3nth10n/SandreasUnity.svg?style=for-the-badge)](https://gitter.im/SanAndreasUnity)  [![Liberapay receiving](https://img.shields.io/liberapay/receives/z3nth10n.svg?style=for-the-badge)](https://liberapay.com/z3nth10n/donate) [![Liberapay patrons](https://img.shields.io/liberapay/patrons/z3nth10n.svg?style=for-the-badge)](https://liberapay.com/z3nth10n/donate) [![Liberapay patrons](https://img.shields.io/liberapay/patrons/z3nth10n.svg?style=for-the-badge)](https://liberapay.com/z3nth10n/donate)
+[![Gitter](https://img.shields.io/gitter/room/z3nth10n/SandreasUnity.svg?style=for-the-badge)](https://gitter.im/SanAndreasUnity)  [![Liberapay receiving](https://img.shields.io/liberapay/receives/z3nth10n.svg?style=for-the-badge)](https://liberapay.com/z3nth10n/donate) [![Liberapay patrons](https://img.shields.io/liberapay/patrons/z3nth10n.svg?style=for-the-badge)](https://liberapay.com/z3nth10n/donate) [![Liberapay goal progress](https://img.shields.io/liberapay/goal/z3nth10n.svg?style=for-the-badge)](https://liberapay.com/z3nth10n/donate)
 
 ## Some goals
 
@@ -87,6 +87,8 @@ So far way...
 
 ### Watching people
 
+#### Already got
+
 - 2 - ...
 
 ----------
@@ -109,9 +111,9 @@ So far way...
 - 2 - Okay...
 - 5 - This is suspicious
 - 10 - So much forks
-- 15 - I'm happy
-- 25 - Amazing
-- 40 - I'm without words
+- 15 - I'm happy :D
+- 25 - Amazing!
+- 40 - I'm without words :O
 
 ### Contributors
 
