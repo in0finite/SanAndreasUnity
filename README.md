@@ -119,6 +119,7 @@ So far way...
 
 - 5 - It would be amzing if everyone were active
 
+----------
 
 - 10 - It was nice while it lasted
 - 25 - I can consider lucky
