@@ -10,7 +10,23 @@ Before starting the game, create/edit config.user.json inside project folder to 
 
 Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data folder. The script which should do that, doesn't work right now.
 
-[![CodeFactor](https://www.codefactor.io/repository/github/z3nth10n/sanandreasunity/badge/master)](https://www.codefactor.io/repository/github/z3nth10n/sanandreasunity) [![GitHub issues](https://img.shields.io/github/issues/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/issues) [![GitHub forks](https://img.shields.io/github/forks/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/network) [![GitHub license](https://img.shields.io/github/license/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/blob/master/LICENSE) [![Twitter](https://img.shields.io/twitter/url/https/github.com/z3nth10n/SanAndreasUnity.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fz3nth10n%2FSanAndreasUnity)
+[![CodeFactor](https://www.codefactor.io/repository/github/z3nth10n/sanandreasunity/badge/master)](https://www.codefactor.io/repository/github/z3nth10n/sanandreasunity) [![GitHub license](https://img.shields.io/github/license/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/issues) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/badges/shields.svg)  [![GitHub forks](https://img.shields.io/github/forks/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/network)  ![GitHub contributors](https://img.shields.io/github/contributors/cdnjs/cdnjs.svg) 
+
+### Misc Stats
+
+![GitHub top language](https://img.shields.io/github/languages/top/badges/shields.svg)  ![Github search hit counter](https://img.shields.io/github/search/torvalds/linux/goto.svg) ![GitHub language count](https://img.shields.io/github/languages/count/badges/shields.svg)  ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/badges/shields.svg) ![GitHub repo size in bytes](https://img.shields.io/github/repo-size/badges/shields.svg)
+
+### Commit & issues & pull requests coverage
+
+![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr/osrf/gazebo.svg) ![GitHub issue age](https://img.shields.io/github/issues/detail/age/badges/shields/979.svg) ![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/eslint/eslint.svg)  ![GitHub last commit](https://img.shields.io/github/last-commit/google/skia.svg) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/google/skia/infra/config.svg)
+
+### Some social networks buttons...
+
+![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Stars) ![GitHub forks](https://img.shields.io/github/forks/badges/shields.svg?style=social&label=Fork) ![GitHub watchers](https://img.shields.io/github/watchers/badges/shields.svg?style=social&label=Watch) ![GitHub followers](https://img.shields.io/github/followers/espadrine.svg?style=social&label=Follow) [![Twitter](https://img.shields.io/twitter/url/https/github.com/z3nth10n/SanAndreasUnity.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Fz3nth10n%2FSanAndreasUnity) ![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)
+
+
+Coming soon: Release downloads
+
 
 ## In game controls
 
