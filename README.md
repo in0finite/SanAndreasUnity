@@ -10,7 +10,7 @@ Before starting the game, create/edit config.user.json inside project folder to 
 
 Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data folder. The script which should do that, doesn't work right now.
 
-[![CodeFactor](https://www.codefactor.io/repository/github/z3nth10n/sanandreasunity/badge/master)](https://www.codefactor.io/repository/github/z3nth10n/sanandreasunity) [![GitHub license](https://img.shields.io/github/license/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/issues) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/z3nth10n/sanandreasunity.svg)  [![GitHub forks](https://img.shields.io/github/forks/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/network)  ![GitHub contributors](https://img.shields.io/github/contributors/https://img.shields.io/github/issues-closed-raw/z3nth10n/sanandreasunity.svg.svg) 
+[![CodeFactor](https://www.codefactor.io/repository/github/z3nth10n/sanandreasunity/badge/master)](https://www.codefactor.io/repository/github/z3nth10n/sanandreasunity) [![GitHub license](https://img.shields.io/github/license/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/blob/master/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/issues) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/z3nth10n/sanandreasunity.svg)  [![GitHub forks](https://img.shields.io/github/forks/z3nth10n/SanAndreasUnity.svg)](https://github.com/z3nth10n/SanAndreasUnity/network)  ![GitHub contributors](https://img.shields.io/github/contributors/https://img.shields.io/github/issues-closed-raw/z3nth10n/sanandreasunity.svg) 
 
 ### Misc Stats
 
@@ -18,7 +18,8 @@ Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data 
 
 ### Commit & issues & pull requests coverage
 
-![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr/z3nth10n/sanandreasunity.svg) ![GitHub issue age](https://img.shields.io/github/issues/detail/age/z3nth10n/sanandreasunity/979.svg) ![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/z3nth10n/sanandreasunity.svg)  ![GitHub last commit](https://img.shields.io/github/last-commit/z3nth10n/sanandreasunity.svg) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/z3nth10n/sanandreasunity/infra/config.svg)
+
+![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/z3nth10n/sanandreasunity.svg) ![GitHub issue age](https://img.shields.io/github/issues/detail/age/z3nth10n/sanandreasunity/979.svg) ![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/z3nth10n/sanandreasunity.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/z3nth10n/sanandreasunity.svg) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/z3nth10n/sanandreasunity/master/config.svg)
 
 ### Some social networks buttons...
 
