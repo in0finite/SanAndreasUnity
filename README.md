@@ -23,7 +23,7 @@ Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data 
 
 ### Numbers for commits & issues & pull requests & donations
 
-![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/z3nth10n/sanandreasunity.svg) ![GitHub issue age](https://img.shields.io/github/issues/detail/age/z3nth10n/sanandreasunity/979.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/z3nth10n/sanandreasunity.svg) ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/z3nth10n/sanandreasunity/master/config.svg) ![Liberapay receiving](https://img.shields.io/liberapay/receives/Changaco.svg)
+![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/z3nth10n/sanandreasunity.svg) ![GitHub issue age](https://img.shields.io/github/issues/detail/age/z3nth10n/sanandreasunity/979.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/z3nth10n/sanandreasunity.svg) ![Liberapay receiving](https://img.shields.io/liberapay/receives/z3nth10n.svg)
 
 
 ### Stats per...
