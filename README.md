@@ -78,7 +78,7 @@ So far way...
 
 - 2 - ...
 
-
+----------
 
 - 3 - Mmmmm...
 - 12 - Interesting your interests
@@ -89,7 +89,7 @@ So far way...
 
 - 2 - ...
 
-
+----------
 
 - 3 - It's a start
 - 7 - You can do better ;-)
@@ -104,7 +104,7 @@ So far way...
 
 - 1 - ...
 
-
+----------
 
 - 2 - Okay...
 - 5 - This is suspicious
@@ -131,7 +131,7 @@ So far way...
 
 - 1 - I'm a forever alone :-(
 
-
+----------
 
 - 2 - Yes! I have a partner
 - 5 - Thanks!
@@ -144,7 +144,7 @@ So far way...
 
 - 4 - ...
 
-
+----------
 
 - 10 - Haha, let's start
 - 25 - Well, this is increasing
