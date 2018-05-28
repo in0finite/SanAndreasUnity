@@ -28,11 +28,11 @@ Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data 
 
 ### Stats per...
 
-![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/d/z3nth10n/sanandreasunity.svg) ![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/w/z3nth10n/sanandreasunity.svg) ![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/m/z3nth10n/sanandreasunity.svg) ![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/z3nth10n/sanandreasunity.svg)
+![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/w/z3nth10n/sanandreasunity.svg) ![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/4w/z3nth10n/sanandreasunity.svg) ![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/z3nth10n/sanandreasunity.svg)
 
 ### Some social networks buttons...
 
-![GitHub stars](https://img.shields.io/github/stars/z3nth10n/sanandreasunity.svg?style=social&label=Stars) ![GitHub forks](https://img.shields.io/github/forks/z3nth10n/sanandreasunity.svg?style=social&label=Fork) ![GitHub watchers](https://img.shields.io/github/watchers/z3nth10n/sanandreasunity.svg?style=social&label=Watch) ![GitHub followers](https://img.shields.io/github/followers/z3nth10n.svg?style=social&label=Follow) [![Twitter](https://img.shields.io/twitter/url/https/github.com/z3nth10n/SanAndreasUnity.svg?style=social)](https://twitter.com/intent/tweet?text=Look%20this%20incredible%20project!&url=https%3A%2F%2Fgithub.com%2Fz3nth10n%2FSanAndreasUnity) ![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)
+![GitHub stars](https://img.shields.io/github/stars/z3nth10n/sanandreasunity.svg?style=social&label=Stars) ![GitHub forks](https://img.shields.io/github/forks/z3nth10n/sanandreasunity.svg?style=social&label=Fork) ![GitHub watchers](https://img.shields.io/github/watchers/z3nth10n/sanandreasunity.svg?style=social&label=Watch) ![GitHub followers](https://img.shields.io/github/followers/z3nth10n.svg?style=social&label=Follow) [![Twitter](https://img.shields.io/twitter/url/https/github.com/z3nth10n/SanAndreasUnity.svg?style=social)](https://twitter.com/intent/tweet?text=Look%20this%20incredible%20project!&url=https%3A%2F%2Fgithub.com%2Fz3nth10n%2FSanAndreasUnity) ![Twitter Follow](https://img.shields.io/twitter/follow/z3nth10n.svg?style=social&label=Follow)
 
 
 Coming soon: Release downloads
