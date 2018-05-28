@@ -15,7 +15,7 @@ Please, contribute to this project to help it to continue its development on Lib
 - 5€ in total
     - 1€/week - 4€/month
     
-With this amount of donations, at least, I will know that I'm doing smething what people likes, keep donating please!
+With this amount of donations, at least, I will know that I'm doing something what people likes, keep donating please!
 
 - 20€ in total
     - 3€/week - 12-15€/month
@@ -83,7 +83,7 @@ So far way...
 - 3 - Mmmmm...
 - 12 - Interesting your interests
 - 45 - Amazing!
-- 180 - Uncredible (O_o)
+- 180 - Incredible (O_o)
 
 ### Watching people
 
