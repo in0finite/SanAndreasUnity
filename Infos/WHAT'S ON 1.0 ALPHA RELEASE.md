@@ -114,7 +114,7 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - Curent socket system only allows messages of 8KBs
 
-- Log extension is printed in hexadecimal on Sublime Text (change extension)
+- Files with .log extension is printed in hexadecimal on Sublime Text (change extension)
 
 ### Must be reviewed
 

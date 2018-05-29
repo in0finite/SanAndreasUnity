@@ -10,7 +10,7 @@ Please, contribute to this project to help it to continue its development on Lib
 
 ## Some goals
 
-Here are [some goals](https://github.com/z3nth10n/SanAndreasUnity/blob/master/GOALS.md) I would like to meet.
+Here are [some goals](https://github.com/z3nth10n/SanAndreasUnity/blob/master/Infos/GOALS.md) I would like to meet.
 
 ## Setup Instructions
 
@@ -92,9 +92,11 @@ O - Toggle quality
 
 ## TODO Lists
 
-Here is a extensive lists of what should be implemented on alpha release 1.0.
+Here is a extensive lists of [what should be implemented on alpha release 1.0](https://github.com/z3nth10n/SanAndreasUnity/blob/master/Infos/WHAT'S%20ON%201.0%20ALPHA%20RELEASE.md).
 
-Here is another list about what should be done in the future.
+Here is another list about [what should be done in the future](https://github.com/z3nth10n/SanAndreasUnity/blob/master/Infos/WHAT'S%20ON%201.0%20ALPHA%20RELEASE.md).
+
+Can help us to develop this? In that case, [fork this project](https://github.com/z3nth10n/SanAndreasUnity/network).
 
 ## Media
 
