@@ -18,5 +18,5 @@
 
 ### Bug #5 ###
 
-- Unnamed bug reappeared (I have checked HiddeFlags and created a new scene (that bring the bug of old GPU))
+- Unnamed bug reappeared (I have checked HiddenFlags and created a new scene (that bring the bug of old GPU))
     - Solved by: PedActions.cs
