@@ -10,7 +10,7 @@ Please, contribute to this project to help it to continue its development on Lib
 
 ## Some goals
 
-Here are [some goals](https://github.com/z3nth10n/SanAndreasUnity/blob/master/Infos/GOALS.md) I would like to meet.
+Here are [some goals](https://github.com/z3nth10n/SanAndreasUnity/blob/master/Infos/GOALS.md) we would like to meet.
 
 ## Setup Instructions
 
@@ -41,8 +41,9 @@ Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data 
 ![GitHub stars](https://img.shields.io/github/stars/z3nth10n/sanandreasunity.svg?style=social&label=Stars) ![GitHub forks](https://img.shields.io/github/forks/z3nth10n/sanandreasunity.svg?style=social&label=Fork) ![GitHub watchers](https://img.shields.io/github/watchers/z3nth10n/sanandreasunity.svg?style=social&label=Watch) ![GitHub followers](https://img.shields.io/github/followers/z3nth10n.svg?style=social&label=Follow) [![Twitter](https://img.shields.io/twitter/url/https/github.com/z3nth10n/SanAndreasUnity.svg?style=social)](https://twitter.com/intent/tweet?text=Look%20this%20incredible%20project!&url=https%3A%2F%2Fgithub.com%2Fz3nth10n%2FSanAndreasUnity) ![Twitter Follow](https://img.shields.io/twitter/follow/z3nth10n.svg?style=social&label=Follow)
 
 
-Coming soon: Release downloads
+*Coming soon:* Release downloads
 
+**Thanks to:** [shields.io](https://shields.io)
 
 ## In game controls
 
