@@ -106,6 +106,30 @@ Can help us to develop this? In that case, [fork this project](https://github.co
 
 ![screen shot 2017-04-01 at 00 02 13](https://cloud.githubusercontent.com/assets/557828/24571349/d96b7c24-1670-11e7-997d-ae15913481f8.png)
 
+## Videos
+
+### First networking test
+
+[![First networking test](http://files.facepunch.com/ziks/2015/April/12/vidthumb1.png)](http://files.facepunch.com/ziks/2015/April/12/2015-04-12-2011-02.mp4)
+
+### Basic car physics
+
+[![Basic car physics](http://files.facepunch.com/ziks/2015/April/12/vidthumb2.png)](http://files.facepunch.com/layla/2015/April/06/2015-04-06_04-32-12.mp4)
+
+### YouTube
+
+#### Ped AI testing from in0finite
+
+[![Ped AI testing](http://img.youtube.com/vi/vkspMT_7PDQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=vkspMT_7PDQ)
+
+#### Some hud updates from Darkenn
+
+[![Some hud updates](http://img.youtube.com/vi/tLbJCoZfyJo/maxresdefault.jpg)](https://www.youtube.com/watch?v=tLbJCoZfyJo)
+
+#### Drone Flight Simulator from xythobuz
+
+[![Drone Flight Simulator](http://img.youtube.com/vi/xUAy7KBpkOs/maxresdefault.jpg)](https://www.youtube.com/watch?v=xUAy7KBpkOs)
+
 ## Resources
 
 * [GTAModding Wiki](http://www.gtamodding.com/wiki/Main_Page)
