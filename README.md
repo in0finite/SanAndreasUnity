@@ -8,6 +8,8 @@ Please, contribute to this project to help it to continue its development on Lib
 
 [![Gitter](https://img.shields.io/gitter/room/z3nth10n/SandreasUnity.svg?style=for-the-badge)](https://gitter.im/SanAndreasUnity)  [![Liberapay receiving](https://img.shields.io/liberapay/receives/z3nth10n.svg?style=for-the-badge)](https://liberapay.com/z3nth10n/donate) [![Liberapay patrons](https://img.shields.io/liberapay/patrons/z3nth10n.svg?style=for-the-badge)](https://liberapay.com/z3nth10n/donate) [![Liberapay goal progress](https://img.shields.io/liberapay/goal/z3nth10n.svg?style=for-the-badge)](https://liberapay.com/z3nth10n/donate)
 
+**GITTER IS NOT LONGER USED, PLEASE, ENTER THIS DISCORD CHAT: https://discord.gg/CzNvg5T**
+
 ## Some goals
 
 Here are [some goals](https://github.com/z3nth10n/SanAndreasUnity/blob/master/Infos/GOALS.md) we would like to meet.
@@ -134,4 +136,3 @@ Can help us to develop this? In that case, [fork this project](https://github.co
 ## Resources
 
 * [GTAModding Wiki](http://www.gtamodding.com/wiki/Main_Page)
-
