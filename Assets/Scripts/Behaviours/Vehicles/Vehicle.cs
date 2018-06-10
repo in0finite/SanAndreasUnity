@@ -1,5 +1,6 @@
 ﻿using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Vehicles;
+using SanAndreasUnity.Utilities;
 using System.Linq;
 using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
@@ -281,7 +282,40 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public VehicleController StartControlling()
         {
+            SetAllCarLights();
             return _controller ?? (_controller = gameObject.AddComponent<VehicleController>());
+        }
+
+        public void SetAllCarLights()
+        {
+            // Implemented: Add lights
+
+            Transform headlights = this.GetComponentWithName<Transform>("headlights"),
+                      taillights = this.GetComponentWithName<Transform>("taillights");
+
+            Vehicle vh = gameObject.GetComponent<Vehicle>();
+
+            if (headlights != null)
+            {
+                m_frontLeftLight = VehicleAPI.SetCarLight(vh, headlights, VehicleLight.FrontLeft);
+                m_frontRightLight = VehicleAPI.SetCarLight(vh, headlights, VehicleLight.FrontRight);
+            }
+
+            if (taillights != null)
+            {
+                m_rearLeftLight = VehicleAPI.SetCarLight(vh, taillights, VehicleLight.RearLeft);
+                m_rearRightLight = VehicleAPI.SetCarLight(vh, taillights, VehicleLight.RearRight);
+            }
+
+            // Apply Light sources
+
+            //directionalLightsMat = Resources.Load<Material>("Materials/directionalLight");
+            //VehicleAPI.SetLightSources(gameObject, directionalLightsMat);
+
+            m_frontLeftLightOk = m_frontLeftLight != null;
+            m_frontRightLightOk = m_frontRightLight != null;
+            m_rearLeftLightOk = m_rearLeftLight != null;
+            m_rearRightLightOk = m_rearRightLight != null;
         }
 
         public SeatAlignment FindClosestSeat(Vector3 position)

@@ -31,7 +31,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             lightObj.localPosition = pos;
             lightObj.localRotation = rot;
 
-            // Rear light props
             Light ret = lightObj.gameObject.AddComponent<Light>();
             SetLightProps(GetVehicleLightParent(light).Value, ref ret);
 

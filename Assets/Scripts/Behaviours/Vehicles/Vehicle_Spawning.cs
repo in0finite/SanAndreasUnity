@@ -2,7 +2,6 @@
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Vehicles;
-using SanAndreasUnity.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -465,35 +464,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             //OptimizeVehicle();
 
             dam.deformColliders = gameObject.GetComponentsInChildren<MeshCollider>();
-
-            // Implemented: Add lights
-
-            Transform headlights = this.GetComponentWithName<Transform>("headlights"),
-                      taillights = this.GetComponentWithName<Transform>("taillights");
-
-            Vehicle vh = gameObject.GetComponent<Vehicle>();
-
-            if (headlights != null)
-            {
-                m_frontLeftLight = VehicleAPI.SetCarLight(vh, headlights, VehicleLight.FrontLeft);
-                m_frontRightLight = VehicleAPI.SetCarLight(vh, headlights, VehicleLight.FrontRight);
-            }
-
-            if (taillights != null)
-            {
-                m_rearLeftLight = VehicleAPI.SetCarLight(vh, taillights, VehicleLight.RearLeft);
-                m_rearRightLight = VehicleAPI.SetCarLight(vh, taillights, VehicleLight.RearRight);
-            }
-
-            // Apply Light sources
-
-            directionalLightsMat = Resources.Load<Material>("Materials/directionalLight");
-            VehicleAPI.SetLightSources(gameObject, directionalLightsMat);
-
-            m_frontLeftLightOk = m_frontLeftLight != null;
-            m_frontRightLightOk = m_frontRightLight != null;
-            m_rearLeftLightOk = m_rearLeftLight != null;
-            m_rearRightLightOk = m_rearRightLight != null;
 
             gameObject.SetLayerRecursive(Layer);
         }
