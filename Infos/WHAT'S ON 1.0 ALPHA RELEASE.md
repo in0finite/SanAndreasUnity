@@ -46,6 +46,8 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - Collapse message logs
 
+- Read sounds from GTA SA Streams: http://www.lysator.liu.se/~creideiki/radio-free-san-andreas/
+
 - Maybe I will use my sockets implementation to do a server system (I will made a paid assets with [examples from Unity Forums](https://github.com/ZZona-Dummies/UnityForumsMultiplayer)
 
 ### Effects & Enhancements
@@ -75,6 +77,8 @@ As the README list was very extensive, I have sum up here what I think it's impo
 * Enhance car lights, turning, doors and braking
     
 ### Bugs to fix
+
+- I have to fix this problem, modifying in some way Assembly Importer GUI to added to mark or something like that is saved to avoid it's compilation (https://cdn.discordapp.com/attachments/454006273751515163/455029337821806592/unknown.png)
 
 - Weird circular shadow appears when drving and the car passes next to a building that projects a shadow (low quality)
 
