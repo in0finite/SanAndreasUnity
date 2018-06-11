@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Fclp.Internals.Extensions;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEngine;
 
 [InitializeOnLoad]
 public static class DevMenu
@@ -34,7 +36,16 @@ public static class DevMenu
 
     private static void SwitchTo(int index)
     {
-        if (!DevProfiles.ExistDevIndex(index)) return;
+        if (!DevProfiles.ExistDevIndex(index))
+        {
+            Debug.LogWarningFormat("Profile {0} is empty!", index);
+            return;
+        }
+
+        // Disable everything and then re-enable
+        menus.ForEach(x => x.Value.PerformAction(false, false));
+        menus[index].PerformAction(true, false);
+
         JObject obj = DevProfiles.obj;
         DevProfiles.SetDevActiveIndex(ref obj, index);
         DevProfiles.SaveChanges(obj);

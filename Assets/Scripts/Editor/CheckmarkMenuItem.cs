@@ -52,7 +52,7 @@ public class CheckmarkMenuItem
         PerformAction(!enabled_);
     }
 
-    private void PerformAction(bool enabled)
+    public void PerformAction(bool enabled, bool perform = true)
     {
         /// Set checkmark on menu item
         Menu.SetChecked(MENU_NAME, enabled);
@@ -62,6 +62,6 @@ public class CheckmarkMenuItem
         enabled_ = enabled;
 
         /// Perform your logic here...
-        menuAction();
+        if (perform) menuAction();
     }
 }
