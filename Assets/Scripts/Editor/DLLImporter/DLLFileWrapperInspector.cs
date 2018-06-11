@@ -16,16 +16,19 @@ public class DLLFileWrapperInspector : UnityEditor.Experimental.AssetImporters.A
 
     private bool _ignore, lastIgnore;
 
+    private static DLLFileWrapperInspector me;
+
     private string fileName
     {
         get
-        {
-            return Path.GetFileName(AssetDatabase.GetAssetPath(target));
+        { // Path.GetFileName();
+            return AssetDatabase.GetAssetPath(target);
         }
     }
 
     public override void OnEnable()
     {
+        me = this;
         Target = (PluginImporter)target;
 
         if (DLLManager.ExistsKey(fileName))
@@ -45,7 +48,7 @@ public class DLLFileWrapperInspector : UnityEditor.Experimental.AssetImporters.A
         EditorGUILayout.HelpBox("Be careful, disable only assemblies that produce errors (due to duplication), because if you disable an assembly that is actively used (and you refresh), to remark manually Editor checkmark (element 1) option.", MessageType.Warning);
 
         if (_ignore != lastIgnore)
-            IgnoreAssembly();
+            IgnoreAssembly(Target, _ignore);
         lastIgnore = _ignore;
 
         base.OnInspectorGUI();
@@ -94,14 +97,14 @@ public class DLLFileWrapperInspector : UnityEditor.Experimental.AssetImporters.A
             EditorGUILayout.HelpBox($"This plugin references at least one UnityEngine module assemblies directly ({m_ReferencesUnityEngineModule}.dll). To assure forward compatibility, only reference UnityEngine.dll, which contains type forwarders for all the module dlls.", MessageType.Warning);*/
     }
 
-    private void IgnoreAssembly()
+    public static void IgnoreAssembly(PluginImporter Target, bool _ignore)
     {
-        Debug.LogFormat("{0}gnoring {1} assembly!", _ignore ? "I" : "Dei", fileName);
+        Debug.LogFormat("{0}gnoring {1} assembly!", _ignore ? "I" : "Dei", me.fileName);
         if (Target == null) return;
         Target.SetCompatibleWithAnyPlatform(!_ignore);
         Target.SetCompatibleWithEditor(!_ignore);
         AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate); // WIP: This doesn't actually works, scripts have to be reloaded manually
-        DLLManager.SetBool(fileName, _ignore);
+        DLLManager.SetBool(me.fileName, _ignore);
     }
 
     /*private delegate Compatibility ValueSwitcher(Compatibility value);

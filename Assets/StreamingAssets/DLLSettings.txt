@@ -1,4 +1,4 @@
 {
-  "UnityEngine.SharedInternalsModule.dll": true,
-  "UnityEngine.CoreModule.dll": true
+  "Assets/Plugins/SAPI/bin/Debug/UnityEngine.CoreModule.dll": true,
+  "Assets/Plugins/SAPI/bin/Debug/UnityEngine.SharedInternalsModule.dll": true
 }

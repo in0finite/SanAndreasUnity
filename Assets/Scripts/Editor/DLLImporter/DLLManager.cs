@@ -133,6 +133,11 @@ public static class DLLManager
         return storedInfo.ContainsKey(key);
     }
 
+    public static Dictionary<string, object> LoadInfo()
+    {
+        return storedInfo;
+    }
+
     private static Dictionary<string, object> storedInfo
     {
         get

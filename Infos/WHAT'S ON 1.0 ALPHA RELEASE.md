@@ -126,7 +126,7 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - If you regenerate scripts while running Unity Editor crashes (patch it?)
 
-- Find in the project for "me" keywords and delete them
+- Find in the project singletons and rename it to "me" if they are private and "instance" if they are public
 
 - Running with `--force-glcore` makes Unity Editor slower when near objects has to be rendered
 
