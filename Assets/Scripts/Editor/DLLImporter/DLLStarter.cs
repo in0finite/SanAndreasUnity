@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-//[InitializeOnLoad]
+[InitializeOnLoad]
 public class DLLStarter
 {
     static DLLStarter()
@@ -15,8 +13,17 @@ public class DLLStarter
 
             foreach (var obj in objs)
             {
-                PluginImporter importer = AssetDatabase.LoadAssetAtPath<PluginImporter>(obj.Key);
-                DLLFileWrapperInspector.IgnoreAssembly(importer, (bool)obj.Value);
+                try
+                {
+                    //Debug.LogFormat("Load assembly as a PluginImporter at {0}!", obj.Key);
+                    PluginImporter importer = AssetImporter.GetAtPath(obj.Key) as PluginImporter;
+                    DLLFileWrapperInspector.IgnoreAssembly(importer, (bool)obj.Value);
+                }
+                catch
+                {
+                    // Must review: If this is reached is because assembly is already disabled
+                    //Debug.Log("Assembly already disabled!");
+                }
             }
         }
     }

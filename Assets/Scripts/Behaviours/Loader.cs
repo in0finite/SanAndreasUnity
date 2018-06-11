@@ -42,14 +42,29 @@ namespace SanAndreasUnity.Behaviours
         private static string[] archivePaths;
         private static IArchive[] archives;
 
+        protected static FileBrowser m_fileBrowser;
+
         private static void StaticUpdate()
         {
             if (HasLoaded)
                 return;
 
+            m_fileBrowser = new FileBrowser(
+                new Rect(100, 100, 600, 500),
+                "Choose GTA Instalattion Path",
+                null
+            );
+
             switch (loadingStatus)
             {
                 case 0:
+                    Debug.Log("Checking if there is available a GTA SA path.");
+                    DevProfiles.CheckDevProfiles(() =>
+                    {
+                        m_fileBrowser.Toggle();
+                        return m_fileBrowser.GetPath();
+                    });
+
                     Debug.Log("Started loading GTA.");
                     archivePaths = Config.GetPaths("archive_paths");
                     break;
