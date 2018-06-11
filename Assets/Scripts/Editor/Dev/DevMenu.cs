@@ -6,7 +6,6 @@ using UnityEditor;
 [InitializeOnLoad]
 public static class DevMenu
 {
-    //private static CheckmarkMenuItem m_zero, m_one, m_two, m_three, m_four;
     private static Dictionary<int, CheckmarkMenuItem> menus = new Dictionary<int, CheckmarkMenuItem>();
 
     static DevMenu()
@@ -18,7 +17,7 @@ public static class DevMenu
 
         for (int i = 0; i < 4; ++i)
         {
-            CheckmarkMenuItem menu = new CheckmarkMenuItem("SanAndreasUnity/Devs/Switch to Profile #" + i);
+            CheckmarkMenuItem menu = new CheckmarkMenuItem(string.Format("SanAndreasUnity/Devs/Switch to Profile {0} #{0}", i), i == DevProfiles.ActiveProfile);
             menu.menuAction = menuAction(i);
 
             menus.Add(i, menu);
@@ -39,25 +38,25 @@ public static class DevMenu
         DevProfiles.SaveChanges(obj);
     }
 
-    [MenuItem("SanAndreasUnity/Devs/Switch to Profile #0")]
+    [MenuItem("SanAndreasUnity/Devs/Switch to Profile 0 #0")]
     private static void Profile0()
     {
         menus[0].ToggleAction();
     }
 
-    [MenuItem("SanAndreasUnity/Devs/Switch to Profile #1")]
+    [MenuItem("SanAndreasUnity/Devs/Switch to Profile 1 #1")]
     private static void Profile1()
     {
         menus[1].ToggleAction();
     }
 
-    [MenuItem("SanAndreasUnity/Devs/Switch to Profile #2")]
+    [MenuItem("SanAndreasUnity/Devs/Switch to Profile 2 #2")]
     private static void Profile2()
     {
         menus[2].ToggleAction();
     }
 
-    [MenuItem("SanAndreasUnity/Devs/Switch to Profile #3")]
+    [MenuItem("SanAndreasUnity/Devs/Switch to Profile 3 #3")]
     private static void Profile3()
     {
         menus[3].ToggleAction();

@@ -21,6 +21,26 @@ public class DevProfiles
         }
     }
 
+    public static int ActiveProfile
+    {
+        get
+        {
+            var aobj = obj[GTAConfig.const_active_dev_profile];
+
+            if (aobj == null) return -1;
+
+            var bobj = aobj.ToObject<Dictionary<string, int>>();
+
+            if (bobj == null) return -1;
+
+            var cobj = bobj.FirstOrDefault(x => x.Key == SystemInfo.deviceUniqueIdentifier);
+
+            if (cobj.Equals(default(KeyValuePair<string, int>))) return -1;
+
+            return cobj.Value;
+        }
+    }
+
     private static JObject DeserializeProfiles()
     {
         string s = "";
@@ -55,7 +75,7 @@ public class DevProfiles
         if (objDev != null)
         {
             Dictionary<string, string[]> devs = objDev.ToObject<Dictionary<string, string[]>>();
-            game_dir = devs.Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[obj[GTAConfig.const_active_dev_profile].ToObject<Dictionary<string, int>>().FirstOrDefault(x => x.Key == SystemInfo.deviceUniqueIdentifier).Value];
+            game_dir = devs.Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[ActiveProfile];
         }
         else
             isSet = false;
@@ -66,9 +86,7 @@ public class DevProfiles
             game_path = game_dir;
 
         if (!isSet)
-        {
             AddNewPath(game_path);
-        }
 
         //string postContents = obj.JsonSerialize(true);
         //if (postContents != contents)
@@ -88,6 +106,8 @@ public class DevProfiles
             devs[id] = devs[id].AddValue(path);
         else
             devs.Add(id, new string[] { path });
+
+        obj[GTAConfig.const_dev_profiles] = JObject.FromObject(devs);
 
         if (setActive)
             SetDevActiveIndex(ref _obj, devs[id].Length - 1);

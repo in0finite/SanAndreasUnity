@@ -20,3 +20,11 @@
 
 - Unnamed bug reappeared (I have checked HiddenFlags and created a new scene (that bring the bug of old GPU))
     - Solved by: PedActions.cs
+    
+### Bug #6 ###    
+
+- When console is opened cursor ticks
+
+### Bug #7 ###
+
+- If you put the same close & open key for console, it never closes

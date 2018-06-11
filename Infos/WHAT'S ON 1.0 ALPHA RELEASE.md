@@ -26,7 +26,7 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - Work on a menu like MTA:SA (F1)
 
-- Dev profiles (for paths) and for the keyboard & mouse controls
+- Dev profiles for the keyboard & mouse controls
 
 - Health, stats (stamina, stength), money & armor system
 
@@ -48,7 +48,7 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - Read sounds from GTA SA Streams: http://www.lysator.liu.se/~creideiki/radio-free-san-andreas/
 
-- Make a paragraph for those categories: 
+- Make a paragraph for those categories: https://i.gyazo.com/07490f1d389fb3c4d6363e8d9810c0c1.png
 
 - Maybe I will use my sockets implementation to do a server system (I will made a paid assets with [examples from Unity Forums](https://github.com/ZZona-Dummies/UnityForumsMultiplayer)
 
@@ -100,10 +100,6 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - In some cases damages to vehicles aren't performed at first collision
 
-- When console is opened cursor ticks
-
-- If you put the same close & open key for console, it never closes
-
 - Colors for debug messages in console
 
 - HTML (from logger) indent is not perfect
@@ -114,7 +110,7 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 ### Leaks
 
-- With the new car light system batches has aumented 
+- Lagging when instantiating new lights
 
 ### Inneficiencies
 

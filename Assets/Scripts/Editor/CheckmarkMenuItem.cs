@@ -22,6 +22,13 @@ public class CheckmarkMenuItem
         instances.Add(this);
     }
 
+    public CheckmarkMenuItem(string menuName, bool enabled)
+    {
+        MENU_NAME = menuName;
+        enabled_ = enabled;
+        instances.Add(this);
+    }
+
     /// Called on load thanks to the InitializeOnLoad attribute
     static CheckmarkMenuItem()
     {
