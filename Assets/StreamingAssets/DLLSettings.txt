@@ -1,0 +1,4 @@
+{
+  "UnityEngine.SharedInternalsModule.dll": true,
+  "UnityEngine.CoreModule.dll": true
+}

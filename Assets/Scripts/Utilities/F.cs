@@ -221,5 +221,18 @@ namespace SanAndreasUnity.Utilities
             }
             return path;
         }
+
+        public static bool IsCasteable<T>(this object input)
+        {
+            try
+            {
+                Convert.ChangeType(input, typeof(T));
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
