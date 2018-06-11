@@ -10,6 +10,11 @@ using UnityObject = UnityEngine.Object;
 
 public static class FEditor
 {
+    public static void EditAction(this CheckmarkMenuItem item)
+    {
+        item.actionDict["edit"]();
+    }
+
     public static List<Enum> EnumGetNonObsoleteValues(this Type type)
     {
         // each enum value has the same position in both values and names arrays

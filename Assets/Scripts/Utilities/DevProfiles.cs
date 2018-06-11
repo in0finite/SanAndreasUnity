@@ -65,6 +65,12 @@ public class DevProfiles
         return contents.JsonDeserialize<JObject>();
     }
 
+    public static string GetPathFromProfileAt(int index)
+    {
+        Dictionary<string, string[]> devs = _obj[GTAConfig.const_dev_profiles].ToObject<Dictionary<string, string[]>>();
+        return devs.Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[index];
+    }
+
     public static string CheckDevProfiles(Func<string> folderList)
     {
         //game_path = Environment.GetEnvironmentVariable("ProgramFiles"); //...
@@ -84,10 +90,7 @@ public class DevProfiles
         var objDev = obj[GTAConfig.const_dev_profiles];
 
         if (objDev != null)
-        {
-            Dictionary<string, string[]> devs = objDev.ToObject<Dictionary<string, string[]>>();
-            game_dir = devs.Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[ActiveProfile];
-        }
+            game_dir = GetPathFromProfileAt(ActiveProfile);
         else
             isSet = false;
 
@@ -124,6 +127,33 @@ public class DevProfiles
 
         if (setActive)
             SetDevActiveIndex(ref _obj, devs[id].Length - 1);
+    }
+
+    public static void EditPath(int index, string path, bool setActive = true, string id = "")
+    {
+        if (string.IsNullOrEmpty(id)) id = SystemInfo.deviceUniqueIdentifier;
+
+        var objDev = _obj[GTAConfig.const_dev_profiles];
+
+        if (objDev == null) return;
+
+        Dictionary<string, string[]> devs = objDev.ToObject<Dictionary<string, string[]>>();
+
+        if (!devs.ContainsKey(id)) return;
+
+        try
+        {
+            devs[id][index] = path;
+
+            _obj[GTAConfig.const_dev_profiles] = JObject.FromObject(devs);
+
+            if (setActive)
+                SetDevActiveIndex(ref _obj, devs[id].Length - 1);
+        }
+        catch
+        {
+            Debug.LogError("Out of index when trying to edit path from dev profile!");
+        }
     }
 
     public static void SetDevActiveIndex(ref JObject __obj, int index, string id = "")

@@ -10,7 +10,7 @@ public class CheckmarkMenuItem
     private string MENU_NAME;
     private bool enabled_;
 
-    public Action menuAction;
+    public Dictionary<string, Action> actionDict = new Dictionary<string, Action>();
 
     private CheckmarkMenuItem()
     {
@@ -62,6 +62,6 @@ public class CheckmarkMenuItem
         enabled_ = enabled;
 
         /// Perform your logic here...
-        if (perform) menuAction();
+        if (perform) actionDict["menu"]();
     }
 }
