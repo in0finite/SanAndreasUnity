@@ -30,3 +30,11 @@ This contains a little list with the features I think should be implemented on t
 - Survival
 - Deathmatch
 - Sandbox
+
+### More platforms supported
+
+- We have to work on a system that will allow to pack GTA SA game contents into a new platform. I was thinking in something that isn't illegal. It's easy to understand, we have a client application on PC (with a legal copy of the game) and a mobile application that scan some QR code or whatever from this client app. With a validation on the QR code, now, we can pack and copy the game contents to the new platform (mobile, ps or xbox...)
+
+### Master server system
+
+- I have been thinking that the server system would be done like the MTA one, an non-official remote server and an official room list taken from those remote server. Or maybe like Terraria system, a client that host the entire server (this have a problem, and is that won't support too many connections (if this client has a bad connection)). But also, I have been thinking one some kind of official server, so avoid that users need to host their own servers. But first, we need to make the MTA style server system, and later with this same server host one by us, but we need to make it affordable.
