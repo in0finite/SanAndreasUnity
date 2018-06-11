@@ -68,8 +68,8 @@ So far way...
 
 ----------
 
-- 3 - Mmmmm...
-- 12 - Interesting your interests
+- 3 - Mmmmm... ✔
+- 12 - Interesting your interests ✔
 - 45 - Amazing!
 - 180 - Incredible (O_o)
 
@@ -81,7 +81,7 @@ So far way...
 
 ----------
 
-- 3 - It's a start
+- 3 - It's a start ✔
 - 7 - You can do better ;-)
 - 15 - Well that's getting better
 - 35 - I think this will be fantastic
