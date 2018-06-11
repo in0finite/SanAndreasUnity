@@ -5,17 +5,30 @@ using System.Linq;
 using System.IO;
 using GTAConfig = SanAndreasUnity.Utilities.Config;
 using System;
+using SanAndreasUnity.Utilities;
 
 public class DevProfiles
 {
+    private static JObject DeserializeProfiles()
+    {
+        string s = "";
+        return DeserializeProfiles(out s);
+    }
+
+    private static JObject DeserializeProfiles(out string contents)
+    {
+        string configPath = GTAConfig.FileName;
+        contents = File.ReadAllText(configPath);
+
+        return contents.JsonDeserialize<JObject>();
+    }
+
     public static string CheckDevProfiles(Func<string> folderList)
     {
         //game_path = Environment.GetEnvironmentVariable("ProgramFiles");
-        string game_path = "";
+        string game_path = "", contents = "";
 
-        string configPath = GTAConfig.FileName,
-               contents = File.ReadAllText(configPath);
-        var obj = contents.JsonDeserialize<JObject>();
+        var obj = DeserializeProfiles(out contents);
 
         var prop = obj[GTAConfig.const_game_dir];
         string game_dir = prop != null ? prop.ToObject<string>() : "";
@@ -29,8 +42,8 @@ public class DevProfiles
 
         if (objDev != null)
         {
-            Dictionary<string, string> devs = objDev.ToObject<Dictionary<string, string>>();
-            game_dir = devs.Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value;
+            Dictionary<string, string[]> devs = objDev.ToObject<Dictionary<string, string[]>>();
+            game_dir = devs.Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[obj[GTAConfig.const_active_dev_profile].ToObject<Dictionary<string, int>>().FirstOrDefault(x => x.Key == SystemInfo.deviceUniqueIdentifier).Value];
         }
         else
             isSet = false;
@@ -41,12 +54,49 @@ public class DevProfiles
             game_path = game_dir;
 
         if (!isSet)
-            obj[GTAConfig.const_dev_profiles] = JObject.FromObject(new Dictionary<string, string> { { SystemInfo.deviceUniqueIdentifier, game_path } });
+        {
+            AddNewPath(game_path);
+        }
 
-        string postContents = obj.JsonSerialize(true);
-        if (postContents != contents)
-            File.WriteAllText(configPath, postContents);
+        //string postContents = obj.JsonSerialize(true);
+        //if (postContents != contents)
+        //    File.WriteAllText(GTAConfig.FileName, postContents);
 
         return game_path;
+    }
+
+    public static void AddNewPath(string path, bool setActive = true, string id = "")
+    {
+        if (string.IsNullOrEmpty(id)) id = SystemInfo.deviceUniqueIdentifier;
+
+        var obj = DeserializeProfiles();
+
+        var objDev = obj[GTAConfig.const_dev_profiles];
+
+        Dictionary<string, string[]> devs = objDev != null ? objDev.ToObject<Dictionary<string, string[]>>() : new Dictionary<string, string[]>();
+        if (devs.ContainsKey(id))
+            devs[id] = devs[id].AddValue(path);
+        else
+            devs.Add(id, new string[] { path });
+
+        if (setActive)
+            SetDevActiveIndex(ref obj, devs[id].Length - 1);
+
+        // Serialize again
+        File.WriteAllText(GTAConfig.FileName, obj.JsonSerialize(true));
+    }
+
+    private static void SetDevActiveIndex(ref JObject obj, int index, string id = "")
+    {
+        if (string.IsNullOrEmpty(id)) id = SystemInfo.deviceUniqueIdentifier;
+        var activeDev = obj[GTAConfig.const_active_dev_profile];
+
+        var dictDev = activeDev != null ? activeDev.ToObject<Dictionary<string, int>>() : new Dictionary<string, int>();
+        if (dictDev.ContainsKey(id))
+            dictDev[id] = index;
+        else
+            dictDev.Add(id, index);
+
+        obj[GTAConfig.const_active_dev_profile] = JObject.FromObject(dictDev);
     }
 }

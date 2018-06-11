@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using SanAndreasUnity.Behaviours.Vehicles;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -233,6 +234,13 @@ namespace SanAndreasUnity.Utilities
             {
                 return false;
             }
+        }
+
+        public static T[] AddValue<T>(this T[] arr, T value)
+        {
+            List<T> list = new List<T>();
+            list.Add(value);
+            return list.ToArray();
         }
     }
 }
