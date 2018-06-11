@@ -180,7 +180,8 @@ public class DevProfiles
 
         if (devDict == null || (devDict != null && devDict.Count == 0)) return false;
 
-        return index <= devDict.Count - 1;
+        //Debug.LogFormat("Index: {0}; Count: {1}", index, devDict.Count - 1);
+        return index <= devDict.Count;
     }
 
     public static void SaveChanges(JObject __obj = null)
