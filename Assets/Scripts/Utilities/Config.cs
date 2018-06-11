@@ -11,6 +11,9 @@ namespace SanAndreasUnity.Utilities
 {
     public static class Config
     {
+        public const string const_game_dir = "game_dir",
+                            const_dev_profiles = "dev_profiles";
+
         public static string FileName
         {
             get { return "config.json"; }

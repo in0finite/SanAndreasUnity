@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -137,10 +138,13 @@ public static class DLLManager
         get
         {
             if (_storedInfo == null)
+            {
                 if (File.Exists(storePath))
-                    _storedInfo = storePath.JsonDeserializeFromFile<Dictionary<string, object>>();
+                    _storedInfo = storePath.JsonDeserializeFromFile<JObject>().ToObject<Dictionary<string, object>>();
                 else
                     _storedInfo = new Dictionary<string, object>();
+            }
+
             return _storedInfo;
         }
         set

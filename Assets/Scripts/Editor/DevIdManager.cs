@@ -4,6 +4,7 @@ using UnityEngine;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.IO;
+using GTAConfig = SanAndreasUnity.Utilities.Config;
 
 namespace SanAndreasUnity.Editor
 {
@@ -16,18 +17,18 @@ namespace SanAndreasUnity.Editor
         {
             //game_path = Environment.GetEnvironmentVariable("ProgramFiles");
 
-            string configPath = Utilities.Config.FileName,
+            string configPath = GTAConfig.FileName,
                    contents = File.ReadAllText(configPath);
             var obj = contents.JsonDeserialize<JObject>();
 
-            var prop = obj["game_dir"];
+            var prop = obj[GTAConfig.const_game_dir];
             string game_dir = prop != null ? prop.Value<string>() : "";
             bool isSet = true;
 
             if (prop != null)
-                obj.Remove("game_dir");
+                obj.Remove(GTAConfig.const_game_dir);
 
-            var objDev = obj["dev_profiles"];
+            var objDev = obj[GTAConfig.const_dev_profiles];
 
             if (objDev != null)
             {
@@ -43,7 +44,7 @@ namespace SanAndreasUnity.Editor
                 game_path = game_dir;
 
             if (!isSet)
-                obj["dev_profiles"] = JObject.FromObject(new Dictionary<string, string> { { SystemInfo.deviceUniqueIdentifier, game_path } });
+                obj[GTAConfig.const_dev_profiles] = JObject.FromObject(new Dictionary<string, string> { { SystemInfo.deviceUniqueIdentifier, game_path } });
 
             string postContents = obj.JsonSerialize(true);
             if (postContents != contents)
