@@ -9,6 +9,18 @@ using SanAndreasUnity.Utilities;
 
 public class DevProfiles
 {
+    private static JObject _obj;
+
+    public static JObject obj
+    {
+        get
+        {
+            if (_obj == null)
+                _obj = DeserializeProfiles();
+            return _obj;
+        }
+    }
+
     private static JObject DeserializeProfiles()
     {
         string s = "";
@@ -28,7 +40,7 @@ public class DevProfiles
         //game_path = Environment.GetEnvironmentVariable("ProgramFiles");
         string game_path = "", contents = "";
 
-        var obj = DeserializeProfiles(out contents);
+        _obj = DeserializeProfiles(out contents);
 
         var prop = obj[GTAConfig.const_game_dir];
         string game_dir = prop != null ? prop.ToObject<string>() : "";
@@ -69,8 +81,6 @@ public class DevProfiles
     {
         if (string.IsNullOrEmpty(id)) id = SystemInfo.deviceUniqueIdentifier;
 
-        var obj = DeserializeProfiles();
-
         var objDev = obj[GTAConfig.const_dev_profiles];
 
         Dictionary<string, string[]> devs = objDev != null ? objDev.ToObject<Dictionary<string, string[]>>() : new Dictionary<string, string[]>();
@@ -80,13 +90,12 @@ public class DevProfiles
             devs.Add(id, new string[] { path });
 
         if (setActive)
-            SetDevActiveIndex(ref obj, devs[id].Length - 1);
+            SetDevActiveIndex(ref _obj, devs[id].Length - 1);
 
-        // Serialize again
-        File.WriteAllText(GTAConfig.FileName, obj.JsonSerialize(true));
+        SaveChanges();
     }
 
-    private static void SetDevActiveIndex(ref JObject obj, int index, string id = "")
+    public static void SetDevActiveIndex(ref JObject obj, int index, string id = "")
     {
         if (string.IsNullOrEmpty(id)) id = SystemInfo.deviceUniqueIdentifier;
         var activeDev = obj[GTAConfig.const_active_dev_profile];
@@ -98,5 +107,26 @@ public class DevProfiles
             dictDev.Add(id, index);
 
         obj[GTAConfig.const_active_dev_profile] = JObject.FromObject(dictDev);
+    }
+
+    public static bool ExistDevIndex(int index)
+    {
+        var devObj = obj[GTAConfig.const_dev_profiles];
+
+        if (devObj == null) return false;
+
+        var devDict = devObj.ToObject<Dictionary<string, string[]>>();
+
+        if (devDict == null || (devDict != null && devDict.Count == 0)) return false;
+
+        return index <= devDict.Count - 1;
+    }
+
+    public static void SaveChanges(JObject __obj = null)
+    {
+        if (__obj == null) __obj = _obj;
+
+        // Serialize again
+        File.WriteAllText(GTAConfig.FileName, __obj.JsonSerialize(true));
     }
 }

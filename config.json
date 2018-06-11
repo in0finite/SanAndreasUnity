@@ -33,7 +33,7 @@
     "${game_dir}/data/animgrp.dat",
     "${data_dir}/auxanimgrp.dat"
   ],
-  "dev_profiles": {
-    "877e721d038ff613a105df736108432e67ebf835": "D:/JUEGOS/KPS GTA San Andreas"
+  "active_dev_profile": {
+    "877e721d038ff613a105df736108432e67ebf835": 0
   }
 }
