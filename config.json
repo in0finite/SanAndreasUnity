@@ -33,12 +33,13 @@
     "${game_dir}/data/animgrp.dat",
     "${data_dir}/auxanimgrp.dat"
   ],
-  "active_dev_profile": {
-    "877e721d038ff613a105df736108432e67ebf835": 0
-  },
   "dev_profiles": {
     "877e721d038ff613a105df736108432e67ebf835": [
-      ""
+      "D:/JUEGOS/KPS GTA San Andreas",
+      "D:/JUEGOS/GTA Underground"
     ]
+  },
+  "active_dev_profile": {
+    "877e721d038ff613a105df736108432e67ebf835": 3
   }
 }

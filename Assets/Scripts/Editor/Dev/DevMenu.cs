@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 
 [InitializeOnLoad]
@@ -27,7 +28,8 @@ public static class DevMenu
     [MenuItem("SanAndreasUnity/Devs/Add Development Workstation", false, 0)]
     private static void AddWorkstation()
     {
-        DevProfiles.AddNewPath(EditorUtility.OpenFolderPanel("Select GTA instalation Path", "", ""));
+        DevProfiles.AddNewPath(EditorUtility.OpenFolderPanel("Select GTA instalation Path", Path.GetDirectoryName(DevProfiles.LastDevProfilePath), ""));
+        DevProfiles.SaveChanges();
     }
 
     private static void SwitchTo(int index)

@@ -80,8 +80,6 @@ As the README list was very extensive, I have sum up here what I think it's impo
     
 ### Bugs to fix
 
-- AddNewPath from DevProfiles doesn't work very well.
-
 - I have to fix this problem, modifying in some way Assembly Importer GUI to added to mark or something like that is saved to avoid it's compilation (https://cdn.discordapp.com/attachments/454006273751515163/455029337821806592/unknown.png) // I have fixed it, but now the inspector looks ugly
 
 - Weird circular shadow appears when drving and the car passes next to a building that projects a shadow (low quality)

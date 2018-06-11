@@ -238,9 +238,19 @@ namespace SanAndreasUnity.Utilities
 
         public static T[] AddValue<T>(this T[] arr, T value)
         {
-            List<T> list = new List<T>();
-            list.Add(value);
-            return list.ToArray();
+            return (new List<T>(arr.ToList()) { value }).ToArray();
+        }
+
+        public static T[] Add<T>(this T[] target, T item)
+        {
+            if (target == null)
+                throw new ArgumentNullException();
+
+            T[] result = new T[target.Length + 1];
+            target.CopyTo(result, 0);
+            result[target.Length] = item;
+
+            return result;
         }
     }
 }
