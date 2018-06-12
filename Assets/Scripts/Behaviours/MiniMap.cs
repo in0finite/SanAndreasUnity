@@ -27,6 +27,8 @@ namespace SanAndreasUnity.Behaviours
 
         public Image northImage, playerImage;
 
+        private Transform northPivot;
+
         public static void AssingMinimap()
         {
             GameObject UI = GameObject.FindGameObjectWithTag("UI");
@@ -230,17 +232,26 @@ namespace SanAndreasUnity.Behaviours
 
                 maskTransform.localPosition = new Vector3(left, top, 0) / 2;
 
-                playerImage.rectTransform.localPosition = new Vector3(left, top, 0) / 2; //new Vector3(left + (uiSize / 2 - playerBlip.width / 2), top + (uiSize / 2 - playerBlip.height / 2), 0) / 2;
+                playerImage.rectTransform.localPosition = new Vector3(left, top, 0) / 2;
                 playerImage.rectTransform.localScale = Vector3.one * .2f;
                 playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, 180);
 
-                northImage.rectTransform.localPosition = new Vector3(left, top + uiSize, 0) / 2;
-                northImage.rectTransform.localScale = Vector3.one * .2f;
+                northPivot = northImage.rectTransform.parent;
+
+                northPivot.localPosition = new Vector3(left, top, 0) / 2;
+                northPivot.localScale = Vector3.one * .2f;
+
+                northImage.rectTransform.localPosition = new Vector3(0, uiSize / 2, 0) / .2f;
                 northImage.rectTransform.localRotation = Quaternion.Euler(0, 180, 0);
             }
 
             Vector3 pPos = player.transform.position;
             mapTransform.localPosition = new Vector3(pPos.x, pPos.z, 0) / -1000f; // Why? I don't know
+
+            maskTransform.localRotation = Quaternion.Euler(0, 0, Camera.main.transform.eulerAngles.y);
+            northPivot.localRotation = Quaternion.Euler(0, 0, Camera.main.transform.eulerAngles.y);
+
+            playerImage.rectTransform.localRotation = Quaternion.Euler(0, 180, (player.transform.localEulerAngles.y - 180) + Camera.main.transform.eulerAngles.y);
         }
     }
 }
