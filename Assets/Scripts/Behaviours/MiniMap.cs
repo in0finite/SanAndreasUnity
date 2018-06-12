@@ -1,5 +1,8 @@
 ﻿using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Utilities;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +22,7 @@ namespace SanAndreasUnity.Behaviours
         private const int texSize = 128; // width/height of single tile in px
         private const int mapSize = tileEdge * texSize; // width/height of whole map in px
         private const int uiSize = 256, uiOffset = 10;
+        private const bool outputImage = false;
 
         private TextureDictionary huds;
 
@@ -55,36 +59,79 @@ namespace SanAndreasUnity.Behaviours
         {
             mapTexture = new Texture2D(mapSize, mapSize);
 
+            //Dictionary<string, byte[]> byteArr = new Dictionary<string, byte[]>();
+            string folder = Path.Combine(Application.streamingAssetsPath, "map-chunks");
+
+            if (outputImage)
+            {
+                if (!Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
+            }
+
             Debug.Log("Merging all map sprites into one sprite.");
             for (int i = 0; i < tileCount; i++)
             {
                 // Offset
-                int x = (i / tileEdge) * texSize,
-                    y = (i % tileEdge) * texSize;
+                int y = ((i / tileEdge) - 1) * texSize,
+                    x = (i % tileEdge) * texSize;
 
                 string name = "radar" + ((i < 10) ? "0" : "") + i;
                 var texDict = TextureDictionary.Load(name);
 
                 Texture2D tex = texDict.GetDiffuse(name).Texture;
+
+                //if (outputImage)
+                //    tex = name.Substring(5).WriteTextToTexture(tex);
+
+                if (outputImage)
+                {
+                    string id = name.Substring(5);
+                    Texture2D image = new Texture2D(texSize, texSize, TextureFormat.ARGB32, false);
+
+                    //Color[] arr = tex.GetPixels();
+                    //Array.Reverse(arr);
+
+                    //image.SetPixels(0, 0, texSize, texSize, arr);
+
+                    //for (int k = 0; k < id.Length; ++k)
+                    //    image.SetPixels(12 * k, 0, 12, 18, id[k].WriteLetterToTexture());
+
+                    for (int xx = 0; xx < texSize; ++xx)
+                        for (int yy = 0; yy < texSize; ++yy)
+                            image.SetPixel(xx, texSize - yy - 1, tex.GetPixel(xx, yy));
+
+                    image.Apply();
+
+                    File.WriteAllBytes(Path.Combine(folder, string.Format("{0}.jpg", id)), ImageConversion.EncodeToPNG(image));
+                    //byteArr.Add(id, tex.GetRawTextureData());
+                }
+
                 for (int ii = 0; ii < texSize; ++ii)
                     for (int jj = 0; jj < texSize; ++jj)
-                        mapTexture.SetPixel(x + ii, y + jj, tex.GetPixel(ii, jj));
+                        mapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
+            }
 
-                //tex.filterMode = FilterMode.Point;
-
-                //tiles[i] = texDict;
+            if (outputImage)
+            {
+                /*foreach (var obj in byteArr)
+                {
+                    //Texture2D tex = new Texture2D(texSize, texSize, TextureFormat.ARGB32, false);
+                    //tex.LoadRawTextureData(obj.Value);
+                    //File.WriteAllBytes(Path.Combine(folder, string.Format("{0}.png", obj.Key)), tex.EncodeToPNG());
+                }*/
             }
 
             mapTexture.Apply();
             mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
+
+            if (outputImage)
+                File.WriteAllBytes(Path.Combine(Application.streamingAssetsPath, "gta-map.png"), mapTexture.EncodeToPNG());
 
             circleMask = Resources.Load<Sprite>("Sprites/MapCircle");
 
             huds = TextureDictionary.Load("hud");
             northBlip = huds.GetDiffuse("radar_north").Texture;
             playerBlip = huds.GetDiffuse("radar_centre").Texture;
-
-            //Debug.Log(new Vector2(playerBlip.width, playerBlip.height));
         }
 
         // --------------------------------
