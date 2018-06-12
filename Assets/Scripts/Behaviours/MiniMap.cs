@@ -24,7 +24,7 @@ namespace SanAndreasUnity.Behaviours
 
         private Texture2D northBlip, playerBlip, mapTexture;
         private Sprite mapSprite, circleMask;
-        private bool enableMinimap;
+        private bool enableMinimap, isReady, isSetup;
 
         public static void AssingMinimap()
         {
@@ -42,8 +42,13 @@ namespace SanAndreasUnity.Behaviours
                 minimap.transform.parent = root;
             }
 
-            if (minimap.GetComponent<MiniMap>() == null)
-                minimap.AddComponent<MiniMap>();
+            MiniMap map = minimap.GetComponent<MiniMap>();
+
+            if (map == null)
+                map = minimap.AddComponent<MiniMap>();
+
+            map.isReady = true;
+            if (!map.isSetup) map.Setup();
         }
 
         private void loadTextures()
@@ -93,7 +98,7 @@ namespace SanAndreasUnity.Behaviours
 
         #endregion Private fields
 
-        private void Awake()
+        private void Setup()
         {
             loadTextures();
 
@@ -107,6 +112,7 @@ namespace SanAndreasUnity.Behaviours
             canvas = transform.parent.GetComponent<Canvas>();
             if (canvas != null)
             {
+                Debug.Log("Canvas already exists!");
                 maskTransform = GetComponent<RectTransform>();
                 mapTransform = transform.Find("Image").GetComponent<RectTransform>();
 
@@ -161,12 +167,25 @@ namespace SanAndreasUnity.Behaviours
             canvas.enabled = false;
             maskTransform.position = new Vector3(Screen.width - uiSize - uiOffset, Screen.height - uiSize - uiOffset);
 
+            Debug.Log("Canvas disabled!");
+
             maskTransform.localScale = new Vector3(uiSize, uiSize, 1);
             mapTransform.localScale = new Vector3(1f / uiSize, 1f / uiSize, 1);
+
+            isSetup = true;
+        }
+
+        private void Awake()
+        {
+            if (!isReady)
+                return;
+
+            Setup();
         }
 
         private void Update()
         {
+            if (!isReady) return;
             if (!Loader.HasLoaded) return;
             if (!playerController.CursorLocked) return;
 
