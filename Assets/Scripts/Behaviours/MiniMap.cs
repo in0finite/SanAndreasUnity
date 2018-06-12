@@ -144,7 +144,7 @@ namespace SanAndreasUnity.Behaviours
             {
                 Debug.LogWarning("Canvas already exists!");
                 maskTransform = GetComponent<RectTransform>();
-                mapTransform = transform.Find("Image").GetComponent<RectTransform>();
+                mapTransform = transform.Find("Minimap-Image").GetComponent<RectTransform>();
 
                 // Setup mapSprite
                 if (GetComponent<Image>().sprite == null)
@@ -177,10 +177,10 @@ namespace SanAndreasUnity.Behaviours
                 if (GetComponent<Mask>() == null)
                     gameObject.AddComponent<Mask>();
 
-                if (transform.Find("Image") == null)
+                if (transform.Find("Minimap-Image") == null)
                 {
                     GameObject image = new GameObject();
-                    image.name = "Image";
+                    image.name = "Minimap-Image";
 
                     image.transform.parent = transform;
 
@@ -192,7 +192,7 @@ namespace SanAndreasUnity.Behaviours
                 }
             }
 
-            mapImage = transform.Find("Image").GetComponent<Image>();
+            mapImage = transform.Find("Minimap-Image").GetComponent<Image>();
             mapImage.sprite = mapSprite;
 
             canvas.enabled = false;
@@ -241,7 +241,7 @@ namespace SanAndreasUnity.Behaviours
 
                 northPivot = northImage.rectTransform.parent;
 
-                northPivot.localPosition = new Vector3(left, top, 0) / 2;
+                northPivot.localPosition = globalPos;
                 northPivot.localScale = Vector3.one * .2f;
 
                 northImage.rectTransform.localPosition = new Vector3(0, uiSize / 2, 0) / .2f;
@@ -252,7 +252,7 @@ namespace SanAndreasUnity.Behaviours
             }
 
             Vector3 pPos = player.transform.position;
-            mapTransform.localPosition = new Vector3(pPos.x, pPos.z, 0); // / -1000f; // Why? I don't know
+            mapTransform.localPosition = new Vector3(pPos.x, pPos.z, 0);
 
             maskTransform.localRotation = Quaternion.Euler(0, 0, Camera.main.transform.eulerAngles.y);
             northPivot.localRotation = Quaternion.Euler(0, 0, Camera.main.transform.eulerAngles.y);
