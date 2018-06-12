@@ -36,6 +36,14 @@ public class DevProfiles
         }
     }
 
+    public static string ActiveProfilePath
+    {
+        get
+        {
+            return GTAConfig.Get<Dictionary<string, string[]>>(GTAConfig.const_dev_profiles).Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[ActiveProfile];
+        }
+    }
+
     public static string LastDevProfilePath
     {
         get

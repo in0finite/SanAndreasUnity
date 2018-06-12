@@ -1,10 +1,16 @@
 ﻿using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace SanAndreasUnity.Behaviours
 {
-    [RequireComponent(typeof(Player))]
+    /*[RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(CanvasRenderer))]
+    [RequireComponent(typeof(ScrollRect))]
+    [RequireComponent(typeof(Image))]
+    [RequireComponent(typeof(Mask))]*/
+
     public class MiniMap : MonoBehaviour
     {
         private const int tileEdge = 12; // width/height of map in tiles
@@ -20,6 +26,7 @@ namespace SanAndreasUnity.Behaviours
 
         public static void loadTextures()
         {
+            Debug.Log(tileEdge * texSize);
             for (int i = 0; i < tileCount; i++)
             {
                 string name = "radar" + ((i < 10) ? "0" : "") + i;
@@ -103,8 +110,9 @@ namespace SanAndreasUnity.Behaviours
 
         private void Awake()
         {
-            player = GetComponent<Player>();
-            playerController = GetComponent<PlayerController>();
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            player = playerObj.GetComponent<Player>();
+            playerController = playerObj.GetComponent<PlayerController>();
         }
 
         private void drawMapWindow(Vector2 screenPos, Vector2 mapPos)

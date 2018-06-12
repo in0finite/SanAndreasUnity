@@ -21,7 +21,8 @@ namespace SanAndreasUnity.Importing.Archive
     {
         public static string GameDir
         {
-            get { return Config.Get<Dictionary<string, string>>(Config.const_dev_profiles).Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value; }
+            //Debug.Log("Path: " + DevProfiles.ActiveProfilePath);
+            get { return DevProfiles.ActiveProfilePath; }
         }
 
         public static string ModelsDir { get { return Path.Combine(GameDir, "models"); } }

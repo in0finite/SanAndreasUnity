@@ -1,5 +1,6 @@
 ﻿//using Facepunch.Networking;
 using Newtonsoft.Json.Linq;
+using SanAndreasUnity.Importing.Archive;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -67,7 +68,14 @@ namespace SanAndreasUnity.Utilities
 
         private static TVal ConvertVal<TVal>(JToken val)
         {
-            return (TVal)Convert.ChangeType(val, typeof(TVal));
+            try
+            {
+                return (TVal)Convert.ChangeType(val, typeof(TVal));
+            }
+            catch
+            {
+                return val.ToObject<TVal>();
+            }
         }
 
         public static TVal Get<TVal>(string key)
@@ -96,6 +104,10 @@ namespace SanAndreasUnity.Utilities
             if (key == "data_dir")
             {
                 subs = DataPath;
+            }
+            else if (key == "game_dir")
+            {
+                subs = ArchiveManager.GameDir;
             }
             else
             {
