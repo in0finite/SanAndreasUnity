@@ -22,7 +22,7 @@ namespace SanAndreasUnity.Behaviours
         private const int texSize = 128; // width/height of single tile in px
         private const int mapSize = tileEdge * texSize; // width/height of whole map in px
         private const int uiSize = 256, uiOffset = 10;
-        private const bool outputImage = false;
+        private const bool outputChunks = false, outputImage = true;
 
         private TextureDictionary huds;
 
@@ -62,7 +62,7 @@ namespace SanAndreasUnity.Behaviours
             //Dictionary<string, byte[]> byteArr = new Dictionary<string, byte[]>();
             string folder = Path.Combine(Application.streamingAssetsPath, "map-chunks");
 
-            if (outputImage)
+            if (outputChunks)
             {
                 if (!Directory.Exists(folder))
                     Directory.CreateDirectory(folder);
@@ -72,7 +72,7 @@ namespace SanAndreasUnity.Behaviours
             for (int i = 0; i < tileCount; i++)
             {
                 // Offset
-                int y = ((i / tileEdge) - 1) * texSize,
+                int y = ((i / tileEdge) + 1) * texSize,
                     x = (i % tileEdge) * texSize;
 
                 string name = "radar" + ((i < 10) ? "0" : "") + i;
@@ -83,7 +83,7 @@ namespace SanAndreasUnity.Behaviours
                 //if (outputImage)
                 //    tex = name.Substring(5).WriteTextToTexture(tex);
 
-                if (outputImage)
+                if (outputChunks)
                 {
                     string id = name.Substring(5);
                     Texture2D image = new Texture2D(texSize, texSize, TextureFormat.ARGB32, false);
@@ -109,16 +109,6 @@ namespace SanAndreasUnity.Behaviours
                 for (int ii = 0; ii < texSize; ++ii)
                     for (int jj = 0; jj < texSize; ++jj)
                         mapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
-            }
-
-            if (outputImage)
-            {
-                /*foreach (var obj in byteArr)
-                {
-                    //Texture2D tex = new Texture2D(texSize, texSize, TextureFormat.ARGB32, false);
-                    //tex.LoadRawTextureData(obj.Value);
-                    //File.WriteAllBytes(Path.Combine(folder, string.Format("{0}.png", obj.Key)), tex.EncodeToPNG());
-                }*/
             }
 
             mapTexture.Apply();
