@@ -57,7 +57,9 @@ namespace SanAndreasUnity.Behaviours
 
         private void loadTextures()
         {
-            mapTexture = new Texture2D(mapSize, mapSize);
+            mapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
+            mapTexture.wrapMode = TextureWrapMode.Repeat;
+            mapTexture.filterMode = FilterMode.Point;
 
             //Dictionary<string, byte[]> byteArr = new Dictionary<string, byte[]>();
             string folder = Path.Combine(Application.streamingAssetsPath, "map-chunks");
@@ -202,7 +204,6 @@ namespace SanAndreasUnity.Behaviours
             }
 
             canvas.enabled = false;
-            maskTransform.position = new Vector3(Screen.width - uiSize - uiOffset, Screen.height - uiSize - uiOffset);
 
             Debug.Log("Canvas disabled!");
 
@@ -230,7 +231,12 @@ namespace SanAndreasUnity.Behaviours
             {
                 canvas.enabled = true;
                 enableMinimap = true;
+
+                maskTransform.localPosition = new Vector3(Screen.width - uiSize - uiOffset, Screen.height - uiSize - uiOffset, 0) / 2;
             }
+
+            Vector3 pPos = player.transform.position;
+            mapTransform.localPosition = new Vector3(pPos.x, pPos.z, 0) / -1000f; // Why? I don't know
         }
     }
 }
