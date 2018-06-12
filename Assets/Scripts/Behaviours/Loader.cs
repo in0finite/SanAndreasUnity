@@ -161,7 +161,8 @@ namespace SanAndreasUnity.Behaviours
                 case 7:
                     using (Utilities.Profiler.Start("special texture load time"))
                     {
-                        MiniMap.loadTextures();
+                        //MiniMap.loadTextures();
+                        MiniMap.AssingMinimap();
 
                         // Load mouse cursor texture
                         Texture2D mouse = TextureDictionary.Load("fronten_pc").GetDiffuse("mouse").Texture;

@@ -18,25 +18,63 @@ namespace SanAndreasUnity.Behaviours
         private const int mapEdge = 6000; // width/height of map in world coordinates
         private const int texSize = 128; // width/height of single tile in px
         private const int mapSize = tileEdge * texSize; // width/height of whole map in px
+        private const int uiSize = 256, uiOffset = 10;
 
-        private static TextureDictionary[] tiles = new TextureDictionary[tileCount];
-        private static TextureDictionary huds;
-        private static Texture2D northBlip;
-        private static Texture2D playerBlip;
+        //private static TextureDictionary[] tiles = new TextureDictionary[tileCount];
+        private TextureDictionary huds;
 
-        public static void loadTextures()
+        private Texture2D northBlip, playerBlip, mapTexture;
+        private Sprite mapSprite, circleMask;
+        private bool enableMinimap;
+
+        public static void AssingMinimap()
         {
-            Debug.Log(tileEdge * texSize);
+            GameObject UI = GameObject.FindGameObjectWithTag("UI");
+            Transform root = UI != null ? UI.transform : null;
+
+            GameObject minimap = GameObject.FindGameObjectWithTag("Minimap");
+            if (minimap == null)
+            {
+                minimap = new GameObject();
+
+                minimap.name = "Minimap";
+                minimap.tag = "Minimap";
+
+                minimap.transform.parent = root;
+            }
+
+            if (minimap.GetComponent<MiniMap>() == null)
+                minimap.AddComponent<MiniMap>();
+        }
+
+        private void loadTextures()
+        {
+            mapTexture = new Texture2D(mapSize, mapSize);
+
+            Debug.Log("Merging all map sprites into one sprite.");
             for (int i = 0; i < tileCount; i++)
             {
+                // Offset
+                int x = (i / tileEdge) * texSize,
+                    y = (i % tileEdge) * texSize;
+
                 string name = "radar" + ((i < 10) ? "0" : "") + i;
                 var texDict = TextureDictionary.Load(name);
 
                 Texture2D tex = texDict.GetDiffuse(name).Texture;
-                tex.filterMode = FilterMode.Point;
+                for (int ii = 0; ii < texSize; ++ii)
+                    for (int jj = 0; jj < texSize; ++jj)
+                        mapTexture.SetPixel(x + ii, y + jj, tex.GetPixel(ii, jj));
 
-                tiles[i] = texDict;
+                //tex.filterMode = FilterMode.Point;
+
+                //tiles[i] = texDict;
             }
+
+            mapTexture.Apply();
+            mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
+
+            circleMask = Resources.Load<Sprite>("Sprites/MapCircle");
 
             huds = TextureDictionary.Load("hud");
             northBlip = huds.GetDiffuse("radar_north").Texture;
@@ -45,7 +83,7 @@ namespace SanAndreasUnity.Behaviours
             //Debug.Log(new Vector2(playerBlip.width, playerBlip.height));
         }
 
-        private static Texture2D getTile(int i)
+        /*private static Texture2D getTile(int i)
         {
             if ((i < 0) || (i >= tileCount))
                 return null;
@@ -97,7 +135,7 @@ namespace SanAndreasUnity.Behaviours
                 pos.y = mapSize - 1;
 
             return new Vector2(pos.x % texSize, pos.y % texSize);
-        }
+        }*/
 
         // --------------------------------
 
@@ -105,17 +143,84 @@ namespace SanAndreasUnity.Behaviours
 
         private Player player;
         private PlayerController playerController;
+        private Canvas canvas;
+        private RectTransform mapTransform, maskTransform;
 
         #endregion Private fields
 
         private void Awake()
         {
+            loadTextures();
+
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             player = playerObj.GetComponent<Player>();
             playerController = playerObj.GetComponent<PlayerController>();
+
+            // Start object setup
+
+            //Check if parent is a canvas
+            canvas = transform.parent.GetComponent<Canvas>();
+            if (canvas != null)
+            {
+                maskTransform = GetComponent<RectTransform>();
+                mapTransform = transform.Find("Image").GetComponent<RectTransform>();
+
+                // Setup mapSprite
+                if (GetComponent<Image>().sprite == null)
+                    GetComponent<Image>().sprite = circleMask;
+
+                transform.Find("Image").GetComponent<Image>().sprite = mapSprite;
+            }
+            else
+            {
+                GameObject canvasObject = new GameObject();
+                canvasObject.name = "Canvas";
+
+                canvasObject.AddComponent<RectTransform>();
+                canvas = canvasObject.AddComponent<Canvas>();
+                canvasObject.AddComponent<CanvasScaler>();
+                canvasObject.AddComponent<GraphicRaycaster>();
+
+                transform.parent = canvasObject.transform;
+
+                if (GetComponent<RectTransform>() == null)
+                    mapTransform = gameObject.AddComponent<RectTransform>();
+
+                if (GetComponent<CanvasRenderer>() == null)
+                    gameObject.AddComponent<CanvasRenderer>();
+
+                if (GetComponent<Image>() == null)
+                {
+                    Image img = gameObject.AddComponent<Image>();
+                    img.sprite = circleMask;
+                }
+
+                if (GetComponent<Mask>() == null)
+                    gameObject.AddComponent<Mask>();
+
+                if (transform.Find("Image") == null)
+                {
+                    GameObject image = new GameObject();
+                    image.name = "Image";
+
+                    image.transform.parent = transform;
+
+                    mapTransform = image.AddComponent<RectTransform>();
+                    image.AddComponent<CanvasRenderer>();
+
+                    Image mapImage = image.AddComponent<Image>();
+                    mapImage.sprite = mapSprite;
+                }
+            }
+
+            canvas.enabled = false;
+            maskTransform.position = new Vector3(Screen.width - uiSize - uiOffset, Screen.height - uiSize - uiOffset);
+
+            maskTransform.localScale = new Vector3(uiSize, uiSize, 1);
+            mapTransform.localScale = new Vector3(1f / uiSize, 1f / uiSize, 1);
         }
 
-        private void drawMapWindow(Vector2 screenPos, Vector2 mapPos)
+        /*private void drawMapWindow(Vector2 screenPos, Vector2 mapPos)
         {
             float zoom = 1,
                   rTexSize = texSize; // WIP: There is a problem when you increase the size (because of the tiling)
@@ -162,16 +267,22 @@ namespace SanAndreasUnity.Behaviours
             drawTexturePart(northBlip, new Vector2(screenPos.x + ((rTexSize - northBlip.width) / 2), screenPos.y - (northBlip.height / 2)), Vector2.zero, new Vector2(northBlip.width, northBlip.height));
 
             GUI.EndGroup();
-        }
+        }*/
 
-        private void OnGUI()
+        private void Update()
         {
             if (!Loader.HasLoaded) return;
             if (!playerController.CursorLocked) return;
 
+            if (!enableMinimap)
+            {
+                canvas.enabled = true;
+                enableMinimap = true;
+            }
+
             // Player coordinates on map, (0; 0) moved from center to top-left
-            Vector2 pos = new Vector2(player.transform.position.x + (mapEdge / 2), mapEdge - (player.transform.position.z + (mapEdge / 2)));
-            drawMapWindow(new Vector2(10, 10), pos);
+            //Vector2 pos = new Vector2(player.transform.position.x + (mapEdge / 2), mapEdge - (player.transform.position.z + (mapEdge / 2)));
+            //drawMapWindow(new Vector2(10, 10), pos);
         }
     }
 }
