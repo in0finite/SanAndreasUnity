@@ -23,9 +23,9 @@ namespace SanAndreasUnity.Behaviours
 
         // WIP: I will generate this later...
         // I need some method to generate a Canvas element (like in the menu)
-        public Canvas iconCanvas;
+        public Canvas outlineCanvas, iconCanvas;
 
-        public Image northImage, playerImage;
+        public Image northImage, playerImage, outlineImage;
 
         private Transform northPivot;
 
@@ -199,8 +199,8 @@ namespace SanAndreasUnity.Behaviours
 
             Debug.Log("Canvas disabled!");
 
-            maskTransform.localScale = new Vector3(uiSize, uiSize, 1);
-            mapTransform.localScale = new Vector3(1f / uiSize, 1f / uiSize, 1);
+            GetComponent<RectTransform>().sizeDelta = new Vector2(uiSize, uiSize);
+            //mapTransform.localScale = new Vector3(1f / uiSize, 1f / uiSize, 1);
 
             isSetup = true;
         }
@@ -223,6 +223,7 @@ namespace SanAndreasUnity.Behaviours
             {
                 canvas.enabled = true;
                 iconCanvas.enabled = true;
+                outlineCanvas.enabled = true;
                 enableMinimap = true;
 
                 // Must review: For some reason values are Y-axis inverted
@@ -230,9 +231,11 @@ namespace SanAndreasUnity.Behaviours
                 float left = Screen.width - uiSize - uiOffset,
                       top = Screen.height - uiSize - uiOffset * 2;
 
-                maskTransform.localPosition = new Vector3(left, top, 0) / 2;
+                Vector3 globalPos = new Vector3(left, top, 0) / 2;
 
-                playerImage.rectTransform.localPosition = new Vector3(left, top, 0) / 2;
+                maskTransform.localPosition = globalPos;
+
+                playerImage.rectTransform.localPosition = globalPos;
                 playerImage.rectTransform.localScale = Vector3.one * .2f;
                 playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, 180);
 
@@ -243,10 +246,13 @@ namespace SanAndreasUnity.Behaviours
 
                 northImage.rectTransform.localPosition = new Vector3(0, uiSize / 2, 0) / .2f;
                 northImage.rectTransform.localRotation = Quaternion.Euler(0, 180, 0);
+
+                outlineImage.rectTransform.localPosition = globalPos;
+                outlineImage.rectTransform.sizeDelta = Vector2.one * uiSize;
             }
 
             Vector3 pPos = player.transform.position;
-            mapTransform.localPosition = new Vector3(pPos.x, pPos.z, 0) / -1000f; // Why? I don't know
+            mapTransform.localPosition = new Vector3(pPos.x, pPos.z, 0); // / -1000f; // Why? I don't know
 
             maskTransform.localRotation = Quaternion.Euler(0, 0, Camera.main.transform.eulerAngles.y);
             northPivot.localRotation = Quaternion.Euler(0, 0, Camera.main.transform.eulerAngles.y);
