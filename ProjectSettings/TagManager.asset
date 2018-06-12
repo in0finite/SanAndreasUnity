@@ -43,3 +43,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Map
+    uniqueID: 401442191
+    locked: 0
+  - name: MapIcons
+    uniqueID: 3495189807
+    locked: 0
+  - name: MapPlayer
+    uniqueID: 3677193385
+    locked: 0

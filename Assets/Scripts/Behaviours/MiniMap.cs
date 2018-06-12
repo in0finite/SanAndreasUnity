@@ -1,19 +1,10 @@
 ﻿using SanAndreasUnity.Importing.Conversion;
-using SanAndreasUnity.Utilities;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace SanAndreasUnity.Behaviours
 {
-    /*[RequireComponent(typeof(RectTransform))]
-    [RequireComponent(typeof(CanvasRenderer))]
-    [RequireComponent(typeof(ScrollRect))]
-    [RequireComponent(typeof(Image))]
-    [RequireComponent(typeof(Mask))]*/
-
     public class MiniMap : MonoBehaviour
     {
         private const int tileEdge = 12; // width/height of map in tiles
@@ -29,6 +20,12 @@ namespace SanAndreasUnity.Behaviours
         private Texture2D northBlip, playerBlip, mapTexture;
         private Sprite mapSprite, circleMask;
         private bool enableMinimap, isReady, isSetup;
+
+        // WIP: I will generate this later...
+        // I need some method to generate a Canvas element (like in the menu)
+        public Canvas iconCanvas;
+
+        public Image northImage, playerImage;
 
         public static void AssingMinimap()
         {
@@ -61,7 +58,6 @@ namespace SanAndreasUnity.Behaviours
             mapTexture.wrapMode = TextureWrapMode.Repeat;
             mapTexture.filterMode = FilterMode.Point;
 
-            //Dictionary<string, byte[]> byteArr = new Dictionary<string, byte[]>();
             string folder = Path.Combine(Application.streamingAssetsPath, "map-chunks");
 
             if (outputChunks)
@@ -82,21 +78,10 @@ namespace SanAndreasUnity.Behaviours
 
                 Texture2D tex = texDict.GetDiffuse(name).Texture;
 
-                //if (outputImage)
-                //    tex = name.Substring(5).WriteTextToTexture(tex);
-
                 if (outputChunks)
                 {
                     string id = name.Substring(5);
                     Texture2D image = new Texture2D(texSize, texSize, TextureFormat.ARGB32, false);
-
-                    //Color[] arr = tex.GetPixels();
-                    //Array.Reverse(arr);
-
-                    //image.SetPixels(0, 0, texSize, texSize, arr);
-
-                    //for (int k = 0; k < id.Length; ++k)
-                    //    image.SetPixels(12 * k, 0, 12, 18, id[k].WriteLetterToTexture());
 
                     for (int xx = 0; xx < texSize; ++xx)
                         for (int yy = 0; yy < texSize; ++yy)
@@ -105,7 +90,6 @@ namespace SanAndreasUnity.Behaviours
                     image.Apply();
 
                     File.WriteAllBytes(Path.Combine(folder, string.Format("{0}.jpg", id)), ImageConversion.EncodeToPNG(image));
-                    //byteArr.Add(id, tex.GetRawTextureData());
                 }
 
                 for (int ii = 0; ii < texSize; ++ii)
@@ -124,6 +108,9 @@ namespace SanAndreasUnity.Behaviours
             huds = TextureDictionary.Load("hud");
             northBlip = huds.GetDiffuse("radar_north").Texture;
             playerBlip = huds.GetDiffuse("radar_centre").Texture;
+
+            northImage.sprite = Sprite.Create(northBlip, new Rect(0, 0, northBlip.width, northBlip.height), new Vector2(northBlip.width, northBlip.height) / 2);
+            playerImage.sprite = Sprite.Create(playerBlip, new Rect(0, 0, playerBlip.width, playerBlip.height), new Vector2(playerBlip.width, playerBlip.height) / 2);
         }
 
         // --------------------------------
@@ -134,6 +121,7 @@ namespace SanAndreasUnity.Behaviours
         private PlayerController playerController;
         private Canvas canvas;
         private RectTransform mapTransform, maskTransform;
+        private Image mapImage;
 
         #endregion Private fields
 
@@ -149,17 +137,16 @@ namespace SanAndreasUnity.Behaviours
 
             //Check if parent is a canvas
             canvas = transform.parent.GetComponent<Canvas>();
+
             if (canvas != null)
             {
-                Debug.Log("Canvas already exists!");
+                Debug.LogWarning("Canvas already exists!");
                 maskTransform = GetComponent<RectTransform>();
                 mapTransform = transform.Find("Image").GetComponent<RectTransform>();
 
                 // Setup mapSprite
                 if (GetComponent<Image>().sprite == null)
                     GetComponent<Image>().sprite = circleMask;
-
-                transform.Find("Image").GetComponent<Image>().sprite = mapSprite;
             }
             else
             {
@@ -203,6 +190,9 @@ namespace SanAndreasUnity.Behaviours
                 }
             }
 
+            mapImage = transform.Find("Image").GetComponent<Image>();
+            mapImage.sprite = mapSprite;
+
             canvas.enabled = false;
 
             Debug.Log("Canvas disabled!");
@@ -230,9 +220,23 @@ namespace SanAndreasUnity.Behaviours
             if (!enableMinimap)
             {
                 canvas.enabled = true;
+                iconCanvas.enabled = true;
                 enableMinimap = true;
 
-                maskTransform.localPosition = new Vector3(Screen.width - uiSize - uiOffset, Screen.height - uiSize - uiOffset, 0) / 2;
+                // Must review: For some reason values are Y-axis inverted
+
+                float left = Screen.width - uiSize - uiOffset,
+                      top = Screen.height - uiSize - uiOffset * 2;
+
+                maskTransform.localPosition = new Vector3(left, top, 0) / 2;
+
+                playerImage.rectTransform.localPosition = new Vector3(left, top, 0) / 2; //new Vector3(left + (uiSize / 2 - playerBlip.width / 2), top + (uiSize / 2 - playerBlip.height / 2), 0) / 2;
+                playerImage.rectTransform.localScale = Vector3.one * .2f;
+                playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, 180);
+
+                northImage.rectTransform.localPosition = new Vector3(left, top + uiSize, 0) / 2;
+                northImage.rectTransform.localScale = Vector3.one * .2f;
+                northImage.rectTransform.localRotation = Quaternion.Euler(0, 180, 0);
             }
 
             Vector3 pPos = player.transform.position;
