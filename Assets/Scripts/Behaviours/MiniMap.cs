@@ -262,7 +262,9 @@ namespace SanAndreasUnity.Behaviours
 
             Vector3 pPos = player.transform.position;
             mapTransform.localPosition = new Vector3(pPos.x, pPos.z, 0) / (-1000f / uiSize); // Why?
-            mapImage.transform.localScale = new Vector3(zoom, zoom, 1); // This doesn't work
+            //mapTransform.offsetMin /= new Vector3(zoom, zoom, 1); // This doesn't work
+            //mapTransform.offsetMax *= new Vector3(zoom, zoom, 1);
+            //mapTransform.ForceUpdateRectTransforms();
 
             float relAngle = Camera.main.transform.eulerAngles.y; //Vector3.Angle(Vector3.forward, Camera.main.transform.TransformDirection(Camera.main.transform.forward));
             maskTransform.localRotation = Quaternion.Euler(0, 0, relAngle);

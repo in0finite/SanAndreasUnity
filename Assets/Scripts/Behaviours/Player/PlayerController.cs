@@ -63,11 +63,8 @@ namespace SanAndreasUnity.Behaviours
         private static Vector3 lastPos = Vector3.zero,
                                deltaPos = Vector3.zero;
 
-        private List<float> rotArrayYaw = new List<float>();
-        private float rotAverageYaw = 0F;
-
-        private List<float> rotArrayPitch = new List<float>();
-        private float rotAveragePitch = 0F;
+        private Vector2 _mouseAbsolute;
+        private Vector2 _smoothMouse = Vector2.zero;
 
         #endregion Private fields
 
@@ -78,13 +75,14 @@ namespace SanAndreasUnity.Behaviours
         public float CarCameraDistance = 6.0f;
         public float PlayerCameraDistance = 3.0f;
 
-        public Vector2 PitchClamp = new Vector2(-89f, 89f);
+        //public Vector2 PitchClamp = new Vector2(-89f, 89f);
+        public Vector2 clampInDegrees = new Vector2(90, 90);
 
         public float EnterVehicleRadius = 5.0f;
 
         public float animationBlendWeight = 0.4f;
 
-        public float m_smoothing = 20;
+        public Vector2 smoothing = new Vector2(10, 10);
         public bool m_doSmooth = true;
 
         public bool CursorLocked;
@@ -96,12 +94,12 @@ namespace SanAndreasUnity.Behaviours
         public Camera Camera { get { return _player.Camera; } }
         public Pedestrian PlayerModel { get { return _player.PlayerModel; } }
 
-        public float Pitch
+        /*public float Pitch
         {
             get { return _pitch; }
             set
             {
-                _pitch = Mathf.Clamp(value, PitchClamp.x, PitchClamp.y);
+                _pitch = Mathf.Clamp(value, clampInDegrees.x, -clampInDegrees.x);
 
                 var angles = Camera.transform.localEulerAngles;
                 angles.x = _pitch;
@@ -121,7 +119,7 @@ namespace SanAndreasUnity.Behaviours
                 angles.y = _yaw;
                 trans.localEulerAngles = angles;
             }
-        }
+        }*/
 
         #endregion Properties
 
@@ -307,47 +305,31 @@ namespace SanAndreasUnity.Behaviours
                 ChangeCursorState(!CursorLocked);
 
             if (CursorLocked)
-            {
-                var cursorDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+            { // While cursor is locked and don't show on screen we can move player's camera.
+                var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
-                Yaw += cursorDelta.x * CursorSensitivity.x;
-                Pitch -= cursorDelta.y * CursorSensitivity.y;
+                mouseDelta = Vector2.Scale(mouseDelta, CursorSensitivity); //new Vector2(CursorSensitivity.x * smoothing.x, CursorSensitivity.y * smoothing.y));
+
+                if (m_doSmooth)
+                {
+                    _smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
+                    _smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
+
+                    // Find the absolute mouse movement value from point zero.
+                    _mouseAbsolute += _smoothMouse;
+                }
+                else
+                    _mouseAbsolute += mouseDelta;
+
+                if (clampInDegrees.x > 0)
+                    _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x, clampInDegrees.x);
+
+                if (clampInDegrees.y > 0)
+                    _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);
+
+                Camera.transform.rotation = Quaternion.AngleAxis(-_mouseAbsolute.x, Vector3.up)
+                    * Quaternion.AngleAxis(_mouseAbsolute.y, Vector3.right);
             }
-
-            //rotAveragePitch = 0f;
-            //rotAverageYaw = 0f;
-
-            if (m_doSmooth)
-            {
-                rotArrayPitch.Add(Pitch);
-                rotArrayYaw.Add(Yaw);
-
-                if (rotArrayPitch.Count >= m_smoothing)
-                {
-                    rotArrayPitch.RemoveAt(0);
-                }
-                if (rotArrayYaw.Count >= m_smoothing)
-                {
-                    rotArrayYaw.RemoveAt(0);
-                }
-
-                for (int j = 0; j < rotArrayPitch.Count; j++)
-                {
-                    rotAveragePitch += rotArrayPitch[j];
-                }
-                for (int i = 0; i < rotArrayYaw.Count; i++)
-                {
-                    rotAverageYaw += rotArrayYaw[i];
-                }
-
-                rotAveragePitch /= rotArrayPitch.Count;
-                rotAverageYaw /= rotArrayYaw.Count;
-            }
-
-            //rotAveragePitch = ClampAngle(rotAveragePitch, PitchClamp.x, PitchClamp.y);
-
-            Camera.transform.rotation = Quaternion.AngleAxis(m_doSmooth ? rotAverageYaw : Yaw, Vector3.up)
-                * Quaternion.AngleAxis(m_doSmooth ? rotAveragePitch : Pitch, Vector3.right);
 
             float distance;
             Vector3 castFrom;
@@ -578,23 +560,6 @@ namespace SanAndreasUnity.Behaviours
             CursorLocked = locked;
             Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
             Cursor.visible = !locked;
-        }
-
-        public static float ClampAngle(float angle, float min, float max)
-        {
-            angle = angle % 360;
-            if ((angle >= -360F) && (angle <= 360F))
-            {
-                if (angle < -360F)
-                {
-                    angle += 360F;
-                }
-                if (angle > 360F)
-                {
-                    angle -= 360F;
-                }
-            }
-            return Mathf.Clamp(angle, min, max);
         }
     }
 }
