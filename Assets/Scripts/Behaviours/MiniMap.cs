@@ -32,8 +32,19 @@ namespace SanAndreasUnity.Behaviours
         public float zoom = 1.3f;
 
         public const float maxVelocity = 300f;
+        public static float[] zooms = new float[7] { .75f, .875f, 1f, 1.15f, 1.3f, 1.5f, 1.8f };
+
+        [HideInInspector]
+        public int zoomSelector = 4;
+
+        public float zoomDuration = 1;
 
         private Transform northPivot;
+
+        //Zoom vars
+        private bool startZooming;
+
+        private float startTimeZooming;
 
         public static void AssingMinimap()
         {
@@ -161,8 +172,6 @@ namespace SanAndreasUnity.Behaviours
         private void Update()
         {
             if (!isReady) return;
-            //if (!Loader.HasLoaded) return;
-            //if (!playerController.CursorLocked) return;
 
             if (!enableMinimap)
             {
@@ -196,6 +205,20 @@ namespace SanAndreasUnity.Behaviours
                 outlineImage.rectTransform.sizeDelta = Vector2.one * uiSize;
                 outlineImage.rectTransform.localScale = Vector3.one * 1.05f;
             }
+
+            if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.B))
+                startZooming = true;
+
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                ++zoomSelector;
+                ChangeZoom();
+            }
+            else if (Input.GetKeyDown(KeyCode.B))
+            {
+                --zoomSelector;
+                ChangeZoom();
+            }
         }
 
         private void FixedUpdate()
@@ -203,9 +226,9 @@ namespace SanAndreasUnity.Behaviours
             if (mapTransform != null)
             {
                 float deltaZoom = zoom - lastZoom;
+
                 mapTransform.localScale = new Vector3(zoom, zoom, 1);
-                //mapTransform.ForceUpdateRectTransforms();
-                //mapTransform.localPosition += new Vector3(deltaZoom, deltaZoom, 1) / uiSize;
+
                 lastZoom = zoom;
             }
 
@@ -215,17 +238,41 @@ namespace SanAndreasUnity.Behaviours
         private void LateUpdate()
         {
             if (!isReady) return;
-            //if (!Loader.HasLoaded) return;
-            //if (!playerController.CursorLocked) return;
+            //if (!playerController.CursorLocked) return; // Note: This must be activated when on debug
 
             Vector3 pPos = player.transform.position, defPos = (new Vector3(pPos.x, pPos.z, 0) / (-1000f / uiSize));
             mapTransform.localPosition = new Vector3(defPos.x * zoom, defPos.y * zoom, 1); // Why?
 
-            float relAngle = Camera.main.transform.eulerAngles.y; //Vector3.Angle(Vector3.forward, Camera.main.transform.TransformDirection(Camera.main.transform.forward));
+            float relAngle = Camera.main.transform.eulerAngles.y;
             maskTransform.localRotation = Quaternion.Euler(0, 0, relAngle);
             northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
 
             playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (player.transform.eulerAngles.y + 180));
+        }
+
+        private void ChangeZoom()
+        {
+            if (startZooming)
+            {
+                startTimeZooming = Time.time;
+                startZooming = false;
+            }
+
+            zoomSelector = GetClampedZoomSelector(zoomSelector);
+            float curZoom = zooms[zoomSelector % zooms.Length],
+                  lastZoom = zooms[GetClampedZoomSelector(zoomSelector - 1) % zooms.Length];
+
+            zoom = Mathf.Lerp(lastZoom, curZoom, (Time.time - startTimeZooming) / zoomDuration);
+        }
+
+        private int GetClampedZoomSelector(int? val = null)
+        {
+            int zoomVal = val == null ? zoomSelector : val.Value;
+
+            if (zoomVal < 0)
+                zoomVal = zooms.Length - 1;
+
+            return zoomVal;
         }
     }
 }
