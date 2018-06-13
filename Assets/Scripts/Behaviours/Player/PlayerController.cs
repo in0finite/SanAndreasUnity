@@ -77,7 +77,7 @@ namespace SanAndreasUnity.Behaviours
         public float PlayerCameraDistance = 3.0f;
 
         //public Vector2 PitchClamp = new Vector2(-89f, 89f);
-        public Vector2 clampInDegrees = new Vector2(90, 90);
+        public Vector2 clampInDegrees = new Vector2(90, 60);
 
         public float EnterVehicleRadius = 5.0f;
 
@@ -88,39 +88,20 @@ namespace SanAndreasUnity.Behaviours
 
         public bool CursorLocked;
 
+        public float CurVelocity
+        {
+            get
+            {
+                return deltaPos.magnitude * 3.6f / velTimer;
+            }
+        }
+
         #endregion Inspector Fields
 
         #region Properties
 
         public Camera Camera { get { return _player.Camera; } }
         public Pedestrian PlayerModel { get { return _player.PlayerModel; } }
-
-        /*public float Pitch
-        {
-            get { return _pitch; }
-            set
-            {
-                _pitch = Mathf.Clamp(value, clampInDegrees.x, -clampInDegrees.x);
-
-                var angles = Camera.transform.localEulerAngles;
-                angles.x = _pitch;
-                Camera.transform.localEulerAngles = angles;
-            }
-        }
-
-        public float Yaw
-        {
-            get { return _yaw; }
-            set
-            {
-                _yaw = value.NormalizeAngle();
-
-                var trans = Camera.transform;
-                var angles = trans.localEulerAngles;
-                angles.y = _yaw;
-                trans.localEulerAngles = angles;
-            }
-        }*/
 
         #endregion Properties
 
@@ -193,9 +174,6 @@ namespace SanAndreasUnity.Behaviours
 
                 // Show FPS history
                 Color[] colors = new Color[fpsTexture.width * fpsTexture.height];
-                /*Color cRed = new Color(1.0f, 0.0f, 0.0f, 1.0f);
-                Color cYellow = new Color(1.0f, 1.0f, 0.0f, 1.0f);
-                Color cGreen = new Color(0.0f, 1.0f, 0.0f, 1.0f);*/
 
                 for (int i = 0; i < (fpsTexture.width * fpsTexture.height); i++)
                     colors[i] = new Color(0.0f, 0.0f, 0.0f, 0.66f); // Half-transparent background for FPS graph
@@ -309,14 +287,13 @@ namespace SanAndreasUnity.Behaviours
             { // While cursor is locked and don't show on screen we can move player's camera.
                 var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
-                mouseDelta = Vector2.Scale(mouseDelta, CursorSensitivity); //new Vector2(CursorSensitivity.x * smoothing.x, CursorSensitivity.y * smoothing.y));
+                mouseDelta = Vector2.Scale(mouseDelta, CursorSensitivity);
 
                 if (m_doSmooth)
                 {
                     _smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
                     _smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
 
-                    // Find the absolute mouse movement value from point zero.
                     _mouseAbsolute += _smoothMouse;
                 }
                 else
@@ -329,10 +306,10 @@ namespace SanAndreasUnity.Behaviours
 
                 if (clampInDegrees.y > 0)
                     _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);
-
-                Camera.transform.rotation = Quaternion.AngleAxis(_mouseAbsolute.x, Vector3.up) //transform.InverseTransformDirection(Vector3.up))
-                    * Quaternion.AngleAxis(-_mouseAbsolute.y, Vector3.right);
             }
+
+            Camera.transform.rotation = Quaternion.AngleAxis(_mouseAbsolute.x, Vector3.up)
+                                      * Quaternion.AngleAxis(-_mouseAbsolute.y, Vector3.right);
 
             float distance;
             Vector3 castFrom;

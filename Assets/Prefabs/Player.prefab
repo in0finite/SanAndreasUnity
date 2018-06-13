@@ -202,7 +202,7 @@ MonoBehaviour:
   CursorSensitivity: {x: 7, y: 7}
   CarCameraDistance: 6
   PlayerCameraDistance: 3
-  clampInDegrees: {x: 90, y: 90}
+  clampInDegrees: {x: 90, y: 60}
   EnterVehicleRadius: 5
   animationBlendWeight: 0.01
   smoothing: {x: 10, y: 10}
