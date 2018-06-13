@@ -85,6 +85,7 @@ namespace SanAndreasUnity.Behaviours
         public float animationBlendWeight = 0.4f;
 
         public float m_smoothing = 20;
+        public bool m_doSmooth = true;
 
         public bool CursorLocked;
 
@@ -316,34 +317,37 @@ namespace SanAndreasUnity.Behaviours
             //rotAveragePitch = 0f;
             //rotAverageYaw = 0f;
 
-            rotArrayPitch.Add(Pitch);
-            rotArrayYaw.Add(Yaw);
+            if (m_doSmooth)
+            {
+                rotArrayPitch.Add(Pitch);
+                rotArrayYaw.Add(Yaw);
 
-            if (rotArrayPitch.Count >= m_smoothing)
-            {
-                rotArrayPitch.RemoveAt(0);
-            }
-            if (rotArrayYaw.Count >= m_smoothing)
-            {
-                rotArrayYaw.RemoveAt(0);
-            }
+                if (rotArrayPitch.Count >= m_smoothing)
+                {
+                    rotArrayPitch.RemoveAt(0);
+                }
+                if (rotArrayYaw.Count >= m_smoothing)
+                {
+                    rotArrayYaw.RemoveAt(0);
+                }
 
-            for (int j = 0; j < rotArrayPitch.Count; j++)
-            {
-                rotAveragePitch += rotArrayPitch[j];
-            }
-            for (int i = 0; i < rotArrayYaw.Count; i++)
-            {
-                rotAverageYaw += rotArrayYaw[i];
-            }
+                for (int j = 0; j < rotArrayPitch.Count; j++)
+                {
+                    rotAveragePitch += rotArrayPitch[j];
+                }
+                for (int i = 0; i < rotArrayYaw.Count; i++)
+                {
+                    rotAverageYaw += rotArrayYaw[i];
+                }
 
-            rotAveragePitch /= rotArrayPitch.Count;
-            rotAverageYaw /= rotArrayYaw.Count;
+                rotAveragePitch /= rotArrayPitch.Count;
+                rotAverageYaw /= rotArrayYaw.Count;
+            }
 
             //rotAveragePitch = ClampAngle(rotAveragePitch, PitchClamp.x, PitchClamp.y);
 
-            Camera.transform.rotation = Quaternion.AngleAxis(rotAverageYaw, Vector3.up)
-                * Quaternion.AngleAxis(rotAveragePitch, Vector3.right);
+            Camera.transform.rotation = Quaternion.AngleAxis(m_doSmooth ? rotAverageYaw : Yaw, Vector3.up)
+                * Quaternion.AngleAxis(m_doSmooth ? rotAveragePitch : Pitch, Vector3.right);
 
             float distance;
             Vector3 castFrom;
