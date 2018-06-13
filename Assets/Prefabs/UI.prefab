@@ -76,7 +76,7 @@ GameObject:
   - component: {fileID: 114487661805984862}
   m_Layer: 5
   m_Name: Minimap
-  m_TagString: Minimap
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 114403716082730598}
   m_Layer: 0
   m_Name: MinimapSystem
-  m_TagString: Untagged
+  m_TagString: Minimap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -173,7 +173,8 @@ namespace SanAndreasUnity.Behaviours
             if (!isReady)
                 return;
 
-            Setup();
+            if (!isSetup)
+                Setup();
         }
 
         private void Update()
