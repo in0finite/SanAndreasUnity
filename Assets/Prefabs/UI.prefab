@@ -427,7 +427,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineCanvas: {fileID: 223736806774217056}
   iconCanvas: {fileID: 223003346341044794}
-  canvas: {fileID: 0}
+  canvas: {fileID: 223682112327264460}
   northImage: {fileID: 114074779211426578}
   playerImage: {fileID: 114106417822196936}
   outlineImage: {fileID: 114468575846868774}

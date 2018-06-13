@@ -25,9 +25,14 @@ namespace SanAndreasUnity.Behaviours
                       iconCanvas,
                       canvas;
 
-        public Image northImage, playerImage, outlineImage, maskImage, mapImage;
+        public Image northImage,
+                     playerImage,
+                     outlineImage,
+                     maskImage,
+                     mapImage;
 
-        public RectTransform mapTransform, maskTransform;
+        public RectTransform mapTransform,
+                             maskTransform;
 
         public float zoom = 1.3f;
 
@@ -67,7 +72,6 @@ namespace SanAndreasUnity.Behaviours
             if (map == null)
                 map = minimap.AddComponent<MiniMap>();
 
-            map.isReady = true;
             if (!map.isSetup) map.Setup();
         }
 
@@ -116,6 +120,7 @@ namespace SanAndreasUnity.Behaviours
                         mapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
             }
 
+            Debug.Log("Finished merging minimap!");
             mapTexture.Apply();
             mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
 
@@ -128,8 +133,7 @@ namespace SanAndreasUnity.Behaviours
             northBlip = huds.GetDiffuse("radar_north").Texture;
             playerBlip = huds.GetDiffuse("radar_centre").Texture;
 
-            northImage.sprite = Sprite.Create(northBlip, new Rect(0, 0, northBlip.width, northBlip.height), new Vector2(northBlip.width, northBlip.height) / 2);
-            playerImage.sprite = Sprite.Create(playerBlip, new Rect(0, 0, playerBlip.width, playerBlip.height), new Vector2(playerBlip.width, playerBlip.height) / 2);
+            Debug.Log("Finished loading minimap textures!");
         }
 
         // --------------------------------
@@ -150,19 +154,18 @@ namespace SanAndreasUnity.Behaviours
             player = playerObj.GetComponent<Player>();
             playerController = playerObj.GetComponent<PlayerController>();
 
-            if (mapImage != null)
-                mapImage.sprite = mapSprite;
-
-            if (maskImage != null && maskImage.sprite == null)
-                maskImage.sprite = circleMask;
-
             if (canvas != null && canvas.enabled)
                 canvas.enabled = false;
 
-            if (mapTransform != null)
-                mapTransform.sizeDelta = new Vector2(uiSize, uiSize);
+            if (iconCanvas != null && iconCanvas.enabled)
+                iconCanvas.enabled = false;
+
+            if (outlineCanvas != null && outlineCanvas.enabled)
+                outlineCanvas.enabled = false;
 
             isSetup = true;
+            isReady = true;
+            Debug.Log("Finished minimap setup!");
         }
 
         private void Awake()
@@ -179,14 +182,48 @@ namespace SanAndreasUnity.Behaviours
 
             if (!enableMinimap)
             {
+                Debug.Log("Starting to enable minimap!");
+
+                string error = "{0} is null or disabled! (Please, keep it active!)";
+
                 if (canvas != null && !canvas.enabled)
                     canvas.enabled = true;
+                else
+                    Debug.LogErrorFormat(error, "Canvas");
 
                 if (iconCanvas != null && !iconCanvas.enabled)
                     iconCanvas.enabled = true;
+                else
+                    Debug.LogErrorFormat(error, "IconCanvas");
 
                 if (outlineCanvas != null && !outlineCanvas.enabled)
                     outlineCanvas.enabled = true;
+                else
+                    Debug.LogErrorFormat(error, "OutlineCanvas");
+
+                if (northBlip != null && northImage != null)
+                    northImage.sprite = Sprite.Create(northBlip, new Rect(0, 0, northBlip.width, northBlip.height), new Vector2(northBlip.width, northBlip.height) / 2);
+                else
+                    Debug.LogErrorFormat(error, "NorthImage");
+
+                if (playerBlip != null && playerImage != null)
+                    playerImage.sprite = Sprite.Create(playerBlip, new Rect(0, 0, playerBlip.width, playerBlip.height), new Vector2(playerBlip.width, playerBlip.height) / 2);
+                else
+                    Debug.LogErrorFormat(error, "PlayerImage");
+
+                if (mapImage != null)
+                    mapImage.sprite = mapSprite;
+
+                if (maskImage != null && maskImage.sprite == null)
+                    maskImage.sprite = circleMask;
+
+                if (mapTransform != null)
+                    mapTransform.sizeDelta = new Vector2(uiSize, uiSize);
+                else
+                    Debug.LogErrorFormat(error, "MapTransform");
+
+                if (maskTransform == null)
+                    Debug.LogErrorFormat(error, "MaskTransform");
 
                 enableMinimap = true;
 
@@ -227,6 +264,8 @@ namespace SanAndreasUnity.Behaviours
                     outlineImage.rectTransform.sizeDelta = Vector2.one * uiSize;
                     outlineImage.rectTransform.localScale = Vector3.one * 1.05f;
                 }
+
+                Debug.Log("Minimap started!");
             }
 
             if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.B))
@@ -265,13 +304,20 @@ namespace SanAndreasUnity.Behaviours
             //if (!playerController.CursorLocked) return; // Note: This must be activated when on debug
 
             Vector3 pPos = player.transform.position, defPos = (new Vector3(pPos.x, pPos.z, 0) / (-1000f / uiSize));
-            mapTransform.localPosition = new Vector3(defPos.x * zoom, defPos.y * zoom, 1); // Why?
+
+            if (mapTransform != null)
+                mapTransform.localPosition = new Vector3(defPos.x * zoom, defPos.y * zoom, 1); // Why?
 
             float relAngle = Camera.main.transform.eulerAngles.y;
-            maskTransform.localRotation = Quaternion.Euler(0, 0, relAngle);
-            northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
 
-            playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (player.transform.eulerAngles.y + 180));
+            if (maskTransform != null)
+                maskTransform.localRotation = Quaternion.Euler(0, 0, relAngle);
+
+            if (northPivot != null)
+                northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
+
+            if (playerImage != null)
+                playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (player.transform.eulerAngles.y + 180));
         }
 
         private void ChangeZoom()

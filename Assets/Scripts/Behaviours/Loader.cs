@@ -72,7 +72,7 @@ namespace SanAndreasUnity.Behaviours
                     break;
 
                 case 1:
-                    using (Utilities.Profiler.Start("Archive load time"))
+                    using (Profiler.Start("Archive load time"))
                     {
                         List<IArchive> listArchives = new List<IArchive>();
                         foreach (var path in archivePaths)
@@ -95,7 +95,7 @@ namespace SanAndreasUnity.Behaviours
                     break;
 
                 case 2:
-                    using (Utilities.Profiler.Start("Collision load time"))
+                    using (Profiler.Start("Collision load time"))
                     {
                         int numCollisionFiles = 0;
                         foreach (var archive in archives)
@@ -111,7 +111,7 @@ namespace SanAndreasUnity.Behaviours
                     break;
 
                 case 3:
-                    using (Utilities.Profiler.Start("Item info load time"))
+                    using (Profiler.Start("Item info load time"))
                     {
                         foreach (var path in Config.GetPaths("item_paths"))
                         {
@@ -135,14 +135,14 @@ namespace SanAndreasUnity.Behaviours
                     break;
 
                 case 4:
-                    using (Utilities.Profiler.Start("Handling info load time"))
+                    using (Profiler.Start("Handling info load time"))
                     {
                         Handling.Load(Config.GetPath("handling_path"));
                     }
                     break;
 
                 case 5:
-                    using (Utilities.Profiler.Start("Animation group info load time"))
+                    using (Profiler.Start("Animation group info load time"))
                     {
                         foreach (var path in Config.GetPaths("anim_groups_paths"))
                         {
@@ -152,14 +152,14 @@ namespace SanAndreasUnity.Behaviours
                     break;
 
                 case 6:
-                    using (Utilities.Profiler.Start("Car color info load time"))
+                    using (Profiler.Start("Car color info load time"))
                     {
                         CarColors.Load(Config.GetPath("car_colors_path"));
                     }
                     break;
 
                 case 7:
-                    using (Utilities.Profiler.Start("special texture load time"))
+                    using (Profiler.Start("Special texture load time"))
                     {
                         //MiniMap.loadTextures();
                         MiniMap.AssingMinimap();
@@ -167,13 +167,11 @@ namespace SanAndreasUnity.Behaviours
                         // Load mouse cursor texture
                         Texture2D mouse = TextureDictionary.Load("fronten_pc").GetDiffuse("mouse").Texture;
                         Texture2D mouseFix = new Texture2D(mouse.width, mouse.height);
+
                         for (int x = 0; x < mouse.width; x++)
-                        {
                             for (int y = 0; y < mouse.height; y++)
-                            {
                                 mouseFix.SetPixel(x, mouse.height - y - 1, mouse.GetPixel(x, y));
-                            }
-                        }
+
                         mouseFix.Apply();
                         Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
                     }
