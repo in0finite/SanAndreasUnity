@@ -325,27 +325,13 @@ namespace SanAndreasUnity.Behaviours
                 // Waiting for an answer: https://stackoverflow.com/questions/50837685/camera-global-rotation-clamping-issue-unity3d
 
                 /*if (clampInDegrees.x > 0)
-                    _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x, clampInDegrees.x);
+                    _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x, clampInDegrees.x);*/
 
                 if (clampInDegrees.y > 0)
-                    _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);*/
+                    _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);
 
                 Camera.transform.rotation = Quaternion.AngleAxis(_mouseAbsolute.x, Vector3.up) //transform.InverseTransformDirection(Vector3.up))
                     * Quaternion.AngleAxis(-_mouseAbsolute.y, Vector3.right);
-
-                //Quaternion targetOrientation = Quaternion.Euler(_mouseAbsolute);
-
-                //Camera.transform.rotation *= targetOrientation;
-
-                /*Vector3 euler = Camera.transform.eulerAngles;
-
-                if (clampInDegrees.x > 0)
-                    euler.x = ClampAngle(euler.x, -clampInDegrees.x, clampInDegrees.x);
-
-                if (clampInDegrees.x > 0)
-                    euler.y = ClampAngle(euler.y, -clampInDegrees.y, clampInDegrees.y);
-
-                Camera.transform.eulerAngles = euler;*/
             }
 
             float distance;
