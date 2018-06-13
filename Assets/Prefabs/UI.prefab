@@ -431,10 +431,13 @@ MonoBehaviour:
   northImage: {fileID: 114074779211426578}
   playerImage: {fileID: 114106417822196936}
   outlineImage: {fileID: 114468575846868774}
+  maskImage: {fileID: 114690809005601046}
   mapImage: {fileID: 114943004525129146}
   mapTransform: {fileID: 224779433496236624}
   maskTransform: {fileID: 224020270871840966}
   zoom: 1.3
+  zoomSelector: 4
+  zoomDuration: 1
 --- !u!114 &114468575846868774
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -25,7 +25,7 @@ namespace SanAndreasUnity.Behaviours
                       iconCanvas,
                       canvas;
 
-        public Image northImage, playerImage, outlineImage, mapImage;
+        public Image northImage, playerImage, outlineImage, maskImage, mapImage;
 
         public RectTransform mapTransform, maskTransform;
 
@@ -150,13 +150,17 @@ namespace SanAndreasUnity.Behaviours
             player = playerObj.GetComponent<Player>();
             playerController = playerObj.GetComponent<PlayerController>();
 
-            mapImage.sprite = mapSprite;
+            if (mapImage != null)
+                mapImage.sprite = mapSprite;
 
-            canvas.enabled = false;
+            if (maskImage != null && maskImage.sprite == null)
+                maskImage.sprite = circleMask;
 
-            Debug.Log("Canvas disabled!");
+            if (canvas != null && canvas.enabled)
+                canvas.enabled = false;
 
-            GetComponent<RectTransform>().sizeDelta = new Vector2(uiSize, uiSize);
+            if (mapTransform != null)
+                mapTransform.sizeDelta = new Vector2(uiSize, uiSize);
 
             isSetup = true;
         }
@@ -175,9 +179,15 @@ namespace SanAndreasUnity.Behaviours
 
             if (!enableMinimap)
             {
-                canvas.enabled = true;
-                iconCanvas.enabled = true;
-                outlineCanvas.enabled = true;
+                if (canvas != null && !canvas.enabled)
+                    canvas.enabled = true;
+
+                if (iconCanvas != null && !iconCanvas.enabled)
+                    iconCanvas.enabled = true;
+
+                if (outlineCanvas != null && !outlineCanvas.enabled)
+                    outlineCanvas.enabled = true;
+
                 enableMinimap = true;
 
                 // Must review: For some reason values are Y-axis inverted
@@ -187,23 +197,36 @@ namespace SanAndreasUnity.Behaviours
 
                 Vector3 globalPos = new Vector3(left, top, 0) / 2;
 
-                maskTransform.localPosition = globalPos;
+                if (maskTransform != null)
+                    maskTransform.localPosition = globalPos;
 
-                playerImage.rectTransform.localPosition = globalPos;
-                playerImage.rectTransform.localScale = Vector3.one * .2f;
-                playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, 180);
+                if (playerImage != null)
+                {
+                    playerImage.rectTransform.localPosition = globalPos;
+                    playerImage.rectTransform.localScale = Vector3.one * .2f;
+                    playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, 180);
+                }
 
-                northPivot = northImage.rectTransform.parent;
+                if (northImage != null)
+                {
+                    northPivot = northImage.rectTransform.parent;
 
-                northPivot.localPosition = globalPos;
-                northPivot.localScale = Vector3.one * .2f;
+                    northImage.rectTransform.localPosition = new Vector3(0, uiSize / 2, 0) / .2f;
+                    northImage.rectTransform.localRotation = Quaternion.Euler(0, 180, 0);
+                }
 
-                northImage.rectTransform.localPosition = new Vector3(0, uiSize / 2, 0) / .2f;
-                northImage.rectTransform.localRotation = Quaternion.Euler(0, 180, 0);
+                if (northPivot != null)
+                {
+                    northPivot.localPosition = globalPos;
+                    northPivot.localScale = Vector3.one * .2f;
+                }
 
-                outlineImage.rectTransform.localPosition = globalPos;
-                outlineImage.rectTransform.sizeDelta = Vector2.one * uiSize;
-                outlineImage.rectTransform.localScale = Vector3.one * 1.05f;
+                if (outlineImage != null)
+                {
+                    outlineImage.rectTransform.localPosition = globalPos;
+                    outlineImage.rectTransform.sizeDelta = Vector2.one * uiSize;
+                    outlineImage.rectTransform.localScale = Vector3.one * 1.05f;
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.B))
@@ -232,7 +255,8 @@ namespace SanAndreasUnity.Behaviours
                 lastZoom = zoom;
             }
 
-            zoom = Mathf.Lerp(.9f, 1.3f, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity);
+            if (playerController != null)
+                zoom = Mathf.Lerp(.9f, 1.3f, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity);
         }
 
         private void LateUpdate()
