@@ -270,7 +270,7 @@ namespace SanAndreasUnity.Behaviours
             maskTransform.localRotation = Quaternion.Euler(0, 0, relAngle);
             northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
 
-            playerImage.rectTransform.localRotation = Quaternion.Euler(0, 180, (player.transform.localEulerAngles.y - 180) + Camera.main.transform.eulerAngles.y);
+            playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (player.transform.eulerAngles.y + 180));
         }
     }
 }

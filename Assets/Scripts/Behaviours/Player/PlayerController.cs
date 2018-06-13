@@ -331,7 +331,7 @@ namespace SanAndreasUnity.Behaviours
                     _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);*/
 
                 Camera.transform.rotation = Quaternion.AngleAxis(_mouseAbsolute.x, Vector3.up) //transform.InverseTransformDirection(Vector3.up))
-                    * Quaternion.AngleAxis(_mouseAbsolute.y, Vector3.right);
+                    * Quaternion.AngleAxis(-_mouseAbsolute.y, Vector3.right);
 
                 //Quaternion targetOrientation = Quaternion.Euler(_mouseAbsolute);
 
