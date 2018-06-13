@@ -1,6 +1,7 @@
 ﻿using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Utilities;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -62,7 +63,11 @@ namespace SanAndreasUnity.Behaviours
         private static Vector3 lastPos = Vector3.zero,
                                deltaPos = Vector3.zero;
 
-        private float lastYaw, lastPitch;
+        private List<float> rotArrayYaw = new List<float>();
+        private float rotAverageYaw = 0F;
+
+        private List<float> rotArrayPitch = new List<float>();
+        private float rotAveragePitch = 0F;
 
         #endregion Private fields
 
@@ -79,7 +84,7 @@ namespace SanAndreasUnity.Behaviours
 
         public float animationBlendWeight = 0.4f;
 
-        public float smoothing = 5;
+        public float m_smoothing = 20;
 
         public bool CursorLocked;
 
@@ -308,15 +313,37 @@ namespace SanAndreasUnity.Behaviours
                 Pitch -= cursorDelta.y * CursorSensitivity.y;
             }
 
-            float step = Time.time % (smoothing * Time.deltaTime),
-                  smoothYaw = Mathf.Lerp(lastYaw, Yaw, step),
-                  smoothPitch = Mathf.Lerp(lastPitch, Pitch, step);
+            //rotAveragePitch = 0f;
+            //rotAverageYaw = 0f;
 
-            Camera.transform.rotation = Quaternion.AngleAxis(smoothYaw, Vector3.up)
-                * Quaternion.AngleAxis(smoothPitch, Vector3.right);
+            rotArrayPitch.Add(Pitch);
+            rotArrayYaw.Add(Yaw);
 
-            lastYaw = Yaw;
-            lastPitch = Pitch;
+            if (rotArrayPitch.Count >= m_smoothing)
+            {
+                rotArrayPitch.RemoveAt(0);
+            }
+            if (rotArrayYaw.Count >= m_smoothing)
+            {
+                rotArrayYaw.RemoveAt(0);
+            }
+
+            for (int j = 0; j < rotArrayPitch.Count; j++)
+            {
+                rotAveragePitch += rotArrayPitch[j];
+            }
+            for (int i = 0; i < rotArrayYaw.Count; i++)
+            {
+                rotAverageYaw += rotArrayYaw[i];
+            }
+
+            rotAveragePitch /= rotArrayPitch.Count;
+            rotAverageYaw /= rotArrayYaw.Count;
+
+            //rotAveragePitch = ClampAngle(rotAveragePitch, PitchClamp.x, PitchClamp.y);
+
+            Camera.transform.rotation = Quaternion.AngleAxis(rotAverageYaw, Vector3.up)
+                * Quaternion.AngleAxis(rotAveragePitch, Vector3.right);
 
             float distance;
             Vector3 castFrom;
@@ -547,6 +574,23 @@ namespace SanAndreasUnity.Behaviours
             CursorLocked = locked;
             Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
             Cursor.visible = !locked;
+        }
+
+        public static float ClampAngle(float angle, float min, float max)
+        {
+            angle = angle % 360;
+            if ((angle >= -360F) && (angle <= 360F))
+            {
+                if (angle < -360F)
+                {
+                    angle += 360F;
+                }
+                if (angle > 360F)
+                {
+                    angle -= 360F;
+                }
+            }
+            return Mathf.Clamp(angle, min, max);
         }
     }
 }

@@ -214,7 +214,7 @@ namespace SanAndreasUnity.Behaviours
             Setup();
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if (!isReady) return;
             if (!Loader.HasLoaded) return;
@@ -252,6 +252,13 @@ namespace SanAndreasUnity.Behaviours
                 outlineImage.rectTransform.sizeDelta = Vector2.one * uiSize;
                 outlineImage.rectTransform.localScale = Vector3.one * 1.05f;
             }
+        }
+
+        private void LateUpdate()
+        {
+            if (!isReady) return;
+            if (!Loader.HasLoaded) return;
+            if (!playerController.CursorLocked) return;
 
             Vector3 pPos = player.transform.position;
             mapTransform.localPosition = new Vector3(pPos.x, pPos.z, 0) / (-1000f / uiSize); // Why?
