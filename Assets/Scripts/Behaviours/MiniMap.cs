@@ -1,4 +1,5 @@
 ﻿using SanAndreasUnity.Importing.Conversion;
+using System;
 using System.Collections;
 using System.IO;
 using UnityEngine;
@@ -16,12 +17,6 @@ namespace SanAndreasUnity.Behaviours
         private const int uiSize = 256, uiOffset = 10;
         private const bool outputChunks = false, outputImage = true;
 
-        private TextureDictionary huds;
-
-        private Texture2D northBlip, playerBlip, mapTexture;
-        private Sprite mapSprite, circleMask;
-        private bool enableMinimap, isReady, isSetup;
-
         public Canvas outlineCanvas,
                       iconCanvas,
                       canvas;
@@ -33,10 +28,25 @@ namespace SanAndreasUnity.Behaviours
                      mapImage;
 
         public RectTransform mapTransform,
-                             maskTransform;
+                             maskTransform,
+                             mapContainer;
 
         public float zoom = 1.3f;
-        private const float scaleConst = 10f;
+        private const float scaleConst = 1f;
+
+        public const float maxVelocity = 300f;
+        public static float[] zooms = new float[10] { .5f, .75f, 1f, 1.2f, 1.4f, 1.6f, 2f, 2.5f, 3f, 5f };
+
+        private int zoomSelector = 2;
+
+        // Why?
+        [HideInInspector] [Obsolete] public float calibrator = 2.34f;
+
+        public float zoomDuration = 1;
+
+        public bool debugActive = true;
+
+        #region "Properties"
 
         private float realZoom
         {
@@ -50,25 +60,7 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        public const float maxVelocity = 300f;
-        public static float[] zooms = new float[7] { .3f, .5f, .75f, 1f, 1.2f, 1.4f, 1.6f };
-
-        [HideInInspector]
-        public int zoomSelector = 3;
-
-        // Why?
-        public float calibrator = 2.34f;
-
-        public float zoomDuration = 1;
-
-        public bool debugActive = true;
-
-        private Transform northPivot;
-
-        //Zoom vars
-        private float curZoomPercentage;
-
-        private Coroutine zoomCoroutine;
+        #endregion "Properties"
 
         public static void AssingMinimap()
         {
@@ -97,8 +89,8 @@ namespace SanAndreasUnity.Behaviours
         private void loadTextures()
         {
             mapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
-            mapTexture.wrapMode = TextureWrapMode.Repeat;
-            mapTexture.filterMode = FilterMode.Point;
+            //mapTexture.wrapMode = TextureWrapMode.Repeat;
+            //mapTexture.filterMode = FilterMode.Point;
 
             string folder = Path.Combine(Application.streamingAssetsPath, "map-chunks");
 
@@ -159,9 +151,27 @@ namespace SanAndreasUnity.Behaviours
 
         #region Private fields
 
+        // Texture & control flags
         private Player player;
+
         private PlayerController playerController;
-        private float lastZoom;
+
+        private TextureDictionary huds;
+
+        private Texture2D northBlip, playerBlip, mapTexture;
+        private Sprite mapSprite, circleMask;
+
+        private Transform northPivot;
+
+        // Flags
+        private bool enableMinimap, isReady, isSetup;
+
+        // Zoom vars
+        public float curZoomPercentage;
+
+        private float lastZoom, lastLerpedZoom, lerpedZoomCounter;
+
+        private Coroutine zoomCoroutine;
 
         #endregion Private fields
 
@@ -237,10 +247,10 @@ namespace SanAndreasUnity.Behaviours
                 if (maskImage != null && maskImage.sprite == null)
                     maskImage.sprite = circleMask;
 
-                if (mapTransform != null)
-                    mapTransform.sizeDelta = new Vector2(uiSize, uiSize);
+                if (mapContainer != null)
+                    mapContainer.sizeDelta = new Vector2(uiSize, uiSize);
                 else
-                    Debug.LogErrorFormat(error, "MapTransform");
+                    Debug.LogErrorFormat(error, "MapContainer");
 
                 if (maskTransform == null)
                     Debug.LogErrorFormat(error, "MaskTransform");
@@ -288,6 +298,8 @@ namespace SanAndreasUnity.Behaviours
                 }
 
                 Debug.Log("Minimap started!");
+
+                //Debug.Log("Lossy scale: " + mapTransform.lossyScale);
             }
 
             if (Input.GetKeyDown(KeyCode.N))
@@ -306,6 +318,15 @@ namespace SanAndreasUnity.Behaviours
         {
             if (playerController != null && !playerController.CursorLocked && debugActive) return;
 
+            if (playerController != null)
+                realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
+        }
+
+        private void LateUpdate()
+        {
+            if (!isReady) return;
+            if (playerController != null && !playerController.CursorLocked && debugActive) return;
+
             if (mapTransform != null)
             {
                 float deltaZoom = realZoom - lastZoom;
@@ -315,21 +336,22 @@ namespace SanAndreasUnity.Behaviours
                 lastZoom = realZoom;
             }
 
-            if (playerController != null)
-                realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
-        }
+            Vector3 pPos = player.transform.position,
+                    defPos = (new Vector3(pPos.x, pPos.z, 0) * (uiSize / -1000f)) / scaleConst; // Why?
+            // calibrator
 
-        private void LateUpdate()
-        {
-            if (!isReady) return;
-            if (!playerController.CursorLocked && debugActive) return;
+            if (mapContainer != null)
+            {
+                // WIP: Make this static to avoid shakering
+                float lerpedZoom = realZoom; //Mathf.Lerp(lastLerpedZoom, realZoom, lerpedZoomCounter);
 
-            // scaleConst *
-            //(uiSize / -100f)
-            Vector3 pPos = player.transform.position, defPos = (new Vector3(pPos.x, pPos.z, 0) / -calibrator) / scaleConst;
+                mapContainer.localPosition = new Vector3(defPos.x * lerpedZoom, defPos.y * lerpedZoom, 1);
 
-            if (mapTransform != null)
-                mapTransform.localPosition = new Vector3(defPos.x * realZoom, defPos.y * realZoom, 1); // Why?
+                lerpedZoomCounter += Time.deltaTime;
+
+                if (lerpedZoomCounter > 1)
+                    lerpedZoomCounter = 0;
+            }
 
             float relAngle = Camera.main.transform.eulerAngles.y;
 
@@ -368,6 +390,10 @@ namespace SanAndreasUnity.Behaviours
                 zoomVal = zooms.Length - 1;
 
             return zoomVal;
+        }
+
+        private void OnGUI()
+        {
         }
     }
 }

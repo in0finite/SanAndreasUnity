@@ -182,6 +182,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1627404700688260
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 224402533417526356}
+  m_Layer: 5
+  m_Name: Minimap-Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1704002877622592
 GameObject:
   m_ObjectHideFlags: 1
@@ -435,9 +450,12 @@ MonoBehaviour:
   mapImage: {fileID: 114943004525129146}
   mapTransform: {fileID: 224779433496236624}
   maskTransform: {fileID: 224020270871840966}
+  mapContainer: {fileID: 224402533417526356}
   zoom: 1.3
-  zoomSelector: 4
+  calibrator: 3.9
   zoomDuration: 1
+  debugActive: 1
+  curZoomPercentage: 0
 --- !u!114 &114468575846868774
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -759,7 +777,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 224779433496236624}
+  - {fileID: 224402533417526356}
   m_Father: {fileID: 224787473038982262}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -844,6 +862,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!224 &224402533417526356
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1627404700688260}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 224779433496236624}
+  m_Father: {fileID: 224020270871840966}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224538364652313416
 RectTransform:
   m_ObjectHideFlags: 1
@@ -888,9 +925,9 @@ RectTransform:
   m_GameObject: {fileID: 1773833053091010}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 224020270871840966}
+  m_Father: {fileID: 224402533417526356}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
