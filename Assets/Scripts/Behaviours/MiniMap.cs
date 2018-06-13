@@ -23,9 +23,13 @@ namespace SanAndreasUnity.Behaviours
 
         // WIP: I will generate this later...
         // I need some method to generate a Canvas element (like in the menu)
-        public Canvas outlineCanvas, iconCanvas;
+        public Canvas outlineCanvas,
+                      iconCanvas,
+                      canvas;
 
-        public Image northImage, playerImage, outlineImage;
+        public Image northImage, playerImage, outlineImage, mapImage;
+
+        public RectTransform mapTransform, maskTransform;
 
         public float zoom = 1.3f;
 
@@ -125,9 +129,6 @@ namespace SanAndreasUnity.Behaviours
 
         private Player player;
         private PlayerController playerController;
-        private Canvas canvas;
-        private RectTransform mapTransform, maskTransform;
-        private Image mapImage;
         private float lastZoom;
 
         #endregion Private fields
@@ -143,7 +144,7 @@ namespace SanAndreasUnity.Behaviours
             // Start object setup
 
             //Check if parent is a canvas
-            canvas = transform.parent.GetComponent<Canvas>();
+            /*canvas = transform.parent.GetComponent<Canvas>();
 
             if (canvas != null)
             {
@@ -197,7 +198,7 @@ namespace SanAndreasUnity.Behaviours
                 }
             }
 
-            mapImage = transform.Find("Minimap-Image").GetComponent<Image>();
+            mapImage = transform.Find("Minimap-Image").GetComponent<Image>();*/
             mapImage.sprite = mapSprite;
 
             canvas.enabled = false;

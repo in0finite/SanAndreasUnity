@@ -74,7 +74,6 @@ GameObject:
   - component: {fileID: 222666466498633646}
   - component: {fileID: 114690809005601046}
   - component: {fileID: 114487661805984862}
-  - component: {fileID: 114701390238767256}
   m_Layer: 5
   m_Name: Minimap
   m_TagString: Minimap
@@ -226,6 +225,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4163146413860628}
+  - component: {fileID: 114403716082730598}
   m_Layer: 0
   m_Name: MinimapSystem
   m_TagString: Untagged
@@ -414,6 +414,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c38e6b2242cad9d4aac6a5c077a62573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114403716082730598
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1794000083898140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 517af0b56117a42c9a9cd043b7d1c767, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineCanvas: {fileID: 223736806774217056}
+  iconCanvas: {fileID: 223003346341044794}
+  canvas: {fileID: 0}
+  northImage: {fileID: 114074779211426578}
+  playerImage: {fileID: 114106417822196936}
+  outlineImage: {fileID: 114468575846868774}
+  mapImage: {fileID: 114943004525129146}
+  mapTransform: {fileID: 224779433496236624}
+  maskTransform: {fileID: 224020270871840966}
+  zoom: 1.3
 --- !u!114 &114468575846868774
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -548,22 +569,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114701390238767256
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1158250797250008}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 517af0b56117a42c9a9cd043b7d1c767, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineCanvas: {fileID: 223736806774217056}
-  iconCanvas: {fileID: 223003346341044794}
-  northImage: {fileID: 114074779211426578}
-  playerImage: {fileID: 114106417822196936}
-  outlineImage: {fileID: 114468575846868774}
 --- !u!114 &114768103706765874
 MonoBehaviour:
   m_ObjectHideFlags: 1
