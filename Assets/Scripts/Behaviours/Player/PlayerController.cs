@@ -65,6 +65,7 @@ namespace SanAndreasUnity.Behaviours
 
         private Vector2 _mouseAbsolute;
         private Vector2 _smoothMouse = Vector2.zero;
+        private Vector3 targetDirection = Vector3.forward;
 
         #endregion Private fields
 
@@ -321,14 +322,30 @@ namespace SanAndreasUnity.Behaviours
                 else
                     _mouseAbsolute += mouseDelta;
 
-                if (clampInDegrees.x > 0)
+                // Waiting for an answer: https://stackoverflow.com/questions/50837685/camera-global-rotation-clamping-issue-unity3d
+
+                /*if (clampInDegrees.x > 0)
                     _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x, clampInDegrees.x);
 
                 if (clampInDegrees.y > 0)
-                    _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);
+                    _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);*/
 
-                Camera.transform.rotation = Quaternion.AngleAxis(-_mouseAbsolute.x, Vector3.up)
+                Camera.transform.rotation = Quaternion.AngleAxis(_mouseAbsolute.x, Vector3.up) //transform.InverseTransformDirection(Vector3.up))
                     * Quaternion.AngleAxis(_mouseAbsolute.y, Vector3.right);
+
+                //Quaternion targetOrientation = Quaternion.Euler(_mouseAbsolute);
+
+                //Camera.transform.rotation *= targetOrientation;
+
+                /*Vector3 euler = Camera.transform.eulerAngles;
+
+                if (clampInDegrees.x > 0)
+                    euler.x = ClampAngle(euler.x, -clampInDegrees.x, clampInDegrees.x);
+
+                if (clampInDegrees.x > 0)
+                    euler.y = ClampAngle(euler.y, -clampInDegrees.y, clampInDegrees.y);
+
+                Camera.transform.eulerAngles = euler;*/
             }
 
             float distance;
@@ -560,6 +577,33 @@ namespace SanAndreasUnity.Behaviours
             CursorLocked = locked;
             Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
             Cursor.visible = !locked;
+        }
+
+        /*public static float ClampAngle(float currentValue, float minAngle, float maxAngle, float clampAroundAngle = 0)
+        {
+            float angle = currentValue - (clampAroundAngle + 180);
+
+            while (angle < 0)
+            {
+                angle += 360;
+            }
+
+            angle = Mathf.Repeat(angle, 360);
+
+            return Mathf.Clamp(
+                angle - 180,
+                minAngle,
+                maxAngle
+            ) + 360 + clampAroundAngle;
+        }*/
+
+        public static float ClampAngle(float angle, float min, float max)
+        {
+            if (angle < -360F)
+                angle += 360F;
+            if (angle > 360F)
+                angle -= 360F;
+            return Mathf.Clamp(angle, min, max);
         }
     }
 }

@@ -57,12 +57,12 @@ namespace SanAndreasUnity.Importing.Items
 
         public byte GetByte(int index)
         {
-            return byte.Parse(_parts[index], CultureParser.enUs);
+            return byte.Parse(_parts[index], CultureInfo.InvariantCulture);
         }
 
         public int GetInt(int index)
         {
-            return int.Parse(_parts[index], CultureParser.enUs);
+            return int.Parse(_parts[index], CultureInfo.InvariantCulture);
         }
 
         public int GetInt(int index, NumberStyles numberStyles)
@@ -72,12 +72,12 @@ namespace SanAndreasUnity.Importing.Items
 
         public float GetSingle(int index)
         {
-            return float.Parse(_parts[index], CultureParser.enUs);
+            return float.Parse(_parts[index], CultureInfo.InvariantCulture);
         }
 
         public double GetDouble(int index)
         {
-            return double.Parse(_parts[index], CultureParser.enUs);
+            return double.Parse(_parts[index], CultureInfo.InvariantCulture);
         }
     }
 
