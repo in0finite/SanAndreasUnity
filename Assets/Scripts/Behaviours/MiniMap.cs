@@ -21,8 +21,6 @@ namespace SanAndreasUnity.Behaviours
         private Sprite mapSprite, circleMask;
         private bool enableMinimap, isReady, isSetup;
 
-        // WIP: I will generate this later...
-        // I need some method to generate a Canvas element (like in the menu)
         public Canvas outlineCanvas,
                       iconCanvas,
                       canvas;
@@ -141,64 +139,6 @@ namespace SanAndreasUnity.Behaviours
             player = playerObj.GetComponent<Player>();
             playerController = playerObj.GetComponent<PlayerController>();
 
-            // Start object setup
-
-            //Check if parent is a canvas
-            /*canvas = transform.parent.GetComponent<Canvas>();
-
-            if (canvas != null)
-            {
-                Debug.LogWarning("Canvas already exists!");
-                maskTransform = GetComponent<RectTransform>();
-                mapTransform = transform.Find("Minimap-Image").GetComponent<RectTransform>();
-
-                // Setup mapSprite
-                if (GetComponent<Image>().sprite == null)
-                    GetComponent<Image>().sprite = circleMask;
-            }
-            else
-            {
-                GameObject canvasObject = new GameObject();
-                canvasObject.name = "Canvas";
-
-                canvasObject.AddComponent<RectTransform>();
-                canvas = canvasObject.AddComponent<Canvas>();
-                canvasObject.AddComponent<CanvasScaler>();
-                canvasObject.AddComponent<GraphicRaycaster>();
-
-                transform.parent = canvasObject.transform;
-
-                if (GetComponent<RectTransform>() == null)
-                    mapTransform = gameObject.AddComponent<RectTransform>();
-
-                if (GetComponent<CanvasRenderer>() == null)
-                    gameObject.AddComponent<CanvasRenderer>();
-
-                if (GetComponent<Image>() == null)
-                {
-                    Image img = gameObject.AddComponent<Image>();
-                    img.sprite = circleMask;
-                }
-
-                if (GetComponent<Mask>() == null)
-                    gameObject.AddComponent<Mask>();
-
-                if (transform.Find("Minimap-Image") == null)
-                {
-                    GameObject image = new GameObject();
-                    image.name = "Minimap-Image";
-
-                    image.transform.parent = transform;
-
-                    mapTransform = image.AddComponent<RectTransform>();
-                    image.AddComponent<CanvasRenderer>();
-
-                    Image mapImage = image.AddComponent<Image>();
-                    mapImage.sprite = mapSprite;
-                }
-            }
-
-            mapImage = transform.Find("Minimap-Image").GetComponent<Image>();*/
             mapImage.sprite = mapSprite;
 
             canvas.enabled = false;
