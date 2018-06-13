@@ -1,4 +1,5 @@
 ﻿using SanAndreasUnity.Importing.Conversion;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -65,9 +66,9 @@ namespace SanAndreasUnity.Behaviours
         private Transform northPivot;
 
         //Zoom vars
-        private bool startZooming;
+        private float curZoomPercentage;
 
-        private float startTimeZooming, curZoomPercentage;
+        private Coroutine zoomCoroutine;
 
         public static void AssingMinimap()
         {
@@ -289,18 +290,15 @@ namespace SanAndreasUnity.Behaviours
                 Debug.Log("Minimap started!");
             }
 
-            if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.B))
-                startZooming = true;
-
             if (Input.GetKeyDown(KeyCode.N))
-            {
                 ++zoomSelector;
-                ChangeZoom();
-            }
             else if (Input.GetKeyDown(KeyCode.B))
-            {
                 --zoomSelector;
-                ChangeZoom();
+
+            if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.B))
+            {
+                if (zoomCoroutine != null) StopCoroutine(zoomCoroutine);
+                zoomCoroutine = StartCoroutine(ChangeZoom(Input.GetKeyDown(KeyCode.N)));
             }
         }
 
@@ -345,19 +343,21 @@ namespace SanAndreasUnity.Behaviours
                 playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (player.transform.eulerAngles.y + 180));
         }
 
-        private void ChangeZoom()
+        private IEnumerator ChangeZoom(bool isIncreasing)
         {
-            if (startZooming)
-            {
-                startTimeZooming = Time.time;
-                startZooming = false;
-            }
-
             zoomSelector = GetClampedZoomSelector(zoomSelector);
             float curZoom = zooms[zoomSelector % zooms.Length],
-                  lastZoom = zooms[GetClampedZoomSelector(zoomSelector - 1) % zooms.Length];
+                  lastZoom = zooms[GetClampedZoomSelector(zoomSelector - 1 * (isIncreasing ? 1 : -1)) % zooms.Length];
 
-            curZoomPercentage = Mathf.Lerp(lastZoom, curZoom, (Time.time - startTimeZooming) / zoomDuration);
+            float t = 0;
+            while (t < zoomDuration)
+            {
+                curZoomPercentage = Mathf.Lerp(lastZoom, curZoom, t / zoomDuration);
+                yield return new WaitForFixedUpdate();
+                t += Time.fixedDeltaTime;
+            }
+
+            zoomCoroutine = null;
         }
 
         private int GetClampedZoomSelector(int? val = null)
