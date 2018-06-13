@@ -288,44 +288,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 224266887972739060, guid: dd5c14626ef595d439de799ec08c2b16,
-        type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 223736806774217056, guid: dd5c14626ef595d439de799ec08c2b16,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 224787473038982262, guid: dd5c14626ef595d439de799ec08c2b16,
-        type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 223682112327264460, guid: dd5c14626ef595d439de799ec08c2b16,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 224132835488623496, guid: dd5c14626ef595d439de799ec08c2b16,
-        type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 223003346341044794, guid: dd5c14626ef595d439de799ec08c2b16,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1794000083898140, guid: dd5c14626ef595d439de799ec08c2b16, type: 2}
-      propertyPath: m_TagString
-      value: Minimap
-      objectReference: {fileID: 0}
-    - target: {fileID: 1158250797250008, guid: dd5c14626ef595d439de799ec08c2b16, type: 2}
-      propertyPath: m_TagString
-      value: UI
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dd5c14626ef595d439de799ec08c2b16, type: 2}
   m_IsPrefabParent: 0

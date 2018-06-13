@@ -35,6 +35,19 @@ namespace SanAndreasUnity.Behaviours
                              maskTransform;
 
         public float zoom = 1.3f;
+        private const float scaleConst = 10f;
+
+        private float realZoom
+        {
+            get
+            {
+                return zoom * scaleConst;
+            }
+            set
+            {
+                zoom = value / scaleConst;
+            }
+        }
 
         public const float maxVelocity = 300f;
         public static float[] zooms = new float[7] { .75f, .875f, 1f, 1.15f, 1.3f, 1.5f, 1.8f };
@@ -43,6 +56,8 @@ namespace SanAndreasUnity.Behaviours
         public int zoomSelector = 4;
 
         public float zoomDuration = 1;
+
+        public bool debugActive = true;
 
         private Transform northPivot;
 
@@ -286,28 +301,30 @@ namespace SanAndreasUnity.Behaviours
 
         private void FixedUpdate()
         {
+            if (!playerController.CursorLocked && debugActive) return;
+
             if (mapTransform != null)
             {
-                float deltaZoom = zoom - lastZoom;
+                float deltaZoom = realZoom - lastZoom;
 
-                mapTransform.localScale = new Vector3(zoom, zoom, 1);
+                mapTransform.localScale = new Vector3(realZoom, realZoom, 1);
 
-                lastZoom = zoom;
+                lastZoom = realZoom;
             }
 
             if (playerController != null)
-                zoom = Mathf.Lerp(.9f, 1.3f, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity);
+                realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity);
         }
 
         private void LateUpdate()
         {
             if (!isReady) return;
-            //if (!playerController.CursorLocked) return; // Note: This must be activated when on debug
+            if (!playerController.CursorLocked && debugActive) return;
 
-            Vector3 pPos = player.transform.position, defPos = (new Vector3(pPos.x, pPos.z, 0) / (-1000f / uiSize));
+            Vector3 pPos = player.transform.position, defPos = (new Vector3(pPos.x, pPos.z, 0) / (-1000f * scaleConst / uiSize));
 
             if (mapTransform != null)
-                mapTransform.localPosition = new Vector3(defPos.x * zoom, defPos.y * zoom, 1); // Why?
+                mapTransform.localPosition = new Vector3(defPos.x * realZoom, defPos.y * realZoom, 1); // Why?
 
             float relAngle = Camera.main.transform.eulerAngles.y;
 
@@ -333,7 +350,7 @@ namespace SanAndreasUnity.Behaviours
             float curZoom = zooms[zoomSelector % zooms.Length],
                   lastZoom = zooms[GetClampedZoomSelector(zoomSelector - 1) % zooms.Length];
 
-            zoom = Mathf.Lerp(lastZoom, curZoom, (Time.time - startTimeZooming) / zoomDuration);
+            realZoom = Mathf.Lerp(lastZoom, curZoom, (Time.time - startTimeZooming) / zoomDuration);
         }
 
         private int GetClampedZoomSelector(int? val = null)
