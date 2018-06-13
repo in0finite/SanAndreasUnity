@@ -62,6 +62,8 @@ namespace SanAndreasUnity.Behaviours
         private static Vector3 lastPos = Vector3.zero,
                                deltaPos = Vector3.zero;
 
+        private float lastYaw, lastPitch;
+
         #endregion Private fields
 
         #region Inspector Fields
@@ -76,6 +78,8 @@ namespace SanAndreasUnity.Behaviours
         public float EnterVehicleRadius = 5.0f;
 
         public float animationBlendWeight = 0.4f;
+
+        public float smoothing = 5;
 
         public bool CursorLocked;
 
@@ -304,8 +308,15 @@ namespace SanAndreasUnity.Behaviours
                 Pitch -= cursorDelta.y * CursorSensitivity.y;
             }
 
-            Camera.transform.rotation = Quaternion.AngleAxis(Yaw, Vector3.up)
-                * Quaternion.AngleAxis(Pitch, Vector3.right);
+            float step = Time.time % (smoothing * Time.deltaTime),
+                  smoothYaw = Mathf.Lerp(lastYaw, Yaw, step),
+                  smoothPitch = Mathf.Lerp(lastPitch, Pitch, step);
+
+            Camera.transform.rotation = Quaternion.AngleAxis(smoothYaw, Vector3.up)
+                * Quaternion.AngleAxis(smoothPitch, Vector3.right);
+
+            lastYaw = Yaw;
+            lastPitch = Pitch;
 
             float distance;
             Vector3 castFrom;

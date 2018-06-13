@@ -27,6 +27,8 @@ namespace SanAndreasUnity.Behaviours
 
         public Image northImage, playerImage, outlineImage;
 
+        public float zoom = 1;
+
         private Transform northPivot;
 
         public static void AssingMinimap()
@@ -200,7 +202,6 @@ namespace SanAndreasUnity.Behaviours
             Debug.Log("Canvas disabled!");
 
             GetComponent<RectTransform>().sizeDelta = new Vector2(uiSize, uiSize);
-            //mapTransform.localScale = new Vector3(1f / uiSize, 1f / uiSize, 1);
 
             isSetup = true;
         }
@@ -213,7 +214,7 @@ namespace SanAndreasUnity.Behaviours
             Setup();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (!isReady) return;
             if (!Loader.HasLoaded) return;
@@ -249,13 +250,16 @@ namespace SanAndreasUnity.Behaviours
 
                 outlineImage.rectTransform.localPosition = globalPos;
                 outlineImage.rectTransform.sizeDelta = Vector2.one * uiSize;
+                outlineImage.rectTransform.localScale = Vector3.one * 1.05f;
             }
 
             Vector3 pPos = player.transform.position;
-            mapTransform.localPosition = new Vector3(pPos.x, pPos.z, 0);
+            mapTransform.localPosition = new Vector3(pPos.x, pPos.z, 0) / (-1000f / uiSize); // Why?
+            mapImage.transform.localScale = new Vector3(zoom, zoom, 1); // This doesn't work
 
-            maskTransform.localRotation = Quaternion.Euler(0, 0, Camera.main.transform.eulerAngles.y);
-            northPivot.localRotation = Quaternion.Euler(0, 0, Camera.main.transform.eulerAngles.y);
+            float relAngle = Camera.main.transform.eulerAngles.y; //Vector3.Angle(Vector3.forward, Camera.main.transform.TransformDirection(Camera.main.transform.forward));
+            maskTransform.localRotation = Quaternion.Euler(0, 0, relAngle);
+            northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
 
             playerImage.rectTransform.localRotation = Quaternion.Euler(0, 180, (player.transform.localEulerAngles.y - 180) + Camera.main.transform.eulerAngles.y);
         }
