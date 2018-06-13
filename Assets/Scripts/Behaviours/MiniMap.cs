@@ -1,9 +1,11 @@
-﻿using SanAndreasUnity.Importing.Conversion;
+﻿using SanAndreasUnity.Behaviours.Vehicles;
+using SanAndreasUnity.Importing.Conversion;
 using System;
 using System.Collections;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -37,8 +39,6 @@ namespace SanAndreasUnity.Behaviours
         public const float maxVelocity = 300f;
         public static float[] zooms = new float[10] { .5f, .75f, 1f, 1.2f, 1.4f, 1.6f, 2f, 2.5f, 3f, 5f };
 
-        private int zoomSelector = 2;
-
         // Why?
         [HideInInspector] [Obsolete] public float calibrator = 2.34f;
 
@@ -57,6 +57,28 @@ namespace SanAndreasUnity.Behaviours
             set
             {
                 zoom = value / scaleConst;
+            }
+        }
+
+        private Vector3 pPos
+        {
+            get
+            {
+                return player.transform.position;
+            }
+        }
+
+        private int _vCount = 0;
+        private float _vTimer;
+
+        private int VehicleCount
+        {
+            get
+            {
+                if (_vTimer == 0)
+                    _vCount = Object.FindObjectsOfType<Vehicle>().Length;
+
+                return _vCount;
             }
         }
 
@@ -171,7 +193,15 @@ namespace SanAndreasUnity.Behaviours
 
         private float lastZoom, lastLerpedZoom, lerpedZoomCounter;
 
+        private int zoomSelector = 2;
+
         private Coroutine zoomCoroutine;
+
+        // Toggle flags
+        private bool toggleInfo = true;
+
+        // GUI Elements
+        private Texture2D blackPixel;
 
         #endregion Private fields
 
@@ -191,6 +221,10 @@ namespace SanAndreasUnity.Behaviours
 
             if (outlineCanvas != null && outlineCanvas.enabled)
                 outlineCanvas.enabled = false;
+
+            blackPixel = new Texture2D(1, 1);
+            blackPixel.SetPixel(0, 0, new Color(0, 0, 0, .5f));
+            blackPixel.Apply();
 
             isSetup = true;
             isReady = true;
@@ -312,6 +346,9 @@ namespace SanAndreasUnity.Behaviours
                 if (zoomCoroutine != null) StopCoroutine(zoomCoroutine);
                 zoomCoroutine = StartCoroutine(ChangeZoom(Input.GetKeyDown(KeyCode.N)));
             }
+
+            if (Input.GetKeyDown(KeyCode.F8))
+                toggleInfo = !toggleInfo;
         }
 
         private void FixedUpdate()
@@ -320,6 +357,10 @@ namespace SanAndreasUnity.Behaviours
 
             if (playerController != null)
                 realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
+
+            _vTimer += Time.fixedDeltaTime;
+            if (_vTimer > 1)
+                _vTimer = 0;
         }
 
         private void LateUpdate()
@@ -336,8 +377,7 @@ namespace SanAndreasUnity.Behaviours
                 lastZoom = realZoom;
             }
 
-            Vector3 pPos = player.transform.position,
-                    defPos = (new Vector3(pPos.x, pPos.z, 0) * (uiSize / -1000f)) / scaleConst; // Why?
+            Vector3 defPos = (new Vector3(pPos.x, pPos.z, 0) * (uiSize / -1000f)) / scaleConst; // Why?
             // calibrator
 
             if (mapContainer != null)
@@ -394,6 +434,19 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnGUI()
         {
+            if (!toggleInfo) return;
+
+            GUILayout.BeginArea(new Rect(Screen.width - uiSize - 10, uiSize + 20, uiSize, 50));
+
+            Vector2 labelSize = new Vector2(uiSize, 25);
+            Rect labelRect = new Rect(Vector2.zero, labelSize);
+
+            GUI.DrawTexture(labelRect, blackPixel);
+            GUI.Label(labelRect,
+                string.Format("x: {0}, y: {1}, z: {2} ({3})", pPos.x.ToString("F2"), pPos.y.ToString("F2"), pPos.z.ToString("F2"), VehicleCount),
+                new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
+
+            GUILayout.EndArea();
         }
     }
 }

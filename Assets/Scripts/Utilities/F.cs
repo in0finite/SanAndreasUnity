@@ -347,5 +347,16 @@ namespace SanAndreasUnity.Utilities
 
             return Texturemap[chipName];
         }
+
+        // Slow method
+        public static int CountObjectsInLayer(int layer)
+        {
+            int i = 0;
+            foreach (Transform t in Object.FindObjectsOfType<Transform>())
+                if (t.gameObject.layer == layer)
+                    ++i;
+
+            return i;
+        }
     }
 }

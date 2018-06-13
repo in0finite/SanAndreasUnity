@@ -49,15 +49,15 @@ Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data 
 
 ## In game controls
 
-V - spawn vehicle
+V - Spawn vehicle
 
-P - change pedestrian model
+P - Change pedestrian model
 
-L - turn off / on car lights
+L - Turn off / on car lights
 
-L shift - run / fly fast
+L Shift - Run / Fly fast
 
-mouse scroll - zoom in/out
+Mouse Scroll - Zoom in / out player camera
 
 F1 - toggle debug menu
 
@@ -82,6 +82,14 @@ F10 - Toggle FPS
 F9 - Toggle velocimeter
 
 O - Toggle quality
+
+B - Zoom out minimap
+
+N - Zoom in minimap
+
+M - Open the entire map
+
+F8 - Show more info in the minimap
 
 ## CLI
 
