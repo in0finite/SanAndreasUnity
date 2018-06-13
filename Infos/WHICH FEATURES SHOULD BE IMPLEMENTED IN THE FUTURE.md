@@ -4,7 +4,7 @@ This contains a little list with the features I think should be implemented on t
 
 * Gear system (to make cars keep stoped on slopes)
 
-* Boats, airplanes and bikes (+ fall)
+* Airplanes interiors
 
 ### Mods system
 
@@ -30,10 +30,33 @@ This contains a little list with the features I think should be implemented on t
 - Survival
 - Deathmatch
 - Sandbox
+- Battleroyale
+
+### Survival
+
+- Broken bones
+
+- Buffs (cold, hot, poison, etc... Look at Terraria)
+
+- Gore
+
+### Physics
+
+- Building with physics (explosion / collision damages)
+
+- Damage for airplanes (from its interiors and from outside)
+
+### Environment
+
+- Peds take flights in airplanes (and you can kill them inside an airplane)
+
+- Make submarine and the two boats from SF driveable (maybe in a gamemode you need some skills to drive them)
 
 ### More platforms supported
 
 - We have to work on a system that will allow to pack GTA SA game contents into a new platform. I was thinking in something that isn't illegal. It's easy to understand, we have a client application on PC (with a legal copy of the game) and a mobile application that scan some QR code or whatever from this client app. With a validation on the QR code, now, we can pack and copy the game contents to the new platform (mobile, ps or xbox...)
+
+- To pack the content we can use an QR code system to pass in JWT or Base64 the data we need.
 
 ### Master server system
 

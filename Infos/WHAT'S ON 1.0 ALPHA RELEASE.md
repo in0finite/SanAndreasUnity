@@ -36,6 +36,12 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - Cars & fuel stations can explode
 
+ - Boats
+ 
+ - Airplanes & helicopters
+ 
+ - Bikes + fall
+
 - Wheel explosion (I have to convert colliders, from a capsule collider generate a mesh collider with the shape of a capsule)
 
 - In-game input manager
@@ -70,6 +76,8 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 * Stars, clouds and enviroment enhances
 
+- Speed effect
+
 ### Environment
 
 * Weather system
@@ -79,6 +87,10 @@ As the README list was very extensive, I have sum up here what I think it's impo
 * Enhance car lights, turning, doors and braking
     
 ### Bugs to fix
+
+- I must save each folder instance on config.user.json not in config.json, and delete profile devs
+
+- Read all radarxx.txd that its available
 
 - I have to fix this problem, modifying in some way Assembly Importer GUI to added to mark or something like that is saved to avoid it's compilation (https://cdn.discordapp.com/attachments/454006273751515163/455029337821806592/unknown.png) // I have fixed it, but now the inspector looks ugly
 
