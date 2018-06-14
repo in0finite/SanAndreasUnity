@@ -53,3 +53,23 @@
 - https://gtaforums.com/topic/742038-relsavciii-gtatools-open-source-enginelibraries-for-gta/
 
 This to read GTA:SA contents
+
+### 14
+
+- https://gtaforums.com/topic/375568-zone-list/
+
+### 15
+
+![...](https://graffitilics.com/wp-content/uploads/graffiti-gta-san-andreas-map-gta-sa-grand-theft-auto-san-andreas-with-gta-map-gta-san-andreas.jpg)
+
+### 16
+
+- http://gta.wikia.com/wiki/GXT
+
+### 17
+
+- https://github.com/multitheftauto/mtasa-blue/blob/c39e2cbf9ef355e8720d98c7de7cda93fc25d735/Shared/mods/deathmatch/logic/CZoneNames.cpp#L25
+
+### 18
+
+- https://github.com/alemariusnexus/gtatools
