@@ -10,7 +10,7 @@ using H = GXTHelpers;
 public class GXTSAIVEntry : IComparable
 {
     public int offset;
-    public int keyHash = new int();
+    public int keyHash = 0;
 
     public int CompareTo(object obj)
     {
@@ -25,7 +25,7 @@ public class GXTSAIVEntry : IComparable
 public class GXTVC3Entry : IComparable
 {
     public int offset;
-    public string key = new string(new char[8]);
+    public char[] key = new char[8];
 
     public int CompareTo(object obj)
     {
@@ -381,9 +381,14 @@ public partial class GXTLoader
             {
                 int numEntries = tkeySize / 8;
                 GXTTable table = new GXTTable(header.name, encoding == Encoding.None ? Encoding.GXT8 : encoding, keepKeyNames);
-                GXTSAIVEntry[] entries = Arrays.InitializeWithDefaultInstances<GXTSAIVEntry>(numEntries);
+                GXTSAIVEntry[] entries = new GXTSAIVEntry[numEntries];
 
-                reader.readArray32((int)entries, 2 * numEntries);
+                // 2 * numEntries? Why?
+                for (int i = 0; i < numEntries; ++i)
+                {
+                    entries[i].offset = reader.read32(cpos);
+                    cpos += 8; // Why 8?
+                }
 
                 /*for (int32_t i = 0 ; i < numEntries ; i++) {
                     stream->read((char*) &entries[i], 8);
@@ -425,8 +430,10 @@ public partial class GXTLoader
 
                         for (int k = 0; k < step; k++)
                         {
+                            char[] buf = new char[1];
                             int idx = j * step + k;
-                            stream.Read(text.Substring(idx), 1);
+                            stream.Read(buf, strLen, 1);
+                            // text.Substring(idx)
 
                             strLen++;
                             if (text[idx] == '\0')
@@ -474,12 +481,13 @@ public partial class GXTLoader
 
                 stream.Read((string)entries, 12 * numEntries);
 
-#if !GTAFORMATS_LITTLE_ENDIAN
-                for (int i = 0; i < numEntries; i++)
-                {
-                    entries[i].offset = SwapEndianness32(entries[i].offset);
-                }
-#endif
+                /*#if !GTAFORMATS_LITTLE_ENDIAN
+                                for (int i = 0; i < numEntries; i++)
+                                {
+                                    entries[i].offset = SwapEndianness32(entries[i].offset);
+                                }
+                #endif*/
+
                 /*for (int32_t i = 0 ; i < numEntries ; i++) {
                     stream->read((char*) &entries[i], 12);
                 }*/
