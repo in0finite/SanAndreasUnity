@@ -433,7 +433,7 @@ public partial class GXTLoader
                             char[] buf = new char[1];
                             int idx = j * step + k;
                             stream.Read(buf, strLen, 1);
-                            // text.Substring(idx)
+                            // text.Substring(idx) ??
 
                             strLen++;
                             if (text[idx] == '\0')
