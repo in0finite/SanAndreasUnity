@@ -73,3 +73,11 @@ This to read GTA:SA contents
 ### 18
 
 - https://github.com/alemariusnexus/gtatools
+
+### 19
+
+- https://gtaforums.com/topic/742038-relsavciii-gtatools-open-source-enginelibraries-for-gta/
+
+### 20
+
+- http://gta.wikia.com/wiki/ZONE
