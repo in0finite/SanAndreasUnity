@@ -227,7 +227,9 @@ namespace SanAndreasUnity.Behaviours
         private Texture2D blackPixel;
 
         private float fAlpha = 1;
-        private bool showZoomPanel;
+        private bool showZoomPanel, showMap;
+        private Vector2 mapScrollView = Vector2.zero;
+        private float mapScale = 1;
 
         #endregion Private fields
 
@@ -264,6 +266,8 @@ namespace SanAndreasUnity.Behaviours
 
             if (!isSetup)
                 Setup();
+
+            mapScale = Screen.width / mapTexture.width;
         }
 
         private void Update()
@@ -375,6 +379,9 @@ namespace SanAndreasUnity.Behaviours
 
             if (Input.GetKeyDown(KeyCode.F8))
                 toggleInfo = !toggleInfo;
+
+            if (Input.GetKeyDown(KeyCode.M))
+                showMap = !showMap;
         }
 
         private void FixedUpdate()
@@ -467,41 +474,57 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!isReady || !toggleInfo) return;
 
-            GUILayout.BeginArea(new Rect(Screen.width - uiSize - 10, uiSize + 20, uiSize, 80));
-
-            GUIStyle style = new GUIStyle("label") { alignment = TextAnchor.MiddleCenter };
-
-            Vector2 labelSize = new Vector2(uiSize, 25);
-            Rect labelRect = new Rect(Vector2.zero, labelSize);
-
-            GUI.DrawTexture(labelRect, blackPixel);
-            GUI.Label(labelRect,
-                string.Format("x: {0}, y: {1}, z: {2} ({3})", pPos.x.ToString("F2"), pPos.y.ToString("F2"), pPos.z.ToString("F2"), VehicleCount),
-                style);
-
-            Rect zoneRect = new Rect(uiSize / 2 - uiSize / (2 * 3), 25, uiSize / 3, 25);
-
-            GUI.DrawTexture(zoneRect, blackPixel);
-            GUI.Label(zoneRect, ZoneName, style);
-
-            if (showZoomPanel)
+            if (!showMap)
             {
-                Color previousColor = GUI.color;
+                GUILayout.BeginArea(new Rect(Screen.width - uiSize - 10, uiSize + 20, uiSize, 80));
 
-                Rect zoomPanel = new Rect(uiSize / 2 - uiSize / (2 * 4), 55, uiSize / 4, 25);
+                GUIStyle style = new GUIStyle("label") { alignment = TextAnchor.MiddleCenter };
 
-                GUI.color = new Color(0, 0, 0, fAlpha);
+                Vector2 labelSize = new Vector2(uiSize, 25);
+                Rect labelRect = new Rect(Vector2.zero, labelSize);
 
-                GUI.DrawTexture(zoomPanel, blackPixel);
+                GUI.DrawTexture(labelRect, blackPixel);
+                GUI.Label(labelRect,
+                    string.Format("x: {0}, y: {1}, z: {2} ({3})", pPos.x.ToString("F2"), pPos.y.ToString("F2"), pPos.z.ToString("F2"), VehicleCount),
+                    style);
 
-                GUI.color = new Color(255, 255, 255, fAlpha);
+                Rect zoneRect = new Rect(uiSize / 2 - uiSize / (2 * 3), 25, uiSize / 3, 25);
 
-                GUI.Label(zoomPanel, string.Format("x{0}", curZoomPercentage.ToString("F2")), style);
+                GUI.DrawTexture(zoneRect, blackPixel);
+                GUI.Label(zoneRect, ZoneName, style);
 
-                GUI.color = previousColor;
+                if (showZoomPanel)
+                {
+                    Color previousColor = GUI.color;
+
+                    Rect zoomPanel = new Rect(uiSize / 2 - uiSize / (2 * 4), 55, uiSize / 4, 25);
+
+                    GUI.color = new Color(0, 0, 0, fAlpha);
+
+                    GUI.DrawTexture(zoomPanel, blackPixel);
+
+                    GUI.color = new Color(255, 255, 255, fAlpha);
+
+                    GUI.Label(zoomPanel, string.Format("x{0}", curZoomPercentage.ToString("F2")), style);
+
+                    GUI.color = previousColor;
+                }
+
+                GUILayout.EndArea();
             }
+            else
+            {
+                Vector2 mapRect = new Vector2(mapTexture.width, mapTexture.height) * (mapScale * 2);
 
-            GUILayout.EndArea();
+                GUI.DrawTexture(new Rect(50, 50, Screen.width - 100, Screen.height - 100), blackPixel);
+                mapScrollView = GUI.BeginScrollView(new Rect(60, 60, Screen.width - 120, Screen.height - 120), mapScrollView, new Rect(Vector2.zero, mapRect));
+                GUI.DrawTexture(new Rect(Vector2.one * 15, mapRect), mapTexture);
+
+                // WIP: Draw player pointer & undescovered zones
+                // + drag & drop
+
+                GUI.EndScrollView();
+            }
         }
     }
 }

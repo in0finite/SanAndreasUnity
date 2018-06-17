@@ -276,11 +276,14 @@ namespace SanAndreasUnity.Behaviours
             if (Input.GetKeyDown(KeyCode.F1))
                 _showMenu = !_showMenu;
 
+            if (_showMenu && Input.GetKeyDown(KeyCode.M))
+                _showMenu = false;
+
             bool isConsoleStateChanged = Console.Instance.m_openKey != Console.Instance.m_closeKey ?
                 Input.GetKeyDown(Console.Instance.m_openKey) || Input.GetKeyDown(Console.Instance.m_closeKey) :
                 Input.GetKeyDown(Console.Instance.m_openKey);
 
-            if (!_showMenu && (Input.GetKeyDown(KeyCode.Escape) || isConsoleStateChanged || Input.GetKeyDown(KeyCode.F1)))
+            if (!_showMenu && (Input.GetKeyDown(KeyCode.Escape) || isConsoleStateChanged || Input.GetKeyDown(KeyCode.F1) || Input.GetKeyDown(KeyCode.M)))
                 ChangeCursorState(!CursorLocked);
 
             if (CursorLocked)
