@@ -69,16 +69,38 @@ namespace SanAndreasUnity.Behaviours
         }
 
         private int _vCount = 0;
-        private float _vTimer;
+        private float _gTimer;
 
         private int VehicleCount
         {
             get
             {
-                if (_vTimer == 0)
+                if (_gTimer == 0)
                     _vCount = Object.FindObjectsOfType<Vehicle>().Length;
 
                 return _vCount;
+            }
+        }
+
+        private string _zName;
+
+        private string ZoneName
+        {
+            get
+            {
+                if (_gTimer == 0)
+                {
+                    Vector3 playerPos = Vector3.zero;
+                    try
+                    {
+                        playerPos = pPos;
+                    }
+                    catch { }
+
+                    _zName = SZone.GetName(ZoneHelpers._zoneInfoList, playerPos);
+                }
+
+                return _zName;
             }
         }
 
@@ -358,9 +380,9 @@ namespace SanAndreasUnity.Behaviours
             if (playerController != null)
                 realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
 
-            _vTimer += Time.fixedDeltaTime;
-            if (_vTimer > 1)
-                _vTimer = 0;
+            _gTimer += Time.fixedDeltaTime;
+            if (_gTimer > 1)
+                _gTimer = 0;
         }
 
         private void LateUpdate()
@@ -438,13 +460,20 @@ namespace SanAndreasUnity.Behaviours
 
             GUILayout.BeginArea(new Rect(Screen.width - uiSize - 10, uiSize + 20, uiSize, 50));
 
+            GUIStyle style = new GUIStyle("label") { alignment = TextAnchor.MiddleCenter };
+
             Vector2 labelSize = new Vector2(uiSize, 25);
             Rect labelRect = new Rect(Vector2.zero, labelSize);
 
             GUI.DrawTexture(labelRect, blackPixel);
             GUI.Label(labelRect,
                 string.Format("x: {0}, y: {1}, z: {2} ({3})", pPos.x.ToString("F2"), pPos.y.ToString("F2"), pPos.z.ToString("F2"), VehicleCount),
-                new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
+                style);
+
+            Rect zoneRect = new Rect(uiSize / 2 - uiSize / (2 * 3), 25, uiSize / 3, 25);
+
+            GUI.DrawTexture(zoneRect, blackPixel);
+            GUI.Label(zoneRect, ZoneName, style);
 
             GUILayout.EndArea();
         }
