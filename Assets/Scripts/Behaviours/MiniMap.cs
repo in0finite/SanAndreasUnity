@@ -64,6 +64,7 @@ namespace SanAndreasUnity.Behaviours
         {
             get
             {
+                if (player == null) return Vector3.zero;
                 return player.transform.position;
             }
         }
@@ -224,6 +225,9 @@ namespace SanAndreasUnity.Behaviours
 
         // GUI Elements
         private Texture2D blackPixel;
+
+        private float fAlpha = 1;
+        private bool showZoomPanel;
 
         #endregion Private fields
 
@@ -429,6 +433,9 @@ namespace SanAndreasUnity.Behaviours
 
         private IEnumerator ChangeZoom(bool isIncreasing)
         {
+            showZoomPanel = true;
+            fAlpha = 1;
+
             zoomSelector = GetClampedZoomSelector(zoomSelector);
             float curZoom = zooms[zoomSelector % zooms.Length],
                   lastZoom = zooms[GetClampedZoomSelector(zoomSelector - 1 * (isIncreasing ? 1 : -1)) % zooms.Length];
@@ -439,8 +446,10 @@ namespace SanAndreasUnity.Behaviours
                 curZoomPercentage = Mathf.Lerp(lastZoom, curZoom, t / zoomDuration);
                 yield return new WaitForFixedUpdate();
                 t += Time.fixedDeltaTime;
+                fAlpha -= Time.fixedDeltaTime / zoomDuration;
             }
 
+            showZoomPanel = false;
             zoomCoroutine = null;
         }
 
@@ -456,9 +465,9 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnGUI()
         {
-            if (!toggleInfo) return;
+            if (!isReady || !toggleInfo) return;
 
-            GUILayout.BeginArea(new Rect(Screen.width - uiSize - 10, uiSize + 20, uiSize, 50));
+            GUILayout.BeginArea(new Rect(Screen.width - uiSize - 10, uiSize + 20, uiSize, 80));
 
             GUIStyle style = new GUIStyle("label") { alignment = TextAnchor.MiddleCenter };
 
@@ -474,6 +483,23 @@ namespace SanAndreasUnity.Behaviours
 
             GUI.DrawTexture(zoneRect, blackPixel);
             GUI.Label(zoneRect, ZoneName, style);
+
+            if (showZoomPanel)
+            {
+                Color previousColor = GUI.color;
+
+                Rect zoomPanel = new Rect(uiSize / 2 - uiSize / (2 * 4), 55, uiSize / 4, 25);
+
+                GUI.color = new Color(0, 0, 0, fAlpha);
+
+                GUI.DrawTexture(zoomPanel, blackPixel);
+
+                GUI.color = new Color(255, 255, 255, fAlpha);
+
+                GUI.Label(zoomPanel, string.Format("x{0}", curZoomPercentage.ToString("F2")), style);
+
+                GUI.color = previousColor;
+            }
 
             GUILayout.EndArea();
         }
