@@ -283,7 +283,8 @@ namespace SanAndreasUnity.Behaviours
                 Input.GetKeyDown(Console.Instance.m_openKey) || Input.GetKeyDown(Console.Instance.m_closeKey) :
                 Input.GetKeyDown(Console.Instance.m_openKey);
 
-            if (!_showMenu && (Input.GetKeyDown(KeyCode.Escape) || isConsoleStateChanged || Input.GetKeyDown(KeyCode.F1) || Input.GetKeyDown(KeyCode.M)))
+            // Fixed: If Escape is pressed, map isn't available
+            if (!_showMenu && (Input.GetKeyDown(KeyCode.Escape) || isConsoleStateChanged || Input.GetKeyDown(KeyCode.F1) || (CursorLocked && Input.GetKeyDown(KeyCode.M))))
                 ChangeCursorState(!CursorLocked);
 
             if (CursorLocked)

@@ -403,9 +403,11 @@ namespace SanAndreasUnity.Behaviours
                 toggleMap = !toggleMap;
 
             Vector2 movement = Vector2.zero, // WIP : + offset
-                    centerOffset = new Vector2(Mathf.Lerp(-1, 1, Input.mousePosition.x / screenDims.x), Mathf.Lerp(-1, 1, (screenDims.y - Input.mousePosition.y) / screenDims.y));
+                    centerOffset = new Vector2(Mathf.Lerp(1, -1, Input.mousePosition.x / screenDims.x), Mathf.Lerp(1, -1, (screenDims.y - Input.mousePosition.y) / screenDims.y));
 
             //Debug.LogFormat("Center Offset: {0}", centerOffset);
+
+            bool isScrolling = false;
 
             if (Input.mouseScrollDelta != Vector2.zero)
             {
@@ -414,25 +416,31 @@ namespace SanAndreasUnity.Behaviours
 
                 // WIP: I want to scroll to point
 
-                movement.x += centerOffset.x * mapMovement; //Mathf.Lerp(-mapMovement, mapMovement, centerOffset.x);
-                movement.y += centerOffset.y * mapMovement; //Mathf.Lerp(-mapMovement, mapMovement, centerOffset.y);
+                if (Input.mouseScrollDelta.y > 0)
+                {
+                    mapScroll.x += centerOffset.x * mapMovement * 5; //Mathf.Lerp(-mapMovement, mapMovement, centerOffset.x);
+                    mapScroll.y += centerOffset.y * mapMovement * 5; //Mathf.Lerp(-mapMovement, mapMovement, centerOffset.y);
+                }
+
+                isScrolling = true;
             }
 
             if (Input.GetMouseButton(2))
             {
-                // WIP: This doesn't work very well
-
-                movement.x = (screenCenter.x - Input.mousePosition.x > 0 ? mapMovement : -mapMovement);
-                movement.y = (screenCenter.y - (Screen.height - Input.mousePosition.y) > 0 ? mapMovement : -mapMovement);
+                movement.x = centerOffset.x * mapMovement;
+                movement.y = centerOffset.y * mapMovement;
             }
             else
             {
-                movement.x = Input.GetAxis("Horizontal");
-                movement.y = Input.GetAxis("Vertical");
+                movement.x = Input.GetAxis("Horizontal") * mapMovement;
+                movement.y = Input.GetAxis("Vertical") * mapMovement;
             }
 
-            mapScroll.x += movement.x;
-            mapScroll.y += movement.y;
+            if (!isScrolling)
+            {
+                mapScroll.x += movement.x;
+                mapScroll.y += movement.y;
+            }
         }
 
         private void FixedUpdate()
@@ -574,11 +582,12 @@ namespace SanAndreasUnity.Behaviours
 
                 GUILayout.BeginArea(new Rect(Vector2.one * 60, windowSize));
 
-                // WIP: Make scroll zoom in the pointed direction
                 GUILayout.BeginArea(new Rect(mapScroll, mapRect));
 
                 GUI.DrawTexture(new Rect(Vector2.zero, mapRect), mapTexture);
 
+                // WIP: I have to load move cursor
+                // WIP: I have to load map bars
                 // WIP: Draw player pointer & undescovered zones
                 // + drag & drop
 
