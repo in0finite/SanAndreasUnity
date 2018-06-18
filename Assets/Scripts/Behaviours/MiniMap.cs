@@ -1,5 +1,6 @@
 ﻿using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Conversion;
+using SanAndreasUnity.Utilities;
 using System;
 using System.Collections;
 using System.IO;
@@ -18,6 +19,8 @@ namespace SanAndreasUnity.Behaviours
         private const int mapSize = tileEdge * texSize; // width/height of whole map in px
         private const int uiSize = 256, uiOffset = 10;
         private const bool outputChunks = false, outputImage = true;
+
+        public static bool toggleMap;
 
         public Canvas outlineCanvas,
                       iconCanvas,
@@ -42,7 +45,9 @@ namespace SanAndreasUnity.Behaviours
         // Why?
         [HideInInspector] [Obsolete] public float calibrator = 2.34f;
 
-        public float zoomDuration = 1;
+        public float zoomDuration = 1,
+                     mapZoomScaler = 1,
+                     mapMovement = 5;
 
         public bool debugActive = true;
 
@@ -224,12 +229,17 @@ namespace SanAndreasUnity.Behaviours
         private bool toggleInfo = true;
 
         // GUI Elements
-        private Texture2D blackPixel;
+        private Texture2D blackPixel, seaPixel;
 
         private float fAlpha = 1;
-        private bool showZoomPanel, showMap;
-        private Vector2 mapScrollView = Vector2.zero;
-        private float mapScale = 1;
+        private bool showZoomPanel;
+
+        private Vector2 mapScroll; //, baseMapSize;
+
+        private const float mapMaxScale = 1f, mapMinScale = .25f;
+
+        private float mapScale = mapMaxScale / 1.5f,
+                      baseScale;
 
         #endregion Private fields
 
@@ -254,6 +264,10 @@ namespace SanAndreasUnity.Behaviours
             blackPixel.SetPixel(0, 0, new Color(0, 0, 0, .5f));
             blackPixel.Apply();
 
+            seaPixel = new Texture2D(1, 1);
+            seaPixel.SetPixel(0, 0, new Color(.45f, .54f, .678f));
+            seaPixel.Apply();
+
             isSetup = true;
             isReady = true;
             Debug.Log("Finished minimap setup!");
@@ -266,8 +280,6 @@ namespace SanAndreasUnity.Behaviours
 
             if (!isSetup)
                 Setup();
-
-            mapScale = Screen.width / mapTexture.width;
         }
 
         private void Update()
@@ -361,6 +373,10 @@ namespace SanAndreasUnity.Behaviours
                     outlineImage.rectTransform.localScale = Vector3.one * 1.05f;
                 }
 
+                baseScale = Screen.width / (float)mapTexture.width;
+                //baseMapSize = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
+                //Debug.Log("BaseScale: " + baseScale);
+
                 Debug.Log("Minimap started!");
 
                 //Debug.Log("Lossy scale: " + mapTransform.lossyScale);
@@ -381,7 +397,21 @@ namespace SanAndreasUnity.Behaviours
                 toggleInfo = !toggleInfo;
 
             if (Input.GetKeyDown(KeyCode.M))
-                showMap = !showMap;
+                toggleMap = !toggleMap;
+
+            if (Input.mouseScrollDelta != Vector2.zero)
+            {
+                mapScale += Input.mouseScrollDelta.y * Time.fixedDeltaTime * mapZoomScaler;
+                mapScale = Mathf.Clamp(mapScale, mapMinScale, mapMaxScale);
+            }
+
+            if (Input.GetMouseButton(2))
+            {
+                Vector2 screenCenter = new Vector2(Screen.width, Screen.height) / 2;
+
+                mapScroll.x += screenCenter.x - Input.mousePosition.x > 0 ? mapMovement : -mapMovement;
+                mapScroll.y += screenCenter.y - (Screen.height - Input.mousePosition.y) > 0 ? mapMovement : -mapMovement;
+            }
         }
 
         private void FixedUpdate()
@@ -474,7 +504,7 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!isReady || !toggleInfo) return;
 
-            if (!showMap)
+            if (!toggleMap)
             {
                 GUILayout.BeginArea(new Rect(Screen.width - uiSize - 10, uiSize + 20, uiSize, 80));
 
@@ -514,16 +544,31 @@ namespace SanAndreasUnity.Behaviours
             }
             else
             {
-                Vector2 mapRect = new Vector2(mapTexture.width, mapTexture.height) * (mapScale * 2);
+                Vector2 mapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2),
+                        windowSize = new Vector2(Screen.width - 120, Screen.height - 120);
+
+                //bool isGreater = windowSize.IsGreater(mapRect, true);
+
+                //Debug.LogFormat("Base: {0}, Map: {1}", baseScale, mapScale);
 
                 GUI.DrawTexture(new Rect(50, 50, Screen.width - 100, Screen.height - 100), blackPixel);
-                mapScrollView = GUI.BeginScrollView(new Rect(60, 60, Screen.width - 120, Screen.height - 120), mapScrollView, new Rect(Vector2.zero, mapRect));
-                GUI.DrawTexture(new Rect(Vector2.one * 15, mapRect), mapTexture);
+                //if (isGreater)
+                GUI.DrawTexture(new Rect(Vector2.one * 60, windowSize), seaPixel);
+
+                GUILayout.BeginArea(new Rect(Vector2.one * 60, windowSize)); //new Rect(Vector2.zero, mapRect));
+                // + (!isGreater ? Vector2.zero : mapScroll)
+
+                // WIP: Make scroll zoom in the pointed version
+                GUILayout.BeginArea(new Rect(mapScroll, mapRect));
+
+                //isGreater ? windowSize / 2 - mapRect / 2 :
+                GUI.DrawTexture(new Rect(Vector2.zero, mapRect), mapTexture);
 
                 // WIP: Draw player pointer & undescovered zones
                 // + drag & drop
 
-                GUI.EndScrollView();
+                GUILayout.EndArea();
+                GUILayout.EndArea();
             }
         }
     }

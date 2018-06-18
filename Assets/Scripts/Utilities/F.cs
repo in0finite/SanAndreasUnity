@@ -358,5 +358,57 @@ namespace SanAndreasUnity.Utilities
 
             return i;
         }
+
+        public static bool IsGreaterOrEqual(this Vector2 local, Vector2 other)
+        {
+            if (local.x >= other.x && local.y >= other.y)
+                return true;
+            else
+                return false;
+        }
+
+        public static bool IsLesserOrEqual(this Vector2 local, Vector2 other)
+        {
+            if (local.x <= other.x && local.y <= other.y)
+                return true;
+            else
+                return false;
+        }
+
+        public static bool IsGreater(this Vector2 local, Vector2 other, bool orOperator = false)
+        {
+            if (orOperator)
+            {
+                if (local.x > other.x || local.y > other.y)
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                if (local.x > other.x && local.y > other.y)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        public static bool IsLesser(this Vector2 local, Vector2 other, bool orOperator = false)
+        {
+            if (orOperator)
+            {
+                if (local.x < other.x || local.y < other.y)
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                if (local.x < other.x && local.y < other.y)
+                    return true;
+                else
+                    return false;
+            }
+        }
     }
 }

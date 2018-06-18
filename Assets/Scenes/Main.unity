@@ -236,6 +236,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 114403716082730598, guid: dd5c14626ef595d439de799ec08c2b16,
+        type: 2}
+      propertyPath: mapZoomScaler
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114403716082730598, guid: dd5c14626ef595d439de799ec08c2b16,
+        type: 2}
+      propertyPath: mapMovement
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dd5c14626ef595d439de799ec08c2b16, type: 2}
   m_IsPrefabParent: 0
@@ -277,6 +287,11 @@ Prefab:
     - target: {fileID: 4388436116821042, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114173420020992462, guid: 9d45d42a7408c1e4ab325d6840364b84,
+        type: 2}
+      propertyPath: m_doSmooth
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
