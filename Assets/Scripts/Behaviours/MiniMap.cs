@@ -139,8 +139,6 @@ namespace SanAndreasUnity.Behaviours
         private void loadTextures()
         {
             mapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
-            //mapTexture.wrapMode = TextureWrapMode.Repeat;
-            //mapTexture.filterMode = FilterMode.Point;
 
             string folder = Path.Combine(Application.streamingAssetsPath, "map-chunks");
 
@@ -377,12 +375,7 @@ namespace SanAndreasUnity.Behaviours
                 screenCenter = new Vector2(Screen.width, Screen.height) / 2;
                 screenDims = screenCenter * 2;
 
-                //baseMapSize = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
-                //Debug.Log("BaseScale: " + baseScale);
-
                 Debug.Log("Minimap started!");
-
-                //Debug.Log("Lossy scale: " + mapTransform.lossyScale);
             }
 
             if (Input.GetKeyDown(KeyCode.N))
@@ -405,8 +398,6 @@ namespace SanAndreasUnity.Behaviours
             Vector2 movement = Vector2.zero, // WIP : + offset
                     centerOffset = new Vector2(Mathf.Lerp(1, -1, Input.mousePosition.x / screenDims.x), Mathf.Lerp(1, -1, (screenDims.y - Input.mousePosition.y) / screenDims.y));
 
-            //Debug.LogFormat("Center Offset: {0}", centerOffset);
-
             bool isScrolling = false;
 
             if (Input.mouseScrollDelta != Vector2.zero)
@@ -414,12 +405,12 @@ namespace SanAndreasUnity.Behaviours
                 mapScale += Input.mouseScrollDelta.y * Time.fixedDeltaTime * mapZoomScaler;
                 mapScale = Mathf.Clamp(mapScale, mapMinScale, mapMaxScale);
 
-                // WIP: I want to scroll to point
+                // WIP: I want to scroll to mouse position
 
                 if (Input.mouseScrollDelta.y > 0)
                 {
-                    mapScroll.x += centerOffset.x * mapMovement * 5; //Mathf.Lerp(-mapMovement, mapMovement, centerOffset.x);
-                    mapScroll.y += centerOffset.y * mapMovement * 5; //Mathf.Lerp(-mapMovement, mapMovement, centerOffset.y);
+                    mapScroll.x += centerOffset.x * mapMovement * 5;
+                    mapScroll.y += centerOffset.y * mapMovement * 5;
                 }
 
                 isScrolling = true;
@@ -588,6 +579,7 @@ namespace SanAndreasUnity.Behaviours
 
                 // WIP: I have to load move cursor
                 // WIP: I have to load map bars
+                // WIP: I have to load marker
                 // WIP: Draw player pointer & undescovered zones
                 // + drag & drop
 
