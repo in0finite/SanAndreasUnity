@@ -234,7 +234,7 @@ namespace SanAndreasUnity.Behaviours
         private float fAlpha = 1;
         private bool showZoomPanel;
 
-        private Vector2 mapScroll; //, baseMapSize;
+        private Vector2 mapScroll, screenCenter, screenDims; //, baseMapSize;
 
         private const float mapMaxScale = 1f, mapMinScale = .25f;
 
@@ -374,6 +374,9 @@ namespace SanAndreasUnity.Behaviours
                 }
 
                 baseScale = Screen.width / (float)mapTexture.width;
+                screenCenter = new Vector2(Screen.width, Screen.height) / 2;
+                screenDims = screenCenter * 2;
+
                 //baseMapSize = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
                 //Debug.Log("BaseScale: " + baseScale);
 
@@ -399,19 +402,37 @@ namespace SanAndreasUnity.Behaviours
             if (Input.GetKeyDown(KeyCode.M))
                 toggleMap = !toggleMap;
 
+            Vector2 movement = Vector2.zero, // WIP : + offset
+                    centerOffset = new Vector2(Mathf.Lerp(-1, 1, Input.mousePosition.x / screenDims.x), Mathf.Lerp(-1, 1, (screenDims.y - Input.mousePosition.y) / screenDims.y));
+
+            //Debug.LogFormat("Center Offset: {0}", centerOffset);
+
             if (Input.mouseScrollDelta != Vector2.zero)
             {
                 mapScale += Input.mouseScrollDelta.y * Time.fixedDeltaTime * mapZoomScaler;
                 mapScale = Mathf.Clamp(mapScale, mapMinScale, mapMaxScale);
+
+                // WIP: I want to scroll to point
+
+                movement.x += centerOffset.x * mapMovement; //Mathf.Lerp(-mapMovement, mapMovement, centerOffset.x);
+                movement.y += centerOffset.y * mapMovement; //Mathf.Lerp(-mapMovement, mapMovement, centerOffset.y);
             }
 
             if (Input.GetMouseButton(2))
             {
-                Vector2 screenCenter = new Vector2(Screen.width, Screen.height) / 2;
+                // WIP: This doesn't work very well
 
-                mapScroll.x += screenCenter.x - Input.mousePosition.x > 0 ? mapMovement : -mapMovement;
-                mapScroll.y += screenCenter.y - (Screen.height - Input.mousePosition.y) > 0 ? mapMovement : -mapMovement;
+                movement.x = (screenCenter.x - Input.mousePosition.x > 0 ? mapMovement : -mapMovement);
+                movement.y = (screenCenter.y - (Screen.height - Input.mousePosition.y) > 0 ? mapMovement : -mapMovement);
             }
+            else
+            {
+                movement.x = Input.GetAxis("Horizontal");
+                movement.y = Input.GetAxis("Vertical");
+            }
+
+            mapScroll.x += movement.x;
+            mapScroll.y += movement.y;
         }
 
         private void FixedUpdate()
@@ -547,21 +568,15 @@ namespace SanAndreasUnity.Behaviours
                 Vector2 mapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2),
                         windowSize = new Vector2(Screen.width - 120, Screen.height - 120);
 
-                //bool isGreater = windowSize.IsGreater(mapRect, true);
-
-                //Debug.LogFormat("Base: {0}, Map: {1}", baseScale, mapScale);
-
                 GUI.DrawTexture(new Rect(50, 50, Screen.width - 100, Screen.height - 100), blackPixel);
-                //if (isGreater)
+
                 GUI.DrawTexture(new Rect(Vector2.one * 60, windowSize), seaPixel);
 
-                GUILayout.BeginArea(new Rect(Vector2.one * 60, windowSize)); //new Rect(Vector2.zero, mapRect));
-                // + (!isGreater ? Vector2.zero : mapScroll)
+                GUILayout.BeginArea(new Rect(Vector2.one * 60, windowSize));
 
-                // WIP: Make scroll zoom in the pointed version
+                // WIP: Make scroll zoom in the pointed direction
                 GUILayout.BeginArea(new Rect(mapScroll, mapRect));
 
-                //isGreater ? windowSize / 2 - mapRect / 2 :
                 GUI.DrawTexture(new Rect(Vector2.zero, mapRect), mapTexture);
 
                 // WIP: Draw player pointer & undescovered zones
