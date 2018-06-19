@@ -232,7 +232,7 @@ namespace SanAndreasUnity.Behaviours
         private float fAlpha = 1;
         private bool showZoomPanel;
 
-        private Vector2 mapScroll, screenCenter, screenDims; //, baseMapSize;
+        private Vector2 mapScroll, screenCenter, screenDims, baseMapRect, windowSize, constantMapRect, mapUpperLeftCorner, mapRect, mapMousePosition, mapZoomPos; //, baseMapSize;
 
         private const float mapMaxScale = 1f, mapMinScale = .25f;
 
@@ -374,6 +374,11 @@ namespace SanAndreasUnity.Behaviours
                 baseScale = Screen.width / (float)mapTexture.width;
                 screenCenter = new Vector2(Screen.width, Screen.height) / 2;
                 screenDims = screenCenter * 2;
+                windowSize = new Vector2(Screen.width - 120, Screen.height - 120);
+                baseMapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
+                // This value is constant
+                constantMapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * 2);
+                mapUpperLeftCorner = Vector2.one * 60;
 
                 Debug.Log("Minimap started!");
             }
@@ -395,10 +400,23 @@ namespace SanAndreasUnity.Behaviours
             if (Input.GetKeyDown(KeyCode.M))
                 toggleMap = !toggleMap;
 
+            float mousePosY = screenDims.y - Input.mousePosition.y;
             Vector2 movement = Vector2.zero, // WIP : + offset
-                    centerOffset = new Vector2(Mathf.Lerp(1, -1, Input.mousePosition.x / screenDims.x), Mathf.Lerp(1, -1, (screenDims.y - Input.mousePosition.y) / screenDims.y));
+                    centerOffset = new Vector2(Mathf.Lerp(0, 1, Mathf.Clamp01((Input.mousePosition.x - mapUpperLeftCorner.x) / windowSize.x)), Mathf.Lerp(0, 1, Mathf.Clamp01((mousePosY - mapUpperLeftCorner.y) / windowSize.y)));
+
+            /*if (Input.mousePosition.x < mapUpperLeftCorner.x)
+                centerOffset.x = 0;
+            else if (Input.mousePosition.x > windowSize.x)
+                centerOffset.x = 1;
+
+            if (mousePosY < mapUpperLeftCorner.y)
+                centerOffset.y = 0;
+            else if (mousePosY > windowSize.y)
+                centerOffset.y = 1;*/
 
             bool isScrolling = false;
+
+            mapMousePosition = TransformPosition(new Vector2(Input.mousePosition.x, mousePosY) - mapUpperLeftCorner);
 
             if (Input.mouseScrollDelta != Vector2.zero)
             {
@@ -409,29 +427,40 @@ namespace SanAndreasUnity.Behaviours
 
                 if (Input.mouseScrollDelta.y > 0)
                 {
-                    mapScroll.x += centerOffset.x * mapMovement * 5;
-                    mapScroll.y += centerOffset.y * mapMovement * 5;
+                    // WIP: I have to get the current map texture position (like a Raycast) and set the the center with this
+                    //mapScroll.x += centerOffset.x * mapMovement * 5;
+                    //mapScroll.y += centerOffset.y * mapMovement * 5;
+
+                    mapZoomPos = mapMousePosition - windowSize / 2; //Vector2.Lerp(windowSize / 2 - baseMapRect / 2, mapMousePosition - windowSize / 2, curZoomPercentage);
                 }
 
                 isScrolling = true;
             }
 
-            if (Input.GetMouseButton(2))
-            {
-                movement.x = centerOffset.x * mapMovement;
-                movement.y = centerOffset.y * mapMovement;
-            }
-            else
-            {
-                movement.x = Input.GetAxis("Horizontal") * mapMovement;
-                movement.y = Input.GetAxis("Vertical") * mapMovement;
-            }
+            //Debug.LogFormat("Zoom Center: {0}, Mouse Pos: {1}; Map Scroll: {2}", centerOffset * mapRect, new Vector2(Input.mousePosition.x, mousePosY), mapScroll);
 
             if (!isScrolling)
             {
-                mapScroll.x += movement.x;
+                if (Input.GetMouseButton(2))
+                {
+                    movement.x = centerOffset.x * mapMovement;
+                    movement.y = centerOffset.y * mapMovement;
+                }
+                else
+                {
+                    movement.x = Input.GetAxis("Horizontal") * mapMovement;
+                    movement.y = Input.GetAxis("Vertical") * mapMovement;
+                }
+
+                mapScroll.x -= movement.x;
                 mapScroll.y += movement.y;
             }
+        }
+
+        private Vector2 TransformPosition(Vector2 mousePos)
+        {
+            //Vector2 realMapScroll = new Vector2(-mapScroll.x, mapScroll.y);
+            return mousePos - mapScroll;
         }
 
         private void FixedUpdate()
@@ -564,18 +593,19 @@ namespace SanAndreasUnity.Behaviours
             }
             else
             {
-                Vector2 mapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2),
-                        windowSize = new Vector2(Screen.width - 120, Screen.height - 120);
+                mapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
 
                 GUI.DrawTexture(new Rect(50, 50, Screen.width - 100, Screen.height - 100), blackPixel);
 
-                GUI.DrawTexture(new Rect(Vector2.one * 60, windowSize), seaPixel);
+                GUI.DrawTexture(new Rect(mapUpperLeftCorner, windowSize), seaPixel);
 
-                GUILayout.BeginArea(new Rect(Vector2.one * 60, windowSize));
+                GUILayout.BeginArea(new Rect(mapUpperLeftCorner, windowSize));
 
                 GUILayout.BeginArea(new Rect(mapScroll, mapRect));
 
-                GUI.DrawTexture(new Rect(Vector2.zero, mapRect), mapTexture);
+                GUI.DrawTexture(new Rect(mapZoomPos, mapRect), mapTexture);
+
+                GUI.DrawTexture(new Rect(Vector2.zero, Vector2.one * 16), blackPixel);
 
                 // WIP: I have to load move cursor
                 // WIP: I have to load map bars

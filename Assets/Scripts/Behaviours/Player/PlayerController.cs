@@ -279,6 +279,9 @@ namespace SanAndreasUnity.Behaviours
             if (_showMenu && Input.GetKeyDown(KeyCode.M))
                 _showMenu = false;
 
+            if (MiniMap.toggleMap && Input.GetKeyDown(KeyCode.Escape))
+                MiniMap.toggleMap = false;
+
             bool isConsoleStateChanged = Console.Instance.m_openKey != Console.Instance.m_closeKey ?
                 Input.GetKeyDown(Console.Instance.m_openKey) || Input.GetKeyDown(Console.Instance.m_closeKey) :
                 Input.GetKeyDown(Console.Instance.m_openKey);
