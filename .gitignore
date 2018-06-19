@@ -65,3 +65,4 @@ Assets/FromAssetStore/SpriteLights/Scenes/
 config.user.json
 anim.txt
 *.app
+*.ppm
