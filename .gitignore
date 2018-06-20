@@ -50,6 +50,11 @@ Assets/StreamingAssets/*.meta
 Assets/FromAssetStore/LlamaSoftware/LightLod/Demo/
 Assets/FromAssetStore/SpriteLights/Scenes/
 
+# Clean-up
+
+/VS/
+/Assets/StreamingAssets/SAConsole/
+
 # I have to except one html & log as example
 
 **UnityVS**

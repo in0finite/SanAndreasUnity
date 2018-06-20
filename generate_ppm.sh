@@ -1,1 +1,0 @@
-gource -s .06 -1024x768 --key --highlight-all-users --hide mouse,progress,files,filenames,dirnames --file-idle-time 0     --max-files 0      --background-colour 000000     --font-size 22     --title "SanAndreasUnity" --output-framerate 30 --output-ppm-stream output.ppm
