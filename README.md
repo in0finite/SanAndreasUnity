@@ -114,6 +114,10 @@ Can help us to develop this? In that case, [fork this project](https://github.co
 
 [![Drone Flight Simulator](http://img.youtube.com/vi/xUAy7KBpkOs/maxresdefault.jpg)](https://www.youtube.com/watch?v=xUAy7KBpkOs)
 
+## Gource
+
+Check this amazing video created with Gource: https://www.youtube.com/watch?v=7IKEP_SKU8I
+
 ## Resources
 
 * [GTAModding Wiki](http://www.gtamodding.com/wiki/Main_Page)
