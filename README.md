@@ -8,10 +8,6 @@ Please, contribute to this project to help it to continue its development on Lib
 
 [![Discord](https://img.shields.io/badge/Discord-chat-blue.svg)](https://discord.gg/CzNvg5T)
 
-## Some goals
-
-Here are [some goals](https://github.com/z3nth10n/SanAndreasUnity/blob/master/Infos/GOALS.md) we would like to meet.
-
 ## Setup Instructions
 
 Before starting the game, create/edit config.user.json inside project folder to specify path to gta.
@@ -32,19 +28,19 @@ L Shift - Run / Fly fast
 
 Mouse Scroll - Zoom in / out player camera
 
-F1 - toggle debug menu
+F1 - Toggle debug menu
 
 F2 - Open console
 
-T - enable debug flying mode
+T - Enable debug flying mode
 
-R - enable debug noclip mode
+R - Enable debug noclip mode
 
-backspace - fly up
+Backspace - Fly up
 
-delete - fly down
+Delete - Fly down
 
-Z - fly very fast
+Z - Fly very fast
 
 E - Enter/exit vehicles
 
