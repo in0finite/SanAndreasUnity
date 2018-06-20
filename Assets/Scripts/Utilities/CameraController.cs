@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
-using UnityEngine.PostProcessing;
+
+//using UnityEngine.PostProcessing;
 
 [RequireComponent(typeof(Camera))]
-[RequireComponent(typeof(PostProcessingBehaviour))]
+//[RequireComponent(typeof(PostProcessingBehaviour))]
 //[RequireComponent(typeof(Tonemapping))]
 //[RequireComponent(typeof(Bloom))]
 public class CameraController : MonoBehaviour
 {
-    public bool highQuality;
+    /*public bool highQuality;
 
     private Camera camera;
     private PostProcessingBehaviour behaviour;
@@ -48,5 +49,5 @@ public class CameraController : MonoBehaviour
         SetQuality();
 
         highQuality = !highQuality;
-    }
+    }*/
 }

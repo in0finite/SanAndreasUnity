@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using LightData = SpriteLights.LightData;
+
+//using LightData = SpriteLights.LightData;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -113,7 +114,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         internal static void SetLightSources(GameObject gameObject, Material mat)
         {
-            List<LightData> datas = new List<LightData>();
+            /*List<LightData> datas = new List<LightData>();
             var objs = GetLightObjects(gameObject);
 
             //Map object with an index
@@ -128,7 +129,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 lightData.size = 1;
 
                 datas.Add(lightData);
-            }
+            }*/
 
             // WIP: Move this to blinker object, where we need to generate the spritelight
 
