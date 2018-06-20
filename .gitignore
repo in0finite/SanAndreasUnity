@@ -55,8 +55,9 @@ Assets/FromAssetStore/SpriteLights/Scenes/
 
 # Clean-up
 
-/VS/
-/Assets/StreamingAssets/SAConsole/
+VS/
+Assets/StreamingAssets/SAConsole/
+Assets/Plugins/SAPI/
 
 # I have to except one html & log as example
 
