@@ -76,7 +76,12 @@ public class DevProfiles
     public static string GetPathFromProfileAt(int index)
     {
         Dictionary<string, string[]> devs = _obj[GTAConfig.const_dev_profiles].ToObject<Dictionary<string, string[]>>();
-        return devs.Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[index];
+        var dev = devs.Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault();
+		if (null == dev.Value)
+			return null;
+		if (index >= dev.Value.Length)
+			return null;
+		return dev.Value[index];
     }
 
     public static string CheckDevProfiles(Func<string> folderList)
