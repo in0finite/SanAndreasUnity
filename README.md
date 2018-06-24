@@ -4,13 +4,11 @@ We're porting [GTA: San Andreas](http://www.rockstargames.com/sanandreas/) to Un
 
 This won't be a complete re-implementation of the game, but we're hoping to build something similar to [Multi Theft Auto](http://www.mtasa.com/) with assets streamed from an existing installation of San Andreas.
 
-Please, contribute to this project to help it to continue its development on Liberapay (with the amount of 5€/week our goal (by the moment) will be accomplished)
-
 [![Discord](https://img.shields.io/badge/Discord-chat-blue.svg)](https://discord.gg/CzNvg5T)
 
 ## Setup Instructions
 
-Before starting the game, create/edit config.user.json inside project folder to specify path to gta.
+Before starting the game, you need to set path to gta installation (you will be asked for path when project is opened).
 
 Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data folder. The script which should do that, doesn't work right now.
 
@@ -70,15 +68,13 @@ F8 - Show more info in the minimap
 
 * --html => Output log in html instead of text
 
-## TODO Lists
+## TODO List
 
-Here is a extensive lists of [what should be implemented on alpha release 1.0](https://github.com/z3nth10n/SanAndreasUnity/blob/master/Infos/WHAT'S%20ON%201.0%20ALPHA%20RELEASE.md).
+Here is an extensive list of [what should be implemented](/Infos/WhatShouldBeImplemented.md).
 
-Here is another list about [what should be done in the future](https://github.com/z3nth10n/SanAndreasUnity/blob/master/Infos/WHAT'S%20ON%201.0%20ALPHA%20RELEASE.md).
+Can help us to develop this? In that case, join us on discord so we can discuss about it.
 
-Can help us to develop this? In that case, [fork this project](https://github.com/z3nth10n/SanAndreasUnity/network).
-
-## Media
+## Screenshots
 
 ![screen shot 2017-04-01 at 00 01 31](https://cloud.githubusercontent.com/assets/557828/24571347/d95f11a0-1670-11e7-9e8e-d2a511d9f929.png)
 
@@ -96,9 +92,7 @@ Can help us to develop this? In that case, [fork this project](https://github.co
 
 [![Basic car physics](http://files.facepunch.com/ziks/2015/April/12/vidthumb2.png)](http://files.facepunch.com/layla/2015/April/06/2015-04-06_04-32-12.mp4)
 
-### YouTube
-
-#### Ped AI testing from in0finite
+#### Ped AI testing from Bigbossbro08
 
 [![Ped AI testing](http://img.youtube.com/vi/vkspMT_7PDQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=vkspMT_7PDQ)
 
@@ -110,9 +104,6 @@ Can help us to develop this? In that case, [fork this project](https://github.co
 
 [![Drone Flight Simulator](http://img.youtube.com/vi/xUAy7KBpkOs/maxresdefault.jpg)](https://www.youtube.com/watch?v=xUAy7KBpkOs)
 
-## Gource
-
-Check this amazing video created with Gource: https://www.youtube.com/watch?v=7IKEP_SKU8I
 
 ## Resources
 
