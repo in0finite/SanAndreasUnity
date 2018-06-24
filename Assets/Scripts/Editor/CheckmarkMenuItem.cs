@@ -52,6 +52,11 @@ public class CheckmarkMenuItem
         PerformAction(!enabled_);
     }
 
+	public void EditAction()
+	{
+		this.actionDict["edit"]();
+	}
+
     public void PerformAction(bool enabled, bool perform = true)
     {
         /// Set checkmark on menu item
