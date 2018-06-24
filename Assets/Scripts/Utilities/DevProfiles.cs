@@ -67,7 +67,7 @@ public class DevProfiles
 
     private static JObject DeserializeProfiles(out string contents)
     {
-        string configPath = GTAConfig.FileName;
+		string configPath = GTAConfig.UserFileName;
         contents = File.ReadAllText(configPath);
 
         return contents.JsonDeserialize<JObject>();
@@ -202,6 +202,6 @@ public class DevProfiles
         if (__obj == null) __obj = _obj;
 
         // Serialize again
-        File.WriteAllText(GTAConfig.FileName, __obj.JsonSerialize(true));
+		File.WriteAllText(GTAConfig.UserFileName, __obj.JsonSerialize(true));
     }
 }
