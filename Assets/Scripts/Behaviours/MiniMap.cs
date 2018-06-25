@@ -246,8 +246,10 @@ namespace SanAndreasUnity.Behaviours
             loadTextures();
 
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            player = playerObj.GetComponent<Player>();
-            playerController = playerObj.GetComponent<PlayerController>();
+			if (playerObj != null) {
+				player = playerObj.GetComponent<Player> ();
+				playerController = playerObj.GetComponent<PlayerController> ();
+			}
 
             if (canvas != null && canvas.enabled)
                 canvas.enabled = false;
@@ -513,7 +515,7 @@ namespace SanAndreasUnity.Behaviours
             if (northPivot != null)
                 northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
 
-            if (playerImage != null)
+			if (playerImage != null && player != null)
                 playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (player.transform.eulerAngles.y + 180));
         }
 

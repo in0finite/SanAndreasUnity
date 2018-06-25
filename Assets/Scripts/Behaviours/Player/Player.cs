@@ -389,7 +389,7 @@ namespace SanAndreasUnity.Behaviours
                 UpdateWheelTurning();
 
             // switch weapons - does not work
-            if (!IsInVehicle && !Console.Instance.IsOpened && !MiniMap.toggleMap)
+			if (!IsInVehicle && (null == Console.Instance || !Console.Instance.IsOpened) && !MiniMap.toggleMap)
             {
                 if (Input.mouseScrollDelta.y != 0)
                 {
