@@ -96,10 +96,10 @@ namespace SanAndreasUnity.Behaviours
 
             // Only debug
 
-            foreach (var go in gameObject.GetComponentsInChildren<Component>())
-                Debug.LogFormat("Name: {0} => {1}", go.name, go.hideFlags);
+            //foreach (var go in gameObject.GetComponentsInChildren<Component>())
+            //    Debug.LogFormat("Name: {0} => {1}", go.name, go.hideFlags);
 
-            Debug.LogFormat("DirectX: {0}", SystemInfo.graphicsShaderLevel);
+            Debug.LogFormat("Shader level: {0}", SystemInfo.graphicsShaderLevel);
 
             Debug.LogFormat("Max FPS: {0}", Application.targetFrameRate);
 
@@ -116,21 +116,21 @@ namespace SanAndreasUnity.Behaviours
             // Wait to everything to load
             yield return new WaitForSeconds(1);
 
-            if (SystemInfo.graphicsShaderLevel <= 40)
-                try
-                {
-                    Camera.main.allowMSAA = false;
-                    Camera.main.allowHDR = false;
+			if (SystemInfo.graphicsShaderLevel <= 40) {
+				try {
+					Debug.Log("Adjusting settings for older GPUs");
 
-                    foreach (var mat in transform.root.GetComponentsInChildren<Material>())
-                    {
-                        mat.EnableKeyword("_SPECULARHIGHLIGHTS_OFF");
-                        mat.SetFloat("_SpecularHighlights", 0f);
-                    }
-                }
-                catch
-                {
-                }
+					Camera.main.allowMSAA = false;
+					Camera.main.allowHDR = false;
+
+					foreach (var mat in transform.root.GetComponentsInChildren<Material>()) {
+						mat.EnableKeyword ("_SPECULARHIGHLIGHTS_OFF");
+						mat.SetFloat ("_SpecularHighlights", 0f);
+					}
+				} catch {
+				}
+			}
+
         }
 
         private void MySetupLocalPlayer()
