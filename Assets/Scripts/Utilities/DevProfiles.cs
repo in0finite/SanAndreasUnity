@@ -27,7 +27,7 @@ public class DevProfiles
         {
             try
             {
-                return _obj[GTAConfig.const_active_dev_profile].ToObject<Dictionary<string, int>>().FirstOrDefault(x => x.Key == SystemInfo.deviceUniqueIdentifier).Value;
+                return obj[GTAConfig.const_active_dev_profile].ToObject<Dictionary<string, int>>().FirstOrDefault(x => x.Key == SystemInfo.deviceUniqueIdentifier).Value;
             }
             catch
             {
