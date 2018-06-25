@@ -46,7 +46,7 @@ public class DevProfiles
             }
             catch
             {
-                Debug.LogWarningFormat("You must set the GTA path, because if not the game won't launch. You can set it manually using this id: '{0}', or setting it with the Editor popup.", SystemInfo.deviceUniqueIdentifier);
+                throw new Exception("You must set the GTA path, because if not the game won't launch. You can set it manually using this id: '{0}', or setting it with the Editor popup.", SystemInfo.deviceUniqueIdentifier);
             }
         }
     }
