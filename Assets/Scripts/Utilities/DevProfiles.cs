@@ -40,7 +40,14 @@ public class DevProfiles
     {
         get
         {
-            return GTAConfig.Get<Dictionary<string, string[]>>(GTAConfig.const_dev_profiles).Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[ActiveProfile];
+            try
+            {
+                return GTAConfig.Get<Dictionary<string, string[]>>(GTAConfig.const_dev_profiles).Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[ActiveProfile];
+            }
+            catch
+            {
+                Debug.LogWarningFormat("You must set the GTA path, because if not the game won't launch. You can set it manually using this id: '{0}', or setting it with the Editor popup.", SystemInfo.deviceUniqueIdentifier);
+            }
         }
     }
 
@@ -67,7 +74,7 @@ public class DevProfiles
 
     private static JObject DeserializeProfiles(out string contents)
     {
-		string configPath = GTAConfig.UserFileName;
+        string configPath = GTAConfig.UserFileName;
         contents = File.ReadAllText(configPath);
 
         return contents.JsonDeserialize<JObject>();
@@ -77,11 +84,11 @@ public class DevProfiles
     {
         Dictionary<string, string[]> devs = _obj[GTAConfig.const_dev_profiles].ToObject<Dictionary<string, string[]>>();
         var dev = devs.Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault();
-		if (null == dev.Value)
-			return null;
-		if (index >= dev.Value.Length)
-			return null;
-		return dev.Value[index];
+        if (null == dev.Value)
+            return null;
+        if (index >= dev.Value.Length)
+            return null;
+        return dev.Value[index];
     }
 
     public static string CheckDevProfiles(Func<string> folderList)
@@ -202,6 +209,6 @@ public class DevProfiles
         if (__obj == null) __obj = _obj;
 
         // Serialize again
-		File.WriteAllText(GTAConfig.UserFileName, __obj.JsonSerialize(true));
+        File.WriteAllText(GTAConfig.UserFileName, __obj.JsonSerialize(true));
     }
 }
