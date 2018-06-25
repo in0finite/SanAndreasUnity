@@ -293,7 +293,11 @@ Prefab:
       propertyPath: m_doSmooth
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114401842841139250, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
+    - {fileID: 114828623362714814, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
+    - {fileID: 114912848126749456, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
+    - {fileID: 114741845841415948, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
   m_IsPrefabParent: 0
 --- !u!20 &592530380 stripped
@@ -428,58 +432,6 @@ Light:
   m_PrefabParentObject: {fileID: 10808534, guid: b6900baf9f552ba46ad27d4ada4d5489,
     type: 2}
   m_PrefabInternal: {fileID: 1430544491}
---- !u!114 &1430544496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1430544492}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f1160b384eb1e947a75ec670ffcb535, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: 130c849eedd050940a765649e6a8ced6, type: 2}
-  lightAmount: 10000
-  globalBrightnessOffset: 0
---- !u!114 &1430544497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1430544492}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b673157d0bd1b494996f7e5c41de81b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  omnidirectionalCityLightsMat: {fileID: 2100000, guid: 0aa19bf290b634f41bd6f83158c9d430,
-    type: 2}
-  amberColor: {r: 1, g: 0.43965724, b: 0, a: 1}
-  whiteColor: {r: 1, g: 1, b: 0.30054384, a: 1}
-  spacing: 90
---- !u!114 &1430544498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1430544492}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8aecd8110978d74fb2b5a05ad4371bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  greenLight: {r: 0.033104774, g: 1, b: 0.22322798, a: 1}
-  redLight: {r: 1, g: 0.004024717, b: 0, a: 1}
-  whiteLight: {r: 1, g: 1, b: 0.30054384, a: 1}
-  amberLight: {r: 1, g: 0.43965724, b: 0, a: 1}
-  globalBrightnessOffset: 0
-  directionalLightsMat: {fileID: 2100000, guid: 29cb2b6f302243b48ab4387fb3645182,
-    type: 2}
-  omnidirectionalRunwayLightsMat: {fileID: 2100000, guid: c49a174dbb205a84cbb73ddf139e65a8,
-    type: 2}
-  papiLightsMat: {fileID: 2100000, guid: b00bb5bf45a467c43bacf7bf9329416c, type: 2}
-  strobeLightsMat: {fileID: 2100000, guid: cebc07feac42c8249aa22a17a2415049, type: 2}
 --- !u!1001 &1631170488
 Prefab:
   m_ObjectHideFlags: 0
