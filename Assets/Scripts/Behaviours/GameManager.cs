@@ -47,6 +47,16 @@ namespace SanAndreasUnity.Behaviours {
 			Cursor.visible = !locked;
 		}
 
+		public static void ExitApplication() {
+
+			#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+			#else
+			Application.Quit ();
+			#endif
+
+		}
+
 	}
 
 }

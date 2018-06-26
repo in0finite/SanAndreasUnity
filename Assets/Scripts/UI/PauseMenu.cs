@@ -77,21 +77,25 @@ namespace SanAndreasUnity.UI {
 
 			if (!Loader.HasLoaded || !IsOpened)
 				return;
-
-			// TODO: not finished
-
+			
 
 			GUILayout.Space (20);
 
-			// add items: map, controls, world stats, utilities, teleport, options
+			// TODO: add items: map, teleport, options, set time
 
 			if (GUILayout.Button ("Resume"))
 				IsOpened = false;
+			
+			GUILayout.Space (10);
 
 			// draw all registered items
 			onDrawItems ();
 
-			GUILayout.Button ("Exit");
+			GUILayout.Space (10);
+
+			if (GUILayout.Button ("Exit")) {
+				GameManager.ExitApplication ();
+			}
 
 		}
 
