@@ -23,6 +23,8 @@ namespace SanAndreasUnity.UI {
 			}
 		}
 
+		public	static	event System.Action	onDrawItems = delegate {};
+
 		private	static	PlayerController m_playerController;
 
 
@@ -81,13 +83,15 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.Space (20);
 
-			// world stats, utilities, teleport, options
+			// add items: map, controls, world stats, utilities, teleport, options
 
-			GUILayout.Button ("Resume");
-			GUILayout.Button ("Map");
-			GUILayout.Button ("Controls");
+			if (GUILayout.Button ("Resume"))
+				IsOpened = false;
+
+			// draw all registered items
+			onDrawItems ();
+
 			GUILayout.Button ("Exit");
-
 
 		}
 

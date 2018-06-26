@@ -42,7 +42,25 @@ namespace SanAndreasUnity.UI {
 
 		public	void	RegisterButtonInPauseMenu() {
 
+			PauseMenu.onDrawItems += this.OnPauseMenuGUI;
 
+		}
+
+		public	void	UnRegisterButtonInPauseMenu() {
+
+			PauseMenu.onDrawItems -= this.OnPauseMenuGUI;
+
+		}
+
+		private	void	OnPauseMenuGUI() {
+
+			// display button for opening/closing window
+
+			string text = this.isOpened ? "Hide " + this.windowName : "Show " + this.windowName;
+
+			if (GUILayout.Button (text)) {
+				this.isOpened = ! this.isOpened;
+			}
 
 		}
 
