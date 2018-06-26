@@ -222,7 +222,7 @@ namespace SanAndreasUnity.Behaviours
 
             float scrollValue = Input.mouseScrollDelta.y;
 
-            if (Console.Instance.IsOpened || MiniMap.toggleMap)
+			if (!GameManager.CanPlayerReadInput ())
                 scrollValue = 0;
 
             if (_player.IsInVehicle)
