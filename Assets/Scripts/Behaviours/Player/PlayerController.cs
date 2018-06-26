@@ -37,21 +37,15 @@ namespace SanAndreasUnity.Behaviours
         private static bool _showFPS = true,
                             _showVel = true;
 
-        private static bool __menu;
-
         public static bool _showMenu
         {
             get
             {
-                return __menu;
+				return UI.PauseMenu.IsOpened;
             }
             set
             {
-                __menu = value;
-
-                // Fix: This is weird
-                if (me.CursorLocked)
-                    me.ChangeCursorState(false);
+				UI.PauseMenu.IsOpened = value;
             }
         }
 
@@ -272,23 +266,6 @@ namespace SanAndreasUnity.Behaviours
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
-
-            if (Input.GetKeyDown(KeyCode.F1))
-                _showMenu = !_showMenu;
-
-            if (_showMenu && Input.GetKeyDown(KeyCode.M))
-                _showMenu = false;
-
-            if (MiniMap.toggleMap && Input.GetKeyDown(KeyCode.Escape))
-                MiniMap.toggleMap = false;
-
-            bool isConsoleStateChanged = Console.Instance.m_openKey != Console.Instance.m_closeKey ?
-                Input.GetKeyDown(Console.Instance.m_openKey) || Input.GetKeyDown(Console.Instance.m_closeKey) :
-                Input.GetKeyDown(Console.Instance.m_openKey);
-
-            // Fixed: If Escape is pressed, map isn't available
-            if (!_showMenu && (Input.GetKeyDown(KeyCode.Escape) || isConsoleStateChanged || Input.GetKeyDown(KeyCode.F1) || (CursorLocked && Input.GetKeyDown(KeyCode.M))))
-                ChangeCursorState(!CursorLocked);
 
             if (CursorLocked)
             { // While cursor is locked and don't show on screen we can move player's camera.
@@ -542,7 +519,7 @@ namespace SanAndreasUnity.Behaviours
             //	PlayerModel._anim.Blend( );
         }
 
-        private void ChangeCursorState(bool locked)
+        public void ChangeCursorState(bool locked)
         {
             CursorLocked = locked;
             Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
