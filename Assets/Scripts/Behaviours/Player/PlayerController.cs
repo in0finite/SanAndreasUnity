@@ -21,21 +21,10 @@ namespace SanAndreasUnity.Behaviours
 
         private Transform[] _spawns;
 
-        private static int fpsTextureWidth = 75;
-        private static int fpsTextureHeight = 25;
-        private static float fpsMaximum = 60.0f;
-        /*private static float fpsGreen = 50.0f;
-        private static float fpsRed = 23.0f;*/
-        private float fpsDeltaTime = 0.0f;
-        private Texture2D fpsTexture = null;
-        private float[] fpsHistory = new float[fpsTextureWidth];
-        private int fpsIndex = 0;
-
         private static Rect teleportWindowRect;
         private const int teleportWindowID = 1;
 
-        private static bool _showFPS = true,
-                            _showVel = true;
+        private static bool _showVel = true;
 
         public static bool _showMenu
         {
@@ -109,8 +98,7 @@ namespace SanAndreasUnity.Behaviours
             Cursor.visible = false;
 
             _spawns = GameObject.Find("Player Spawns").GetComponentsInChildren<Transform>();
-            fpsTexture = new Texture2D(fpsTextureWidth, fpsTextureHeight, TextureFormat.RGBA32, false, true);
-
+            
             teleportWindowRect = new Rect(Screen.width - 260, 10, 250, 10 + (25 * _spawns.Count()));
         }
 
@@ -154,60 +142,7 @@ namespace SanAndreasUnity.Behaviours
             if (_showVel && Loader.HasLoaded)
                 GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(5, 5)), string.Format("{0:0.0} km/h", deltaPos.magnitude * 3.6f / velTimer), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
 
-            if (_showFPS)
-            {
-                float msec = fpsDeltaTime * 1000.0f;
-                float fps = 1.0f / fpsDeltaTime;
-
-                // Show FPS counter
-                GUILayout.BeginArea(GUIUtils.GetCornerRect(ScreenCorner.BottomRight, 100, 25, new Vector2(15 + fpsTexture.width, 10)));
-                GUILayout.Label(string.Format("{0:0.}fps ({1:0.0}ms)", fps, msec), new GUIStyle("label") { alignment = TextAnchor.MiddleLeft });
-                GUILayout.EndArea();
-
-                if (fpsTexture == null) return;
-
-                // Show FPS history
-                Color[] colors = new Color[fpsTexture.width * fpsTexture.height];
-
-                for (int i = 0; i < (fpsTexture.width * fpsTexture.height); i++)
-                    colors[i] = new Color(0.0f, 0.0f, 0.0f, 0.66f); // Half-transparent background for FPS graph
-
-                fpsTexture.SetPixels(colors);
-
-                // Append to history storage
-                fpsHistory[fpsIndex] = fps;
-
-                int f = fpsIndex;
-
-                if (fps > fpsHistory.Average())
-                    fpsMaximum = fps;
-
-                // Draw graph into texture
-                for (int i = fpsTexture.width - 1; i >= 0; i--)
-                {
-                    float graphVal = (fpsHistory[f] > fpsMaximum) ? fpsMaximum : fpsHistory[f]; //Clamps
-                    int height = (int)(graphVal * fpsTexture.height / (fpsMaximum + 0.1f)); //Returns the height of the desired point with a padding of 0.1f units
-
-                    float p = fpsHistory[f] / fpsMaximum,
-                          r = Mathf.Lerp(1, 1 - p, p),
-                          g = Mathf.Lerp(p * 2, p, p);
-
-                    fpsTexture.SetPixel(i, height, new Color(r, g, 0));
-                    f--;
-
-                    if (f < 0)
-                        f = fpsHistory.Length - 1;
-                }
-
-                // Next entry in rolling history buffer
-                fpsIndex++;
-                if (fpsIndex >= fpsHistory.Length)
-                    fpsIndex = 0;
-
-                // Draw texture on GUI
-                fpsTexture.Apply(false, false);
-                GUI.DrawTexture(GUIUtils.GetCornerRect(ScreenCorner.BottomRight, fpsTexture.width, fpsTexture.height, new Vector2(5, fpsTexture.height - 15)), fpsTexture);
-            }
+            
         }
 
         private void FixedUpdate()
@@ -226,12 +161,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
-            // FPS counting
-            fpsDeltaTime += (Time.deltaTime - fpsDeltaTime) * 0.1f;
-
-            if (Input.GetKeyDown(KeyCode.F10))
-                _showFPS = !_showFPS;
-
+            
             if (Input.GetKeyDown(KeyCode.F9))
                 _showVel = !_showVel;
 
@@ -454,6 +384,7 @@ namespace SanAndreasUnity.Behaviours
 
                 break;
             }
+
         }
 
         private void OnDrawGizmosSelected()
