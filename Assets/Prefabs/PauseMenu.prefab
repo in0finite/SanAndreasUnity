@@ -20,6 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4615557407145958}
   - component: {fileID: 114435663141359712}
+  - component: {fileID: 114924086961640034}
+  - component: {fileID: 114611395026534988}
   m_Layer: 0
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -51,3 +53,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 661aa8bc19a0e4d3dbb894f6b7b77966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114611395026534988
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693201817607148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e43dd3376534c44ea99e33b8a01cadba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: Utilities
+  isOpened: 1
+  windowRect:
+    serializedVersion: 2
+    x: 304
+    y: 10
+    width: 200
+    height: 100
+--- !u!114 &114924086961640034
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693201817607148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a86af676e111c4861b8e0f454c7cb025, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: World stats
+  isOpened: 0
+  windowRect:
+    serializedVersion: 2
+    x: 10
+    y: 10
+    width: 250
+    height: 330

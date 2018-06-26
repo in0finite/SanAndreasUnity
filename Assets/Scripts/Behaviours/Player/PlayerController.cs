@@ -13,6 +13,9 @@ namespace SanAndreasUnity.Behaviours
         #region Private fields
 
         private static PlayerController me;
+		public	static	PlayerController	FindInstance() {
+			return FindObjectOfType<PlayerController> ();
+		}
 
         private Player _player;
 

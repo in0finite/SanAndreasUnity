@@ -83,6 +83,12 @@ namespace SanAndreasUnity.Behaviours
 
         public static Player me;
 
+		public	static	Player	FindInstance() {
+			return FindObjectOfType<Player> ();
+		}
+
+
+
         //     protected override void OnAwake()
         protected void Awake()
         {

@@ -526,27 +526,3 @@ Prefab:
 GameObject:
   m_PrefabParentObject: {fileID: 100000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 2}
   m_PrefabInternal: {fileID: 1631170488}
---- !u!1 &1683486672 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1693201817607148, guid: 259a477cc43ab4eb184305bfc583d66e,
-    type: 2}
-  m_PrefabInternal: {fileID: 1440815959}
---- !u!114 &1683486675
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1683486672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a86af676e111c4861b8e0f454c7cb025, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  windowName: World stats
-  isOpened: 1
-  windowRect:
-    serializedVersion: 2
-    x: 10
-    y: 10
-    width: 250
-    height: 330

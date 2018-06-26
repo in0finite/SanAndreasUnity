@@ -15,7 +15,6 @@ public class UIVehicleSpawner : MonoBehaviour
         _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         _player = GameObject.Find("Player").GetComponent<Player>();
 
-        windowRect = new Rect(Screen.width / 2 - 100, 10, 200, 100);
     }
 
     // Update is called once per frame
@@ -27,39 +26,10 @@ public class UIVehicleSpawner : MonoBehaviour
         }
     }
 
-    private static Rect windowRect;
-    private const int windowID = 2;
-
-    private void OnGUI()
-    {
-        if (!PlayerController._showMenu)
-            return;
-
-        windowRect = GUILayout.Window(windowID, windowRect, spawnWindow, "Utilities");
-    }
-
-    private void spawnWindow(int windowID)
-    {
-        Vector2 pos = new Vector2(_player.transform.position.x + 3000, 6000 - (_player.transform.position.z + 3000));
-        GUILayout.Label("Pos: X" + (int)pos.x + " Y" + (int)pos.y + " Z" + (int)_player.transform.position.y);
-
-        if (GUILayout.Button("Spawn vehicle"))
-        {
-            SpawnVehicle();
-        }
-
-        if (GUILayout.Button("Change player model"))
-        {
-            CharacterModelChanger.ChangePedestrianModel();
-        }
-
-        GUI.DragWindow();
-    }
 
     public void SpawnVehicle()
     {
-        SanAndreasUnity.Behaviours.PlayerController cont =
-            GameObject.FindObjectOfType<SanAndreasUnity.Behaviours.PlayerController>();
+        var cont = GameObject.FindObjectOfType<SanAndreasUnity.Behaviours.PlayerController>();
 
         if (null == cont)
         {
@@ -72,8 +42,8 @@ public class UIVehicleSpawner : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(-cont.transform.right, Vector3.up);
 
             //	SanAndreasUnity.Behaviours.Vehicles.VehicleSpawner.Create ();
-            SanAndreasUnity.Behaviours.Vehicles.Vehicle v = SanAndreasUnity.Behaviours.Vehicles.Vehicle.Create(-1, null, pos, rotation);
-            Debug.Log("Spawned vehicle with id" + v.Definition.Id);
+			var v = SanAndreasUnity.Behaviours.Vehicles.Vehicle.Create(-1, null, pos, rotation);
+            Debug.Log("Spawned vehicle with id " + v.Definition.Id);
         }
     }
 }
