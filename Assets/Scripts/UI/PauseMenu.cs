@@ -17,9 +17,9 @@ namespace SanAndreasUnity.UI {
 			set {
 				m_isOpened = value;
 
-				// Fix: This is weird
-				if (m_playerController.CursorLocked)
-					m_playerController.ChangeCursorState(false);
+				// Why ?
+				if (GameManager.CursorLocked)
+					GameManager.ChangeCursorState(false);
 			}
 		}
 
@@ -65,8 +65,8 @@ namespace SanAndreasUnity.UI {
 			// unlock and show cursor while pause menu is opened
 			if (m_playerController != null) {
 				bool shouldBeLocked = !IsOpened;
-				if (m_playerController.CursorLocked != shouldBeLocked)
-					m_playerController.ChangeCursorState (shouldBeLocked);
+				if (GameManager.CursorLocked != shouldBeLocked)
+					GameManager.ChangeCursorState (shouldBeLocked);
 			}
 
 		}

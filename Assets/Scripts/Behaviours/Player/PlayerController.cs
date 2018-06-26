@@ -69,8 +69,6 @@ namespace SanAndreasUnity.Behaviours
         public Vector2 smoothing = new Vector2(10, 10);
         public bool m_doSmooth = true;
 
-        public bool CursorLocked;
-
         public float CurVelocity
         {
             get
@@ -92,10 +90,6 @@ namespace SanAndreasUnity.Behaviours
         {
             me = this;
             _player = GetComponent<Player>();
-
-            CursorLocked = true;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
 
             _spawns = GameObject.Find("Player Spawns").GetComponentsInChildren<Transform>();
             
@@ -190,16 +184,11 @@ namespace SanAndreasUnity.Behaviours
                 }
             }
 
-            // Fix cursor state if it has been 'broken', happens eg. with zoom gestures in the editor in macOS
-            if (CursorLocked && ((Cursor.lockState != CursorLockMode.Locked) || (Cursor.visible)))
+			if (GameManager.CanPlayerReadInput())
             {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-
-            if (CursorLocked)
-            { // While cursor is locked and don't show on screen we can move player's camera.
-                var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+				// Move player's camera.
+                
+				var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
                 mouseDelta = Vector2.Scale(mouseDelta, CursorSensitivity);
 
@@ -258,7 +247,7 @@ namespace SanAndreasUnity.Behaviours
 
             Camera.transform.position = castRay.GetPoint(distance);
 
-            if (!CursorLocked) return;
+			if (!GameManager.CanPlayerReadInput()) return;
 
             if (Input.GetButtonDown("Use") && _player.IsInVehicle)
             {
@@ -448,13 +437,6 @@ namespace SanAndreasUnity.Behaviours
             state.weight = animationBlendWeight;
 
             //	PlayerModel._anim.Blend( );
-        }
-
-        public void ChangeCursorState(bool locked)
-        {
-            CursorLocked = locked;
-            Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !locked;
         }
 
         /*public static float ClampAngle(float currentValue, float minAngle, float maxAngle, float clampAroundAngle = 0)

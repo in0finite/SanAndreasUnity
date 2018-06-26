@@ -467,7 +467,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void FixedUpdate()
         {
-            if (playerController != null && !playerController.CursorLocked && debugActive) return;
+			if (playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
 
             if (playerController != null)
                 realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
@@ -480,7 +480,7 @@ namespace SanAndreasUnity.Behaviours
         private void LateUpdate()
         {
             if (!isReady) return;
-            if (playerController != null && !playerController.CursorLocked && debugActive) return;
+			if (playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
 
             if (mapTransform != null)
             {

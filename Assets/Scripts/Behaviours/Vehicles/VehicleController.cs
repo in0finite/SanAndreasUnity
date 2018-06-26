@@ -16,7 +16,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Update()
         {
-            if (!_playerController.CursorLocked) return;
+			if (!GameManager.CanPlayerReadInput()) return;
 
             var accel = Input.GetAxis("Vertical");
             var brake = Input.GetKey(KeyCode.Space) ? 1.0f : 0.0f;
