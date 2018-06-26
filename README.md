@@ -14,59 +14,9 @@ Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data 
 
 **Note:** It seems that it has been fixed, but it must be reviewed.
 
-## In game controls
+## In-game controls
 
-V - Spawn vehicle
-
-P - Change pedestrian model
-
-L - Turn off / on car lights
-
-L Shift - Run / Fly fast
-
-Mouse Scroll - Zoom in / out player camera
-
-F1 - Toggle debug menu
-
-F2 - Open console
-
-T - Enable debug flying mode
-
-R - Enable debug noclip mode
-
-Backspace - Fly up
-
-Delete - Fly down
-
-Z - Fly very fast
-
-E - Enter/exit vehicles
-
-Space - Jump
-
-F10 - Toggle FPS
-
-F9 - Toggle velocimeter
-
-O - Toggle quality
-
-B - Zoom out minimap
-
-N - Zoom in minimap
-
-M - Open the entire map
-
-F8 - Show more info in the minimap
-
-## CLI
-
-* --handlelog // --h => Enables log handling (in HTML)
-
-* --console // --c => Display a console to see what is Unity outputting
-
-* --stopdebug // --s => Stop debug when reached x messages
-
-* --html => Output log in html instead of text
+Press Escape while in game to open pause menu. You'll see there a lot of utilities, and among them, there is a window which shows all controls.
 
 ## TODO List
 
@@ -108,3 +58,4 @@ Can help us to develop this? In that case, join us on discord so we can discuss 
 ## Resources
 
 * [GTAModding Wiki](http://www.gtamodding.com/wiki/Main_Page)
+
