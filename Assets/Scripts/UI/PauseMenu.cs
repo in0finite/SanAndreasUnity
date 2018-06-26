@@ -79,9 +79,15 @@ namespace SanAndreasUnity.UI {
 				return;
 			
 
+			// draw title
+			string pauseMenuTitle = "PAUSE MENU";
+			Vector2 titleSize = Utilities.GUIUtils.CalcScreenSizeForText (pauseMenuTitle, GUI.skin.label);
+			GUI.Label( new Rect(Screen.width / 2 - titleSize.x / 2, 10, titleSize.x, titleSize.y), pauseMenuTitle);
+
+
 			GUILayout.Space (20);
 
-			// TODO: add items: map, options
+			// TODO: add items: map, 
 
 			if (GUILayout.Button ("Resume"))
 				IsOpened = false;

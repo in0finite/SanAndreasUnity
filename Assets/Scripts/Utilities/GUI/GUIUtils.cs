@@ -54,5 +54,22 @@ namespace SanAndreasUnity.Utilities
 
 		}
 
+		public	static	Vector2	CalcScreenSizeForContent( GUIContent content, GUIStyle style ) {
+
+			return style.CalcScreenSize (style.CalcSize (content));
+		}
+
+		public	static	Vector2	CalcScreenSizeForText( string text, GUIStyle style ) {
+
+			return CalcScreenSizeForContent (new GUIContent (text), style);
+		}
+
+		public	static	bool	ButtonWithCalculatedSize( string text ) {
+
+			Vector2 size = CalcScreenSizeForText (text, GUI.skin.button);
+
+			return GUILayout.Button (text, GUILayout.Width (size.x), GUILayout.Height (size.y));
+		}
+
     }
 }
