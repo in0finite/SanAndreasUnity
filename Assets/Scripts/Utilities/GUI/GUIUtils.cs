@@ -39,5 +39,20 @@ namespace SanAndreasUnity.Utilities
 
             return default(Rect);
         }
+
+		public static Rect GetCenteredRect( Vector2 size ) {
+
+			Vector2 pos = new Vector2 (Screen.width * 0.5f, Screen.height * 0.5f);
+			pos -= size * 0.5f;
+
+			return new Rect (pos, size);
+		}
+
+		public static Rect GetCenteredRectPerc( Vector2 sizeInScreenPercentage ) {
+
+			return GetCenteredRect (new Vector2 (Screen.width * sizeInScreenPercentage.x, Screen.height * sizeInScreenPercentage.y));
+
+		}
+
     }
 }

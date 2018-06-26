@@ -81,6 +81,8 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.Space (20);
 
+			// world stats, utilities, teleport, options
+
 			GUILayout.Button ("Resume");
 			GUILayout.Button ("Map");
 			GUILayout.Button ("Controls");

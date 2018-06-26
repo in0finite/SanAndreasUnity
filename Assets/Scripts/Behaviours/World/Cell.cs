@@ -176,6 +176,8 @@ namespace SanAndreasUnity.Behaviours.World
             measuredTimes[1] = (float)_timer.Elapsed.TotalMilliseconds;
         }
 
+
+		/*
         private static Rect windowRect = new Rect(10, 10, 250, 330);
         private const int windowID = 0;
 
@@ -189,8 +191,9 @@ namespace SanAndreasUnity.Behaviours.World
 
             windowRect = GUILayout.Window(windowID, windowRect, showWindow, "World statistics");
         }
+        */
 
-        private void showWindow(int windowID)
+		public void showWindow(int windowID)
         {
             GUILayout.Label("total num divisions " + (null == _leaves ? 0 : _leaves.Count));
             GUILayout.Label("total num objects " + totalNumObjects);
