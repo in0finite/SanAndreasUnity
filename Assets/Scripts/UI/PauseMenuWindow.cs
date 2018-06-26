@@ -15,6 +15,9 @@ namespace SanAndreasUnity.UI {
 
 		public	Rect	windowRect = Utilities.GUIUtils.GetCenteredRectPerc(new Vector2(0.5f, 0.5f));
 
+		public	bool	useScrollView = false;
+		protected	Vector2	scrollPos = Vector2.zero;
+
 
 
 		void OnGUI() {
@@ -30,7 +33,13 @@ namespace SanAndreasUnity.UI {
 
 			// display exit button, scroll view ?
 
+			if (this.useScrollView)
+				this.scrollPos = GUILayout.BeginScrollView (this.scrollPos);
+
 			this.OnWindowGUI ();
+
+			if (this.useScrollView)
+				GUILayout.EndScrollView ();
 
 			GUI.DragWindow ();
 		}

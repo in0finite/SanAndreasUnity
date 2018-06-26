@@ -13,6 +13,7 @@ namespace SanAndreasUnity.UI {
 
 			this.isOpened = false;
 			this.windowName = "Controls";
+			this.useScrollView = true;
 
 		}
 
