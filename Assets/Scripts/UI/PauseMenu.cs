@@ -41,23 +41,32 @@ namespace SanAndreasUnity.UI {
 		// Update is called once per frame
 		void Update () {
 
-			if (Input.GetKeyDown(KeyCode.F1))
+			if (Input.GetKeyDown(KeyCode.Escape))
 				IsOpened = !IsOpened;
 
-			if (IsOpened && Input.GetKeyDown(KeyCode.M))
-				IsOpened = false;
+		//	if (IsOpened && Input.GetKeyDown(KeyCode.M))
+		//		IsOpened = false;
 
-			if (MiniMap.toggleMap && Input.GetKeyDown(KeyCode.Escape))
-				MiniMap.toggleMap = false;
+		//	if (MiniMap.toggleMap && Input.GetKeyDown(KeyCode.Escape))
+		//		MiniMap.toggleMap = false;
 
-			bool isConsoleStateChanged = Console.Instance.m_openKey != Console.Instance.m_closeKey ?
-				Input.GetKeyDown(Console.Instance.m_openKey) || Input.GetKeyDown(Console.Instance.m_closeKey) :
-				Input.GetKeyDown(Console.Instance.m_openKey);
+//			bool isConsoleStateChanged = Console.Instance.m_openKey != Console.Instance.m_closeKey ?
+//				Input.GetKeyDown(Console.Instance.m_openKey) || Input.GetKeyDown(Console.Instance.m_closeKey) :
+//				Input.GetKeyDown(Console.Instance.m_openKey);
+//
+//			if (m_playerController != null) {
+//				// WTF is this ?!
+//
+//				// Fixed: If Escape is pressed, map isn't available
+//				if (!IsOpened && (Input.GetKeyDown (KeyCode.Escape) || isConsoleStateChanged || Input.GetKeyDown (KeyCode.F1) || (m_playerController.CursorLocked && Input.GetKeyDown (KeyCode.M))))
+//					m_playerController.ChangeCursorState (!m_playerController.CursorLocked);
+//			}
 
+			// unlock and show cursor while pause menu is opened
 			if (m_playerController != null) {
-				// Fixed: If Escape is pressed, map isn't available
-				if (!IsOpened && (Input.GetKeyDown (KeyCode.Escape) || isConsoleStateChanged || Input.GetKeyDown (KeyCode.F1) || (m_playerController.CursorLocked && Input.GetKeyDown (KeyCode.M))))
-					m_playerController.ChangeCursorState (!m_playerController.CursorLocked);
+				bool shouldBeLocked = !IsOpened;
+				if (m_playerController.CursorLocked != shouldBeLocked)
+					m_playerController.ChangeCursorState (shouldBeLocked);
 			}
 
 		}
