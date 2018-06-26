@@ -1,0 +1,65 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+namespace SanAndreasUnity.UI {
+
+	public class OptionsWindow : PauseMenuWindow {
+
+		/// <summary>
+		/// Subscribe to this event to draw gui inside options window.
+		/// </summary>
+		public	static	event System.Action	onGUI = delegate {};
+
+
+
+		OptionsWindow() {
+
+			// set default parameters
+
+			this.isOpened = false;
+			this.windowName = "Options";
+			this.useScrollView = true;
+
+		}
+
+		void Start () {
+			
+			this.RegisterButtonInPauseMenu ();
+
+			// adjust rect
+			float windowWidth = Screen.width * 0.85f;
+			windowWidth = Mathf.Min (windowWidth, 600);
+			float windowHeight = Screen.height * 0.8f;
+			windowHeight = Mathf.Min (windowHeight, windowWidth * 9 / 16);
+			this.windowRect = Utilities.GUIUtils.GetCenteredRect (new Vector2 (windowWidth, windowHeight));
+
+		}
+
+
+		protected override void OnWindowGUI ()
+		{
+
+			GUILayout.Space (10);
+
+			onGUI ();
+
+			GUILayout.Space (20);
+
+			// options to add: show FPS counter, show minimap, 
+
+		}
+
+
+		/// <summary>
+		/// Displays float slider with description.
+		/// </summary>
+		public	static	void	FloatSlider(ref float value, float min, float max, string description) {
+
+			GUILayout.Label(description + " : " + value);
+			value = GUILayout.HorizontalSlider( value, min, max );
+
+		}
+
+	}
+
+}

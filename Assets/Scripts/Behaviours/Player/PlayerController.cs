@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Behaviours
     {
         #region Private fields
 
-        private static PlayerController me;
+		public	static	PlayerController	Instance { get ; private set ; }
 		public	static	PlayerController	FindInstance() {
 			return FindObjectOfType<PlayerController> ();
 		}
@@ -22,7 +22,7 @@ namespace SanAndreasUnity.Behaviours
         private float _pitch;
         private float _yaw;
 
-        private static bool _showVel = true;
+		public static bool _showVel = true;
 
         public static bool _showMenu
         {
@@ -88,7 +88,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Awake()
         {
-            me = this;
+            Instance = this;
             _player = GetComponent<Player>();
 
         }
