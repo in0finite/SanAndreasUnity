@@ -11,10 +11,7 @@ namespace SanAndreasUnity.Behaviours {
 
 
 		private void Awake() {
-
-			CursorLocked = true;
-			Cursor.lockState = CursorLockMode.Locked;
-			Cursor.visible = false;
+			
 
 		}
 

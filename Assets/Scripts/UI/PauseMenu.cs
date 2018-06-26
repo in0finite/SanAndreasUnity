@@ -63,7 +63,7 @@ namespace SanAndreasUnity.UI {
 //			}
 
 			// unlock and show cursor while pause menu is opened
-			if (m_playerController != null) {
+			if (Loader.HasLoaded && m_playerController != null) {
 				bool shouldBeLocked = !IsOpened;
 				if (GameManager.CursorLocked != shouldBeLocked)
 					GameManager.ChangeCursorState (shouldBeLocked);
