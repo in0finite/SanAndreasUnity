@@ -21,9 +21,6 @@ namespace SanAndreasUnity.Behaviours.World
 
         private Light light;
 
-        private static Rect windowRect = new Rect(10, 350, 250, 200);
-        private const int windowID = 3;
-
         public static float TimeFactor
         {
             get
@@ -77,27 +74,6 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
-        private void OnGUI()
-        {
-            if (!PlayerController._showMenu)
-                return;
-
-            windowRect = GUILayout.Window(windowID, windowRect, timeWindow, "Set Time");
-        }
-
-        private void timeWindow(int windowID)
-        {
-            GUILayout.Label("Set Time:");
-
-            foreach (var en in Enum.GetValues(typeof(TimeState)))
-            {
-                TimeState e = (TimeState)en;
-                if (GUILayout.Button(e.ToString()))
-                    SetTime(e);
-            }
-
-            GUI.DragWindow();
-        }
 
         public static void SetTime(TimeState time)
         {

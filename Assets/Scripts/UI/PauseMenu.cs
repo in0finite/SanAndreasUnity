@@ -81,7 +81,7 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.Space (20);
 
-			// TODO: add items: map, teleport, options, set time
+			// TODO: add items: map, options
 
 			if (GUILayout.Button ("Resume"))
 				IsOpened = false;
