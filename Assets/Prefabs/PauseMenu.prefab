@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114924086961640034}
   - component: {fileID: 114611395026534988}
   - component: {fileID: 114636911127793484}
+  - component: {fileID: 114911863237150764}
   m_Layer: 0
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -73,6 +74,7 @@ MonoBehaviour:
     y: 10
     width: 200
     height: 100
+  useScrollView: 0
 --- !u!114 &114636911127793484
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -92,6 +94,27 @@ MonoBehaviour:
     y: 78.75
     width: 115
     height: 157.5
+  useScrollView: 1
+--- !u!114 &114911863237150764
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693201817607148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4187a46a1c9ad4590a8b39ab12ce6522, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: Teleport
+  isOpened: 1
+  windowRect:
+    serializedVersion: 2
+    x: 57.5
+    y: 78.75
+    width: 115
+    height: 157.5
+  useScrollView: 1
 --- !u!114 &114924086961640034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -111,3 +134,4 @@ MonoBehaviour:
     y: 10
     width: 250
     height: 330
+  useScrollView: 0

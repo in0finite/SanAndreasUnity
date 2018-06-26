@@ -22,11 +22,6 @@ namespace SanAndreasUnity.Behaviours
         private float _pitch;
         private float _yaw;
 
-        private Transform[] _spawns;
-
-        private static Rect teleportWindowRect;
-        private const int teleportWindowID = 1;
-
         private static bool _showVel = true;
 
         public static bool _showMenu
@@ -89,38 +84,21 @@ namespace SanAndreasUnity.Behaviours
 
         #endregion Properties
 
+
+
         private void Awake()
         {
             me = this;
             _player = GetComponent<Player>();
 
-            _spawns = GameObject.Find("Player Spawns").GetComponentsInChildren<Transform>();
-            
-            teleportWindowRect = new Rect(Screen.width - 260, 10, 250, 10 + (25 * _spawns.Count()));
         }
 
-        private void teleportWindow(int windowID)
-        {
-            for (int i = 1; i < _spawns.Count(); i++)
-            {
-                if (GUILayout.Button(_spawns[i].name))
-                {
-                    _player.transform.position = _spawns[i].position;
-                    _player.transform.rotation = _spawns[i].rotation;
-                }
-            }
-
-            GUI.DragWindow();
-        }
 
         private void OnGUI()
         {
             Event e = Event.current;
 
-            // Show buttons for teleport to player spawn locations
-            if (_showMenu && (_spawns.Count() > 1))
-                teleportWindowRect = GUILayout.Window(teleportWindowID, teleportWindowRect, teleportWindow, "Teleport to a location:");
-
+            
             // Shohw flying / noclip states
             if (_player.enableFlying || _player.enableNoclip)
             {

@@ -81,7 +81,7 @@ namespace SanAndreasUnity.Behaviours
 
         #endregion Properties
 
-        public static Player me;
+		public	static	Player	Instance { get ; private set ; }
 
 		public	static	Player	FindInstance() {
 			return FindObjectOfType<Player> ();
@@ -94,7 +94,7 @@ namespace SanAndreasUnity.Behaviours
         {
             //    base.OnAwake();
 
-            me = this;
+            Instance = this;
 
             characterController = GetComponent<CharacterController>();
 

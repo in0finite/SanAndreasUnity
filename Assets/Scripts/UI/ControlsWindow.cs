@@ -22,7 +22,7 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = new Rect(Screen.width / 2 - 150, 10, 300, 400);
+			this.windowRect = new Rect(Screen.width / 2 - 150, 30, 300, 400);
 		}
 
 
@@ -42,7 +42,8 @@ namespace SanAndreasUnity.UI {
 			"L - Turn off / on car lights\n\n" +
 			"L Shift - Run / Fly fast\n\n" +
 			"Mouse Scroll - Zoom in / out player camera\n\n" +
-			"F1 - Toggle debug menu\n\nF2 - Open console\n\n" +
+			"Esc - Toggle pause menu\n\n" +
+			"F2 - Open console\n\n" +
 			"T - Enable debug flying mode\n\n" +
 			"R - Enable debug noclip mode\n\n" +
 			"Backspace - Fly up\n\n" +
