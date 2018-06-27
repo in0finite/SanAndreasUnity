@@ -130,6 +130,24 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - Files with .log extension is printed in hexadecimal on Sublime Text (change extension)
 
+- The scripts must read infinite radarXX.tcd textures
+
+- Implement polar rotation system in Camera:
+
+```
+elevation -= Input.GetAxis("Mouse Y");
+polar = Mathf.Clamp(polar + Input.GetAxis("Mouse X"), -90.0f, 90.0f);
+while (elevation < 0.0f)
+{
+    elevation += 360.0f;
+}
+while (elevation >= 360.0f)
+{
+    elevation -= 360.0f;
+}
+transform.rotation = Quaternion.AngleAxis(polar, Vector3.up) * Quaternion.AngleAxis(elevation, Vector3.right);
+```
+
 ### Must be reviewed
 
 - If you regenerate scripts while running Unity Editor crashes (patch it?)
@@ -142,8 +160,10 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - HUGE REFACTOR (compiling Assembly into DLLs will solve most problems)
 
+- Minimap size depeding on screen resolution
+
 ## What is UltraGTA?
 
-UltraGTA is a project that I (z3nth10n) have been developing for about 3 - 4 months, it is able to read a custom GTA map and generate terrain, seas, rivers, roads, rails, houses, interiors and so on (for example: http://prtty.me/media/map-of-gta-united-states-grand-theft-auto-world-rpg-at-gta.png).
+UltraGTA is a project that I (z3nth10n) have been developing for about 3 - 4 months, it is able to read a custom GTA map and generate terrain, seas, rivers, roads, rails, houses, interiors and so on (for example: https://github.com/GTA-ASM/SanAndreasUnity/blob/master/Assets/StreamingAssets/map.png).
 
 One of these days I will mix it with marvelous project.
