@@ -1,48 +1,47 @@
-As the README list was very extensive, I have sum up here what I think it's important to implement inside alpha release 1.0:
 
 ## TODO
+<br>
+
 
 ### Features
 
-* Animations must be loaded/played by index – because different anim definition groups (man, woman, etc) use different anim names ( walk_civi, woman_walknorm, respectively).
+- Animations must be loaded/played by index – because different anim definition groups (man, woman, etc) use different anim names ( walk_civi, woman_walknorm, respectively).
 
-* Weapons. Aiming with weapons – aim animation.
+- **Weapons. Aiming with weapons – aim animation.**
 
-* What else can be imported: ai paths, character spawn info, item pickups, audio, 
+- Rigid body character
 
-* Rigid body character (on die or exiting a moving car, for example, like GTA IV)
+- Load map in editor
 
-* Load map in editor.
+- **Async geometry loading - currently, geometry is loaded synchronously, which seems like the main performance bottleneck**
 
-* Async geometry loading.
+- Make everything networked
 
-* Make everything networked.
+- See the entire map (pressing M, or in pause menu) - add ability to teleport to selected location
+
+- **Spawn vehicle by name**
+
+- Work on a menu like MTA:SA (F1)
+
+- Dev profiles for the keyboard & mouse controls - ??
+
+- Health, stats (stamina, stength), money & armor system - no need for this until weapons are implemented
 
 - Two driving camera modes (aim to front and free look)
 
 - Multiple car cameras: exterior (3 distance switches), interior & cinematic
 
-- See the entire map (pressing M)
-
-- Work on a menu like MTA:SA (F1)
-
-- Dev profiles for the keyboard & mouse controls
-
-- Health, stats (stamina, stength), money & armor system
-
 - AI System for Peds
 
-- Peds (and worker peds)
+- Peds (and worker peds) - ??
+
+- Import: AI paths, character spawn info, item pickups, 
 
 - Cars & fuel stations can explode
 
- - Boats
- 
- - Airplanes & helicopters
- 
- - Bikes + fall
+- Other vehicles: airplanes, helicopters, bikes, boats
 
-- Wheel explosion (I have to convert colliders, from a capsule collider generate a mesh collider with the shape of a capsule)
+- Wheel explosion (we have to convert colliders, from a capsule collider generate a mesh collider with the shape of a capsule)
 
 - In-game input manager
 
@@ -54,9 +53,8 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - Read sounds from GTA SA Streams: http://www.lysator.liu.se/~creideiki/radio-free-san-andreas/
 
-- Make a paragraph for those categories: https://i.gyazo.com/07490f1d389fb3c4d6363e8d9810c0c1.png
+- Make a paragraph for those categories: https://i.gyazo.com/07490f1d389fb3c4d6363e8d9810c0c1.png - ??
 
-- Maybe I will use my sockets implementation to do a server system (I will made a paid assets with [examples from Unity Forums](https://github.com/ZZona-Dummies/UnityForumsMultiplayer)
 
 ### Effects & Enhancements
 
@@ -88,11 +86,13 @@ As the README list was very extensive, I have sum up here what I think it's impo
     
 ### Bugs to fix
 
-- I must save each folder instance on config.user.json not in config.json, and delete profile devs
+- NRE is thrown when no scene is opened
 
-- Read all radarxx.txd that its available
+- Delete profile devs
 
-- I have to fix this problem, modifying in some way Assembly Importer GUI to added to mark or something like that is saved to avoid it's compilation (https://cdn.discordapp.com/attachments/454006273751515163/455029337821806592/unknown.png) // I have fixed it, but now the inspector looks ugly
+- Read all radarxx.txd that are available
+
+- Have to fix this problem, modifying somehow Assembly Importer GUI to add to mark or something like that is saved to avoid it's compilation (https://cdn.discordapp.com/attachments/454006273751515163/455029337821806592/unknown.png) - It's fixed, but now the inspector looks ugly - ??
 
 - Weird circular shadow appears when drving and the car passes next to a building that projects a shadow (low quality)
 
@@ -100,13 +100,13 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - Auto-zoom with big vehicles
 
-- Some cars have its suppension to low to allow them to move
+- Some cars have its suppension too low to allow them to move
 
-- Cars sometimes spawn under other cars, this makes that the cars jumps
+- Cars sometimes spawn under other cars, which causes those cars to jump
 
-- Make cars spawn appropiate for each zone
+- Make cars spawn in their zone
 
-- When vehicles are damanged light goes weird
+- When vehicles are damaged, light goes weird
 
 - Once vehicles are despawned they don't re-spawn
 
@@ -116,13 +116,13 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - HTML (from logger) indent is not perfect
 
-- Console Application is not launching on build (CLI was checked and work properly)
+- Console Application is not launching on build (CLI was checked and works properly)
 
-- Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is running Unity Editor undr `--force-glcore` and going to **Assets > Reimport all**
+- Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is running Unity Editor under `--force-glcore` and going to *Assets > Reimport all*
 
 ### Leaks
 
-- Lagging when instantiating new lights
+- Lag when instantiating new lights
 
 ### Inneficiencies
 
@@ -132,38 +132,21 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - The scripts must read infinite radarXX.tcd textures
 
-- Implement polar rotation system in Camera:
+- Implement polar rotation system for camera
 
-```
-elevation -= Input.GetAxis("Mouse Y");
-polar = Mathf.Clamp(polar + Input.GetAxis("Mouse X"), -90.0f, 90.0f);
-while (elevation < 0.0f)
-{
-    elevation += 360.0f;
-}
-while (elevation >= 360.0f)
-{
-    elevation -= 360.0f;
-}
-transform.rotation = Quaternion.AngleAxis(polar, Vector3.up) * Quaternion.AngleAxis(elevation, Vector3.right);
-```
 
 ### Must be reviewed
 
-- If you regenerate scripts while running Unity Editor crashes (patch it?)
+- If you regenerate scripts while running, Unity Editor crashes (patch it?)
 
-- Find in the project singletons and rename it to "me" if they are private and "instance" if they are public
+- Running with `--force-glcore` makes Unity Editor slower when near objects have to be rendered
 
-- Running with `--force-glcore` makes Unity Editor slower when near objects has to be rendered
+- Car break light system doesn't work fine ?
 
-- I think that car light break system doesn't work fine
+- HUGE REFACTOR (compiling Assembly into DLLs will solve most problems) - what problems ??
 
-- HUGE REFACTOR (compiling Assembly into DLLs will solve most problems)
+- **Minimap size should depend on screen resolution**
 
-- Minimap size depeding on screen resolution
 
-## What is UltraGTA?
-
-UltraGTA is a project that I (z3nth10n) have been developing for about 3 - 4 months, it is able to read a custom GTA map and generate terrain, seas, rivers, roads, rails, houses, interiors and so on (for example: https://github.com/GTA-ASM/SanAndreasUnity/blob/master/Assets/StreamingAssets/map.png).
-
-One of these days I will mix it with marvelous project.
+<br>
+<br>
