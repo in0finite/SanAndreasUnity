@@ -19,9 +19,9 @@
 
 - See the entire map (pressing M, or in pause menu) - add ability to teleport to selected location
 
-- **Spawn vehicle by name**
-
 - Work on a menu like MTA:SA (F1)
+
+- **Camera settings**
 
 - Dev profiles for the keyboard & mouse controls - ??
 
@@ -86,6 +86,8 @@
     
 ### Bugs to fix
 
+- **Why is the sky always black ? - check quality settings**
+
 - NRE is thrown when no scene is opened
 
 - Delete profile devs
@@ -136,6 +138,8 @@
 
 
 ### Must be reviewed
+
+- Check Profiler to see what is taking performance
 
 - If you regenerate scripts while running, Unity Editor crashes (patch it?)
 

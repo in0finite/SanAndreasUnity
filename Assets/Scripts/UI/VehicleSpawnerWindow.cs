@@ -9,6 +9,7 @@ namespace SanAndreasUnity.UI {
 	public class VehicleSpawnerWindow : PauseMenuWindow {
 
 		private	List<IGrouping<VehicleType, VehicleDef>>	vehicleGroupings = null;
+		private	int[]	columnWidths = new int[]{ 120, 120, 30, 70 };
 
 
 
@@ -33,7 +34,7 @@ namespace SanAndreasUnity.UI {
 
 			//this.windowRect = Utilities.GUIUtils.GetCornerRect (SanAndreasUnity.Utilities.ScreenCorner.TopRight, 
 			//	new Vector2 (windowWidth, windowHeight), new Vector2 (20, 20));
-			this.windowRect = Utilities.GUIUtils.GetCenteredRectPerc( new Vector2(0.8f, 0.8f) );
+			this.windowRect = Utilities.GUIUtils.GetCenteredRectPerc( new Vector2(0.4f, 0.8f) );
 
 		}
 
@@ -63,7 +64,7 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.Space (10);
 
-			// display list of all vehicles, and a button next to them which will spawn them
+			// for each vehicle, display a button which spawns it
 
 			foreach (var grouping in this.vehicleGroupings) {
 				
@@ -71,17 +72,26 @@ namespace SanAndreasUnity.UI {
 
 				GUILayout.Space (10);
 
+				// table columns
+//				GUILayout.BeginHorizontal();
+//				GUILayout.Label ("Game name", GUILayout.Width (this.columnWidths [0]));
+//				GUILayout.Label ("Class name", GUILayout.Width (this.columnWidths [1]));
+//				GUILayout.Label ("Id", GUILayout.Width (this.columnWidths [2]));
+//				GUILayout.Label ("Frequency", GUILayout.Width (this.columnWidths [3]));
+//				GUILayout.EndHorizontal ();
+//
+//				GUILayout.Space (10);
+
 				// display all vehicles of this type
 				foreach (var v in grouping) {
 					//GUILayout.BeginHorizontal ();
 
-					if (GUILayout.Button (v.GameName)) {
+					if (GUILayout.Button (v.GameName, GUILayout.Width(this.columnWidths[0]))) {
 						Behaviours.Vehicles.Vehicle.CreateInFrontOfPlayer (v.Id);
 					}
-					//GUILayout.Label (v.GameName);
-					//GUILayout.Label (v.ClassName);
-					//GUILayout.Label (v.Id);
-					//GUILayout.Label (v.Frequency);
+					//GUILayout.Label (v.ClassName, GUILayout.Width (this.columnWidths [1]));
+					//GUILayout.Label (v.Id.ToString(), GUILayout.Width (this.columnWidths [2]));
+					//GUILayout.Label (v.Frequency.ToString(), GUILayout.Width (this.columnWidths [3]));
 
 					//GUILayout.EndHorizontal ();
 				}
