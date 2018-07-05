@@ -60,6 +60,36 @@ namespace SanAndreasUnity.UI {
 
 		}
 
+		/// <summary>
+		/// Displays float slider with description.
+		/// </summary>
+		public	static	float	FloatSlider(float value, float min, float max, string description) {
+
+			GUILayout.Label(description + " : " + value);
+			float newValue = GUILayout.HorizontalSlider( value, min, max );
+			return newValue;
+		}
+
+		public	static	T	MultipleOptions<T>( T currentValue, string description, params T[] allValues ) {
+
+			GUILayout.Label (description + " : " + currentValue.ToString ());
+
+			GUILayout.BeginHorizontal ();
+
+			T newValue = currentValue;
+
+			foreach (var v in allValues) {
+				if (GUILayout.Button (v.ToString ())) {
+					newValue = v;
+				}
+				GUILayout.Space (5);
+			}
+
+			GUILayout.EndHorizontal ();
+
+			return newValue;
+		}
+
 	}
 
 }
