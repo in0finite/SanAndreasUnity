@@ -88,6 +88,10 @@
 
 - **Why is the sky always black ? - check quality settings**
 
+- car lights can't be turned off
+
+- blinkers are not working correctly
+
 - NRE is thrown when no scene is opened
 
 - Delete profile devs

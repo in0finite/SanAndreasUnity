@@ -283,6 +283,16 @@ Prefab:
       propertyPath: m_doSmooth
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 20067565082138416, guid: 9d45d42a7408c1e4ab325d6840364b84,
+        type: 2}
+      propertyPath: near clip plane
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20067565082138416, guid: 9d45d42a7408c1e4ab325d6840364b84,
+        type: 2}
+      propertyPath: field of view
+      value: 60
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114401842841139250, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
     - {fileID: 114828623362714814, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
