@@ -97,12 +97,49 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             throw new Exception("Unable to find cars to spawn");
         }
 
+
+		/// <summary>
+		/// Gets the position for spawning based on current position of player.
+		/// </summary>
+		public static void GetPositionForSpawning(out Vector3 pos, out Quaternion rot) {
+
+			pos = Vector3.zero;
+			rot = Quaternion.identity;
+
+			//if (null == PlayerController.Instance)
+			//	return;
+
+			var cont = PlayerController.Instance;
+
+			Vector3 spawnOffset = new Vector3 (0, 2, 5);
+
+			pos = cont.transform.position + cont.transform.forward * spawnOffset.z + cont.transform.up * spawnOffset.y
+				+ cont.transform.right * spawnOffset.x;
+			rot = Quaternion.LookRotation(-cont.transform.right, Vector3.up);
+
+		}
+
         public static Vehicle Create(VehicleSpawner spawner)
         {
             //Debug.Log("-111");
             return Create(spawner.Info.CarId, spawner.Info.Colors, spawner.transform.position,
                 spawner.transform.rotation);
         }
+
+		public static Vehicle Create(int carId, Vector3 position, Quaternion rotation)
+		{
+			return Create (carId, null, position, rotation);
+		}
+
+		public static Vehicle CreateInFrontOfPlayer(int carId) {
+
+			Vector3 pos;
+			Quaternion rot;
+
+			GetPositionForSpawning (out pos, out rot);
+
+			return Create (carId, pos, rot);
+		}
 
         public static Vehicle Create(int carId, int[] colors, Vector3 position, Quaternion rotation)
         {

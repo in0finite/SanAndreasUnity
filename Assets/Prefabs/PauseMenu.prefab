@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 114911863237150764}
   - component: {fileID: 114753158958291610}
   - component: {fileID: 114604904801458000}
+  - component: {fileID: 114769417846371336}
   m_Layer: 0
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -190,6 +191,26 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 0
+--- !u!114 &114769417846371336
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693201817607148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4428e76f4d28f48fdb58f39252b4e240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: Vehicle Spawner
+  isOpened: 0
+  windowRect:
+    serializedVersion: 2
+    x: 57.5
+    y: 78.75
+    width: 115
+    height: 157.5
+  useScrollView: 1
 --- !u!114 &114911863237150764
 MonoBehaviour:
   m_ObjectHideFlags: 1
