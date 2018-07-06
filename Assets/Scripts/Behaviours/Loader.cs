@@ -44,6 +44,10 @@ namespace SanAndreasUnity.Behaviours
 
         protected static FileBrowser m_fileBrowser;
 
+		private	static	System.Diagnostics.Stopwatch	m_stopwatch = new System.Diagnostics.Stopwatch();
+
+
+
         private static void StaticUpdate()
         {
             if (HasLoaded)
@@ -57,9 +61,10 @@ namespace SanAndreasUnity.Behaviours
 
             switch (loadingStatus)
             {
-                case 0:
-                    Debug.Log("Checking if there is available a GTA SA path.");
-                    //DevProfiles.CheckDevProfiles(null);
+			case 0:
+                    //Debug.Log("Checking if there is available a GTA SA path.");
+                    
+					//DevProfiles.CheckDevProfiles(null);
 
                     /*() =>
                     {
@@ -67,8 +72,12 @@ namespace SanAndreasUnity.Behaviours
                         return m_fileBrowser.GetPath();
                     }*/
 
-                    Debug.Log("Started loading GTA.");
+					m_stopwatch.Start ();
+
+                    Debug.Log("Started loading GTA");
+
                     archivePaths = Config.GetPaths("archive_paths");
+
                     break;
 
                 case 1:
@@ -161,8 +170,10 @@ namespace SanAndreasUnity.Behaviours
                 case 7:
                     using (Profiler.Start("Special texture load time"))
                     {
-                        //MiniMap.loadTextures();
-                        MiniMap.AssingMinimap();
+						using (Profiler.Start ("Minimap load time")) {
+							//MiniMap.loadTextures();
+							MiniMap.AssingMinimap ();
+						}
 
                         // Load mouse cursor texture
                         Texture2D mouse = TextureDictionary.Load("fronten_pc").GetDiffuse("mouse").Texture;
@@ -175,8 +186,11 @@ namespace SanAndreasUnity.Behaviours
                         mouseFix.Apply();
                         Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
                     }
+
                     HasLoaded = true;
-                    Debug.Log("GTA loading finished.");
+
+					Debug.Log("GTA loading finished in " + m_stopwatch.Elapsed.TotalSeconds + " seconds");
+
                     break;
             }
 

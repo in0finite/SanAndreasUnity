@@ -17,11 +17,9 @@
 
 - Make everything networked
 
-- See the entire map (pressing M, or in pause menu) - add ability to teleport to selected location
+- **See the entire map (pressing M, or in pause menu) - add ability to teleport to selected location**
 
 - Work on a menu like MTA:SA (F1)
-
-- **Camera settings**
 
 - Dev profiles for the keyboard & mouse controls - ??
 
