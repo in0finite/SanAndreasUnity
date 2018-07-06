@@ -12,13 +12,13 @@ namespace SanAndreasUnity.Behaviours
 {
     public class MiniMap : MonoBehaviour
     {
-        private const int tileEdge = 12; // width/height of map in tiles
-        private const int tileCount = tileEdge * tileEdge; // number of tiles
-        private const int mapEdge = 6000; // width/height of map in world coordinates
-        private const int texSize = 128; // width/height of single tile in px
-        private const int mapSize = tileEdge * texSize; // width/height of whole map in px
-        private const int uiSize = 256, uiOffset = 10;
-        private const bool outputChunks = false, outputImage = true;
+        public const int tileEdge = 12; // width/height of map in tiles
+        public const int tileCount = tileEdge * tileEdge; // number of tiles
+        public const int mapEdge = 6000; // width/height of map in world coordinates
+        public const int texSize = 128; // width/height of single tile in px
+        public const int mapSize = tileEdge * texSize; // width/height of whole map in px
+        public const int uiSize = 256, uiOffset = 10;
+		private const bool outputChunks = false, outputImage = false;
 
         public static bool toggleMap;
 
@@ -52,6 +52,8 @@ namespace SanAndreasUnity.Behaviours
         public bool debugActive = true;
 
         #region "Properties"
+
+		public	static	MiniMap	Instance { get ; private set ; }
 
         private float realZoom
         {
@@ -110,7 +112,19 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
+		public Texture2D NorthBlip { get { return this.northBlip; } }
+
+		public Texture2D PlayerBlip { get { return this.playerBlip; } }
+
+		public Texture2D MapTexture { get { return this.mapTexture; } }
+
+		public Texture2D BlackPixel { get { return this.blackPixel; } }
+
+		public Texture2D SeaPixel { get { return this.seaPixel; } }
+
         #endregion "Properties"
+
+
 
         public static void AssingMinimap()
         {
@@ -195,6 +209,7 @@ namespace SanAndreasUnity.Behaviours
             Debug.Log("Finished loading minimap textures!");
         }
 
+
         // --------------------------------
 
         #region Private fields
@@ -207,7 +222,7 @@ namespace SanAndreasUnity.Behaviours
         private TextureDictionary huds;
 
         private Texture2D northBlip, playerBlip, mapTexture;
-        private Sprite mapSprite, circleMask;
+		private Sprite mapSprite, circleMask;
 
         private Transform northPivot;
 
@@ -240,6 +255,7 @@ namespace SanAndreasUnity.Behaviours
                       baseScale;
 
         #endregion Private fields
+
 
         private void Setup()
         {
@@ -275,6 +291,8 @@ namespace SanAndreasUnity.Behaviours
 
         private void Awake()
         {
+			Instance = this;
+
             if (!isReady)
                 return;
 
@@ -464,6 +482,18 @@ namespace SanAndreasUnity.Behaviours
             //Vector2 realMapScroll = new Vector2(-mapScroll.x, mapScroll.y);
             return mousePos - mapScroll;
         }
+
+		public	static	Vector2	WorldPosToMapTexturePos(Vector3 worldPos) {
+
+			// texture center is at (0,0) world coordinates
+			// this, for example, means that the left edge of the world is at: -mapEdge / 2.0f
+
+			// adjust world position, so that (0,0) world coordinates are mapped to (0,0) texture coordinates
+			worldPos += new Vector3 (mapEdge / 2.0f, 0, mapEdge / 2.0f);
+
+			float mul = mapSize / (float)mapEdge;
+			return new Vector2 (worldPos.x * mul, worldPos.z * mul);
+		}
 
         private void FixedUpdate()
         {

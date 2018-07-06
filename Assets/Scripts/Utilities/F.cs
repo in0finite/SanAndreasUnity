@@ -410,5 +410,24 @@ namespace SanAndreasUnity.Utilities
                     return false;
             }
         }
+
+		/// <summary>
+		/// Clamps all coordinates between 0 and 1.
+		/// </summary>
+		public static Rect Clamp01(this Rect rect) {
+
+			float xMin = rect.xMin;
+			float xMax = rect.xMax;
+			float yMin = rect.yMin;
+			float yMax = rect.yMax;
+
+			xMin = Mathf.Clamp01 (xMin);
+			xMax = Mathf.Clamp01 (xMax);
+			yMin = Mathf.Clamp01 (yMin);
+			yMax = Mathf.Clamp01 (yMax);
+
+			return new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
+		}
+
     }
 }
