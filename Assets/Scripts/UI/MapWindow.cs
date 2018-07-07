@@ -16,7 +16,10 @@ namespace SanAndreasUnity.UI {
 		private	Texture2D	m_infoAreaTexture;
 
 		private	float	m_playerPointerSize = 10;
-		private	bool	m_drawZoneNames = false;
+		private	bool	m_drawZones = false;
+
+		private	bool	m_isWaypointPlaced = false;
+		private	Vector2	m_waypointMapPos = Vector2.zero;
 
 
 
@@ -220,11 +223,15 @@ namespace SanAndreasUnity.UI {
 				return;
 			
 
+			// move focused position
+
 			this.m_focusPos += new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw("Vertical")) 
 				* 100 * Time.deltaTime / this.zoomLevel;
 
 			this.ClampFocusPos ();
 
+
+			// zoom
 
 			float oldZoomLevel = this.zoomLevel;
 
@@ -240,6 +247,20 @@ namespace SanAndreasUnity.UI {
 
 			if (oldZoomLevel != this.zoomLevel) {
 			//	this.AdjustVisibleMapRectAfterZooming ();
+			}
+
+
+			// toggle waypoint on map
+
+			if (Input.GetMouseButtonDown (1)) {
+
+				Vector2 mouseMapPos;
+				if (this.GetMapPosUnderMouse (out mouseMapPos)) {
+					m_isWaypointPlaced = !m_isWaypointPlaced;
+					if (m_isWaypointPlaced)
+						m_waypointMapPos = mouseMapPos;
+				}
+
 			}
 
 		}
@@ -344,9 +365,9 @@ namespace SanAndreasUnity.UI {
 				//GUI.DrawTexture (new Rect (Vector2.zero, Vector2.one * 16), blackPixel);
 
 
-				// TODO: map bars, marker, undiscovered zones, drag & drop - ??, zone name under cursor
+				// TODO: map bars, marker, undiscovered zones, drag & drop - ??
 
-				// TODO: focus on player when map is opened ; close map on Esc ; place marker on map ; teleport to marker
+				// TODO: focus on player when map is opened ; place marker on map ; teleport to marker
 
 
 				//GUILayout.EndArea ();
@@ -452,7 +473,7 @@ namespace SanAndreasUnity.UI {
 			GUILayout.Space (5);
 			GUILayout.Label ("Player size: " + (int) m_playerPointerSize + " ");
 			m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
-			m_drawZoneNames = GUILayout.Toggle (m_drawZoneNames, "Zone names");
+			m_drawZones = GUILayout.Toggle (m_drawZones, "Zone names");
 
 			// zone name under cursor
 			Vector3 mouseWorldPos;
@@ -486,10 +507,11 @@ namespace SanAndreasUnity.UI {
 			//	this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, 10 );
 			//	this.DrawItemOnMap( blackPixel, Player.Instance.transform.position, 50 );
 
-			// draw all zone names
-			if (m_drawZoneNames) {
+			// draw all zones
+			if (m_drawZones) {
 				
 				foreach (var zone in SZone.AllZones) {
+					
 					Vector2 min = MiniMap.WorldPosToMapPos (zone.vmin);
 					Vector2 max = MiniMap.WorldPosToMapPos (zone.vmax);
 					Rect rect = new Rect (min, max - min);
@@ -501,6 +523,11 @@ namespace SanAndreasUnity.UI {
 					}
 
 				}
+			}
+
+			// draw waypoint
+			if (m_isWaypointPlaced) {
+				this.DrawItemOnMap (MiniMap.Instance.WaypointTexture, m_waypointMapPos, 12);
 			}
 
 
@@ -577,11 +604,17 @@ namespace SanAndreasUnity.UI {
 
 		}
 
+		public	void	DrawItemOnMap( Texture2D itemTexture, Vector2 mapPos, int itemSize ) {
+
+			this.DrawItemOnMap (itemTexture, F.CreateRect (mapPos, Vector2.one * itemSize));
+
+		}
+
 		public	void	DrawItemOnMap( Texture2D itemTexture, Vector3 worldPos, int itemSize ) {
 
 			Vector2 mapPos = MiniMap.WorldPosToMapPos (worldPos);
 
-			this.DrawItemOnMap (itemTexture, F.CreateRect (mapPos, Vector2.one * itemSize));
+			this.DrawItemOnMap (itemTexture, mapPos, itemSize);
 
 		}
 
