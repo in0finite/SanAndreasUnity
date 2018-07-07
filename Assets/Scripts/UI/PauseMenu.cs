@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
+using System.Linq;
 
 namespace SanAndreasUnity.UI {
 	
@@ -35,16 +36,31 @@ namespace SanAndreasUnity.UI {
 
 		}
 
-		// Use this for initialization
 		void Start () {
 			
 		}
-		
-		// Update is called once per frame
+
+		public	static	PauseMenuWindow[]	GetAllWindows() {
+			return FindObjectsOfType<PauseMenuWindow> ();
+		}
+
 		void Update () {
 
-			if (Input.GetKeyDown(KeyCode.Escape))
-				IsOpened = !IsOpened;
+			if (Input.GetKeyDown (KeyCode.Escape)) {
+				
+				if (IsOpened) {
+					// if there is a modal window, close it, otherwise close pause menu
+					var window = GetAllWindows ().FirstOrDefault (w => w.isOpened && w.IsModal);
+					if (window != null) {
+						window.isOpened = false;
+					} else {
+						IsOpened = !IsOpened;
+					}
+				} else {
+					IsOpened = !IsOpened;
+				}
+
+			}
 
 		//	if (IsOpened && Input.GetKeyDown(KeyCode.M))
 		//		IsOpened = false;

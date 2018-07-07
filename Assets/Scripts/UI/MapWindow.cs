@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.UI {
 
@@ -9,7 +10,12 @@ namespace SanAndreasUnity.UI {
 		//private	Rect	visibleMapRect = new Rect ();
 		private	Vector2	m_focusPos = Vector2.one * MiniMap.mapSize / 2.0f;
 		private	float	zoomLevel = 1;
-		private	float	controlsAreaHeight = 60;
+		private	float	infoAreaHeight = 60;
+		private	bool	m_clipMapItems = false;
+
+		private	Texture2D	m_infoAreaTexture;
+
+		private	float	m_playerPointerSize = 10;
 
 
 
@@ -20,6 +26,14 @@ namespace SanAndreasUnity.UI {
 			this.isOpened = false;
 			this.windowName = "Map";
 			this.useScrollView = false;
+			this.isDraggable = false;
+			this.isModal = true;
+
+		}
+
+		void Awake () {
+			
+			m_infoAreaTexture = F.CreateTexture (1, 1, Color.grey);
 
 		}
 
@@ -28,7 +42,7 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = Utilities.GUIUtils.GetCenteredRectPerc (new Vector2 (0.9f, 0.9f));
+			this.windowRect = Utilities.GUIUtils.GetCenteredRectPerc (new Vector2 (1.0f, 1.0f));
 
 		}
 
@@ -69,7 +83,7 @@ namespace SanAndreasUnity.UI {
 		public	Rect	GetMapDisplayRect() {
 
 			float mapDisplayWidth = this.windowRect.width;
-			float mapDisplayHeight = this.windowRect.height - this.controlsAreaHeight;
+			float mapDisplayHeight = this.windowRect.height - this.infoAreaHeight;
 			Rect mapDisplayRect = new Rect (0, 0, mapDisplayWidth, mapDisplayHeight);
 			return mapDisplayRect;
 		}
@@ -312,17 +326,41 @@ namespace SanAndreasUnity.UI {
 
 				// TODO: load move cursor, load map bars, load marker, draw player pointer & undiscovered zones, drag & drop
 
-				// TODO: focus on player when map is opened
-				// TODO: close map on Esc
+				// TODO: focus on player when map is opened ; close map on Esc ; place marker on map ; teleport to marker
 
 
 				//GUILayout.EndArea ();
 				//GUILayout.EndArea ();
 
 
-				// draw controls
+				if (!m_clipMapItems) {
+					GUI.EndClip ();
+				//	GUI.EndGroup ();
+				} else {
+					GUI.BeginGroup (mapDisplayRect);	// ensure that all map items are drawn inside this rect - doesn't work when items are rotated
+				}
 
-				GUILayout.BeginArea(new Rect(3, mapDisplayRect.yMax, mapDisplayRect.width - 3, this.controlsAreaHeight));
+
+				// draw player pointer
+				this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, (int) m_playerPointerSize );
+			//	this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, 10 );
+			//	this.DrawItemOnMap( blackPixel, Player.Instance.transform.position, 50 );
+
+
+				if (!m_clipMapItems) {
+				//	GUI.BeginGroup (new Rect (0, 0, Screen.width, Screen.height));
+					GUI.BeginClip (this.windowRect);
+				} else {
+					GUI.EndGroup ();
+				}
+
+
+				// draw info area
+
+				Rect infoAreaRect = new Rect (3, mapDisplayRect.yMax, mapDisplayRect.width - 3, this.infoAreaHeight);
+
+				GUILayout.BeginArea (infoAreaRect);
+				GUI.DrawTexture (new Rect(new Vector2(-infoAreaRect.x, 0), infoAreaRect.size), m_infoAreaTexture);
 				GUILayout.Space (10);
 				GUILayout.BeginHorizontal ();
 
@@ -338,15 +376,128 @@ namespace SanAndreasUnity.UI {
 				GUILayout.Space (5);
 				GUILayout.Label ("Zoom: " + this.zoomLevel);
 				GUILayout.Space (5);
-				GUILayout.Label ("Press arrows to move, +/- to zoom");
+				GUILayout.Label ("Player size: " + (int) m_playerPointerSize + " ");
+				m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
 
 				GUILayout.EndHorizontal ();
+
+				GUILayout.Space (5);
+				GUILayout.Label ("Press arrows to move, +/- to zoom");
+
 				GUILayout.EndArea ();
 
 			}
 
 		}
 
+		public	bool	GetMapItemRenderRect( Rect itemMapBoundsRect, out Rect renderRect ) {
+
+			renderRect = Rect.zero;
+
+		//	Texture2D mapTexture = MiniMap.Instance.MapTexture;
+
+			Rect visibleMapRect = this.GetVisibleMapRect ();
+
+			if (!visibleMapRect.Overlaps (itemMapBoundsRect) && !visibleMapRect.Contains (itemMapBoundsRect)) {
+			//	Debug.LogFormat ("Item rect {0} is not within visible rect {1}", itemRect, visibleMapRect);
+				return false;
+			}
+
+			// just convert map pos to screen pos
+			Rect displayRectNormalized = itemMapBoundsRect.Normalized( visibleMapRect );
+
+
+
+			/*
+			// get intersection between these rects
+			Rect intersectionRect = itemRect.Intersection (visibleMapRect);
+
+			Rect displayRectNormalized = intersectionRect.Normalized (visibleMapRect);
+		//	displayRectNormalized.y = 1.0f - displayRectNormalized.y;
+			Rect texCoords = intersectionRect.Normalized (itemRect);
+
+
+			// just in case
+			displayRectNormalized = displayRectNormalized.Clamp01();
+			texCoords = texCoords.Clamp01 ();
+			*/
+
+
+			// adjust display rect
+
+			Rect mapDisplayRect = this.GetMapDisplayRect ();
+			Vector2 renderRectPos = mapDisplayRect.position + Vector2.Scale (mapDisplayRect.size, displayRectNormalized.position);
+			renderRectPos.y = mapDisplayRect.height - renderRectPos.y;
+			Vector2 renderRectSize = Vector2.Scale (mapDisplayRect.size, displayRectNormalized.size);
+			renderRectPos.y -= renderRectSize.y;
+			renderRect = new Rect (renderRectPos, renderRectSize);
+
+
+		//	GUI.DrawTextureWithTexCoords(renderRect, itemTexture, texCoords);
+
+
+		//	Debug.LogFormat ("Drawn item: item rect {0} visible map rect {1} intersection rect {2} displayRectNormalized {3} " +
+		//	"texCoords {4} mapDisplayRect {5} renderRect {6}", itemRect, visibleMapRect, intersectionRect, displayRectNormalized,
+		//		texCoords, mapDisplayRect, renderRect);
+
+			return true;
+		}
+
+		public	void	DrawItemOnMap( Texture2D itemTexture, Rect itemRect ) {
+
+			Rect renderRect;
+			if (GetMapItemRenderRect (itemRect, out renderRect)) {
+				GUI.DrawTexture (renderRect, itemTexture);
+			}
+
+		}
+
+		public	void	DrawItemOnMap( Texture2D itemTexture, Vector3 worldPos, int itemSize ) {
+
+			Vector2 mapPos = MiniMap.WorldPosToMapTexturePos (worldPos);
+
+			this.DrawItemOnMap (itemTexture, F.CreateRect (mapPos, Vector2.one * itemSize));
+
+		}
+
+		public	void	DrawItemOnMapRotated( Texture2D itemTexture, Vector3 worldPos, Vector3 worldDir, int itemSize ) {
+
+			Vector2 mapPos = MiniMap.WorldPosToMapTexturePos (worldPos);
+
+			this.DrawItemOnMapRotated (itemTexture, F.CreateRect (mapPos, Vector2.one * itemSize), worldDir);
+
+		}
+
+		public	void	DrawItemOnMapRotated( Texture2D itemTexture, Rect itemRect, Vector3 worldDir ) {
+
+			Rect renderRect;
+			if (!GetMapItemRenderRect (itemRect, out renderRect)) {
+				return;
+			}
+
+
+			GUI.Label (GUIUtils.GetCornerRect (ScreenCorner.TopLeft, Vector2.one * 100), "Player visible");
+
+
+			// find angle around Y axis
+			Vector3 dir = new Vector3(worldDir.x, 0, worldDir.z).normalized;
+			Quaternion q = Quaternion.LookRotation (dir, Vector3.up);
+			float angle = q.eulerAngles.y - 180.0f;
+
+			// save matrix
+			var oldMatrix = GUI.matrix;
+
+			// rotate around center of item
+			GUIUtility.RotateAroundPivot( angle, renderRect.center );
+
+			// draw
+			GUI.DrawTexture (renderRect, itemTexture);
+
+			// restore matrix
+			GUI.matrix = oldMatrix;
+
+
+		}
 
 
 	}

@@ -17,7 +17,7 @@
 
 - Make everything networked
 
-- **See the entire map (pressing M, or in pause menu) - add ability to teleport to selected location**
+- **Map - toggle it by pressing M ; add ability to teleport to selected location ; focus on player when opened ;**
 
 - Work on a menu like MTA:SA (F1)
 

@@ -429,5 +429,51 @@ namespace SanAndreasUnity.Utilities
 			return new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
 		}
 
+		public	static	bool	Contains(this Rect rect, Rect other) {
+
+			return rect.xMax >= other.xMax && rect.xMin <= other.xMin && rect.yMax >= other.yMax && rect.yMin <= other.yMin;
+
+		}
+
+		public	static	Rect	Intersection(this Rect rect, Rect other) {
+
+			float xMax = Mathf.Min (rect.xMax, other.xMax);
+			float yMax = Mathf.Min (rect.yMax, other.yMax);
+
+			float xMin = Mathf.Max (rect.xMin, other.xMin);
+			float yMin = Mathf.Max (rect.yMin, other.yMin);
+
+			return new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
+		}
+
+		public	static	Rect	Normalized(this Rect rect, Rect outter) {
+
+			float xMin = (rect.xMin - outter.xMin) / outter.width;
+			float xMax = (rect.xMax - outter.xMin) / outter.width;
+
+			float yMin = (rect.yMin - outter.yMin) / outter.height;
+			float yMax = (rect.yMax - outter.yMin) / outter.height;
+
+			return new Rect(xMin, yMin, xMax - xMin, yMax - yMin);
+		}
+
+		public	static	Rect	CreateRect(Vector2 center, Vector2 size) {
+			return new Rect (center - size / 2.0f, size);
+		}
+
+		public	static	Texture2D	CreateTexture (int width, int height, Color color) {
+
+			Color[] pixels = new Color[width * height];
+
+			for (int i = 0; i < pixels.Length; i++)
+				pixels [i] = color;
+
+			Texture2D texture = new Texture2D (width, height);
+			texture.SetPixels (pixels);
+			texture.Apply ();
+
+			return texture;
+		}
+
     }
 }

@@ -18,6 +18,12 @@ namespace SanAndreasUnity.UI {
 		public	bool	useScrollView = false;
 		protected	Vector2	scrollPos = Vector2.zero;
 
+		protected	bool	isDraggable = true;
+		public bool IsDraggable { get { return this.isDraggable; } }
+
+		protected	bool	isModal = false;
+		public bool IsModal { get { return this.isModal; } }
+
 
 
 		void OnGUI() {
@@ -25,7 +31,10 @@ namespace SanAndreasUnity.UI {
 			if (!PauseMenu.IsOpened || !this.isOpened)
 				return;
 
-			this.windowRect = GUI.Window( this.windowId, this.windowRect, WindowFunction, this.windowName );
+			if (this.isModal)
+				this.windowRect = GUI.ModalWindow (this.windowId, this.windowRect, WindowFunction, this.windowName);
+			else
+				this.windowRect = GUI.Window( this.windowId, this.windowRect, WindowFunction, this.windowName );
 
 		}
 
@@ -41,7 +50,9 @@ namespace SanAndreasUnity.UI {
 			if (this.useScrollView)
 				GUILayout.EndScrollView ();
 
-			GUI.DragWindow ();
+			if (this.isDraggable)
+				GUI.DragWindow ();
+			
 		}
 
 		protected virtual void OnWindowGUI() {
