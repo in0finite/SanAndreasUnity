@@ -80,6 +80,9 @@ namespace SanAndreasUnity.UI {
 		}
 
 
+		/// <summary>
+		/// Rect in which the map is displayed, relative to window area.
+		/// </summary>
 		public	Rect	GetMapDisplayRect() {
 
 			float mapDisplayWidth = this.windowRect.width;
@@ -151,6 +154,18 @@ namespace SanAndreasUnity.UI {
 
 		public	static	float	GetMapSize() {
 			return MiniMap.mapSize;
+		}
+
+
+		public	Vector2	ScreenPosToDisplayPos(Vector2 screenPos) {
+
+			Rect displayRect = this.GetMapDisplayRect ();
+
+			Vector2 displayPos = screenPos - displayRect.position;
+			// flip Y axis
+			displayPos.y = Screen.height - displayPos.y;
+
+			return displayPos;
 		}
 
 
@@ -278,53 +293,13 @@ namespace SanAndreasUnity.UI {
 				//GUILayout.BeginArea (new Rect (mapScroll, mapRect));
 
 				// draw the map texture
-
-				//GUI.DrawTexture (new Rect (mapZoomPos, mapRect), mapTexture);
-				//GUI.DrawTexture (new Rect (Vector2.zero, this.windowRect.size), MiniMap.Instance.MapTexture);
-
-				Rect texCoords = new Rect(visibleMapRect.x / mapTexture.width, visibleMapRect.y / mapTexture.height,
-					visibleMapRect.width / mapTexture.width, visibleMapRect.height / mapTexture.height);
-
-				texCoords = Utilities.F.Clamp01 (texCoords);
-
-				// adjust display rect
-				Rect renderRect = mapDisplayRect;
-			//	float mulX = mapDisplayRect.width / GetMapSize ();
-			//	float mulY = mapDisplayRect.height / GetMapSize ();
-
-				if(visibleMapRect.xMax > GetMapSize()) {
-					// reduce display width
-				//	renderRect.width -= (visibleMapRect.xMax - GetMapSize()) * mulX ;
-					float perc = (visibleMapRect.xMax - GetMapSize()) / visibleMapRect.width;
-					renderRect.xMax -= perc * mapDisplayRect.width;
-				}
-				if (visibleMapRect.xMin < 0) {
-					// increase x pos
-				//	renderRect.xMin += - visibleMapRect.xMin * mulX;
-					float perc = - visibleMapRect.xMin / visibleMapRect.width;
-					renderRect.xMin += perc * mapDisplayRect.width;
-				}
-				if(visibleMapRect.yMax > GetMapSize()) {
-					// reduce display height from top
-				//	renderRect.yMin += (visibleMapRect.yMax - GetMapSize()) * mulY ;
-					float perc = (visibleMapRect.yMax - GetMapSize()) / visibleMapRect.height;
-					renderRect.yMin += perc * mapDisplayRect.height;
-				}
-				if (visibleMapRect.yMin < 0) {
-					// reduce display height from bottom
-				//	renderRect.yMax -= - visibleMapRect.yMin * mulY;
-					float perc = - visibleMapRect.yMin / visibleMapRect.height;
-					renderRect.yMax -= perc * mapDisplayRect.height;
-				}
-
-			//	mapTexture.wrapMode = TextureWrapMode.Clamp;
-
-				GUI.DrawTextureWithTexCoords(renderRect, mapTexture, texCoords);
+				this.DrawMapTexture( mapDisplayRect, visibleMapRect );
 
 				// what's this ?
 				//GUI.DrawTexture (new Rect (Vector2.zero, Vector2.one * 16), blackPixel);
 
-				// TODO: load move cursor, load map bars, load marker, draw player pointer & undiscovered zones, drag & drop
+
+				// TODO: map bars, marker, undiscovered zones, drag & drop - ??, zone name under cursor
 
 				// TODO: focus on player when map is opened ; close map on Esc ; place marker on map ; teleport to marker
 
@@ -333,62 +308,138 @@ namespace SanAndreasUnity.UI {
 				//GUILayout.EndArea ();
 
 
-				if (!m_clipMapItems) {
-					GUI.EndClip ();
-				//	GUI.EndGroup ();
-				} else {
-					GUI.BeginGroup (mapDisplayRect);	// ensure that all map items are drawn inside this rect - doesn't work when items are rotated
-				}
+				// draw 2 lines crossing under cursor
+				Vector2 mouseDisplayPos = ScreenPosToDisplayPos( Input.mousePosition );
+				float linesWidth = 4;
+				Color linesColor = (Color.yellow + Color.black) / 2.0f;
+				// vertical line
+				GUIUtils.DrawRect (new Rect(mouseDisplayPos.x - linesWidth / 2.0f, 0, linesWidth, mapDisplayRect.height), linesColor);
+				// horizontal line
+				GUIUtils.DrawRect (new Rect(0, mouseDisplayPos.y - linesWidth / 2.0f, mapDisplayRect.width, linesWidth), linesColor);
 
 
-				// draw player pointer
-				this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, (int) m_playerPointerSize );
-			//	this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, 10 );
-			//	this.DrawItemOnMap( blackPixel, Player.Instance.transform.position, 50 );
-
-
-				if (!m_clipMapItems) {
-				//	GUI.BeginGroup (new Rect (0, 0, Screen.width, Screen.height));
-					GUI.BeginClip (this.windowRect);
-				} else {
-					GUI.EndGroup ();
-				}
+				// draw map items
+				this.DrawMapItems (mapDisplayRect);
 
 
 				// draw info area
-
-				Rect infoAreaRect = new Rect (3, mapDisplayRect.yMax, mapDisplayRect.width - 3, this.infoAreaHeight);
-
-				GUILayout.BeginArea (infoAreaRect);
-				GUI.DrawTexture (new Rect(new Vector2(-infoAreaRect.x, 0), infoAreaRect.size), m_infoAreaTexture);
-				GUILayout.Space (10);
-				GUILayout.BeginHorizontal ();
-
-				if (GUILayout.Button ("Focus on player")) {
-					FocusOnPlayer ();
-				}
-				GUILayout.Space (10);
-				GUILayout.Label ("Player world pos: " + Player.Instance.transform.position);
-				GUILayout.Space (5);
-				GUILayout.Label ("Player minimap pos: " + MiniMap.WorldPosToMapTexturePos (Player.Instance.transform.position));
-				GUILayout.Space (5);
-				GUILayout.Label ("Focus pos: " + this.GetFocusPosition ());
-				GUILayout.Space (5);
-				GUILayout.Label ("Zoom: " + this.zoomLevel);
-				GUILayout.Space (5);
-				GUILayout.Label ("Player size: " + (int) m_playerPointerSize + " ");
-				m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
-
-				GUILayout.EndHorizontal ();
-
-				GUILayout.Space (5);
-				GUILayout.Label ("Press arrows to move, +/- to zoom");
-
-				GUILayout.EndArea ();
+				this.DrawInfoArea( mapDisplayRect );
 
 			}
 
 		}
+
+		private	void	DrawMapTexture(Rect mapDisplayRect, Rect visibleMapRect) {
+
+			Texture2D mapTexture = MiniMap.Instance.MapTexture;
+
+
+			//GUI.DrawTexture (new Rect (mapZoomPos, mapRect), mapTexture);
+			//GUI.DrawTexture (new Rect (Vector2.zero, this.windowRect.size), MiniMap.Instance.MapTexture);
+
+			Rect texCoords = new Rect(visibleMapRect.x / mapTexture.width, visibleMapRect.y / mapTexture.height,
+				visibleMapRect.width / mapTexture.width, visibleMapRect.height / mapTexture.height);
+
+			texCoords = Utilities.F.Clamp01 (texCoords);
+
+			// adjust display rect
+
+			Rect renderRect = mapDisplayRect;
+		//	float mulX = mapDisplayRect.width / GetMapSize ();
+		//	float mulY = mapDisplayRect.height / GetMapSize ();
+
+			if(visibleMapRect.xMax > GetMapSize()) {
+				// reduce display width
+			//	renderRect.width -= (visibleMapRect.xMax - GetMapSize()) * mulX ;
+				float perc = (visibleMapRect.xMax - GetMapSize()) / visibleMapRect.width;
+				renderRect.xMax -= perc * mapDisplayRect.width;
+			}
+			if (visibleMapRect.xMin < 0) {
+				// increase x pos
+			//	renderRect.xMin += - visibleMapRect.xMin * mulX;
+				float perc = - visibleMapRect.xMin / visibleMapRect.width;
+				renderRect.xMin += perc * mapDisplayRect.width;
+			}
+			if(visibleMapRect.yMax > GetMapSize()) {
+				// reduce display height from top
+			//	renderRect.yMin += (visibleMapRect.yMax - GetMapSize()) * mulY ;
+				float perc = (visibleMapRect.yMax - GetMapSize()) / visibleMapRect.height;
+				renderRect.yMin += perc * mapDisplayRect.height;
+			}
+			if (visibleMapRect.yMin < 0) {
+				// reduce display height from bottom
+			//	renderRect.yMax -= - visibleMapRect.yMin * mulY;
+				float perc = - visibleMapRect.yMin / visibleMapRect.height;
+				renderRect.yMax -= perc * mapDisplayRect.height;
+			}
+
+		//	mapTexture.wrapMode = TextureWrapMode.Clamp;
+
+			GUI.DrawTextureWithTexCoords(renderRect, mapTexture, texCoords);
+
+		}
+
+		private	void	DrawInfoArea (Rect mapDisplayRect) {
+
+
+			Rect infoAreaRect = new Rect (3, mapDisplayRect.yMax, mapDisplayRect.width - 3, this.infoAreaHeight);
+
+			GUILayout.BeginArea (infoAreaRect);
+			GUI.DrawTexture (new Rect(new Vector2(-infoAreaRect.x, 0), infoAreaRect.size), m_infoAreaTexture);
+			GUILayout.Space (10);
+			GUILayout.BeginHorizontal ();
+
+			if (GUILayout.Button ("Focus on player")) {
+				FocusOnPlayer ();
+			}
+			GUILayout.Space (10);
+			GUILayout.Label ("Player world pos: " + Player.Instance.transform.position);
+			GUILayout.Space (5);
+			GUILayout.Label ("Player minimap pos: " + MiniMap.WorldPosToMapTexturePos (Player.Instance.transform.position));
+			GUILayout.Space (5);
+			GUILayout.Label ("Focus pos: " + this.GetFocusPosition ());
+			GUILayout.Space (5);
+			GUILayout.Label ("Zoom: " + this.zoomLevel);
+			GUILayout.Space (5);
+			GUILayout.Label ("Player size: " + (int) m_playerPointerSize + " ");
+			m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
+
+			GUILayout.EndHorizontal ();
+
+			GUILayout.Space (5);
+			GUILayout.Label ("Press arrows to move, +/- to zoom");
+
+			GUILayout.EndArea ();
+
+		}
+
+		private	void	DrawMapItems(Rect mapDisplayRect) {
+
+
+			if (!m_clipMapItems) {
+				GUI.EndClip ();
+				//	GUI.EndGroup ();
+			} else {
+				GUI.BeginGroup (mapDisplayRect);	// ensure that all map items are drawn inside this rect - doesn't work when items are rotated
+			}
+
+
+			// draw player pointer
+			this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, (int) m_playerPointerSize );
+			//	this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, 10 );
+			//	this.DrawItemOnMap( blackPixel, Player.Instance.transform.position, 50 );
+
+
+			if (!m_clipMapItems) {
+				//	GUI.BeginGroup (new Rect (0, 0, Screen.width, Screen.height));
+				GUI.BeginClip (this.windowRect);
+			} else {
+				GUI.EndGroup ();
+			}
+
+
+		}
+
 
 		public	bool	GetMapItemRenderRect( Rect itemMapBoundsRect, out Rect renderRect ) {
 

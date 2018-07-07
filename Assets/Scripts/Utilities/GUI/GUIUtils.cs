@@ -6,6 +6,11 @@ namespace SanAndreasUnity.Utilities
 
     public static class GUIUtils
     {
+
+		private	static	GUIStyle	styleWithBackground = new GUIStyle ();
+
+
+
         public static Rect GetCornerRect(ScreenCorner corner, Vector2 size, Vector2? padding = null)
         {
             return GetCornerRect(corner, size.x, size.y, padding);
@@ -69,6 +74,15 @@ namespace SanAndreasUnity.Utilities
 			Vector2 size = CalcScreenSizeForText (text, GUI.skin.button);
 
 			return GUILayout.Button (text, GUILayout.Width (size.x), GUILayout.Height (size.y));
+		}
+
+		public static void DrawRect (Rect position, Color color, GUIContent content = null)
+		{
+			var backgroundColor = GUI.backgroundColor;
+			GUI.backgroundColor = color;
+			styleWithBackground.normal.background = Texture2D.whiteTexture;
+			GUI.Box (position, content ?? GUIContent.none, styleWithBackground);
+			GUI.backgroundColor = backgroundColor;
 		}
 
     }
