@@ -16,6 +16,7 @@ namespace SanAndreasUnity.UI {
 		private	Texture2D	m_infoAreaTexture;
 
 		private	float	m_playerPointerSize = 10;
+		private	bool	m_drawZoneNames = false;
 
 
 
@@ -52,7 +53,7 @@ namespace SanAndreasUnity.UI {
 			Vector3 playerWorldPos = Player.Instance.transform.position;
 			//	Vector2 focusWorldPos = new Vector2 (playerWorldPos.x, playerWorldPos.z);
 			//	Vector2 focusPosNormalized = focusPos / MiniMap.mapEdge;
-			Vector2 focusPos = MiniMap.WorldPosToMapTexturePos(playerWorldPos);
+			Vector2 focusPos = MiniMap.WorldPosToMapPos(playerWorldPos);
 
 			// flip y axis
 		//	focusPos.y = MiniMap.mapSize - focusPos.y;
@@ -166,6 +167,50 @@ namespace SanAndreasUnity.UI {
 			displayPos.y = Screen.height - displayPos.y;
 
 			return displayPos;
+		}
+
+		public	bool	GetMapPosUnderMouse(out Vector2 mapPos) {
+
+			mapPos = Vector2.zero;
+
+			Vector2 displayPos = ScreenPosToDisplayPos (Input.mousePosition);
+
+			// check if it is inside display rect
+			if (!this.GetMapDisplayRect ().Contains (displayPos))
+				return false;
+
+			mapPos = DisplayPosToMapPos (displayPos);
+
+			return true;
+		}
+
+		public	bool	GetWorldPosUnderMouse(out Vector3 worldPos) {
+
+			worldPos = Vector3.zero;
+
+			Vector2 mapPos;
+			if(!this.GetMapPosUnderMouse(out mapPos))
+				return false;
+
+			worldPos = MiniMap.MapPosToWorldPos (mapPos);
+
+			return true;
+		}
+
+		public	Vector2	DisplayPosToMapPos(Vector2 displayPos) {
+
+			Rect mapDisplayRect = this.GetMapDisplayRect ();
+			Rect visibleMapRect = this.GetVisibleMapRect ();
+
+			// don't know why is this needed
+			// flip Y axis
+			displayPos.y = mapDisplayRect.height - displayPos.y;
+
+			Vector2 normalizedPos = Rect.PointToNormalized (mapDisplayRect, displayPos);
+
+			Vector2 mapPos = Rect.NormalizedToPoint (visibleMapRect, normalizedPos);
+
+			return mapPos;
 		}
 
 
@@ -395,14 +440,26 @@ namespace SanAndreasUnity.UI {
 			GUILayout.Space (10);
 			GUILayout.Label ("Player world pos: " + Player.Instance.transform.position);
 			GUILayout.Space (5);
-			GUILayout.Label ("Player minimap pos: " + MiniMap.WorldPosToMapTexturePos (Player.Instance.transform.position));
+			GUILayout.Label ("Player minimap pos: " + MiniMap.WorldPosToMapPos (Player.Instance.transform.position));
 			GUILayout.Space (5);
 			GUILayout.Label ("Focus pos: " + this.GetFocusPosition ());
+			GUILayout.Space (5);
+			Vector2 cursorMapPos;
+			if (this.GetMapPosUnderMouse (out cursorMapPos))
+				GUILayout.Label ("Cursor pos: " + cursorMapPos);
 			GUILayout.Space (5);
 			GUILayout.Label ("Zoom: " + this.zoomLevel);
 			GUILayout.Space (5);
 			GUILayout.Label ("Player size: " + (int) m_playerPointerSize + " ");
 			m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
+			m_drawZoneNames = GUILayout.Toggle (m_drawZoneNames, "Zone names");
+
+			// zone name under cursor
+			Vector3 mouseWorldPos;
+			if (this.GetWorldPosUnderMouse (out mouseWorldPos)) {
+				GUILayout.Label ("cursor world pos: " + mouseWorldPos);
+				GUILayout.Label ("Zone: " + SZone.GetZoneName (mouseWorldPos, true), GUILayout.Width(60));
+			}
 
 			GUILayout.EndHorizontal ();
 
@@ -428,6 +485,23 @@ namespace SanAndreasUnity.UI {
 			this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, (int) m_playerPointerSize );
 			//	this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, 10 );
 			//	this.DrawItemOnMap( blackPixel, Player.Instance.transform.position, 50 );
+
+			// draw all zone names
+			if (m_drawZoneNames) {
+				
+				foreach (var zone in SZone.AllZones) {
+					Vector2 min = MiniMap.WorldPosToMapPos (zone.vmin);
+					Vector2 max = MiniMap.WorldPosToMapPos (zone.vmax);
+					Rect rect = new Rect (min, max - min);
+
+					Rect renderRect;
+					if (this.GetMapItemRenderRect (rect, out renderRect)) {
+						GUI.Box (renderRect, "");
+						GUIUtils.CenteredLabel (renderRect.center, zone.name);
+					}
+
+				}
+			}
 
 
 			if (!m_clipMapItems) {
@@ -505,7 +579,7 @@ namespace SanAndreasUnity.UI {
 
 		public	void	DrawItemOnMap( Texture2D itemTexture, Vector3 worldPos, int itemSize ) {
 
-			Vector2 mapPos = MiniMap.WorldPosToMapTexturePos (worldPos);
+			Vector2 mapPos = MiniMap.WorldPosToMapPos (worldPos);
 
 			this.DrawItemOnMap (itemTexture, F.CreateRect (mapPos, Vector2.one * itemSize));
 
@@ -513,7 +587,7 @@ namespace SanAndreasUnity.UI {
 
 		public	void	DrawItemOnMapRotated( Texture2D itemTexture, Vector3 worldPos, Vector3 worldDir, int itemSize ) {
 
-			Vector2 mapPos = MiniMap.WorldPosToMapTexturePos (worldPos);
+			Vector2 mapPos = MiniMap.WorldPosToMapPos (worldPos);
 
 			this.DrawItemOnMapRotated (itemTexture, F.CreateRect (mapPos, Vector2.one * itemSize), worldDir);
 

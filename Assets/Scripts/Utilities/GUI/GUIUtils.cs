@@ -85,5 +85,12 @@ namespace SanAndreasUnity.Utilities
 			GUI.backgroundColor = backgroundColor;
 		}
 
+		public	static	void	CenteredLabel(Vector2 pos, string text) {
+
+			Vector2 size = CalcScreenSizeForText (text, GUI.skin.label);
+
+			GUI.Label (new Rect (pos - size * 0.5f, size), text);
+		}
+
     }
 }

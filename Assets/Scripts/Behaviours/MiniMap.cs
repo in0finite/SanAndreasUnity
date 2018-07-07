@@ -105,7 +105,7 @@ namespace SanAndreasUnity.Behaviours
                     }
                     catch { }
 
-                    _zName = SZone.GetName(ZoneHelpers._zoneInfoList, playerPos);
+                    _zName = SZone.GetZoneName(ZoneHelpers.zoneInfoList, playerPos);
                 }
 
                 return _zName;
@@ -483,17 +483,28 @@ namespace SanAndreasUnity.Behaviours
             return mousePos - mapScroll;
         }
 
-		public	static	Vector2	WorldPosToMapTexturePos(Vector3 worldPos) {
+		public	static	Vector2	WorldPosToMapPos(Vector3 worldPos) {
 
-			// texture center is at (0,0) world coordinates
+			// map center is at (0,0) world coordinates
 			// this, for example, means that the left edge of the world is at: -mapEdge / 2.0f
 
-			// adjust world position, so that (0,0) world coordinates are mapped to (0,0) texture coordinates
+			// adjust world position, so that (0,0) world coordinates are mapped to (0,0) map coordinates
 			worldPos += new Vector3 (mapEdge / 2.0f, 0, mapEdge / 2.0f);
 
 			float mul = mapSize / (float)mapEdge;
 			return new Vector2 (worldPos.x * mul, worldPos.z * mul);
 		}
+
+		public	static	Vector3	MapPosToWorldPos(Vector2 mapPos) {
+
+			// adjust map position, so that (0,0) map coordinated are mapped to (0,0) world coordinates
+			mapPos -= Vector2.one * (mapSize * 0.5f);
+
+			float mul = mapEdge / (float)mapSize;
+
+			return new Vector3 (mapPos.x * mul, 0.0f, mapPos.y * mul);
+		}
+
 
         private void FixedUpdate()
         {

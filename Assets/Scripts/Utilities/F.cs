@@ -411,6 +411,10 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
+		public static Vector2 ToVec2WithXAndZ( this Vector3 vec3 ) {
+			return new Vector2 (vec3.x, vec3.z);
+		}
+
 		/// <summary>
 		/// Clamps all coordinates between 0 and 1.
 		/// </summary>
