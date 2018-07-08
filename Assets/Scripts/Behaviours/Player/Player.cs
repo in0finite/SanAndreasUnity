@@ -88,6 +88,9 @@ namespace SanAndreasUnity.Behaviours
 			return FindObjectOfType<Player> ();
 		}
 
+		/// <summary>Position of player instance.</summary>
+		public	static	Vector3	InstancePos { get { return Instance.transform.position; } }
+
 
 
         //     protected override void OnAwake()

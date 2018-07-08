@@ -184,7 +184,7 @@ MonoBehaviour:
     y: 10
     width: 200
     height: 100
-  useScrollView: 0
+  useScrollView: 1
 --- !u!114 &114636911127793484
 MonoBehaviour:
   m_ObjectHideFlags: 1
