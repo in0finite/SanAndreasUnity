@@ -37,7 +37,8 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = new Rect(Screen.width - 260, 10, 250, 10 + (25 * _spawns.Count));
+			float height = Mathf.Min( 0.7f * Screen.height, 10 + 25 * _spawns.Count );
+			this.windowRect = new Rect(Screen.width - 260, 10, 250, height);
 		}
 
 
