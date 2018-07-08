@@ -16,7 +16,6 @@ namespace SanAndreasUnity.UI {
 
 			// set default parameters
 
-			this.isOpened = false;
 			this.windowName = "Options";
 			this.useScrollView = true;
 

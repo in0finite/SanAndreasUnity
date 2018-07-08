@@ -29,7 +29,6 @@ namespace SanAndreasUnity.UI {
 
 			// set default parameters
 
-			this.isOpened = false;
 			this.windowName = "Map";
 			this.useScrollView = false;
 			this.isDraggable = false;
@@ -52,8 +51,17 @@ namespace SanAndreasUnity.UI {
 
 		}
 
+		protected	override	void	OnWindowOpened() {
+
+			this.FocusOnPlayer ();
+
+		}
+
 
 		public	void	FocusOnPlayer() {
+
+			if (null == Player.Instance)
+				return;
 
 			Vector3 playerWorldPos = Player.Instance.transform.position;
 			//	Vector2 focusWorldPos = new Vector2 (playerWorldPos.x, playerWorldPos.z);
@@ -247,7 +255,7 @@ namespace SanAndreasUnity.UI {
 			}
 
 
-			if (!PauseMenu.IsOpened || !this.isOpened)
+			if (!PauseMenu.IsOpened || !this.IsOpened)
 				return;
 			
 

@@ -17,11 +17,9 @@
 
 - Make everything networked
 
-- **Map - focus on player when opened ; better info area**
+- **Map - better info area**
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
-
-- utility: destroy all vehicles
 
 - Work on a menu like MTA:SA (F1)
 

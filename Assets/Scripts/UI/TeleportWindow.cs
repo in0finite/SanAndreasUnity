@@ -17,7 +17,6 @@ namespace SanAndreasUnity.UI {
 
 			// set default parameters
 
-			this.isOpened = true;
 			this.windowName = "Teleport";
 			this.useScrollView = true;
 

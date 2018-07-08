@@ -7,8 +7,21 @@ namespace SanAndreasUnity.UI {
 
 		public	string	windowName = "";
 
-		public	bool	isOpened = false;
-		public bool IsOpened { get { return this.isOpened; } set { isOpened = value; } }
+		[SerializeField]	protected	bool	m_isOpenedByDefault = false;
+
+		private	bool	m_isOpened = false;
+		public bool IsOpened {
+			get { return this.m_isOpened; } 
+			set { 
+				if (m_isOpened == value)
+					return;
+				m_isOpened = value;
+				if (m_isOpened)
+					this.OnWindowOpened ();
+				else
+					this.OnWindowClosed ();
+			}
+		}
 
 		private	static	int	lastWindowId = 1352345;
 		private	int	windowId = lastWindowId++;
@@ -25,11 +38,42 @@ namespace SanAndreasUnity.UI {
 		protected	bool	isModal = false;
 		public bool IsModal { get { return this.isModal; } }
 
+		private	bool	m_hasStarted = false;
+
+
+
+		void WindowStart() {
+
+			if (m_isOpenedByDefault)
+				this.IsOpened = true;
+
+			this.OnWindowStart ();
+		}
+
+		/// <summary>
+		/// Called on first OnGUI().
+		/// </summary>
+		protected virtual void OnWindowStart() {
+			
+		}
+
+		protected virtual void OnWindowOpened() {
+
+		}
+
+		protected virtual void OnWindowClosed() {
+
+		}
 
 
 		void OnGUI() {
 
-			if (!PauseMenu.IsOpened || !this.isOpened)
+			if (!m_hasStarted) {
+				m_hasStarted = true;
+				this.WindowStart ();
+			}
+
+			if (!PauseMenu.IsOpened || !this.IsOpened)
 				return;
 
 			if (this.isModal)
@@ -77,10 +121,10 @@ namespace SanAndreasUnity.UI {
 
 			// display button for opening/closing window
 
-			string text = this.isOpened ? "Hide " + this.windowName : "Show " + this.windowName;
+			string text = this.IsOpened ? "Hide " + this.windowName : "Show " + this.windowName;
 
 			if (GUILayout.Button (text)) {
-				this.isOpened = ! this.isOpened;
+				this.IsOpened = ! this.IsOpened;
 			}
 
 		}

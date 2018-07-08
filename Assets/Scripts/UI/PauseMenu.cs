@@ -50,9 +50,9 @@ namespace SanAndreasUnity.UI {
 				
 				if (IsOpened) {
 					// if there is a modal window, close it, otherwise close pause menu
-					var window = GetAllWindows ().FirstOrDefault (w => w.isOpened && w.IsModal);
+					var window = GetAllWindows ().FirstOrDefault (w => w.IsOpened && w.IsModal);
 					if (window != null) {
-						window.isOpened = false;
+						window.IsOpened = false;
 					} else {
 						IsOpened = !IsOpened;
 					}

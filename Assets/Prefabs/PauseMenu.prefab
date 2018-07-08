@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Map
-  isOpened: 0
+  m_isOpenedByDefault: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Options
-  isOpened: 0
+  m_isOpenedByDefault: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -177,7 +177,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Utilities
-  isOpened: 1
+  m_isOpenedByDefault: 1
   windowRect:
     serializedVersion: 2
     x: 304
@@ -197,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Controls
-  isOpened: 0
+  m_isOpenedByDefault: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: DayTime
-  isOpened: 0
+  m_isOpenedByDefault: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Vehicle Spawner
-  isOpened: 0
+  m_isOpenedByDefault: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Teleport
-  isOpened: 1
+  m_isOpenedByDefault: 1
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: World stats
-  isOpened: 0
+  m_isOpenedByDefault: 0
   windowRect:
     serializedVersion: 2
     x: 10

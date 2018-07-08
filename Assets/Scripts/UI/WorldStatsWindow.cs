@@ -10,7 +10,6 @@ namespace SanAndreasUnity.UI {
 
 			// set default parameters
 
-			this.isOpened = false;
 			this.windowName = "World stats";
 			this.windowRect = new Rect(10, 10, 250, 330);
 
