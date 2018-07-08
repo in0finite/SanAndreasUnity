@@ -96,14 +96,12 @@ namespace SanAndreasUnity.UI {
 			
 
 			// draw title
-			string pauseMenuTitle = "PAUSE MENU";
-			Vector2 titleSize = Utilities.GUIUtils.CalcScreenSizeForText (pauseMenuTitle, GUI.skin.label);
-			GUI.Label( new Rect(Screen.width / 2 - titleSize.x / 2, 10, titleSize.x, titleSize.y), pauseMenuTitle);
+			Utilities.GUIUtils.CenteredLabel (new Vector2 (Screen.width / 2.0f, 20), "<b>PAUSE MENU</b>");
 
+
+			GUI.BeginGroup (new Rect (10, 0, 250, Screen.height));
 
 			GUILayout.Space (20);
-
-			// TODO: add items: map, 
 
 			if (GUILayout.Button ("Resume"))
 				IsOpened = false;
@@ -118,6 +116,8 @@ namespace SanAndreasUnity.UI {
 			if (GUILayout.Button ("Exit")) {
 				GameManager.ExitApplication ();
 			}
+
+			GUI.EndGroup ();
 
 		}
 

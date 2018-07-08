@@ -415,11 +415,6 @@ namespace SanAndreasUnity.UI {
 				//GUI.DrawTexture (new Rect (Vector2.zero, Vector2.one * 16), blackPixel);
 
 
-				// TODO: map bars, undiscovered zones, drag & drop - ??
-
-				// TODO: focus on player when map is opened ; teleport to marker
-
-
 				//GUILayout.EndArea ();
 				//GUILayout.EndArea ();
 
@@ -685,9 +680,6 @@ namespace SanAndreasUnity.UI {
 			if (!GetMapItemRenderRect (itemRect, out renderRect)) {
 				return;
 			}
-
-
-			GUI.Label (GUIUtils.GetCornerRect (ScreenCorner.TopLeft, Vector2.one * 100), "Player visible");
 
 
 			// find angle around Y axis

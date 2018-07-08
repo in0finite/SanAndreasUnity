@@ -85,7 +85,7 @@ namespace SanAndreasUnity.UI {
 
 		void WindowFunction( int id ) {
 
-			// display exit button ?
+			// TODO: display exit button ?
 
 			if (this.useScrollView)
 				this.scrollPos = GUILayout.BeginScrollView (this.scrollPos);
