@@ -5,6 +5,7 @@ using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -156,42 +157,96 @@ namespace SanAndreasUnity.Behaviours
 
             jumpTimer = antiBunnyHopFactor;
 
-            if (!IsGrounded)
-                // Find the ground (instead of falling)
-                FindGround(false);
+			if (!IsGrounded) {
+				// Find the ground (instead of falling)
+				FindGround ();
+			}
+
         }
 
-        public void FindGround(bool debug = false)
+		public void Teleport(Vector3 pos) {
+
+			this.transform.position = pos;
+
+			this.FindGround ();
+
+		}
+
+        public void FindGround ()
+		{
+			StopCoroutine (FindGroundCoroutine());
+			StartCoroutine (FindGroundCoroutine ());
+		}
+
+        private IEnumerator FindGroundCoroutine()
         {
-            StartCoroutine(_FindGround(debug));
+
+			yield return null;
+
+			// we have to set y pos to high value, because, for some reason, raycasting upwards doesn't work
+			this.transform.SetY (150);
+
+			Vector3 startingPos = this.transform.position;
+
+			// wait for loader to finish
+			while (!Loader.HasLoaded)
+				yield return null;
+
+			// yield until you find ground beneath or above the player, or until timeout expires
+
+			float timeStarted = Time.time;
+			int numAttempts = 1;
+
+			while (true) {
+				
+				if (Time.time - timeStarted > 4.0f) {
+					// timeout expired
+					Debug.LogWarning("Failed to find ground - timeout expired");
+					yield break;
+				}
+
+				// maintain starting position
+				this.transform.position = startingPos;
+				this.Velocity = Vector3.zero;
+
+				RaycastHit hit;
+				float raycastDistance = 1000f;
+				// raycast against all layers, except player
+				int raycastLayerMask = ~ LayerMask.GetMask ("Player");
+
+				Vector3[] raycastPositions = new Vector3[]{ this.transform.position, this.transform.position + Vector3.up * raycastDistance };	//transform.position - Vector3.up * characterController.height;
+				Vector3[] raycastDirections = new Vector3[]{ Vector3.down, Vector3.down };
+				string[] customMessages = new string[]{ "from center", "from above" };
+
+				for (int i = 0; i < raycastPositions.Length; i++) {
+
+					if (Physics.Raycast (raycastPositions[i], raycastDirections[i], out hit, raycastDistance, raycastLayerMask)) {
+						// ray hit the ground
+						// we can move there
+
+						this.OnFoundGround (hit, numAttempts, customMessages [i]);
+
+						yield break;
+					}
+
+				}
+
+
+				numAttempts++;
+				yield return null;
+			}
+
         }
 
-        private IEnumerator _FindGround(bool debug = false)
-        {
-            //First, we have to go to an operative range
+		private void OnFoundGround(RaycastHit hit, int numAttempts, string customMessage) {
 
-            if (transform.position.y > 150)
-            {
-                Vector3 t = transform.position;
-                transform.position = new Vector3(t.x, 150, t.z);
-            }
+			this.transform.position = hit.point + Vector3.up * characterController.height * 1.5f;
+			this.Velocity = Vector3.zero;
 
-            // Review: Maybe this can cause a bug due to CPU perfomance
-            yield return new WaitForSeconds(1);
+			Debug.LogFormat ("Found ground at {0}, distance {1}, object name {2}, num attempts {3}, {4}", hit.point, hit.distance, 
+				hit.transform.name, numAttempts, customMessage);
 
-            //Then, when evetrything is loaded, then...
-
-            RaycastHit hit;
-            if (Physics.Raycast(new Ray(transform.position - Vector3.up * characterController.height, Vector3.down), out hit))
-            {
-                if (!debug)
-                    transform.position = hit.point + Vector3.up * characterController.height / 2;
-                else
-                    Debug.LogFormat("Ground found at {0}!", hit.point);
-            }
-            else if (debug)
-                Debug.Log("Nothing found yet!!");
-        }
+		}
 
 #if CLIENT
 

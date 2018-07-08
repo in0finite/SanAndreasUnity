@@ -101,6 +101,9 @@ namespace SanAndreasUnity.Behaviours.World
                     }
                 }
 
+				// set layer recursively for all game objects
+			//	this.gameObject.SetLayerRecursive( this.gameObject.layer );
+
                 if (Water != null)
                 {
                     using (Utilities.Profiler.Start("Water load time"))

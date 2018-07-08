@@ -293,6 +293,10 @@ Prefab:
       propertyPath: field of view
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 1273918895060814, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114401842841139250, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
     - {fileID: 114828623362714814, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
@@ -361,6 +365,10 @@ Prefab:
       propertyPath: WaterPrefab
       value: 
       objectReference: {fileID: 1631170489}
+    - target: {fileID: 149528, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0

@@ -17,7 +17,9 @@
 
 - Make everything networked
 
-- **Map - toggle it by pressing M ; add ability to teleport to selected location ; focus on player when opened ;**
+- **Map - toggle it by pressing M ; focus on player when opened ;**
+
+- Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ;
 
 - Work on a menu like MTA:SA (F1)
 

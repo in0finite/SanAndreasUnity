@@ -177,6 +177,12 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
+		public static void SetY(this Transform t, float yPos) {
+			Vector3 pos = t.position;
+			pos.y = yPos;
+			t.position = pos;
+		}
+
         public static object FromHex(this string hexString, Type type, CultureInfo info)
         {
             var argTypes = new[] { typeof(string), typeof(NumberStyles), typeof(IFormatProvider) };

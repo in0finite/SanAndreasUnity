@@ -21,6 +21,8 @@ namespace SanAndreasUnity.UI {
 		private	bool	m_isWaypointPlaced = false;
 		private	Vector2	m_waypointMapPos = Vector2.zero;
 
+		private	Vector2	m_lastMousePosition = Vector2.zero;
+
 
 
 		MapWindow() {
@@ -176,7 +178,7 @@ namespace SanAndreasUnity.UI {
 
 			mapPos = Vector2.zero;
 
-			Vector2 displayPos = ScreenPosToDisplayPos (Input.mousePosition);
+			Vector2 displayPos = ScreenPosToDisplayPos (m_lastMousePosition);
 
 			// check if it is inside display rect
 			if (!this.GetMapDisplayRect ().Contains (displayPos))
@@ -214,6 +216,16 @@ namespace SanAndreasUnity.UI {
 			Vector2 mapPos = Rect.NormalizedToPoint (visibleMapRect, normalizedPos);
 
 			return mapPos;
+		}
+
+
+		private	void	TeleportToWaypoint() {
+
+			if (!m_isWaypointPlaced)
+				return;
+
+			Player.Instance.Teleport (MiniMap.MapPosToWorldPos (m_waypointMapPos));
+
 		}
 
 
@@ -262,6 +274,11 @@ namespace SanAndreasUnity.UI {
 				}
 
 			}
+
+
+			// remember last mouse position
+			m_lastMousePosition = Input.mousePosition;
+
 
 		}
 
@@ -365,9 +382,9 @@ namespace SanAndreasUnity.UI {
 				//GUI.DrawTexture (new Rect (Vector2.zero, Vector2.one * 16), blackPixel);
 
 
-				// TODO: map bars, marker, undiscovered zones, drag & drop - ??
+				// TODO: map bars, undiscovered zones, drag & drop - ??
 
-				// TODO: focus on player when map is opened ; place marker on map ; teleport to marker
+				// TODO: focus on player when map is opened ; teleport to marker
 
 
 				//GUILayout.EndArea ();
@@ -375,7 +392,7 @@ namespace SanAndreasUnity.UI {
 
 
 				// draw 2 lines crossing under cursor
-				Vector2 mouseDisplayPos = ScreenPosToDisplayPos( Input.mousePosition );
+				Vector2 mouseDisplayPos = ScreenPosToDisplayPos( m_lastMousePosition );
 				float linesWidth = 4;
 				Color linesColor = (Color.yellow + Color.black) / 2.0f;
 				// vertical line
@@ -453,10 +470,13 @@ namespace SanAndreasUnity.UI {
 			GUILayout.BeginArea (infoAreaRect);
 			GUI.DrawTexture (new Rect(new Vector2(-infoAreaRect.x, 0), infoAreaRect.size), m_infoAreaTexture);
 			GUILayout.Space (10);
-			GUILayout.BeginHorizontal ();
+			GUILayout.BeginHorizontal (GUILayout.MaxWidth (infoAreaRect.width));
 
 			if (GUILayout.Button ("Focus on player")) {
 				FocusOnPlayer ();
+			}
+			if (GUILayout.Button ("Teleport to waypoint")) {
+				this.TeleportToWaypoint ();
 			}
 			GUILayout.Space (10);
 			GUILayout.Label ("Player world pos: " + Player.Instance.transform.position);
@@ -473,7 +493,7 @@ namespace SanAndreasUnity.UI {
 			GUILayout.Space (5);
 			GUILayout.Label ("Player size: " + (int) m_playerPointerSize + " ");
 			m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
-			m_drawZones = GUILayout.Toggle (m_drawZones, "Zone names");
+			m_drawZones = GUILayout.Toggle (m_drawZones, "Draw zones");
 
 			// zone name under cursor
 			Vector3 mouseWorldPos;
