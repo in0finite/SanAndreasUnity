@@ -8,6 +8,7 @@ namespace SanAndreasUnity.UI {
 		public	string	windowName = "";
 
 		public	bool	isOpened = false;
+		public bool IsOpened { get { return this.isOpened; } set { isOpened = value; } }
 
 		private	static	int	lastWindowId = 1352345;
 		private	int	windowId = lastWindowId++;

@@ -420,8 +420,8 @@ namespace SanAndreasUnity.Behaviours
             if (Input.GetKeyDown(KeyCode.F8))
                 toggleInfo = !toggleInfo;
 
-            if (Input.GetKeyDown(KeyCode.M))
-                toggleMap = !toggleMap;
+            //if (Input.GetKeyDown(KeyCode.M))
+            //    toggleMap = !toggleMap;
 
             float mousePosY = screenDims.y - Input.mousePosition.y;
             Vector2 movement = Vector2.zero, // WIP : + offset
