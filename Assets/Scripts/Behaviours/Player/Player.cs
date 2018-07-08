@@ -164,11 +164,18 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-		public void Teleport(Vector3 pos) {
+		public void Teleport(Vector3 position, Quaternion rotation) {
 
-			this.transform.position = pos;
+			this.transform.position = position;
+			this.transform.rotation = rotation;
 
 			this.FindGround ();
+
+		}
+
+		public void Teleport(Vector3 position) {
+
+			this.Teleport (position, this.transform.rotation);
 
 		}
 
@@ -183,12 +190,12 @@ namespace SanAndreasUnity.Behaviours
 
 			yield return null;
 
-			// we have to set y pos to high value, because, for some reason, raycasting upwards doesn't work
+			// set y pos to high value, so that higher grounds can be loaded
 			this.transform.SetY (150);
 
 			Vector3 startingPos = this.transform.position;
 
-			// wait for loader to finish
+			// wait for loader to finish, in case he didn't
 			while (!Loader.HasLoaded)
 				yield return null;
 

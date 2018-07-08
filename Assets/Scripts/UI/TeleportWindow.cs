@@ -58,8 +58,7 @@ namespace SanAndreasUnity.UI {
 
 				if (GUILayout.Button (spawnLocation.name))
 				{
-					Player.Instance.transform.position = spawnLocation.position;
-					Player.Instance.transform.rotation = spawnLocation.rotation;
+					Player.Instance.Teleport (spawnLocation.position, spawnLocation.rotation);
 				}
 			}
 
