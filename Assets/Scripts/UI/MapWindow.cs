@@ -10,7 +10,7 @@ namespace SanAndreasUnity.UI {
 		//private	Rect	visibleMapRect = new Rect ();
 		private	Vector2	m_focusPos = Vector2.one * MiniMap.mapSize / 2.0f;
 		private	float	zoomLevel = 1;
-		private	float	infoAreaHeight = 60;
+		private	float	infoAreaHeight = 90;
 		private	bool	m_clipMapItems = false;
 
 		private	Texture2D	m_infoAreaTexture;
@@ -22,6 +22,8 @@ namespace SanAndreasUnity.UI {
 		private	Vector2	m_waypointMapPos = Vector2.zero;
 
 		private	Vector2	m_lastMousePosition = Vector2.zero;
+
+		private	Vector2	m_infoAreaScrollViewPos = Vector2.zero;
 
 
 
@@ -499,7 +501,12 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.BeginArea (infoAreaRect);
 			GUI.DrawTexture (new Rect(new Vector2(-infoAreaRect.x, 0), infoAreaRect.size), m_infoAreaTexture);
+
+			m_infoAreaScrollViewPos = GUILayout.BeginScrollView (m_infoAreaScrollViewPos);
+
 			GUILayout.Space (10);
+
+			// first row - controls
 			GUILayout.BeginHorizontal (GUILayout.MaxWidth (infoAreaRect.width));
 
 			if (GUILayout.Button ("Focus on player [F]")) {
@@ -508,7 +515,16 @@ namespace SanAndreasUnity.UI {
 			if (GUILayout.Button ("Teleport to waypoint")) {
 				this.TeleportToWaypoint ();
 			}
-			GUILayout.Space (10);
+			GUILayout.Space (5);
+			GUILayout.Label ("Player size: " + (int) m_playerPointerSize);
+			m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
+			m_drawZones = GUILayout.Toggle (m_drawZones, "Draw zones");
+
+			GUILayout.EndHorizontal ();
+
+			// second row - info
+			GUILayout.BeginHorizontal (GUILayout.MaxWidth (infoAreaRect.width));
+
 			GUILayout.Label ("Player world pos: " + Player.Instance.transform.position);
 			GUILayout.Space (5);
 			GUILayout.Label ("Player minimap pos: " + MiniMap.WorldPosToMapPos (Player.Instance.transform.position));
@@ -520,22 +536,20 @@ namespace SanAndreasUnity.UI {
 				GUILayout.Label ("Cursor pos: " + cursorMapPos);
 			GUILayout.Space (5);
 			GUILayout.Label ("Zoom: " + this.zoomLevel);
-			GUILayout.Space (5);
-			GUILayout.Label ("Player size: " + (int) m_playerPointerSize + " ");
-			m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
-			m_drawZones = GUILayout.Toggle (m_drawZones, "Draw zones");
-
 			// zone name under cursor
+			GUILayout.Space (5);
 			Vector3 mouseWorldPos;
 			if (this.GetWorldPosUnderMouse (out mouseWorldPos)) {
 				GUILayout.Label ("cursor world pos: " + mouseWorldPos);
-				GUILayout.Label ("Zone: " + SZone.GetZoneName (mouseWorldPos, true), GUILayout.Width(60));
+				GUILayout.Label ("Zone: " + SZone.GetZoneName (mouseWorldPos, true), GUILayout.Width(80));
 			}
 
 			GUILayout.EndHorizontal ();
 
 			GUILayout.Space (5);
-			GUILayout.Label ("Press arrows to move, +/- to zoom");
+			GUILayout.Label ("Controls: arrows/WASD - move, +/- - zoom, right click - place waypoint");
+
+			GUILayout.EndScrollView ();
 
 			GUILayout.EndArea ();
 
