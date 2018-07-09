@@ -76,6 +76,18 @@ namespace SanAndreasUnity.Utilities
 			return GUILayout.Button (text, GUILayout.Width (size.x), GUILayout.Height (size.y));
 		}
 
+		public	static	bool	ButtonWithColor( Rect rect, string text, Color color) {
+
+			var oldColor = GUI.backgroundColor;
+			GUI.backgroundColor = color;
+
+			bool result = GUI.Button (rect, text);
+
+			GUI.backgroundColor = oldColor;
+
+			return result;
+		}
+
 		public static void DrawRect (Rect position, Color color, GUIContent content = null)
 		{
 			var backgroundColor = GUI.backgroundColor;

@@ -33,6 +33,8 @@ namespace SanAndreasUnity.UI {
 			this.useScrollView = false;
 			this.isDraggable = false;
 			this.isModal = true;
+			this.m_hasExitButton = false;
+			this.m_hasMinimizeButton = false;
 
 		}
 
