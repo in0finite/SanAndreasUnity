@@ -1,7 +1,5 @@
 
 ## TODO
-<br>
-
 
 ### Features
 
@@ -57,6 +55,7 @@
 
 - Make a paragraph for those categories: https://i.gyazo.com/07490f1d389fb3c4d6363e8d9810c0c1.png - ??
 
+- Implement map zoom (https://stackoverflow.com/questions/10694397/how-to-zoom-in-using-mouse-position-on-that-image)
 
 ### Effects & Enhancements
 
@@ -138,10 +137,9 @@
 
 - Files with .log extension is printed in hexadecimal on Sublime Text (change extension)
 
-- The scripts must read infinite radarXX.tcd textures
+- The scripts must read infinite radarXX.txd textures
 
 - Implement polar rotation system for camera
-
 
 ### Must be reviewed
 
@@ -156,7 +154,3 @@
 - HUGE REFACTOR (compiling Assembly into DLLs will solve most problems) - what problems ??
 
 - **Minimap size should depend on screen resolution**
-
-
-<br>
-<br>
