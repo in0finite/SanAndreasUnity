@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 4460574794146942}
   - component: {fileID: 114130700506787182}
   - component: {fileID: 114299782105903270}
+  - component: {fileID: 114176722346621994}
+  - component: {fileID: 114921708719520758}
   m_Layer: 0
   m_Name: Settings
   m_TagString: Untagged
@@ -43,6 +45,8 @@ GameObject:
   - component: {fileID: 114911863237150764}
   - component: {fileID: 114753158958291610}
   - component: {fileID: 114604904801458000}
+  - component: {fileID: 114769417846371336}
+  - component: {fileID: 114366197016130562}
   m_Layer: 0
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -88,6 +92,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc581ee14e49f45bd8c98693d8ad173f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114176722346621994
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1149364431340810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c960baf8e8064cf5b80a1e60a5b79e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114299782105903270
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -99,6 +114,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0b1df49a9e0a49d8947a7026c7371d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114366197016130562
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693201817607148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09e5fb65bfb794372ad6dc715a59c96b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: Map
+  m_isOpenedByDefault: 0
+  windowRect:
+    serializedVersion: 2
+    x: 57.5
+    y: 78.75
+    width: 115
+    height: 157.5
+  useScrollView: 0
 --- !u!114 &114435663141359712
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -122,7 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Options
-  isOpened: 0
+  m_isOpenedByDefault: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -142,14 +177,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Utilities
-  isOpened: 1
+  m_isOpenedByDefault: 1
   windowRect:
     serializedVersion: 2
     x: 304
     y: 10
     width: 200
     height: 100
-  useScrollView: 0
+  useScrollView: 1
 --- !u!114 &114636911127793484
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -162,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Controls
-  isOpened: 0
+  m_isOpenedByDefault: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -182,7 +217,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: DayTime
-  isOpened: 0
+  m_isOpenedByDefault: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -190,6 +225,26 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 0
+--- !u!114 &114769417846371336
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693201817607148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4428e76f4d28f48fdb58f39252b4e240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: Vehicle Spawner
+  m_isOpenedByDefault: 0
+  windowRect:
+    serializedVersion: 2
+    x: 57.5
+    y: 78.75
+    width: 115
+    height: 157.5
+  useScrollView: 1
 --- !u!114 &114911863237150764
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -202,7 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Teleport
-  isOpened: 1
+  m_isOpenedByDefault: 1
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -210,6 +265,17 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 1
+--- !u!114 &114921708719520758
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1149364431340810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c3852056a1bf469ab2128fe025acd57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114924086961640034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -222,7 +288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: World stats
-  isOpened: 0
+  m_isOpenedByDefault: 0
   windowRect:
     serializedVersion: 2
     x: 10

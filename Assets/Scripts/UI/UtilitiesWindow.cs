@@ -1,44 +1,41 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using SanAndreasUnity.Behaviours;
 
 namespace SanAndreasUnity.UI {
 
 	public class UtilitiesWindow : PauseMenuWindow {
-
-		private	Behaviours.Player	_player;
-
+		
 
 
 		UtilitiesWindow() {
 
 			// set default parameters
 
-			this.isOpened = true;
 			this.windowName = "Utilities";
+			this.useScrollView = true;
 
 		}
 
 		void Start () {
-
-			_player = Behaviours.Player.FindInstance ();
-
+			
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = new Rect(Screen.width / 2 - 100, 10, 200, 100);
+			this.windowRect = new Rect(Screen.width / 2 - 100, 10, 200, 150);
 		}
 
 
 		protected override void OnWindowGUI ()
 		{
 
-			if (_player) {
+			if (Player.Instance) {
 				// display player position
-				Vector2 pos = new Vector2 (_player.transform.position.x + 3000, 6000 - (_player.transform.position.z + 3000));
-				GUILayout.Label ("Pos: X" + (int)pos.x + " Y" + (int)pos.y + " Z" + (int)_player.transform.position.y);
+			//	Vector2 pos = new Vector2 (_player.transform.position.x + 3000, 6000 - (_player.transform.position.z + 3000));
+				GUILayout.Label ("Pos: " + Player.InstancePos);
 			}
 
-			if (GUILayout.Button ("Spawn vehicle")) {
+			if (GUILayout.Button ("Spawn random vehicle")) {
 				var spawner = FindObjectOfType<UIVehicleSpawner> ();
 				if (spawner)
 					spawner.SpawnVehicle ();
@@ -47,6 +44,17 @@ namespace SanAndreasUnity.UI {
 			if (GUILayout.Button("Change player model"))
 			{
 				CharacterModelChanger.ChangePedestrianModel();
+			}
+
+			if (GUILayout.Button("Destroy all vehicles"))
+			{
+				var vehicles = FindObjectsOfType<Behaviours.Vehicles.Vehicle> ();
+				var vehicleToIgnore = Player.Instance != null ? Player.Instance.CurrentVehicle : null;
+
+				foreach (var v in vehicles) {
+					if (v != vehicleToIgnore)
+						Destroy (v.gameObject);
+				}
 			}
 
 		}

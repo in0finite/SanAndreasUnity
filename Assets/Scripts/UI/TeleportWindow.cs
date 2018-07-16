@@ -17,7 +17,6 @@ namespace SanAndreasUnity.UI {
 
 			// set default parameters
 
-			this.isOpened = true;
 			this.windowName = "Teleport";
 			this.useScrollView = true;
 
@@ -37,7 +36,9 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = new Rect(Screen.width - 260, 10, 250, 10 + (25 * _spawns.Count));
+			float width = 260;
+			float height = Mathf.Min( 0.7f * Screen.height, 10 + 25 * _spawns.Count );
+			this.windowRect = new Rect(Screen.width - width - 10, 10, width, height);
 		}
 
 
@@ -58,8 +59,7 @@ namespace SanAndreasUnity.UI {
 
 				if (GUILayout.Button (spawnLocation.name))
 				{
-					Player.Instance.transform.position = spawnLocation.position;
-					Player.Instance.transform.rotation = spawnLocation.rotation;
+					Player.Instance.Teleport (spawnLocation.position, spawnLocation.rotation);
 				}
 			}
 

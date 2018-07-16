@@ -155,6 +155,94 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f1fb24ea8c25e644cb89baa25b4a8bff, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &108487984
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 108487985}
+  m_Layer: 0
+  m_Name: Santa Maria Beach
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &108487985
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 108487984}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 347, y: 6, z: -1783}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 414666137}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &327595850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 327595851}
+  m_Layer: 0
+  m_Name: Angel Pine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &327595851
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 327595850}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2195, y: 32, z: -2272}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 414666137}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &414151601
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 414151602}
+  m_Layer: 0
+  m_Name: Area 69
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &414151602
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 414151601}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 146, y: 27, z: 1903}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 414666137}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &414666137 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 418232, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+  m_PrefabInternal: {fileID: 1430544491}
 --- !u!1001 &515286961
 Prefab:
   m_ObjectHideFlags: 0
@@ -197,6 +285,34 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9678826ffd3ed244997780ccbdec99b7, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &590769228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 590769229}
+  m_Layer: 0
+  m_Name: Los Santos Airport
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &590769229
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 590769228}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1829, y: 14, z: -2600}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 414666137}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &592379530
 Prefab:
   m_ObjectHideFlags: 0
@@ -283,6 +399,20 @@ Prefab:
       propertyPath: m_doSmooth
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 20067565082138416, guid: 9d45d42a7408c1e4ab325d6840364b84,
+        type: 2}
+      propertyPath: near clip plane
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 20067565082138416, guid: 9d45d42a7408c1e4ab325d6840364b84,
+        type: 2}
+      propertyPath: field of view
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 1273918895060814, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114401842841139250, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
     - {fileID: 114828623362714814, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
@@ -351,6 +481,54 @@ Prefab:
       propertyPath: WaterPrefab
       value: 
       objectReference: {fileID: 1631170489}
+    - target: {fileID: 149528, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 156920, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_Name
+      value: Grove Street
+      objectReference: {fileID: 0}
+    - target: {fileID: 1550219727895838, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_Name
+      value: San Fierro Garage
+      objectReference: {fileID: 0}
+    - target: {fileID: 461086, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4077053835485560, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 4916251233388722, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 421924, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_RootOrder
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4393180410188950, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 162096, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_Name
+      value: Desert Airport
+      objectReference: {fileID: 0}
+    - target: {fileID: 1743648181207958, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_Name
+      value: Los Santos - Car Park
+      objectReference: {fileID: 0}
+    - target: {fileID: 133962, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_Name
+      value: Los Santos - Car Park Downtown
+      objectReference: {fileID: 0}
+    - target: {fileID: 1061115742419774, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_Name
+      value: Las Venturas - The Visage Casino
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0
@@ -464,6 +642,34 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 259a477cc43ab4eb184305bfc583d66e, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1469474710
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1469474711}
+  m_Layer: 0
+  m_Name: Gant Bridge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1469474711
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1469474710}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2574, y: 8, z: 1380}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 414666137}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1631170488
 Prefab:
   m_ObjectHideFlags: 0
@@ -526,3 +732,31 @@ Prefab:
 GameObject:
   m_PrefabParentObject: {fileID: 100000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 2}
   m_PrefabInternal: {fileID: 1631170488}
+--- !u!1 &2119699357
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 2119699358}
+  m_Layer: 0
+  m_Name: Mike Toreno's Ranch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2119699358
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2119699357}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -708, y: 13, z: 958}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 414666137}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
