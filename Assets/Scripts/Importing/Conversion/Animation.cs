@@ -140,8 +140,12 @@ namespace SanAndreasUnity.Importing.Conversion
             }
         }
 
+
         private static readonly Dictionary<string, Package> _sLoaded
             = new Dictionary<string, Package>();
+		// All loaded anims. Each entry contains file name and corresponding ifp package.
+	//	public static IEnumerable<KeyValuePair<string, Package>> Loaded { get { return _sLoaded; } }
+
 
         public static Animation Load(string fileName, string clipName, FrameContainer frames)
         {

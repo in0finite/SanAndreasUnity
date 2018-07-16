@@ -8,15 +8,16 @@ namespace SanAndreasUnity.Importing.Animation
     public enum AnimGroup
     {
         None = 0,
-        WalkCycle = 1,
-        Car = 2,
-        MyWalkCycle = 3,
-        Colt45 = 4,
-        Rifle = 5,
-        Rocket = 6,
-        Grenade = 7,
+        WalkCycle,
+        Car,
+        MyWalkCycle,
+        Colt45,
+        Rifle,
+        Rocket,
+        Grenade,
+		Gun,
 
-        _Count = 8
+        _Count
     }
 
     public enum AnimIndex
@@ -49,8 +50,40 @@ namespace SanAndreasUnity.Importing.Animation
         GetOutLeft = 6,
         GetOutRight = 7,
 
-        _Count = 8
+		// so we can dynamically access all anims of the anim group
+        Index0 = 0,
+		Index1,
+		Index2,
+		Index3,
+		Index4,
+		Index5,
+		Index6,
+		Index7,
+		Index8,
+		Index9,
+		Index10,
+		Index11,
+		Index12,
+		Index13,
+		Index14,
+		Index15,
+		Index16,
+		Index17,
+		Index18,
+		Index19,
+		Index20,
+
     }
+
+	public static class AnimIndexUtil
+	{
+
+		public static AnimIndex Get(int index)
+		{
+			string name = "Index" + index;
+			return (AnimIndex)Enum.Parse(typeof(AnimIndex), name);
+		}
+	}
 
     /*
 	public class AnimIndex {
@@ -82,9 +115,15 @@ namespace SanAndreasUnity.Importing.Animation
 
         private static readonly Regex _sEndRegex = new Regex(@"^\s*end\s*",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
+		
         public static readonly Dictionary<string, Dictionary<AnimGroup, AnimationGroup>> _sGroups
             = new Dictionary<string, Dictionary<AnimGroup, AnimationGroup>>();
+		/// <summary>
+		/// Key is a name of anim group. Value is dictionary, in which the key is anim group type and value is info about anim group.
+		/// </summary>
+		public static IEnumerable<KeyValuePair<string, Dictionary<AnimGroup, AnimationGroup>>> AllLoadedGroups
+		{ get { return _sGroups; } }
+
 
         public static void Load(string path)
         {
@@ -122,12 +161,14 @@ namespace SanAndreasUnity.Importing.Animation
             return GetInternal(name, type) ?? GetInternal("default", type);
         }
 
+
         private readonly string[] _animations;
         public string[] Animations { get { return _animations; } }
 
         public readonly string Name;
         public readonly string FileName;
         public readonly AnimGroup Type;
+
 
         private AnimationGroup(Match match, StreamReader reader)
         {
@@ -155,7 +196,7 @@ namespace SanAndreasUnity.Importing.Animation
 
         public bool HasAnimation(string animName)
         {
-            return System.Array.IndexOf<string>(_animations, animName) >= 0;
+            return System.Array.IndexOf(_animations, animName) >= 0;
         }
     }
 }
