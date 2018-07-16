@@ -120,6 +120,8 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is running Unity Editor undr `--force-glcore` and going to **Assets > Reimport all**
 
+- Current defined zones doesn't show correctly on minimap
+
 ### Leaks
 
 - Lagging when instantiating new lights
@@ -130,7 +132,7 @@ As the README list was very extensive, I have sum up here what I think it's impo
 
 - Files with .log extension is printed in hexadecimal on Sublime Text (change extension)
 
-- The scripts must read infinite radarXX.tcd textures
+- The scripts must read infinite radarXX.txd textures
 
 - Implement polar rotation system in Camera:
 

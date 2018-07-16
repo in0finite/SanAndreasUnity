@@ -232,12 +232,25 @@ namespace SanAndreasUnity.Behaviours
         private float fAlpha = 1;
         private bool showZoomPanel;
 
-        private Vector2 mapScroll, screenCenter, screenDims, baseMapRect, windowSize, constantMapRect, mapUpperLeftCorner, mapRect, mapMousePosition, mapZoomPos; //, baseMapSize;
+        private Vector2 mapScroll,
+            screenCenter,
+            screenDims,
+            //baseMapRect,
+            windowSize,
+            //constantMapRect,
+            mapUpperLeftCorner,
+            mapRect,
+            mapMousePosition,
+            mapZoomPos; //, baseMapSize;
 
-        private const float mapMaxScale = 1f, mapMinScale = .25f;
+        private const float mapMaxScale = 1f,
+                            mapMinScale = .25f,
+                            constZoom = 1.25f;
 
-        private float mapScale = mapMaxScale / 1.5f,
-                      baseScale;
+        private float curZoom = 1;
+
+        //private float mapScale = mapMaxScale / 1.5f,
+        //              baseScale;
 
         #endregion Private fields
 
@@ -246,10 +259,11 @@ namespace SanAndreasUnity.Behaviours
             loadTextures();
 
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-			if (playerObj != null) {
-				player = playerObj.GetComponent<Player> ();
-				playerController = playerObj.GetComponent<PlayerController> ();
-			}
+            if (playerObj != null)
+            {
+                player = playerObj.GetComponent<Player>();
+                playerController = playerObj.GetComponent<PlayerController>();
+            }
 
             if (canvas != null && canvas.enabled)
                 canvas.enabled = false;
@@ -373,13 +387,13 @@ namespace SanAndreasUnity.Behaviours
                     outlineImage.rectTransform.localScale = Vector3.one * 1.05f;
                 }
 
-                baseScale = Screen.width / (float)mapTexture.width;
+                //baseScale = Screen.width / (float)mapTexture.width;
                 screenCenter = new Vector2(Screen.width, Screen.height) / 2;
                 screenDims = screenCenter * 2;
                 windowSize = new Vector2(Screen.width - 120, Screen.height - 120);
-                baseMapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
+                //baseMapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
                 // This value is constant
-                constantMapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * 2);
+                //constantMapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * 2);
                 mapUpperLeftCorner = Vector2.one * 60;
 
                 Debug.Log("Minimap started!");
@@ -418,12 +432,12 @@ namespace SanAndreasUnity.Behaviours
 
             bool isScrolling = false;
 
+            Vector2 realMousePos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
             mapMousePosition = TransformPosition(new Vector2(Input.mousePosition.x, mousePosY) - mapUpperLeftCorner);
 
             if (Input.mouseScrollDelta != Vector2.zero)
             {
-                mapScale += Input.mouseScrollDelta.y * Time.fixedDeltaTime * mapZoomScaler;
-                mapScale = Mathf.Clamp(mapScale, mapMinScale, mapMaxScale);
+                //mapScale += Input.mouseScrollDelta.y * Time.fixedDeltaTime * mapZoomScaler;
 
                 // WIP: I want to scroll to mouse position
 
@@ -433,8 +447,12 @@ namespace SanAndreasUnity.Behaviours
                     //mapScroll.x += centerOffset.x * mapMovement * 5;
                     //mapScroll.y += centerOffset.y * mapMovement * 5;
 
-                    mapZoomPos = mapMousePosition - windowSize / 2; //Vector2.Lerp(windowSize / 2 - baseMapRect / 2, mapMousePosition - windowSize / 2, curZoomPercentage);
+                    //mapZoomPos = mapMousePosition - windowSize / 2; //Vector2.Lerp(windowSize / 2 - baseMapRect / 2, mapMousePosition - windowSize / 2, curZoomPercentage);
+                    curZoom *= constZoom;
+                    mapZoomPos = realMousePos - constZoom * (realMousePos - mapZoomPos);
                 }
+
+                curZoom = Mathf.Clamp(curZoom, mapMinScale, mapMaxScale);
 
                 isScrolling = true;
             }
@@ -467,7 +485,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void FixedUpdate()
         {
-			if (playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
+            if (playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
 
             if (playerController != null)
                 realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
@@ -480,7 +498,7 @@ namespace SanAndreasUnity.Behaviours
         private void LateUpdate()
         {
             if (!isReady) return;
-			if (playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
+            if (playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
 
             if (mapTransform != null)
             {
@@ -515,7 +533,7 @@ namespace SanAndreasUnity.Behaviours
             if (northPivot != null)
                 northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
 
-			if (playerImage != null && player != null)
+            if (playerImage != null && player != null)
                 playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (player.transform.eulerAngles.y + 180));
         }
 
@@ -595,7 +613,7 @@ namespace SanAndreasUnity.Behaviours
             }
             else
             {
-                mapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
+                mapRect = new Vector2(mapTexture.width, mapTexture.height); //* (baseScale * (mapScale / mapMaxScale) * 2);
 
                 GUI.DrawTexture(new Rect(50, 50, Screen.width - 100, Screen.height - 100), blackPixel);
 
@@ -603,9 +621,11 @@ namespace SanAndreasUnity.Behaviours
 
                 GUILayout.BeginArea(new Rect(mapUpperLeftCorner, windowSize));
 
-                GUILayout.BeginArea(new Rect(mapScroll, mapRect));
+                GUILayout.BeginArea(new Rect(mapScroll, mapRect * curZoom));
 
-                GUI.DrawTexture(new Rect(mapZoomPos, mapRect), mapTexture);
+                GUI.DrawTexture(new Rect(mapZoomPos, mapRect * curZoom), mapTexture);
+                //if (Event.current.type.Equals(EventType.Repaint))
+                //GUI.DrawTexture(new Rect(10, 10, 100, 100), mapTexture);
 
                 GUI.DrawTexture(new Rect(Vector2.zero, Vector2.one * 16), blackPixel);
 
