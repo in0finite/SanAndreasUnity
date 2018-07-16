@@ -7,7 +7,7 @@
 
 - Animations must be loaded/played by index – because different anim definition groups (man, woman, etc) use different anim names ( walk_civi, woman_walknorm, respectively).
 
-- **Weapons. Aiming with weapons – aim animation.**
+- **Weapons. Aiming with weapons – aim animation. - See weapons.md**
 
 - Rigid body character
 
@@ -20,6 +20,8 @@
 - **Map - better info area ; input mouse position is not always correct ; see Map.md ; **
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
+
+- Loader - better display of progress ; add loading steps ;
 
 - Work on a menu like MTA:SA (F1)
 
