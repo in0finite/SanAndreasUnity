@@ -1,7 +1,5 @@
 
 ## TODO
-<br>
-
 
 ### Features
 
@@ -55,6 +53,7 @@
 
 - Make a paragraph for those categories: https://i.gyazo.com/07490f1d389fb3c4d6363e8d9810c0c1.png - ??
 
+- Implement map zoom (https://stackoverflow.com/questions/10694397/how-to-zoom-in-using-mouse-position-on-that-image)
 
 ### Effects & Enhancements
 
@@ -126,8 +125,6 @@
 
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is running Unity Editor under `--force-glcore` and going to *Assets > Reimport all*
 
-- Current defined zones doesn't show correctly on minimap
-
 ### Leaks
 
 - Lag when instantiating new lights
@@ -142,7 +139,6 @@
 
 - Implement polar rotation system for camera
 
-
 ### Must be reviewed
 
 - Check Profiler to see what is taking performance
@@ -156,7 +152,3 @@
 - HUGE REFACTOR (compiling Assembly into DLLs will solve most problems) - what problems ??
 
 - **Minimap size should depend on screen resolution**
-
-
-<br>
-<br>
