@@ -30,6 +30,24 @@ default, ped, mywalkcycle, 3
 	GUN_STAND
 end
 
+default, ped, gun, 15
+	GunCrouchBwd
+	GunCrouchFwd
+	GunMove_BWD
+	GunMove_FWD
+	GunMove_L
+	GunMove_R
+	Gun_2_IDLE
+	GUN_BUTT
+	GUN_BUTT_crouch
+	Gun_stand
+	IDLE_armed
+	run_1armed﻿
+	run_armed
+	WALK_armed
+	WALK_start_armed
+end
+
 default, colt45, colt45, 3
 	COLT45_FIRE
 	COLT45_RELOAD
