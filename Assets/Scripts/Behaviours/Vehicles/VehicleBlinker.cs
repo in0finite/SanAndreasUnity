@@ -22,12 +22,12 @@ public class VehicleBlinker : MonoBehaviour
 
     #region "Ordinary private fields"
 
-    private float defaultIntensity;
+    //private float defaultIntensity;
 
-    private Light blinkerLight;
+    //private Light blinkerLight;
 
-    private bool blinkerSwitch,
-                 setAppart;
+    private bool blinkerSwitch;
+                 //setAppart;
 
     #endregion "Ordinary private fields"
 
@@ -59,23 +59,32 @@ public class VehicleBlinker : MonoBehaviour
 
         if (!VehicleAPI.IsValidIndividualLight(lightType)) throw new Exception("Light sides need to have a valid value, revise your code.");
 
-        setAppart = gameObject.GetComponent<Light>() != null;
+        //setAppart = gameObject.GetComponent<Light>() != null;
 
-        GameObject obj = gameObject;
+        //GameObject obj = gameObject;
 
-        if (setAppart)
-        {
-            obj = new GameObject("Blinker");
-            obj.transform.parent = parent;
-            obj.transform.position = parent.position + Vector3.right * (IsLeftSide ? -1 : 1) * .2f;
-            obj.transform.localRotation = Quaternion.Euler(new Vector3(0, 30 * (IsLeftSide ? -1 : 1), 0));
-        }
+        //if (setAppart)
+        //{
+        GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Capsule);
 
-        blinkerLight = obj.AddComponent<Light>();
+        Destroy(obj.GetComponent<CapsuleCollider>());
 
-        VehicleAPI.SetLightProps(lightType, ref blinkerLight, true);
+        obj.name = "Blinker";
+        obj.transform.parent = parent;
+        obj.transform.position = parent.position + Vector3.right * (IsLeftSide ? -1 : 1) * .2f;
+        obj.transform.localRotation = Quaternion.Euler(new Vector3(0, 30 * (IsLeftSide ? -1 : 1), 0));
+        obj.transform.localScale = Vector3.one * .2f;
 
-        defaultIntensity = blinkerLight.intensity;
+        MeshRenderer renderer = obj.GetComponent<MeshRenderer>();
+
+        renderer.material = Resources.Load<Material>("Materials/Blinker");
+        //}
+
+        //blinkerLight = obj.AddComponent<Light>();
+
+        //VehicleAPI.SetLightProps(lightType, ref blinkerLight, true);
+
+        //defaultIntensity = blinkerLight.intensity;
 
         ToggleBlinker(false);
 
@@ -99,13 +108,13 @@ public class VehicleBlinker : MonoBehaviour
     private bool ShouldBePowered(VehicleLight side)
     {
         //if (!side.HasValue) throw new Exception("Light sides need to have a value, revise your code.");
-        Debug.LogFormat("Blinker Mode: {0}; Steering: {1}", vehicle.blinkerMode, vehicle.Steering);
+        //Debug.LogFormat("Blinker Mode: {0}; Steering: {1}", vehicle.blinkerMode, vehicle.Steering);
         return IsLeftSide && (vehicle.blinkerMode == VehicleBlinkerMode.Left || vehicle.blinkerMode == VehicleBlinkerMode.Emergency);
     }
 
     private void ToggleBlinker(bool active)
     {
-        blinkerLight.intensity = active ? defaultIntensity : 0;
-        blinkerLight.enabled = active;
+        //blinkerLight.intensity = active ? defaultIntensity : 0;
+        //blinkerLight.enabled = active;
     }
 }

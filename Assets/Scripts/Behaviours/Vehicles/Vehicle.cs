@@ -133,7 +133,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private const float constRearNightIntensity = .7f;
 
-        private bool IsNightToggled
+        public bool IsNightToggled
         {
             get
             {
@@ -378,10 +378,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 else if (horAxis == 0 && Steering == 0)
                     blinkerMode = VehicleBlinkerMode.None;
 
-                if (!_isNightToggled && WorldController.IsNight)
-                    IsNightToggled = true;
-                else if (_isNightToggled && !WorldController.IsNight)
-                    IsNightToggled = false;
+                //VehicleAPI.LoopBlinker(blinkerMode, (v) => GLDebug.DrawCube(v, Quaternion.identity));
             }
 
             foreach (var wheel in _wheels)

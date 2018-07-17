@@ -1,4 +1,5 @@
 ﻿using SanAndreasUnity.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public const float constDamageFactor = 2;
         private const bool testing = true;
+
+        public static Dictionary<VehicleLight, Vector3> blinkerPos = new Dictionary<VehicleLight, Vector3>();
 
         internal static Light SetCarLight(Vehicle vehicle, Transform parent, VehicleLight light, Vector3? pos = null)
         {
@@ -38,12 +41,38 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             // Now set its blinker
             Transform blinker = vehicle.transform.FindChildRecursive(parent.name + "2");
 
-            // Note: If pixelLightCount is equal to 2 the blinker willnever show
-            if ((blinker != null && QualitySettings.pixelLightCount > 2) || testing)
-                VehicleBlinker.Init(testing ? lightObj.transform : blinker, light, vehicle);
+            //if(blinker != null)
+            //    blinkerPos.Add(light, blinker.position);
+
+            //Debug.LogFormat("Blinker added: {0}", light);
+
+            // Note: If pixelLightCount is equal to 2 the blinker will never show
+
+            //There is a bug, if the blinker is set the vehicle can't steer
+            //if ((blinker != null && QualitySettings.pixelLightCount > 2) || testing)
+            //    VehicleBlinker.Init(testing ? lightObj.transform : blinker, light, vehicle);
 
             go = lightObj.gameObject;
             return ret;
+        }
+
+        internal static void LoopBlinker(VehicleBlinkerMode light, Action<Vector3> act)
+        {
+            try
+            {
+                switch (light)
+                {
+                    case VehicleBlinkerMode.Left:
+                        act(blinkerPos[VehicleLight.FrontLeft]);
+                        act(blinkerPos[VehicleLight.RearLeft]);
+                        break;
+
+                    case VehicleBlinkerMode.Right:
+                        act(blinkerPos[VehicleLight.FrontRight]);
+                        act(blinkerPos[VehicleLight.RearRight]);
+                        break;
+                }
+            } catch { }
         }
 
         internal static bool IsFrontLight(VehicleLight light)
