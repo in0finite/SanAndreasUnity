@@ -271,16 +271,19 @@ namespace SanAndreasUnity.Behaviours
                 return;
             }
 
-			if (_player.WeaponHolder.currentWeaponSlot > 0 && Input.GetMouseButton(1))
+			if (_player.WeaponHolder.IsHoldingWeapon && Input.GetMouseButton(1))
             {
-                // right click is on
-                // aim with weapon
-                //	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
-                //		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
-                PlayerModel.PlayAnim(AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND, PlayMode.StopAll);
+                // player is holding a weapon, and right click is on => aim with weapon
+				_player.WeaponHolder.IsAiming = true;
             }
             else
             {
+				// player is not aiming
+
+				_player.WeaponHolder.IsAiming = false;
+
+				// give input to player, and update anims
+
                 var inputMove = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
                 if (inputMove.sqrMagnitude > 0f)
@@ -289,7 +292,9 @@ namespace SanAndreasUnity.Behaviours
 
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-						if (_player.WeaponHolder.currentWeaponSlot > 0)
+						// player is running
+
+						if (_player.WeaponHolder.IsHoldingWeapon)
                         {
                             // player is holding a weapon
 
@@ -307,7 +312,7 @@ namespace SanAndreasUnity.Behaviours
                     else
                     {
                         // player is walking
-						if (_player.WeaponHolder.currentWeaponSlot > 0)
+						if (_player.WeaponHolder.IsHoldingWeapon)
                         {
                             Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
                                 AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
@@ -322,7 +327,7 @@ namespace SanAndreasUnity.Behaviours
                 else
                 {
                     // player is standing
-					if (_player.WeaponHolder.currentWeaponSlot > 0)
+					if (_player.WeaponHolder.IsHoldingWeapon)
                     {
                         Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
                             AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
