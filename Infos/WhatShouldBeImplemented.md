@@ -45,7 +45,7 @@
 
 - In-game input manager
 
-- Flip & repair cars
+- Repair cars with key
 
 - CLI parameter for Console app to know where to connect (an IP)
 
@@ -126,6 +126,10 @@
 - Console Application is not launching on build (CLI was checked and works properly)
 
 - Sometimes in old gpus, all goes black, like for example here (https://i.gyazo.com/b3a682b86ab0808ca132bad803194cab.mp4) the way of fixing this is running Unity Editor under `--force-glcore` and going to *Assets > Reimport all*
+
+- Cars stop when they are falling:
+
+![...](https://cdn.discordapp.com/attachments/454006273751515163/468968463302524928/unknown.png)
 
 ### Leaks
 
