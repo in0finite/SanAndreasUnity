@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         #region "Lights"
 
-        public const float constDamageFactor = 2;
+        public const float constDamageFactor = 2, frontLightIntensity = 1.5f;
 
         public static Dictionary<VehicleLight, Vector3> blinkerPos = new Dictionary<VehicleLight, Vector3>();
 
@@ -115,7 +115,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         light.type = LightType.Spot;
                         light.range = 60;
                         light.spotAngle = 90;
-                        light.intensity = 2;
+                        light.intensity = frontLightIntensity;
                         break;
 
                     case VehicleLight.Rear:

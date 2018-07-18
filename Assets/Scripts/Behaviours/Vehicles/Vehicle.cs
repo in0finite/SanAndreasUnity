@@ -146,10 +146,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 _isNightToggled = value;
 
-                SetLight(VehicleLight.FrontLeft, _isNightToggled ? 1 : 0);
-                SetLight(VehicleLight.FrontRight, _isNightToggled ? 1 : 0);
-                SetLight(VehicleLight.RearLeft, _isNightToggled ? 1 : 0);
-                SetLight(VehicleLight.RearRight, _isNightToggled ? 1 : 0);
+                SetLight(VehicleLight.FrontLeft, _isNightToggled ? VehicleAPI.frontLightIntensity : 0);
+                SetLight(VehicleLight.FrontRight, _isNightToggled ? VehicleAPI.frontLightIntensity : 0);
+                SetLight(VehicleLight.RearLeft, _isNightToggled ? constRearNightIntensity : 0);
+                SetLight(VehicleLight.RearRight, _isNightToggled ? constRearNightIntensity : 0);
             }
         }
 
@@ -259,7 +259,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                             if (lightObj != null) lightObj.enabled = false;
                         }
 
-                        SetLight(i, mustRearPower ? 1 : brightness);
+                        SetLight(i, mustRearPower ? constRearNightIntensity : brightness);
                     }
                 }
             }
@@ -412,8 +412,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     m_frontLeftLightPowered = !m_frontLeftLight;
                     m_frontRightLightPowered = !m_frontRightLightPowered;
 
-                    SetLight(VehicleLight.FrontLeft, m_frontLeftLightPowered ? 1 : 0);
-                    SetLight(VehicleLight.FrontRight, m_frontRightLightPowered ? 1 : 0);
+                    SetLight(VehicleLight.FrontLeft, m_frontLeftLightPowered ? VehicleAPI.frontLightIntensity : 0);
+                    SetLight(VehicleLight.FrontRight, m_frontRightLightPowered ? VehicleAPI.frontLightIntensity : 0);
                 }
 
                 if (Braking > 0.125f)
