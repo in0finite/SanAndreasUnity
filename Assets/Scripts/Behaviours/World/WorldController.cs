@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Behaviours.World
         public const float dayCycleMins = 24,
                            relMinSecs = 1; // That means that one second in real life in one minute in game
 
-        private static float dayTimeCounter;
+        private static float dayTimeCounter, dayCount;
 
         public AnimationCurve lightCurve;
         public Transform dirLight;
@@ -64,7 +64,14 @@ namespace SanAndreasUnity.Behaviours.World
 
             if (dirLight != null)
             {
-                float angle = (dayTimeCounter * AngleFactor) % 360;
+                float prod = dayTimeCounter * AngleFactor, 
+                      angle = prod % 360;
+
+                if (prod > 0 && prod % 360 == 0)
+                {
+                    ++dayCount;
+                    Debug.Log("Day "+dayCount);
+                }
 
                 dirLight.rotation = Quaternion.Euler(angle, -130, 0);
                 dayTimeCounter += AngleFactor;
@@ -74,38 +81,37 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
-
+        // Must review
         public static void SetTime(TimeState time)
         {
             switch (time)
             {
                 case TimeState.Dawn:
-                    dayTimeCounter = dayTimeCounter > 0 ? GetNearestWholeMultiple(dayTimeCounter, TimeFactor) : 0;
+                    dayTimeCounter = dayCount > 0 ? GetRoundedTime(TimeFactor) : 0;
                     break;
 
                 case TimeState.Noon:
-                    dayTimeCounter = dayTimeCounter > 0 ? GetNearestWholeMultiple(dayTimeCounter, 90 * TimeFactor) : TimeFactor * 90;
+                    dayTimeCounter = dayCount > 0 ? GetRoundedTime(90 * TimeFactor) : TimeFactor * 90;
                     break;
 
                 case TimeState.Dusk:
-                    dayTimeCounter = dayTimeCounter > 0 ? GetNearestWholeMultiple(dayTimeCounter, 180 * TimeFactor) : TimeFactor * 180;
+                    dayTimeCounter = dayCount > 0 ? GetRoundedTime(180 * TimeFactor) : TimeFactor * 180;
                     break;
 
                 case TimeState.Midnight:
-                    dayTimeCounter = dayTimeCounter > 0 ? GetNearestWholeMultiple(dayTimeCounter, 270 * TimeFactor) : TimeFactor * 270;
+                    dayTimeCounter = dayCount > 0 ? GetRoundedTime(270 * TimeFactor) : TimeFactor * 270;
                     break;
             }
 
             Debug.LogFormat("Time set to {0}! ({1})", time.ToString(), dayTimeCounter);
         }
 
-        private static float GetNearestWholeMultiple(float input, float X)
+        private static float GetRoundedTime(float X)
         {
-            var output = Mathf.Round(input / X);
-            if (output == 0 && input > 0) output += 1;
-            output *= X;
+            float completeDay = 360 * TimeFactor;
+            //Debug.LogWarning("Days: "+dayCount);
 
-            return output;
+            return completeDay * dayCount + X;
         }
     }
 }

@@ -1,10 +1,7 @@
-﻿using SanAndreasUnity.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
-//using LightData = SpriteLights.LightData;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -12,15 +9,28 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         #region "Lights"
 
-        public const float constDamageFactor = 2;
-        private const bool testing = true;
+        public const float constDamageFactor = 2, frontLightIntensity = 1.5f;
 
         public static Dictionary<VehicleLight, Vector3> blinkerPos = new Dictionary<VehicleLight, Vector3>();
 
         internal static Light SetCarLight(Vehicle vehicle, Transform parent, VehicleLight light, Vector3? pos = null)
         {
             GameObject gameObject = null;
-            return SetCarLight(vehicle, parent, light, pos == null ? (IsLeftLight(light) ? new Vector3(-parent.localPosition.x * 2, 0, 0) : Vector3.zero) : pos.Value, out gameObject);
+            Light lightRet = SetCarLight(vehicle, parent, light, pos == null ? (IsLeftLight(light) ? new Vector3(-parent.localPosition.x * 2, 0, 0) : Vector3.zero) : pos.Value, out gameObject);
+
+            // Now set its blinker
+            Transform blinker = vehicle.transform.FindChildRecursive(parent.name + "2");
+
+            // Note: If pixelLightCount is equal to 2 the blinker will never show
+
+            //There is a bug, if the blinker is set the vehicle can't steer
+            //if (blinker != null) // || testing ... QualitySettings.pixelLightCount > 2 // Not needed
+                VehicleBlinker.Init(gameObject.transform, light, vehicle); //testing ? lightObj.transform :
+
+            //Debug.Log("Is Blinker Null?: "+(blinker == null));
+
+            return lightRet;
+
         }
 
         internal static Light SetCarLight(Vehicle vehicle, Transform parent, VehicleLight light, Vector3 pos, out GameObject go)
@@ -37,20 +47,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             Light ret = lightObj.gameObject.AddComponent<Light>();
             SetLightProps(GetVehicleLightParent(light).Value, ref ret);
-
-            // Now set its blinker
-            Transform blinker = vehicle.transform.FindChildRecursive(parent.name + "2");
-
-            //if(blinker != null)
-            //    blinkerPos.Add(light, blinker.position);
-
-            //Debug.LogFormat("Blinker added: {0}", light);
-
-            // Note: If pixelLightCount is equal to 2 the blinker will never show
-
-            //There is a bug, if the blinker is set the vehicle can't steer
-            //if ((blinker != null && QualitySettings.pixelLightCount > 2) || testing)
-            //    VehicleBlinker.Init(testing ? lightObj.transform : blinker, light, vehicle);
 
             go = lightObj.gameObject;
             return ret;
@@ -82,6 +78,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         internal static bool IsLeftLight(VehicleLight light)
         {
+            //Debug.LogFormat("Light type: {0} ({1})", light, light == VehicleLight.FrontLeft || light == VehicleLight.RearLeft);
             return light == VehicleLight.FrontLeft || light == VehicleLight.RearLeft;
         }
 
@@ -118,7 +115,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         light.type = LightType.Spot;
                         light.range = 60;
                         light.spotAngle = 90;
-                        light.intensity = 2;
+                        light.intensity = frontLightIntensity;
                         break;
 
                     case VehicleLight.Rear:
@@ -139,38 +136,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 light.intensity = .8f;
                 light.color = new Color(1, .5f, 0);
             }
-        }
-
-        internal static void SetLightSources(GameObject gameObject, Material mat)
-        {
-            /*List<LightData> datas = new List<LightData>();
-            var objs = GetLightObjects(gameObject);
-
-            //Map object with an index
-            //Debug.LogFormat("Objs: {0}", objs.Count());
-
-            foreach (var go in objs)
-            {
-                LightData lightData = new LightData();
-
-                lightData.position = go.transform.position;
-                lightData.brightness = 1;
-                lightData.size = 1;
-
-                datas.Add(lightData);
-            }*/
-
-            // WIP: Move this to blinker object, where we need to generate the spritelight
-
-            //var obj = SpriteLights.CreateLights(gameObject.name.ToLower() + "-LD", datas.ToArray(), mat);
-
-            //Debug.LogFormat("Obj Count: {0}", obj.Count());
-
-            /*gameObject.transform.MakeChild(obj, (p, o) =>
-            {
-                // Check the index and them set where is has to be generated
-                o.transform.position = m_frontLeftLight.transform.position;
-            });*/
         }
 
         internal static IEnumerable<GameObject> GetLightObjects(GameObject gameObject)

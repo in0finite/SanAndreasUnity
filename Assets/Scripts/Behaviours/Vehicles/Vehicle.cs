@@ -1,6 +1,7 @@
 ﻿using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
@@ -40,6 +41,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private bool frontLeftLightOk = true, frontRightLightOk = true, rearLeftLightOk = true, rearRightLightOk = true,
                     m_frontLeftLightPowered = true, m_frontRightLightPowered = true, m_rearLeftLightPowered = true, m_rearRightLightPowered = true;
+
+        private const float blinkerSum = 1.5f;
 
         private Material directionalLightsMat;
 
@@ -143,10 +146,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 _isNightToggled = value;
 
-                SetLight(VehicleLight.FrontLeft, _isNightToggled ? 1 : 0);
-                SetLight(VehicleLight.FrontRight, _isNightToggled ? 1 : 0);
-                SetLight(VehicleLight.RearLeft, _isNightToggled ? 1 : 0);
-                SetLight(VehicleLight.RearRight, _isNightToggled ? 1 : 0);
+                SetLight(VehicleLight.FrontLeft, _isNightToggled ? VehicleAPI.frontLightIntensity : 0);
+                SetLight(VehicleLight.FrontRight, _isNightToggled ? VehicleAPI.frontLightIntensity : 0);
+                SetLight(VehicleLight.RearLeft, _isNightToggled ? constRearNightIntensity : 0);
+                SetLight(VehicleLight.RearRight, _isNightToggled ? constRearNightIntensity : 0);
             }
         }
 
@@ -238,9 +241,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 {
                     VehicleLight parsedLight = (VehicleLight)bit; //VehicleAPI.ParseFromBit(i);
 
-                    //Debug.LogFormat("ParsedLight: {0}\nReal Light: {1}", parsedLight.ToString(), light.ToString());
-                    //Debug.Break();
-
                     if (IsLightOk(parsedLight))
                     {
                         Light lightObj = GetLight(parsedLight);
@@ -259,7 +259,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                             if (lightObj != null) lightObj.enabled = false;
                         }
 
-                        SetLight(i, mustRearPower ? 1 : brightness);
+                        SetLight(i, mustRearPower ? constRearNightIntensity : brightness);
                     }
                 }
             }
@@ -306,11 +306,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_rearLeftLight = VehicleAPI.SetCarLight(vh, taillights, VehicleLight.RearLeft);
                 m_rearRightLight = VehicleAPI.SetCarLight(vh, taillights, VehicleLight.RearRight);
             }
-
-            // Apply Light sources
-
-            //directionalLightsMat = Resources.Load<Material>("Materials/directionalLight");
-            //VehicleAPI.SetLightSources(gameObject, directionalLightsMat);
 
             m_frontLeftLightOk = m_frontLeftLight != null;
             m_frontRightLightOk = m_frontRightLight != null;
@@ -375,10 +370,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 if (horAxis != 0)
                     blinkerMode = horAxis < 0 ? VehicleBlinkerMode.Left : VehicleBlinkerMode.Right;
-                else if (horAxis == 0 && Steering == 0)
-                    blinkerMode = VehicleBlinkerMode.None;
-
-                //VehicleAPI.LoopBlinker(blinkerMode, (v) => GLDebug.DrawCube(v, Quaternion.identity));
+                else if (horAxis == 0 && Steering == 0 && blinkerMode != VehicleBlinkerMode.None)
+                    StartCoroutine(DelayedBlinkersTurnOff());
             }
 
             foreach (var wheel in _wheels)
@@ -411,16 +404,22 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (HasDriver)
             {
-                if (m_frontLeftLightPowered)
-                    SetLight(VehicleLight.FrontLeft, 1f);
-
-                if (m_frontRightLightPowered)
-                    SetLight(VehicleLight.FrontRight, 1f);
+                if(Input.GetKeyDown(KeyCode.F))
+                {
+                    if(Vector3.Dot(transform.up, Vector3.down) > 0)
+                    {
+                        transform.position += Vector3.up * 1.5f;
+                        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 0);
+                    }
+                }
 
                 if (Input.GetKeyDown(KeyCode.L))
                 {
                     m_frontLeftLightPowered = !m_frontLeftLight;
                     m_frontRightLightPowered = !m_frontRightLightPowered;
+
+                    SetLight(VehicleLight.FrontLeft, m_frontLeftLightPowered ? VehicleAPI.frontLightIntensity : 0);
+                    SetLight(VehicleLight.FrontRight, m_frontRightLightPowered ? VehicleAPI.frontLightIntensity : 0);
                 }
 
                 if (Braking > 0.125f)
@@ -445,6 +444,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             //    NetworkingFixedUpdate();
             PhysicsFixedUpdate();
+        }
+
+        private IEnumerator DelayedBlinkersTurnOff()
+        {
+            yield return new WaitForSeconds(blinkerSum);
+
+            if (blinkerMode != VehicleBlinkerMode.None)
+                blinkerMode = VehicleBlinkerMode.None;
         }
     }
 }
