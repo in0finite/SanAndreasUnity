@@ -279,9 +279,6 @@ namespace SanAndreasUnity.Behaviours
 
             CurrentVehicle = vehicle;
 
-            //var timer = new Stopwatch();
-            //timer.Start();
-
             if (!vehicle.IsNightToggled && WorldController.IsNight)
                 vehicle.IsNightToggled = true;
             else if (vehicle.IsNightToggled && !WorldController.IsNight)
