@@ -594,7 +594,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   dirLight: {fileID: 1430544493}
-  startTimeState: 3
+  startTimeState: 1
 --- !u!108 &1430544495 stripped
 Light:
   m_PrefabParentObject: {fileID: 10808534, guid: b6900baf9f552ba46ad27d4ada4d5489,
