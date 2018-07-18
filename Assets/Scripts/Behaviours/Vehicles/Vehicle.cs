@@ -404,16 +404,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (HasDriver)
             {
-                if (m_frontLeftLightPowered)
-                    SetLight(VehicleLight.FrontLeft, 1f);
+                // Must review, this was part of something
 
-                if (m_frontRightLightPowered)
-                    SetLight(VehicleLight.FrontRight, 1f);
 
                 if (Input.GetKeyDown(KeyCode.L))
                 {
                     m_frontLeftLightPowered = !m_frontLeftLight;
                     m_frontRightLightPowered = !m_frontRightLightPowered;
+
+                    SetLight(VehicleLight.FrontLeft, m_frontLeftLightPowered ? 1 : 0);
+                    SetLight(VehicleLight.FrontRight, m_frontRightLightPowered ? 1 : 0);
                 }
 
                 if (Braking > 0.125f)

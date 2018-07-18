@@ -284,6 +284,8 @@ namespace SanAndreasUnity.Behaviours
             else if (vehicle.IsNightToggled && !WorldController.IsNight)
                 vehicle.IsNightToggled = false;
 
+            Debug.Log("IsNightToggled? "+vehicle.IsNightToggled);
+
             var seat = vehicle.GetSeat(seatAlignment);
 
             characterController.enabled = false;
