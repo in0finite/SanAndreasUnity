@@ -22,7 +22,7 @@ public class VehicleBlinker : MonoBehaviour
 
     #region "Ordinary private fields"
 
-    private bool blinkerSwitch;
+    private bool _blinkerSwitch;
     private MeshRenderer blinkerRenderer;
     private float defaultIntensity;
 
@@ -49,6 +49,28 @@ public class VehicleBlinker : MonoBehaviour
         }
     }
 
+    private bool ShouldBePowered
+    {
+        get
+        {
+            return (IsLeftSide && vehicle.blinkerMode == VehicleBlinkerMode.Left || !IsLeftSide && vehicle.blinkerMode == VehicleBlinkerMode.Right) || vehicle.blinkerMode == VehicleBlinkerMode.Emergency;
+        }
+    }
+
+    private bool blinkerSwitch
+    {
+        get
+        {
+            return _blinkerSwitch;
+        }
+
+        set
+        {
+            _blinkerSwitch = value;
+            ToggleBlinker(_blinkerSwitch);
+        }
+    }
+
     // Use this for initialization
     private void Start()
     {
@@ -70,7 +92,7 @@ public class VehicleBlinker : MonoBehaviour
         blinkerRenderer.material = Resources.Load<Material>("Materials/Blinker");
         defaultIntensity = blinkerRenderer.material.GetFloat("_MKGlowPower");
 
-        ToggleBlinker(false);
+        blinkerSwitch = false;
 
         InvokeRepeating("Cycle", 0, repeatInterval);
     }
@@ -78,30 +100,20 @@ public class VehicleBlinker : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        // Must review
+        if (vehicle.HasDriver && !ShouldBePowered && blinkerSwitch)
+        {
+            Debug.Log("Turning off blinkers!");
+            blinkerSwitch = false;
+        }
     }
 
     private void Cycle()
     {
-        if (vehicle.HasDriver && ShouldBePowered(lightType) || blinkerSwitch)
-        {
-            ToggleBlinker(blinkerSwitch);
-            blinkerSwitch = !blinkerSwitch;
-        }
+        if (!(vehicle.HasDriver && ShouldBePowered))
+            return;
 
-        if (vehicle.HasDriver && !ShouldBePowered(lightType) && blinkerSwitch)
-        {
-            Debug.Log("Turning off blinkers!");
-            blinkerSwitch = false;
-            ToggleBlinker(blinkerSwitch);
-        }
-    }
-
-    private bool ShouldBePowered(VehicleLight side)
-    {
-        //if (!side.HasValue) throw new Exception("Light sides need to have a value, revise your code.");
-        //Debug.LogFormat("Blinker Mode: {0}; Steering: {1}", vehicle.blinkerMode, vehicle.Steering);
-        //Debug.LogFormat("Light: {0}, IsLeft?: {1}, Mode: {2}", lightType, IsLeftSide, vehicle.blinkerMode);
-        return (IsLeftSide && vehicle.blinkerMode == VehicleBlinkerMode.Left || !IsLeftSide && vehicle.blinkerMode == VehicleBlinkerMode.Right) || vehicle.blinkerMode == VehicleBlinkerMode.Emergency;
+        blinkerSwitch = !blinkerSwitch;
     }
 
     private void ToggleBlinker(bool active)

@@ -43,7 +43,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     m_frontLeftLightPowered = true, m_frontRightLightPowered = true, m_rearLeftLightPowered = true, m_rearRightLightPowered = true;
 
         private const float blinkerSum = 1.5f;
-        private float blinkerTimer;
 
         private Material directionalLightsMat;
 
@@ -371,7 +370,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 if (horAxis != 0)
                     blinkerMode = horAxis < 0 ? VehicleBlinkerMode.Left : VehicleBlinkerMode.Right;
-                else if (horAxis == 0 && Steering == 0 && blinkerTimer == 0 && blinkerMode != VehicleBlinkerMode.None)
+                else if (horAxis == 0 && Steering == 0 && blinkerMode != VehicleBlinkerMode.None)
                     StartCoroutine(DelayedBlinkersTurnOff());
             }
 
@@ -443,14 +442,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private IEnumerator DelayedBlinkersTurnOff()
         {
-            Debug.Log("Start blinker countdown");
-            blinkerTimer = blinkerSum;
-
-            while (blinkerTimer > 0)
-            {
-                blinkerTimer -= Time.fixedDeltaTime;
-                yield return new WaitForFixedUpdate();
-            }
+            yield return new WaitForSeconds(blinkerSum);
 
             if (blinkerMode != VehicleBlinkerMode.None)
                 blinkerMode = VehicleBlinkerMode.None;
