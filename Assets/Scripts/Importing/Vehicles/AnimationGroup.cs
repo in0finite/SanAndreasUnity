@@ -16,6 +16,7 @@ namespace SanAndreasUnity.Importing.Animation
         Rocket,
         Grenade,
 		Gun,
+		Weapons,
 
         _Count
     }
@@ -72,6 +73,16 @@ namespace SanAndreasUnity.Importing.Animation
 		Index18,
 		Index19,
 		Index20,
+		Index21,
+		Index22,
+		Index23,
+		Index24,
+		Index25,
+		Index26,
+		Index27,
+		Index28,
+		Index29,
+		Index30,
 
     }
 

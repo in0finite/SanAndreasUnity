@@ -30,7 +30,7 @@ default, ped, mywalkcycle, 3
 	GUN_STAND
 end
 
-default, ped, gun, 15
+default, ped, gun, 23
 	GunCrouchBwd
 	GunCrouchFwd
 	GunMove_BWD
@@ -44,8 +44,36 @@ default, ped, gun, 15
 	IDLE_armed
 	run_1armed﻿
 	run_armed
+	run_left
+	run_right
+	run_player﻿
+	sprint_civi
 	WALK_armed
 	WALK_start_armed
+	SHOT_leftP
+	SHOT_partial
+	SHOT_partial_B
+	SHOT_rightP
+end
+
+default, weapons, weapons, 17
+	SHP_1H_Lift
+	SHP_1H_Lift_End
+	SHP_1H_Ret
+	SHP_1H_Ret_S
+	SHP_2H_Lift
+	SHP_2H_Lift_End
+	SHP_2H_Ret
+	SHP_2H_Ret_S
+	SHP_Ar_Lift
+	SHP_Ar_Lift_End
+	SHP_Ar_Ret
+	SHP_Ar_Ret_S
+	SHP_G_Lift_In
+	SHP_G_Lift_Out
+	SHP_Tray_In
+	SHP_Tray_Out
+	SHP_Tray_Pose
 end
 
 default, colt45, colt45, 3
