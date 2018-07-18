@@ -364,17 +364,20 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                                     lastContact = damagePoint;
                                 }
 
-                                if (vp.m_frontLeftLightOk && (damagePoint - vp.m_frontLeftLight.transform.position).sqrMagnitude < lightContactDistance)
-                                    vp.m_frontLeftLightOk = false;
+                                if (vp != null)
+                                {
+                                    if (vp.m_frontLeftLight != null && vp.m_frontLeftLightOk && (damagePoint - vp.m_frontLeftLight.transform.position).sqrMagnitude < lightContactDistance)
+                                        vp.m_frontLeftLightOk = false;
 
-                                if (vp.m_frontRightLightOk && (damagePoint - vp.m_frontRightLight.transform.position).sqrMagnitude < lightContactDistance)
-                                    vp.m_frontRightLightOk = false;
+                                    if (vp.m_frontRightLight != null && vp.m_frontRightLightOk && (damagePoint - vp.m_frontRightLight.transform.position).sqrMagnitude < lightContactDistance)
+                                        vp.m_frontRightLightOk = false;
 
-                                if (vp.m_rearLeftLightOk && (damagePoint - vp.m_rearLeftLight.transform.position).sqrMagnitude < lightContactDistance)
-                                    vp.m_rearLeftLightOk = false;
+                                    if (vp.m_rearLeftLight != null && vp.m_rearLeftLightOk && (damagePoint - vp.m_rearLeftLight.transform.position).sqrMagnitude < lightContactDistance)
+                                        vp.m_rearLeftLightOk = false;
 
-                                if (vp.m_rearRightLightOk && (damagePoint - vp.m_rearRightLight.transform.position).sqrMagnitude < lightContactDistance)
-                                    vp.m_rearRightLightOk = false;
+                                    if (vp.m_rearRightLight != null && vp.m_rearRightLightOk && (damagePoint - vp.m_rearRightLight.transform.position).sqrMagnitude < lightContactDistance)
+                                        vp.m_rearRightLightOk = false;
+                                }
                             }
                         }
 

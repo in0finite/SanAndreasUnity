@@ -22,12 +22,7 @@ public class VehicleBlinker : MonoBehaviour
 
     #region "Ordinary private fields"
 
-    //private float defaultIntensity;
-
-    //private Light blinkerLight;
-
     private bool blinkerSwitch;
-                 //setAppart;
 
     #endregion "Ordinary private fields"
 
@@ -55,21 +50,14 @@ public class VehicleBlinker : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        //lightSide = GetVehicleLightSide(lightType);
-
         if (!VehicleAPI.IsValidIndividualLight(lightType)) throw new Exception("Light sides need to have a valid value, revise your code.");
 
-        //setAppart = gameObject.GetComponent<Light>() != null;
-
-        //GameObject obj = gameObject;
-
-        //if (setAppart)
-        //{
         GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Capsule);
 
-        Destroy(obj.GetComponent<CapsuleCollider>());
+        //If you uncomment this wheels won't steer
+        //Destroy(obj.GetComponent<CapsuleCollider>());
 
-        obj.name = "Blinker";
+        obj.name = string.Format("Blinker ({0})", lightType.ToString());
         obj.transform.parent = parent;
         obj.transform.position = parent.position + Vector3.right * (IsLeftSide ? -1 : 1) * .2f;
         obj.transform.localRotation = Quaternion.Euler(new Vector3(0, 30 * (IsLeftSide ? -1 : 1), 0));
@@ -78,13 +66,6 @@ public class VehicleBlinker : MonoBehaviour
         MeshRenderer renderer = obj.GetComponent<MeshRenderer>();
 
         renderer.material = Resources.Load<Material>("Materials/Blinker");
-        //}
-
-        //blinkerLight = obj.AddComponent<Light>();
-
-        //VehicleAPI.SetLightProps(lightType, ref blinkerLight, true);
-
-        //defaultIntensity = blinkerLight.intensity;
 
         ToggleBlinker(false);
 
