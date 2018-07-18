@@ -3,6 +3,7 @@ using UnityEngine;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Behaviours;
 using System.Linq;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.UI {
 
@@ -49,7 +50,7 @@ namespace SanAndreasUnity.UI {
 
 
 		//	var defs = Item.GetDefinitions<Importing.Items.Definitions.WeaponDef> ();
-			var datas = Importing.Weapons.WeaponData.AllLoadedWeaponsData;
+			var datas = Importing.Weapons.WeaponData.AllLoadedWeaponsData.DistinctBy( wd => wd.weaponType );
 
 			foreach (var data in datas) {
 

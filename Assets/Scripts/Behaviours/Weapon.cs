@@ -9,14 +9,21 @@ namespace SanAndreasUnity.Behaviours
 {
 	public enum WeaponSlot
 	{
+		Hand = 0,
+		Melee = 1,
 		Pistol = 2,
 		Shotgun = 3,
 		Submachine = 4, // uzi, mp5, tec9
 		Machine = 5, // ak47, m4
 		Rifle = 6,
 		Heavy = 7, // rocket launcher, flame thrower, minigun
+		SatchelCharge = 8,
+		Misc = 9, // spraycan, extinguisher, camera
+		Misc2 = 10, // dildo, vibe, flowers, cane
+		Special = 11, // parachute, goggles
+		Detonator = 12,
 
-		Count = 8
+		Count = 13
 	}
 
 //	public class WeaponData

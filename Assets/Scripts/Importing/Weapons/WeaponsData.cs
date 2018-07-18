@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Importing.Weapons
 
 		// common for all weapons
 
-		string firstChar;
+		public readonly string firstChar;
 		public readonly string weaponType;
 		public readonly string eFireType;
 		public readonly float targetRange, weaponRange;
@@ -17,45 +17,39 @@ namespace SanAndreasUnity.Importing.Weapons
 	//	int reloadSampleTime1, reloadSampleTime2;
 		public readonly int weaponslot;
 
-		GunData gunData;
+		public readonly GunData gunData;
 
 
 		public class GunData
 		{
-			string AssocGroupId;
+			public readonly string AssocGroupId;
 
-			int ammoClip;
+			public readonly int ammoClip;
 
-			int damage;
+			public readonly int damage;
 
-			UnityEngine.Vector3 fireOffset;
+			public readonly UnityEngine.Vector3 fireOffset;
 
-			int skillLevel;// 	0:POOR	1:STD	2:PRO
-			int reqStatLevel; // req stat level to get this weapon skill level
+			public readonly int skillLevel;// 	0:POOR	1:STD	2:PRO
+			public readonly int reqStatLevel; // req stat level to get this weapon skill level
 
-			float accuracy;// (0.5 - 2.0f)
-			float moveSpeed;// (0.5 - 1.5)
+			public readonly float accuracy;// (0.5 - 2.0f)
+			public readonly float moveSpeed;// (0.5 - 1.5)
 
-			int animLoopStart, animLoopEnd, animLoopFire;
-			int animLoop2Start, animLoop2End, animLoop2Fire;
+			public readonly int animLoopStart, animLoopEnd, animLoopFire;
+			public readonly int animLoop2Start, animLoop2End, animLoop2Fire;
 
-			int breakoutTime;
+			public readonly int breakoutTime;
 
-			string hexFlags;
+			public readonly string hexFlags;
 
 			// old_shot_data
 
-			float speed, radius;
-			float lifespan, spread;
-
-
-		}
-
-		public enum GunFlags
-		{
-
+			public readonly float speed, radius;
+			public readonly float lifespan, spread;
 
 		}
+
 
 		private	static	List<WeaponData>	m_loadedWeaponData = new List<WeaponData> ();
 		public	static	IEnumerable<WeaponData>	AllLoadedWeaponsData { get { return m_loadedWeaponData; } }
@@ -82,7 +76,7 @@ namespace SanAndreasUnity.Importing.Weapons
 				}
 			}
 
-			UnityEngine.Debug.Log ("Loaded weapons data: \"" + path + "\" - " + m_loadedWeaponData.Count + " entries");
+			UnityEngine.Debug.Log ("Loaded weapons data - " + m_loadedWeaponData.Count + " entries");
 
 		}
 
@@ -107,10 +101,7 @@ namespace SanAndreasUnity.Importing.Weapons
 			var fields = typeof(T).GetFields (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic
 				| System.Reflection.BindingFlags.Public);
 			
-			//	if (fields.Length != parts.Length)
-			//		throw new System.ArgumentException ("Error loading weapons data: number of fields is not equal to number of entries in a line");
-
-			UnityEngine.Debug.Log ("Parsing weapons data line parts:\n" + string.Join("\n", parts));
+		//	UnityEngine.Debug.Log ("Parsing weapons data line parts:\n" + string.Join("\n", parts));
 
 			int partIndex = 0;
 
@@ -146,8 +137,8 @@ namespace SanAndreasUnity.Importing.Weapons
 					field.SetValue (obj, vec3);
 				}
 
-				UnityEngine.Debug.LogFormat ("new value {0}, index {1}, field name {2}", field.GetValue (obj), partIndex,
-					field.Name);
+			//	UnityEngine.Debug.LogFormat ("new value {0}, index {1}, field name {2}", field.GetValue (obj), partIndex,
+			//		field.Name);
 
 				partIndex++;
 			}

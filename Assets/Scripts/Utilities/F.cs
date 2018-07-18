@@ -259,6 +259,19 @@ namespace SanAndreasUnity.Utilities
             return result;
         }
 
+		public static IEnumerable<T> DistinctBy<T,T2>(this IEnumerable<T> enumerable, System.Func<T,T2> selector)
+		{
+			List<KeyValuePair<T,T2>> list = new List<KeyValuePair<T, T2>>();
+
+			foreach (var elem in enumerable) {
+				var value = selector (elem);
+				if (!list.Exists (item => item.Value.Equals (value)))
+					list.Add (new KeyValuePair<T, T2> (elem, value));
+			}
+
+			return list.Select (item => item.Key);
+		}
+
         private static Dictionary<string, Texture2D> Texturemap = new Dictionary<string, Texture2D>();
         private static Texture2D Font;
 
