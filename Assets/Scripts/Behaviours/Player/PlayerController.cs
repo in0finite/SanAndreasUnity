@@ -271,7 +271,7 @@ namespace SanAndreasUnity.Behaviours
                 return;
             }
 
-            if (_player.currentWeaponSlot > 0 && Input.GetMouseButton(1))
+			if (_player.WeaponHolder.currentWeaponSlot > 0 && Input.GetMouseButton(1))
             {
                 // right click is on
                 // aim with weapon
@@ -289,7 +289,7 @@ namespace SanAndreasUnity.Behaviours
 
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        if (_player.currentWeaponSlot > 0)
+						if (_player.WeaponHolder.currentWeaponSlot > 0)
                         {
                             // player is holding a weapon
 
@@ -307,7 +307,7 @@ namespace SanAndreasUnity.Behaviours
                     else
                     {
                         // player is walking
-                        if (_player.currentWeaponSlot > 0)
+						if (_player.WeaponHolder.currentWeaponSlot > 0)
                         {
                             Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
                                 AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
@@ -322,7 +322,7 @@ namespace SanAndreasUnity.Behaviours
                 else
                 {
                     // player is standing
-                    if (_player.currentWeaponSlot > 0)
+					if (_player.WeaponHolder.currentWeaponSlot > 0)
                     {
                         Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
                             AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);

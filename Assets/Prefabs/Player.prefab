@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 143191563852256374}
   - component: {fileID: 114099438993920694}
   - component: {fileID: 114173420020992462}
+  - component: {fileID: 114879899237604226}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -180,8 +181,6 @@ MonoBehaviour:
   Camera: {fileID: 20067565082138416}
   PlayerModel: {fileID: 114671475596742702}
   TurnSpeed: 10
-  currentWeaponSlot: -1
-  autoAddWeapon: 0
   enableFlying: 0
   enableNoclip: 0
   characterController: {fileID: 0}
@@ -207,7 +206,6 @@ MonoBehaviour:
   animationBlendWeight: 0.01
   smoothing: {x: 10, y: 10}
   m_doSmooth: 1
-  CursorLocked: 0
 --- !u!114 &114401842841139250
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -297,6 +295,19 @@ MonoBehaviour:
   blurAndFlaresShader: {fileID: 4800000, guid: be6e39cf196f146d5be72fbefb18ed75, type: 3}
   brightPassFilterShader: {fileID: 4800000, guid: 0aeaa4cb29f5d4e9c8455f04c8575c8c,
     type: 3}
+--- !u!114 &114879899237604226
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1273918895060814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 104b2f17607c64562aea9bbcedc03368, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentWeaponSlot: -1
+  autoAddWeapon: 0
 --- !u!114 &114912848126749456
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -308,7 +319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175f426eee620b54bbcdb155ed8ecf32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highQuality: 0
 --- !u!124 &124844237926371820
 Behaviour:
   m_ObjectHideFlags: 1

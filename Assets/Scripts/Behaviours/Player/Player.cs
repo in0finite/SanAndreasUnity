@@ -18,6 +18,9 @@ namespace SanAndreasUnity.Behaviours
     {
         #region Private Fields
 
+		private WeaponHolder m_weaponHolder;
+		public WeaponHolder WeaponHolder { get { return m_weaponHolder; } }
+
         private int jumpTimer;
 
         #endregion Private Fields
@@ -28,10 +31,6 @@ namespace SanAndreasUnity.Behaviours
         public Pedestrian PlayerModel;
 
         public float TurnSpeed = 10f;
-
-        public Weapon[] weapons = new Weapon[(int)WeaponSlot.Count];
-        public int currentWeaponSlot = -1;
-        public bool autoAddWeapon = false;
 
         public bool enableFlying = false;
         public bool enableNoclip = false;
@@ -101,6 +100,7 @@ namespace SanAndreasUnity.Behaviours
             Instance = this;
 
             characterController = GetComponent<CharacterController>();
+			m_weaponHolder = GetComponent<WeaponHolder> ();
 
             IsLocalPlayer = true;
 
@@ -462,42 +462,7 @@ namespace SanAndreasUnity.Behaviours
 
             if (IsInVehicle && IsDrivingVehicle)
                 UpdateWheelTurning();
-
-            // switch weapons - does not work
-			if (!IsInVehicle && (null == Console.Instance || !Console.Instance.IsOpened) && !MiniMap.toggleMap)
-            {
-                if (Input.mouseScrollDelta.y != 0)
-                {
-                    if (currentWeaponSlot < 0)
-                        currentWeaponSlot = 0;
-
-                    for (int i = currentWeaponSlot + (int)Mathf.Sign(Input.mouseScrollDelta.y), count = 0;
-                        i != currentWeaponSlot && count < (int)WeaponSlot.Count;
-                        i += (int)Mathf.Sign(Input.mouseScrollDelta.y), count++)
-                    {
-                        if (i < 0)
-                            i = weapons.Length - 1;
-                        if (i >= weapons.Length)
-                            i = 0;
-
-                        if (weapons[i] != null)
-                        {
-                            SwitchWeapon(i);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // add weapons to player if he doesn't have any
-            if (autoAddWeapon && null == System.Array.Find(weapons, w => w != null))
-            {
-                // player has no weapons
-
-                weapons[(int)WeaponSlot.Machine] = Weapon.Load(355);
-                SwitchWeapon((int)WeaponSlot.Machine);
-            }
-
+			
             //If player falls from the map
             if (IsGrounded && transform.position.y < -50)
             {
@@ -562,22 +527,5 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        private void SwitchWeapon(int slotIndex)
-        {
-            if (PlayerModel.weapon != null)
-            {
-                // set parent to weapons container in order to hide it
-                //	PlayerModel.weapon.SetParent (Weapon.weaponsContainer.transform);
-
-                PlayerModel.weapon.gameObject.SetActive(false);
-            }
-
-            PlayerModel.weapon = weapons[slotIndex].gameObject.transform;
-            // change parent to make it visible
-            //	PlayerModel.weapon.SetParent(this.transform);
-            PlayerModel.weapon.gameObject.SetActive(true);
-
-            currentWeaponSlot = slotIndex;
-        }
     }
 }
