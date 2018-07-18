@@ -172,7 +172,8 @@ namespace SanAndreasUnity.UI {
 
 			// display button for opening/closing window
 
-			string text = this.IsOpened ? "Hide " + this.windowName : "Show " + this.windowName;
+		//	string text = this.IsOpened ? "Hide " + this.windowName : "Show " + this.windowName;
+			string text = this.windowName;
 
 			if (GUILayout.Button (text)) {
 				this.IsOpened = ! this.IsOpened;
