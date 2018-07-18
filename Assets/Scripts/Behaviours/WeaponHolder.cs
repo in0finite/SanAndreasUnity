@@ -9,15 +9,18 @@ namespace SanAndreasUnity.Behaviours {
 		private	Player	m_player;
 		public	Pedestrian	PlayerModel { get { return m_player.PlayerModel; } }
 
-		public	Weapon[]	weapons = new Weapon[(int)WeaponSlot.Count];
+		private	Weapon[]	weapons = new Weapon[(int)WeaponSlot.Count];
 
-		public	int		currentWeaponSlot = -1;
+		private	int		currentWeaponSlot = -1;
+		public	int		CurrentWeaponSlot { get { return this.currentWeaponSlot; } }
 		public	bool	IsHoldingWeapon { get { return this.currentWeaponSlot > 0; } }
 
 		public	bool	autoAddWeapon = false;
 
 		private	bool	m_isAiming = false;
-		public bool IsAiming { get { return this.m_isAiming; } set { m_isAiming = value; } }
+		public	bool	IsAiming { get { return this.m_isAiming; } set { m_isAiming = value; } }
+
+		public	Transform	CurrentWeaponTransform { get ; private set ; }
 
 
 
@@ -61,8 +64,8 @@ namespace SanAndreasUnity.Behaviours {
 			if (autoAddWeapon && null == System.Array.Find (weapons, w => w != null)) {
 				// player has no weapons
 
-				weapons [(int)WeaponSlot.Machine] = Weapon.Load (355);
-				SwitchWeapon ((int)WeaponSlot.Machine);
+				this.SetWeaponAtSlot (355, WeaponSlot.Machine);
+				this.SwitchWeapon (WeaponSlot.Machine);
 			}
 
 
@@ -83,27 +86,75 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 
+			// update transform of weapon
+			if (CurrentWeaponTransform != null && PlayerModel.RightFinger != null && PlayerModel.LeftFinger != null) {
+
+				CurrentWeaponTransform.transform.position = PlayerModel.RightFinger.transform.position;
+
+				Vector3 dir = (PlayerModel.LeftFinger.transform.position - PlayerModel.RightFinger.transform.position).normalized;
+				Quaternion q = Quaternion.LookRotation (dir, transform.up);
+				Vector3 upNow = q * Vector3.up;
+				dir = Quaternion.AngleAxis (-90, upNow) * dir;
+				CurrentWeaponTransform.transform.rotation = Quaternion.LookRotation (dir, transform.up);
+			}
+
+
 			// reset aim state - it should be done by controller
 		//	m_isAiming = false;
 
 		}
 
-		private void SwitchWeapon(int slotIndex)
+		public void SwitchWeapon(WeaponSlot slot)
 		{
-			if (PlayerModel.weapon != null)
-			{
-				// set parent to weapons container in order to hide it
-				//	PlayerModel.weapon.SetParent (Weapon.weaponsContainer.transform);
+			this.SwitchWeapon ((int)slot);
+		}
 
-				PlayerModel.weapon.gameObject.SetActive(false);
+		public void SwitchWeapon (int slotIndex)
+		{
+			if (CurrentWeaponTransform != null) {
+				// set parent to weapons container in order to hide it
+			//	weapon.SetParent (Weapon.weaponsContainer.transform);
+
+				CurrentWeaponTransform.gameObject.SetActive (false);
 			}
 
-			PlayerModel.weapon = weapons[slotIndex].gameObject.transform;
-			// change parent to make it visible
-			//	PlayerModel.weapon.SetParent(this.transform);
-			PlayerModel.weapon.gameObject.SetActive(true);
+			if (slotIndex >= 0) {
+				
+				CurrentWeaponTransform = weapons [slotIndex].gameObject.transform;
+
+				// change parent to make it visible
+			//	weapon.SetParent(this.transform);
+				CurrentWeaponTransform.gameObject.SetActive (true);
+
+			} else {
+				CurrentWeaponTransform = null;
+			}
 
 			currentWeaponSlot = slotIndex;
+		}
+
+		public void SetWeaponAtSlot (Importing.Items.Definitions.WeaponDef weaponDef, WeaponSlot slot)
+		{
+
+			this.SetWeaponAtSlot (weaponDef.Id, slot);
+
+		}
+
+		public void SetWeaponAtSlot (int weaponId, WeaponSlot slot)
+		{
+
+			weapons [(int)slot] = Weapon.Load (weaponId);
+
+		}
+
+		public void RemoveAllWeapons() {
+
+			this.SwitchWeapon (-1);
+
+			for (int i = 0; i < this.weapons.Length; i++) {
+				this.weapons [i] = null;
+			}
+
 		}
 
 	}

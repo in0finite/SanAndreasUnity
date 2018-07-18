@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 114769417846371336}
   - component: {fileID: 114366197016130562}
   - component: {fileID: 114396965753478646}
+  - component: {fileID: 114184621571316304}
   m_Layer: 0
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -104,6 +105,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c960baf8e8064cf5b80a1e60a5b79e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114184621571316304
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693201817607148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47b9d4dc7492d4d5892d2931d8a960be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: Weapons
+  m_isOpenedByDefault: 0
+  windowRect:
+    serializedVersion: 2
+    x: 57.5
+    y: 78.75
+    width: 115
+    height: 157.5
+  useScrollView: 1
 --- !u!114 &114299782105903270
 MonoBehaviour:
   m_ObjectHideFlags: 1

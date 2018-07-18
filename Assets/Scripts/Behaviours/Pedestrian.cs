@@ -47,9 +47,11 @@ namespace SanAndreasUnity.Behaviours
 
         public Vector3 VehicleParentOffset { get; set; }
 
-        public Transform weapon = null;
         private Transform m_leftFinger = null;
+		public Transform LeftFinger { get { return m_leftFinger; } }
+
         private Transform m_rightFinger = null;
+		public Transform RightFinger { get { return m_rightFinger; } }
 
         private Player _player;
 
@@ -153,16 +155,6 @@ namespace SanAndreasUnity.Behaviours
                 }
             }
 
-            // update transform of weapon
-            if (weapon != null && m_rightFinger != null && m_leftFinger != null)
-            {
-                weapon.transform.position = m_rightFinger.transform.position;
-                Vector3 dir = (m_leftFinger.transform.position - m_rightFinger.transform.position).normalized;
-                Quaternion q = Quaternion.LookRotation(dir, transform.up);
-                Vector3 upNow = q * Vector3.up;
-                dir = Quaternion.AngleAxis(-90, upNow) * dir;
-                weapon.transform.rotation = Quaternion.LookRotation(dir, transform.up);
-            }
         }
 
         private void OnValidate()
