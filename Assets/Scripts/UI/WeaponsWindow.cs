@@ -2,6 +2,7 @@
 using UnityEngine;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Behaviours;
+using System.Linq;
 
 namespace SanAndreasUnity.UI {
 
@@ -47,17 +48,18 @@ namespace SanAndreasUnity.UI {
 			}
 
 
-			var defs = Item.GetDefinitions<Importing.Items.Definitions.WeaponDef> ();
+		//	var defs = Item.GetDefinitions<Importing.Items.Definitions.WeaponDef> ();
+			var datas = Importing.Weapons.WeaponData.AllLoadedWeaponsData;
 
-			foreach (var def in defs) {
+			foreach (var data in datas) {
 
-				GUILayout.Label ("Id " + def.Id + " Name " + def.ModelName);
+				GUILayout.Label ("Id " + data.modelId1 + " Name " + data.weaponType + " Slot " + data.weaponslot);
 
 				if (playerExists) {
 					if (GUILayout.Button ("Give", GUILayout.Width(70))) {
 						// give weapon to player
 						// in which slot ?
-						Player.Instance.WeaponHolder.SetWeaponAtSlot( def, WeaponSlot.Machine );
+						Player.Instance.WeaponHolder.SetWeaponAtSlot( data.modelId1, WeaponSlot.Machine );
 						Player.Instance.WeaponHolder.SwitchWeapon (WeaponSlot.Machine);
 					}
 				}

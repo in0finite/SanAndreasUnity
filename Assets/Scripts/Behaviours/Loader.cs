@@ -32,7 +32,7 @@ namespace SanAndreasUnity.Behaviours
             get
             {
                 string[] statuses = { "archive paths", "archive", "collision files", "item info",
-                    "handling info", "animation group info", "car colors", "special textures" };
+                    "handling info", "animation group info", "car colors", "weapons data", "special textures" };
 
                 return "Loading " + statuses[loadingStatus];
             }
@@ -167,7 +167,14 @@ namespace SanAndreasUnity.Behaviours
                     }
                     break;
 
-                case 7:
+				case 7:
+					using (Profiler.Start("Weapons data load time"))
+					{
+						Importing.Weapons.WeaponData.Load(Config.GetPath("weapons_path"));
+					}
+					break;
+
+                case 8:
                     using (Profiler.Start("Special texture load time"))
                     {
 						using (Profiler.Start ("Minimap load time")) {
