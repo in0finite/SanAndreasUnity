@@ -28,11 +28,17 @@ namespace SanAndreasUnity.UI {
 
 		private	static	PlayerController m_playerController;
 
+	//	public	Color	windowsColor = new Color(0.5f, 0.5f, 0.5f, 0.8f);
+	//	private	static	Texture2D	m_windowBackgroundTexture = null;
+	//	private	static	bool	m_changedWindowStyle = false;
+
 
 
 		void Awake () {
 
 			m_playerController = FindObjectOfType<PlayerController> ();
+
+		//	m_windowBackgroundTexture = Utilities.F.CreateTexture (1, 1, this.windowsColor);
 
 		}
 
@@ -93,7 +99,12 @@ namespace SanAndreasUnity.UI {
 
 			if (!Loader.HasLoaded || !IsOpened)
 				return;
-			
+
+//			if (!m_changedWindowStyle) {
+//				m_changedWindowStyle = true;
+//				GUI.skin.window.normal.background = m_windowBackgroundTexture;
+//			}
+
 
 			// draw title
 			Utilities.GUIUtils.CenteredLabel (new Vector2 (Screen.width / 2.0f, 20), "<b>PAUSE MENU</b>");

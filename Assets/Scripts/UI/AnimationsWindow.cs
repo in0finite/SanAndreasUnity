@@ -8,6 +8,7 @@ namespace SanAndreasUnity.UI {
 
 		private	Vector2	m_scrollViewPos = Vector2.zero;
 		private	float m_lastContentHeight = 0;
+		private bool m_displayWalkcycleAnims = false;
 
 
 
@@ -42,15 +43,21 @@ namespace SanAndreasUnity.UI {
 //			}
 
 
-			// display all anim groups and their anims
+
+			float headerHeight = 20;
+
+			m_displayWalkcycleAnims = GUI.Toggle( new Rect(0, 0, 150, headerHeight), m_displayWalkcycleAnims, "Display walkcycle anims");
+
+
+			// display anim groups and their anims
 
 			Rect scrollViewRect = this.windowRect;
-			m_scrollViewPos = GUI.BeginScrollView (new Rect (Vector2.zero, scrollViewRect.size), m_scrollViewPos, 
-				new Rect (Vector2.zero, new Vector2(scrollViewRect.width, m_lastContentHeight) ), false, false);
+			m_scrollViewPos = GUI.BeginScrollView (new Rect (new Vector2(0, headerHeight), scrollViewRect.size), m_scrollViewPos, 
+				new Rect (Vector2.zero, new Vector2(scrollViewRect.width, m_lastContentHeight) ));
 
 			float labelWidth = 150;
 			float labelHeight = 20;
-			Rect rect = new Rect (Vector2.zero, new Vector2(labelWidth, labelHeight));
+			Rect rect = new Rect (new Vector2(0, headerHeight), new Vector2(labelWidth, labelHeight));
 		//	m_lastContentHeight = 0;
 
 			bool playerExists = Behaviours.Player.Instance != null;
@@ -65,10 +72,13 @@ namespace SanAndreasUnity.UI {
 
 				foreach (var pair2 in pair.Value) {
 
+					if (!m_displayWalkcycleAnims && pair2.Key == AnimGroup.WalkCycle)
+						continue;
+
 				//	rect.xMin = labelWidth;
 				//	rect.yMin += labelHeight;
 					rect.position = new Vector2 (labelWidth, rect.position.y + labelHeight);
-					GUI.Label (rect, "Type: " + pair.Key);
+					GUI.Label (rect, "Type: " + pair2.Key);
 
 					var animGroup = pair2.Value;
 
@@ -92,7 +102,7 @@ namespace SanAndreasUnity.UI {
 
 			GUI.EndScrollView ();
 
-			m_lastContentHeight = rect.position.y;
+			m_lastContentHeight = rect.yMax;
 
 		}
 
