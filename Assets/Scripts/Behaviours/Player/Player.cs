@@ -65,6 +65,10 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
+		public bool IsWalking { get; set; }
+		public bool IsRunning { get; set; }
+		public bool IsSprinting { get; set; }
+
         public Vector3 Velocity { get; private set; }
         public Vector3 Movement { get; set; }
 
@@ -80,6 +84,7 @@ namespace SanAndreasUnity.Behaviours
         private static bool makeGPUAdjustments;
 
         #endregion Properties
+
 
 		public	static	Player	Instance { get ; private set ; }
 
@@ -434,31 +439,9 @@ namespace SanAndreasUnity.Behaviours
                 transform.rotation = spawn.rotation;
             }
 
-            // Constrain to stay inside map
-            if (transform.position.x < -3000)
-            {
-                var t = transform.position;
-                t.x = -3000;
-                transform.position = t;
-            }
-            if (transform.position.x > 3000)
-            {
-                var t = transform.position;
-                t.x = 3000;
-                transform.position = t;
-            }
-            if (transform.position.z < -3000)
-            {
-                var t = transform.position;
-                t.z = -3000;
-                transform.position = t;
-            }
-            if (transform.position.z > 3000)
-            {
-                var t = transform.position;
-                t.z = 3000;
-                transform.position = t;
-            }
+			ConstrainPosition ();
+
+			UpdateAnims ();
 
             if (IsInVehicle && IsDrivingVehicle)
                 UpdateWheelTurning();
@@ -470,7 +453,66 @@ namespace SanAndreasUnity.Behaviours
                 transform.position = new Vector3(t.x, 150, t.z);
                 FindGround();
             }
+
+		//	IsWalking = IsRunning = false;
+
         }
+
+		private void ConstrainPosition() {
+
+			// Constrain to stay inside map
+
+			if (transform.position.x < -3000)
+			{
+				var t = transform.position;
+				t.x = -3000;
+				transform.position = t;
+			}
+			if (transform.position.x > 3000)
+			{
+				var t = transform.position;
+				t.x = 3000;
+				transform.position = t;
+			}
+			if (transform.position.z < -3000)
+			{
+				var t = transform.position;
+				t.z = -3000;
+				transform.position = t;
+			}
+			if (transform.position.z > 3000)
+			{
+				var t = transform.position;
+				t.z = 3000;
+				transform.position = t;
+			}
+
+		}
+
+		private void UpdateAnims() {
+
+			if (IsInVehicle || m_weaponHolder.IsHoldingWeapon)
+				return;
+
+			if (IsRunning) {
+				
+				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Run, PlayMode.StopAll);
+
+			} else if (IsWalking) {
+				
+				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Walk, PlayMode.StopAll);
+
+			} else if (IsSprinting) {
+
+				PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
+
+			} else {
+				// player is standing
+				PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle, PlayMode.StopAll);
+
+			}
+
+		}
 
         private void FixedUpdate()
         {
@@ -511,7 +553,7 @@ namespace SanAndreasUnity.Behaviours
                     ? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
 
                 // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
-                if (!Input.GetButton("Jump"))
+				if (!Input.GetKey(KeyCode.LeftShift))
                     jumpTimer++;
                 else if (jumpTimer >= antiBunnyHopFactor)
                 {

@@ -38,8 +38,8 @@ namespace SanAndreasUnity.UI {
 			return
 			"V - Spawn vehicle\n\n" +
 			"P - Change pedestrian model\n\n" +
-			"L - Turn off / on car lights\n\n" +
-			"L Shift - Run / Fly fast\n\n" +
+			"Left Shift - Jump / Fly fast\n\n" +
+			"Space - Sprint\n\n" +
 			"Mouse Scroll - Zoom in / out player camera\n\n" +
 			"Esc - Toggle pause menu\n\n" +
 			"F2 - Open console\n\n" +
@@ -49,7 +49,7 @@ namespace SanAndreasUnity.UI {
 			"Delete - Fly down\n\n" +
 			"Z - Fly very fast\n\n" +
 			"E - Enter/exit vehicles\n\n" +
-			"Space - Jump\n\n" +
+			"L - Turn off / on car lights\n\n" +
 			"F10 - Toggle FPS\n\n" +
 			"F9 - Toggle velocimeter\n\n" +
 			"O - Toggle quality\n\n" +

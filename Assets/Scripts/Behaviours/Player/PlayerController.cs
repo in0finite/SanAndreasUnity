@@ -143,6 +143,11 @@ namespace SanAndreasUnity.Behaviours
             if (!Loader.HasLoaded)
                 return;
 
+
+			// reset player input
+			_player.IsWalking = _player.IsRunning = _player.IsSprinting = false;
+			
+
             if (!_player.enableFlying && !_player.IsInVehicle && Input.GetKeyDown(KeyCode.T))
             {
                 _player.enableFlying = true;
@@ -228,7 +233,9 @@ namespace SanAndreasUnity.Behaviours
 
             Camera.transform.position = castRay.GetPoint(distance);
 
+
 			if (!GameManager.CanPlayerReadInput()) return;
+
 
             if (Input.GetButtonDown("Use") && _player.IsInVehicle)
             {
@@ -237,7 +244,9 @@ namespace SanAndreasUnity.Behaviours
                 return;
             }
 
-            if (_player.IsInVehicle) return;
+            
+			if (_player.IsInVehicle) return;
+
 
             if (_player.enableFlying || _player.enableNoclip)
             {
@@ -271,6 +280,7 @@ namespace SanAndreasUnity.Behaviours
                 return;
             }
 
+
 			if (_player.WeaponHolder.IsHoldingWeapon && Input.GetMouseButton(1))
             {
                 // player is holding a weapon, and right click is on => aim with weapon
@@ -282,7 +292,7 @@ namespace SanAndreasUnity.Behaviours
 
 				_player.WeaponHolder.IsAiming = false;
 
-				// give input to player, and update anims
+				// give input to player
 
                 var inputMove = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
 
@@ -290,59 +300,19 @@ namespace SanAndreasUnity.Behaviours
                 {
                     inputMove.Normalize();
 
-                    if (Input.GetKey(KeyCode.LeftShift))
-                    {
-						// player is running
+					if (Input.GetKey (KeyCode.LeftAlt))
+						_player.IsWalking = true;
+					else if (Input.GetKey (KeyCode.Space))
+						_player.IsSprinting = true;
+					else
+						_player.IsRunning = true;
 
-						if (_player.WeaponHolder.IsHoldingWeapon)
-                        {
-                            // player is holding a weapon
-
-                            Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
-                                AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
-                        }
-                        else
-                        {
-                            // player is not holding a weapon
-                            PlayerModel.PlayAnim(AnimGroup.WalkCycle,
-                                AnimIndex.Run, PlayMode.StopAll);
-                        }
-                        //    PlayerModel.Running = true;
-                    }
-                    else
-                    {
-                        // player is walking
-						if (_player.WeaponHolder.IsHoldingWeapon)
-                        {
-                            Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
-                                AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
-                        }
-                        else
-                        {
-                            PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.Walk, PlayMode.StopAll);
-                        }
-                        //    PlayerModel.Walking = true;
-                    }
                 }
-                else
-                {
-                    // player is standing
-					if (_player.WeaponHolder.IsHoldingWeapon)
-                    {
-                        Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
-                            AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
-                        //	PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, PlayMode.StopAll);
-                    }
-                    else
-                    {
-                        PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle, PlayMode.StopAll);
-                    }
-                    //    PlayerModel.Walking = false;
-                }
-
+               	
                 _player.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
                     new Vector3(1f, 0f, 1f)).normalized;
             }
+
 
             if (!Input.GetButtonDown("Use")) return;
 

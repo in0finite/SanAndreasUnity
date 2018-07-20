@@ -263,10 +263,49 @@ Prefab:
       propertyPath: PedestrianId
       value: 163
       objectReference: {fileID: 0}
+    - target: {fileID: 11434656, guid: 2efc0f7174246f84fba88b52ea93bc71, type: 2}
+      propertyPath: Camera
+      value: 
+      objectReference: {fileID: 1024790309}
     m_RemovedComponents:
     - {fileID: 11456232, guid: 2efc0f7174246f84fba88b52ea93bc71, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 2efc0f7174246f84fba88b52ea93bc71, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &201259442 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 151936, guid: 2efc0f7174246f84fba88b52ea93bc71, type: 2}
+  m_PrefabInternal: {fileID: 201259441}
+--- !u!114 &201259443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 201259442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57e796a954503384dbd1282729710af5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CursorSensitivity: {x: 2, y: 2}
+  CarCameraDistance: 6
+  PlayerCameraDistance: 3
+  clampInDegrees: {x: 90, y: 60}
+  EnterVehicleRadius: 5
+  animationBlendWeight: 0.4
+  smoothing: {x: 10, y: 10}
+  m_doSmooth: 1
+--- !u!114 &201259447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 201259442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 104b2f17607c64562aea9bbcedc03368, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoAddWeapon: 0
 --- !u!1 &862277649
 GameObject:
   m_ObjectHideFlags: 0

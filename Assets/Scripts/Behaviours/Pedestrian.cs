@@ -261,7 +261,7 @@ namespace SanAndreasUnity.Behaviours
             m_leftFinger = _frames.GetByName(" L Finger").transform;
         }
 
-        public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, PlayMode playMode)
+		public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, PlayMode playMode = PlayMode.StopAll)
         {
             var animState = LoadAnim(group, anim);
             if (null == animState)

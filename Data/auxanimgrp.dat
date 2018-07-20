@@ -24,10 +24,11 @@ default, ped, car, 8
 	CAR_getout_RHS
 end
 
-default, ped, mywalkcycle, 3
+default, ped, mywalkcycle, 4
 	IDLE_ARMED
 	FUCKU
 	GUN_STAND
+	sprint_civi
 end
 
 default, ped, gun, 23
@@ -88,6 +89,12 @@ default, rifle, rifle, 5
 	RIFLE_fire
 	RIFLE_fire_poor
 	RIFLE_load
+end
+
+default, shotgun, shotgun, 3
+	shotgun_crouchfire
+	shotgun_fire
+	shotgun_fire_poor
 end
 
 default, rocket, rocket, 5

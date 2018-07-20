@@ -13,6 +13,7 @@ namespace SanAndreasUnity.Importing.Animation
         MyWalkCycle,
         Colt45,
         Rifle,
+		Shotgun,
         Rocket,
         Grenade,
 		Gun,
@@ -34,15 +35,14 @@ namespace SanAndreasUnity.Importing.Animation
         RoadCross = 4,
         WalkStart = 5,
 
+		// mywalkcycle
         IdleArmed = 0,
         FuckU = 1,
         GUN_STAND = 2,
-        COLT45FIRE = 3,
-        COLT45RELOAD = 4,
+		sprint_civi = 3,
 
         // AnimGroup.Car
         Sit = 0,
-
         SitPassenger = 1,
         DriveLeft = 2,
         DriveRight = 3,
@@ -50,6 +50,13 @@ namespace SanAndreasUnity.Importing.Animation
         GetInRight = 5,
         GetOutLeft = 6,
         GetOutRight = 7,
+
+		// Gun
+		run_armed = 12,
+		WALK_armed = 17,
+
+		// Rifle
+		RIFLE_fire = 2,
 
 		// so we can dynamically access all anims of the anim group
         Index0 = 0,

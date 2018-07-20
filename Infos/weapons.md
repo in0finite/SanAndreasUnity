@@ -21,7 +21,7 @@ We need the following functionality:
 
 - When player has a weapon in his hand, the **weapon should be attached to fingers** (maybe with a little adjustment for fingers) - this way player can do all anims (jump, run, etc), and weapon will remain on the proper place. This should only be done for specific anims.
 
-- There are cases when we need to **play 2 anims at the same time**. For example, when player is holding a weapon, and running at the same time - we need to play run anim for the legs, and weaponidle anim for the body - how to do this ? Tried with anim blending, but it looked ugly. - Found the anims that were needed.
+- There are cases when we need to **play 2 anims at the same time**. Examples: reloading a weapon, aim and move at the same time. How to do this ? Tried with anim blending, but it looked ugly. Try avatar mask ?
 
 
 ***

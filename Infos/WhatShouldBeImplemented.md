@@ -21,6 +21,10 @@
 
 - Loader - better display of progress ; add loading steps ;
 
+- remove OnValidate() function from Pedestrian
+
+- Player.Teleport() coroutine stopping
+
 - Work on a menu like MTA:SA (F1)
 
 - Dev profiles for the keyboard & mouse controls - ??

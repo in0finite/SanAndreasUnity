@@ -18,7 +18,18 @@ namespace SanAndreasUnity.Behaviours {
 		public	bool	autoAddWeapon = false;
 
 		private	bool	m_isAiming = false;
-		public	bool	IsAiming { get { return this.m_isAiming; } set { m_isAiming = value; } }
+		public	bool	IsAiming { get { return this.m_isAiming; } set { 
+				if (!this.IsHoldingWeapon || m_player.IsInVehicle)
+					return;
+				if (m_isAiming == value)
+					return;
+				m_isAiming = value;
+				// start anim
+			//	var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
+			//	state.speed = 0.0f;
+			//	state.wrapMode = WrapMode.ClampForever;
+			//	state.time = state.length;
+			} }
 
 		public	Transform	CurrentWeaponTransform { get ; private set ; }
 
@@ -69,19 +80,45 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 
-			if (this.IsAiming && !m_player.IsInVehicle) {
+			if (this.IsAiming && this.IsHoldingWeapon && !m_player.IsInVehicle) {
+				// player is aiming
+				// play appropriate anim
 
-				//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
-				//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
+			//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
+			//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
 
-				PlayerModel.PlayAnim(AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND, PlayMode.StopAll);
-
+				var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
+				state.wrapMode = WrapMode.ClampForever;
+				if (state.normalizedTime > 0.7f)
+					state.normalizedTime = 0.7f;
 			}
 
-			// update current anim
-			if (!m_player.IsInVehicle && !this.IsAiming) {
+			if (!m_player.IsInVehicle && !this.IsAiming && this.IsHoldingWeapon) {
+				// player is not aiming
+				// update current anim
 
+				if (m_player.IsRunning) {
 
+				//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
+				//		AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
+
+					PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.run_armed);
+
+				} else if (m_player.IsWalking) {
+
+				//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
+				//		AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
+
+					PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.WALK_armed);
+
+				} else {
+					// player is standing
+
+				//	Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
+				//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
+
+					PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
+				}
 
 			}
 
