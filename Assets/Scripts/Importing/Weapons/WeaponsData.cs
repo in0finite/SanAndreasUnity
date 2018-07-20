@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Importing.Weapons
 {
@@ -44,11 +45,45 @@ namespace SanAndreasUnity.Importing.Weapons
 
 			public readonly string hexFlags;
 
+			private List<GunFlags> m_flags = new List<GunFlags> (0);
+			public IEnumerable<GunFlags> Flags { get { return m_flags; } }
+
 			// old_shot_data
 
 			public readonly float speed, radius;
 			public readonly float lifespan, spread;
 
+
+			public GunData(string[] parts) {
+
+				LoadWithReflection (parts, this, "m_flags");
+
+				// calculate flags
+				var enumValues = System.Enum.GetValues( typeof(GunFlags) );
+				foreach(var enumValue in enumValues) {
+					if( HasFlag( this.hexFlags, (GunFlags) enumValue) )
+						m_flags.Add( (GunFlags) enumValue );
+				}
+
+			}
+
+			public static bool HasFlag (string hexFlags, GunFlags flag) {
+				// reverse hex flags
+				hexFlags = new string( hexFlags.Reverse().ToArray() );
+
+				// find index of flag
+				int index = s_groupedFlags.FindIndex( grp => grp.Contains(flag) );
+				if (index < 0)
+					return false;
+
+				// find char with this index
+				if (index >= hexFlags.Length)
+					return false;
+				char c = hexFlags [index];
+
+				int hex = int.Parse (c.ToString (), System.Globalization.NumberStyles.HexNumber);
+				return (hex & ( 1 << s_groupedFlags [index].IndexOf (flag) )) != 0;
+			}
 
 			public GunAimingOffset aimingOffset {
 				get { 
@@ -57,6 +92,23 @@ namespace SanAndreasUnity.Importing.Weapons
 			}
 
 		}
+
+		public enum GunFlags
+		{
+			CANAIM, AIMWITHARM, FIRSTPERSON, ONLYFREEAIM,
+			MOVEAIM, MOVEFIRE,
+			THROW, HEAVY, CONTINUOUSFIRE, TWIN_PISTOL,
+			RELOAD, CROUCHFIRE, RELOAD2START, LONG_RELOAD,
+			SLOWSDWN, RANDSPEED, EXPANDS
+		}
+
+		private	static	GunFlags[][]	s_groupedFlags = new GunFlags[5][] {
+			new GunFlags[]{ GunFlags.CANAIM, GunFlags.AIMWITHARM, GunFlags.FIRSTPERSON, GunFlags.ONLYFREEAIM },
+			new GunFlags[]{ GunFlags.MOVEAIM, GunFlags.MOVEFIRE },
+			new GunFlags[]{ GunFlags.THROW, GunFlags.HEAVY, GunFlags.CONTINUOUSFIRE, GunFlags.TWIN_PISTOL },
+			new GunFlags[]{ GunFlags.RELOAD, GunFlags.CROUCHFIRE, GunFlags.RELOAD2START, GunFlags.LONG_RELOAD },
+			new GunFlags[]{ GunFlags.SLOWSDWN, GunFlags.RANDSPEED, GunFlags.EXPANDS }
+		};
 
 		public class GunAimingOffset
 		{
@@ -129,8 +181,7 @@ namespace SanAndreasUnity.Importing.Weapons
 			if (this.firstChar == "$") {
 				// this weapon is gun - load gun data
 				var gunParts = parts.Skip (numEntriesUsed).ToArray ();
-				this.gunData = new GunData ();
-				LoadWithReflection (gunParts, this.gunData);
+				this.gunData = new GunData (gunParts);
 			}
 
 		}

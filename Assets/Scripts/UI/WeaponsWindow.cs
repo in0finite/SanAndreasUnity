@@ -25,7 +25,7 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = Utilities.GUIUtils.GetCenteredRect( new Vector2( 500, 400 ) );
+			this.windowRect = Utilities.GUIUtils.GetCenteredRect( new Vector2( 600, 400 ) );
 		}
 
 
@@ -54,12 +54,12 @@ namespace SanAndreasUnity.UI {
 
 			foreach (var data in datas) {
 
-				GUILayout.Label ("Id " + data.modelId1 + " Name " + data.weaponType + " Slot " + data.weaponslot);
+				GUILayout.Label ("Id: " + data.modelId1 + " Name: " + data.weaponType + " Slot: " + data.weaponslot +
+					" Flags: " + ( null == data.gunData ? "" : string.Join(" ", data.gunData.Flags) ) );
 
 				if (playerExists) {
 					if (GUILayout.Button ("Give", GUILayout.Width(70))) {
 						// give weapon to player
-						// in which slot ?
 						Player.Instance.WeaponHolder.SetWeaponAtSlot( data.modelId1, WeaponSlot.Machine );
 						Player.Instance.WeaponHolder.SwitchWeapon (WeaponSlot.Machine);
 					}

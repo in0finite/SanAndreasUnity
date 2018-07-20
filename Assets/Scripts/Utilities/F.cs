@@ -272,6 +272,23 @@ namespace SanAndreasUnity.Utilities
 			return list.Select (item => item.Key);
 		}
 
+		public static int FindIndex<T> (this IEnumerable<T> enumerable, System.Predicate<T> predicate)
+		{
+			int i = 0;
+			foreach (var elem in enumerable) {
+				if (predicate (elem))
+					return i;
+				i++;
+			}
+			return -1;
+		}
+
+		public static int IndexOf<T> (this IEnumerable<T> enumerable, T value)
+		{
+			return enumerable.FindIndex (elem => elem.Equals (value));
+		}
+
+
         private static Dictionary<string, Texture2D> Texturemap = new Dictionary<string, Texture2D>();
         private static Texture2D Font;
 
