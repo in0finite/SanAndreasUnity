@@ -48,11 +48,14 @@ namespace SanAndreasUnity.Behaviours
         public Vector3 VehicleParentOffset { get; set; }
 
         private Transform m_leftFinger = null;
-		public Transform LeftFinger { get { return m_leftFinger; } }
+
+        public Transform Spine { get; private set; }
+
+        public Transform LeftFinger { get { return m_leftFinger; } }
 
         private Transform m_rightFinger = null;
 		public Transform RightFinger { get { return m_rightFinger; } }
-
+        
         private Player _player;
 
         public bool Walking
@@ -243,6 +246,41 @@ namespace SanAndreasUnity.Behaviours
             //	LoadAllAnimations ();
         }
 
+        public void ChangeSpineRotation(Vector3 bulletdir, Vector3 adir, float rotationSpeed, ref Vector3 tempSpineLocalEulerAngles, ref Quaternion targetRot, ref Quaternion spineRotationLastFrame)
+        {
+            //Rotate the spine bone so the gun (roughly) aims at the target
+            Spine.rotation = Quaternion.FromToRotation(bulletdir, adir) * Spine.rotation;
+
+            tempSpineLocalEulerAngles = Spine.localEulerAngles;
+
+
+            //Stop our agent from breaking their back by rotating too far
+            tempSpineLocalEulerAngles = new Vector3(ResetIfTooHigh(tempSpineLocalEulerAngles.x, 90),
+                                                    ResetIfTooHigh(tempSpineLocalEulerAngles.y, 90),
+                                                    ResetIfTooHigh(tempSpineLocalEulerAngles.z, 90));
+
+            Spine.localEulerAngles = tempSpineLocalEulerAngles;
+            targetRot = Spine.rotation;
+
+            //Smoothly rotate to the new position.  
+            Spine.rotation = Quaternion.Slerp(spineRotationLastFrame, targetRot, Time.deltaTime * rotationSpeed);
+            spineRotationLastFrame = Spine.rotation;
+        }
+        
+        public static float ResetIfTooHigh(float r, float lim)
+        {
+
+            if (r > 180)
+                r -= 360;
+
+            if (r < -lim || r > lim)
+            {
+                return 0;
+            }
+            else
+                return r;
+        }
+
         private void LoadModel(string modelName, params string[] txds)
         {
             if (_frames != null)
@@ -259,6 +297,7 @@ namespace SanAndreasUnity.Behaviours
 
             m_rightFinger = _frames.GetByName(" R Finger").transform;
             m_leftFinger = _frames.GetByName(" L Finger").transform;
+            Spine = _frames.GetByName(" Spine").transform;
         }
 
 		public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, PlayMode playMode = PlayMode.StopAll)
