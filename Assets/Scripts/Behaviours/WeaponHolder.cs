@@ -33,9 +33,9 @@ namespace SanAndreasUnity.Behaviours {
 
 		public	Transform	CurrentWeaponTransform { get ; private set ; }
 
+        public Vector3 UpwardAxis;
 
-
-		void Awake () {
+        void Awake () {
 			
 			m_player = this.GetComponent<Player> ();
 
@@ -124,16 +124,7 @@ namespace SanAndreasUnity.Behaviours {
 
 
 			// update transform of weapon
-			if (CurrentWeaponTransform != null && PlayerModel.RightFinger != null && PlayerModel.LeftFinger != null) {
-
-				CurrentWeaponTransform.transform.position = PlayerModel.RightFinger.transform.position;
-
-				Vector3 dir = (PlayerModel.LeftFinger.transform.position - PlayerModel.RightFinger.transform.position).normalized;
-				Quaternion q = Quaternion.LookRotation (dir, transform.up);
-				Vector3 upNow = q * Vector3.up;
-				dir = Quaternion.AngleAxis (-90, upNow) * dir;
-				CurrentWeaponTransform.transform.rotation = Quaternion.LookRotation (dir, transform.up);
-			}
+			
 
 
 			// reset aim state - it should be done by controller
@@ -141,7 +132,11 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
-		public void SwitchWeapon(WeaponSlot slot)
+        private void LateUpdate()
+        {
+        }
+
+        public void SwitchWeapon(WeaponSlot slot)
 		{
 			this.SwitchWeapon ((int)slot);
 		}
