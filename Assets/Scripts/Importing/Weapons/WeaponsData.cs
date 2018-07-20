@@ -17,6 +17,7 @@ namespace SanAndreasUnity.Importing.Weapons
 	//	int reloadSampleTime1, reloadSampleTime2;
 		public readonly int weaponslot;
 
+		// for gun weapons only
 		public readonly GunData gunData;
 
 
@@ -48,17 +49,50 @@ namespace SanAndreasUnity.Importing.Weapons
 			public readonly float speed, radius;
 			public readonly float lifespan, spread;
 
+
+			public GunAimingOffset aimingOffset {
+				get { 
+					return WeaponData.LoadedGunAimingOffsets.FirstOrDefault (offset => offset.animGroup == AssocGroupId);
+				}
+			}
+
+		}
+
+		public class GunAimingOffset
+		{
+
+			public readonly string firstChar;
+
+			public readonly string animGroup;
+
+			public readonly float aimX, aimZ;
+
+			public readonly float duckX, duckZ;
+
+			public readonly int rloadA, rloadB;
+			public readonly int crouchRLoadA, crouchRLoadB;
+
+
+			public GunAimingOffset(string line)
+			{
+				LoadWithReflection (SplitLine (line), this);
+			}
+
 		}
 
 
 		private	static	List<WeaponData>	m_loadedWeaponData = new List<WeaponData> ();
-		public	static	IEnumerable<WeaponData>	AllLoadedWeaponsData { get { return m_loadedWeaponData; } }
+		public	static	IEnumerable<WeaponData>	LoadedWeaponsData { get { return m_loadedWeaponData; } }
 
+		private	static	List<GunAimingOffset>	m_loadedGunAimingOffsets = new List<GunAimingOffset> ();
+		public	static	IEnumerable<GunAimingOffset>	LoadedGunAimingOffsets { get { return m_loadedGunAimingOffsets; } }
 
 
 		public static void Load (string path)
 		{
+			
 			m_loadedWeaponData.Clear ();
+			m_loadedGunAimingOffsets.Clear ();
 
 			using (var reader = File.OpenText (path)) {
 				string line;
@@ -69,10 +103,15 @@ namespace SanAndreasUnity.Importing.Weapons
 						continue;
 					if (line.StartsWith ("#"))
 						continue;
-					if (!line.StartsWith ("$"))
-						continue;
 					
-					m_loadedWeaponData.Add (new WeaponData (line));
+					if (line.StartsWith ("$")) {
+						// weapon
+						m_loadedWeaponData.Add (new WeaponData (line));
+					} else if (line.StartsWith ("%")) {
+						// gun aiming offset
+						m_loadedGunAimingOffsets.Add (new GunAimingOffset (line));
+					}
+
 				}
 			}
 
@@ -83,11 +122,12 @@ namespace SanAndreasUnity.Importing.Weapons
 
 		public WeaponData (string line) {
 
-			var parts = line.Split (new string[]{"\t", " "}, System.StringSplitOptions.RemoveEmptyEntries);
+			var parts = SplitLine (line);
 
 			int numEntriesUsed = LoadWithReflection (parts, this, "gunData");
 
 			if (this.firstChar == "$") {
+				// this weapon is gun - load gun data
 				var gunParts = parts.Skip (numEntriesUsed).ToArray ();
 				this.gunData = new GunData ();
 				LoadWithReflection (gunParts, this.gunData);
@@ -95,6 +135,11 @@ namespace SanAndreasUnity.Importing.Weapons
 
 		}
 
+
+		public static string[] SplitLine (string line)
+		{
+			return line.Split (new string[]{ "\t", " " }, System.StringSplitOptions.RemoveEmptyEntries);
+		}
 
 		public static int LoadWithReflection<T>(string[] parts, T obj, params string[] fieldsToIgnore) {
 			

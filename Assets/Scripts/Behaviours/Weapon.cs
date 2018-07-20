@@ -47,6 +47,9 @@ namespace SanAndreasUnity.Behaviours
 		private WeaponData data = null;
 		public WeaponData Data { get { return this.data; } }
 
+		private	WeaponData.GunAimingOffset gunAimingOffset;
+		public WeaponData.GunAimingOffset GunAimingOffset { get { return this.gunAimingOffset; } }
+
 
 	//	public int totalAmmo = 0;
 	//	public int ammoInClip = 0;
@@ -79,7 +82,10 @@ namespace SanAndreasUnity.Behaviours
 
 			Weapon w = new Weapon ();
 			w.definition = def;
-			w.data = WeaponData.AllLoadedWeaponsData.FirstOrDefault (wd => wd.modelId1 == def.Id);
+			w.data = WeaponData.LoadedWeaponsData.FirstOrDefault (wd => wd.modelId1 == def.Id);
+			// cache gun aiming offset
+			if (w.data.gunData != null)
+				w.gunAimingOffset = w.data.gunData.aimingOffset;
 			w.m_gameObject = go;
 
 			return w;

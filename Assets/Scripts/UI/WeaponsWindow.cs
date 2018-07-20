@@ -50,7 +50,7 @@ namespace SanAndreasUnity.UI {
 
 
 		//	var defs = Item.GetDefinitions<Importing.Items.Definitions.WeaponDef> ();
-			var datas = Importing.Weapons.WeaponData.AllLoadedWeaponsData.DistinctBy( wd => wd.weaponType );
+			var datas = Importing.Weapons.WeaponData.LoadedWeaponsData.DistinctBy( wd => wd.weaponType );
 
 			foreach (var data in datas) {
 
