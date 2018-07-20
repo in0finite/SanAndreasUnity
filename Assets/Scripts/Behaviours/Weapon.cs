@@ -57,6 +57,8 @@ namespace SanAndreasUnity.Behaviours
 		private GameObject m_gameObject = null;
 		public GameObject gameObject { get { return m_gameObject; } }
 
+		public Transform transform { get { return m_gameObject.transform; } }
+
 		private static GameObject weaponsContainer = null;
 
 

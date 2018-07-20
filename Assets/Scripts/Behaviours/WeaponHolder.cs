@@ -32,7 +32,8 @@ namespace SanAndreasUnity.Behaviours {
 			//	state.time = state.length;
 			} }
 
-		public	Transform	CurrentWeaponTransform { get ; private set ; }
+		public	Weapon	CurrentWeapon { get ; private set ; }
+		private	Transform	CurrentWeaponTransform { get { return CurrentWeapon != null ? CurrentWeapon.transform : null; } }
 
 		public Vector3 UpwardAxis;
 
@@ -167,8 +168,16 @@ namespace SanAndreasUnity.Behaviours {
 				} else if (this.weaponAttachType == WeaponAttachType.RightHand) {
 					if (PlayerModel.RightHand != null) {
 
-						CurrentWeaponTransform.transform.position = PlayerModel.RightHand.position;
-						CurrentWeaponTransform.transform.rotation = PlayerModel.RightHand.rotation;
+						Vector3 weaponPos = PlayerModel.RightHand.position;
+						Transform rotationTr = PlayerModel.RightHand;
+
+						// add aim offset
+					//	var aimOffset = CurrentWeapon.GunAimingOffset;
+					//	if (aimOffset != null)
+					//		weaponPos += rotationTr.forward * aimOffset.aimZ + rotationTr.right * aimOffset.aimX;
+
+						CurrentWeaponTransform.transform.position = weaponPos;
+						CurrentWeaponTransform.transform.rotation = rotationTr.rotation;
 					}
 				}
 
@@ -191,23 +200,23 @@ namespace SanAndreasUnity.Behaviours {
 
 		public void SwitchWeapon (int slotIndex)
 		{
-			if (CurrentWeaponTransform != null) {
+			if (CurrentWeapon != null) {
 				// set parent to weapons container in order to hide it
 			//	weapon.SetParent (Weapon.weaponsContainer.transform);
 
-				CurrentWeaponTransform.gameObject.SetActive (false);
+				CurrentWeapon.gameObject.SetActive (false);
 			}
 
 			if (slotIndex >= 0) {
 				
-				CurrentWeaponTransform = weapons [slotIndex].gameObject.transform;
+				CurrentWeapon = weapons [slotIndex];
 
 				// change parent to make it visible
 			//	weapon.SetParent(this.transform);
-				CurrentWeaponTransform.gameObject.SetActive (true);
+				CurrentWeapon.gameObject.SetActive (true);
 
 			} else {
-				CurrentWeaponTransform = null;
+				CurrentWeapon = null;
 			}
 
 			currentWeaponSlot = slotIndex;
