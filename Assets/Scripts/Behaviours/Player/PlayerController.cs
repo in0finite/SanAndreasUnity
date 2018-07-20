@@ -285,13 +285,13 @@ namespace SanAndreasUnity.Behaviours
 			if (_player.WeaponHolder.IsHoldingWeapon && Input.GetMouseButton(1))
             {
                 // player is holding a weapon, and right click is on => aim with weapon
-				_player.WeaponHolder.IsAiming = true;
+				_player.WeaponHolder.IsAimOn = true;
             }
             else
             {
 				// player is not aiming
 
-				_player.WeaponHolder.IsAiming = false;
+				_player.WeaponHolder.IsAimOn = false;
 
 				// give input to player
 

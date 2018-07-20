@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Importing.Animation;
+using SanAndreasUnity.Importing.Weapons;
 
 namespace SanAndreasUnity.Behaviours {
 	
@@ -18,19 +19,8 @@ namespace SanAndreasUnity.Behaviours {
 
 		public	bool	autoAddWeapon = false;
 
-		private	bool	m_isAiming = false;
-		public	bool	IsAiming { get { return this.m_isAiming; } set { 
-				if (!this.IsHoldingWeapon || m_player.IsInVehicle)
-					return;
-				if (m_isAiming == value)
-					return;
-				m_isAiming = value;
-				// start anim
-			//	var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
-			//	state.speed = 0.0f;
-			//	state.wrapMode = WrapMode.ClampForever;
-			//	state.time = state.length;
-			} }
+		public	bool	IsAimOn { get; set; }
+		public	bool	IsAiming { get { return this.IsAimOn && this.IsHoldingWeapon && !m_player.IsInVehicle; } }
 
 		public	Weapon	CurrentWeapon { get ; private set ; }
 		private	Transform	CurrentWeaponTransform { get { return CurrentWeapon != null ? CurrentWeapon.transform : null; } }
@@ -51,6 +41,9 @@ namespace SanAndreasUnity.Behaviours {
 		}
 
 		public	WeaponAttachType	weaponAttachType = WeaponAttachType.RightHand;
+
+		[SerializeField]	[Range(0,1)]	private	float	m_aimWithRifleMaxAnimTime = 0.7f;
+		[SerializeField]	[Range(0,1)]	private	float	m_aimWithArmMaxAnimTime = 1.0f;
 
 
 
@@ -99,21 +92,33 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 
-			if (this.IsAiming && this.IsHoldingWeapon && !m_player.IsInVehicle) {
+			if (this.IsAiming) {
 				// player is aiming
 				// play appropriate anim
 
 			//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
 			//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
 
-				var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
-				state.wrapMode = WrapMode.ClampForever;
-				if (state.normalizedTime > 0.7f)
-					state.normalizedTime = 0.7f;
+				if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+					// aim with arm
+					// ie: pistol, tec9, sawnoff
+
+					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
+					state.wrapMode = WrapMode.ClampForever;
+					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
+						state.normalizedTime = m_aimWithArmMaxAnimTime;
+
+				} else {
+
+					var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
+					state.wrapMode = WrapMode.ClampForever;
+					if (state.normalizedTime > m_aimWithRifleMaxAnimTime)
+						state.normalizedTime = m_aimWithRifleMaxAnimTime;
+				}
 			}
 
 			if (!m_player.IsInVehicle && !this.IsAiming && this.IsHoldingWeapon) {
-				// player is not aiming
+				// player is not aiming, but is holding a weapon
 				// update current anim
 
 				if (m_player.IsRunning) {
@@ -184,14 +189,8 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 
-			// reset aim state - it should be done by controller
-		//	m_isAiming = false;
-
 		}
 
-        private void LateUpdate()
-        {
-        }
 
         public void SwitchWeapon(WeaponSlot slot)
 		{

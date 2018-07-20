@@ -78,7 +78,7 @@ default, weapons, weapons, 17
 end
 
 default, colt45, colt45, 3
-	COLT45_FIRE
+	colt45_fire
 	COLT45_RELOAD
 	colt45_crouchfire
 end

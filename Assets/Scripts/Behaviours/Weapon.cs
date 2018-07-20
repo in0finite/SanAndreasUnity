@@ -62,6 +62,7 @@ namespace SanAndreasUnity.Behaviours
 		private static GameObject weaponsContainer = null;
 
 
+
 		public static Weapon Load (int modelId)
 		{
 			WeaponDef def = Item.GetDefinition<WeaponDef> (modelId);
@@ -91,6 +92,14 @@ namespace SanAndreasUnity.Behaviours
 			w.m_gameObject = go;
 
 			return w;
+		}
+
+		public bool HasFlag( WeaponData.GunFlag gunFlag ) {
+
+			if (this.data != null && this.data.gunData != null)
+				return this.data.gunData.HasFlag (gunFlag);
+
+			return false;
 		}
 
 	}

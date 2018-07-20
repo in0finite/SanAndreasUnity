@@ -55,6 +55,9 @@ namespace SanAndreasUnity.Importing.Animation
 		run_armed = 12,
 		WALK_armed = 17,
 
+		// Colt45
+		colt45_fire = 0,
+
 		// Rifle
 		RIFLE_fire = 2,
 

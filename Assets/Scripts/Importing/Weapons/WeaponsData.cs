@@ -45,8 +45,8 @@ namespace SanAndreasUnity.Importing.Weapons
 
 			public readonly string hexFlags;
 
-			private List<GunFlags> m_flags = new List<GunFlags> (0);
-			public IEnumerable<GunFlags> Flags { get { return m_flags; } }
+			private List<GunFlag> m_flags = new List<GunFlag> (0);
+			public IEnumerable<GunFlag> Flags { get { return m_flags; } }
 
 			// old_shot_data
 
@@ -59,15 +59,20 @@ namespace SanAndreasUnity.Importing.Weapons
 				LoadWithReflection (parts, this, "m_flags");
 
 				// calculate flags
-				var enumValues = System.Enum.GetValues( typeof(GunFlags) );
+				var enumValues = System.Enum.GetValues( typeof(GunFlag) );
 				foreach(var enumValue in enumValues) {
-					if( HasFlag( this.hexFlags, (GunFlags) enumValue) )
-						m_flags.Add( (GunFlags) enumValue );
+					if( HasFlag( this.hexFlags, (GunFlag) enumValue) )
+						m_flags.Add( (GunFlag) enumValue );
 				}
 
 			}
 
-			public static bool HasFlag (string hexFlags, GunFlags flag) {
+			public bool HasFlag (GunFlag flag)
+			{
+				return m_flags.Contains (flag);
+			}
+
+			public static bool HasFlag (string hexFlags, GunFlag flag) {
 				// reverse hex flags
 				hexFlags = new string( hexFlags.Reverse().ToArray() );
 
@@ -93,7 +98,7 @@ namespace SanAndreasUnity.Importing.Weapons
 
 		}
 
-		public enum GunFlags
+		public enum GunFlag
 		{
 			CANAIM, AIMWITHARM, FIRSTPERSON, ONLYFREEAIM,
 			MOVEAIM, MOVEFIRE,
@@ -102,12 +107,12 @@ namespace SanAndreasUnity.Importing.Weapons
 			SLOWSDWN, RANDSPEED, EXPANDS
 		}
 
-		private	static	GunFlags[][]	s_groupedFlags = new GunFlags[5][] {
-			new GunFlags[]{ GunFlags.CANAIM, GunFlags.AIMWITHARM, GunFlags.FIRSTPERSON, GunFlags.ONLYFREEAIM },
-			new GunFlags[]{ GunFlags.MOVEAIM, GunFlags.MOVEFIRE },
-			new GunFlags[]{ GunFlags.THROW, GunFlags.HEAVY, GunFlags.CONTINUOUSFIRE, GunFlags.TWIN_PISTOL },
-			new GunFlags[]{ GunFlags.RELOAD, GunFlags.CROUCHFIRE, GunFlags.RELOAD2START, GunFlags.LONG_RELOAD },
-			new GunFlags[]{ GunFlags.SLOWSDWN, GunFlags.RANDSPEED, GunFlags.EXPANDS }
+		private	static	GunFlag[][]	s_groupedFlags = new GunFlag[5][] {
+			new GunFlag[]{ GunFlag.CANAIM, GunFlag.AIMWITHARM, GunFlag.FIRSTPERSON, GunFlag.ONLYFREEAIM },
+			new GunFlag[]{ GunFlag.MOVEAIM, GunFlag.MOVEFIRE },
+			new GunFlag[]{ GunFlag.THROW, GunFlag.HEAVY, GunFlag.CONTINUOUSFIRE, GunFlag.TWIN_PISTOL },
+			new GunFlag[]{ GunFlag.RELOAD, GunFlag.CROUCHFIRE, GunFlag.RELOAD2START, GunFlag.LONG_RELOAD },
+			new GunFlag[]{ GunFlag.SLOWSDWN, GunFlag.RANDSPEED, GunFlag.EXPANDS }
 		};
 
 		public class GunAimingOffset
