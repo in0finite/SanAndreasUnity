@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44658786, g: 0.4964227, b: 0.5748251, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -294,7 +294,6 @@ MonoBehaviour:
   animationBlendWeight: 0.4
   smoothing: {x: 10, y: 10}
   m_doSmooth: 1
-  SpineOffset: {x: 0, y: 35, z: 90}
 --- !u!114 &201259447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,6 +307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoAddWeapon: 0
   UpwardAxis: {x: 0, y: 0, z: 0}
+  SpineOffset: {x: 0, y: 35, z: 90}
 --- !u!1 &862277649
 GameObject:
   m_ObjectHideFlags: 0

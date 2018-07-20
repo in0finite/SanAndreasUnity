@@ -8,6 +8,7 @@ namespace SanAndreasUnity.Behaviours {
 
 		private	Player	m_player;
 		public	Pedestrian	PlayerModel { get { return m_player.PlayerModel; } }
+		public	Camera	Camera { get { return m_player.Camera; } }
 
 		private	Weapon[]	weapons = new Weapon[(int)WeaponSlot.Count];
 
@@ -33,7 +34,15 @@ namespace SanAndreasUnity.Behaviours {
 
 		public	Transform	CurrentWeaponTransform { get ; private set ; }
 
-        public Vector3 UpwardAxis;
+		public Vector3 UpwardAxis;
+
+		private Vector3 tempSpineLocalEulerAngles;
+		private Quaternion targetRot;
+		private Quaternion spineRotationLastFrame;
+
+		public Vector3 SpineOffset;
+
+
 
         void Awake () {
 			
@@ -123,8 +132,21 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 
+			// spine
+			if (this.IsAiming)
+			{
+				PlayerModel.Spine.LookAt(Camera.transform.position + Camera.transform.position + Camera.transform.forward * Camera.farClipPlane);
+				PlayerModel.Spine.Rotate(SpineOffset);
+				this.UpwardAxis = PlayerModel.Spine.up;
+			//	PlayerModel.ChangeSpineRotation (this.CurrentWeaponTransform.forward, Camera.transform.position + Camera.transform.forward * Camera.farClipPlane - this.CurrentWeaponTransform.position, SpineRotationSpeed, ref tempSpineLocalEulerAngles, ref targetRot, ref spineRotationLastFrame);
+			}
+
 			// update transform of weapon
-			
+			if (this.CurrentWeaponTransform != null && PlayerModel.RightFinger != null && PlayerModel.LeftFinger != null)
+			{
+				this.CurrentWeaponTransform.position = PlayerModel.RightFinger.position;
+				this.CurrentWeaponTransform.rotation = PlayerModel.RightFinger.rotation;
+			}
 
 
 			// reset aim state - it should be done by controller

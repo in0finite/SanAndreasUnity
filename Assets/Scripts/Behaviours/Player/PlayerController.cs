@@ -48,9 +48,6 @@ namespace SanAndreasUnity.Behaviours
         private Vector2 _smoothMouse = Vector2.zero;
         private Vector3 targetDirection = Vector3.forward;
 
-        private Vector3 tempSpineLocalEulerAngles;
-        private Quaternion targetRot;
-        private Quaternion spineRotationLastFrame;
         #endregion Private fields
 
         #region Inspector Fields
@@ -70,7 +67,6 @@ namespace SanAndreasUnity.Behaviours
         public Vector2 smoothing = new Vector2(10, 10);
         public bool m_doSmooth = true;
 
-        public Vector3 SpineOffset;
 
         public float CurVelocity
         {
@@ -370,30 +366,6 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        private void LateUpdate()
-        {
-            if (_player.WeaponHolder.IsAiming == true)
-            {
-                PlayerModel.Spine.LookAt(Camera.transform.position + Camera.transform.position + Camera.transform.forward * Camera.farClipPlane);
-                PlayerModel.Spine.Rotate(SpineOffset);
-                _player.WeaponHolder.UpwardAxis = PlayerModel.Spine.up;
-                //PlayerModel.ChangeSpineRotation(_player.WeaponHolder.CurrentWeaponTransform.forward, Camera.transform.position + Camera.transform.forward * Camera.farClipPlane - _player.WeaponHolder.CurrentWeaponTransform.position, SpineRotationSpeed, ref tempSpineLocalEulerAngles, ref targetRot, ref spineRotationLastFrame);
-            }
-
-
-            if (_player.WeaponHolder.CurrentWeaponTransform != null && PlayerModel.RightFinger != null && PlayerModel.LeftFinger != null)
-            {
-                _player.WeaponHolder.CurrentWeaponTransform.position = PlayerModel.RightFinger.position;
-                _player.WeaponHolder.CurrentWeaponTransform.rotation = PlayerModel.RightFinger.rotation;
-                //_player.WeaponHolder.CurrentWeaponTransform.transform.position = PlayerModel.RightFinger.transform.position;
-
-                //Vector3 dir = (PlayerModel.LeftFinger.transform.position - PlayerModel.RightFinger.transform.position).normalized;
-                //Quaternion q = Quaternion.LookRotation(dir, transform.up);
-                //Vector3 upNow = q * transform.up;
-                //dir = Quaternion.AngleAxis(-90, upNow) * dir;
-                //_player.WeaponHolder.CurrentWeaponTransform.transform.rotation = Quaternion.LookRotation(dir, transform.up);
-            }
-        }
 
         private void Play2Animations(int[] boneIds1, int[] boneIds2,
             AnimGroup group1, AnimGroup group2, AnimIndex animIndex1, AnimIndex animIndex2)
