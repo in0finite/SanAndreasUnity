@@ -48,15 +48,21 @@ namespace SanAndreasUnity.Behaviours
         public Vector3 VehicleParentOffset { get; set; }
 
         private Transform m_leftFinger = null;
-
-        public Transform Spine { get; private set; }
-
-        public Transform LeftFinger { get { return m_leftFinger; } }
+		public Transform LeftFinger { get { return m_leftFinger; } }
 
         private Transform m_rightFinger = null;
 		public Transform RightFinger { get { return m_rightFinger; } }
         
+		private Transform m_leftHand;
+		public Transform LeftHand { get { return m_leftHand; } }
+
+		private Transform m_rightHand;
+		public Transform RightHand { get { return m_rightHand; } }
+
+		public Transform Spine { get; private set; }
+
         private Player _player;
+
 
         public bool Walking
         {
@@ -297,7 +303,10 @@ namespace SanAndreasUnity.Behaviours
 
             m_rightFinger = _frames.GetByName(" R Finger").transform;
             m_leftFinger = _frames.GetByName(" L Finger").transform;
-            Spine = _frames.GetByName(" Spine").transform;
+			m_rightHand = _frames.GetByName (" R Hand").transform;
+			m_leftHand = _frames.GetByName (" L Hand").transform;
+			Spine = _frames.GetByName(" Spine").transform;
+
         }
 
 		public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, PlayMode playMode = PlayMode.StopAll)

@@ -42,6 +42,15 @@ namespace SanAndreasUnity.Behaviours {
 
 		public Vector3 SpineOffset;
 
+		public enum WeaponAttachType
+		{
+			None,
+			RightHand,
+			BothFingers
+		}
+
+		public	WeaponAttachType	weaponAttachType = WeaponAttachType.RightHand;
+
 
 
         void Awake () {
@@ -142,10 +151,27 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 			// update transform of weapon
-			if (this.CurrentWeaponTransform != null && PlayerModel.RightFinger != null && PlayerModel.LeftFinger != null)
-			{
-				this.CurrentWeaponTransform.position = PlayerModel.RightFinger.position;
-				this.CurrentWeaponTransform.rotation = PlayerModel.RightFinger.rotation;
+			if (CurrentWeaponTransform != null) {
+
+				if (this.weaponAttachType == WeaponAttachType.BothFingers) {
+					if (PlayerModel.RightFinger != null && PlayerModel.LeftFinger != null) {
+
+						CurrentWeaponTransform.transform.position = PlayerModel.RightFinger.transform.position;
+
+						Vector3 dir = (PlayerModel.LeftFinger.transform.position - PlayerModel.RightFinger.transform.position).normalized;
+						Quaternion q = Quaternion.LookRotation (dir, transform.up);
+						Vector3 upNow = q * Vector3.up;
+						dir = Quaternion.AngleAxis (-90, upNow) * dir;
+						CurrentWeaponTransform.transform.rotation = Quaternion.LookRotation (dir, transform.up);
+					}
+				} else if (this.weaponAttachType == WeaponAttachType.RightHand) {
+					if (PlayerModel.RightHand != null) {
+
+						CurrentWeaponTransform.transform.position = PlayerModel.RightHand.position;
+						CurrentWeaponTransform.transform.rotation = PlayerModel.RightHand.rotation;
+					}
+				}
+
 			}
 
 
