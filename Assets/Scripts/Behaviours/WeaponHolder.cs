@@ -92,7 +92,7 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 
-			this.UpdateAnims ();
+		//	this.UpdateAnims ();
 
 
 			// spine
@@ -104,38 +104,18 @@ namespace SanAndreasUnity.Behaviours {
 			//	PlayerModel.ChangeSpineRotation (this.CurrentWeaponTransform.forward, Camera.transform.position + Camera.transform.forward * Camera.farClipPlane - this.CurrentWeaponTransform.position, SpineRotationSpeed, ref tempSpineLocalEulerAngles, ref targetRot, ref spineRotationLastFrame);
 			}
 
-			// update transform of weapon
-			if (CurrentWeaponTransform != null) {
 
-				if (this.weaponAttachType == WeaponAttachType.BothFingers) {
-					if (PlayerModel.RightFinger != null && PlayerModel.LeftFinger != null) {
+		//	UpdateWeaponTransform ();
 
-						CurrentWeaponTransform.transform.position = PlayerModel.RightFinger.transform.position;
 
-						Vector3 dir = (PlayerModel.LeftFinger.transform.position - PlayerModel.RightFinger.transform.position).normalized;
-						Quaternion q = Quaternion.LookRotation (dir, transform.up);
-						Vector3 upNow = q * Vector3.up;
-						dir = Quaternion.AngleAxis (-90, upNow) * dir;
-						CurrentWeaponTransform.transform.rotation = Quaternion.LookRotation (dir, transform.up);
-					}
-				} else if (this.weaponAttachType == WeaponAttachType.RightHand) {
-					if (PlayerModel.RightHand != null) {
+		}
 
-						Vector3 weaponPos = PlayerModel.RightHand.position;
-						Transform rotationTr = PlayerModel.RightHand;
+		void LateUpdate()
+		{
 
-						// add aim offset
-					//	var aimOffset = CurrentWeapon.GunAimingOffset;
-					//	if (aimOffset != null)
-					//		weaponPos += rotationTr.forward * aimOffset.aimZ + rotationTr.right * aimOffset.aimX;
+			UpdateAnims ();
 
-						CurrentWeaponTransform.transform.position = weaponPos;
-						CurrentWeaponTransform.transform.rotation = rotationTr.rotation;
-					}
-				}
-
-			}
-
+			UpdateWeaponTransform ();
 
 		}
 
@@ -157,10 +137,22 @@ namespace SanAndreasUnity.Behaviours {
 					// aim with arm
 					// ie: pistol, tec9, sawnoff
 
-					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
-					state.wrapMode = WrapMode.ClampForever;
-					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
-						state.normalizedTime = m_aimWithArmMaxAnimTime;
+//					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
+//					state.wrapMode = WrapMode.ClampForever;
+//					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
+//						state.normalizedTime = m_aimWithArmMaxAnimTime;
+
+					var state = PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
+				//	state.RemoveMixingTransform (PlayerModel.RightUpperArm);
+
+					// rotate right upper arm to match direction of player
+					// we'll need a few adjustments, because arm's right vector is player's forward vector,
+					// and arm's forward vector is player's down vector => arm's up is player's left
+					Vector3 lookAtPos = m_player.transform.position - m_player.transform.up * 500;
+					Vector3 dir = -m_player.transform.right;
+					PlayerModel.RightUpperArm.LookAt( lookAtPos, dir);
+					// also rotate right hand
+					PlayerModel.RightHand.LookAt (lookAtPos, dir);
 
 				} else {
 
@@ -217,6 +209,43 @@ namespace SanAndreasUnity.Behaviours {
 						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
 					}
 
+				}
+
+			}
+
+		}
+
+		private void UpdateWeaponTransform ()
+		{
+
+			// update transform of weapon
+			if (CurrentWeaponTransform != null) {
+
+				if (this.weaponAttachType == WeaponAttachType.BothFingers) {
+					if (PlayerModel.RightFinger != null && PlayerModel.LeftFinger != null) {
+
+						CurrentWeaponTransform.transform.position = PlayerModel.RightFinger.transform.position;
+
+						Vector3 dir = (PlayerModel.LeftFinger.transform.position - PlayerModel.RightFinger.transform.position).normalized;
+						Quaternion q = Quaternion.LookRotation (dir, transform.up);
+						Vector3 upNow = q * Vector3.up;
+						dir = Quaternion.AngleAxis (-90, upNow) * dir;
+						CurrentWeaponTransform.transform.rotation = Quaternion.LookRotation (dir, transform.up);
+					}
+				} else if (this.weaponAttachType == WeaponAttachType.RightHand) {
+					if (PlayerModel.RightHand != null) {
+
+						Vector3 weaponPos = PlayerModel.RightHand.position;
+						Transform rotationTr = PlayerModel.RightHand;
+
+						// add aim offset
+						//	var aimOffset = CurrentWeapon.GunAimingOffset;
+						//	if (aimOffset != null)
+						//		weaponPos += rotationTr.forward * aimOffset.aimZ + rotationTr.right * aimOffset.aimX;
+
+						CurrentWeaponTransform.transform.position = weaponPos;
+						CurrentWeaponTransform.transform.rotation = rotationTr.rotation;
+					}
 				}
 
 			}

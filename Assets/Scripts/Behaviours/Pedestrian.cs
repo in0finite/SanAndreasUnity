@@ -59,6 +59,14 @@ namespace SanAndreasUnity.Behaviours
 		private Transform m_rightHand;
 		public Transform RightHand { get { return m_rightHand; } }
 
+		public Transform LeftUpperArm { get; private set; }
+		public Transform RightUpperArm { get; private set; }
+
+		public Transform LeftForeArm { get; private set; }
+		public Transform RightForeArm { get; private set; }
+
+		public Transform Head { get; private set; }
+
 		public Transform Spine { get; private set; }
 
         private Player _player;
@@ -305,6 +313,11 @@ namespace SanAndreasUnity.Behaviours
             m_leftFinger = _frames.GetByName(" L Finger").transform;
 			m_rightHand = _frames.GetByName (" R Hand").transform;
 			m_leftHand = _frames.GetByName (" L Hand").transform;
+			RightUpperArm = _frames.GetByName (" R UpperArm").transform;
+			LeftUpperArm = _frames.GetByName (" L UpperArm").transform;
+			RightForeArm = _frames.GetByName (" R ForeArm").transform;
+			LeftForeArm = _frames.GetByName (" L ForeArm").transform;
+			Head = _frames.GetByName (" Head").transform;
 			Spine = _frames.GetByName(" Spine").transform;
 
         }
