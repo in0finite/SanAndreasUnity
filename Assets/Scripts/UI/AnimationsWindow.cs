@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Importing.Animation;
+using SanAndreasUnity.Behaviours;
 
 namespace SanAndreasUnity.UI {
 
@@ -22,12 +23,8 @@ namespace SanAndreasUnity.UI {
 		}
 
 		void Start () {
-
-			if (null == Behaviours.World.Cell.Instance) {
-				// world is not loaded
-				// we will use this window
-				this.RegisterButtonInPauseMenu ();
-			}
+			
+			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
 			this.windowRect = Utilities.GUIUtils.GetCenteredRect( new Vector2( 500, 400 ) );
@@ -37,16 +34,21 @@ namespace SanAndreasUnity.UI {
 		protected override void OnWindowGUI ()
 		{
 
-//			if (null == Behaviours.Player.Instance) {
+//			if (null == Player.Instance) {
 //				GUILayout.Label ("Player object not found");
 //				return;
 //			}
 
 
+			bool playerExists = Player.Instance != null;
 
-			float headerHeight = 20;
 
-			m_displayWalkcycleAnims = GUI.Toggle( new Rect(0, 0, 150, headerHeight), m_displayWalkcycleAnims, "Display walkcycle anims");
+			float headerHeight = 40;
+
+			if (playerExists)
+				Player.Instance.shouldPlayAnims = !GUI.Toggle( new Rect( 0, 0, 150, 20 ), !Player.Instance.shouldPlayAnims, "Override player anims" );
+
+			m_displayWalkcycleAnims = GUI.Toggle( new Rect(0, 20, 150, 20), m_displayWalkcycleAnims, "Display walkcycle anims");
 
 
 			// display anim groups and their anims
@@ -59,8 +61,6 @@ namespace SanAndreasUnity.UI {
 			float labelHeight = 20;
 			Rect rect = new Rect (new Vector2(0, headerHeight), new Vector2(labelWidth, labelHeight));
 		//	m_lastContentHeight = 0;
-
-			bool playerExists = Behaviours.Player.Instance != null;
 
 
 			foreach (var pair in Importing.Animation.AnimationGroup.AllLoadedGroups) {
@@ -91,7 +91,7 @@ namespace SanAndreasUnity.UI {
 						if (playerExists) {
 							// display button which will play the anim
 							if (GUI.Button (rect, anim)) {
-								Behaviours.Player.Instance.PlayerModel.PlayAnim( animGroup.Type, AnimIndexUtil.Get(i), PlayMode.StopAll );
+								Player.Instance.PlayerModel.PlayAnim( animGroup.Type, AnimIndexUtil.Get(i), PlayMode.StopAll );
 							}
 						} else {
 							GUI.Label (rect, anim);

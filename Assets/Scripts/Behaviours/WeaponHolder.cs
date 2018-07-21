@@ -92,80 +92,7 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 
-			if (this.IsAiming) {
-				// player is aiming
-				// play appropriate anim
-
-			//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
-			//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
-
-				if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
-					// aim with arm
-					// ie: pistol, tec9, sawnoff
-
-					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
-					state.wrapMode = WrapMode.ClampForever;
-					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
-						state.normalizedTime = m_aimWithArmMaxAnimTime;
-
-				} else {
-
-					var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
-					state.wrapMode = WrapMode.ClampForever;
-					if (state.normalizedTime > m_aimWithRifleMaxAnimTime)
-						state.normalizedTime = m_aimWithRifleMaxAnimTime;
-				}
-			}
-
-			if (!m_player.IsInVehicle && !this.IsAiming && this.IsHoldingWeapon) {
-				// player is not aiming, but is holding a weapon
-				// update current anim
-
-				if (m_player.IsRunning) {
-
-					//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
-					//		AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
-
-					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
-						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Run);
-					} else {
-						PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.run_armed);
-					}
-
-				} else if (m_player.IsWalking) {
-
-					//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
-					//		AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
-
-					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
-						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Walk);
-					} else {
-						PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.WALK_armed);
-					}
-
-				} else if (m_player.IsSprinting) {
-
-					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
-						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
-					} else {
-						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
-					}
-
-				} else {
-					// player is standing
-
-				//	Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
-				//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
-
-					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
-						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
-					} else {
-						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
-					}
-
-				}
-
-			}
+			this.UpdateAnims ();
 
 
 			// spine
@@ -209,6 +136,90 @@ namespace SanAndreasUnity.Behaviours {
 
 			}
 
+
+		}
+
+
+		private void UpdateAnims ()
+		{
+
+			if (!m_player.shouldPlayAnims)
+				return;
+
+			if (this.IsAiming) {
+				// player is aiming
+				// play appropriate anim
+
+			//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
+			//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
+
+				if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+					// aim with arm
+					// ie: pistol, tec9, sawnoff
+
+					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
+					state.wrapMode = WrapMode.ClampForever;
+					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
+						state.normalizedTime = m_aimWithArmMaxAnimTime;
+
+				} else {
+
+					var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
+					state.wrapMode = WrapMode.ClampForever;
+					if (state.normalizedTime > m_aimWithRifleMaxAnimTime)
+						state.normalizedTime = m_aimWithRifleMaxAnimTime;
+				}
+			}
+
+			if (!m_player.IsInVehicle && !this.IsAiming && this.IsHoldingWeapon) {
+				// player is not aiming, but is holding a weapon
+				// update current anim
+
+				if (m_player.IsRunning) {
+
+				//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
+				//		AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
+
+					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Run);
+					} else {
+						PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.run_armed);
+					}
+
+				} else if (m_player.IsWalking) {
+
+				//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
+				//		AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
+
+					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Walk);
+					} else {
+						PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.WALK_armed);
+					}
+
+				} else if (m_player.IsSprinting) {
+
+					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
+					} else {
+						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
+					}
+
+				} else {
+					// player is standing
+
+				//	Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
+				//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
+
+					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
+					} else {
+						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
+					}
+
+				}
+
+			}
 
 		}
 

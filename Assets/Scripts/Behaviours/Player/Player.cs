@@ -30,6 +30,8 @@ namespace SanAndreasUnity.Behaviours
         public Camera Camera;
         public Pedestrian PlayerModel;
 
+		public bool shouldPlayAnims = true;
+
         public float TurnSpeed = 10f;
 
         public bool enableFlying = false;
@@ -490,6 +492,9 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 		private void UpdateAnims() {
+
+			if (!this.shouldPlayAnims)
+				return;
 
 			if (IsInVehicle || m_weaponHolder.IsHoldingWeapon)
 				return;

@@ -40,6 +40,12 @@ These are the useful parameters in weapons.dat :
 - aim offset (this could be position of weapon when it's held, or position of where the other hand should be ?)
 - anim group
 
+***
 
+### Status
+
+- colt45 aim anim
+
+- rotate player in direction of aiming
 
 
