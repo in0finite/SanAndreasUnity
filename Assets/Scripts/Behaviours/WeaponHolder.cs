@@ -125,7 +125,7 @@ namespace SanAndreasUnity.Behaviours {
 			//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
 			//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
 
-				if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+				if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
 					// aim with arm
 					// ie: pistol, tec9, sawnoff
 
@@ -164,7 +164,7 @@ namespace SanAndreasUnity.Behaviours {
 				//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
 				//		AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
 
-					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+					if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
 						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Run);
 					} else {
 						PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.run_armed);
@@ -175,7 +175,7 @@ namespace SanAndreasUnity.Behaviours {
 				//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
 				//		AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
 
-					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+					if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
 						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Walk);
 					} else {
 						PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.WALK_armed);
@@ -183,7 +183,7 @@ namespace SanAndreasUnity.Behaviours {
 
 				} else if (m_player.IsSprinting) {
 
-					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+					if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
 						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
 					} else {
 						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
@@ -195,7 +195,7 @@ namespace SanAndreasUnity.Behaviours {
 				//	Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
 				//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
 
-					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+					if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
 						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
 					} else {
 						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
@@ -252,7 +252,7 @@ namespace SanAndreasUnity.Behaviours {
 				PlayerModel.Spine.LookAt(Camera.transform.position + Camera.transform.forward * 500);
 
 				Vector3 eulers = this.SpineOffset;
-				if (this.CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM))
+				if (this.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
 					eulers.y = 0;
 				PlayerModel.Spine.Rotate (eulers);
 

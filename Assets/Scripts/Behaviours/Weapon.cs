@@ -94,7 +94,7 @@ namespace SanAndreasUnity.Behaviours
 			return w;
 		}
 
-		public bool HasFlag( WeaponData.GunFlag gunFlag ) {
+		public bool HasFlag( GunFlag gunFlag ) {
 
 			if (this.data != null && this.data.gunData != null)
 				return this.data.gunData.HasFlag (gunFlag);

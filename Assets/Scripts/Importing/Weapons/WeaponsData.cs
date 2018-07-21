@@ -98,15 +98,6 @@ namespace SanAndreasUnity.Importing.Weapons
 
 		}
 
-		public enum GunFlag
-		{
-			CANAIM, AIMWITHARM, FIRSTPERSON, ONLYFREEAIM,
-			MOVEAIM, MOVEFIRE,
-			THROW, HEAVY, CONTINUOUSFIRE, TWIN_PISTOL,
-			RELOAD, CROUCHFIRE, RELOAD2START, LONG_RELOAD,
-			SLOWSDWN, RANDSPEED, EXPANDS
-		}
-
 		private	static	GunFlag[][]	s_groupedFlags = new GunFlag[5][] {
 			new GunFlag[]{ GunFlag.CANAIM, GunFlag.AIMWITHARM, GunFlag.FIRSTPERSON, GunFlag.ONLYFREEAIM },
 			new GunFlag[]{ GunFlag.MOVEAIM, GunFlag.MOVEFIRE },
@@ -247,6 +238,15 @@ namespace SanAndreasUnity.Importing.Weapons
 			return partIndex;
 		}
 
+	}
+
+	public enum GunFlag
+	{
+		CANAIM, AIMWITHARM, FIRSTPERSON, ONLYFREEAIM,
+		MOVEAIM, MOVEFIRE,
+		THROW, HEAVY, CONTINUOUSFIRE, TWIN_PISTOL,
+		RELOAD, CROUCHFIRE, RELOAD2START, LONG_RELOAD,
+		SLOWSDWN, RANDSPEED, EXPANDS
 	}
 
 }
