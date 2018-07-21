@@ -123,17 +123,33 @@ namespace SanAndreasUnity.Behaviours {
 
 				if (m_player.IsRunning) {
 
-				//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
-				//		AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
+					//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
+					//		AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
 
-					PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.run_armed);
+					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Run);
+					} else {
+						PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.run_armed);
+					}
 
 				} else if (m_player.IsWalking) {
 
-				//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
-				//		AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
+					//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
+					//		AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
 
-					PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.WALK_armed);
+					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Walk);
+					} else {
+						PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.WALK_armed);
+					}
+
+				} else if (m_player.IsSprinting) {
+
+					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
+					} else {
+						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
+					}
 
 				} else {
 					// player is standing
@@ -141,7 +157,12 @@ namespace SanAndreasUnity.Behaviours {
 				//	Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
 				//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
 
-					PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
+					if (CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM)) {
+						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
+					} else {
+						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
+					}
+
 				}
 
 			}
