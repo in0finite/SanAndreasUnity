@@ -44,8 +44,11 @@ These are the useful parameters in weapons.dat :
 
 ### Status
 
-- colt45 aim anim
-
 - rotate player in direction of aiming
 
+- whem anim is changed, reset position/rotation of all model transforms
+
+- right after the model is loaded, play idle anim
+
+- rotate the pelvis instead of spine (because thighs look ugly)
 

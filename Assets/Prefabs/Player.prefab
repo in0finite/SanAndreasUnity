@@ -180,6 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Camera: {fileID: 20067565082138416}
   PlayerModel: {fileID: 114671475596742702}
+  shouldPlayAnims: 1
   TurnSpeed: 10
   enableFlying: 0
   enableNoclip: 0
@@ -245,7 +246,6 @@ MonoBehaviour:
   PedestrianId: 167
   AnimGroup: 1
   animIndex: 3
-  weapon: {fileID: 0}
 --- !u!114 &114741845841415948
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -306,8 +306,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 104b2f17607c64562aea9bbcedc03368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentWeaponSlot: -1
   autoAddWeapon: 0
+  UpwardAxis: {x: 0, y: 0, z: 0}
+  SpineOffset: {x: 0, y: 45, z: 90}
+  weaponAttachType: 1
+  m_aimWithRifleMaxAnimTime: 0.7
+  m_aimWithArmMaxAnimTime: 1
 --- !u!114 &114912848126749456
 MonoBehaviour:
   m_ObjectHideFlags: 1

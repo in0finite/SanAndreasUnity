@@ -307,7 +307,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoAddWeapon: 0
   UpwardAxis: {x: 0, y: 0, z: 0}
-  SpineOffset: {x: 0, y: 35, z: 90}
+  SpineOffset: {x: 0, y: 45, z: 90}
+  weaponAttachType: 1
+  m_aimWithRifleMaxAnimTime: 0.7
+  m_aimWithArmMaxAnimTime: 1
 --- !u!1 &862277649
 GameObject:
   m_ObjectHideFlags: 0

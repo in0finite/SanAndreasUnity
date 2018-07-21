@@ -92,28 +92,20 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 
-		//	this.UpdateAnims ();
-
-
-			// spine
-			if (this.IsAiming)
-			{
-				PlayerModel.Spine.LookAt(Camera.transform.position + Camera.transform.position + Camera.transform.forward * Camera.farClipPlane);
-				PlayerModel.Spine.Rotate(SpineOffset);
-				this.UpwardAxis = PlayerModel.Spine.up;
-			//	PlayerModel.ChangeSpineRotation (this.CurrentWeaponTransform.forward, Camera.transform.position + Camera.transform.forward * Camera.farClipPlane - this.CurrentWeaponTransform.position, SpineRotationSpeed, ref tempSpineLocalEulerAngles, ref targetRot, ref spineRotationLastFrame);
-			}
-
-
-		//	UpdateWeaponTransform ();
-
-
 		}
 
 		void LateUpdate()
 		{
+			// all things that manipulate skeleton must be placed in LateUpdate(), because otherwise Animator will
+			// override them
+
+			// order of these functions is important
 
 			UpdateAnims ();
+
+			RotatePlayerInDirectionOfAiming ();
+
+			RotateSpine ();
 
 			UpdateWeaponTransform ();
 
@@ -249,6 +241,38 @@ namespace SanAndreasUnity.Behaviours {
 				}
 
 			}
+
+		}
+
+		private void RotateSpine ()
+		{
+
+			if (this.IsAiming)
+			{
+				PlayerModel.Spine.LookAt(Camera.transform.position + Camera.transform.forward * 500);
+
+				Vector3 eulers = this.SpineOffset;
+				if (this.CurrentWeapon.HasFlag (WeaponData.GunFlag.AIMWITHARM))
+					eulers.y = 0;
+				PlayerModel.Spine.Rotate (eulers);
+
+				this.UpwardAxis = PlayerModel.Spine.up;
+			//	PlayerModel.ChangeSpineRotation (this.CurrentWeaponTransform.forward, Camera.transform.position + Camera.transform.forward * Camera.farClipPlane - this.CurrentWeaponTransform.position, SpineRotationSpeed, ref tempSpineLocalEulerAngles, ref targetRot, ref spineRotationLastFrame);
+			}
+
+		}
+
+		private void RotatePlayerInDirectionOfAiming ()
+		{
+
+			if (!this.IsAiming)
+				return;
+
+			Vector3 lookAtPos = Camera.transform.position + Camera.transform.forward * 500;
+		//	Vector3 lookAtPos = m_player.transform.position + m_player.transform.forward * 500;
+			lookAtPos.y = m_player.transform.position.y;
+
+			m_player.transform.LookAt (lookAtPos, Vector3.up);
 
 		}
 
