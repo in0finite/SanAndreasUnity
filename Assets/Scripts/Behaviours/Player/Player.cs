@@ -83,6 +83,9 @@ namespace SanAndreasUnity.Behaviours
 
         private Vehicle.SeatAlignment _currentVehicleSeatAlignment;
 
+		public bool IsAiming { get { return m_weaponHolder.IsAiming; } }
+		public Weapon CurrentWeapon { get { return m_weaponHolder.CurrentWeapon; } }
+
         private static bool makeGPUAdjustments;
 
         #endregion Properties

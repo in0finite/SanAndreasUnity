@@ -76,6 +76,8 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
+		public Vector3 CameraFocusPos { get { return _player.transform.position + Vector3.up * 0.5f; } }
+
         #endregion Inspector Fields
 
         #region Properties
@@ -171,68 +173,8 @@ namespace SanAndreasUnity.Behaviours
                 }
             }
 
-			if (GameManager.CanPlayerReadInput())
-            {
-				// Move player's camera.
-                
-				var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
-                mouseDelta = Vector2.Scale(mouseDelta, CursorSensitivity);
-
-                if (m_doSmooth)
-                {
-                    _smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
-                    _smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
-
-                    _mouseAbsolute += _smoothMouse;
-                }
-                else
-                    _mouseAbsolute += mouseDelta;
-
-                // Waiting for an answer: https://stackoverflow.com/questions/50837685/camera-global-rotation-clamping-issue-unity3d
-
-                /*if (clampInDegrees.x > 0)
-                    _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x, clampInDegrees.x);*/
-
-                if (clampInDegrees.y > 0)
-                    _mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);
-            }
-
-            Camera.transform.rotation = Quaternion.AngleAxis(_mouseAbsolute.x, Vector3.up)
-                                      * Quaternion.AngleAxis(-_mouseAbsolute.y, Vector3.right);
-
-            float distance;
-            Vector3 castFrom;
-
-            float scrollValue = Input.mouseScrollDelta.y;
-
-			if (!GameManager.CanPlayerReadInput ())
-                scrollValue = 0;
-
-            if (_player.IsInVehicle)
-            {
-                CarCameraDistance = Mathf.Clamp(CarCameraDistance - scrollValue, 2.0f, 32.0f);
-                distance = CarCameraDistance;
-                castFrom = _player.CurrentVehicle.transform.position;
-            }
-            else
-            {
-                PlayerCameraDistance = Mathf.Clamp(PlayerCameraDistance - scrollValue, 2.0f, 32.0f);
-                distance = PlayerCameraDistance;
-                castFrom = transform.position + Vector3.up * .5f;
-            }
-
-            var castRay = new Ray(castFrom, -Camera.transform.forward);
-
-            RaycastHit hitInfo;
-
-            if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance,
-                -1 ^ (1 << MapObject.BreakableLayer) ^ (1 << Vehicle.Layer)))
-            {
-                distance = hitInfo.distance;
-            }
-
-            Camera.transform.position = castRay.GetPoint(distance);
+			this.UpdateCamera ();
 
 
 			if (!GameManager.CanPlayerReadInput()) return;
@@ -332,6 +274,110 @@ namespace SanAndreasUnity.Behaviours
             }
 
         }
+
+		private void UpdateCamera ()
+		{
+
+			if (GameManager.CanPlayerReadInput())
+			{
+				// rotate camera around player / rotate player while aiming
+
+				var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+
+				mouseDelta = Vector2.Scale(mouseDelta, CursorSensitivity);
+
+//				if (m_doSmooth)
+//				{
+//					_smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
+//					_smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
+//
+//					_mouseAbsolute += _smoothMouse;
+//				}
+//				else
+//					_mouseAbsolute += mouseDelta;
+//
+//				// Waiting for an answer: https://stackoverflow.com/questions/50837685/camera-global-rotation-clamping-issue-unity3d
+//
+//				/*if (clampInDegrees.x > 0)
+//                    _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x, clampInDegrees.x);*/
+//
+//				if (clampInDegrees.y > 0)
+//					_mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);
+
+
+				Vector3 eulers = Camera.transform.eulerAngles;
+				eulers.x += - mouseDelta.y;
+				eulers.y += mouseDelta.x;
+
+				// clamp rotation
+				if(eulers.x > 180)
+					eulers.x -= 360;
+				eulers.x = Mathf.Clamp (eulers.x, -clampInDegrees.x, clampInDegrees.x);
+
+				// apply new rotation
+				Camera.transform.eulerAngles = eulers;
+
+			}
+
+//			Camera.transform.rotation = Quaternion.AngleAxis(_mouseAbsolute.x, Vector3.up)
+//				* Quaternion.AngleAxis(-_mouseAbsolute.y, Vector3.right);
+
+
+			// this must be called from here, otherwise camera will shake
+			_player.WeaponHolder.RotatePlayerInDirectionOfAiming ();
+
+
+			// cast a ray from player to camera to see if it hits anything
+			// if so, then move the camera to hit point
+
+			float distance;
+			Vector3 castFrom;
+			Vector3 castDir = -Camera.transform.forward;
+
+			float scrollValue = Input.mouseScrollDelta.y;
+			if (!GameManager.CanPlayerReadInput ())
+				scrollValue = 0;
+
+			if (_player.IsInVehicle) {
+				CarCameraDistance = Mathf.Clamp (CarCameraDistance - scrollValue, 2.0f, 32.0f);
+				distance = CarCameraDistance;
+				castFrom = _player.CurrentVehicle.transform.position;
+			} else if (_player.IsAiming) {
+				castFrom = this.CameraFocusPos;
+
+				// use distance from gun aiming offset ?
+				if (_player.CurrentWeapon.GunAimingOffset != null) {
+				//	Vector3 desiredCameraPos = this.transform.TransformPoint (- _player.CurrentWeapon.GunAimingOffset.Aim) + Vector3.up * .5f;
+					Vector3 desiredCameraPos = this.transform.TransformPoint( new Vector3(0.8f, 1.0f, -1) );
+					Vector3 diff = desiredCameraPos - castFrom;
+					distance = diff.magnitude;
+					castDir = diff.normalized;
+				}
+				else
+					distance = PlayerCameraDistance;
+			}
+			else
+			{
+				PlayerCameraDistance = Mathf.Clamp(PlayerCameraDistance - scrollValue, 2.0f, 32.0f);
+				distance = PlayerCameraDistance;
+				castFrom = this.CameraFocusPos;
+			}
+
+			var castRay = new Ray(castFrom, castDir);
+
+			RaycastHit hitInfo;
+
+			if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance,
+				-1 ^ (1 << MapObject.BreakableLayer) ^ (1 << Vehicle.Layer)))
+			{
+				distance = hitInfo.distance;
+			}
+
+			Camera.transform.position = castRay.GetPoint(distance);
+
+
+		}
+
 
         private void OnDrawGizmosSelected()
         {

@@ -114,6 +114,7 @@ namespace SanAndreasUnity.Importing.Weapons
 			public readonly string animGroup;
 
 			public readonly float aimX, aimZ;
+			public UnityEngine.Vector3 Aim { get { return new UnityEngine.Vector3 (this.aimX, 0, this.aimZ); } }
 
 			public readonly float duckX, duckZ;
 

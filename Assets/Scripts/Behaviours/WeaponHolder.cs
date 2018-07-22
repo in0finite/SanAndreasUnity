@@ -262,17 +262,21 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
-		private void RotatePlayerInDirectionOfAiming ()
+		public void RotatePlayerInDirectionOfAiming ()
 		{
 
 			if (!this.IsAiming)
 				return;
 
-			Vector3 lookAtPos = Camera.transform.position + Camera.transform.forward * 500;
-		//	Vector3 lookAtPos = m_player.transform.position + m_player.transform.forward * 500;
-			lookAtPos.y = m_player.transform.position.y;
+//			Vector3 lookAtPos = Camera.transform.position + Camera.transform.forward * 500;
+//			lookAtPos.y = m_player.transform.position.y;
+//
+//			m_player.transform.LookAt (lookAtPos, Vector3.up);
 
-			m_player.transform.LookAt (lookAtPos, Vector3.up);
+			Vector3 forward = Camera.transform.forward;
+			forward.y = 0;
+			forward.Normalize ();
+			m_player.transform.forward = forward;
 
 		}
 

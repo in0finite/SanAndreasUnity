@@ -44,8 +44,6 @@ These are the useful parameters in weapons.dat :
 
 ### Status
 
-- display crosshair
-
 - add camera position offset when aiming
 
 - when player stpos aiming, his rotation is reverted to the one before aiming
