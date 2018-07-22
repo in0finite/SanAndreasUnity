@@ -61,6 +61,8 @@ namespace SanAndreasUnity.Behaviours
 
 		private static GameObject weaponsContainer = null;
 
+		public static Texture2D CrosshairTexture { get; set; }
+
 
 
 		public static Weapon Load (int modelId)

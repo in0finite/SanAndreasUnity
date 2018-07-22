@@ -192,6 +192,10 @@ namespace SanAndreasUnity.Behaviours
 
                         mouseFix.Apply();
                         Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
+
+						// load crosshair texture
+						Weapon.CrosshairTexture = TextureDictionary.Load("hud").GetDiffuse("siteM16").Texture;
+						
                     }
 
                     HasLoaded = true;

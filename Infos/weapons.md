@@ -44,7 +44,11 @@ These are the useful parameters in weapons.dat :
 
 ### Status
 
-- rotate player in direction of aiming
+- display crosshair
+
+- add camera position offset when aiming
+
+- when player stpos aiming, his rotation is reverted to the one before aiming
 
 - whem anim is changed, reset position/rotation of all model transforms
 

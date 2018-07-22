@@ -17,6 +17,8 @@
 
 - **Map - better info area ; input mouse position is not always correct ; see Map.md ; **
 
+- Splash screen
+
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
 - Loader - better display of progress ; add loading steps ;
