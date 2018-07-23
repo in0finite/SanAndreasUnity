@@ -23,7 +23,8 @@ namespace SanAndreasUnity.Behaviours
         private AnimIndex _curAnim = AnimIndex.None;
         //	private	string	_curAnim = "" ;
 
-        public UnityEngine.Animation _anim { get; private set; }
+		private UnityEngine.Animation _anim { get; set; }
+		public UnityEngine.Animation AnimComponent { get { return _anim; } }
 
         private FrameContainer _frames;
         public FrameContainer Frames { get { return _frames; } }
@@ -120,6 +121,8 @@ namespace SanAndreasUnity.Behaviours
             get { return transform.localPosition; }
             set { transform.localPosition = value; }
         }
+
+
 
         private void Start()
         {

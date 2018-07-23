@@ -155,7 +155,19 @@ namespace SanAndreasUnity.Behaviours {
 					
 				//	PlayerModel.PlayUpperLayerAnimations (AnimGroup.Rifle, AnimGroup.WalkCycle, AnimIndex.RIFLE_fire, AnimIndex.Idle);
 
-					var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
+					AnimationState state;
+
+					if (PlayerModel.AnimGroup != AnimGroup.Rifle || PlayerModel.animIndex != AnimIndex.RIFLE_fire) {
+						m_player.AnimComponent.Stop ();
+					//	m_player.AnimComponent.clip.SampleAnimation ();
+
+						// override current transforms (and frame velocity) with idle anim
+						state = PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
+						state.normalizedTime = 0;
+						PlayerModel.AnimComponent.Sample ();
+					}
+
+					state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
 					state.wrapMode = WrapMode.ClampForever;
 					if (state.normalizedTime > m_aimWithRifleMaxAnimTime)
 						state.normalizedTime = m_aimWithRifleMaxAnimTime;

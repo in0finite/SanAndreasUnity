@@ -53,6 +53,8 @@ namespace SanAndreasUnity.Behaviours
 
         public Cell Cell { get { return Cell.Instance; } }
 
+		public UnityEngine.Animation AnimComponent { get { return PlayerModel.AnimComponent; } }
+
         public Vector3 Position
         {
             get { return transform.localPosition; }
@@ -549,6 +551,7 @@ namespace SanAndreasUnity.Behaviours
             }
             else if (IsLocalPlayer)
             {
+				
                 if (Movement.sqrMagnitude > float.Epsilon)
                 {
                     Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
