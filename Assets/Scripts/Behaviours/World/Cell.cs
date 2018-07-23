@@ -71,8 +71,13 @@ namespace SanAndreasUnity.Behaviours.World
 
                 using (Utilities.Profiler.Start("Cell partitioning time"))
                 {
+                    var timer = Stopwatch.StartNew();
+
                     var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
                     var insts = placements.ToDictionary(x => x, x => StaticGeometry.Create());
+                    timer.Stop();
+
+                    UnityEngine.Debug.LogFormat("Placements loaded in {0} ms", timer.ElapsedMilliseconds);
 
                     UnityEngine.Debug.Log("Num static geometries " + placements.Count() + ".");
                     totalNumObjects = placements.Count();
@@ -101,8 +106,8 @@ namespace SanAndreasUnity.Behaviours.World
                     }
                 }
 
-				// set layer recursively for all game objects
-			//	this.gameObject.SetLayerRecursive( this.gameObject.layer );
+                // set layer recursively for all game objects
+                //	this.gameObject.SetLayerRecursive( this.gameObject.layer );
 
                 if (Water != null)
                 {
@@ -179,8 +184,7 @@ namespace SanAndreasUnity.Behaviours.World
             measuredTimes[1] = (float)_timer.Elapsed.TotalMilliseconds;
         }
 
-
-		/*
+        /*
         private static Rect windowRect = new Rect(10, 10, 250, 330);
         private const int windowID = 0;
 
@@ -196,7 +200,7 @@ namespace SanAndreasUnity.Behaviours.World
         }
         */
 
-		public void showWindow(int windowID)
+        public void showWindow(int windowID)
         {
             GUILayout.Label("total num divisions " + (null == _leaves ? 0 : _leaves.Count));
             GUILayout.Label("total num objects " + totalNumObjects);
