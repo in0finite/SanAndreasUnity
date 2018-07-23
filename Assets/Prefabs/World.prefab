@@ -39,23 +39,7 @@ GameObject:
   m_Component:
   - component: {fileID: 421924}
   m_Layer: 0
-  m_Name: Los Santos - Car park downtown
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &139240
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 468082}
-  - component: {fileID: 11460870}
-  m_Layer: 0
-  m_Name: Vehicle Physics
+  m_Name: Los Santos - Car Park Downtown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,6 +72,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 499186}
+  - component: {fileID: 114077829182571006}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -137,7 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 475742}
   m_Layer: 0
-  m_Name: Los Santos - Grove Street
+  m_Name: Grove Street
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,7 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 461086}
   m_Layer: 0
-  m_Name: Abandoned Airport - Hideout
+  m_Name: Desert Airport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -201,11 +186,17 @@ Transform:
   - {fileID: 475742}
   - {fileID: 4393180410188950}
   - {fileID: 461086}
-  - {fileID: 4916251233388722}
+  - {fileID: 4694664445516102}
+  - {fileID: 4404069868695510}
+  - {fileID: 4410618639338142}
+  - {fileID: 4832859264981614}
   - {fileID: 4077053835485560}
+  - {fileID: 4153270575826190}
+  - {fileID: 4281002318532498}
+  - {fileID: 4916251233388722}
   - {fileID: 421924}
   m_Father: {fileID: 499186}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &421924
 Transform:
@@ -218,7 +209,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 418232}
-  m_RootOrder: 6
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &440826
 Transform:
@@ -231,7 +222,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 499186}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &461086
 Transform:
@@ -258,19 +249,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 499186}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &468082
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 139240}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 499186}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &472884
 Transform:
@@ -309,7 +287,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 499186}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &499186
 Transform:
@@ -324,7 +302,6 @@ Transform:
   - {fileID: 472884}
   - {fileID: 406580}
   - {fileID: 462626}
-  - {fileID: 468082}
   - {fileID: 440826}
   - {fileID: 418232}
   - {fileID: 492816}
@@ -361,10 +338,12 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!81 &8101816
 AudioListener:
   m_ObjectHideFlags: 1
@@ -386,7 +365,7 @@ Light:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 153756}
   m_Enabled: 1
-  serializedVersion: 7
+  serializedVersion: 8
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
@@ -411,6 +390,8 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!114 &11436500
@@ -455,32 +436,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WaterPrefab: {fileID: 0}
---- !u!114 &11460870
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 139240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82a245a7166802b41bcb706255d566f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DragScale: 0.05
-  AccelerationScale: 75
-  BreakingScale: 1
-  SuspensionForceScale: 100000
-  SuspensionDampingScale: 50000
-  MassScale: 1
-  ForwardFrictionExtremumSlip: 0.125
-  ForwardFrictionExtremumValue: 2.5
-  ForwardFrictionAsymptoteSlip: 1
-  ForwardFrictionAsymptoteValue: 2
-  SideFrictionExtremumSlip: 0.5
-  SideFrictionExtremumValue: 2.5
-  SideFrictionAsymptoteSlip: 1
-  SideFrictionAsymptoteValue: 2
-  AntiRollScale: 20000
 --- !u!124 &12458128
 Behaviour:
   m_ObjectHideFlags: 1
@@ -523,7 +478,37 @@ GameObject:
   m_Component:
   - component: {fileID: 4493953062982132}
   m_Layer: 0
-  m_Name: Las Venturas - The Visage casino
+  m_Name: Las Venturas - The Visage Casino
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1207184902467428
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4404069868695510}
+  m_Layer: 0
+  m_Name: Area 69
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1446699222852744
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4410618639338142}
+  m_Layer: 0
+  m_Name: Mike Toreno's Ranch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -538,7 +523,67 @@ GameObject:
   m_Component:
   - component: {fileID: 4393180410188950}
   m_Layer: 0
-  m_Name: San Fierro - Hideout
+  m_Name: San Fierro Garage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1551681599764314
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4153270575826190}
+  m_Layer: 0
+  m_Name: Santa Maria Beach
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1635632847464120
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4694664445516102}
+  m_Layer: 0
+  m_Name: Gant Bridge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1675865652371734
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4832859264981614}
+  m_Layer: 0
+  m_Name: Angel Pine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1678886838302222
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4281002318532498}
+  m_Layer: 0
+  m_Name: Los Santos Airport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -553,7 +598,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4077053835485560}
   m_Layer: 0
-  m_Name: Los Santos - Car park
+  m_Name: Los Santos - Car Park
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -570,7 +615,33 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 418232}
-  m_RootOrder: 5
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4153270575826190
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1551681599764314}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 347, y: 6, z: -1783}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 418232}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4281002318532498
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1678886838302222}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1829, y: 14, z: -2600}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 418232}
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4393180410188950
 Transform:
@@ -585,6 +656,32 @@ Transform:
   m_Father: {fileID: 418232}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 86.62501, z: 0}
+--- !u!4 &4404069868695510
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1207184902467428}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 146, y: 27, z: 1903}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 418232}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4410618639338142
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1446699222852744}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -708, y: 13, z: 958}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 418232}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4493953062982132
 Transform:
   m_ObjectHideFlags: 1
@@ -598,6 +695,32 @@ Transform:
   m_Father: {fileID: 418232}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4694664445516102
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1635632847464120}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2574, y: 8, z: 1380}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 418232}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4832859264981614
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1675865652371734}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2195, y: 32, z: -2272}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 418232}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4916251233388722
 Transform:
   m_ObjectHideFlags: 1
@@ -609,5 +732,60 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 418232}
-  m_RootOrder: 4
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: -157.143, z: 0}
+--- !u!114 &114077829182571006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 143544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f448a6ce85e59e943974de56271f3ce5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.000001270324
+      value: 1.0000031
+      inSlope: -2.9000547
+      outSlope: -2.9000547
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.24999273
+    - serializedVersion: 3
+      time: 0.5000107
+      value: 0.009750675
+      inSlope: -0.0068289125
+      outSlope: -0.0068289125
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.8998677
+      value: 0.50498855
+      inSlope: 4.620677
+      outSlope: 4.620677
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.70871896
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2.85
+      outSlope: 2.85
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33334053
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  dirLight: {fileID: 406580}
+  startTimeState: 1
