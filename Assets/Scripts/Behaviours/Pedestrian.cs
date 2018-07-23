@@ -391,7 +391,7 @@ namespace SanAndreasUnity.Behaviours
 
             state = PlayAnim(group, animIndex, PlayMode.StopSameLayer);
 
-	    state.AddMixingTransform(_root, false);
+			state.AddMixingTransform(_root.transform, false);
 
             state.AddMixingTransform(L_Thigh, true);
 

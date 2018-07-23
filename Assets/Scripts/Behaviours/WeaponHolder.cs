@@ -124,10 +124,10 @@ namespace SanAndreasUnity.Behaviours {
                     // aim with arm
                     // ie: pistol, tec9, sawnoff
                     
-                    //					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
-                    //					state.wrapMode = WrapMode.ClampForever;
-                    //					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
-                    //						state.normalizedTime = m_aimWithArmMaxAnimTime;
+//					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
+//					state.wrapMode = WrapMode.ClampForever;
+//					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
+//						state.normalizedTime = m_aimWithArmMaxAnimTime;
 
                     var state = PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
 					//state.RemoveMixingTransform (PlayerModel.Spine);
@@ -141,15 +141,15 @@ namespace SanAndreasUnity.Behaviours {
 					// also rotate right hand
 					PlayerModel.RightHand.LookAt (lookAtPos, dir);
 
-				}
-                else
-                {
-                    PlayerModel.PlayUpperLayerAnimations(AnimGroup.Rifle, AnimGroup.WalkCycle, AnimIndex.RIFLE_fire, AnimIndex.Idle);
+				} else {
+					
+				//	PlayerModel.PlayUpperLayerAnimations (AnimGroup.Rifle, AnimGroup.WalkCycle, AnimIndex.RIFLE_fire, AnimIndex.Idle);
 
-
-     //               state.wrapMode = WrapMode.ClampForever;
-					//if (state.normalizedTime > m_aimWithRifleMaxAnimTime)
-					//	state.normalizedTime = m_aimWithRifleMaxAnimTime;
+					var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
+					state.wrapMode = WrapMode.ClampForever;
+					if (state.normalizedTime > m_aimWithRifleMaxAnimTime)
+						state.normalizedTime = m_aimWithRifleMaxAnimTime;
+					
 				}
 			}
 
