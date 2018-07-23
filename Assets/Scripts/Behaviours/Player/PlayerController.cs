@@ -75,6 +75,7 @@ namespace SanAndreasUnity.Behaviours
         }
 
 		public Vector3 CameraFocusPos { get { return _player.transform.position + Vector3.up * 0.5f; } }
+		public Vector3 CameraFocusPosVehicle { get { return _player.CurrentVehicle.transform.position; } }
 
         #endregion Inspector Fields
 
@@ -278,50 +279,54 @@ namespace SanAndreasUnity.Behaviours
 
 			if (GameManager.CanPlayerReadInput())
 			{
-				// rotate camera around player / rotate player while aiming
+				// rotate camera
 
 				var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
 				mouseDelta = Vector2.Scale(mouseDelta, CursorSensitivity);
 
-//				if (m_doSmooth)
-//				{
-//					_smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
-//					_smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
-//
-//					_mouseAbsolute += _smoothMouse;
-//				}
-//				else
-//					_mouseAbsolute += mouseDelta;
-//
-//				// Waiting for an answer: https://stackoverflow.com/questions/50837685/camera-global-rotation-clamping-issue-unity3d
-//
-//				/*if (clampInDegrees.x > 0)
-//                    _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x, clampInDegrees.x);*/
-//
-//				if (clampInDegrees.y > 0)
-//					_mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);
+
+				if (m_doSmooth)
+				{
+					_smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
+					_smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
+
+					_mouseAbsolute += _smoothMouse;
+				}
+				else
+					_mouseAbsolute += mouseDelta;
+
+				// Waiting for an answer: https://stackoverflow.com/questions/50837685/camera-global-rotation-clamping-issue-unity3d
+
+				/*if (clampInDegrees.x > 0)
+                    _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x, clampInDegrees.x);*/
+
+				if (clampInDegrees.y > 0)
+					_mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);
 
 
-				Vector3 eulers = Camera.transform.eulerAngles;
-				eulers.x += - mouseDelta.y;
-				eulers.y += mouseDelta.x;
-
-				// clamp rotation
-				if(eulers.x > 180)
-					eulers.x -= 360;
-				eulers.x = Mathf.Clamp (eulers.x, -clampInDegrees.x, clampInDegrees.x);
-
-				// apply new rotation
-				Camera.transform.eulerAngles = eulers;
+//				Vector3 eulers = Camera.transform.eulerAngles;
+//				eulers.x += - mouseDelta.y;
+//				eulers.y += mouseDelta.x;
+//
+//				// no rotation around z axis
+//				eulers.z = 0;
+//
+//				// clamp rotation
+//				if(eulers.x > 180)
+//					eulers.x -= 360;
+//				eulers.x = Mathf.Clamp (eulers.x, -clampInDegrees.x, clampInDegrees.x);
+//
+//				// apply new rotation
+//				Camera.transform.eulerAngles = eulers;
 
 			}
 
-//			Camera.transform.rotation = Quaternion.AngleAxis(_mouseAbsolute.x, Vector3.up)
-//				* Quaternion.AngleAxis(-_mouseAbsolute.y, Vector3.right);
+			Camera.transform.rotation = Quaternion.AngleAxis(_mouseAbsolute.x, Vector3.up)
+				* Quaternion.AngleAxis(-_mouseAbsolute.y, Vector3.right);
 
 
-			// this must be called from here, otherwise camera will shake
+			// this must be called from here (right after the camera transform is changed), otherwise camera will shake
 			_player.WeaponHolder.RotatePlayerInDirectionOfAiming ();
 
 
@@ -336,11 +341,16 @@ namespace SanAndreasUnity.Behaviours
 			if (!GameManager.CanPlayerReadInput ())
 				scrollValue = 0;
 
-			if (_player.IsInVehicle) {
+			if (_player.IsInVehicle)
+			{
 				CarCameraDistance = Mathf.Clamp (CarCameraDistance - scrollValue, 2.0f, 32.0f);
 				distance = CarCameraDistance;
-				castFrom = _player.CurrentVehicle.transform.position;
-			} else if (_player.IsAiming) {
+				castFrom = this.CameraFocusPosVehicle;
+				// cast towards current camera position
+			//	castDir = (Camera.transform.position - castFrom).normalized;
+			}
+			else if (_player.IsAiming)
+			{
 				castFrom = this.CameraFocusPos;
 
 				// use distance from gun aiming offset ?

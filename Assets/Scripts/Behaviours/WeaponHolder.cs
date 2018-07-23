@@ -96,12 +96,15 @@ namespace SanAndreasUnity.Behaviours {
 
 			// order of these functions is important
 
+
 			UpdateAnims ();
 
 			RotatePlayerInDirectionOfAiming ();
 
+			// this should be done AFTER the player has rotated in direction of aiming
 			RotateSpine ();
 
+			// this should be done after all other skeleton changes
 			UpdateWeaponTransform ();
 
 		}
