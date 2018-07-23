@@ -125,9 +125,8 @@ MonoBehaviour:
   PlayerCameraDistance: 3
   clampInDegrees: {x: 60, y: 60}
   EnterVehicleRadius: 5
-  animationBlendWeight: 0.01
   smoothing: {x: 10, y: 10}
-  m_doSmooth: 1
+  m_doSmooth: 0
 --- !u!114 &114671475596742702
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -154,11 +153,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoAddWeapon: 0
-  UpwardAxis: {x: 0, y: 0, z: 0}
   SpineOffset: {x: 0, y: 45, z: 90}
   weaponAttachType: 1
   m_aimWithRifleMaxAnimTime: 0.7
-  m_aimWithArmMaxAnimTime: 1
+  cameraAimOffset: {x: 0.7, y: 0.2, z: -1}
 --- !u!143 &143191563852256374
 CharacterController:
   m_ObjectHideFlags: 1

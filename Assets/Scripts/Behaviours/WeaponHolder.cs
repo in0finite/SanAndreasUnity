@@ -282,7 +282,8 @@ namespace SanAndreasUnity.Behaviours {
 			Vector3 forward = Camera.transform.forward;
 			forward.y = 0;
 			forward.Normalize ();
-			m_player.transform.forward = forward;
+		//	m_player.transform.forward = forward;
+			m_player.Heading = forward;
 
 		}
 

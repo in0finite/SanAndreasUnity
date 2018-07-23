@@ -73,11 +73,11 @@ namespace SanAndreasUnity.Behaviours
 
         public Vector3 Velocity { get; private set; }
         public Vector3 Movement { get; set; }
-
-        public Vector3 Heading { get; private set; }
-        public Vehicle CurrentVehicle { get; private set; }
-
-        public bool IsInVehicle { get { return CurrentVehicle != null; } }
+		/// <summary> Direction towards which the player turns. </summary>
+        public Vector3 Heading { get; set; }
+        
+		public Vehicle CurrentVehicle { get; private set; }
+		public bool IsInVehicle { get { return CurrentVehicle != null; } }
         public bool IsInVehicleSeat { get; private set; }
         public bool IsDrivingVehicle { get; private set; }
 
