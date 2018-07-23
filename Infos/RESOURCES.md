@@ -98,6 +98,10 @@ This to read GTA:SA contents
 
 - https://github.com/RandomationGames/Randomation-Vehicle-Physics
 
+#### Boats
+
+- http://www.habrador.com/tutorials/unity-boat-tutorial/6-propulsion/
+
 ### 22
 
 #### Blinkers
