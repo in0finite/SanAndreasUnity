@@ -38,7 +38,9 @@ namespace SanAndreasUnity.Behaviours {
 		public	WeaponAttachType	weaponAttachType = WeaponAttachType.RightHand;
 
 		[SerializeField]	[Range(0,1)]	private	float	m_aimWithRifleMaxAnimTime = 0.7f;
-		[SerializeField]	[Range(0,1)]	private	float	m_aimWithArmMaxAnimTime = 1.0f;
+	//	[SerializeField]	[Range(0,1)]	private	float	m_aimWithArmMaxAnimTime = 1.0f;
+
+		public	Vector3	cameraAimOffset = new Vector3 (0.7f, 0.2f, -1);
 
 
 
@@ -107,6 +109,8 @@ namespace SanAndreasUnity.Behaviours {
 			RotateSpine ();
 
 			// this should be done after all other skeleton changes
+			// idk why this boolean has to be checked - there are some race conditions with animations
+			// - if we don't check it, weapons will start shaking
 			if (this.IsAiming)
 				UpdateWeaponTransform ();
 
