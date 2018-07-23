@@ -372,7 +372,7 @@ namespace SanAndreasUnity.Behaviours
         {
             LoadAnim(upperLayerGroup, upperLayerIndex);
 
-            _anim[GetAnimName(upperLayerGroup, upperLayerIndex)].layer = 0;
+            _anim[GetAnimName(upperLayerGroup, upperLayerIndex)].layer = 1;
 
             AnimationState state = PlayAnim(upperLayerGroup, upperLayerIndex, PlayMode.StopSameLayer);
 
@@ -387,9 +387,11 @@ namespace SanAndreasUnity.Behaviours
 
             LoadAnim(group, animIndex);
 
-            _anim[GetAnimName(group, animIndex)].layer = 1;
+            _anim[GetAnimName(group, animIndex)].layer = 0;
 
             state = PlayAnim(group, animIndex, PlayMode.StopSameLayer);
+
+	    state.AddMixingTransform(_root, false);
 
             state.AddMixingTransform(L_Thigh, true);
 
