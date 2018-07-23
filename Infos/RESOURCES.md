@@ -81,3 +81,31 @@ This to read GTA:SA contents
 ### 20
 
 - http://gta.wikia.com/wiki/ZONE
+
+### 21
+
+#### Helicopters
+
+- https://assetstore.unity.com/packages/tools/physics/base-helicopter-controller-40107
+
+#### Airplanes
+
+- https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-32351
+
+- https://keithmaggio.wordpress.com/2011/07/01/unity-3d-code-snippet-flight-script/
+
+#### Bikes
+
+- https://github.com/RandomationGames/Randomation-Vehicle-Physics
+
+### 22
+
+#### Blinkers
+
+- https://assetstore.unity.com/packages/vfx/shaders/fullscreen-camera-effects/mk-glow-free-28044
+
+### 23
+
+#### Weapons
+
+- https://forum.unity.com/threads/cod-modern-warfare-style-gun-script-update-08-07-2015.52651/
