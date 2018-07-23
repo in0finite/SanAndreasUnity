@@ -62,8 +62,6 @@ namespace SanAndreasUnity.Behaviours
 
         public float EnterVehicleRadius = 5.0f;
 
-        public float animationBlendWeight = 0.4f;
-
         public Vector2 smoothing = new Vector2(10, 10);
         public bool m_doSmooth = true;
 
@@ -410,37 +408,6 @@ namespace SanAndreasUnity.Behaviours
 
                 break;
             }
-        }
-
-
-        private void Play2Animations(int[] boneIds1, int[] boneIds2,
-            AnimGroup group1, AnimGroup group2, AnimIndex animIndex1, AnimIndex animIndex2)
-        {
-            PlayerModel._anim[PlayerModel.GetAnimName(group1, animIndex1)].layer = 0;
-
-            AnimationState state = PlayerModel.PlayAnim(group1, animIndex1, PlayMode.StopSameLayer);
-
-            foreach (int boneId in boneIds1)
-            {
-                Frame f = PlayerModel.Frames.GetByBoneId(boneId);
-                state.AddMixingTransform(f.transform, true);
-                //	runState.wrapMode = WrapMode.Loop;
-            }
-
-            PlayerModel._anim[PlayerModel.GetAnimName(group2, animIndex2)].layer = 1;
-
-            state = PlayerModel.PlayAnim(group2, animIndex2, PlayMode.StopSameLayer);
-
-            foreach (int boneId in boneIds2)
-            {
-                Frame f = PlayerModel.Frames.GetByBoneId(boneId);
-                //	state.RemoveMixingTransform(f.transform);
-                state.AddMixingTransform(f.transform, true);
-                //	state.wrapMode = WrapMode.Loop;
-            }
-            state.weight = animationBlendWeight;
-
-            //	PlayerModel._anim.Blend( );
         }
 
         /*public static float ClampAngle(float currentValue, float minAngle, float maxAngle, float clampAroundAngle = 0)

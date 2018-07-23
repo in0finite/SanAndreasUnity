@@ -67,7 +67,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public Transform Head { get; private set; }
 
-		public Transform Spine { get; private set; }
+        public Transform Spine { get; private set; }
+        public Transform R_Thigh { get; private set; }
+        public Transform L_Thigh { get; private set; }
 
         private Player _player;
 
@@ -319,7 +321,8 @@ namespace SanAndreasUnity.Behaviours
 			LeftForeArm = _frames.GetByName (" L ForeArm").transform;
 			Head = _frames.GetByName (" Head").transform;
 			Spine = _frames.GetByName(" Spine").transform;
-
+            R_Thigh = _frames.GetByName(" R Thigh").transform;
+            L_Thigh = _frames.GetByName(" L Thigh").transform;
         }
 
 		public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, PlayMode playMode = PlayMode.StopAll)
@@ -332,6 +335,142 @@ namespace SanAndreasUnity.Behaviours
             _curAnim = animIndex = anim;
 
             _anim.Play(animState.name, playMode);
+
+            return animState;
+        }
+
+        public AnimationState AddMixingTransform(AnimGroup group, AnimIndex anim, Transform mix)
+        {
+            var animState = LoadAnim(group, anim);
+            if (null == animState)
+                return null;
+
+            _curAnimGroup = AnimGroup = group;
+            _curAnim = animIndex = anim;
+
+            animState.AddMixingTransform(mix);
+
+            return animState;
+        }
+
+        public AnimationState RemoveMixingTransform(AnimGroup group, AnimIndex anim, Transform mix)
+        {
+            var animState = LoadAnim(group, anim);
+            if (null == animState)
+                return null;
+
+            _curAnimGroup = AnimGroup = group;
+            _curAnim = animIndex = anim;
+
+            animState.RemoveMixingTransform(mix);
+
+            return animState;
+        }
+
+        public void PlayUpperLayerAnimations(
+           AnimGroup upperLayerGroup, AnimGroup group, AnimIndex upperLayerIndex, AnimIndex animIndex)
+        {
+            LoadAnim(upperLayerGroup, upperLayerIndex);
+
+            _anim[GetAnimName(upperLayerGroup, upperLayerIndex)].layer = 1;
+
+            AnimationState state = PlayAnim(upperLayerGroup, upperLayerIndex, PlayMode.StopSameLayer);
+
+            state.normalizedTime = 1;
+
+            //state.AddMixingTransform(Spine, true);
+
+            //foreach (Transform t in Spine.GetComponentInChildren<Transform>())
+            //{
+            //    //	runState.wrapMode = WrapMode.Loop;
+            //}
+
+            LoadAnim(group, animIndex);
+
+            _anim[GetAnimName(group, animIndex)].layer = 0;
+
+            state = PlayAnim(group, animIndex, PlayMode.StopSameLayer);
+
+	    state.AddMixingTransform(_root, false);
+
+            state.AddMixingTransform(L_Thigh, true);
+
+            //foreach (Transform t in L_Thigh.GetComponentInChildren<Transform>())
+            //{
+            //    //	state.RemoveMixingTransform(f.transform);
+            //    //	state.wrapMode = WrapMode.Loop;
+            //}
+
+            state.AddMixingTransform(R_Thigh, true);
+
+            //foreach (Transform t in R_Thigh.GetComponentInChildren<Transform>())
+            //{
+            //    //	state.RemoveMixingTransform(f.transform);
+            //    //	state.wrapMode = WrapMode.Loop;
+            //}
+            //state.weight = animationBlendWeight;
+
+            //	PlayerModel._anim.Blend( );
+        }
+
+        public AnimationState AddMixingTransform(AnimGroup group, AnimIndex anim, Transform mix, bool recursive)
+        {
+            var animState = LoadAnim(group, anim);
+            if (null == animState)
+                return null;
+
+            _curAnimGroup = AnimGroup = group;
+            _curAnim = animIndex = anim;
+
+            animState.AddMixingTransform(mix, recursive);
+
+            return animState;
+        }
+
+        public AnimationState Blend(AnimGroup group, AnimIndex anim)
+        {
+            var animState = LoadAnim(group, anim);
+            if (null == animState)
+                return null;
+
+            _curAnimGroup = AnimGroup = group;
+            _curAnim = animIndex = anim;
+
+            animState.AddMixingTransform(Spine);
+
+            _anim.Blend(animState.name);
+
+            return animState;
+        }
+
+        public AnimationState Blend(AnimGroup group, AnimIndex anim, float targetWeight)
+        {
+            var animState = LoadAnim(group, anim);
+            if (null == animState)
+                return null;
+
+            _curAnimGroup = AnimGroup = group;
+            _curAnim = animIndex = anim;
+
+            animState.AddMixingTransform(Spine);
+
+            _anim.Blend(animState.name, targetWeight);
+
+            return animState;
+        }
+
+        public AnimationState Blend(AnimGroup group, AnimIndex anim, float targetWeight, float fadeLength)
+        {
+            var animState = LoadAnim(group, anim);
+            if (null == animState)
+                return null;
+
+            _curAnimGroup = AnimGroup = group;
+            _curAnim = animIndex = anim;
+
+            animState.AddMixingTransform(Spine);
+
+            _anim.Blend(animState.name, targetWeight, fadeLength);
 
             return animState;
         }

@@ -24,12 +24,7 @@ namespace SanAndreasUnity.Behaviours {
 
 		public	Weapon	CurrentWeapon { get ; private set ; }
 		private	Transform	CurrentWeaponTransform { get { return CurrentWeapon != null ? CurrentWeapon.transform : null; } }
-
-		public Vector3 UpwardAxis;
-
-		private Vector3 tempSpineLocalEulerAngles;
-		private Quaternion targetRot;
-		private Quaternion spineRotationLastFrame;
+        
 
 		public Vector3 SpineOffset;
 
@@ -126,16 +121,16 @@ namespace SanAndreasUnity.Behaviours {
 			//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
 
 				if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
-					// aim with arm
-					// ie: pistol, tec9, sawnoff
+                    // aim with arm
+                    // ie: pistol, tec9, sawnoff
+                    
+                    //					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
+                    //					state.wrapMode = WrapMode.ClampForever;
+                    //					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
+                    //						state.normalizedTime = m_aimWithArmMaxAnimTime;
 
-//					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
-//					state.wrapMode = WrapMode.ClampForever;
-//					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
-//						state.normalizedTime = m_aimWithArmMaxAnimTime;
-
-					var state = PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
-				//	state.RemoveMixingTransform (PlayerModel.RightUpperArm);
+                    var state = PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
+					//state.RemoveMixingTransform (PlayerModel.Spine);
 
 					// rotate right upper arm to match direction of player
 					// we'll need a few adjustments, because arm's right vector is player's forward vector,
@@ -146,12 +141,15 @@ namespace SanAndreasUnity.Behaviours {
 					// also rotate right hand
 					PlayerModel.RightHand.LookAt (lookAtPos, dir);
 
-				} else {
+				}
+                else
+                {
+                    PlayerModel.PlayUpperLayerAnimations(AnimGroup.Rifle, AnimGroup.WalkCycle, AnimIndex.RIFLE_fire, AnimIndex.Idle);
 
-					var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
-					state.wrapMode = WrapMode.ClampForever;
-					if (state.normalizedTime > m_aimWithRifleMaxAnimTime)
-						state.normalizedTime = m_aimWithRifleMaxAnimTime;
+
+     //               state.wrapMode = WrapMode.ClampForever;
+					//if (state.normalizedTime > m_aimWithRifleMaxAnimTime)
+					//	state.normalizedTime = m_aimWithRifleMaxAnimTime;
 				}
 			}
 
@@ -255,8 +253,6 @@ namespace SanAndreasUnity.Behaviours {
 				if (this.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
 					eulers.y = 0;
 				PlayerModel.Spine.Rotate (eulers);
-
-				this.UpwardAxis = PlayerModel.Spine.up;
 			//	PlayerModel.ChangeSpineRotation (this.CurrentWeaponTransform.forward, Camera.transform.position + Camera.transform.forward * Camera.farClipPlane - this.CurrentWeaponTransform.position, SpineRotationSpeed, ref tempSpineLocalEulerAngles, ref targetRot, ref spineRotationLastFrame);
 			}
 
