@@ -87,6 +87,8 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 
+			this.UpdateWeaponTransform ();
+
 		}
 
 		void LateUpdate()
@@ -105,7 +107,8 @@ namespace SanAndreasUnity.Behaviours {
 			RotateSpine ();
 
 			// this should be done after all other skeleton changes
-			UpdateWeaponTransform ();
+			if (this.IsAiming)
+				UpdateWeaponTransform ();
 
 		}
 

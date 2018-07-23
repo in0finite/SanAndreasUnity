@@ -356,7 +356,8 @@ namespace SanAndreasUnity.Behaviours
 				// use distance from gun aiming offset ?
 				if (_player.CurrentWeapon.GunAimingOffset != null) {
 				//	Vector3 desiredCameraPos = this.transform.TransformPoint (- _player.CurrentWeapon.GunAimingOffset.Aim) + Vector3.up * .5f;
-					Vector3 desiredCameraPos = this.transform.TransformPoint( new Vector3(0.8f, 1.0f, -1) );
+				//	Vector3 desiredCameraPos = this.transform.TransformPoint( new Vector3(0.8f, 1.0f, -1) );
+					Vector3 desiredCameraPos = this.CameraFocusPos + Camera.transform.TransformVector( new Vector3(0.8f, 0.5f, -1) );
 					Vector3 diff = desiredCameraPos - castFrom;
 					distance = diff.magnitude;
 					castDir = diff.normalized;
