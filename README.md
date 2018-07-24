@@ -18,10 +18,6 @@ Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data 
 
 Press Escape while in game to open pause menu. You'll see there a lot of utilities, and among them, there is a window which shows all controls.
 
-## CLI commands
-
-You can see them [here](/Infos/CLI.md).
-
 ## TODO List
 
 Here is an extensive list of [what should be implemented](/Infos/WhatShouldBeImplemented.md).

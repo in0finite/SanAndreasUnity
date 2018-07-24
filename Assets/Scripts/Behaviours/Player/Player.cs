@@ -74,6 +74,7 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsSprinting { get; set; }
 
         public Vector3 Velocity { get; private set; }
+		/// <summary> Current movement input. </summary>
         public Vector3 Movement { get; set; }
 		/// <summary> Direction towards which the player turns. </summary>
         public Vector3 Heading { get; set; }
@@ -533,8 +534,11 @@ namespace SanAndreasUnity.Behaviours
 
             if (IsInVehicle) return;
 
-            var forward = Vector3.RotateTowards(transform.forward, Heading, TurnSpeed * Time.deltaTime, 0.0f);
-            transform.localRotation = Quaternion.LookRotation(forward);
+
+			// rotate player towards his heading
+			Vector3 forward = Vector3.RotateTowards (this.transform.forward, Heading, TurnSpeed * Time.deltaTime, 0.0f);
+			this.transform.rotation = Quaternion.LookRotation(forward);
+
 
             if (enableFlying || enableNoclip)
             {
@@ -554,12 +558,15 @@ namespace SanAndreasUnity.Behaviours
 				
                 if (Movement.sqrMagnitude > float.Epsilon)
                 {
+					// change heading to match movement input
                     Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
                 }
 
+				// change velocity based on movement input and current speed extracted from anim
                 var vDiff = Movement * PlayerModel.Speed - new Vector3(Velocity.x, 0f, Velocity.z);
+				Velocity += vDiff;
 
-                Velocity += vDiff;
+				// apply gravity
                 Velocity = new Vector3(Velocity.x, characterController.isGrounded
                     ? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
 
@@ -572,6 +579,7 @@ namespace SanAndreasUnity.Behaviours
                     jumpTimer = 0;
                 }
 
+				// finally, move the character
                 characterController.Move(Velocity * Time.fixedDeltaTime);
             }
             else

@@ -46,6 +46,8 @@ These are the useful parameters in weapons.dat :
 
 - while aiming with rifle, there is a little shaking of player - check max rifle aim anim time
 
+- spine should be rotated locally, not globally
+
 - display all anim info in animations window: current time, length, root frame velocity, anim name, 
 
 - whem anim is changed, reset position/rotation of all model transforms

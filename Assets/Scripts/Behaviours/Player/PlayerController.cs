@@ -148,6 +148,7 @@ namespace SanAndreasUnity.Behaviours
 
 			// reset player input
 			_player.IsWalking = _player.IsRunning = _player.IsSprinting = false;
+			_player.Movement = Vector3.zero;
 			
 
             if (!_player.enableFlying && !_player.IsInVehicle && Input.GetKeyDown(KeyCode.T))

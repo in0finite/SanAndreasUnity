@@ -42,6 +42,8 @@ namespace SanAndreasUnity.Behaviours {
 
 		public	Vector3	cameraAimOffset = new Vector3 (0.7f, 0.2f, -1);
 
+		public	bool	rotatePlayerInDirectionOfAiming = true;
+
 
 
         void Awake () {
@@ -91,6 +93,12 @@ namespace SanAndreasUnity.Behaviours {
 
 			this.UpdateWeaponTransform ();
 
+
+			if (this.IsAiming) {
+				Debug.DrawRay (this.CurrentWeaponTransform.position + this.CurrentWeaponTransform.forward * 4, 
+					this.CurrentWeaponTransform.forward, Color.red);
+			}
+
 		}
 
 		void LateUpdate()
@@ -103,7 +111,7 @@ namespace SanAndreasUnity.Behaviours {
 
 			UpdateAnims ();
 
-			RotatePlayerInDirectionOfAiming ();
+		//	RotatePlayerInDirectionOfAiming ();
 
 			// this should be done AFTER the player has rotated in direction of aiming
 			RotateSpine ();
@@ -272,6 +280,9 @@ namespace SanAndreasUnity.Behaviours {
 
 		public void RotatePlayerInDirectionOfAiming ()
 		{
+
+			if (!this.rotatePlayerInDirectionOfAiming)
+				return;
 
 			if (!this.IsAiming)
 				return;
