@@ -14,6 +14,9 @@ namespace SanAndreasUnity.UI {
 		public Vector2 hudSize = new Vector2 (100, 100);
 		public Vector2 hudPadding = new Vector2 (10, 10);
 
+		public Color healthColor = Color.red;
+		public Color healthBackgroundColor = (Color.red + Color.black) * 0.5f;
+
 
 		void Start () {
 			
@@ -34,7 +37,7 @@ namespace SanAndreasUnity.UI {
 			}
 
 			// draw hud
-			DrawHud( this.hudScreenCorner, this.hudSize, this.hudPadding );
+			DrawHud( this.hudScreenCorner, this.hudSize, this.hudPadding, this.healthColor, this.healthBackgroundColor );
 
 		}
 
@@ -76,12 +79,17 @@ namespace SanAndreasUnity.UI {
 
 		}
 
-		public static void DrawHud (ScreenCorner screenCorner, Vector2 size, Vector2 padding)
+		public static void DrawHud (ScreenCorner screenCorner, Vector2 size, Vector2 padding, Color healthColor,
+			Color healthBackgroundColor)
 		{
 
 			var rect = GUIUtils.GetCornerRect (screenCorner, size, padding);
 
 			// draw icon for current weapon
+
+			Rect texRect = rect;
+			texRect.width *= 0.4f;
+			texRect.height *= 0.5f;
 
 			Texture2D tex;
 			if (Player.Instance.CurrentWeapon != null)
@@ -94,10 +102,7 @@ namespace SanAndreasUnity.UI {
 			}
 
 			if (tex != null) {
-				Rect texRect = rect;
-				texRect.width *= 0.4f;
-				texRect.height *= 0.5f;
-
+				
 				var savedMatrix = GUI.matrix;
 				// we have to flip texture around Y axis
 				GUIUtility.ScaleAroundPivot (new Vector2 (1.0f, -1.0f), texRect.center);
@@ -108,6 +113,34 @@ namespace SanAndreasUnity.UI {
 				GUI.matrix = savedMatrix;
 			}
 
+			// health bar
+
+			float barHeight = 8f; //rect.height / 10f;
+			float barWidth = rect.width * 0.5f;
+			Rect healthBarRect = new Rect (rect.width * 0.5f, texRect.yMax - barHeight, barWidth, barHeight);
+			DrawBar( healthBarRect, 1.0f, healthColor, healthBackgroundColor );
+
+		}
+
+		public static void DrawBar (Rect rect, float fillPerc, Color fillColor, Color backgroundColor)
+		{
+			fillPerc = Mathf.Clamp01 (fillPerc);
+
+			float borderWidth = 2f; //rect.height / 8f;
+
+			Rect fillRect = rect;
+			fillRect.position += Vector2.one * borderWidth;
+			fillRect.size -= Vector2.one * borderWidth * 2;
+
+			// first fill with black - that will be the border
+			GUIUtils.DrawRect( rect, Color.black );
+
+			// fill with background
+			GUIUtils.DrawRect( fillRect, backgroundColor );
+
+			// draw filled part
+			fillRect.width *= fillPerc;
+			GUIUtils.DrawRect( fillRect, fillColor );
 
 		}
 
