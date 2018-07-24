@@ -39,7 +39,7 @@ namespace SanAndreasUnity.Behaviours
 //		public int damage = 0;
 //	}
 
-	public class Weapon
+	public class Weapon : MonoBehaviour
 	{
 		private WeaponDef definition = null;
 		public WeaponDef Definition { get { return this.definition; } }
@@ -50,14 +50,9 @@ namespace SanAndreasUnity.Behaviours
 		private	WeaponData.GunAimingOffset gunAimingOffset;
 		public WeaponData.GunAimingOffset GunAimingOffset { get { return this.gunAimingOffset; } }
 
-
 	//	public int totalAmmo = 0;
 	//	public int ammoInClip = 0;
 
-		private GameObject m_gameObject = null;
-		public GameObject gameObject { get { return m_gameObject; } }
-
-		public Transform transform { get { return m_gameObject.transform; } }
 
 		private static GameObject weaponsContainer = null;
 
@@ -85,15 +80,14 @@ namespace SanAndreasUnity.Behaviours
 
 			geoms.AttachFrames (go.transform, MaterialFlags.Default);
 
-			Weapon w = new Weapon ();
-			w.definition = def;
-			w.data = WeaponData.LoadedWeaponsData.FirstOrDefault (wd => wd.modelId1 == def.Id);
+			Weapon weapon = go.AddComponent<Weapon> ();
+			weapon.definition = def;
+			weapon.data = WeaponData.LoadedWeaponsData.FirstOrDefault (wd => wd.modelId1 == def.Id);
 			// cache gun aiming offset
-			if (w.data.gunData != null)
-				w.gunAimingOffset = w.data.gunData.aimingOffset;
-			w.m_gameObject = go;
-
-			return w;
+			if (weapon.data.gunData != null)
+				weapon.gunAimingOffset = weapon.data.gunData.aimingOffset;
+			
+			return weapon;
 		}
 
 		public bool HasFlag( GunFlag gunFlag ) {
