@@ -588,5 +588,21 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
+
+		void OnDrawGizmosSelected ()
+		{
+
+			// draw heading ray
+
+			Gizmos.color = Color.blue;
+			Gizmos.DrawLine (this.transform.position, this.transform.position + this.Heading);
+
+			// draw movement ray
+
+			Gizmos.color = Color.green;
+			Gizmos.DrawLine (this.transform.position, this.transform.position + this.Movement);
+
+		}
+
     }
 }

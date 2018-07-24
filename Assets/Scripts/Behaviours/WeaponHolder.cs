@@ -309,9 +309,7 @@ namespace SanAndreasUnity.Behaviours {
 		public void SwitchWeapon (int slotIndex)
 		{
 			if (CurrentWeapon != null) {
-				// set parent to weapons container in order to hide it
-			//	weapon.SetParent (Weapon.weaponsContainer.transform);
-
+				// hide the weapon
 				CurrentWeapon.gameObject.SetActive (false);
 			}
 
@@ -340,7 +338,14 @@ namespace SanAndreasUnity.Behaviours {
 		public void SetWeaponAtSlot (int weaponId, WeaponSlot slot)
 		{
 
-			weapons [(int)slot] = Weapon.Load (weaponId);
+			int index = (int)slot;
+
+			// destroy current weapon at this slot
+			if (weapons [index] != null) {
+				Destroy (weapons [index].gameObject);
+			}
+
+			weapons [index] = Weapon.Load (weaponId);
 
 		}
 
@@ -350,6 +355,18 @@ namespace SanAndreasUnity.Behaviours {
 
 			for (int i = 0; i < this.weapons.Length; i++) {
 				this.weapons [i] = null;
+			}
+
+		}
+
+
+		void OnDrawGizmosSelected ()
+		{
+			// draw ray from gun
+
+			if (CurrentWeapon != null) {
+				Gizmos.color = Color.red;
+				Gizmos.DrawRay (CurrentWeaponTransform.position, CurrentWeaponTransform.forward);
 			}
 
 		}

@@ -44,9 +44,11 @@ These are the useful parameters in weapons.dat :
 
 ### Status
 
-- while aiming with rifle, there is a little shaking of player - check max rifle aim anim time
+- weapons hud ; switching weapons
 
-- spine should be rotated locally, not globally
+- play 2 anims at the same time - this is needed for: reloading, aim and move at the same time, 
+
+- spine should be rotated locally, not globally ? - some models have different rotation of spine in the idle anim, which means that their spine will not look at the same place - possible solution would be to play the same idle anim on all models
 
 - display all anim info in animations window: current time, length, root frame velocity, anim name, 
 
