@@ -395,6 +395,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crosshairSize: 30.7
   crosshairScaleMode: 0
+  hudScreenCorner: 1
+  hudSize: {x: 100, y: 100}
+  hudPadding: {x: 10, y: 10}
 --- !u!114 &114042572616448592
 MonoBehaviour:
   m_ObjectHideFlags: 1

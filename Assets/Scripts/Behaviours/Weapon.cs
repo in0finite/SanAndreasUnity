@@ -53,6 +53,8 @@ namespace SanAndreasUnity.Behaviours
 	//	public int totalAmmo = 0;
 	//	public int ammoInClip = 0;
 
+		public Texture2D HudTexture { get; private set; }
+
 
 		private static GameObject weaponsContainer = null;
 
@@ -86,7 +88,14 @@ namespace SanAndreasUnity.Behaviours
 			// cache gun aiming offset
 			if (weapon.data.gunData != null)
 				weapon.gunAimingOffset = weapon.data.gunData.aimingOffset;
-			
+
+			// load hud texture
+			try {
+				weapon.HudTexture = TextureDictionary.Load( def.TextureDictionaryName ).GetDiffuse( def.TextureDictionaryName + "icon" ).Texture;
+			} catch {
+				Debug.LogErrorFormat ("Failed to load hud icon for weapon {0}, txd {1}", def.ModelName, def.TextureDictionaryName);
+			}
+
 			return weapon;
 		}
 
