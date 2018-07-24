@@ -83,25 +83,29 @@ namespace SanAndreasUnity.UI {
 
 			// draw icon for current weapon
 
-			if (Player.Instance.CurrentWeapon != null) {
+			Texture2D tex;
+			if (Player.Instance.CurrentWeapon != null)
+			{
+				tex = Player.Instance.CurrentWeapon.HudTexture;
+			}
+			else
+			{
+				tex = Weapon.FistTexture;
+			}
 
-				var tex = Player.Instance.CurrentWeapon.HudTexture;
+			if (tex != null) {
+				Rect texRect = rect;
+				texRect.width *= 0.4f;
+				texRect.height *= 0.5f;
 
-				if (tex != null) {
-					Rect texRect = rect;
-					texRect.width *= 0.4f;
-					texRect.height *= 0.5f;
+				var savedMatrix = GUI.matrix;
+				// we have to flip texture around Y axis
+				GUIUtility.ScaleAroundPivot (new Vector2 (1.0f, -1.0f), texRect.center);
 
-					var savedMatrix = GUI.matrix;
-					// we have to flip texture around Y axis
-					GUIUtility.ScaleAroundPivot (new Vector2 (1.0f, -1.0f), texRect.center);
+			//	GUI.DrawTexture( texRect, tex, ScaleMode.StretchToFill, true, 0.0f, Color.black, 3f, 5f );
+				GUI.DrawTexture (texRect, tex);
 
-				//	GUI.DrawTexture( texRect, tex, ScaleMode.StretchToFill, true, 0.0f, Color.black, 3f, 5f );
-					GUI.DrawTexture (texRect, tex);
-
-					GUI.matrix = savedMatrix;
-				}
-
+				GUI.matrix = savedMatrix;
 			}
 
 

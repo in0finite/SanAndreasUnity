@@ -196,6 +196,9 @@ namespace SanAndreasUnity.Behaviours
 						// load crosshair texture
 						Weapon.CrosshairTexture = TextureDictionary.Load("hud").GetDiffuse("siteM16").Texture;
 						
+						// fist texture
+						Weapon.FistTexture = TextureDictionary.Load("hud").GetDiffuse("fist").Texture;
+
                     }
 
                     HasLoaded = true;

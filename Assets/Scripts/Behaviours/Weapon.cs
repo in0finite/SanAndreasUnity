@@ -59,6 +59,7 @@ namespace SanAndreasUnity.Behaviours
 		private static GameObject weaponsContainer = null;
 
 		public static Texture2D CrosshairTexture { get; set; }
+		public static Texture2D FistTexture { get; set; }
 
 
 
@@ -93,7 +94,7 @@ namespace SanAndreasUnity.Behaviours
 			try {
 				weapon.HudTexture = TextureDictionary.Load( def.TextureDictionaryName ).GetDiffuse( def.TextureDictionaryName + "icon" ).Texture;
 			} catch {
-				Debug.LogErrorFormat ("Failed to load hud icon for weapon {0}, txd {1}", def.ModelName, def.TextureDictionaryName);
+				Debug.LogErrorFormat ("Failed to load hud icon for weapon: model {0}, txd {1}", def.ModelName, def.TextureDictionaryName);
 			}
 
 			return weapon;
