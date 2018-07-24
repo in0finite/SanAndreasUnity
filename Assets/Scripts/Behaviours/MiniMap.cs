@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Behaviours
         public const int texSize = 128; // width/height of single tile in px
         public const int mapSize = tileEdge * texSize; // width/height of whole map in px
         public const int uiSize = 256, uiOffset = 10;
-		private const bool outputChunks = false, outputImage = false;
+        private const bool outputChunks = false, outputImage = false;
 
         public static bool toggleMap;
 
@@ -53,7 +53,7 @@ namespace SanAndreasUnity.Behaviours
 
         #region "Properties"
 
-		public	static	MiniMap	Instance { get ; private set ; }
+        public static MiniMap Instance { get; private set; }
 
         private float realZoom
         {
@@ -112,21 +112,19 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-		public Texture2D NorthBlip { get { return this.northBlip; } }
+        public Texture2D NorthBlip { get { return this.northBlip; } }
 
-		public Texture2D PlayerBlip { get { return this.playerBlip; } }
+        public Texture2D PlayerBlip { get { return this.playerBlip; } }
 
-		public Texture2D WaypointTexture { get { return this.waypointTexture; } }
+        public Texture2D WaypointTexture { get { return this.waypointTexture; } }
 
-		public Texture2D MapTexture { get { return this.mapTexture; } }
+        public Texture2D MapTexture { get { return this.mapTexture; } }
 
-		public Texture2D BlackPixel { get { return this.blackPixel; } }
+        public Texture2D BlackPixel { get { return this.blackPixel; } }
 
-		public Texture2D SeaPixel { get { return this.seaPixel; } }
+        public Texture2D SeaPixel { get { return this.seaPixel; } }
 
         #endregion "Properties"
-
-
 
         public static void AssingMinimap()
         {
@@ -207,11 +205,10 @@ namespace SanAndreasUnity.Behaviours
             huds = TextureDictionary.Load("hud");
             northBlip = huds.GetDiffuse("radar_north").Texture;
             playerBlip = huds.GetDiffuse("radar_centre").Texture;
-			waypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
+            waypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
 
             Debug.Log("Finished loading minimap textures!");
         }
-
 
         // --------------------------------
 
@@ -225,7 +222,7 @@ namespace SanAndreasUnity.Behaviours
         private TextureDictionary huds;
 
         private Texture2D northBlip, playerBlip, waypointTexture, mapTexture;
-		private Sprite mapSprite, circleMask;
+        private Sprite mapSprite, circleMask;
 
         private Transform northPivot;
 
@@ -272,7 +269,6 @@ namespace SanAndreasUnity.Behaviours
 
         #endregion Private fields
 
-
         private void Setup()
         {
             loadTextures();
@@ -308,7 +304,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Awake()
         {
-			Instance = this;
+            Instance = this;
 
             if (!isReady)
                 return;
@@ -504,28 +500,27 @@ namespace SanAndreasUnity.Behaviours
             return mousePos - mapScroll;
         }
 
-		public	static	Vector2	WorldPosToMapPos(Vector3 worldPos) {
+        public static Vector2 WorldPosToMapPos(Vector3 worldPos)
+        {
+            // map center is at (0,0) world coordinates
+            // this, for example, means that the left edge of the world is at: -mapEdge / 2.0f
 
-			// map center is at (0,0) world coordinates
-			// this, for example, means that the left edge of the world is at: -mapEdge / 2.0f
+            // adjust world position, so that (0,0) world coordinates are mapped to (0,0) map coordinates
+            worldPos += new Vector3(mapEdge / 2.0f, 0, mapEdge / 2.0f);
 
-			// adjust world position, so that (0,0) world coordinates are mapped to (0,0) map coordinates
-			worldPos += new Vector3 (mapEdge / 2.0f, 0, mapEdge / 2.0f);
+            float mul = mapSize / (float)mapEdge;
+            return new Vector2(worldPos.x * mul, worldPos.z * mul);
+        }
 
-			float mul = mapSize / (float)mapEdge;
-			return new Vector2 (worldPos.x * mul, worldPos.z * mul);
-		}
+        public static Vector3 MapPosToWorldPos(Vector2 mapPos)
+        {
+            // adjust map position, so that (0,0) map coordinated are mapped to (0,0) world coordinates
+            mapPos -= Vector2.one * (mapSize * 0.5f);
 
-		public	static	Vector3	MapPosToWorldPos(Vector2 mapPos) {
+            float mul = mapEdge / (float)mapSize;
 
-			// adjust map position, so that (0,0) map coordinated are mapped to (0,0) world coordinates
-			mapPos -= Vector2.one * (mapSize * 0.5f);
-
-			float mul = mapEdge / (float)mapSize;
-
-			return new Vector3 (mapPos.x * mul, 0.0f, mapPos.y * mul);
-		}
-
+            return new Vector3(mapPos.x * mul, 0.0f, mapPos.y * mul);
+        }
 
         private void FixedUpdate()
         {

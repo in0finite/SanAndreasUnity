@@ -82,10 +82,19 @@ namespace SanAndreasUnity.Behaviours.World
                     UnityEngine.Debug.Log("Num static geometries " + placements.Count() + ".");
                     totalNumObjects = placements.Count();
 
+                    UnityEngine.Debug.Log("Initializating placements instances");
+                    timer = Stopwatch.StartNew();
+
                     foreach (var inst in insts)
                     {
                         inst.Value.Initialize(inst.Key, insts);
                     }
+
+                    timer.Stop();
+                    UnityEngine.Debug.LogFormat("Finished loading placements instances in {0} ms!", timer.ElapsedMilliseconds);
+
+                    UnityEngine.Debug.Log("Initializating cars");
+                    timer = Stopwatch.StartNew();
 
                     //    if (NetConfig.IsServer) {
                     if (loadParkedVehicles)
@@ -104,17 +113,26 @@ namespace SanAndreasUnity.Behaviours.World
                     {
                         RootDivision.AddRange(insts.Values.Cast<MapObject>());
                     }
-                }
 
-                // set layer recursively for all game objects
-                //	this.gameObject.SetLayerRecursive( this.gameObject.layer );
+                    timer.Stop();
+                    UnityEngine.Debug.LogFormat("Finished loading cars in {0} ms!", timer.ElapsedMilliseconds);
 
-                if (Water != null)
-                {
-                    using (Utilities.Profiler.Start("Water load time"))
+                    // set layer recursively for all game objects
+                    //	this.gameObject.SetLayerRecursive( this.gameObject.layer );
+
+                    UnityEngine.Debug.Log("Initializating water");
+                    timer = Stopwatch.StartNew();
+
+                    if (Water != null)
                     {
-                        Water.Initialize(new WaterFile(Config.GetPath("water_path")));
+                        using (Utilities.Profiler.Start("Water load time"))
+                        {
+                            Water.Initialize(new WaterFile(Config.GetPath("water_path")));
+                        }
                     }
+
+                    timer.Stop();
+                    UnityEngine.Debug.LogFormat("Finished loading water in {0} ms!", timer.ElapsedMilliseconds);
                 }
 
                 _timer = new Stopwatch();

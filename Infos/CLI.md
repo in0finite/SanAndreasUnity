@@ -1,5 +1,3 @@
-
-
 ## Command line interface
 
 * --handlelog // --h => Enables log handling (in HTML)
@@ -9,5 +7,3 @@
 * --stopdebug // --s => Stop debug when reached x messages
 
 * --html => Output log in html instead of text
-
-
