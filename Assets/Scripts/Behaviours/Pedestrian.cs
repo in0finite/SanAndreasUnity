@@ -328,6 +328,20 @@ namespace SanAndreasUnity.Behaviours
             L_Thigh = _frames.GetByName(" L Thigh").transform;
         }
 
+		/// <summary>
+		/// Resets the state of the model. This includes position, rotation, and velocity of every frame (bone).
+		/// It does it by playing idle anim, setting it's time to 0, and sampling from it.
+		/// </summary>
+		public void ResetModelState ()
+		{
+
+			var state = PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
+			state.normalizedTime = 0;
+			AnimComponent.Sample ();
+
+		}
+
+
 		public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, PlayMode playMode = PlayMode.StopAll)
         {
             var animState = LoadAnim(group, anim);
@@ -341,6 +355,27 @@ namespace SanAndreasUnity.Behaviours
 
             return animState;
         }
+
+		public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, bool resetModelStateIfAnimChanged, bool resetAnimStateIfAnimChanged)
+		{
+			bool animChanged = this.AnimGroup != group || this.animIndex != anim;
+
+			if (resetModelStateIfAnimChanged && animChanged) {
+				this.ResetModelState ();
+			}
+
+			var state = PlayAnim (group, anim);
+
+			if (resetAnimStateIfAnimChanged && animChanged) {
+				state.enabled = true;
+				state.normalizedTime = 0;
+				state.speed = 1;
+				state.weight = 1;
+				state.wrapMode = this.AnimComponent.wrapMode;
+			}
+
+			return state;
+		}
 
         public AnimationState AddMixingTransform(AnimGroup group, AnimIndex anim, Transform mix)
         {
