@@ -7,6 +7,7 @@ using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
+using System;
 
 #if UNITY_EDITOR
 
@@ -26,6 +27,8 @@ namespace SanAndreasUnity.Behaviours
     public class Loader : MonoBehaviour
     {
         public static bool HasLoaded { get; private set; }
+
+        private static bool HasErrors;
 
         public static string loadingStatusString
         {
@@ -50,7 +53,7 @@ namespace SanAndreasUnity.Behaviours
 
         private static void StaticUpdate()
         {
-            if (HasLoaded)
+            if (HasLoaded || HasErrors)
                 return;
 
             /*m_fileBrowser = new FileBrowser(
@@ -76,7 +79,16 @@ namespace SanAndreasUnity.Behaviours
 
                     Debug.Log("Started loading GTA");
 
-                    archivePaths = Config.GetPaths("archive_paths");
+                    try
+                    {
+                        archivePaths = Config.GetPaths("archive_paths");
+                    }
+                    catch(IndexOutOfRangeException ex)
+                    {
+                        Debug.LogError(ex.Message);
+                        Debug.Log("Active Dev Index: "+DevProfiles.ActiveProfile);
+                        HasErrors = true;
+                    }
 
                     break;
 

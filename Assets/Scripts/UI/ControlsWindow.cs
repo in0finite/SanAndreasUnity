@@ -41,8 +41,8 @@ namespace SanAndreasUnity.UI {
 			"Left Shift - Jump / Fly fast\n\n" +
 			"Space - Sprint\n\n" +
 			"Mouse Scroll - Zoom in / out player camera\n\n" +
-			"Esc - Toggle pause menu\n\n" +
-			"F2 - Open console\n\n" +
+			"Esc / F1 (WIP) - Toggle pause menu\n\n" +
+			"F2 - Open / close console (WIP)\n\n" +
 			"T - Enable debug flying mode\n\n" +
 			"R - Enable debug noclip mode\n\n" +
 			"Backspace - Fly up\n\n" +
