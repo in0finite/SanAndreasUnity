@@ -2,6 +2,7 @@
 using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
@@ -283,7 +284,35 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public VehicleController StartControlling()
         {
             SetAllCarLights();
+            SetAllDoors();
             return _controller ?? (_controller = gameObject.AddComponent<VehicleController>());
+        }
+
+        public void SetAllDoors()
+        {
+            Transform FrontLeftDoor = this.GetComponentWithName<Transform>("door_lf_dummy"),
+                      FrontRightDoor = this.GetComponentWithName<Transform>("door_rf_dummy"),
+                      RearLeftDoor = this.GetComponentWithName<Transform>("door_lr_dummy"),
+                      RearRightDoor = this.GetComponentWithName<Transform>("door_rr_dummy");
+
+            bool IsTwoDoorsVehicle = RearLeftDoor == null && RearRightDoor == null;
+
+            List<Transform> doors = new List<Transform>();
+
+            doors.Add(FrontLeftDoor);
+            doors.Add(FrontRightDoor);
+
+            if (!IsTwoDoorsVehicle)
+            {
+                doors.Add(RearLeftDoor);
+                doors.Add(RearRightDoor);
+            }
+
+            foreach (Transform door in doors)
+            {
+                // Initializate VehicleDoor script here
+                VehicleDoor.InitializateDoor(door);
+            }
         }
 
         public void SetAllCarLights()
