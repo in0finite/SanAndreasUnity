@@ -28,6 +28,9 @@ namespace SanAndreasUnity.UI {
 
 		void OnGUI () {
 
+			if (!Loader.HasLoaded)
+				return;
+
 			if (null == Player.Instance)
 				return;
 

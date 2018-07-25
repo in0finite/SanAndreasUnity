@@ -58,27 +58,14 @@ namespace SanAndreasUnity.Behaviours {
 				return;
 
 
-			// switch weapons - does not work
-			if (GameManager.CanPlayerReadInput() && !m_player.IsInVehicle) {
-				if (Input.mouseScrollDelta.y != 0) {
-					
-					if (currentWeaponSlot < 0)
-						currentWeaponSlot = 0;
+			// switch weapons
+			if (GameManager.CanPlayerReadInput()) {
 
-					for (int i = currentWeaponSlot + (int)Mathf.Sign (Input.mouseScrollDelta.y), count = 0;
-						i != currentWeaponSlot && count < (int)WeaponSlot.Count;
-						i += (int)Mathf.Sign (Input.mouseScrollDelta.y), count++) {
-						if (i < 0)
-							i = weapons.Length - 1;
-						if (i >= weapons.Length)
-							i = 0;
-
-						if (weapons [i] != null) {
-							SwitchWeapon (i);
-							break;
-						}
-					}
-				}
+				if (Input.GetKeyDown (KeyCode.Q))
+					this.SwitchWeapon (false);
+				else if (Input.GetKeyDown (KeyCode.E))
+					this.SwitchWeapon (true);
+				
 			}
 
 
@@ -301,6 +288,33 @@ namespace SanAndreasUnity.Behaviours {
 		}
 
 
+		public void SwitchWeapon( bool next )
+		{
+
+			if (currentWeaponSlot < 0)
+				currentWeaponSlot = 0;
+
+			int delta = next ? 1 : -1;
+
+			for (int i = currentWeaponSlot + delta, count = 0;
+				i != currentWeaponSlot && count < weapons.Length;
+				i += delta, count++) {
+
+				if (i < 0)
+					i = weapons.Length - 1;
+				if (i >= weapons.Length)
+					i = 0;
+
+				if ( (int)WeaponSlot.Hand == i || weapons [i] != null ) {
+					// this is a hand slot or there is a weapon in this slot
+					// switch to it
+					SwitchWeapon (i);
+					break;
+				}
+			}
+
+		}
+
         public void SwitchWeapon(WeaponSlot slot)
 		{
 			this.SwitchWeapon ((int)slot);
@@ -308,6 +322,9 @@ namespace SanAndreasUnity.Behaviours {
 
 		public void SwitchWeapon (int slotIndex)
 		{
+			if (slotIndex == currentWeaponSlot)
+				return;
+
 			if (CurrentWeapon != null) {
 				// hide the weapon
 				CurrentWeapon.gameObject.SetActive (false);
@@ -317,9 +334,9 @@ namespace SanAndreasUnity.Behaviours {
 				
 				CurrentWeapon = weapons [slotIndex];
 
-				// change parent to make it visible
-			//	weapon.SetParent(this.transform);
-				CurrentWeapon.gameObject.SetActive (true);
+				// show the weapon
+				if (CurrentWeapon != null)
+					CurrentWeapon.gameObject.SetActive (true);
 
 			} else {
 				CurrentWeapon = null;
@@ -330,22 +347,28 @@ namespace SanAndreasUnity.Behaviours {
 
 		public void SetWeaponAtSlot (Importing.Items.Definitions.WeaponDef weaponDef, WeaponSlot slot)
 		{
-
 			this.SetWeaponAtSlot (weaponDef.Id, slot);
-
 		}
 
 		public void SetWeaponAtSlot (int weaponId, WeaponSlot slot)
 		{
+			this.SetWeaponAtSlot (weaponId, (int)slot);
+		}
 
-			int index = (int)slot;
-
+		public void SetWeaponAtSlot (int weaponId, int slotIndex)
+		{
+			
 			// destroy current weapon at this slot
-			if (weapons [index] != null) {
-				Destroy (weapons [index].gameObject);
+			if (weapons [slotIndex] != null) {
+				Destroy (weapons [slotIndex].gameObject);
 			}
 
-			weapons [index] = Weapon.Load (weaponId);
+			weapons [slotIndex] = Weapon.Load (weaponId);
+
+			if (slotIndex == currentWeaponSlot) {
+				// update current weapon variable
+				CurrentWeapon = weapons [slotIndex];
+			}
 
 		}
 

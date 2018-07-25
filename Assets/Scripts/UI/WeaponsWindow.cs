@@ -43,7 +43,7 @@ namespace SanAndreasUnity.UI {
 
 			// button to remove all weapons from player
 			if (playerExists) {
-				if (GUILayout.Button ("Remove weapon"))
+				if (GUILayout.Button ("Remove all weapons", GUILayout.Width(120)))
 					Player.Instance.WeaponHolder.RemoveAllWeapons ();
 				GUILayout.Space (15);
 			}
@@ -60,8 +60,8 @@ namespace SanAndreasUnity.UI {
 				if (playerExists) {
 					if (GUILayout.Button ("Give", GUILayout.Width(70))) {
 						// give weapon to player
-						Player.Instance.WeaponHolder.SetWeaponAtSlot( data.modelId1, WeaponSlot.Machine );
-						Player.Instance.WeaponHolder.SwitchWeapon (WeaponSlot.Machine);
+						Player.Instance.WeaponHolder.SetWeaponAtSlot( data.modelId1, data.weaponslot );
+						Player.Instance.WeaponHolder.SwitchWeapon (data.weaponslot);
 					}
 				}
 
