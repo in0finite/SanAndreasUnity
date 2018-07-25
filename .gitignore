@@ -47,8 +47,10 @@ sysinfo.txt
 .sonarqube/
 SonarQube/
 Build/Build_Data/StreamingAssets/
-Assets/StreamingAssets/*.log
-Assets/StreamingAssets/*.html
+Assets/StreamingAssets/logs/*.log
+Assets/StreamingAssets/logs/*.html
+Assets/StreamingAssets/logs/*.meta
+Assets/StreamingAssets/logs/*.gz
 Assets/StreamingAssets/*.meta
 Assets/FromAssetStore/LlamaSoftware/LightLod/Demo/
 Assets/FromAssetStore/SpriteLights/Scenes/

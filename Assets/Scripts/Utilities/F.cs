@@ -515,5 +515,50 @@ namespace SanAndreasUnity.Utilities
 			return texture;
 		}
 
+        /// <summary>
+        /// Converts a given DateTime into a Unix timestamp
+        /// </summary>
+        /// <param name="value">Any DateTime</param>
+        /// <returns>The given DateTime in Unix timestamp format</returns>
+        public static int ToUnixTimestamp(this DateTime value)
+        {
+            return (int)Math.Truncate((value.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+        }
+
+        /// <summary>
+        /// Gets a Unix timestamp representing the current moment
+        /// </summary>
+        /// <param name="ignored">Parameter ignored</param>
+        /// <returns>Now expressed as a Unix timestamp</returns>
+        public static int UnixTimestamp(this DateTime ignored)
+        {
+            return (int)Math.Truncate((DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+        }
+
+        // Extrated from: https://dotnetcodr.com/2015/01/23/how-to-compress-and-decompress-files-with-gzip-in-net-c/
+        public static void CompressFile(string fileToCompressPath, string fileNameZip)
+        {
+            FileInfo fileToBeGZipped = new FileInfo(fileToCompressPath);
+            FileInfo gzipFileName = new FileInfo(string.Concat(fileNameZip, ".gz"));
+
+            using (FileStream fileToBeZippedAsStream = fileToBeGZipped.OpenRead())
+            {
+                using (FileStream gzipTargetAsStream = gzipFileName.Create())
+                {
+                    using (GZipStream gzipStream = new GZipStream(gzipTargetAsStream, CompressionMode.Compress))
+                    {
+                        try
+                        {
+                            fileToBeZippedAsStream.CopyTo(gzipStream);
+                            Debug.LogFormat("'{0}' zipped as '{1}.gz'", Path.GetFileName(fileToCompressPath), Path.GetFileName(fileNameZip));
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogError(ex.Message);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

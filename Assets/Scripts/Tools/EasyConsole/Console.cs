@@ -112,7 +112,11 @@ public class Console : MonoBehaviour
         instance = this;
 
         if (m_handleLog)
+        {
             Application.logMessageReceived += PrintDebug;
+            Debug.Log("Debug log handled!");
+        }
+
         //Application.RegisterLogCallback(new Application.LogCallback(this.PrintDebug));
 
         lines = new CircularBuffer<string>(linesOfHistory, true);
@@ -904,16 +908,31 @@ public class Console : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
+private void OnApplicationQuit()
     {
         if (m_handleLog)
         {
             if (string.IsNullOrEmpty(logPath))
-                logPath = Path.Combine(Application.streamingAssetsPath, string.Format("debug_{0}.{1}", DateTime.Now.DateTimeToUnixTimestamp(), printHtml ? "html" : "log"));
+                logPath = Path.Combine(Application.streamingAssetsPath, "logs", string.Format("latest.{0}", printHtml ? "html" : "log"));
 
             string dir = Path.GetDirectoryName(logPath);
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
+
+            if (File.Exists(logPath))
+            {
+                string oldName = Path.Combine(Application.streamingAssetsPath, "logs", string.Format("debug_{0}.{1}", DateTime.Now.ToUnixTimestamp(), printHtml ? "html" : "log"));
+                File.Move(logPath, oldName);
+
+                string zipFile = Path.Combine(Application.streamingAssetsPath, "logs", DateTime.Now.ToString("yyyy-MM-dd"));
+
+                if (File.Exists(string.Concat(zipFile, ".gz")))
+                    zipFile += string.Format("-{0}", Directory.GetFiles(Path.Combine(Application.streamingAssetsPath, "logs"), string.Format("{0}*", DateTime.Now.ToString("yyyy-MM-dd")), SearchOption.AllDirectories).Length - 1);
+
+                File.Delete(oldName);
+
+                F.CompressFile(oldName, zipFile);
+            }
 
             File.WriteAllText(logPath, printHtml ? GenerateHTML() : consoleLog.ToString());
         }
