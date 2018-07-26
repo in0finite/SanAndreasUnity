@@ -81,11 +81,6 @@ namespace SanAndreasUnity.Behaviours {
 			this.UpdateWeaponTransform ();
 
 
-			if (this.IsAiming) {
-				Debug.DrawRay (this.CurrentWeaponTransform.position + this.CurrentWeaponTransform.forward * 4, 
-					this.CurrentWeaponTransform.forward, Color.red);
-			}
-
 		}
 
 		void LateUpdate()
@@ -377,6 +372,8 @@ namespace SanAndreasUnity.Behaviours {
 			this.SwitchWeapon (-1);
 
 			for (int i = 0; i < this.weapons.Length; i++) {
+				if (this.weapons [i] != null)
+					Destroy (this.weapons [i].gameObject);
 				this.weapons [i] = null;
 			}
 
