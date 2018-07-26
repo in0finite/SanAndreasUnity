@@ -35,6 +35,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public partial class Vehicle : MonoBehaviour
 #endif
     {
+        public float angularVelocity;
+
         private static int _sLayer = -1;
 
         [HideInInspector]
@@ -311,7 +313,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             foreach (Transform door in doors)
             {
                 // Initializate VehicleDoor script here
-                VehicleDoor.InitializateDoor(door);
+                VehicleDoor.InitializateDoor(door, this);
             }
         }
 
@@ -471,6 +473,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void FixedUpdate()
         {
+            //angularVelocity = GetComponent<Rigidbody>().angularVelocity.magnitude;
+
             //    NetworkingFixedUpdate();
             PhysicsFixedUpdate();
         }
