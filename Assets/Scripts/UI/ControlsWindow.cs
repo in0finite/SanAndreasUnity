@@ -21,7 +21,7 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = new Rect(Screen.width / 2 - 150, 30, 300, 400);
+			this.windowRect = new Rect(Screen.width / 2 - 150, 30, 350, 400);
 		}
 
 
@@ -38,17 +38,18 @@ namespace SanAndreasUnity.UI {
 			return
 			"V - Spawn vehicle\n\n" +
 			"P - Change pedestrian model\n\n" +
+			"W/A/S/D - Move player\n\n" +
 			"Left Shift - Jump / Fly fast\n\n" +
 			"Space - Sprint\n\n" +
 			"Mouse Scroll - Zoom in / out player camera\n\n" +
+			"E/Q - Next/previous weapon\n\n" +
 			"Esc - Toggle pause menu\n\n" +
-			"F2 - Open console\n\n" +
 			"T - Enable debug flying mode\n\n" +
 			"R - Enable debug noclip mode\n\n" +
 			"Backspace - Fly up\n\n" +
 			"Delete - Fly down\n\n" +
 			"Z - Fly very fast\n\n" +
-			"E - Enter/exit vehicles\n\n" +
+			"Enter - Enter/exit vehicles\n\n" +
 			"L - Turn off / on car lights\n\n" +
 			"F10 - Toggle FPS\n\n" +
 			"F9 - Toggle velocimeter\n\n" +

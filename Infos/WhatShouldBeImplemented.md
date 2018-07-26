@@ -29,10 +29,6 @@
 
 - add option to disable smooth player movement
 
-- Remove EasyConsole
-
-- Update controls window
-
 - Jump
 
 - Work on a menu like MTA:SA (F1)
