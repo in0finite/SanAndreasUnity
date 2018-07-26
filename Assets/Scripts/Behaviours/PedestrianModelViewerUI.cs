@@ -52,27 +52,6 @@ public class PedestrianModelViewerUI : MonoBehaviour
 
         GUILayout.Label("Current anim group: " + pedestrian.AnimGroup);
 
-        if (GUILayout.Button("Next anim group"))
-        {
-            AnimGroup newGroup = pedestrian.AnimGroup + 1;
-            if (newGroup >= AnimGroup.MyWalkCycle)
-            {
-                newGroup = AnimGroup.WalkCycle;
-            }
-            pedestrian.animIndex = (newGroup == AnimGroup.WalkCycle) ? AnimIndex.Idle : AnimIndex.Walk;
-            loadModel(pedestrian.PedestrianId, newGroup, pedestrian.animIndex);
-        }
-
-        if (GUILayout.Button("Previous anim group"))
-        {
-            AnimGroup newGroup = pedestrian.AnimGroup - 1;
-            if (newGroup <= AnimGroup.None)
-            {
-                newGroup = AnimGroup.Car;
-            }
-            pedestrian.animIndex = (newGroup == AnimGroup.WalkCycle) ? AnimIndex.Idle : AnimIndex.Walk;
-            loadModel(pedestrian.PedestrianId, newGroup, pedestrian.animIndex);
-        }
 
         // ----------------------------------------------------------------------
         /*

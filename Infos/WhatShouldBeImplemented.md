@@ -23,7 +23,7 @@
 
 - Loader - better display of progress ; add loading steps ;
 
-- remove OnValidate() function from Pedestrian
+- Ped window: display all peds, their info, 
 
 - Jump
 
