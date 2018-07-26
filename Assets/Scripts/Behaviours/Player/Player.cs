@@ -91,6 +91,8 @@ namespace SanAndreasUnity.Behaviours
 
         private static bool makeGPUAdjustments;
 
+		private Coroutine m_findGroundCoroutine;
+
         #endregion Properties
 
 
@@ -197,8 +199,12 @@ namespace SanAndreasUnity.Behaviours
 
         public void FindGround ()
 		{
-			StopCoroutine (FindGroundCoroutine());
-			StartCoroutine (FindGroundCoroutine ());
+			if (m_findGroundCoroutine != null) {
+				StopCoroutine (m_findGroundCoroutine);
+				m_findGroundCoroutine = null;
+			}
+
+			m_findGroundCoroutine = StartCoroutine (FindGroundCoroutine ());
 		}
 
         private IEnumerator FindGroundCoroutine()

@@ -25,10 +25,6 @@
 
 - remove OnValidate() function from Pedestrian
 
-- Player.Teleport() coroutine stopping
-
-- add option to disable smooth player movement
-
 - Jump
 
 - Work on a menu like MTA:SA (F1)
