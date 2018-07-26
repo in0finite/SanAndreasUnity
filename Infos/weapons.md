@@ -44,8 +44,6 @@ These are the useful parameters in weapons.dat :
 
 ### Status
 
-- weapons hud ; switching weapons
-
 - play 2 anims at the same time - this is needed for: reloading, aim and move at the same time, 
 
 - problematic anims: move/fire with heavy weapons, 
@@ -54,11 +52,17 @@ These are the useful parameters in weapons.dat :
 
 - spine should be rotated locally, not globally ? - some models have different rotation of spine in the idle anim, which means that their spine will not look at the same place - possible solution would be to play the same idle anim on all models
 
-- display all anim info in animations window: current time, length, root frame velocity, anim name, 
+- display all anim info in animations window: root frame velocity, 
 
 - whem anim is changed, reset position/rotation of all model transforms
 
-- right after the model is loaded, play idle anim and sample it
+- right after the model is loaded, reset model state
 
 - rotate the pelvis instead of spine (because thighs look ugly)
+
+- run and aim at the same time with single-arm weapons
+
+- play separate anim for: THROW weapons, desert eagle/silenced, heavy weapons, 
+
+- sprint with: pistols, mp5, THROW, 
 

@@ -2,6 +2,7 @@
 using UnityEngine;
 using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Behaviours;
+using System.Linq;
 
 namespace SanAndreasUnity.UI {
 
@@ -10,6 +11,7 @@ namespace SanAndreasUnity.UI {
 		private	Vector2	m_scrollViewPos = Vector2.zero;
 		private	float m_lastContentHeight = 0;
 		private bool m_displayWalkcycleAnims = false;
+		private bool m_displayAnimStats = false;
 
 
 
@@ -43,12 +45,23 @@ namespace SanAndreasUnity.UI {
 			bool playerExists = Player.Instance != null;
 
 
-			float headerHeight = 40;
+			float headerHeight = m_displayAnimStats ? 200 : 60;
+
+			GUILayout.BeginArea (new Rect (0, 0, this.windowRect.width, headerHeight));
 
 			if (playerExists)
-				Player.Instance.shouldPlayAnims = !GUI.Toggle( new Rect( 0, 0, 150, 20 ), !Player.Instance.shouldPlayAnims, "Override player anims" );
+				Player.Instance.shouldPlayAnims = !GUILayout.Toggle( !Player.Instance.shouldPlayAnims, "Override player anims" );
 
-			m_displayWalkcycleAnims = GUI.Toggle( new Rect(0, 20, 150, 20), m_displayWalkcycleAnims, "Display walkcycle anims");
+			m_displayWalkcycleAnims = GUILayout.Toggle( m_displayWalkcycleAnims, "Display walkcycle anims");
+
+			m_displayAnimStats = GUILayout.Toggle( m_displayAnimStats, "Display anim stats");
+
+			// display anim stats
+			if (m_displayAnimStats && playerExists) {
+				DisplayAnimStats ();
+			}
+
+			GUILayout.EndArea ();
 
 
 			// display anim groups and their anims
@@ -84,17 +97,18 @@ namespace SanAndreasUnity.UI {
 
 					rect.position = new Vector2 (labelWidth * 2, rect.position.y);
 					for (int i=0; i < animGroup.Animations.Length; i++) {
-						var anim = animGroup.Animations[i];
+						string animName = animGroup.Animations[i];
 
 						rect.position = new Vector2 (rect.position.x, rect.position.y + labelHeight);
 
 						if (playerExists) {
 							// display button which will play the anim
-							if (GUI.Button (rect, anim)) {
-								Player.Instance.PlayerModel.PlayAnim( animGroup.Type, AnimIndexUtil.Get(i), PlayMode.StopAll );
+							if (GUI.Button (rect, animName)) {
+								Player.Instance.PlayerModel.ResetModelState ();
+								Player.Instance.PlayerModel.PlayAnim( animGroup.Type, AnimIndexUtil.Get(i) );
 							}
 						} else {
-							GUI.Label (rect, anim);
+							GUI.Label (rect, animName);
 						}
 					}
 				}
@@ -103,6 +117,39 @@ namespace SanAndreasUnity.UI {
 			GUI.EndScrollView ();
 
 			m_lastContentHeight = rect.yMax;
+
+		}
+
+		private void DisplayAnimStats ()
+		{
+
+			GUILayout.Space (5);
+
+			var model = Player.Instance.PlayerModel;
+
+			int numActiveClips = model.AnimComponent.OfType<AnimationState>().Where(a => a.enabled).Count();
+			GUILayout.Label("Currently played clips [" + numActiveClips + "] :");
+
+			// display all currently played clips
+
+			foreach (AnimationState animState in model.AnimComponent) {
+
+				if (!animState.enabled)
+					continue;
+
+			//	GUILayout.BeginHorizontal ();
+
+				var clip = animState.clip;
+
+				GUILayout.Label (string.Format ("name {0}, length {1}, frame rate {2}, wrap mode {3}, speed {4}, time {5}", 
+					clip.name, animState.length, clip.frameRate, animState.wrapMode, animState.speed, animState.normalizedTime));
+
+			//	GUILayout.EndHorizontal ();
+			}
+
+			GUILayout.Space (7);
+
+			GUILayout.Label ("Root frame velocity: " + model.Frames.Root.LocalVelocity);
 
 		}
 
