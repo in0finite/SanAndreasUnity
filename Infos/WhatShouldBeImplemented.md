@@ -117,7 +117,9 @@
 
 - Auto-zoom with big vehicles
 
-- Some cars have its suppension too low to allow them to move
+- Some cars have its suppension too low to allow them to move (Reming is an example):
+
+![...](https://i.gyazo.com/1cec15e93e255c13ce63818bed46d40d.png)
 
 - Cars sometimes spawn under other cars, which causes those cars to jump
 
