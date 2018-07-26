@@ -7,38 +7,25 @@ using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
-
+using System.Collections;
 #if UNITY_EDITOR
-
 using UnityEditor;
-
 #endif
-
 using System.Collections.Generic;
 
 namespace SanAndreasUnity.Behaviours
 {
 #if UNITY_EDITOR
-
     //	[ExecuteInEditMode]
     [InitializeOnLoad]
 #endif
     public class Loader : MonoBehaviour
     {
-        public static bool HasLoaded { get; private set; }
+        
+		public static bool HasLoaded { get; private set; }
 
-        public static string loadingStatusString
-        {
-            get
-            {
-                string[] statuses = { "archive paths", "archive", "collision files", "item info",
-                    "handling info", "animation group info", "car colors", "weapons data", "special textures" };
+		public static string LoadingStatus { get; private set; }
 
-                return "Loading " + statuses[loadingStatus];
-            }
-        }
-
-        private static int loadingStatus = 0;
         private static string[] archivePaths;
         private static IArchive[] archives;
 
@@ -46,174 +33,297 @@ namespace SanAndreasUnity.Behaviours
 
 		private	static	System.Diagnostics.Stopwatch	m_stopwatch = new System.Diagnostics.Stopwatch();
 
+		public class LoadingStep
+		{
+			public IEnumerator Coroutine { get; set; }
+			public System.Action LoadFunction { get; set; }
+			public string Description { get; set; }
+			public bool StopLoadingOnException { get; set; }
+
+			public LoadingStep (System.Action loadFunction, string description, bool stopLoadingOnException = true)
+			{
+				this.LoadFunction = loadFunction;
+				this.Description = description;
+				this.StopLoadingOnException = stopLoadingOnException;
+			}
+
+			public LoadingStep (IEnumerator coroutine, string description, bool stopLoadingOnException = true)
+			{
+				this.Coroutine = coroutine;
+				this.Description = description;
+				this.StopLoadingOnException = stopLoadingOnException;
+			}
+			
+		}
+
+		private static List<LoadingStep> m_loadingSteps = new List<LoadingStep> ();
 
 
-        private static void StaticUpdate()
-        {
-            if (HasLoaded)
-                return;
 
-            /*m_fileBrowser = new FileBrowser(
-                new Rect(100, 100, 600, 500),
-                "Choose GTA Instalattion Path",
-                null
-            );*/
+		void Start ()
+		{
 
-            switch (loadingStatus)
-            {
-			case 0:
-                    //Debug.Log("Checking if there is available a GTA SA path.");
-                    
-					//DevProfiles.CheckDevProfiles(null);
+			AddLoadingSteps ();
 
-                    /*() =>
+			StartCoroutine (LoadCoroutine ());
+
+		}
+
+		private static void AddLoadingSteps ()
+		{
+			
+			System.Action[] loadFunctions = new System.Action[] {
+				StepGetPaths,
+				StepLoadArchives,
+				StepLoadCollision,
+				StepLoadItemInfo,
+				StepLoadHandling,
+				StepLoadAnimGroups,
+				StepLoadCarColors,
+				StepLoadWeaponsData,
+				StepLoadMap,
+				StepLoadSpecialTextures
+			};
+
+			string[] descriptions = new string[]{
+				"archive paths", "archive", "collision files", "item info",
+				"handling", "animation groups", "car colors", "weapons data", "map", "special textures"
+			};
+
+
+			for (int i = 0; i < loadFunctions.Length; i++) {
+				AddLoadingStep (new LoadingStep (loadFunctions [i], descriptions [i]));
+			}
+
+		}
+
+		private static void AddLoadingStep (LoadingStep step)
+		{
+			m_loadingSteps.AddIfNotPresent (step);
+		}
+
+
+		private static IEnumerator LoadCoroutine ()
+		{
+
+			foreach (var step in m_loadingSteps) {
+
+				// update description
+				LoadingStatus = step.Description;
+				yield return null;
+
+				var en = step.Coroutine;
+
+				if (en != null) {
+					// this step uses coroutine
+
+					bool hasNext = true;
+
+					while (hasNext) {
+
+						hasNext = false;
+						try {
+							hasNext = en.MoveNext ();
+						} catch (System.Exception ex) {
+							Debug.LogException (ex);
+							if (step.StopLoadingOnException) {
+								yield break;
+							}
+						}
+
+						// update description
+						LoadingStatus = step.Description;
+						yield return null;
+
+					}
+				} else {
+					// this step uses a function
+
+					try {
+						step.LoadFunction ();
+					} catch(System.Exception ex) {
+						Debug.LogException (ex);
+						if (step.StopLoadingOnException) {
+							yield break;
+						}
+					}
+				}
+
+				// step finished it's work
+
+				yield return null;
+			}
+
+			// all steps finished loading
+
+			HasLoaded = true;
+
+			Debug.Log("GTA loading finished in " + m_stopwatch.Elapsed.TotalSeconds + " seconds");
+
+		}
+
+
+		private static void StepGetPaths ()
+		{
+			//Debug.Log("Checking if there is available a GTA SA path.");
+
+			//DevProfiles.CheckDevProfiles(null);
+
+			/*() =>
                     {
                         m_fileBrowser.Toggle();
                         return m_fileBrowser.GetPath();
                     }*/
 
-					m_stopwatch.Start ();
+			m_stopwatch.Start ();
 
-                    Debug.Log("Started loading GTA");
+			Debug.Log("Started loading GTA");
 
-                    archivePaths = Config.GetPaths("archive_paths");
+			archivePaths = Config.GetPaths("archive_paths");
 
-                    break;
+		}
 
-                case 1:
-                    using (Profiler.Start("Archive load time"))
-                    {
-                        List<IArchive> listArchives = new List<IArchive>();
-                        foreach (var path in archivePaths)
-                        {
-                            if (File.Exists(path))
-                            {
-                                listArchives.Add(ArchiveManager.LoadImageArchive(path));
-                            }
-                            else if (Directory.Exists(path))
-                            {
-                                listArchives.Add(ArchiveManager.LoadLooseArchive(path));
-                            }
-                            else
-                            {
-                                Debug.Log("Archive not found: " + path);
-                            }
-                        }
-                        archives = listArchives.FindAll(a => a != null).ToArray();
-                    }
-                    break;
-
-                case 2:
-                    using (Profiler.Start("Collision load time"))
-                    {
-                        int numCollisionFiles = 0;
-                        foreach (var archive in archives)
-                        {
-                            foreach (var colFile in archive.GetFileNamesWithExtension(".col"))
-                            {
-                                CollisionFile.Load(colFile);
-                                numCollisionFiles++;
-                            }
-                        }
-                        Debug.Log("Number of collision files " + numCollisionFiles);
-                    }
-                    break;
-
-                case 3:
-                    using (Profiler.Start("Item info load time"))
-                    {
-                        foreach (var path in Config.GetPaths("item_paths"))
-                        {
-                            var ext = Path.GetExtension(path).ToLower();
-                            switch (ext)
-                            {
-                                case ".dat":
-                                    Item.ReadLoadList(path);
-                                    break;
-
-                                case ".ide":
-                                    Item.ReadIde(path);
-                                    break;
-
-                                case ".ipl":
-                                    Item.ReadIpl(path);
-                                    break;
-                            }
-                        }
-                    }
-                    break;
-
-                case 4:
-                    using (Profiler.Start("Handling info load time"))
-                    {
-                        Handling.Load(Config.GetPath("handling_path"));
-                    }
-                    break;
-
-                case 5:
-                    using (Profiler.Start("Animation group info load time"))
-                    {
-                        foreach (var path in Config.GetPaths("anim_groups_paths"))
-                        {
-                            AnimationGroup.Load(path);
-                        }
-                    }
-                    break;
-
-                case 6:
-                    using (Profiler.Start("Car color info load time"))
-                    {
-                        CarColors.Load(Config.GetPath("car_colors_path"));
-                    }
-                    break;
-
-				case 7:
-					using (Profiler.Start("Weapons data load time"))
+		private static void StepLoadArchives ()
+		{
+			
+			using (Profiler.Start("Archive load time"))
+			{
+				List<IArchive> listArchives = new List<IArchive>();
+				foreach (var path in archivePaths)
+				{
+					if (File.Exists(path))
 					{
-						Importing.Weapons.WeaponData.Load(Config.GetPath("weapons_path"));
+						listArchives.Add(ArchiveManager.LoadImageArchive(path));
 					}
-					break;
+					else if (Directory.Exists(path))
+					{
+						listArchives.Add(ArchiveManager.LoadLooseArchive(path));
+					}
+					else
+					{
+						Debug.Log("Archive not found: " + path);
+					}
+				}
+				archives = listArchives.FindAll(a => a != null).ToArray();
+			}
 
-                case 8:
-                    using (Profiler.Start("Special texture load time"))
-                    {
-						using (Profiler.Start ("Minimap load time")) {
-							//MiniMap.loadTextures();
-							MiniMap.AssingMinimap ();
-						}
+		}
 
-                        // Load mouse cursor texture
-                        Texture2D mouse = TextureDictionary.Load("fronten_pc").GetDiffuse("mouse").Texture;
-                        Texture2D mouseFix = new Texture2D(mouse.width, mouse.height);
+		private static void StepLoadCollision ()
+		{
+			using (Profiler.Start("Collision load time"))
+			{
+				int numCollisionFiles = 0;
+				foreach (var archive in archives)
+				{
+					foreach (var colFile in archive.GetFileNamesWithExtension(".col"))
+					{
+						CollisionFile.Load(colFile);
+						numCollisionFiles++;
+					}
+				}
+				Debug.Log("Number of collision files " + numCollisionFiles);
+			}
+		}
 
-                        for (int x = 0; x < mouse.width; x++)
-                            for (int y = 0; y < mouse.height; y++)
-                                mouseFix.SetPixel(x, mouse.height - y - 1, mouse.GetPixel(x, y));
+		private static void StepLoadItemInfo ()
+		{
+			using (Profiler.Start("Item info load time"))
+			{
+				foreach (var path in Config.GetPaths("item_paths"))
+				{
+					var ext = Path.GetExtension(path).ToLower();
+					switch (ext)
+					{
+					case ".dat":
+						Item.ReadLoadList(path);
+						break;
 
-                        mouseFix.Apply();
-                        Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
+					case ".ide":
+						Item.ReadIde(path);
+						break;
 
-						// load crosshair texture
-						Weapon.CrosshairTexture = TextureDictionary.Load("hud").GetDiffuse("siteM16").Texture;
-						
-						// fist texture
-						Weapon.FistTexture = TextureDictionary.Load("hud").GetDiffuse("fist").Texture;
+					case ".ipl":
+						Item.ReadIpl(path);
+						break;
+					}
+				}
+			}
+		}
 
-                    }
+		private static void StepLoadHandling ()
+		{
+			using (Profiler.Start("Handling info load time"))
+			{
+				Handling.Load(Config.GetPath("handling_path"));
+			}
+		}
 
-                    HasLoaded = true;
+		private static void StepLoadAnimGroups ()
+		{
+			using (Profiler.Start("Animation group info load time"))
+			{
+				foreach (var path in Config.GetPaths("anim_groups_paths"))
+				{
+					AnimationGroup.Load(path);
+				}
+			}
+		}
 
-					Debug.Log("GTA loading finished in " + m_stopwatch.Elapsed.TotalSeconds + " seconds");
+		private static void StepLoadCarColors ()
+		{
+			using (Profiler.Start("Car color info load time"))
+			{
+				CarColors.Load(Config.GetPath("car_colors_path"));
+			}
+		}
 
-                    break;
-            }
+		private static void StepLoadWeaponsData ()
+		{
+			using (Profiler.Start("Weapons data load time"))
+			{
+				Importing.Weapons.WeaponData.Load(Config.GetPath("weapons_path"));
+			}
+		}
 
-            loadingStatus++;
-        }
+		private static void StepLoadMap ()
+		{
+			using (Profiler.Start ("Minimap load time")) {
+				//MiniMap.loadTextures();
+				MiniMap.AssingMinimap ();
+			}
+		}
+
+		private static void StepLoadSpecialTextures ()
+		{
+			using (Profiler.Start("Special texture load time"))
+			{
+
+				// Load mouse cursor texture
+				Texture2D mouse = TextureDictionary.Load("fronten_pc").GetDiffuse("mouse").Texture;
+				Texture2D mouseFix = new Texture2D(mouse.width, mouse.height);
+
+				for (int x = 0; x < mouse.width; x++)
+					for (int y = 0; y < mouse.height; y++)
+						mouseFix.SetPixel(x, mouse.height - y - 1, mouse.GetPixel(x, y));
+
+				mouseFix.Apply();
+				Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
+
+				// load crosshair texture
+				Weapon.CrosshairTexture = TextureDictionary.Load("hud").GetDiffuse("siteM16").Texture;
+
+				// fist texture
+				Weapon.FistTexture = TextureDictionary.Load("hud").GetDiffuse("fist").Texture;
+
+			}
+		}
+
+
 
         private void Update()
         {
-            StaticUpdate();
+			
         }
 
         private void OnGUI()
@@ -223,8 +333,9 @@ namespace SanAndreasUnity.Behaviours
 
             // display loading progress
             GUILayout.BeginArea(new Rect(10, 5, 400, 100));
-            GUILayout.Label("<size=25>" + loadingStatusString + "</size>");
+			GUILayout.Label("<size=25>" + LoadingStatus + "</size>");
             GUILayout.EndArea();
         }
+
     }
 }

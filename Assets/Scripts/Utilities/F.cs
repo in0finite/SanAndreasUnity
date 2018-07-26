@@ -288,6 +288,15 @@ namespace SanAndreasUnity.Utilities
 			return enumerable.FindIndex (elem => elem.Equals (value));
 		}
 
+		public static bool AddIfNotPresent<T> (this List<T> list, T item)
+		{
+			if (!list.Contains (item)) {
+				list.Add (item);
+				return true;
+			}
+			return false;
+		}
+
 
         private static Dictionary<string, Texture2D> Texturemap = new Dictionary<string, Texture2D>();
         private static Texture2D Font;
