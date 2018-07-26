@@ -8,17 +8,11 @@ using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
 using System.Collections;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 using System.Collections.Generic;
 
 namespace SanAndreasUnity.Behaviours
 {
-#if UNITY_EDITOR
-    //	[ExecuteInEditMode]
-    [InitializeOnLoad]
-#endif
+	
     public class Loader : MonoBehaviour
     {
         
@@ -26,12 +20,12 @@ namespace SanAndreasUnity.Behaviours
 
 		public static string LoadingStatus { get; private set; }
 
+		private static int m_currentStepIndex = 0;
+
         private static string[] archivePaths;
         private static IArchive[] archives;
 
-        protected static FileBrowser m_fileBrowser;
-
-		private	static	System.Diagnostics.Stopwatch	m_stopwatch = new System.Diagnostics.Stopwatch();
+		private	static System.Diagnostics.Stopwatch m_stopwatch = new System.Diagnostics.Stopwatch();
 
 		public class LoadingStep
 		{
@@ -39,6 +33,7 @@ namespace SanAndreasUnity.Behaviours
 			public System.Action LoadFunction { get; set; }
 			public string Description { get; set; }
 			public bool StopLoadingOnException { get; set; }
+			public float TimeElapsed { get; internal set; }
 
 			public LoadingStep (System.Action loadFunction, string description, bool stopLoadingOnException = true)
 			{
@@ -58,6 +53,10 @@ namespace SanAndreasUnity.Behaviours
 
 		private static List<LoadingStep> m_loadingSteps = new List<LoadingStep> ();
 
+		public static Texture2D CurrentSplashTex { get; set; }
+		public static Texture2D SplashTex1 { get; set; }
+		public static Texture2D SplashTex2 { get; set; }
+
 
 
 		void Start ()
@@ -75,19 +74,23 @@ namespace SanAndreasUnity.Behaviours
 			System.Action[] loadFunctions = new System.Action[] {
 				StepGetPaths,
 				StepLoadArchives,
+				StepLoadSplashScreen,
+				StepSetSplash1,
 				StepLoadCollision,
 				StepLoadItemInfo,
 				StepLoadHandling,
 				StepLoadAnimGroups,
 				StepLoadCarColors,
 				StepLoadWeaponsData,
+				StepSetSplash2,
 				StepLoadMap,
 				StepLoadSpecialTextures
 			};
 
 			string[] descriptions = new string[]{
-				"archive paths", "archive", "collision files", "item info",
-				"handling", "animation groups", "car colors", "weapons data", "map", "special textures"
+				"Loading archive paths", "Loading archives", "Loading splash screen", "Set splash 1", "Loading collision files", "Loading item info",
+				"Loading handling", "Loading animation groups", "Loading car colors", "Loading weapons data",
+				"Set splash 2", "Loading map", "Loading special textures"
 			};
 
 
@@ -106,11 +109,16 @@ namespace SanAndreasUnity.Behaviours
 		private static IEnumerator LoadCoroutine ()
 		{
 
+			var stopwatchForSteps = new System.Diagnostics.Stopwatch ();
+
 			foreach (var step in m_loadingSteps) {
 
 				// update description
 				LoadingStatus = step.Description;
 				yield return null;
+
+				stopwatchForSteps.Stop ();
+				stopwatchForSteps.Start ();
 
 				var en = step.Coroutine;
 
@@ -151,7 +159,9 @@ namespace SanAndreasUnity.Behaviours
 
 				// step finished it's work
 
-				yield return null;
+				step.TimeElapsed = stopwatchForSteps.ElapsedMilliseconds;
+
+				m_currentStepIndex++;
 			}
 
 			// all steps finished loading
@@ -201,12 +211,34 @@ namespace SanAndreasUnity.Behaviours
 					}
 					else
 					{
-						Debug.Log("Archive not found: " + path);
+						Debug.LogError("Archive not found: " + path);
 					}
 				}
 				archives = listArchives.FindAll(a => a != null).ToArray();
 			}
 
+		}
+
+		private static void StepLoadSplashScreen ()
+		{
+			var txd = TextureDictionary.Load ("LOADSCS");
+
+			int index1 = Random.Range (1, 14);
+			int index2 = Random.Range (1, 14);
+
+			SplashTex1 = txd.GetDiffuse ("loadsc" + index1).Texture;
+			SplashTex2 = txd.GetDiffuse ("loadsc" + index2).Texture;
+
+		}
+
+		private static void StepSetSplash1 ()
+		{
+			CurrentSplashTex = SplashTex1;
+		}
+
+		private static void StepSetSplash2 ()
+		{
+			CurrentSplashTex = SplashTex2;
 		}
 
 		private static void StepLoadCollision ()
@@ -331,9 +363,28 @@ namespace SanAndreasUnity.Behaviours
             if (HasLoaded)
                 return;
 
+			// background
+
+			if (CurrentSplashTex != null) {
+				GUIUtils.DrawTextureWithYFlipped (new Rect (0, 0, Screen.width, Screen.height), CurrentSplashTex);
+			} else {
+				GUIUtils.DrawRect (new Rect (0, 0, Screen.width, Screen.height), Color.black);
+			}
+
             // display loading progress
-            GUILayout.BeginArea(new Rect(10, 5, 400, 100));
+
+			GUILayout.BeginArea(new Rect(10, 5, 400, Screen.height));
+
 			GUILayout.Label("<size=25>" + LoadingStatus + "</size>");
+
+			// display all steps
+			GUILayout.Space (10);
+			int i=0;
+			foreach (var step in m_loadingSteps) {
+				GUILayout.Label( step.Description + (m_currentStepIndex > i ? (" - " + step.TimeElapsed + " ms") : "") );
+				i++;
+			}
+
             GUILayout.EndArea();
         }
 

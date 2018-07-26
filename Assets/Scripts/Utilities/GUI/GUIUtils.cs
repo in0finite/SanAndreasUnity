@@ -104,5 +104,17 @@ namespace SanAndreasUnity.Utilities
 			GUI.Label (new Rect (pos - size * 0.5f, size), text);
 		}
 
+		/// <summary> Draws the texture flipped around Y axis. </summary>
+		public	static	void	DrawTextureWithYFlipped(Rect rect, Texture2D tex) {
+
+			var savedMatrix = GUI.matrix;
+
+			GUIUtility.ScaleAroundPivot (new Vector2 (1, -1), rect.center);
+
+			GUI.DrawTexture (rect, tex);
+
+			GUI.matrix = savedMatrix;
+		}
+
     }
 }
