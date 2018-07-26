@@ -31,7 +31,7 @@
 
 - Work on a menu like MTA:SA (F1)
 
-- Dev profiles for the keyboard & mouse controls - ??
+- Create custom profiles for keyboard & mouse controls
 
 - Health, stats (stamina, stength), money & armor system - no need for this until weapons are implemented
 
@@ -41,7 +41,7 @@
 
 - AI System for Peds
 
-- Peds (and peds insides banks, sex shops, ammunations, bars/restaurants, officines, workshops, etc...) - ??
+- Peds (and peds insides banks, sex shops, ammunations, bars/restaurants, officines, workshops, etc...)
 
 - Import: AI paths, character spawn info, item pickups, 
 
@@ -59,7 +59,7 @@
 
 - Read sounds from GTA SA Streams: http://www.lysator.liu.se/~creideiki/radio-free-san-andreas/
 
-- Make a description on a MD file explaining this options: https://i.gyazo.com/07490f1d389fb3c4d6363e8d9810c0c1.png - ??
+- Make a description on a MD file explaining this options: https://i.gyazo.com/07490f1d389fb3c4d6363e8d9810c0c1.png
 
 - Implement scrolled map zoom (https://stackoverflow.com/questions/10694397/how-to-zoom-in-using-mouse-position-on-that-image)
 
@@ -109,7 +109,7 @@
 
 - Improve profile devs (delete ids because now it's on config.user.json)
 
-- Have to fix this problem, modifying somehow Assembly Importer GUI to add to mark or something like that is saved to avoid it's compilation (https://cdn.discordapp.com/attachments/454006273751515163/455029337821806592/unknown.png) - It's fixed, but now the inspector looks ugly - ??
+- Have to fix this problem, modifying somehow Assembly Importer GUI to add to mark or something like that is saved to avoid it's compilation (https://cdn.discordapp.com/attachments/454006273751515163/455029337821806592/unknown.png) - It's fixed, but now the inspector looks ugly (this is for the Socket console)
 
 - Weird circular shadow appears when driving and the car passes next to a building that projects a shadow (Quality Settings: Simple)
 
@@ -145,7 +145,7 @@
 
 ### Leaks
 
-- Lag when instantiating new lights
+**Nothing. :)**
 
 ### Inneficiencies
 
