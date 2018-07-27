@@ -26,6 +26,9 @@ namespace SanAndreasUnity.Behaviours
 
 		private static float m_totalEstimatedLoadingTime = 0;
 
+		private static bool m_hasErrors = false;
+		private static System.Exception m_loadException;
+
         private static string[] archivePaths;
         private static IArchive[] archives;
 
@@ -84,6 +87,7 @@ namespace SanAndreasUnity.Behaviours
 				new LoadingStep ( StepLoadCollision, "Loading collision files", 0.9f ),
 				new LoadingStep ( StepLoadItemInfo, "Loading item info", 2.4f ),
 				new LoadingStep ( StepLoadHandling, "Loading handling", 0.01f ),
+				//new LoadingStep ( () => { throw new System.Exception ("testing error handling"); }, "testing error handling", 0.01f ),
 				new LoadingStep ( StepLoadAnimGroups, "Loading animation groups", 0.02f ),
 				new LoadingStep ( StepLoadCarColors, "Loading car colors", 0.04f ),
 				new LoadingStep ( StepLoadWeaponsData, "Loading weapons data", 0.05f ),
@@ -155,7 +159,7 @@ namespace SanAndreasUnity.Behaviours
 						try {
 							hasNext = en.MoveNext ();
 						} catch (System.Exception ex) {
-							Debug.LogException (ex);
+							HandleExceptionDuringLoad (ex);
 							if (step.StopLoadingOnException) {
 								yield break;
 							}
@@ -172,7 +176,7 @@ namespace SanAndreasUnity.Behaviours
 					try {
 						step.LoadFunction ();
 					} catch(System.Exception ex) {
-						Debug.LogException (ex);
+						HandleExceptionDuringLoad (ex);
 						if (step.StopLoadingOnException) {
 							yield break;
 						}
@@ -194,6 +198,14 @@ namespace SanAndreasUnity.Behaviours
 
 			Debug.Log("GTA loading finished in " + stopwatch.Elapsed.TotalSeconds + " seconds");
 
+		}
+
+		private static void HandleExceptionDuringLoad (System.Exception ex)
+		{
+			m_hasErrors = true;
+			m_loadException = ex;
+
+			Debug.LogException (ex);
 		}
 
 
@@ -390,11 +402,18 @@ namespace SanAndreasUnity.Behaviours
 			GUILayout.Space (10);
 			DisplayProgressBar ();
 
+			// display error
+			if (m_hasErrors) {
+				GUILayout.Space (20);
+				GUILayout.Label("<size=20>" + "The following exception occured during the current step:\n" + "</size>" + m_loadException.ToString ());
+			}
+
 			// display all steps
 //			GUILayout.Space (10);
 //			DisplayAllSteps ();
 
             GUILayout.EndArea();
+
         }
 
 		private static void DisplayAllSteps ()
