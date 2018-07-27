@@ -9,6 +9,7 @@ using SanAndreasUnity.Utilities;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -22,6 +23,8 @@ namespace SanAndreasUnity.Behaviours
 
 		private static int m_currentStepIndex = 0;
 
+		private static float m_totalEstimatedLoadingTime = 0;
+
         private static string[] archivePaths;
         private static IArchive[] archives;
 
@@ -29,23 +32,26 @@ namespace SanAndreasUnity.Behaviours
 
 		public class LoadingStep
 		{
-			public IEnumerator Coroutine { get; set; }
-			public System.Action LoadFunction { get; set; }
+			public IEnumerator Coroutine { get; private set; }
+			public System.Action LoadFunction { get; private set; }
 			public string Description { get; set; }
-			public bool StopLoadingOnException { get; set; }
+			public bool StopLoadingOnException { get; private set; }
 			public float TimeElapsed { get; internal set; }
+			public float EstimatedTime { get; private set; }
 
-			public LoadingStep (System.Action loadFunction, string description, bool stopLoadingOnException = true)
+			public LoadingStep (System.Action loadFunction, string description, float estimatedTime = 0f, bool stopLoadingOnException = true)
 			{
 				this.LoadFunction = loadFunction;
 				this.Description = description;
+				this.EstimatedTime = estimatedTime;
 				this.StopLoadingOnException = stopLoadingOnException;
 			}
 
-			public LoadingStep (IEnumerator coroutine, string description, bool stopLoadingOnException = true)
+			public LoadingStep (IEnumerator coroutine, string description, float estimatedTime = 0f, bool stopLoadingOnException = true)
 			{
 				this.Coroutine = coroutine;
 				this.Description = description;
+				this.EstimatedTime = estimatedTime;
 				this.StopLoadingOnException = stopLoadingOnException;
 			}
 			
@@ -71,31 +77,25 @@ namespace SanAndreasUnity.Behaviours
 		private static void AddLoadingSteps ()
 		{
 			
-			System.Action[] loadFunctions = new System.Action[] {
-				StepGetPaths,
-				StepLoadArchives,
-				StepLoadSplashScreen,
-				StepSetSplash1,
-				StepLoadCollision,
-				StepLoadItemInfo,
-				StepLoadHandling,
-				StepLoadAnimGroups,
-				StepLoadCarColors,
-				StepLoadWeaponsData,
-				StepSetSplash2,
-				StepLoadMap,
-				StepLoadSpecialTextures
-			};
-
-			string[] descriptions = new string[]{
-				"Loading archive paths", "Loading archives", "Loading splash screen", "Set splash 1", "Loading collision files", "Loading item info",
-				"Loading handling", "Loading animation groups", "Loading car colors", "Loading weapons data",
-				"Set splash 2", "Loading map", "Loading special textures"
+			LoadingStep[] steps = new LoadingStep[] {
+				new LoadingStep ( StepGetPaths, "Loading archive paths" ),
+				new LoadingStep ( StepLoadArchives, "Loading archives", 1.7f ),
+				new LoadingStep ( StepLoadSplashScreen, "Loading splash screen" ),
+				new LoadingStep ( StepSetSplash1, "Set splash 1" ),
+				new LoadingStep ( StepLoadCollision, "Loading collision files", 0.9f ),
+				new LoadingStep ( StepLoadItemInfo, "Loading item info", 2.4f ),
+				new LoadingStep ( StepLoadHandling, "Loading handling", 0.01f ),
+				new LoadingStep ( StepLoadAnimGroups, "Loading animation groups", 0.02f ),
+				new LoadingStep ( StepLoadCarColors, "Loading car colors", 0.04f ),
+				new LoadingStep ( StepLoadWeaponsData, "Loading weapons data", 0.05f ),
+				new LoadingStep ( StepSetSplash2, "Set splash 2" ),
+				new LoadingStep ( StepLoadMap, "Loading map", 2f ),
+				new LoadingStep ( StepLoadSpecialTextures, "Loading special textures", 0.05f ),
 			};
 
 
-			for (int i = 0; i < loadFunctions.Length; i++) {
-				AddLoadingStep (new LoadingStep (loadFunctions [i], descriptions [i]));
+			for (int i = 0; i < steps.Length; i++) {
+				AddLoadingStep (steps [i]);
 			}
 
 		}
@@ -108,6 +108,14 @@ namespace SanAndreasUnity.Behaviours
 
 		private static IEnumerator LoadCoroutine ()
 		{
+
+			// wait a few frames - to "unblock" the program, and to let other scripts initialize before
+			// registering their loading steps
+			yield return null;
+			yield return null;
+
+			// calculate total loading time
+			m_totalEstimatedLoadingTime = m_loadingSteps.Sum( step => step.EstimatedTime );
 
 			var stopwatchForSteps = new System.Diagnostics.Stopwatch ();
 
@@ -353,6 +361,23 @@ namespace SanAndreasUnity.Behaviours
 
 
 
+		public static float GetProgressPerc ()
+		{
+			if (m_currentStepIndex <= 0)
+				return 0f;
+
+			if (m_currentStepIndex >= m_loadingSteps.Count)
+				return 1f;
+
+			float estimatedTimePassed = 0f;
+			for (int i = 0; i < m_currentStepIndex; i++) {
+				estimatedTimePassed += m_loadingSteps [i].EstimatedTime;
+			}
+
+			return Mathf.Clamp01 (estimatedTimePassed / m_totalEstimatedLoadingTime);
+		}
+
+
         private void Update()
         {
 			
@@ -375,18 +400,47 @@ namespace SanAndreasUnity.Behaviours
 
 			GUILayout.BeginArea(new Rect(10, 5, 400, Screen.height));
 
+			// current status
 			GUILayout.Label("<size=25>" + LoadingStatus + "</size>");
 
-			// display all steps
+			// progress bar
 			GUILayout.Space (10);
+			DisplayProgressBar ();
+
+			// display all steps
+//			GUILayout.Space (10);
+//			DisplayAllSteps ();
+
+            GUILayout.EndArea();
+        }
+
+		private static void DisplayAllSteps ()
+		{
+
 			int i=0;
 			foreach (var step in m_loadingSteps) {
 				GUILayout.Label( step.Description + (m_currentStepIndex > i ? (" - " + step.TimeElapsed + " ms") : "") );
 				i++;
 			}
 
-            GUILayout.EndArea();
-        }
+		}
+
+		private static void DisplayProgressBar ()
+		{
+			float width = 200;
+			float height = 12;
+
+//			Rect rect = GUILayoutUtility.GetLastRect ();
+//			rect.position += new Vector2 (0, rect.height);
+//			rect.size = new Vector2 (width, height);
+
+			Rect rect = GUILayoutUtility.GetRect( width, height );
+			rect.width = width;
+
+			float progressPerc = GetProgressPerc ();
+			GUIUtils.DrawBar( rect, progressPerc, new Vector4(149, 185, 244, 255) / 256.0f, new Vector4(92, 147, 237, 255) / 256.0f, 2f );
+
+		}
 
     }
 }

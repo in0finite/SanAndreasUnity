@@ -97,6 +97,26 @@ namespace SanAndreasUnity.Utilities
 			GUI.backgroundColor = backgroundColor;
 		}
 
+		public static void DrawBar (Rect rect, float fillPerc, Color fillColor, Color backgroundColor, float borderWidth)
+		{
+			fillPerc = Mathf.Clamp01 (fillPerc);
+
+			Rect fillRect = rect;
+			fillRect.position += Vector2.one * borderWidth;
+			fillRect.size -= Vector2.one * borderWidth * 2;
+
+			// first fill with black - that will be the border
+			GUIUtils.DrawRect( rect, Color.black );
+
+			// fill with background
+			GUIUtils.DrawRect( fillRect, backgroundColor );
+
+			// draw filled part
+			fillRect.width *= fillPerc;
+			GUIUtils.DrawRect( fillRect, fillColor );
+
+		}
+
 		public	static	void	CenteredLabel(Vector2 pos, string text) {
 
 			Vector2 size = CalcScreenSizeForText (text, GUI.skin.label);
