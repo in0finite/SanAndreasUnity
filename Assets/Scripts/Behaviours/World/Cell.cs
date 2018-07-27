@@ -25,7 +25,7 @@ namespace SanAndreasUnity.Behaviours.World
         public Transform Focus;
         public Water Water;
 
-        public static Cell Instance = null;
+		public static Cell Instance { get ; private set; }
 
         // Statistics
         private int totalNumObjects = 0;
@@ -47,12 +47,14 @@ namespace SanAndreasUnity.Behaviours.World
         public float maxDrawDistance = 500;
 
         public bool loadParkedVehicles = true;
-        private PlayerController _playerController;
+        
+
 
         private void Awake()
         {
-            Instance = this;
-            _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+			if (null == Instance)
+				Instance = this;
+			
         }
 
         private void Start()
@@ -60,84 +62,92 @@ namespace SanAndreasUnity.Behaviours.World
             InvokeRepeating("UpdateDivisions", 0f, 0.1f);
         }
 
+		internal void Setup ()
+		{
+
+			if (RootDivision == null)
+			{
+				RootDivision = Division.Create(transform);
+				RootDivision.SetBounds(
+					new Vector2(-3000f, -3000f),
+					new Vector2(+3000f, +3000f));
+
+				using (Utilities.Profiler.Start("Cell partitioning time"))
+				{
+					var timer = Stopwatch.StartNew();
+
+					var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
+					var insts = placements.ToDictionary(x => x, x => StaticGeometry.Create());
+					timer.Stop();
+
+					UnityEngine.Debug.LogFormat("Placements loaded in {0} ms", timer.ElapsedMilliseconds);
+
+					UnityEngine.Debug.Log("Num static geometries " + placements.Count() + ".");
+					totalNumObjects = placements.Count();
+
+					UnityEngine.Debug.Log("Initializating placements instances");
+					timer = Stopwatch.StartNew();
+
+					foreach (var inst in insts)
+					{
+						inst.Value.Initialize(inst.Key, insts);
+					}
+
+					timer.Stop();
+					UnityEngine.Debug.LogFormat("Finished loading placements instances in {0} ms!", timer.ElapsedMilliseconds);
+
+					UnityEngine.Debug.Log("Initializating cars");
+					timer = Stopwatch.StartNew();
+
+					//    if (NetConfig.IsServer) {
+					if (loadParkedVehicles)
+					{
+						//Debug.Log("-444");
+						var parkedVehicles = Item.GetPlacements<ParkedVehicle>(CellIds.ToArray());
+						var cars = parkedVehicles.Select(x => VehicleSpawner.Create(x))
+							.Cast<MapObject>()
+							.ToArray();
+
+						UnityEngine.Debug.Log("Num parked vehicles " + parkedVehicles.Count() + ".");
+
+						RootDivision.AddRange(insts.Values.Cast<MapObject>().Concat(cars));
+					}
+					else
+					{
+						RootDivision.AddRange(insts.Values.Cast<MapObject>());
+					}
+
+					timer.Stop();
+					UnityEngine.Debug.LogFormat("Finished loading cars in {0} ms!", timer.ElapsedMilliseconds);
+
+					// set layer recursively for all game objects
+					//	this.gameObject.SetLayerRecursive( this.gameObject.layer );
+
+					UnityEngine.Debug.Log("Initializating water");
+					timer = Stopwatch.StartNew();
+
+					if (Water != null)
+					{
+						using (Utilities.Profiler.Start("Water load time"))
+						{
+							Water.Initialize(new WaterFile(Config.GetPath("water_path")));
+						}
+					}
+
+					timer.Stop();
+					UnityEngine.Debug.LogFormat("Finished loading water in {0} ms!", timer.ElapsedMilliseconds);
+				}
+
+				_timer = new Stopwatch();
+				_leaves = RootDivision.ToList();
+			}
+
+		}
+
         private void Update()
         {
-            if (RootDivision == null && Loader.HasLoaded)
-            {
-                RootDivision = Division.Create(transform);
-                RootDivision.SetBounds(
-                    new Vector2(-3000f, -3000f),
-                    new Vector2(+3000f, +3000f));
 
-                using (Utilities.Profiler.Start("Cell partitioning time"))
-                {
-                    var timer = Stopwatch.StartNew();
-
-                    var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
-                    var insts = placements.ToDictionary(x => x, x => StaticGeometry.Create());
-                    timer.Stop();
-
-                    UnityEngine.Debug.LogFormat("Placements loaded in {0} ms", timer.ElapsedMilliseconds);
-
-                    UnityEngine.Debug.Log("Num static geometries " + placements.Count() + ".");
-                    totalNumObjects = placements.Count();
-
-                    UnityEngine.Debug.Log("Initializating placements instances");
-                    timer = Stopwatch.StartNew();
-
-                    foreach (var inst in insts)
-                    {
-                        inst.Value.Initialize(inst.Key, insts);
-                    }
-
-                    timer.Stop();
-                    UnityEngine.Debug.LogFormat("Finished loading placements instances in {0} ms!", timer.ElapsedMilliseconds);
-
-                    UnityEngine.Debug.Log("Initializating cars");
-                    timer = Stopwatch.StartNew();
-
-                    //    if (NetConfig.IsServer) {
-                    if (loadParkedVehicles)
-                    {
-                        //Debug.Log("-444");
-                        var parkedVehicles = Item.GetPlacements<ParkedVehicle>(CellIds.ToArray());
-                        var cars = parkedVehicles.Select(x => VehicleSpawner.Create(x))
-                            .Cast<MapObject>()
-                            .ToArray();
-
-                        UnityEngine.Debug.Log("Num parked vehicles " + parkedVehicles.Count() + ".");
-
-                        RootDivision.AddRange(insts.Values.Cast<MapObject>().Concat(cars));
-                    }
-                    else
-                    {
-                        RootDivision.AddRange(insts.Values.Cast<MapObject>());
-                    }
-
-                    timer.Stop();
-                    UnityEngine.Debug.LogFormat("Finished loading cars in {0} ms!", timer.ElapsedMilliseconds);
-
-                    // set layer recursively for all game objects
-                    //	this.gameObject.SetLayerRecursive( this.gameObject.layer );
-
-                    UnityEngine.Debug.Log("Initializating water");
-                    timer = Stopwatch.StartNew();
-
-                    if (Water != null)
-                    {
-                        using (Utilities.Profiler.Start("Water load time"))
-                        {
-                            Water.Initialize(new WaterFile(Config.GetPath("water_path")));
-                        }
-                    }
-
-                    timer.Stop();
-                    UnityEngine.Debug.LogFormat("Finished loading water in {0} ms!", timer.ElapsedMilliseconds);
-                }
-
-                _timer = new Stopwatch();
-                _leaves = RootDivision.ToList();
-            }
+			//this.Setup ();
 
             if (null == _leaves)
                 return;
@@ -146,6 +156,7 @@ namespace SanAndreasUnity.Behaviours.World
             _timer.Start();
             numLeavesLoadedThisFrame = 0;
             numObjectsLoadedThisFrame = 0;
+
             foreach (var div in _leaves)
             {
                 if (float.IsPositiveInfinity(div.LoadOrder))
@@ -162,7 +173,9 @@ namespace SanAndreasUnity.Behaviours.World
                     numLeavesLoadedThisFrame++;
                 }
             }
+
             measuredTimes[2] = (float)_timer.Elapsed.TotalMilliseconds;
+
         }
 
         private void UpdateDivisions()

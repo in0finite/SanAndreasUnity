@@ -1,4 +1,3 @@
-
 ## TODO
 
 ### Features
@@ -21,7 +20,7 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- Loader - better display of progress ; add loading steps ; (Álvaro)
+- Loader - add cell as loading step ; display error, if any ;
 
 - Remove OnValidate() function from Pedestrian
 

@@ -98,6 +98,12 @@ namespace SanAndreasUnity.Behaviours
 				AddLoadingStep (steps [i]);
 			}
 
+
+			if (Behaviours.World.Cell.Instance != null) {
+				// add step for cell
+				AddLoadingStep( new LoadingStep( () => Behaviours.World.Cell.Instance.Setup (), "World setup", 7.5f ) );
+			}
+
 		}
 
 		private static void AddLoadingStep (LoadingStep step)
