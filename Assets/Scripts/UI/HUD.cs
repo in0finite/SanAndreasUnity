@@ -127,24 +127,10 @@ namespace SanAndreasUnity.UI {
 
 		public static void DrawBar (Rect rect, float fillPerc, Color fillColor, Color backgroundColor)
 		{
-			fillPerc = Mathf.Clamp01 (fillPerc);
-
+			
 			float borderWidth = 2f; //rect.height / 8f;
 
-			Rect fillRect = rect;
-			fillRect.position += Vector2.one * borderWidth;
-			fillRect.size -= Vector2.one * borderWidth * 2;
-
-			// first fill with black - that will be the border
-			GUIUtils.DrawRect( rect, Color.black );
-
-			// fill with background
-			GUIUtils.DrawRect( fillRect, backgroundColor );
-
-			// draw filled part
-			fillRect.width *= fillPerc;
-			GUIUtils.DrawRect( fillRect, fillColor );
-
+			GUIUtils.DrawBar (rect, fillPerc, fillColor, backgroundColor, borderWidth);
 		}
 
 	}

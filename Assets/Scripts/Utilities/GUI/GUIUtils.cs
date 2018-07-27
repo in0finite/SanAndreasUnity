@@ -97,11 +97,43 @@ namespace SanAndreasUnity.Utilities
 			GUI.backgroundColor = backgroundColor;
 		}
 
+		public static void DrawBar (Rect rect, float fillPerc, Color fillColor, Color backgroundColor, float borderWidth)
+		{
+			fillPerc = Mathf.Clamp01 (fillPerc);
+
+			Rect fillRect = rect;
+			fillRect.position += Vector2.one * borderWidth;
+			fillRect.size -= Vector2.one * borderWidth * 2;
+
+			// first fill with black - that will be the border
+			GUIUtils.DrawRect( rect, Color.black );
+
+			// fill with background
+			GUIUtils.DrawRect( fillRect, backgroundColor );
+
+			// draw filled part
+			fillRect.width *= fillPerc;
+			GUIUtils.DrawRect( fillRect, fillColor );
+
+		}
+
 		public	static	void	CenteredLabel(Vector2 pos, string text) {
 
 			Vector2 size = CalcScreenSizeForText (text, GUI.skin.label);
 
 			GUI.Label (new Rect (pos - size * 0.5f, size), text);
+		}
+
+		/// <summary> Draws the texture flipped around Y axis. </summary>
+		public	static	void	DrawTextureWithYFlipped(Rect rect, Texture2D tex) {
+
+			var savedMatrix = GUI.matrix;
+
+			GUIUtility.ScaleAroundPivot (new Vector2 (1, -1), rect.center);
+
+			GUI.DrawTexture (rect, tex);
+
+			GUI.matrix = savedMatrix;
 		}
 
     }

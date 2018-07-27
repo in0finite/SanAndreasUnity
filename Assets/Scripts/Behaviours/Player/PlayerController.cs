@@ -65,6 +65,9 @@ namespace SanAndreasUnity.Behaviours
         public Vector2 smoothing = new Vector2(10, 10);
         public bool m_doSmooth = true;
 
+		[SerializeField] private bool m_smoothMovement = false;
+
+
 
         public float CurVelocity
         {
@@ -237,7 +240,11 @@ namespace SanAndreasUnity.Behaviours
 
 				// give input to player
 
-                var inputMove = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+				Vector3 inputMove = Vector3.zero;
+				if (m_smoothMovement)
+					inputMove = new Vector3 (Input.GetAxis ("Horizontal"), 0f, Input.GetAxis ("Vertical"));
+				else
+					inputMove = new Vector3 (Input.GetAxisRaw ("Horizontal"), 0f, Input.GetAxisRaw ("Vertical"));
 
                 if (inputMove.sqrMagnitude > 0f)
                 {

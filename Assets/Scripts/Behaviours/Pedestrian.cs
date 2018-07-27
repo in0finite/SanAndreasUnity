@@ -5,23 +5,18 @@ using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Animation;
 using UnityEngine;
 
-#if UNITY_EDITOR
-
-using UnityEditor;
-
-#endif
-
 namespace SanAndreasUnity.Behaviours
 {
     using Anim = SanAndreasUnity.Importing.Conversion.Animation;
 
-    [ExecuteInEditMode]
     public class Pedestrian : MonoBehaviour
     {
-        private int _curPedestrianId;
+        
         private AnimGroup _curAnimGroup = AnimGroup.None;
         private AnimIndex _curAnim = AnimIndex.None;
-        //	private	string	_curAnim = "" ;
+        
+		public AnimGroup AnimGroup { get { return _curAnimGroup; } }
+		public AnimIndex animIndex { get { return _curAnim; } }
 
 		private UnityEngine.Animation _anim { get; set; }
 		public UnityEngine.Animation AnimComponent { get { return _anim; } }
@@ -35,14 +30,12 @@ namespace SanAndreasUnity.Behaviours
 
         public PedestrianDef Definition { get; private set; }
 
-        public int PedestrianId = 7;
+		[SerializeField] private int m_startingPedId = 167;
+
+		public int PedestrianId { get; private set; }
 
         // have we loaded model since the Loader has finished loading
         private bool loadedModelOnStartup = false;
-
-        public AnimGroup AnimGroup = AnimGroup.WalkCycle;
-        public AnimIndex animIndex = AnimIndex.Idle;
-        //	public	string	animIndex = "" ;
 
         public bool IsInVehicle { get; set; }
 
@@ -75,63 +68,14 @@ namespace SanAndreasUnity.Behaviours
         private Player _player;
 
 
-        public bool Walking
-        {
-            set
-            {
-                AnimGroup = AnimGroup.WalkCycle;
-                animIndex = value ? AnimIndex.Walk : AnimIndex.Idle;
-                PlayAnim(AnimGroup, animIndex, PlayMode.StopAll);
-            }
-            get
-            {
-                return AnimGroup == AnimGroup.WalkCycle
-                    && (animIndex == AnimIndex.Walk || Running);
-            }
-        }
-
-        public bool WalkingArmed
-        {
-            set
-            {
-                AnimGroup = AnimGroup.MyWalkCycle;
-                animIndex = value ? AnimIndex.Walk : AnimIndex.IdleArmed;
-            }
-        }
-
-        public bool Running
-        {
-            set
-            {
-                AnimGroup = AnimGroup.WalkCycle;
-                animIndex = value ? AnimIndex.Run : AnimIndex.Walk;
-                PlayAnim(AnimGroup, animIndex, PlayMode.StopAll);
-            }
-            get
-            {
-                return AnimGroup == AnimGroup.WalkCycle
-                    && (animIndex == AnimIndex.Run || animIndex == AnimIndex.Panicked);
-            }
-        }
-
+		/// <summary> Speed of the model extracted from animation. </summary>
         public float Speed { get; private set; }
 
-        public Vector3 Position
+
+
+        private void Awake()
         {
-            get { return transform.localPosition; }
-            set { transform.localPosition = value; }
-        }
-
-
-
-        private void Start()
-        {
-            // can not use these functions because Loader has not finished loading
-
-            //	Load (PedestrianId);
-            //	PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle, PlayMode.StopAll);
-
-            _player = transform.parent.gameObject.GetComponent<Player>();
+			_player = this.GetComponentInParent<Player> ();
         }
 
         private void LateUpdate()
@@ -156,10 +100,6 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
-#if UNITY_EDITOR
-            if (!EditorApplication.isPlaying)
-                return;
-#endif
 
             if (Loader.HasLoaded)
             {
@@ -169,7 +109,7 @@ namespace SanAndreasUnity.Behaviours
 
                     // load model on startup
                     Debug.Log("Loading pedestrian model after startup.");
-                    Load(PedestrianId);
+					Load (m_startingPedId);
                     // and play animation
                     PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle, PlayMode.StopAll);
 
@@ -179,33 +119,7 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-        private void OnValidate()
-        {
-            //	if (null == _frames)
-            //		return;
-
-            if (!Loader.HasLoaded) return;
-
-#if UNITY_EDITOR
-            if (!EditorApplication.isPlaying && !EditorApplication.isPaused)
-                return;
-#endif
-
-            if (_curPedestrianId != PedestrianId)
-            {
-                Load(PedestrianId);
-            }
-
-            if (_curAnim != animIndex || _curAnimGroup != AnimGroup)
-            {
-#if UNITY_EDITOR
-                PlayAnim(AnimGroup, animIndex, PlayMode.StopAll);
-#else
-				CrossFadeAnim(AnimGroup, animIndex, 0.3f, PlayMode.StopAll);
-#endif
-            }
-        }
-
+        
         private void OnDrawGizmosSelected()
         {
             float size = 0.1f;
@@ -216,20 +130,21 @@ namespace SanAndreasUnity.Behaviours
             {
                 foreach (Transform tr in smr.bones)
                 {
-#if UNITY_EDITOR
-                    //	Handles.Label(tr.position, tr.name);
-#endif
                     Gizmos.DrawWireCube(tr.position, new Vector3(size, size, size));
                 }
             }
         }
 
+
         public void Load(int id)
         {
-            _curPedestrianId = PedestrianId = id;
+            
+			var newDefinition = Item.GetDefinition<PedestrianDef>(id);
+			if (null == newDefinition)
+				return;
 
-            Definition = Item.GetDefinition<PedestrianDef>(id);
-            if (Definition == null) return;
+			PedestrianId = id;
+			Definition = newDefinition;
 
             LoadModel(Definition.ModelName, Definition.TextureDictionaryName);
 
@@ -265,6 +180,7 @@ namespace SanAndreasUnity.Behaviours
             //	LoadAllAnimations ();
         }
 
+
         public void ChangeSpineRotation(Vector3 bulletdir, Vector3 adir, float rotationSpeed, ref Vector3 tempSpineLocalEulerAngles, ref Quaternion targetRot, ref Quaternion spineRotationLastFrame)
         {
             //Rotate the spine bone so the gun (roughly) aims at the target
@@ -299,6 +215,7 @@ namespace SanAndreasUnity.Behaviours
             else
                 return r;
         }
+
 
         private void LoadModel(string modelName, params string[] txds)
         {
@@ -348,8 +265,8 @@ namespace SanAndreasUnity.Behaviours
             if (null == animState)
                 return null;
 
-            _curAnimGroup = AnimGroup = group;
-            _curAnim = animIndex = anim;
+            _curAnimGroup = group;
+            _curAnim = anim;
 
             _anim.Play(animState.name, playMode);
 
@@ -383,8 +300,8 @@ namespace SanAndreasUnity.Behaviours
             if (null == animState)
                 return null;
 
-            _curAnimGroup = AnimGroup = group;
-            _curAnim = animIndex = anim;
+            _curAnimGroup = group;
+            _curAnim = anim;
 
             animState.AddMixingTransform(mix);
 
@@ -397,8 +314,8 @@ namespace SanAndreasUnity.Behaviours
             if (null == animState)
                 return null;
 
-            _curAnimGroup = AnimGroup = group;
-            _curAnim = animIndex = anim;
+            _curAnimGroup = group;
+            _curAnim = anim;
 
             animState.RemoveMixingTransform(mix);
 
@@ -457,8 +374,8 @@ namespace SanAndreasUnity.Behaviours
             if (null == animState)
                 return null;
 
-            _curAnimGroup = AnimGroup = group;
-            _curAnim = animIndex = anim;
+            _curAnimGroup = group;
+            _curAnim = anim;
 
             animState.AddMixingTransform(mix, recursive);
 
@@ -471,8 +388,8 @@ namespace SanAndreasUnity.Behaviours
             if (null == animState)
                 return null;
 
-            _curAnimGroup = AnimGroup = group;
-            _curAnim = animIndex = anim;
+            _curAnimGroup = group;
+            _curAnim = anim;
 
             animState.AddMixingTransform(Spine);
 
@@ -487,8 +404,8 @@ namespace SanAndreasUnity.Behaviours
             if (null == animState)
                 return null;
 
-            _curAnimGroup = AnimGroup = group;
-            _curAnim = animIndex = anim;
+            _curAnimGroup = group;
+            _curAnim = anim;
 
             animState.AddMixingTransform(Spine);
 
@@ -503,8 +420,8 @@ namespace SanAndreasUnity.Behaviours
             if (null == animState)
                 return null;
 
-            _curAnimGroup = AnimGroup = group;
-            _curAnim = animIndex = anim;
+            _curAnimGroup = group;
+            _curAnim = anim;
 
             animState.AddMixingTransform(Spine);
 
@@ -519,8 +436,8 @@ namespace SanAndreasUnity.Behaviours
             if (null == animState)
                 return null;
 
-            _curAnimGroup = AnimGroup = group;
-            _curAnim = animIndex = anim;
+            _curAnimGroup = group;
+            _curAnim = anim;
 
             _anim.CrossFade(animState.name, duration, playMode);
 
@@ -533,13 +450,14 @@ namespace SanAndreasUnity.Behaviours
             if (null == animState)
                 return null;
 
-            _curAnimGroup = AnimGroup = group;
-            _curAnim = animIndex = anim;
+            _curAnimGroup = group;
+            _curAnim = anim;
 
             _anim.CrossFadeQueued(animState.name, duration, queueMode, playMode);
 
             return animState;
         }
+
 
         public Anim GetAnim(AnimGroup group, AnimIndex anim)
         {
@@ -558,6 +476,7 @@ namespace SanAndreasUnity.Behaviours
             return animGroup[anim];
         }
 
+
         private AnimationState LoadAnim(AnimGroup group, AnimIndex anim)
         {
             if (anim == AnimIndex.None)
@@ -572,10 +491,13 @@ namespace SanAndreasUnity.Behaviours
                 return null;
             }
 
-            if (Definition == null || (Definition != null && string.IsNullOrEmpty(Definition.AnimGroupName))) return null;
+			if (Definition == null || string.IsNullOrEmpty (Definition.AnimGroupName))
+				return null;
+			
             var animGroup = AnimationGroup.Get(Definition.AnimGroupName, group);
             if (null == animGroup)
                 return null;
+			
             var animName = animGroup[anim];
             //	var animName = anim ;
             //	if (!animGroup.HasAnimation (animName))
@@ -585,17 +507,17 @@ namespace SanAndreasUnity.Behaviours
 
             if (!_loadedAnims.ContainsKey(animName))
             {
-                var clip = Anim.Load(animGroup.FileName, animName, _frames);
-                if (clip.Clip != null)
+				var importedAnim = Anim.Load(animGroup.FileName, animName, _frames);
+				if (importedAnim != null && importedAnim.Clip != null)
                 {
-                    _loadedAnims.Add(animName, clip);
-                    _anim.AddClip(clip.Clip, animName);
+                    _loadedAnims.Add(animName, importedAnim);
+                    _anim.AddClip(importedAnim.Clip, animName);
                     state = _anim[animName];
                 }
                 else
                 {
                     state = null;
-                    Debug.LogWarning(string.Format("File '{0}' doesn't exists!", animGroup.FileName));
+					Debug.LogWarningFormat ("Failed to load anim - file: {0}, anim name: {1}", animGroup.FileName, animName);
                 }
             }
             else
@@ -625,5 +547,6 @@ namespace SanAndreasUnity.Behaviours
                 }
             }
         }
+
     }
 }

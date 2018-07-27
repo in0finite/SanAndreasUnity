@@ -132,16 +132,16 @@ namespace SanAndreasUnity.Behaviours
             {
                 if (message.Running)
                 {
-                    PlayerModel.Running = message.Running;
+                    //PlayerModel.Running = message.Running;
                 }
                 else
                 {
-                    PlayerModel.Walking = true;
+                    //PlayerModel.Walking = true;
                 }
             }
             else
             {
-                PlayerModel.Walking = false;
+                //PlayerModel.Walking = false;
             }
         }
 
