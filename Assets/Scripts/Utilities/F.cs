@@ -229,6 +229,37 @@ namespace SanAndreasUnity.Utilities
             return path;
         }
 
+
+		public	static	void	Invoke( this Component component, string methodName, params object[] args ) {
+
+			var method = component.GetType().GetMethod( methodName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public );
+			if(method != null) {
+				method.Invoke( component, args );
+			}
+
+		}
+
+		public	static	void	InvokeExceptionSafe( this Component component, string methodName, params object[] args ) {
+
+			try {
+				component.Invoke( methodName, args );
+			} catch (System.Exception ex) {
+				Debug.LogException (ex);
+			}
+
+		}
+
+		public static void SendMessageToObjectsOfType<T> (string msg, params object[] args) where T : UnityEngine.Component
+		{
+			var objects = UnityEngine.Object.FindObjectsOfType<T> ();
+
+			foreach (var obj in objects) {
+				obj.InvokeExceptionSafe (msg, args);
+			}
+
+		}
+
+
         public static bool IsCasteable<T>(this object input)
         {
             try

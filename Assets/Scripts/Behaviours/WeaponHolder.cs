@@ -2,6 +2,7 @@
 using UnityEngine;
 using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Importing.Weapons;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours {
 	
@@ -51,7 +52,20 @@ namespace SanAndreasUnity.Behaviours {
 			m_player = this.GetComponent<Player> ();
 
 		}
-		
+
+		void OnLoaderFinished ()
+		{
+			if (this.autoAddWeapon)
+			{
+				this.AddRandomWeapons ();
+
+				if (!this.IsHoldingWeapon)
+				{
+					this.SwitchWeapon (WeaponSlot.Pistol);
+				}
+			}
+		}
+
 		void Update () {
 
 			if (!Loader.HasLoaded)
@@ -66,15 +80,6 @@ namespace SanAndreasUnity.Behaviours {
 				else if (Input.GetKeyDown (KeyCode.E))
 					this.SwitchWeapon (true);
 				
-			}
-
-
-			// add weapons to player if he doesn't have any
-			if (autoAddWeapon && null == System.Array.Find (weapons, w => w != null)) {
-				// player has no weapons
-
-				this.SetWeaponAtSlot (355, WeaponSlot.Machine);
-				this.SwitchWeapon (WeaponSlot.Machine);
 			}
 
 
@@ -322,7 +327,7 @@ namespace SanAndreasUnity.Behaviours {
 
 			if (CurrentWeapon != null) {
 				// hide the weapon
-				CurrentWeapon.gameObject.SetActive (false);
+				HideWeapon( CurrentWeapon );
 			}
 
 			if (slotIndex >= 0) {
@@ -331,13 +336,23 @@ namespace SanAndreasUnity.Behaviours {
 
 				// show the weapon
 				if (CurrentWeapon != null)
-					CurrentWeapon.gameObject.SetActive (true);
+					UnHideWeapon (CurrentWeapon);
 
 			} else {
 				CurrentWeapon = null;
 			}
 
 			currentWeaponSlot = slotIndex;
+		}
+
+		private static void HideWeapon (Weapon weapon)
+		{
+			weapon.gameObject.SetActive (false);
+		}
+
+		private static void UnHideWeapon (Weapon weapon)
+		{
+			weapon.gameObject.SetActive (true);
 		}
 
 		public void SetWeaponAtSlot (Importing.Items.Definitions.WeaponDef weaponDef, WeaponSlot slot)
@@ -363,6 +378,9 @@ namespace SanAndreasUnity.Behaviours {
 			if (slotIndex == currentWeaponSlot) {
 				// update current weapon variable
 				CurrentWeapon = weapons [slotIndex];
+			} else {
+				// hide the newly created weapon
+				HideWeapon (weapons[slotIndex]);
 			}
 
 		}
@@ -375,6 +393,31 @@ namespace SanAndreasUnity.Behaviours {
 				if (this.weapons [i] != null)
 					Destroy (this.weapons [i].gameObject);
 				this.weapons [i] = null;
+			}
+
+		}
+
+
+		public void AddRandomWeapons ()
+		{
+
+			WeaponSlot[] slots = new WeaponSlot[] { WeaponSlot.Pistol, WeaponSlot.Shotgun, WeaponSlot.Submachine,
+				WeaponSlot.Machine, WeaponSlot.Rifle, WeaponSlot.Heavy
+			};
+
+			var groups = WeaponData.LoadedWeaponsData.Where( wd => slots.Contains( (WeaponSlot) wd.weaponslot ) )
+				.GroupBy( wd => wd.weaponslot );
+
+			foreach (var grp in groups) {
+
+				int count = grp.Count ();
+				if (count < 1)
+					continue;
+
+				int index = Random.Range (0, count - 1);
+				WeaponData chosenWeaponData = grp.ElementAt (index);
+
+				this.SetWeaponAtSlot (chosenWeaponData.modelId1, grp.Key);
 			}
 
 		}

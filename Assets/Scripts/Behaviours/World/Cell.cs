@@ -77,7 +77,12 @@ namespace SanAndreasUnity.Behaviours.World
 			}
 
 			var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
-			m_insts = placements.ToDictionary(x => x, x => StaticGeometry.Create());
+
+			m_insts = new Dictionary<Instance,StaticGeometry> (48 * 1024);
+			foreach (var plcm in placements) {
+				m_insts.Add (plcm, StaticGeometry.Create ());
+			}
+			//m_insts = placements.ToDictionary(x => x, x => StaticGeometry.Create());
 
 			UnityEngine.Debug.Log("Num static geometries " + m_insts.Count);
 

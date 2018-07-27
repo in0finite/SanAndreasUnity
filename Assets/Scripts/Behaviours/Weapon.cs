@@ -26,6 +26,34 @@ namespace SanAndreasUnity.Behaviours
 		Count = 13
 	}
 
+	public static class WeaponId
+	{
+		
+		public static readonly int Pistol = 346;
+		public static readonly int PistolSilenced = 347;
+		public static readonly int DesertEagle = 348;
+
+		public static readonly int Shotgun = 349;
+		public static readonly int SawnOff = 350;
+		public static readonly int SPAS12 = 351;
+
+		public static readonly int MicroUzi = 352;
+		public static readonly int Tec9 = 372;
+		public static readonly int MP5 = 353;
+
+		public static readonly int AK47 = 355;
+		public static readonly int M4 = 356;
+
+		public static readonly int CountryRifle = 357;
+		public static readonly int SniperRifle = 358;
+
+		public static readonly int RocketLauncher = 359;
+		public static readonly int RocketLauncherHS = 360;
+		public static readonly int FlameThrower = 361;
+		public static readonly int MiniGun = 362;
+
+	}
+
 //	public class WeaponData
 //	{
 //		public string type = "";

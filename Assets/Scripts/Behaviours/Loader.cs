@@ -198,6 +198,9 @@ namespace SanAndreasUnity.Behaviours
 
 			Debug.Log("GTA loading finished in " + stopwatch.Elapsed.TotalSeconds + " seconds");
 
+			// notify all scripts
+			F.SendMessageToObjectsOfType<MonoBehaviour>( "OnLoaderFinished" );
+
 		}
 
 		private static void HandleExceptionDuringLoad (System.Exception ex)

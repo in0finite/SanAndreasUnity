@@ -127,6 +127,7 @@ MonoBehaviour:
   EnterVehicleRadius: 5
   smoothing: {x: 10, y: 10}
   m_doSmooth: 0
+  m_smoothMovement: 0
 --- !u!114 &114671475596742702
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -138,9 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e93599847d269df4da17655e4ac7b3d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PedestrianId: 167
-  AnimGroup: 1
-  animIndex: 3
+  m_startingPedId: 167
 --- !u!114 &114879899237604226
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -152,11 +151,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 104b2f17607c64562aea9bbcedc03368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoAddWeapon: 0
+  autoAddWeapon: 1
   SpineOffset: {x: 0, y: 45, z: 90}
   weaponAttachType: 1
   m_aimWithRifleMaxAnimTime: 0.7
   cameraAimOffset: {x: 0.7, y: 0.2, z: -1}
+  rotatePlayerInDirectionOfAiming: 1
 --- !u!143 &143191563852256374
 CharacterController:
   m_ObjectHideFlags: 1
