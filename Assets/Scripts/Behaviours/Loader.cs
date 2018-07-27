@@ -131,8 +131,7 @@ namespace SanAndreasUnity.Behaviours
 				LoadingStatus = step.Description;
 				yield return null;
 
-				stopwatchForSteps.Stop ();
-				stopwatchForSteps.Start ();
+				stopwatchForSteps.Restart ();
 
 				var en = step.Coroutine;
 
@@ -176,6 +175,8 @@ namespace SanAndreasUnity.Behaviours
 				step.TimeElapsed = stopwatchForSteps.ElapsedMilliseconds;
 
 				m_currentStepIndex++;
+
+				Debug.LogFormat ("{0} - finished in {1} ms", step.Description, step.TimeElapsed);
 			}
 
 			// all steps finished loading
@@ -210,26 +211,25 @@ namespace SanAndreasUnity.Behaviours
 		private static void StepLoadArchives ()
 		{
 			
-			using (Profiler.Start("Archive load time"))
+			List<IArchive> listArchives = new List<IArchive>();
+
+			foreach (var path in archivePaths)
 			{
-				List<IArchive> listArchives = new List<IArchive>();
-				foreach (var path in archivePaths)
+				if (File.Exists(path))
 				{
-					if (File.Exists(path))
-					{
-						listArchives.Add(ArchiveManager.LoadImageArchive(path));
-					}
-					else if (Directory.Exists(path))
-					{
-						listArchives.Add(ArchiveManager.LoadLooseArchive(path));
-					}
-					else
-					{
-						Debug.LogError("Archive not found: " + path);
-					}
+					listArchives.Add(ArchiveManager.LoadImageArchive(path));
 				}
-				archives = listArchives.FindAll(a => a != null).ToArray();
+				else if (Directory.Exists(path))
+				{
+					listArchives.Add(ArchiveManager.LoadLooseArchive(path));
+				}
+				else
+				{
+					Debug.LogError("Archive not found: " + path);
+				}
 			}
+
+			archives = listArchives.FindAll(a => a != null).ToArray();
 
 		}
 
@@ -257,112 +257,95 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void StepLoadCollision ()
 		{
-			using (Profiler.Start("Collision load time"))
+			
+			int numCollisionFiles = 0;
+
+			foreach (var archive in archives)
 			{
-				int numCollisionFiles = 0;
-				foreach (var archive in archives)
+				foreach (var colFile in archive.GetFileNamesWithExtension(".col"))
 				{
-					foreach (var colFile in archive.GetFileNamesWithExtension(".col"))
-					{
-						CollisionFile.Load(colFile);
-						numCollisionFiles++;
-					}
+					CollisionFile.Load(colFile);
+					numCollisionFiles++;
 				}
-				Debug.Log("Number of collision files " + numCollisionFiles);
 			}
+
+			Debug.Log("Number of collision files " + numCollisionFiles);
+
 		}
 
 		private static void StepLoadItemInfo ()
 		{
-			using (Profiler.Start("Item info load time"))
+			
+			foreach (var path in Config.GetPaths("item_paths"))
 			{
-				foreach (var path in Config.GetPaths("item_paths"))
+				var ext = Path.GetExtension(path).ToLower();
+				switch (ext)
 				{
-					var ext = Path.GetExtension(path).ToLower();
-					switch (ext)
-					{
-					case ".dat":
-						Item.ReadLoadList(path);
-						break;
+				case ".dat":
+					Item.ReadLoadList(path);
+					break;
 
-					case ".ide":
-						Item.ReadIde(path);
-						break;
+				case ".ide":
+					Item.ReadIde(path);
+					break;
 
-					case ".ipl":
-						Item.ReadIpl(path);
-						break;
-					}
+				case ".ipl":
+					Item.ReadIpl(path);
+					break;
 				}
 			}
+
 		}
 
 		private static void StepLoadHandling ()
 		{
-			using (Profiler.Start("Handling info load time"))
-			{
-				Handling.Load(Config.GetPath("handling_path"));
-			}
+			Handling.Load(Config.GetPath("handling_path"));
 		}
 
 		private static void StepLoadAnimGroups ()
 		{
-			using (Profiler.Start("Animation group info load time"))
+			foreach (var path in Config.GetPaths("anim_groups_paths"))
 			{
-				foreach (var path in Config.GetPaths("anim_groups_paths"))
-				{
-					AnimationGroup.Load(path);
-				}
+				AnimationGroup.Load(path);
 			}
 		}
 
 		private static void StepLoadCarColors ()
 		{
-			using (Profiler.Start("Car color info load time"))
-			{
-				CarColors.Load(Config.GetPath("car_colors_path"));
-			}
+			CarColors.Load(Config.GetPath("car_colors_path"));
 		}
 
 		private static void StepLoadWeaponsData ()
 		{
-			using (Profiler.Start("Weapons data load time"))
-			{
-				Importing.Weapons.WeaponData.Load(Config.GetPath("weapons_path"));
-			}
+			Importing.Weapons.WeaponData.Load(Config.GetPath("weapons_path"));
 		}
 
 		private static void StepLoadMap ()
 		{
-			using (Profiler.Start ("Minimap load time")) {
-				//MiniMap.loadTextures();
-				MiniMap.AssingMinimap ();
-			}
+			//MiniMap.loadTextures();
+			MiniMap.AssingMinimap ();
 		}
 
 		private static void StepLoadSpecialTextures ()
 		{
-			using (Profiler.Start("Special texture load time"))
-			{
+			
+			// Load mouse cursor texture
+			Texture2D mouse = TextureDictionary.Load("fronten_pc").GetDiffuse("mouse").Texture;
+			Texture2D mouseFix = new Texture2D(mouse.width, mouse.height);
 
-				// Load mouse cursor texture
-				Texture2D mouse = TextureDictionary.Load("fronten_pc").GetDiffuse("mouse").Texture;
-				Texture2D mouseFix = new Texture2D(mouse.width, mouse.height);
+			for (int x = 0; x < mouse.width; x++)
+				for (int y = 0; y < mouse.height; y++)
+					mouseFix.SetPixel(x, mouse.height - y - 1, mouse.GetPixel(x, y));
 
-				for (int x = 0; x < mouse.width; x++)
-					for (int y = 0; y < mouse.height; y++)
-						mouseFix.SetPixel(x, mouse.height - y - 1, mouse.GetPixel(x, y));
+			mouseFix.Apply();
+			Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
 
-				mouseFix.Apply();
-				Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
+			// load crosshair texture
+			Weapon.CrosshairTexture = TextureDictionary.Load("hud").GetDiffuse("siteM16").Texture;
 
-				// load crosshair texture
-				Weapon.CrosshairTexture = TextureDictionary.Load("hud").GetDiffuse("siteM16").Texture;
+			// fist texture
+			Weapon.FistTexture = TextureDictionary.Load("hud").GetDiffuse("fist").Texture;
 
-				// fist texture
-				Weapon.FistTexture = TextureDictionary.Load("hud").GetDiffuse("fist").Texture;
-
-			}
 		}
 
 
