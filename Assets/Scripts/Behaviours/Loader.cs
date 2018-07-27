@@ -6,6 +6,7 @@ using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Behaviours.World;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,8 +28,6 @@ namespace SanAndreasUnity.Behaviours
 
         private static string[] archivePaths;
         private static IArchive[] archives;
-
-		private	static System.Diagnostics.Stopwatch m_stopwatch = new System.Diagnostics.Stopwatch();
 
 		public class LoadingStep
 		{
@@ -78,9 +77,9 @@ namespace SanAndreasUnity.Behaviours
 		{
 			
 			LoadingStep[] steps = new LoadingStep[] {
-				new LoadingStep ( StepGetPaths, "Loading archive paths" ),
+				new LoadingStep ( StepGetPaths, "Loading archive paths", 0.03f ),
 				new LoadingStep ( StepLoadArchives, "Loading archives", 1.7f ),
-				new LoadingStep ( StepLoadSplashScreen, "Loading splash screen" ),
+				new LoadingStep ( StepLoadSplashScreen, "Loading splash screen", 0.06f ),
 				new LoadingStep ( StepSetSplash1, "Set splash 1" ),
 				new LoadingStep ( StepLoadCollision, "Loading collision files", 0.9f ),
 				new LoadingStep ( StepLoadItemInfo, "Loading item info", 2.4f ),
@@ -89,8 +88,8 @@ namespace SanAndreasUnity.Behaviours
 				new LoadingStep ( StepLoadCarColors, "Loading car colors", 0.04f ),
 				new LoadingStep ( StepLoadWeaponsData, "Loading weapons data", 0.05f ),
 				new LoadingStep ( StepSetSplash2, "Set splash 2" ),
-				new LoadingStep ( StepLoadMap, "Loading map", 2f ),
-				new LoadingStep ( StepLoadSpecialTextures, "Loading special textures", 0.05f ),
+				new LoadingStep ( StepLoadMap, "Loading map", 2.1f ),
+				new LoadingStep ( StepLoadSpecialTextures, "Loading special textures", 0.01f ),
 			};
 
 
@@ -99,9 +98,15 @@ namespace SanAndreasUnity.Behaviours
 			}
 
 
-			if (Behaviours.World.Cell.Instance != null) {
-				// add step for cell
-				AddLoadingStep( new LoadingStep( () => Behaviours.World.Cell.Instance.Setup (), "World setup", 7.5f ) );
+			if (Cell.Instance != null) {
+				// add steps for cell
+				AddLoadingStep( new LoadingStep( () => Cell.Instance.CreateStaticGeometry (), "Creating static geometry", 5.8f ) );
+				AddLoadingStep( new LoadingStep( () => Cell.Instance.InitStaticGeometry (), "Init static geometry", 0.35f ) );
+				AddLoadingStep( new LoadingStep( () => Cell.Instance.LoadParkedVehicles (), "Loading parked vehicles", 0.2f ) );
+				AddLoadingStep( new LoadingStep( () => Cell.Instance.AddMapObjectsToDivisions (), "Adding map objects to divisions", 0.85f ) );
+				AddLoadingStep( new LoadingStep( () => Cell.Instance.LoadWater (), "Loading water", 0.08f ) );
+				AddLoadingStep( new LoadingStep( () => Cell.Instance.FinalizeLoad (), "Finalize world loading", 0.01f ) );
+
 			}
 
 		}
@@ -114,6 +119,10 @@ namespace SanAndreasUnity.Behaviours
 
 		private static IEnumerator LoadCoroutine ()
 		{
+
+			var stopwatch = System.Diagnostics.Stopwatch.StartNew ();
+
+			Debug.Log("Started loading GTA");
 
 			// wait a few frames - to "unblock" the program, and to let other scripts initialize before
 			// registering their loading steps
@@ -183,29 +192,14 @@ namespace SanAndreasUnity.Behaviours
 
 			HasLoaded = true;
 
-			Debug.Log("GTA loading finished in " + m_stopwatch.Elapsed.TotalSeconds + " seconds");
+			Debug.Log("GTA loading finished in " + stopwatch.Elapsed.TotalSeconds + " seconds");
 
 		}
 
 
 		private static void StepGetPaths ()
 		{
-			//Debug.Log("Checking if there is available a GTA SA path.");
-
-			//DevProfiles.CheckDevProfiles(null);
-
-			/*() =>
-                    {
-                        m_fileBrowser.Toggle();
-                        return m_fileBrowser.GetPath();
-                    }*/
-
-			m_stopwatch.Start ();
-
-			Debug.Log("Started loading GTA");
-
 			archivePaths = Config.GetPaths("archive_paths");
-
 		}
 
 		private static void StepLoadArchives ()
