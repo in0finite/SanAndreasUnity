@@ -28,6 +28,7 @@ namespace SanAndreasUnity.UI {
 		public int WindowId { get { return this.windowId; } }
 
 		public	Rect	windowRect = Utilities.GUIUtils.GetCenteredRectPerc(new Vector2(0.5f, 0.5f));
+		public	Vector2	WindowSize { get { return this.windowRect.size; } }
 
 		public	bool	useScrollView = false;
 		protected	Vector2	scrollPos = Vector2.zero;

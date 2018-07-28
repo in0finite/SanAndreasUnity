@@ -16,13 +16,9 @@
 
 - **Map - better info area ; input mouse position is not always correct ; see Map.md ; **
 
-- Splash screen
-
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- Loader - add cell as loading step ; display error, if any ;
-
-- Remove OnValidate() function from Pedestrian
+- Ped window: display all peds, their info, spawn another ped, 
 
 - Player.Teleport() coroutine stopping
 
