@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 114366197016130562}
   - component: {fileID: 114396965753478646}
   - component: {fileID: 114184621571316304}
+  - component: {fileID: 114509004744246330}
   m_Layer: 0
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -187,6 +188,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 661aa8bc19a0e4d3dbb894f6b7b77966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114509004744246330
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693201817607148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a3ba44be90f64d798a3abe7d45cab8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: Peds
+  m_isOpenedByDefault: 0
+  windowRect:
+    serializedVersion: 2
+    x: 57.5
+    y: 78.75
+    width: 115
+    height: 157.5
+  useScrollView: 0
+  numPedsPerPage: 30
 --- !u!114 &114604904801458000
 MonoBehaviour:
   m_ObjectHideFlags: 1

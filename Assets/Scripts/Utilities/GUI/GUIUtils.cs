@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 namespace SanAndreasUnity.Utilities
 {
@@ -134,6 +135,99 @@ namespace SanAndreasUnity.Utilities
 			GUI.DrawTexture (rect, tex);
 
 			GUI.matrix = savedMatrix;
+		}
+
+		public static Rect DrawItemsInARowPerc (Rect rect, System.Action<Rect, string> drawItem, string[] items, float[] widthPercs ) {
+
+			Rect itemRect = rect;
+			float x = rect.position.x;
+
+			for (int i = 0; i < items.Length; i++) {
+				float width = widthPercs [i] * rect.width;
+
+				itemRect.position = new Vector2 (x, itemRect.position.y);
+				itemRect.width = width;
+
+				drawItem (itemRect, items [i]);
+
+				x += width;
+			}
+
+			rect.position += new Vector2 (x, 0f);
+			rect.width -= x;
+			return rect;
+		}
+
+		public static Rect DrawItemsInARow (Rect rect, System.Action<Rect, string> drawItem, string[] items, float[] widths ) {
+
+			float[] widthPercs = new float[widths.Length];
+			for (int i = 0; i < widths.Length; i++) {
+				widthPercs [i] = widths [i] / rect.width;
+			}
+
+			return DrawItemsInARowPerc (rect, drawItem, items, widthPercs);
+		}
+
+		public static Rect GetNextRectInARowPerc (Rect rowRect, ref int currentRectIndex, float spacing, params float[] widthPercs) {
+
+			float x = rowRect.position.x;
+
+			for (int i = 0; i < currentRectIndex; i++) {
+				x += widthPercs [i] * rowRect.width;
+				x += spacing;
+			}
+
+			float width = widthPercs [currentRectIndex] * rowRect.width;
+			currentRectIndex++;
+
+			return new Rect( x, rowRect.position.y, width, rowRect.height );
+		}
+
+		public static Rect GetNextRectInARow (Rect rowRect, ref int currentRectIndex, float spacing, params float[] widths) {
+
+			float[] widthPercs = new float[widths.Length];
+			for (int i = 0; i < widths.Length; i++) {
+				widthPercs [i] = widths [i] / rowRect.width;
+			}
+
+			return GetNextRectInARowPerc (rowRect, ref currentRectIndex, spacing, widthPercs);
+		}
+
+		public static int DrawPagedViewNumbers (Rect rect, int currentPage, int numPages)
+		{
+			int resultingPage = currentPage;
+
+			float spacing = 1f;
+			rect.width = 25f;
+
+
+			if (GUI.Button (rect, "<")) {
+				resultingPage--;
+			}
+			rect.position += new Vector2(rect.width + spacing, 0f);
+
+			for (int i = 0; i < numPages; i++) {
+				var style = currentPage == (i + 1) ? GUI.skin.box : GUI.skin.button;
+				if (GUI.Button (rect, (i + 1).ToString (), style))
+					resultingPage = i + 1;
+				rect.position += new Vector2(rect.width + spacing, 0f);
+			}
+
+			if (GUI.Button (rect, ">")) {
+				resultingPage++;
+			}
+			rect.position += new Vector2(rect.width + spacing, 0f);
+
+
+			resultingPage = Mathf.Clamp( resultingPage, 1, numPages );
+
+			return resultingPage;
+		}
+
+		public static int DrawPagedViewNumbers (Rect rect, int currentPage, int totalNumItems, int numItemsPerPage)
+		{
+			int numPages = Mathf.CeilToInt (totalNumItems / (float) numItemsPerPage);
+			return DrawPagedViewNumbers (rect, currentPage, numPages);
 		}
 
     }
