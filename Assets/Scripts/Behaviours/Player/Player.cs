@@ -72,6 +72,7 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsWalking { get; set; }
 		public bool IsRunning { get; set; }
 		public bool IsSprinting { get; set; }
+		public bool IsJumpOn { get; set; }
 
         public Vector3 Velocity { get; private set; }
 		/// <summary> Current movement input. </summary>
@@ -98,42 +99,29 @@ namespace SanAndreasUnity.Behaviours
 
 		public	static	Player	Instance { get ; private set ; }
 
-		public	static	Player	FindInstance() {
-			return FindObjectOfType<Player> ();
-		}
-
 		/// <summary>Position of player instance.</summary>
 		public	static	Vector3	InstancePos { get { return Instance.transform.position; } }
 
 
 
-        //     protected override void OnAwake()
-        protected void Awake()
+        
+        void Awake()
         {
-            //    base.OnAwake();
-
-            Instance = this;
+            
+			if (null == Instance) {
+				Instance = this;
+			}
 
             characterController = GetComponent<CharacterController>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
 
             IsLocalPlayer = true;
 
-            // Only debug
-
-            //foreach (var go in gameObject.GetComponentsInChildren<Component>())
-            //    Debug.LogFormat("Name: {0} => {1}", go.name, go.hideFlags);
-
-            Debug.LogFormat("Shader level: {0}", SystemInfo.graphicsShaderLevel);
-
-            Debug.LogFormat("Max FPS: {0}", Application.targetFrameRate);
-
-            StartCoroutine(GPUAdjust());
         }
 
-        private void Start()
+        void Start()
         {
-            //	MySetupLocalPlayer ();
+            //MySetupLocalPlayer ();
         }
 
         private IEnumerator GPUAdjust()
@@ -577,7 +565,7 @@ namespace SanAndreasUnity.Behaviours
                     ? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
 
                 // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
-				if (!Input.GetKey(KeyCode.LeftShift))
+				if (!this.IsJumpOn)
                     jumpTimer++;
                 else if (jumpTimer >= antiBunnyHopFactor)
                 {
@@ -593,6 +581,20 @@ namespace SanAndreasUnity.Behaviours
                 Velocity = characterController.velocity;
             }
         }
+
+
+		public void ResetInput ()
+		{
+			this.ResetMovementInput ();
+			this.WeaponHolder.IsAimOn = false;
+		}
+
+		public void ResetMovementInput ()
+		{
+			this.IsWalking = this.IsRunning = this.IsSprinting = false;
+			this.Movement = Vector3.zero;
+			this.IsJumpOn = false;
+		}
 
 
 		void OnDrawGizmosSelected ()

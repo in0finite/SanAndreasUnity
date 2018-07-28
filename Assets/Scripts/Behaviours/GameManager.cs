@@ -5,22 +5,26 @@ namespace SanAndreasUnity.Behaviours {
 	
 	public class GameManager : MonoBehaviour {
 
+		public static GameManager Instance { get ; private set ; }
+
 		public static bool CursorLocked { get ; private set ; }
+
+		public GameObject pedPrefab;
 
 
 
 
 		private void Awake() {
-			
+
+			if (null == Instance)
+				Instance = this;
 
 		}
 
-		// Use this for initialization
 		void Start () {
 			
 		}
 		
-		// Update is called once per frame
 		void Update () {
 
 

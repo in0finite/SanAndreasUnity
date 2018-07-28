@@ -31,6 +31,7 @@ namespace SanAndreasUnity.Behaviours
         public PedestrianDef Definition { get; private set; }
 
 		[SerializeField] private int m_startingPedId = 167;
+		public int StartingPedId { get { return m_startingPedId; } set { m_startingPedId = value; } }
 
 		public int PedestrianId { get; private set; }
 

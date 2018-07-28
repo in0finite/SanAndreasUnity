@@ -150,8 +150,7 @@ namespace SanAndreasUnity.Behaviours
 
 
 			// reset player input
-			_player.IsWalking = _player.IsRunning = _player.IsSprinting = false;
-			_player.Movement = Vector3.zero;
+			_player.ResetMovementInput ();
 			
 
             if (!_player.enableFlying && !_player.IsInVehicle && Input.GetKeyDown(KeyCode.T))
@@ -239,6 +238,8 @@ namespace SanAndreasUnity.Behaviours
 				_player.WeaponHolder.IsAimOn = false;
 
 				// give input to player
+
+				_player.IsJumpOn = Input.GetKey (KeyCode.LeftShift);
 
 				Vector3 inputMove = Vector3.zero;
 				if (m_smoothMovement)
