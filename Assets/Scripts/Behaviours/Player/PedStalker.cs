@@ -10,6 +10,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public Player Player { get; private set; }
 
+		public float stoppingDistance = 3;
+
 
 
 		void Awake ()
@@ -28,11 +30,16 @@ namespace SanAndreasUnity.Behaviours
 			if (Player.Instance != null) {
 
 				Vector3 diff = Player.InstancePos - this.transform.position;
-				Vector3 diffDir = diff.normalized;
+				float distance = diff.magnitude;
 
-				this.Player.IsRunning = true;
-				this.Player.Movement = diffDir;
-				this.Player.Heading = diffDir;
+				if (distance > this.stoppingDistance)
+				{
+					Vector3 diffDir = diff.normalized;
+
+					this.Player.IsRunning = true;
+					this.Player.Movement = diffDir;
+					this.Player.Heading = diffDir;
+				}
 
 			}
 
