@@ -691,7 +691,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         }
 
         //Draw collisionIgnoreHeight gizmos
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
             Vector3 startPoint = transform.TransformPoint(Vector3.up * collisionIgnoreHeight);
             Gizmos.color = Color.red;

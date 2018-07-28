@@ -4,8 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VehicleDoor : MonoBehaviour
+public class VehicleDoor : VehicleBehaviour
 {
+    private bool _isLeft;
+
     private bool _isLocked;
     public bool isLocked
     {
@@ -17,8 +19,16 @@ public class VehicleDoor : MonoBehaviour
         set
         {
             _isLocked = value;
-            body.constraints = _isLocked ? RigidbodyConstraints.FreezeRotationY : RigidbodyConstraints.None;
-            Debug.LogFormat("{0} {1}", _isLocked ? "Closing" : "Opening", transform.name);
+
+            if (joint != null)
+            {
+                JointLimits limits = joint.limits;
+                limits.min = _isLocked ? 0 : (_isLeft ? 0 : -90);
+                limits.max = _isLocked ? 0 : (_isLeft ? 90 : 0);
+                joint.limits = limits;
+            }
+
+            Debug.LogFormat("{0} {1} from {2}", _isLocked ? "Closing" : "Opening", transform.name, vehicle.name);
         }
     }
 
@@ -40,6 +50,8 @@ public class VehicleDoor : MonoBehaviour
 
         doorObj.vehicle = vehicle;
         doorObj.vehicleBody = vehicle.GetComponent<Rigidbody>();
+
+        doorObj._isLeft = doorObj.name.Contains("_lf_") || doorObj.name.Contains("_lr_");
 
         doorObj.allowedToDebug = doorObj.name.Contains("_lf_");
 
@@ -63,8 +75,21 @@ public class VehicleDoor : MonoBehaviour
         //Debug.Log(prefix);
         //Debug.Log(transform.Find(string.Format("{0}_ok", prefix)).gameObject == null);
 
-        //okCollider = transform.Find(string.Format("{0}_ok", prefix)).gameObject.AddComponent<NonConvexMeshCollider>();
-        //damCollider = transform.Find(string.Format("{0}_dam", prefix)).gameObject.AddComponent<NonConvexMeshCollider>();
+        /*okCollider = transform.Find(string.Format("{0}_ok", prefix)).gameObject.AddComponent<NonConvexMeshCollider>();
+        damCollider = transform.Find(string.Format("{0}_dam", prefix)).gameObject.AddComponent<NonConvexMeshCollider>();
+
+        Collider[] allCols = vehicle.gameObject.GetComponentsInChildren<Collider>();
+
+        foreach (Collider col in allCols)
+            col.gameObject.layer = LayerMask.NameToLayer("CarCollider");
+
+        Physics.IgnoreLayerCollision(LayerMask.NameToLayer("CarCollider"), LayerMask.NameToLayer("DoorCollider"));
+
+        Collider[] doorCols = okCollider.Calculate(LayerMask.NameToLayer("DoorCollider"));*/
+
+        /*foreach (Collider col1 in allCols)
+            foreach (Collider col2 in doorCols)
+                Physics.IgnoreCollision(col1, col2);*/
 
         // We have to build the collidrs, but they don't work correctly
     }
@@ -76,12 +101,12 @@ public class VehicleDoor : MonoBehaviour
 
         force = (vehicleBody.mass * .015f) * Mathf.Pow(vehicleBody.angularVelocity.magnitude, 2) * Vector3.Distance(vehicle.transform.TransformPoint(vehicleBody.centerOfMass), transform.position);
 
-        //if (force > 100 && Random.value < lockHealth / 100f)
-        //    _isLocked = false;
+        if (_isLocked && force > 100 && Random.value < lockHealth / 100f)
+            isLocked = false;
 
         // If rotation from the hinge is 0 (== can be closed) block the door
-        if (transform.localEulerAngles.y < 1) //&& (1f - Random.value) < lockHealth / 100f
-            _isLocked = true;
+        if ((transform.localEulerAngles.y < 1 || transform.localEulerAngles.y > 359) && !_isLocked && (1f - Random.value) < lockHealth / 100f)
+            isLocked = true;
 
         if (force > lastForce && allowedToDebug)
         {
@@ -92,6 +117,21 @@ public class VehicleDoor : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        TextGizmo.Draw(transform.position, transform.localEulerAngles.y.ToString("F2"));
+        F.DrawString(transform.position, transform.localEulerAngles.y.ToString("F2"));
+    }
+
+    public override void OnVehicleCollisionEnter(Collision collision)
+    {
+        Debug.Log("Hi world!!");
+    }
+
+    public override void OnVehicleCollisionExit(Collision collision)
+    {
+
+    }
+
+    public override void OnVehicleCollisionStay(Collision collision)
+    {
+
     }
 }

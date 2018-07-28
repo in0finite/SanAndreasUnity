@@ -284,13 +284,25 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public bool IsControlling { get { return _controller != null; } }
 
         public VehicleController StartControlling()
-        {
+        { // Must review: Maybe can cause some leaks
+            List<VehicleBehaviour> behaviours = new List<VehicleBehaviour>();
+
             SetAllCarLights();
-            SetAllDoors();
+            behaviours.AddRange(SetAllDoors());
+            SetAllColliders(behaviours.ToArray());
+
             return _controller ?? (_controller = gameObject.AddComponent<VehicleController>());
         }
 
-        public void SetAllDoors()
+        public void SetAllColliders(VehicleBehaviour[] vehicleBehaviour)
+        {
+            var colliders = gameObject.GetComponentsInChildren<Collider>();
+
+            foreach (Collider col in colliders)
+                VehicleCollider.Init(col.gameObject, this, vehicleBehaviour);
+        }
+
+        public IEnumerable<VehicleBehaviour> SetAllDoors()
         {
             Transform FrontLeftDoor = this.GetComponentWithName<Transform>("door_lf_dummy"),
                       FrontRightDoor = this.GetComponentWithName<Transform>("door_rf_dummy"),
@@ -313,7 +325,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             foreach (Transform door in doors)
             {
                 // Initializate VehicleDoor script here
-                VehicleDoor.InitializateDoor(door, this);
+                yield return VehicleDoor.InitializateDoor(door, this);
             }
         }
 
