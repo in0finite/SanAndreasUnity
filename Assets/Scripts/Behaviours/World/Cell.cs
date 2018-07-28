@@ -16,6 +16,9 @@ namespace SanAndreasUnity.Behaviours.World
         private Stopwatch _timer;
         private List<Division> _leaves;
 
+		private Dictionary<Instance, StaticGeometry> m_insts;
+		private MapObject[] m_cars;
+
         public Division RootDivision { get; private set; }
 
         public List<int> CellIds = new List<int> { 0, 13 };
@@ -62,90 +65,86 @@ namespace SanAndreasUnity.Behaviours.World
             InvokeRepeating("UpdateDivisions", 0f, 0.1f);
         }
 
-		internal void Setup ()
-		{
 
+		internal void CreateStaticGeometry ()
+		{
 			if (RootDivision == null)
 			{
 				RootDivision = Division.Create(transform);
 				RootDivision.SetBounds(
 					new Vector2(-3000f, -3000f),
 					new Vector2(+3000f, +3000f));
-
-				using (Utilities.Profiler.Start("Cell partitioning time"))
-				{
-					var timer = Stopwatch.StartNew();
-
-					var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
-					var insts = placements.ToDictionary(x => x, x => StaticGeometry.Create());
-					timer.Stop();
-
-					UnityEngine.Debug.LogFormat("Placements loaded in {0} ms", timer.ElapsedMilliseconds);
-
-					UnityEngine.Debug.Log("Num static geometries " + placements.Count() + ".");
-					totalNumObjects = placements.Count();
-
-					UnityEngine.Debug.Log("Initializating placements instances");
-					timer = Stopwatch.StartNew();
-
-					foreach (var inst in insts)
-					{
-						inst.Value.Initialize(inst.Key, insts);
-					}
-
-					timer.Stop();
-					UnityEngine.Debug.LogFormat("Finished loading placements instances in {0} ms!", timer.ElapsedMilliseconds);
-
-					UnityEngine.Debug.Log("Initializating cars");
-					timer = Stopwatch.StartNew();
-
-					//    if (NetConfig.IsServer) {
-					if (loadParkedVehicles)
-					{
-						//Debug.Log("-444");
-						var parkedVehicles = Item.GetPlacements<ParkedVehicle>(CellIds.ToArray());
-						var cars = parkedVehicles.Select(x => VehicleSpawner.Create(x))
-							.Cast<MapObject>()
-							.ToArray();
-
-						UnityEngine.Debug.Log("Num parked vehicles " + parkedVehicles.Count() + ".");
-
-						RootDivision.AddRange(insts.Values.Cast<MapObject>().Concat(cars));
-					}
-					else
-					{
-						RootDivision.AddRange(insts.Values.Cast<MapObject>());
-					}
-
-					timer.Stop();
-					UnityEngine.Debug.LogFormat("Finished loading cars in {0} ms!", timer.ElapsedMilliseconds);
-
-					// set layer recursively for all game objects
-					//	this.gameObject.SetLayerRecursive( this.gameObject.layer );
-
-					UnityEngine.Debug.Log("Initializating water");
-					timer = Stopwatch.StartNew();
-
-					if (Water != null)
-					{
-						using (Utilities.Profiler.Start("Water load time"))
-						{
-							Water.Initialize(new WaterFile(Config.GetPath("water_path")));
-						}
-					}
-
-					timer.Stop();
-					UnityEngine.Debug.LogFormat("Finished loading water in {0} ms!", timer.ElapsedMilliseconds);
-				}
-
-				_timer = new Stopwatch();
-				_leaves = RootDivision.ToList();
 			}
+
+			var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
+
+			m_insts = new Dictionary<Instance,StaticGeometry> (48 * 1024);
+			foreach (var plcm in placements) {
+				m_insts.Add (plcm, StaticGeometry.Create ());
+			}
+			//m_insts = placements.ToDictionary(x => x, x => StaticGeometry.Create());
+
+			UnityEngine.Debug.Log("Num static geometries " + m_insts.Count);
+
+			totalNumObjects = m_insts.Count;
+		}
+
+		internal void InitStaticGeometry ()
+		{
+			foreach (var inst in m_insts)
+			{
+				inst.Value.Initialize(inst.Key, m_insts);
+			}
+		}
+
+		internal void LoadParkedVehicles ()
+		{
+			if (loadParkedVehicles)
+			{
+				var parkedVehicles = Item.GetPlacements<ParkedVehicle> (CellIds.ToArray ());
+				m_cars = parkedVehicles.Select (x => VehicleSpawner.Create (x))
+					.Cast<MapObject> ()
+					.ToArray ();
+
+				UnityEngine.Debug.Log ("Num parked vehicles " + m_cars.Length);
+			}
+		}
+
+		internal void AddMapObjectsToDivisions ()
+		{
+			var enumerable = m_insts.Values.Cast<MapObject> ();
+
+			if (m_cars != null)
+				enumerable = enumerable.Concat (m_cars);
+
+			RootDivision.AddRange (enumerable);
 
 		}
 
+		internal void LoadWater ()
+		{
+			if (Water != null)
+			{
+				Water.Initialize(new WaterFile(Config.GetPath("water_path")));
+			}
+		}
+
+		internal void FinalizeLoad ()
+		{
+			// set layer recursively for all game objects
+			//	this.gameObject.SetLayerRecursive( this.gameObject.layer );
+
+			_timer = new Stopwatch();
+			_leaves = RootDivision.ToList();
+
+		}
+
+
         private void Update()
         {
+
+			if (!Loader.HasLoaded)
+				return;
 
 			//this.Setup ();
 
@@ -180,6 +179,9 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void UpdateDivisions()
         {
+			if (!Loader.HasLoaded)
+				return;
+			
             if (_leaves == null) return;
 
             numDivisionsUpdatedLoadOrder = 0;
