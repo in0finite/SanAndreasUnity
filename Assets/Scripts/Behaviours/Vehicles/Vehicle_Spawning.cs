@@ -233,6 +233,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             public Transform Parent { get; set; }
 
+			/// <summary> Player that is occupying this seat. </summary>
+			public Player Player { get; internal set; }
+
+			public bool IsTaken { get { return this.Player != null; } }
+
             public bool IsLeftHand
             {
                 get { return (Alignment & SeatAlignment.Left) == SeatAlignment.Left; }

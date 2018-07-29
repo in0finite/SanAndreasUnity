@@ -100,10 +100,14 @@ namespace SanAndreasUnity.UI {
 					}
 
 					itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
-					GUI.Button (itemRect, "Spawn");
+					if (GUI.Button (itemRect, "Spawn")) {
+						Player.SpawnPed (def.Id);
+					}
 
 					itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
-					GUI.Button (itemRect, "Spawn stocker");
+					if (GUI.Button (itemRect, "Spawn stalker")) {
+						Player.SpawnPedStalker (def.Id);
+					}
 
 				}
 

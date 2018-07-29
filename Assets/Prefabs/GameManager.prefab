@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769ff20407cff41688e681458d8528fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pedPrefab: {fileID: 1246736317761792, guid: bb8a7229f5c124b06be709ab5a7ff007, type: 2}
 --- !u!114 &114366052828304570
 MonoBehaviour:
   m_ObjectHideFlags: 1

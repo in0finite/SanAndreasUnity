@@ -6,6 +6,8 @@ using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using SanAndreasUnity.Utilities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -72,6 +74,7 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsWalking { get; set; }
 		public bool IsRunning { get; set; }
 		public bool IsSprinting { get; set; }
+		public bool IsJumpOn { get; set; }
 
         public Vector3 Velocity { get; private set; }
 		/// <summary> Current movement input. </summary>
@@ -85,6 +88,7 @@ namespace SanAndreasUnity.Behaviours
         public bool IsDrivingVehicle { get; private set; }
 
         private Vehicle.SeatAlignment _currentVehicleSeatAlignment;
+		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return _currentVehicleSeatAlignment; } }
 
 		public bool IsAiming { get { return m_weaponHolder.IsAiming; } }
 		public Weapon CurrentWeapon { get { return m_weaponHolder.CurrentWeapon; } }
@@ -98,42 +102,29 @@ namespace SanAndreasUnity.Behaviours
 
 		public	static	Player	Instance { get ; private set ; }
 
-		public	static	Player	FindInstance() {
-			return FindObjectOfType<Player> ();
-		}
-
 		/// <summary>Position of player instance.</summary>
 		public	static	Vector3	InstancePos { get { return Instance.transform.position; } }
 
 
 
-        //     protected override void OnAwake()
-        protected void Awake()
+        
+        void Awake()
         {
-            //    base.OnAwake();
-
-            Instance = this;
+            
+			if (null == Instance) {
+				Instance = this;
+			}
 
             characterController = GetComponent<CharacterController>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
 
             IsLocalPlayer = true;
 
-            // Only debug
-
-            //foreach (var go in gameObject.GetComponentsInChildren<Component>())
-            //    Debug.LogFormat("Name: {0} => {1}", go.name, go.hideFlags);
-
-            Debug.LogFormat("Shader level: {0}", SystemInfo.graphicsShaderLevel);
-
-            Debug.LogFormat("Max FPS: {0}", Application.targetFrameRate);
-
-            StartCoroutine(GPUAdjust());
         }
 
-        private void Start()
+        void Start()
         {
-            //	MySetupLocalPlayer ();
+            //MySetupLocalPlayer ();
         }
 
         private IEnumerator GPUAdjust()
@@ -294,24 +285,38 @@ namespace SanAndreasUnity.Behaviours
 
         public void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
         {
-            if (IsInVehicle) return;
+            if (IsInVehicle)
+				return;
+			
+			var seat = vehicle.GetSeat (seatAlignment);
+			if (null == seat)
+				return;
 
+			// check if specified seat is taken
+			if (seat.IsTaken)
+				return;
+
+
+			seat.Player = this;
             CurrentVehicle = vehicle;
+			_currentVehicleSeatAlignment = seat.Alignment;
+
+			characterController.enabled = false;
+
 
             if (!vehicle.IsNightToggled && WorldController.IsNight)
                 vehicle.IsNightToggled = true;
             else if (vehicle.IsNightToggled && !WorldController.IsNight)
                 vehicle.IsNightToggled = false;
 
-            Debug.Log("IsNightToggled? "+vehicle.IsNightToggled);
+			Debug.Log ("IsNightToggled? " + vehicle.IsNightToggled);
 
-            var seat = vehicle.GetSeat(seatAlignment);
-
-            characterController.enabled = false;
 
             if (IsLocalPlayer)
             {
-                Camera.transform.SetParent(seat.Parent, true);
+				if (Camera != null) {
+					Camera.transform.SetParent (seat.Parent, true);
+				}
 
                 /*
                 SendToServer(_lastPassengerState = new PlayerPassengerState {
@@ -332,14 +337,15 @@ namespace SanAndreasUnity.Behaviours
 
             PlayerModel.IsInVehicle = true;
 
-            _currentVehicleSeatAlignment = seat.Alignment;
 
-            StartCoroutine(EnterVehicleAnimation(seat, immediate));
+			StartCoroutine (EnterVehicleAnimation (seat, immediate));
+
         }
 
         public void ExitVehicle(bool immediate = false)
         {
-            if (!IsInVehicle || !IsInVehicleSeat) return;
+            if (!IsInVehicle || !IsInVehicleSeat)
+				return;
 
             CurrentVehicle.StopControlling();
 
@@ -356,7 +362,8 @@ namespace SanAndreasUnity.Behaviours
                 //    _snapshots.Reset();
             }
 
-            StartCoroutine(ExitVehicleAnimation(immediate));
+			StartCoroutine (ExitVehicleAnimation (immediate));
+
         }
 
         private IEnumerator EnterVehicleAnimation(Vehicle.Seat seat, bool immediate)
@@ -375,6 +382,8 @@ namespace SanAndreasUnity.Behaviours
                     yield return new WaitForEndOfFrame();
                 }
             }
+
+			// player now completely entered the vehicle
 
             if (seat.IsDriver)
             {
@@ -406,25 +415,51 @@ namespace SanAndreasUnity.Behaviours
                 var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
                 animState.wrapMode = WrapMode.Once;
 
+				// wait until anim finishes or stops
                 while (animState.enabled)
                     yield return new WaitForEndOfFrame();
             }
 
+			// player now completely exited the vehicle
+
             PlayerModel.IsInVehicle = false;
 
-            CurrentVehicle = null;
+			CurrentVehicle = null;
             _currentVehicleSeatAlignment = Vehicle.SeatAlignment.None;
+			seat.Player = null;
 
             transform.localPosition = PlayerModel.VehicleParentOffset;
             transform.localRotation = Quaternion.identity;
 
-            Camera.transform.SetParent(null, true);
             transform.SetParent(null);
 
             characterController.enabled = true;
 
             PlayerModel.VehicleParentOffset = Vector3.zero;
+
+			// change camera parent
+			if (Camera != null) {
+				Camera.transform.SetParent (null, true);
+			}
+
         }
+
+		public static List<Vehicle.SeatAlignment> GetFreeSeats( Vehicle vehicle )
+		{
+			return vehicle.Seats.Where (s => !s.IsTaken).Select (s => s.Alignment).ToList ();
+
+//			var freeSeats = new List<Vehicle.SeatAlignment> (vehicle.Seats.Select (s => s.Alignment));
+//
+//			var players = FindObjectsOfType<Player> ();
+//
+//			foreach (var p in players) {
+//				if (p.IsInVehicle && p.CurrentVehicle == vehicle) {
+//					freeSeats.Remove (p.CurrentVehicleSeatAlignment);
+//				}
+//			}
+//
+//			return freeSeats;
+		}
 
         private void UpdateWheelTurning()
         {
@@ -577,7 +612,7 @@ namespace SanAndreasUnity.Behaviours
                     ? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
 
                 // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
-				if (!Input.GetKey(KeyCode.LeftShift))
+				if (!this.IsJumpOn)
                     jumpTimer++;
                 else if (jumpTimer >= antiBunnyHopFactor)
                 {
@@ -593,6 +628,20 @@ namespace SanAndreasUnity.Behaviours
                 Velocity = characterController.velocity;
             }
         }
+
+
+		public void ResetInput ()
+		{
+			this.ResetMovementInput ();
+			this.WeaponHolder.IsAimOn = false;
+		}
+
+		public void ResetMovementInput ()
+		{
+			this.IsWalking = this.IsRunning = this.IsSprinting = false;
+			this.Movement = Vector3.zero;
+			this.IsJumpOn = false;
+		}
 
 
 		void OnDrawGizmosSelected ()

@@ -164,6 +164,27 @@ namespace SanAndreasUnity.Utilities
             return root.GetComponentsInChildren<T>().FirstOrDefault(x => x.name == name);
         }
 
+		public static T GetOrAddComponent<T> (this GameObject go) where T : Component
+		{
+			T comp = go.GetComponent<T> ();
+			if (null == comp)
+				comp = go.AddComponent<T> ();
+			return comp;
+		}
+
+		public static T GetComponentOrLogError<T> (this GameObject go) where T : Component
+		{
+			T comp = go.GetComponent<T> ();
+			if (null == comp)
+				Debug.LogErrorFormat ("Failed to get component of type: {0}, on game object: {1}", typeof(T), go.name);
+			return comp;
+		}
+
+		public static T GetComponentOrLogError<T> (this Component comp) where T : Component
+		{
+			return comp.gameObject.GetComponentOrLogError<T> ();
+		}
+
         public static void MakeChild(this Transform parent, GameObject[] children)
         {
             MakeChild(parent, children, null);
@@ -183,6 +204,11 @@ namespace SanAndreasUnity.Utilities
 			Vector3 pos = t.position;
 			pos.y = yPos;
 			t.position = pos;
+		}
+
+		public static float Distance(this Transform t, Vector3 pos)
+		{
+			return Vector3.Distance (t.position, pos);
 		}
 
         public static object FromHex(this string hexString, Type type, CultureInfo info)
