@@ -204,6 +204,11 @@ namespace SanAndreasUnity.Utilities
 			t.position = pos;
 		}
 
+		public static float Distance(this Transform t, Vector3 pos)
+		{
+			return Vector3.Distance (t.position, pos);
+		}
+
         public static object FromHex(this string hexString, Type type, CultureInfo info)
         {
             var argTypes = new[] { typeof(string), typeof(NumberStyles), typeof(IFormatProvider) };
