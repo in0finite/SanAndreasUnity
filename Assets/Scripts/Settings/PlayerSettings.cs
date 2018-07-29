@@ -32,6 +32,9 @@ namespace SanAndreasUnity.Settings {
 			//Player.Instance.TurnSpeed = GUILayout.HorizontalSlider (Player.Instance.TurnSpeed, 3f, 30f);
 			OptionsWindow.FloatSlider( ref Player.Instance.TurnSpeed, 3f, 30f, "Turn speed");
 
+			Player.Instance.EnterVehicleRadius = OptionsWindow.FloatSlider (Player.Instance.EnterVehicleRadius, 1.0f, 15f, "Enter vehicle radius");
+
+
 			if (PlayerController.Instance != null) {
 				
 				PlayerController._showVel = GUILayout.Toggle (PlayerController._showVel, "Show speedometer");
@@ -44,10 +47,6 @@ namespace SanAndreasUnity.Settings {
 				//PlayerController.Instance.CursorSensitivity.y = GUILayout.HorizontalSlider (PlayerController.Instance.CursorSensitivity.y, 0.2f, 10f);
 				OptionsWindow.FloatSlider (ref PlayerController.Instance.CursorSensitivity.y, 0.2f, 10f, "Mouse sensitivity y");
 
-				//GUILayout.Label ("Enter vehicle radius:");
-				//PlayerController.Instance.EnterVehicleRadius = GUILayout.HorizontalSlider (PlayerController.Instance.EnterVehicleRadius, 1.0f, 15f);
-				OptionsWindow.FloatSlider (ref PlayerController.Instance.EnterVehicleRadius, 1.0f, 15f, "Enter vehicle radius");
-			
 			}
 
 		}

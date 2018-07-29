@@ -49,6 +49,9 @@ namespace SanAndreasUnity.Behaviours
         // Player must be grounded for at least this many physics frames before being able to jump again; set to 0 to allow bunny hopping
         public int antiBunnyHopFactor = 1;
 
+		[SerializeField] private float m_enterVehicleRadius = 2.0f;
+		public float EnterVehicleRadius { get { return m_enterVehicleRadius; } set { m_enterVehicleRadius = value; } }
+
         #endregion Inspector Fields
 
         #region Properties
