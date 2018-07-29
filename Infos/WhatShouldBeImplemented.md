@@ -20,9 +20,15 @@
 
 - Vehicle entering/exiting must be bullet-proof
 
+- VehicleController should give input only if vehicle is controlled by local player ;
+
 - Ped window: spawn another ped (rotation is not corrected), display info about current ped, kill all peds, 
 
-- Add option to disable smooth player movement
+- Vehicles window: it's too slow - use pages ; display additional info ;
+
+- Jump ??
+
+- Remove editor scripts for destroying player model
 
 - Work on a menu like MTA:SA (F1)
 

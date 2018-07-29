@@ -60,7 +60,7 @@ namespace SanAndreasUnity.Behaviours
         //public Vector2 PitchClamp = new Vector2(-89f, 89f);
         public Vector2 clampInDegrees = new Vector2(90, 60);
 
-        public float EnterVehicleRadius = 5.0f;
+		public float EnterVehicleRadius { get { return _player.EnterVehicleRadius; } }
 
         public Vector2 smoothing = new Vector2(10, 10);
         public bool m_doSmooth = true;

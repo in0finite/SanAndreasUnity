@@ -45,14 +45,14 @@ namespace SanAndreasUnity.Behaviours
 
 					if (closestfreeSeat != null) {
 						// check if it is in range
-						if (closestfreeSeat.tr.Distance (this.transform.position) < 3f) {
+						if (closestfreeSeat.tr.Distance (this.transform.position) < this.Player.EnterVehicleRadius) {
 							// the seat is in range
 							this.Player.EnterVehicle (vehicle, closestfreeSeat.sa);
 						} else {
 							// the seat is not in range
 							// move towards this seat
 							targetPos = closestfreeSeat.tr.position;
-							currentStoppingDistance = 1f;
+							currentStoppingDistance = 0.1f;
 						}
 					}
 

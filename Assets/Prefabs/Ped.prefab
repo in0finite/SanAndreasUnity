@@ -121,6 +121,7 @@ MonoBehaviour:
   jumpSpeed: 8
   antiBumpFactor: 0.75
   antiBunnyHopFactor: 1
+  m_enterVehicleRadius: 1.25
 --- !u!114 &114612013596442786
 MonoBehaviour:
   m_ObjectHideFlags: 1
