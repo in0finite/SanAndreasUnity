@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Importing.Items;
+using SanAndreasUnity.Importing.Items.Definitions;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -10,16 +12,26 @@ namespace SanAndreasUnity.Behaviours
 
 
 
-		public static Player SpawnPed (int pedId, Vector3 pos, Quaternion rot)
+		public static Player SpawnPed (PedestrianDef def, Vector3 pos, Quaternion rot)
 		{
 			CheckPedPrefab ();
 
 			var go = Instantiate (GameManager.Instance.pedPrefab, pos, rot);
 
 			var player = go.GetComponentOrLogError<Player> ();
-			player.PlayerModel.StartingPedId = pedId;
+			player.PlayerModel.StartingPedId = def.Id;
+
+			go.name = "Ped " + def.ModelName;
 
 			return player;
+		}
+
+		public static Player SpawnPed (int pedId, Vector3 pos, Quaternion rot)
+		{
+			var def = Item.GetDefinition<PedestrianDef> (pedId);
+			if (null == def)
+				throw new System.ArgumentException ("Failed to spawn ped: definition not found by id: " + pedId);
+			return SpawnPed (def, pos, rot);
 		}
 
 		public static Player SpawnPed (int pedId)

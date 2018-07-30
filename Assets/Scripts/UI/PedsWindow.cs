@@ -47,36 +47,65 @@ namespace SanAndreasUnity.UI {
 			bool playerExists = Player.Instance != null;
 
 
-			// display all peds
-
 			float[] widthPercsLabels = new float[]{ 0.1f, 0.3f, 0.25f, 0.25f };
 			float[] widthPercsButtons = new float[]{ 0.1f, 0.15f, 0.15f, 0.2f };
 			float rowHeight = 40;
 			float buttonSpacing = 3;
+
+
+			// info about current ped
+			if (playerExists) {
+				GUILayout.Label ("Current ped:");
+				this.DisplayPed( GetLayoutRect( rowHeight ), Player.Instance.PedDef, false, true, widthPercsLabels, 
+					widthPercsButtons, buttonSpacing );
+			}
+
+			// button to kill all peds
+			if (GUILayout.Button ("Kill all peds", GUILayout.Width (100))) {
+				KillAllPeds ();
+			}
+			GUILayout.Space (5);
+
 
 			// page view numbers
 			m_currentPageNumber = GUIUtils.DrawPagedViewNumbers( GetLayoutRect(20), m_currentPageNumber, m_pedDefs.Count, this.numPedsPerPage );
 			GUILayout.Space (5);
 
 			// column descriptions
-			GUIUtils.DrawItemsInARowPerc (GUILayoutUtility.GetRect (this.WindowSize.x, rowHeight), (r, item) => GUI.Label (r, item),
+			GUIUtils.DrawItemsInARowPerc (this.GetLayoutRect (rowHeight), (r, item) => GUI.Label (r, item),
 				new string[]{ "Id", "Model name", "Default type", "Behaviour name" }, widthPercsLabels);
 			GUILayout.Space (7);
+
 
 			// scroll view with all peds
 			m_scrollPos = GUILayout.BeginScrollView (m_scrollPos);
 
 			foreach (var def in m_pedDefs.Skip ((m_currentPageNumber - 1) * this.numPedsPerPage).Take (this.numPedsPerPage)) {
 				
-				Rect rect = GUILayoutUtility.GetRect (this.WindowSize.x, rowHeight);
+				Rect rect = GetLayoutRect (rowHeight);
 
-				rect.height *= 0.5f;
+				this.DisplayPed (rect, def, true, playerExists, widthPercsLabels, widthPercsButtons, buttonSpacing);
 
-				GUIUtils.DrawItemsInARowPerc( rect, 
-					(r, item) => GUI.Label(r, item),
-					new string[]{def.Id.ToString(), def.ModelName, def.DefaultType.ToString(), def.BehaviourName},
-					widthPercsLabels);
+				GUILayout.Space (12);
+			}
 
+			GUILayout.EndScrollView ();
+
+		}
+
+		public void DisplayPed (Rect rect, PedestrianDef def, bool displayOptions, bool playerExists, float[] widthPercsLabels,
+			float[] widthPercsButtons, float buttonSpacing)
+		{
+
+			rect.height *= 0.5f;
+
+			GUIUtils.DrawItemsInARowPerc( rect, 
+				(r, item) => GUI.Label(r, item),
+				new string[]{def.Id.ToString(), def.ModelName, def.DefaultType.ToString(), def.BehaviourName},
+				widthPercsLabels);
+
+
+			if (displayOptions) {
 
 				rect.position += new Vector2 (0, rect.height);
 
@@ -111,16 +140,24 @@ namespace SanAndreasUnity.UI {
 
 				}
 
-				GUILayout.Space (12);
 			}
-
-			GUILayout.EndScrollView ();
 
 		}
 
 		private Rect GetLayoutRect (float height)
 		{
 			return GUILayoutUtility.GetRect (this.WindowSize.x, height);
+		}
+
+		private static void KillAllPeds ()
+		{
+
+			foreach (var p in Player.AllPlayers) {
+				if (p == Player.Instance)
+					continue;
+				Destroy (p.gameObject);
+			}
+
 		}
 
 	}
