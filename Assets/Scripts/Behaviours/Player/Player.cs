@@ -20,6 +20,9 @@ namespace SanAndreasUnity.Behaviours
     {
         #region Private Fields
 
+		private static List<Player> s_allPlayers = new List<Player> ();
+		public static Player[] AllPlayers { get { return s_allPlayers.ToArray (); } }
+
 		private WeaponHolder m_weaponHolder;
 		public WeaponHolder WeaponHolder { get { return m_weaponHolder; } }
 
@@ -59,6 +62,8 @@ namespace SanAndreasUnity.Behaviours
         public Cell Cell { get { return Cell.Instance; } }
 
 		public UnityEngine.Animation AnimComponent { get { return PlayerModel.AnimComponent; } }
+
+		public SanAndreasUnity.Importing.Items.Definitions.PedestrianDef PedDef { get { return this.PlayerModel.Definition; } }
 
         public Vector3 Position
         {
@@ -127,6 +132,16 @@ namespace SanAndreasUnity.Behaviours
         {
             //MySetupLocalPlayer ();
         }
+
+		void OnEnable ()
+		{
+			s_allPlayers.Add (this);
+		}
+
+		void OnDisable ()
+		{
+			s_allPlayers.Remove (this);
+		}
 
         private IEnumerator GPUAdjust()
         {

@@ -18,9 +18,7 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- Vehicle entering/exiting must be bullet-proof
-
-- Ped window: spawn another ped (rotation is not corrected), display info about current ped, kill all peds, 
+- Ped should be rotated only around Y axis
 
 - Vehicles window: it's too slow - use pages ; display additional info ;
 
