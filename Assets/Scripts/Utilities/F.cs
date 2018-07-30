@@ -517,6 +517,10 @@ namespace SanAndreasUnity.Utilities
 			return new Vector2 (vec3.x, vec3.z);
 		}
 
+		public static Vector3 WithXAndZ( this Vector3 vec3 ) {
+			return new Vector3 (vec3.x, 0f, vec3.z);
+		}
+
 		/// <summary>
 		/// Clamps all coordinates between 0 and 1.
 		/// </summary>

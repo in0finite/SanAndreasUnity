@@ -21,12 +21,9 @@ public class CharacterModelChanger : MonoBehaviour
 
     public static void ChangePedestrianModel()
     {
-        SanAndreasUnity.Behaviours.Pedestrian ped =
-            GameObject.FindObjectOfType<SanAndreasUnity.Behaviours.Pedestrian>();
-
-        if (ped != null)
+        if (Player.Instance != null)
         {
-            ChangePedestrianModel(ped, -1);
+			ChangePedestrianModel(Player.Instance.PlayerModel, -1);
         }
     }
 
