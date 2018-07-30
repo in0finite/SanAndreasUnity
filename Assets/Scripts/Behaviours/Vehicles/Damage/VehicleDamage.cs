@@ -364,7 +364,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                                     lastContact = damagePoint;
                                 }
 
-                                if (vp != null)
+                                /*if (vp != null)
                                 {
                                     if (vp.m_frontLeftLight != null && vp.m_frontLeftLightOk && (damagePoint - vp.m_frontLeftLight.transform.position).sqrMagnitude < lightContactDistance)
                                         vp.m_frontLeftLightOk = false;
@@ -377,7 +377,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                                     if (vp.m_rearRightLight != null && vp.m_rearRightLightOk && (damagePoint - vp.m_rearRightLight.transform.position).sqrMagnitude < lightContactDistance)
                                         vp.m_rearRightLightOk = false;
-                                }
+                                }*/
                             }
                         }
 

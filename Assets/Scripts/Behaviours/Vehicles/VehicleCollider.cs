@@ -1,6 +1,4 @@
 ﻿using SanAndreasUnity.Behaviours.Vehicles;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class VehicleCollider : MonoBehaviour
@@ -9,7 +7,7 @@ public class VehicleCollider : MonoBehaviour
     private new Collider collider;
     private VehicleBehaviour[] behaviours;
 
-    public static VehicleCollider Init(GameObject gameObject, Vehicle vehicle, VehicleBehaviour[] vehicleBehaviour = null)
+    public static VehicleCollider Init(GameObject gameObject, Vehicle vehicle, VehicleBehaviour[] vehicleBehaviour)
     {
         VehicleCollider collider = gameObject.AddComponent<VehicleCollider>();
 
@@ -21,7 +19,6 @@ public class VehicleCollider : MonoBehaviour
 
     private void Awake ()
     {
-        //if(behaviours == null) behaviours = vehicle.gameObject.GetComponentsInChildren<VehicleBehaviour>();
         collider = GetComponent<Collider>();
     }
 

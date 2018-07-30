@@ -289,17 +289,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             SetAllCarLights();
             behaviours.AddRange(SetAllDoors());
-            SetAllColliders(behaviours.ToArray());
+            SetAllCollider(behaviours.ToArray());
 
             return _controller ?? (_controller = gameObject.AddComponent<VehicleController>());
         }
 
-        public void SetAllColliders(VehicleBehaviour[] vehicleBehaviour)
+        public void SetAllCollider(VehicleBehaviour[] vehicleBehaviour)
         {
-            var colliders = gameObject.GetComponentsInChildren<Collider>();
-
-            foreach (Collider col in colliders)
-                VehicleCollider.Init(col.gameObject, this, vehicleBehaviour);
+            //Set collider detector on the same place that Rigidbody
+            VehicleCollider.Init(gameObject, this, vehicleBehaviour);
         }
 
         public IEnumerable<VehicleBehaviour> SetAllDoors()
