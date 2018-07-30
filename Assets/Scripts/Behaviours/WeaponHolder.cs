@@ -315,11 +315,6 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
-        public void SwitchWeapon(WeaponSlot slot)
-		{
-			this.SwitchWeapon ((int)slot);
-		}
-
 		public void SwitchWeapon (int slotIndex)
 		{
 			if (slotIndex == currentWeaponSlot)
@@ -355,14 +350,9 @@ namespace SanAndreasUnity.Behaviours {
 			weapon.gameObject.SetActive (true);
 		}
 
-		public void SetWeaponAtSlot (Importing.Items.Definitions.WeaponDef weaponDef, WeaponSlot slot)
+		public void SetWeaponAtSlot (Importing.Items.Definitions.WeaponDef weaponDef, int slot)
 		{
 			this.SetWeaponAtSlot (weaponDef.Id, slot);
-		}
-
-		public void SetWeaponAtSlot (int weaponId, WeaponSlot slot)
-		{
-			this.SetWeaponAtSlot (weaponId, (int)slot);
 		}
 
 		public void SetWeaponAtSlot (int weaponId, int slotIndex)
@@ -401,11 +391,11 @@ namespace SanAndreasUnity.Behaviours {
 		public void AddRandomWeapons ()
 		{
 
-			WeaponSlot[] slots = new WeaponSlot[] { WeaponSlot.Pistol, WeaponSlot.Shotgun, WeaponSlot.Submachine,
+			int[] slots = new int[] { WeaponSlot.Pistol, WeaponSlot.Shotgun, WeaponSlot.Submachine,
 				WeaponSlot.Machine, WeaponSlot.Rifle, WeaponSlot.Heavy
 			};
 
-			var groups = WeaponData.LoadedWeaponsData.Where( wd => slots.Contains( (WeaponSlot) wd.weaponslot ) )
+			var groups = WeaponData.LoadedWeaponsData.Where( wd => slots.Contains( wd.weaponslot ) )
 				.GroupBy( wd => wd.weaponslot );
 
 			foreach (var grp in groups) {

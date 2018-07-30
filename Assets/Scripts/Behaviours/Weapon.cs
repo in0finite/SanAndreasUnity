@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace SanAndreasUnity.Behaviours
 {
-	public enum WeaponSlot
+	public static class WeaponSlot
 	{
-		Hand = 0,
+		public static readonly int Hand = 0,
 		Melee = 1,
 		Pistol = 2,
 		Shotgun = 3,
@@ -23,7 +23,7 @@ namespace SanAndreasUnity.Behaviours
 		Special = 11, // parachute, goggles
 		Detonator = 12,
 
-		Count = 13
+		Count = 13;
 	}
 
 	public static class WeaponId
