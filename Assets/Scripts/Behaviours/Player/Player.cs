@@ -116,12 +116,11 @@ namespace SanAndreasUnity.Behaviours
             
 			if (null == Instance) {
 				Instance = this;
+				IsLocalPlayer = true;
 			}
 
             characterController = GetComponent<CharacterController>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
-
-            IsLocalPlayer = true;
 
         }
 
@@ -350,6 +349,7 @@ namespace SanAndreasUnity.Behaviours
             if (!IsInVehicle || !IsInVehicleSeat)
 				return;
 
+			// this should be done only if player was a driver ?
             CurrentVehicle.StopControlling();
 
             if (IsLocalPlayer)
@@ -597,7 +597,7 @@ namespace SanAndreasUnity.Behaviours
                     characterController.Move(Velocity);
                 }
             }
-            else if (IsLocalPlayer)
+            else
             {
 				
                 if (Movement.sqrMagnitude > float.Epsilon)
@@ -626,10 +626,12 @@ namespace SanAndreasUnity.Behaviours
 				// finally, move the character
                 characterController.Move(Velocity * Time.fixedDeltaTime);
             }
-            else
-            {
-                Velocity = characterController.velocity;
-            }
+
+//			if(!IsLocalPlayer)
+//            {
+//                Velocity = characterController.velocity;
+//            }
+
         }
 
 
