@@ -134,4 +134,19 @@ public class VehicleDoor : VehicleBehaviour
     {
 
     }
+
+    public override void OnVehicleTriggerEnter(Collider other)
+    {
+        Debug.Log("Hi world!!");
+    }
+
+    public override void OnVehicleTriggerExit(Collider other)
+    {
+        
+    }
+
+    public override void OnVehicleTriggerStay(Collider other)
+    {
+        
+    }
 }

@@ -9,4 +9,10 @@ public abstract class VehicleBehaviour : MonoBehaviour
     public abstract void OnVehicleCollisionExit(Collision collision);
 
     public abstract void OnVehicleCollisionStay(Collision collision);
+
+    public abstract void OnVehicleTriggerEnter(Collider other);
+
+    public abstract void OnVehicleTriggerExit(Collider other);
+
+    public abstract void OnVehicleTriggerStay(Collider other);
 }

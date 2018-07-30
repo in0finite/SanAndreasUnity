@@ -52,9 +52,30 @@ public class VehicleCollider : MonoBehaviour
         SendCollision("OnVehicleCollisionStay", collision);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        SendTrigger("OnVehicleTriggerStay", other);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        SendTrigger("OnVehicleTriggerStay", other);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        SendTrigger("OnVehicleTriggerStay", other);
+    }
+
     private void SendCollision(string method, Collision collision)
     {
         foreach (VehicleBehaviour behaviour in behaviours)
             behaviour.SendMessage(method, collision);
+    }
+
+    private void SendTrigger(string method, Collider collider)
+    {
+        foreach (VehicleBehaviour behaviour in behaviours)
+            behaviour.SendMessage(method, collider);
     }
 }
