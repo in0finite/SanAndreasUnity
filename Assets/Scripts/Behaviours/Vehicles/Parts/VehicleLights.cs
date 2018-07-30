@@ -77,10 +77,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             lightObj.localRotation = rot;
 
             lights.lightComponent = lightObj.gameObject.AddComponent<Light>();
+
             SetLightProps(GetVehicleLightParent(light).Value, ref lights.lightComponent);
 
-            vehicle.m_lightDict.Add(light, lights);
+            //Debug.LogFormat("Added {0} light!", light);
+
+            lights.lightType = light;
             lights.vehicle = vehicle;
+
+            vehicle.m_lightDict.Add(light, lights);
 
             go = lightObj.gameObject;
             return lights;
@@ -162,7 +167,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return (VehicleLight)((int)Mathf.Pow(2, bit));
         }
 
-        private bool _isOk, _isPowered;
+        private bool _isOk = true, _isPowered;
         public Light lightComponent;
         private Vehicle vehicle;
 
@@ -208,7 +213,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             get
             {
-                return _isPowered;
+                if(isRear)
+                    return _isPowered;
+                return true;
             }
             set
             {
@@ -280,7 +287,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (lightComponent != null) lightComponent.enabled = false;
             }
 
-            vehicle.SetLight((int)lightType, mustRearPower ? rearLightIntensity : brightness);
+            //Debug.LogFormat("[{0}] CanPower? {1} ({2})", vehicle.name, lightType, brightness);
+            vehicle.SetLight((int)Mathf.Log((int)lightType, 2), mustRearPower ? rearLightIntensity : brightness);
         }
     }
 }

@@ -65,6 +65,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private VehicleController _controller;
 
+        private bool hasRearBrightness
+        {
+            get
+            {
+                if(hasInit)
+                    return m_lightDict[VehicleLight.RearLeft].lightComponent.intensity > 0 || m_lightDict[VehicleLight.RearRight].lightComponent.intensity > 0;
+                return false;
+            }
+        }
 #if CLIENT
         protected override void OnAwake()
         {
@@ -115,7 +124,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public void SetLight(int index, float brightness)
         {
-            if (_lights[index] == brightness) return;
+            Debug.Log("Index: "+index);
+            if (_lights[index] == brightness) return; // Avoid flooding at light events
+            //if(hasInit) Debug.LogFormat("[{0}] CanPower? {1} ({2})", name, ((VehicleLight)index).ToString(), brightness);
             _lights[index] = brightness;
             _colorsChanged = true;
         }
@@ -305,6 +316,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (HasDriver)
             {
+                // Flip car
                 if (Input.GetKeyDown(KeyCode.F))
                 {
                     if (Vector3.Dot(transform.up, Vector3.down) > 0)
@@ -317,7 +329,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (Braking > 0.125f)
                     SetMultipleLights(VehicleLight.Rear, 1f);
                 else
-                    SetMultipleLights(VehicleLight.Rear, 0f);
+                {
+                    //if(hasRearBrightness)
+                        SetMultipleLights(VehicleLight.Rear, 0f);
+                }
             }
             else
             {
