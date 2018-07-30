@@ -88,10 +88,9 @@ namespace SanAndreasUnity.Behaviours
 		public Vehicle CurrentVehicle { get; private set; }
 		public bool IsInVehicle { get { return CurrentVehicle != null; } }
         public bool IsInVehicleSeat { get; private set; }
-        public bool IsDrivingVehicle { get; private set; }
-
-        private Vehicle.SeatAlignment _currentVehicleSeatAlignment;
-		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return _currentVehicleSeatAlignment; } }
+		public bool IsDrivingVehicle { get { return this.IsInVehicleSeat && this.CurrentVehicleSeat.IsDriver && this.IsInVehicle; } }
+		public Vehicle.Seat CurrentVehicleSeat { get; private set; }
+		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return CurrentVehicleSeat.Alignment; } }
 
 		public bool IsAiming { get { return m_weaponHolder.IsAiming; } }
 		public Weapon CurrentWeapon { get { return m_weaponHolder.CurrentWeapon; } }
@@ -299,19 +298,11 @@ namespace SanAndreasUnity.Behaviours
 				return;
 
 
-			seat.Player = this;
             CurrentVehicle = vehicle;
-			_currentVehicleSeatAlignment = seat.Alignment;
+			CurrentVehicleSeat = seat;
+			seat.Player = this;
 
 			characterController.enabled = false;
-
-
-            if (!vehicle.IsNightToggled && WorldController.IsNight)
-                vehicle.IsNightToggled = true;
-            else if (vehicle.IsNightToggled && !WorldController.IsNight)
-                vehicle.IsNightToggled = false;
-
-			Debug.Log ("IsNightToggled? " + vehicle.IsNightToggled);
 
 
             if (IsLocalPlayer)
@@ -338,6 +329,14 @@ namespace SanAndreasUnity.Behaviours
             }
 
             PlayerModel.IsInVehicle = true;
+
+
+			if (!vehicle.IsNightToggled && WorldController.IsNight)
+				vehicle.IsNightToggled = true;
+			else if (vehicle.IsNightToggled && !WorldController.IsNight)
+				vehicle.IsNightToggled = false;
+
+			Debug.Log ("IsNightToggled? " + vehicle.IsNightToggled);
 
 
 			StartCoroutine (EnterVehicleAnimation (seat, immediate));
@@ -388,10 +387,10 @@ namespace SanAndreasUnity.Behaviours
 
 			// player now completely entered the vehicle
 
+			IsInVehicleSeat = true;
+
             if (seat.IsDriver)
             {
-                IsDrivingVehicle = true;
-
                 PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
             }
             else
@@ -399,15 +398,13 @@ namespace SanAndreasUnity.Behaviours
                 PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
             }
 
-            IsInVehicleSeat = true;
         }
 
         private IEnumerator ExitVehicleAnimation(bool immediate)
         {
-            IsDrivingVehicle = false;
             IsInVehicleSeat = false;
 
-            var seat = CurrentVehicle.GetSeat(_currentVehicleSeatAlignment);
+			var seat = CurrentVehicleSeat;
 
             var animIndex = seat.IsLeftHand ? AnimIndex.GetOutLeft : AnimIndex.GetOutRight;
 
@@ -428,7 +425,7 @@ namespace SanAndreasUnity.Behaviours
             PlayerModel.IsInVehicle = false;
 
 			CurrentVehicle = null;
-            _currentVehicleSeatAlignment = Vehicle.SeatAlignment.None;
+			CurrentVehicleSeat = null;
 			seat.Player = null;
 
             transform.localPosition = PlayerModel.VehicleParentOffset;
@@ -441,8 +438,10 @@ namespace SanAndreasUnity.Behaviours
             PlayerModel.VehicleParentOffset = Vector3.zero;
 
 			// change camera parent
-			if (Camera != null) {
-				Camera.transform.SetParent (null, true);
+			if (IsLocalPlayer) {
+				if (Camera != null) {
+					Camera.transform.SetParent (null, true);
+				}
 			}
 
         }
@@ -495,7 +494,7 @@ namespace SanAndreasUnity.Behaviours
 
 			UpdateAnims ();
 
-            if (IsInVehicle && IsDrivingVehicle)
+            if (IsDrivingVehicle)
                 UpdateWheelTurning();
 			
             //If player falls from the map
