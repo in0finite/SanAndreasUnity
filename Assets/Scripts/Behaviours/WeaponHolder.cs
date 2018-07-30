@@ -3,6 +3,7 @@ using UnityEngine;
 using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Importing.Weapons;
 using System.Linq;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours {
 	
@@ -188,7 +189,7 @@ namespace SanAndreasUnity.Behaviours {
 
 				} else if (m_player.IsSprinting) {
 
-					if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
+					if (CurrentWeapon.CanSprintWithIt) {
 						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
 					} else {
 						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
@@ -396,6 +397,7 @@ namespace SanAndreasUnity.Behaviours {
 			};
 
 			var groups = WeaponData.LoadedWeaponsData.Where( wd => slots.Contains( wd.weaponslot ) )
+				.DistinctBy( wd => wd.weaponType )
 				.GroupBy( wd => wd.weaponslot );
 
 			foreach (var grp in groups) {
