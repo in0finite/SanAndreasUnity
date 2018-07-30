@@ -21,8 +21,6 @@
 
 - replace video and some images in readme
 
-- fix Random.Range() max values
-
 - Vehicles window: it's too slow - use pages ; display additional info ;
 
 - Jump

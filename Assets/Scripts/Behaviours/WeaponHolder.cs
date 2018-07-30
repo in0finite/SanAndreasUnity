@@ -404,7 +404,7 @@ namespace SanAndreasUnity.Behaviours {
 				if (count < 1)
 					continue;
 
-				int index = Random.Range (0, count - 1);
+				int index = Random.Range (0, count);
 				WeaponData chosenWeaponData = grp.ElementAt (index);
 
 				this.SetWeaponAtSlot (chosenWeaponData.modelId1, grp.Key);
