@@ -330,15 +330,6 @@ namespace SanAndreasUnity.Behaviours
 
             PlayerModel.IsInVehicle = true;
 
-
-			if (!vehicle.IsNightToggled && WorldController.IsNight)
-				vehicle.IsNightToggled = true;
-			else if (vehicle.IsNightToggled && !WorldController.IsNight)
-				vehicle.IsNightToggled = false;
-
-			Debug.Log ("IsNightToggled? " + vehicle.IsNightToggled);
-
-
 			StartCoroutine (EnterVehicleAnimation (seat, immediate));
 
         }

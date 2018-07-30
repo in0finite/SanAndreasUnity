@@ -73,8 +73,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private ContactPoint nullContact = new ContactPoint();
 
-        private const float lightContactDistance = 5;
-
         //Only for debug
         public Vector3 lastContact = Vector3.zero;
 
