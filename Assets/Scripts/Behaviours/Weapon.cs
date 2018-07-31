@@ -4,7 +4,9 @@ using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Weapons;
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 using SanAndreasUnity.Importing.Animation;
+using System.Reflection;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -87,11 +89,25 @@ namespace SanAndreasUnity.Behaviours
 		public Texture2D HudTexture { get; private set; }
 
 
-		private static GameObject weaponsContainer = null;
+		private static List<System.Type> s_weaponTypes = new List<System.Type> ();
+
+		private static GameObject s_weaponsContainer = null;
 
 		public static Texture2D CrosshairTexture { get; set; }
 		public static Texture2D FistTexture { get; set; }
 
+
+
+		static Weapon ()
+		{
+			// obtain all weapon types
+			var myType = typeof (Weapon);
+			foreach (Assembly a in System.AppDomain.CurrentDomain.GetAssemblies())
+			{
+				s_weaponTypes.AddRange (a.GetTypes ().Where (t => t.IsSubclassOf (myType)));
+			}
+
+		}
 
 
 		public static Weapon Load (int modelId)
@@ -100,23 +116,27 @@ namespace SanAndreasUnity.Behaviours
 			if (null == def)
 				return null;
 
+			WeaponData weaponData = WeaponData.LoadedWeaponsData.FirstOrDefault (wd => wd.modelId1 == def.Id);
+			if (null == weaponData)
+				return null;
+
 			var geoms = Geometry.Load (def.ModelName, def.TextureDictionaryName);
 			if (null == geoms)
 				return null;
 
-			if (null == weaponsContainer) {
-				weaponsContainer = new GameObject ("Weapons");
+			if (null == s_weaponsContainer) {
+				s_weaponsContainer = new GameObject ("Weapons");
 			//	weaponsContainer.SetActive (false);
 			}
 
 			GameObject go = new GameObject (def.ModelName);
-			go.transform.SetParent (weaponsContainer.transform);
+			go.transform.SetParent (s_weaponsContainer.transform);
 
 			geoms.AttachFrames (go.transform, MaterialFlags.Default);
 
-			Weapon weapon = go.AddComponent<Weapon> ();
+			Weapon weapon = AddWeaponComponent (go, weaponData);
 			weapon.definition = def;
-			weapon.data = WeaponData.LoadedWeaponsData.FirstOrDefault (wd => wd.modelId1 == def.Id);
+			weapon.data = weaponData;
 			// cache gun aiming offset
 			if (weapon.data.gunData != null)
 				weapon.gunAimingOffset = weapon.data.gunData.aimingOffset;
@@ -129,6 +149,22 @@ namespace SanAndreasUnity.Behaviours
 			}
 
 			return weapon;
+		}
+
+		private static Weapon AddWeaponComponent (GameObject go, WeaponData data)
+		{
+			// find type which inherits Weapon class, and whose name matches the one in data
+
+			string weaponName = data.weaponType;
+
+			var type = s_weaponTypes.Where (t => 0 == string.Compare (t.Name, weaponName, true)).FirstOrDefault ();
+
+			if (type != null) {
+				return (Weapon)go.AddComponent (type);
+			} else {
+				return go.AddComponent<Weapon> ();
+			}
+
 		}
 
 
