@@ -1,5 +1,4 @@
 ﻿using SanAndreasUnity.Behaviours.World;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -39,15 +38,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
-        [Obsolete]
-        public void ToggleMightLights(bool isFront)
-        {
-            if (isFront)
-                vehicle.SetMultipleLights(VehicleLight.Front, _isNightToggled ? frontLightIntensity : 0);
-            else
-                vehicle.SetMultipleLights(VehicleLight.Rear, _isNightToggled ? rearLightIntensity : 0);
-        }
-
         public static VehicleLights Init(Transform parent, Vehicle vehicle, VehicleLight light, Vector3? pos = null)
         {
             GameObject gameObject = null;
@@ -77,12 +67,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             lights.lightComponent = lightObj.gameObject.AddComponent<Light>();
 
-            SetLightProps(GetVehicleLightParent(light).Value, ref lights.lightComponent);
-
-            //Debug.LogFormat("Added {0} light!", light);
-
             lights.lightType = light;
             lights.vehicle = vehicle;
+
+            lights.SetLightProps();
 
             vehicle.m_lightDict.Add(light, lights);
 
@@ -121,39 +109,30 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return !(light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear);
         }
 
-        public static void SetLightProps(VehicleLight vehicleLight, ref Light light, bool isBlinker = false)
+        public void SetLightProps()
         {
-            if (light == null) return;
+            if (lightComponent == null) return;
 
-            if (!isBlinker)
-                switch (vehicleLight)
-                { //Must review: In some cases car lights are powered by no reason
-                    case VehicleLight.Front:
-                    case VehicleLight.FrontLeft:
-                    case VehicleLight.FrontRight:
-                        light.type = LightType.Spot;
-                        light.range = 60;
-                        light.spotAngle = 90;
-                        light.intensity = WorldController.IsNight ? frontLightIntensity : 0;
-                        break;
+            switch (lightType)
+            { //Must review: In some cases car lights are powered by no reason
+                case VehicleLight.Front:
+                case VehicleLight.FrontLeft:
+                case VehicleLight.FrontRight:
+                    lightComponent.type = LightType.Spot;
+                    lightComponent.range = 60;
+                    lightComponent.spotAngle = 90;
+                    lightComponent.intensity = WorldController.IsNight ? frontLightIntensity : 0;
+                    break;
 
-                    case VehicleLight.Rear:
-                    case VehicleLight.RearLeft:
-                    case VehicleLight.RearRight:
-                        light.type = LightType.Spot;
-                        light.range = 20;
-                        light.spotAngle = 50;
-                        light.intensity = WorldController.IsNight ? rearLightIntensity : 0;
-                        light.color = Color.red;
-                        break;
-                }
-            else
-            { // Blinker
-                light.type = LightType.Spot;
-                light.range = 10;
-                light.spotAngle = 140;
-                light.intensity = .8f;
-                light.color = new Color(1, .5f, 0);
+                case VehicleLight.Rear:
+                case VehicleLight.RearLeft:
+                case VehicleLight.RearRight:
+                    lightComponent.type = LightType.Spot;
+                    lightComponent.range = 20;
+                    lightComponent.spotAngle = 50;
+                    lightComponent.intensity = WorldController.IsNight ? rearLightIntensity : 0;
+                    lightComponent.color = Color.red;
+                    break;
             }
         }
 
@@ -233,6 +212,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             lightComponent = GetComponent<Light>();
             _isPowered = true;
+            IsNightToggled = WorldController.IsNight;
         }
 
         // Update is called once per frame
@@ -287,8 +267,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public void SetLight(float brightness)
         {
             brightness = Mathf.Clamp01(brightness);
-
-            //bool mustRearPower = _isNightToggled && isRear;
 
             if (lightComponent != null)
             {
