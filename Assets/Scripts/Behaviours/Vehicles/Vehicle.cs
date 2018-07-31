@@ -1,4 +1,5 @@
-﻿using SanAndreasUnity.Importing.Vehicles;
+﻿using SanAndreasUnity.Behaviours.World;
+using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
 using System.Collections;
 using System.Collections.Generic;
@@ -124,9 +125,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public void SetLight(int index, float brightness)
         {
-            Debug.Log("Index: "+index);
             if (_lights[index] == brightness) return; // Avoid flooding at light events
-            //if(hasInit) Debug.LogFormat("[{0}] CanPower? {1} ({2})", name, ((VehicleLight)index).ToString(), brightness);
+
             _lights[index] = brightness;
             _colorsChanged = true;
         }
@@ -138,10 +138,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 var bit = 1 << i;
                 if (((int)light & bit) == bit)
                 {
-                    VehicleLight parsedLight = (VehicleLight)bit;
                     if (hasInit)
                     {
-                        if (m_lightDict[parsedLight].canPower) m_lightDict[parsedLight].SetLight(brightness);
+                        VehicleLight parsedLight = (VehicleLight)bit;
+                        VehicleLights lights = m_lightDict[parsedLight];
+                        float bright = lights.isOk && lights.isRear && WorldController.IsNight ? VehicleLights.rearLightIntensity : brightness;
+
+                        if (lights.canPower) lights.SetLight(brightness);
                     }
                     else
                         SetLight(i, brightness);
@@ -161,7 +164,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         { // Must review: Maybe can cause some leaks
             List<VehicleBehaviour> behaviours = new List<VehicleBehaviour>();
 
-            SetAllCarLights();
+            behaviours.AddRange(SetAllCarLights());
             behaviours.AddRange(SetAllDoors());
             SetAllCollider(behaviours.ToArray());
 
@@ -203,7 +206,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
-        public void SetAllCarLights()
+        public IEnumerable<VehicleBehaviour> SetAllCarLights()
         {
             // Implemented: Add lights
 
@@ -214,14 +217,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (headlights != null)
             {
-                VehicleLights.Init(headlights, vh, VehicleLight.FrontLeft);
-                VehicleLights.Init(headlights, vh, VehicleLight.FrontRight);
+                yield return VehicleLights.Init(headlights, vh, VehicleLight.FrontLeft);
+                yield return VehicleLights.Init(headlights, vh, VehicleLight.FrontRight);
             }
 
             if (taillights != null)
             {
-                VehicleLights.Init(taillights, vh, VehicleLight.RearLeft);
-                VehicleLights.Init(taillights, vh, VehicleLight.RearRight);
+                yield return VehicleLights.Init(taillights, vh, VehicleLight.RearLeft);
+                yield return VehicleLights.Init(taillights, vh, VehicleLight.RearRight);
             }
         }
 

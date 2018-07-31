@@ -20,7 +20,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         All = Front | Rear
     }
 
-    [RequireComponent(typeof(Light))]
     public class VehicleLights : VehicleBehaviour
     {
         public const float frontLightIntensity = 1.5f, rearLightIntensity = .7f, lightContactDistance = 5;
@@ -125,16 +124,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public static void SetLightProps(VehicleLight vehicleLight, ref Light light, bool isBlinker = false)
         {
             if (light == null) return;
+
             if (!isBlinker)
                 switch (vehicleLight)
-                {
+                { //Must review: In some cases car lights are powered by no reason
                     case VehicleLight.Front:
                     case VehicleLight.FrontLeft:
                     case VehicleLight.FrontRight:
                         light.type = LightType.Spot;
                         light.range = 60;
                         light.spotAngle = 90;
-                        light.intensity = frontLightIntensity;
+                        light.intensity = WorldController.IsNight ? frontLightIntensity : 0;
                         break;
 
                     case VehicleLight.Rear:
@@ -143,12 +143,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         light.type = LightType.Spot;
                         light.range = 20;
                         light.spotAngle = 50;
-                        light.intensity = 1;
+                        light.intensity = WorldController.IsNight ? rearLightIntensity : 0;
                         light.color = Color.red;
                         break;
                 }
             else
-            {
+            { // Blinker
                 light.type = LightType.Spot;
                 light.range = 10;
                 light.spotAngle = 140;
@@ -213,8 +213,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             get
             {
-                if(isRear)
+                if (isRear)
                     return _isPowered;
+
                 return true;
             }
             set
@@ -222,7 +223,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (!isRear)
                 {
                     _isPowered = value;
-                    vehicle.SetMultipleLights(VehicleLight.Front, frontLightIntensity);
+                    SetLight(_isPowered ? frontLightIntensity : 0);
                 }
             }
         }
@@ -232,20 +233,35 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             lightComponent = GetComponent<Light>();
             _isPowered = true;
-            IsNightToggled = WorldController.IsNight;
         }
 
         // Update is called once per frame
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.L) && !isRear)
+            {
+                Debug.Log("Toggling lights");
                 isPowered = !isPowered;
+            }
+        }
+
+        public void OnDuskTime()
+        {
+            IsNightToggled = true;
+        }
+
+        public void OnDawnTime()
+        {
+            IsNightToggled = false;
         }
 
         public override void OnVehicleCollisionEnter(Collision collision)
         {
             if (isOk && (collision.contacts[0].point - transform.position).sqrMagnitude < lightContactDistance)
+            {
+                Debug.LogFormat("{0} has broken!!", lightType);
                 isOk = false;
+            }
         }
 
         public override void OnVehicleCollisionExit(Collision collision)
@@ -272,23 +288,22 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             brightness = Mathf.Clamp01(brightness);
 
-            bool mustRearPower = _isNightToggled && !IsFrontLight(lightType);
+            //bool mustRearPower = _isNightToggled && isRear;
 
-            if (brightness > 0 || mustRearPower)
+            if (lightComponent != null)
             {
-                if (lightComponent != null && !lightComponent.enabled)
+                if (brightness > 0 && !lightComponent.enabled)
                 {
                     lightComponent.enabled = true;
-                    lightComponent.intensity = mustRearPower ? rearLightIntensity : brightness;
+                    lightComponent.intensity = brightness;
+                }
+                else
+                {
+                    lightComponent.enabled = false;
                 }
             }
-            else
-            {
-                if (lightComponent != null) lightComponent.enabled = false;
-            }
 
-            //Debug.LogFormat("[{0}] CanPower? {1} ({2})", vehicle.name, lightType, brightness);
-            vehicle.SetLight((int)Mathf.Log((int)lightType, 2), mustRearPower ? rearLightIntensity : brightness);
+            vehicle.SetLight((int)Mathf.Log((int)lightType, 2), brightness);
         }
     }
 }

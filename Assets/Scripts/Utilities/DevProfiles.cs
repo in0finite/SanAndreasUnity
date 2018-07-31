@@ -1,4 +1,4 @@
-﻿#define TESTING
+﻿//#define TESTING
 
 using System.Collections.Generic;
 using UnityEngine;

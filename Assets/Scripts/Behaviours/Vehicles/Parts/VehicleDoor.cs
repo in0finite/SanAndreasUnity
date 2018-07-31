@@ -46,6 +46,8 @@ public class VehicleDoor : VehicleBehaviour
 
     public static VehicleDoor InitializateDoor(Transform door, Vehicle vehicle)
     {
+        if (door == null) return null;
+
         VehicleDoor doorObj = door.gameObject.AddComponent<VehicleDoor>();
 
         doorObj.vehicle = vehicle;
@@ -122,7 +124,7 @@ public class VehicleDoor : VehicleBehaviour
 
     public override void OnVehicleCollisionEnter(Collision collision)
     {
-        Debug.Log("Hi world!!");
+        Debug.Log("Hi collision!!");
     }
 
     public override void OnVehicleCollisionExit(Collision collision)
@@ -137,7 +139,7 @@ public class VehicleDoor : VehicleBehaviour
 
     public override void OnVehicleTriggerEnter(Collider other)
     {
-        Debug.Log("Hi world!!");
+        Debug.Log("Hi trigger!!");
     }
 
     public override void OnVehicleTriggerExit(Collider other)

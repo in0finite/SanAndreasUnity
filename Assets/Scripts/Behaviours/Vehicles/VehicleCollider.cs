@@ -7,7 +7,7 @@ public class VehicleCollider : MonoBehaviour
     private new Collider collider;
     private VehicleBehaviour[] behaviours;
 
-    public static VehicleCollider Init(GameObject gameObject, Vehicle vehicle, VehicleBehaviour[] vehicleBehaviour)
+    public static VehicleCollider Init(GameObject gameObject, Vehicle vehicle, VehicleBehaviour[] vehicleBehaviour = null)
     {
         VehicleCollider collider = gameObject.AddComponent<VehicleCollider>();
 
@@ -19,6 +19,7 @@ public class VehicleCollider : MonoBehaviour
 
     private void Awake ()
     {
+        if (behaviours == null) behaviours = FindObjectsOfType<VehicleBehaviour>();
         collider = GetComponent<Collider>();
     }
 
@@ -73,6 +74,6 @@ public class VehicleCollider : MonoBehaviour
     private void SendTrigger(string method, Collider collider)
     {
         foreach (VehicleBehaviour behaviour in behaviours)
-            behaviour.SendMessage(method, collider);
+            if(behaviour != null) behaviour.SendMessage(method, collider);
     }
 }

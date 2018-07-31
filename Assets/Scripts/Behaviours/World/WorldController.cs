@@ -76,6 +76,15 @@ namespace SanAndreasUnity.Behaviours.World
                 dirLight.rotation = Quaternion.Euler(angle, -130, 0);
                 dayTimeCounter += AngleFactor;
 
+                if(dayTimeCounter % TimeFactor == 0)
+                    F.SendMessageToObjectsOfType<MonoBehaviour>("OnDawnTime");
+                else if (dayTimeCounter % TimeFactor * 90 == 0)
+                    F.SendMessageToObjectsOfType<MonoBehaviour>("OnNoonTime");
+                else if (dayTimeCounter % TimeFactor * 180 == 0)
+                    F.SendMessageToObjectsOfType<MonoBehaviour>("OnDuskTime");
+                else if (dayTimeCounter % TimeFactor * 270 == 0)
+                    F.SendMessageToObjectsOfType<MonoBehaviour>("OnMidnightTime");
+
                 // Range: Dusk .. Dawn
                 if (IsNight) light.intensity = lightCurve.Evaluate(Mathf.InverseLerp(180, 360, angle));
             }
