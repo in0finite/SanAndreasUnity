@@ -11,11 +11,17 @@ namespace SanAndreasUnity.Importing.Animation
         WalkCycle,
         Car,
         MyWalkCycle,
+
         Colt45,
-        Rifle,
+		Silenced,
+		Python,
 		Shotgun,
+		Tec,
+		Uzi,
+		Rifle,
         Rocket,
         Grenade,
+
 		Gun,
 		Weapons,
 
@@ -61,9 +67,62 @@ namespace SanAndreasUnity.Importing.Animation
 
 		// Colt45
 		colt45_fire = 0,
+		COLT45_RELOAD,
+		colt45_crouchfire,
+		colt45_fire_2hands,
+		twoguns_crouchfire,
+		colt45_crouchreload,
+		sawnoff_reload,
+
+		// Silenced
+		CrouchReload = 0,
+		SilenceCrouchfire,
+		Silence_fire,
+		Silence_reload,
+
+		// Python
+		python_crouchfire = 0,
+		python_crouchreload,
+		python_fire,
+		python_fire_poor,
+		python_reload,
+
+		// Shotgun
+		shotgun_crouchfire = 0,
+		shotgun_fire,
+		shotgun_fire_poor,
+
+		// Tec
+		TEC_crouchfire = 0,
+		TEC_crouchreload,
+		TEC_fire,
+		TEC_reload,
+
+		// Uzi
+		UZI_crouchfire = 0,
+		UZI_crouchreload,
+		UZI_fire,
+		UZI_fire_poor,
+		UZI_reload,
 
 		// Rifle
-		RIFLE_fire = 2,
+		RIFLE_crouchfire = 0,
+		RIFLE_crouchload,
+		RIFLE_fire,
+		RIFLE_fire_poor,
+		RIFLE_load,
+
+		// Rocket
+		idle_rocket = 0,
+		RocketFire,
+		run_rocket,
+		walk_rocket,
+		WALK_start_rocket,
+
+		// Grenade
+		WEAPON_start_throw = 0,
+		WEAPON_throw,
+		WEAPON_throwu,
 
 		// so we can dynamically access all anims of the anim group
         Index0 = 0,

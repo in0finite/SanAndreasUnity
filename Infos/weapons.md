@@ -42,7 +42,7 @@ These are the useful parameters in weapons.dat :
 
 ***
 
-### Status
+### TODO
 
 - play 2 anims at the same time - this is needed for: reloading, aim and move at the same time, 
 
@@ -62,7 +62,7 @@ These are the useful parameters in weapons.dat :
 
 - run and aim at the same time with single-arm weapons
 
-- play separate anim for: THROW weapons, desert eagle/silenced, heavy weapons, 
+- walk and aim at the same time ; strafe ;
 
-- sprint with: pistols, mp5, THROW, 
+- play separate anim for: THROW weapons, desert eagle/silenced, heavy weapons, 
 
