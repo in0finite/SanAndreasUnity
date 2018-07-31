@@ -3,6 +3,7 @@ using UnityEngine;
 using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Importing.Weapons;
 using System.Linq;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours {
 	
@@ -188,7 +189,7 @@ namespace SanAndreasUnity.Behaviours {
 
 				} else if (m_player.IsSprinting) {
 
-					if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
+					if (CurrentWeapon.CanSprintWithIt) {
 						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
 					} else {
 						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
@@ -315,11 +316,6 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
-        public void SwitchWeapon(WeaponSlot slot)
-		{
-			this.SwitchWeapon ((int)slot);
-		}
-
 		public void SwitchWeapon (int slotIndex)
 		{
 			if (slotIndex == currentWeaponSlot)
@@ -355,14 +351,9 @@ namespace SanAndreasUnity.Behaviours {
 			weapon.gameObject.SetActive (true);
 		}
 
-		public void SetWeaponAtSlot (Importing.Items.Definitions.WeaponDef weaponDef, WeaponSlot slot)
+		public void SetWeaponAtSlot (Importing.Items.Definitions.WeaponDef weaponDef, int slot)
 		{
 			this.SetWeaponAtSlot (weaponDef.Id, slot);
-		}
-
-		public void SetWeaponAtSlot (int weaponId, WeaponSlot slot)
-		{
-			this.SetWeaponAtSlot (weaponId, (int)slot);
 		}
 
 		public void SetWeaponAtSlot (int weaponId, int slotIndex)
@@ -401,11 +392,12 @@ namespace SanAndreasUnity.Behaviours {
 		public void AddRandomWeapons ()
 		{
 
-			WeaponSlot[] slots = new WeaponSlot[] { WeaponSlot.Pistol, WeaponSlot.Shotgun, WeaponSlot.Submachine,
+			int[] slots = new int[] { WeaponSlot.Pistol, WeaponSlot.Shotgun, WeaponSlot.Submachine,
 				WeaponSlot.Machine, WeaponSlot.Rifle, WeaponSlot.Heavy
 			};
 
-			var groups = WeaponData.LoadedWeaponsData.Where( wd => slots.Contains( (WeaponSlot) wd.weaponslot ) )
+			var groups = WeaponData.LoadedWeaponsData.Where( wd => slots.Contains( wd.weaponslot ) )
+				.DistinctBy( wd => wd.weaponType )
 				.GroupBy( wd => wd.weaponslot );
 
 			foreach (var grp in groups) {
@@ -414,7 +406,7 @@ namespace SanAndreasUnity.Behaviours {
 				if (count < 1)
 					continue;
 
-				int index = Random.Range (0, count - 1);
+				int index = Random.Range (0, count);
 				WeaponData chosenWeaponData = grp.ElementAt (index);
 
 				this.SetWeaponAtSlot (chosenWeaponData.modelId1, grp.Key);

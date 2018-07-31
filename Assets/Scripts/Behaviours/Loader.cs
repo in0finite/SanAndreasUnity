@@ -246,8 +246,8 @@ namespace SanAndreasUnity.Behaviours
 		{
 			var txd = TextureDictionary.Load ("LOADSCS");
 
-			int index1 = Random.Range (1, 14);
-			int index2 = Random.Range (1, 14);
+			int index1 = Random.Range (1, 15);
+			int index2 = Random.Range (1, 15);
 
 			SplashTex1 = txd.GetDiffuse ("loadsc" + index1).Texture;
 			SplashTex2 = txd.GetDiffuse ("loadsc" + index2).Texture;

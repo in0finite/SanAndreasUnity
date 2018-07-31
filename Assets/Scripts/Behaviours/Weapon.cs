@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace SanAndreasUnity.Behaviours
 {
-	public enum WeaponSlot
+	public static class WeaponSlot
 	{
-		Hand = 0,
+		public static readonly int Hand = 0,
 		Melee = 1,
 		Pistol = 2,
 		Shotgun = 3,
@@ -23,7 +23,7 @@ namespace SanAndreasUnity.Behaviours
 		Special = 11, // parachute, goggles
 		Detonator = 12,
 
-		Count = 13
+		Count = 13;
 	}
 
 	public static class WeaponId
@@ -78,6 +78,8 @@ namespace SanAndreasUnity.Behaviours
 		private	WeaponData.GunAimingOffset gunAimingOffset;
 		public WeaponData.GunAimingOffset GunAimingOffset { get { return this.gunAimingOffset; } }
 
+		public int SlotIndex { get { return this.Data.weaponslot; } }
+
 	//	public int totalAmmo = 0;
 	//	public int ammoInClip = 0;
 
@@ -128,12 +130,27 @@ namespace SanAndreasUnity.Behaviours
 			return weapon;
 		}
 
+
 		public bool HasFlag( GunFlag gunFlag ) {
 
 			if (this.data != null && this.data.gunData != null)
 				return this.data.gunData.HasFlag (gunFlag);
 
 			return false;
+		}
+
+
+		public bool CanSprintWithIt {
+			get {
+				if (this.HasFlag (GunFlag.AIMWITHARM))
+					return true;
+
+				if (this.SlotIndex == WeaponSlot.Heavy || this.SlotIndex == WeaponSlot.Machine || this.SlotIndex == WeaponSlot.Rifle
+				   || this.SlotIndex == WeaponSlot.Shotgun)
+					return false;
+
+				return true;
+			}
 		}
 
 	}

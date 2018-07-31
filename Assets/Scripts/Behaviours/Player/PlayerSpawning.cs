@@ -68,7 +68,7 @@ namespace SanAndreasUnity.Behaviours
 				Vector3 offset = Random.onUnitSphere;
 				offset.y = 0f;
 				offset.Normalize ();
-				offset *= Random.Range (5, 15);
+				offset *= Random.Range (5f, 15f);
 
 				pos = Player.Instance.transform.TransformPoint (offset);
 				rot = Random.rotation;

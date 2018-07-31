@@ -498,6 +498,8 @@ namespace SanAndreasUnity.Behaviours
 
 			ConstrainPosition ();
 
+			ConstrainRotation ();
+
 			UpdateAnims ();
 
             if (IsDrivingVehicle)
@@ -546,6 +548,22 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
+		private void ConstrainRotation ()
+		{
+			if (IsInVehicle)
+				return;
+
+			// ped can only rotate around Y axis
+
+			Vector3 eulers = this.transform.eulerAngles;
+			if (eulers.x != 0f || eulers.z != 0f) {
+				eulers.x = 0f;
+				eulers.z = 0f;
+				this.transform.eulerAngles = eulers;
+			}
+
+		}
+
 		private void UpdateAnims() {
 
 			if (!this.shouldPlayAnims)
@@ -584,6 +602,10 @@ namespace SanAndreasUnity.Behaviours
             if (IsInVehicle) return;
 
 
+			// player can look only along X and Z axis
+			this.Heading = this.Heading.WithXAndZ ().normalized;
+
+
 			// rotate player towards his heading
 			Vector3 forward = Vector3.RotateTowards (this.transform.forward, Heading, TurnSpeed * Time.deltaTime, 0.0f);
 			this.transform.rotation = Quaternion.LookRotation(forward);
@@ -604,11 +626,14 @@ namespace SanAndreasUnity.Behaviours
             }
             else
             {
-				
+
+				// movement can only be done on X and Z axis
+				this.Movement = this.Movement.WithXAndZ ();
+
+				// change heading to match movement input
                 if (Movement.sqrMagnitude > float.Epsilon)
                 {
-					// change heading to match movement input
-                    Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
+					Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
                 }
 
 				// change velocity based on movement input and current speed extracted from anim
