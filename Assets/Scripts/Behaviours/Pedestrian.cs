@@ -274,6 +274,11 @@ namespace SanAndreasUnity.Behaviours
             return animState;
         }
 
+		public AnimationState PlayAnim (AnimId animId)
+		{
+			return PlayAnim (animId.AnimGroup, animId.AnimIndex);
+		}
+
 		public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, bool resetModelStateIfAnimChanged, bool resetAnimStateIfAnimChanged)
 		{
 			bool animChanged = this.AnimGroup != group || this.animIndex != anim;

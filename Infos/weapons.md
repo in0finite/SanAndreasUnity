@@ -48,13 +48,13 @@ These are the useful parameters in weapons.dat :
 
 - problematic anims: move/fire with heavy weapons, 
 
-- when aiming with single-arm weapons - play the same idle anim for all models
+- when aiming with single-arm weapons - play the same idle anim for all models ?
 
 - spine should be rotated locally, not globally ? - some models have different rotation of spine in the idle anim, which means that their spine will not look at the same place - possible solution would be to play the same idle anim on all models
 
 - display all anim info in animations window: root frame velocity, 
 
-- whem anim is changed, reset position/rotation of all model transforms
+- whem anim is changed, reset model state
 
 - right after the model is loaded, reset model state
 

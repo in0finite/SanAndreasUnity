@@ -189,6 +189,22 @@ namespace SanAndreasUnity.Importing.Animation
 	}
 	*/
 
+	public struct AnimId
+	{
+		private AnimGroup animGroup;
+		public AnimGroup AnimGroup { get { return this.animGroup; } }
+
+		private AnimIndex animIndex;
+		public AnimIndex AnimIndex { get { return this.animIndex; } }
+
+		public AnimId (AnimGroup animGroup, AnimIndex animIndex)
+		{
+			this.animGroup = animGroup;
+			this.animIndex = animIndex;
+		}
+		
+	}
+
     public class AnimationGroup
     {
         private static readonly Regex _sHeaderRegex = new Regex("^" +

@@ -4,6 +4,7 @@ using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Weapons;
 using UnityEngine;
 using System.Linq;
+using SanAndreasUnity.Importing.Animation;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -140,7 +141,7 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-		public bool CanSprintWithIt {
+		public virtual bool CanSprintWithIt {
 			get {
 				if (this.HasFlag (GunFlag.AIMWITHARM))
 					return true;
@@ -151,6 +152,111 @@ namespace SanAndreasUnity.Behaviours
 
 				return true;
 			}
+		}
+
+		public virtual AnimId IdleAnim {
+			get {
+				if (this.HasFlag (GunFlag.AIMWITHARM)) {
+					return new AnimId (AnimGroup.WalkCycle, AnimIndex.Idle);
+				} else {
+					return new AnimId (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
+				}
+			}
+		}
+
+		public virtual AnimId WalkAnim {
+			get {
+				if (this.HasFlag (GunFlag.AIMWITHARM)) {
+					return new AnimId (AnimGroup.WalkCycle, AnimIndex.Walk);
+				} else {
+					return new AnimId (AnimGroup.Gun, AnimIndex.WALK_armed);
+				}
+			}
+		}
+
+		public virtual AnimId RunAnim {
+			get {
+				if (this.HasFlag (GunFlag.AIMWITHARM)) {
+					return new AnimId (AnimGroup.WalkCycle, AnimIndex.Run);
+				} else {
+					return new AnimId (AnimGroup.Gun, AnimIndex.run_armed);
+				}
+			}
+		}
+
+		public virtual void UpdateAnimWhileAiming (Player player)
+		{
+			var CurrentWeapon = this;
+			var PlayerModel = player.PlayerModel;
+
+
+		//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
+		//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
+
+			if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
+				// aim with arm
+				// eg: pistol, tec9, sawnoff
+
+//					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
+//					state.wrapMode = WrapMode.ClampForever;
+//					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
+//						state.normalizedTime = m_aimWithArmMaxAnimTime;
+
+				var state = PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
+				//state.RemoveMixingTransform (PlayerModel.Spine);
+
+				// rotate right upper arm to match direction of player
+				// we'll need a few adjustments, because arm's right vector is player's forward vector,
+				// and arm's forward vector is player's down vector => arm's up is player's left
+				Vector3 lookAtPos = player.transform.position - player.transform.up * 500;
+				Vector3 dir = -player.transform.right;
+				PlayerModel.RightUpperArm.LookAt( lookAtPos, dir);
+				// also rotate right hand
+				PlayerModel.RightHand.LookAt (lookAtPos, dir);
+
+			} else {
+
+				//	PlayerModel.PlayUpperLayerAnimations (AnimGroup.Rifle, AnimGroup.WalkCycle, AnimIndex.RIFLE_fire, AnimIndex.Idle);
+
+				var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire, true, true);
+				state.wrapMode = WrapMode.ClampForever;
+				if (state.normalizedTime > player.WeaponHolder.AimWithRifleMaxAnimTime) {
+					//	state.normalizedTime = m_aimWithRifleMaxAnimTime;
+					state.enabled = false;
+				}
+
+			}
+
+		}
+
+		public virtual void UpdateAnimWhileHolding (Player player)
+		{
+			var CurrentWeapon = this;
+			var PlayerModel = player.PlayerModel;
+
+			if (player.IsRunning) {
+
+				PlayerModel.PlayAnim (CurrentWeapon.RunAnim);
+
+			} else if (player.IsWalking) {
+
+				PlayerModel.PlayAnim (CurrentWeapon.WalkAnim);
+
+			} else if (player.IsSprinting) {
+
+				if (CurrentWeapon.CanSprintWithIt) {
+					PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
+				} else {
+					PlayerModel.PlayAnim (CurrentWeapon.IdleAnim);
+				}
+
+			} else {
+				// player is standing
+
+				PlayerModel.PlayAnim (CurrentWeapon.IdleAnim);
+
+			}
+
 		}
 
 	}
