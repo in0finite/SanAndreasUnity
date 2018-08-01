@@ -24,6 +24,7 @@ namespace SanAndreasUnity.Behaviours
         private FrameContainer _frames;
         public FrameContainer Frames { get { return _frames; } }
         private Frame _root;
+		public Frame RootFrame { get { return _root; } }
 
         private readonly Dictionary<string, Anim> _loadedAnims
             = new Dictionary<string, Anim>();

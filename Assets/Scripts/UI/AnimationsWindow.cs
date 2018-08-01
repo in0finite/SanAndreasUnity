@@ -141,7 +141,7 @@ namespace SanAndreasUnity.UI {
 
 				var clip = animState.clip;
 
-				GUILayout.Label (string.Format ("name {0}, length {1}, frame rate {2}, wrap mode {3}, speed {4}, time {5}", 
+				GUILayout.Label (string.Format ("name: {0}, length: {1}, frame rate: {2}, wrap mode: {3}, speed: {4}, time: {5}", 
 					clip.name, animState.length, clip.frameRate, animState.wrapMode, animState.speed, animState.normalizedTime));
 
 			//	GUILayout.EndHorizontal ();
@@ -149,7 +149,7 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.Space (7);
 
-			GUILayout.Label ("Root frame velocity: " + model.Frames.Root.LocalVelocity);
+			GUILayout.Label ("Root frame velocity: " + model.RootFrame.LocalVelocity);
 
 		}
 
