@@ -16,10 +16,12 @@ namespace SanAndreasUnity.Importing.Animation
 		Silenced,
 		Python,
 		Shotgun,
+		Buddy,
 		Tec,
 		Uzi,
 		Rifle,
         Rocket,
+		Flame,
         Grenade,
 
 		Gun,
@@ -92,6 +94,13 @@ namespace SanAndreasUnity.Importing.Animation
 		shotgun_fire,
 		shotgun_fire_poor,
 
+		// Buddy
+		buddy_crouchfire = 0,
+		buddy_crouchreload,
+		buddy_fire,
+		buddy_fire_poor,
+		buddy_fire_reload,
+
 		// Tec
 		TEC_crouchfire = 0,
 		TEC_crouchreload,
@@ -118,6 +127,9 @@ namespace SanAndreasUnity.Importing.Animation
 		run_rocket,
 		walk_rocket,
 		WALK_start_rocket,
+
+		// Flame
+		FLAME_fire = 0,
 
 		// Grenade
 		WEAPON_start_throw = 0,

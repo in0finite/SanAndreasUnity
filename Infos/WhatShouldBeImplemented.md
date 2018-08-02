@@ -19,7 +19,7 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- replace video and some images in readme
+- replace video and some images in readme ; add instruction to open scene ;
 
 - Vehicles window: it's too slow - use pages ; display additional info ;
 

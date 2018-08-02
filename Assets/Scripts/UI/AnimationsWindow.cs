@@ -2,6 +2,7 @@
 using UnityEngine;
 using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Utilities;
 using System.Linq;
 
 namespace SanAndreasUnity.UI {
@@ -128,7 +129,7 @@ namespace SanAndreasUnity.UI {
 			var model = Player.Instance.PlayerModel;
 
 			int numActiveClips = model.AnimComponent.OfType<AnimationState>().Where(a => a.enabled).Count();
-			GUILayout.Label("Currently played clips [" + numActiveClips + "] :");
+			GUILayout.Label("Currently played anims [" + numActiveClips + "] :");
 
 			// display all currently played clips
 
@@ -137,20 +138,38 @@ namespace SanAndreasUnity.UI {
 				if (!animState.enabled)
 					continue;
 
-			//	GUILayout.BeginHorizontal ();
+				DisplayStatsForAnim (animState);
+			}
 
-				var clip = animState.clip;
+			GUILayout.Space (3);
 
-				GUILayout.Label (string.Format ("name: {0}, length: {1}, frame rate: {2}, wrap mode: {3}, speed: {4}, time: {5}", 
-					clip.name, animState.length, clip.frameRate, animState.wrapMode, animState.speed, animState.normalizedTime));
-
-			//	GUILayout.EndHorizontal ();
+			GUILayout.Label ("Last played anim:");
+			try {
+				AnimationState lastAnimState = model.AnimComponent[ model.GetAnimName (model.AnimGroup, model.animIndex) ];
+				DisplayStatsForAnim (lastAnimState);
+			} catch {
+				
 			}
 
 			GUILayout.Space (7);
 
 			GUILayout.Label ("Root frame velocity: " + model.RootFrame.LocalVelocity);
 
+		}
+
+		private void DisplayStatsForAnim (AnimationState animState)
+		{
+		//	GUILayout.BeginHorizontal ();
+
+			var clip = animState.clip;
+
+			GUILayout.Label (string.Format ("name: {0}, length: {1}, frame rate: {2}, wrap mode: {3}, speed: {4}, " +
+				"normalized speed: {5}, time: {6}, normalized time: {7}, time perc: {8}", 
+				clip.name, animState.length, clip.frameRate, animState.wrapMode, animState.speed, animState.normalizedSpeed, 
+				animState.time, animState.normalizedTime, animState.GetTimePerc ()
+			));
+
+		//	GUILayout.EndHorizontal ();
 		}
 
 	}

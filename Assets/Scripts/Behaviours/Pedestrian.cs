@@ -301,6 +301,11 @@ namespace SanAndreasUnity.Behaviours
 			return state;
 		}
 
+		public AnimationState PlayAnim(AnimId animId, bool resetModelStateIfAnimChanged, bool resetAnimStateIfAnimChanged)
+		{
+			return PlayAnim (animId.AnimGroup, animId.AnimIndex, resetModelStateIfAnimChanged, resetAnimStateIfAnimChanged);
+		}
+
         public AnimationState AddMixingTransform(AnimGroup group, AnimIndex anim, Transform mix)
         {
             var animState = LoadAnim(group, anim);

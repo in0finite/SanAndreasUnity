@@ -112,6 +112,14 @@ default, shotgun, shotgun, 3
 	shotgun_fire_poor
 end
 
+default, buddy, buddy, 5
+	buddy_crouchfire
+	buddy_crouchreload
+	buddy_fire
+	buddy_fire_poor
+	buddy_fire_reload
+end
+
 default, tec, tec, 4
 	TEC_crouchfire
 	TEC_crouchreload
@@ -141,6 +149,10 @@ default, rocket, rocket, 5
 	run_rocket
 	walk_rocket
 	WALK_start_rocket
+end
+
+default, flame, flame, 1
+	FLAME_fire
 end
 
 default, grenade, grenade, 3

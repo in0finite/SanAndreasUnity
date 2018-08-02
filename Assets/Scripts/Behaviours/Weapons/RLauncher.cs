@@ -26,6 +26,12 @@ namespace SanAndreasUnity.Behaviours.Weapons
 			}
 		}
 
+		public override AnimId AimAnim {
+			get {
+				return new AnimId (AnimGroup.Rocket, AnimIndex.RocketFire);
+			}
+		}
+
 		public override void UpdateAnimWhileHolding (Player player)
 		{
 			if (player.IsSprinting) {

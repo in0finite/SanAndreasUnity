@@ -2,6 +2,7 @@
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Weapons;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
@@ -155,9 +156,9 @@ namespace SanAndreasUnity.Behaviours
 		{
 			// find type which inherits Weapon class, and whose name matches the one in data
 
-			string weaponName = data.weaponType;
+			string typeName = data.weaponType.Replace ("_", "");
 
-			var type = s_weaponTypes.Where (t => 0 == string.Compare (t.Name, weaponName, true)).FirstOrDefault ();
+			var type = s_weaponTypes.Where (t => 0 == string.Compare (t.Name, typeName, true)).FirstOrDefault ();
 
 			if (type != null) {
 				return (Weapon)go.AddComponent (type);
@@ -220,6 +221,18 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
+		public virtual AnimId AimAnim {
+			get {
+				return new AnimId (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
+			}
+		}
+
+		public virtual float AimAnimMaxTime {
+			get {
+				return this.data.gunData.animLoopStart * 3.5f / 100.0f;
+			}
+		}
+
 		public virtual void UpdateAnimWhileAiming (Player player)
 		{
 			var CurrentWeapon = this;
@@ -254,9 +267,9 @@ namespace SanAndreasUnity.Behaviours
 
 				//	PlayerModel.PlayUpperLayerAnimations (AnimGroup.Rifle, AnimGroup.WalkCycle, AnimIndex.RIFLE_fire, AnimIndex.Idle);
 
-				var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire, true, true);
+				var state = PlayerModel.PlayAnim (this.AimAnim, true, true);
 				state.wrapMode = WrapMode.ClampForever;
-				if (state.normalizedTime > player.WeaponHolder.AimWithRifleMaxAnimTime) {
+				if (state.time > this.AimAnimMaxTime) {
 					//	state.normalizedTime = m_aimWithRifleMaxAnimTime;
 					state.enabled = false;
 				}
