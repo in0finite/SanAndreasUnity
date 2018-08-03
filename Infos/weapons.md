@@ -44,6 +44,8 @@ These are the useful parameters in weapons.dat :
 
 ### TODO
 
+- fire : aim anim will loop ; gun flash needs some anim (or just rotate it)
+
 - play 2 anims at the same time - this is needed for: reloading, aim and move at the same time, 
 
 - problematic anims: move/fire with heavy weapons, 
@@ -51,8 +53,6 @@ These are the useful parameters in weapons.dat :
 - when aiming with single-arm weapons - play the same idle anim for all models ?
 
 - spine should be rotated locally, not globally ? - some models have different rotation of spine in the idle anim, which means that their spine will not look at the same place - possible solution would be to play the same idle anim on all models
-
-- display all anim info in animations window: root frame velocity, 
 
 - whem anim is changed, reset model state
 
@@ -64,5 +64,5 @@ These are the useful parameters in weapons.dat :
 
 - walk and aim at the same time ; strafe ;
 
-- play separate anim for: THROW weapons, desert eagle/silenced, heavy weapons, 
+- play separate anim for: minigun and flame thrower, 
 

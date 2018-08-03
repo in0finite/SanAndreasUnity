@@ -21,6 +21,8 @@
 
 - replace video and some images in readme ; add instruction to open scene ;
 
+- Anims must be player by their name
+
 - Vehicles window: it's too slow - use pages ; display additional info ;
 
 - Jump

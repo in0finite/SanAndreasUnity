@@ -24,6 +24,8 @@ namespace SanAndreasUnity.Behaviours {
 		public	bool	IsAimOn { get; set; }
 		public	bool	IsAiming { get { return this.IsAimOn && this.IsHoldingWeapon && !m_player.IsInVehicle; } }
 
+		public	bool	IsFireOn { get; set; }
+
 		public	Weapon	CurrentWeapon { get ; private set ; }
 		private	Transform	CurrentWeaponTransform { get { return CurrentWeapon != null ? CurrentWeapon.transform : null; } }
         

@@ -28,7 +28,10 @@ namespace SanAndreasUnity.Behaviours.Weapons
 
 		public override AnimId AimAnim {
 			get {
-				return new AnimId (AnimGroup.Python, AnimIndex.python_fire);
+				if (this.Data.gunData.AssocGroupId.EndsWith ("bad"))
+					return new AnimId (AnimGroup.Python, AnimIndex.python_fire_poor);
+				else
+					return new AnimId (AnimGroup.Python, AnimIndex.python_fire);
 			}
 		}
 

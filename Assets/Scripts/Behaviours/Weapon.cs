@@ -229,7 +229,13 @@ namespace SanAndreasUnity.Behaviours
 
 		public virtual float AimAnimMaxTime {
 			get {
-				return this.data.gunData.animLoopStart * 3.5f / 100.0f;
+				return Weapons.WeaponsManager.ConvertAnimTime (this.data.gunData.animLoopStart);
+			}
+		}
+
+		public virtual float AimAnimFireMaxTime {
+			get {
+				return Weapons.WeaponsManager.ConvertAnimTime (this.data.gunData.animLoopEnd);
 			}
 		}
 
@@ -269,9 +275,19 @@ namespace SanAndreasUnity.Behaviours
 
 				var state = PlayerModel.PlayAnim (this.AimAnim, true, true);
 				state.wrapMode = WrapMode.ClampForever;
+
 				if (state.time > this.AimAnimMaxTime) {
-					//	state.normalizedTime = m_aimWithRifleMaxAnimTime;
-					state.enabled = false;
+					if (player.WeaponHolder.IsFireOn) {
+						state.enabled = true;
+						if(state.time >= this.AimAnimFireMaxTime) {
+							state.time = this.AimAnimMaxTime;
+							player.AnimComponent.Sample ();
+						}
+					} else {
+						state.time = this.AimAnimMaxTime;
+						player.AnimComponent.Sample ();
+						state.enabled = false;
+					}
 				}
 
 			}
