@@ -91,9 +91,10 @@ namespace SanAndreasUnity.Behaviours {
 				
 			}
 
-
 			this.UpdateWeaponTransform ();
 
+			if (CurrentWeapon != null)
+				CurrentWeapon.UpdateGunFlashRotation (m_player);
 
 		}
 

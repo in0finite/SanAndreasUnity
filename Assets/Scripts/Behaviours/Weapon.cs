@@ -97,6 +97,9 @@ namespace SanAndreasUnity.Behaviours
 		public static Texture2D CrosshairTexture { get; set; }
 		public static Texture2D FistTexture { get; set; }
 
+		public AnimationState AimAnimState { get; protected set; }
+		public Transform GunFlash { get; private set; }
+
 
 
 		static Weapon ()
@@ -178,6 +181,38 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
+		protected virtual void Awake ()
+		{
+			this.GunFlash = this.transform.FindChildRecursive("gunflash");
+		}
+
+		protected virtual void Start ()
+		{
+
+		}
+
+		protected virtual void Update ()
+		{
+
+			// enable/disable gun flash
+			if (this.GunFlash != null) {
+				bool shouldBeVisible = false;
+
+				if (AimAnimState != null && AimAnimState.enabled) {
+					// aim anim is being played
+
+					if (AimAnimState.time.BetweenExclusive (this.AimAnimMaxTime, this.AimAnimMaxTime + this.GunFlashDuration)) {
+						// muzzle flash should be visible
+						shouldBeVisible = true;
+					}
+				}
+
+				this.GunFlash.gameObject.SetActive (shouldBeVisible);
+			}
+
+		}
+
+
 		public virtual bool CanSprintWithIt {
 			get {
 				if (this.HasFlag (GunFlag.AIMWITHARM))
@@ -239,6 +274,12 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
+		public virtual float GunFlashDuration {
+			get {
+				return Weapons.WeaponsManager.Instance.GunFlashDuration;
+			}
+		}
+
 		public virtual void UpdateAnimWhileAiming (Player player)
 		{
 			var CurrentWeapon = this;
@@ -274,12 +315,16 @@ namespace SanAndreasUnity.Behaviours
 				//	PlayerModel.PlayUpperLayerAnimations (AnimGroup.Rifle, AnimGroup.WalkCycle, AnimIndex.RIFLE_fire, AnimIndex.Idle);
 
 				var state = PlayerModel.PlayAnim (this.AimAnim, true, true);
+				AimAnimState = state;
 				state.wrapMode = WrapMode.ClampForever;
 
 				if (state.time > this.AimAnimMaxTime) {
 					if (player.WeaponHolder.IsFireOn) {
 						state.enabled = true;
+
+						// check if anim reached end
 						if(state.time >= this.AimAnimFireMaxTime) {
+							// anim reached end, revert it to start
 							state.time = this.AimAnimMaxTime;
 							player.AnimComponent.Sample ();
 						}
@@ -321,6 +366,21 @@ namespace SanAndreasUnity.Behaviours
 				PlayerModel.PlayAnim (CurrentWeapon.IdleAnim);
 
 			}
+
+		}
+
+		public virtual void UpdateGunFlashRotation (Player player)
+		{
+
+			if (null == this.GunFlash)
+				return;
+
+			if (!this.GunFlash.gameObject.activeInHierarchy)
+				return;
+
+			float delta = Weapons.WeaponsManager.Instance.GunFlashRotationSpeed * Time.deltaTime;
+
+			this.GunFlash.rotation *= Quaternion.AngleAxis (delta, Vector3.right);
 
 		}
 
