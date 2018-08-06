@@ -22,7 +22,11 @@ namespace SanAndreasUnity.Behaviours {
 		public	bool	autoAddWeapon = false;
 
 		public	bool	IsAimOn { get; set; }
-		public	bool	IsAiming { get { return this.IsAimOn && this.IsHoldingWeapon && !m_player.IsInVehicle; } }
+		public	bool	IsAiming { get; private set; }
+
+		public	bool	IsFiring { get; set; }
+		public	bool	IsFireOn { get; set; }
+		//public	float	TimeWhenStartedFiring { get; private set; }
 
 		public	Weapon	CurrentWeapon { get ; private set ; }
 		private	Transform	CurrentWeaponTransform { get { return CurrentWeapon != null ? CurrentWeapon.transform : null; } }
@@ -39,7 +43,13 @@ namespace SanAndreasUnity.Behaviours {
 
 		public	WeaponAttachType	weaponAttachType = WeaponAttachType.RightHand;
 
-		[SerializeField]	[Range(0,1)]	private	float	m_aimWithRifleMaxAnimTime = 0.7f;
+
+		//[SerializeField]	[Range(0,1)]	private	float	m_aimWithRifleMinAnimTime = 0.0f;
+		//public	float	AimWithRifleMinAnimTime { get { return m_aimWithRifleMinAnimTime; } set { m_aimWithRifleMinAnimTime = value; } }
+
+		[SerializeField]	[Range(0,4)]	private	float	m_aimWithRifleMaxAnimTime = 0.7f;
+		public	float	AimWithRifleMaxAnimTime { get { return m_aimWithRifleMaxAnimTime; } set { m_aimWithRifleMaxAnimTime = value; } }
+		
 	//	[SerializeField]	[Range(0,1)]	private	float	m_aimWithArmMaxAnimTime = 1.0f;
 
 		public	Vector3	cameraAimOffset = new Vector3 (0.7f, 0.2f, -1);
@@ -83,9 +93,31 @@ namespace SanAndreasUnity.Behaviours {
 				
 			}
 
-
 			this.UpdateWeaponTransform ();
 
+			if (CurrentWeapon != null)
+				CurrentWeapon.UpdateGunFlashRotation (m_player);
+
+			// update aiming state
+
+			if (this.IsAiming) {
+				// check if we should exit aiming state
+				if (!this.IsHoldingWeapon || m_player.IsInVehicle || !this.IsAimOn) {
+					if (!this.IsFiring) {
+						this.IsAiming = false;
+					}
+				}
+			} else {
+				// check if we should enter aiming state
+				if (this.IsHoldingWeapon && this.IsAimOn && !m_player.IsInVehicle) {
+					this.IsAiming = true;
+				}
+			}
+
+			// update firing state
+
+			if (!this.IsAiming)
+				this.IsFiring = false;
 
 		}
 
@@ -122,93 +154,14 @@ namespace SanAndreasUnity.Behaviours {
 			if (this.IsAiming) {
 				// player is aiming
 				// play appropriate anim
-
-			//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
-			//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
-
-				if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
-                    // aim with arm
-                    // ie: pistol, tec9, sawnoff
-                    
-//					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
-//					state.wrapMode = WrapMode.ClampForever;
-//					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
-//						state.normalizedTime = m_aimWithArmMaxAnimTime;
-
-                    var state = PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
-					//state.RemoveMixingTransform (PlayerModel.Spine);
-
-					// rotate right upper arm to match direction of player
-					// we'll need a few adjustments, because arm's right vector is player's forward vector,
-					// and arm's forward vector is player's down vector => arm's up is player's left
-					Vector3 lookAtPos = m_player.transform.position - m_player.transform.up * 500;
-					Vector3 dir = -m_player.transform.right;
-					PlayerModel.RightUpperArm.LookAt( lookAtPos, dir);
-					// also rotate right hand
-					PlayerModel.RightHand.LookAt (lookAtPos, dir);
-
-				} else {
-					
-				//	PlayerModel.PlayUpperLayerAnimations (AnimGroup.Rifle, AnimGroup.WalkCycle, AnimIndex.RIFLE_fire, AnimIndex.Idle);
-
-					var state = PlayerModel.PlayAnim (AnimGroup.Rifle, AnimIndex.RIFLE_fire, true, true);
-					state.wrapMode = WrapMode.ClampForever;
-					if (state.normalizedTime > m_aimWithRifleMaxAnimTime) {
-					//	state.normalizedTime = m_aimWithRifleMaxAnimTime;
-						state.enabled = false;
-					}
-					
-				}
+				CurrentWeapon.UpdateAnimWhileAiming (m_player);
 			}
 
 			if (!m_player.IsInVehicle && !this.IsAiming && this.IsHoldingWeapon) {
 				// player is not aiming, but is holding a weapon
 				// update current anim
 
-				if (m_player.IsRunning) {
-
-				//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
-				//		AnimGroup.MyWalkCycle, AnimIndex.Run, AnimIndex.IdleArmed);
-
-					if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
-						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Run);
-					} else {
-						PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.run_armed);
-					}
-
-				} else if (m_player.IsWalking) {
-
-				//	Play2Animations (new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.WalkCycle,
-				//		AnimGroup.MyWalkCycle, AnimIndex.Walk, AnimIndex.IdleArmed);
-
-					if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
-						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Walk);
-					} else {
-						PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.WALK_armed);
-					}
-
-				} else if (m_player.IsSprinting) {
-
-					if (CurrentWeapon.CanSprintWithIt) {
-						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
-					} else {
-						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
-					}
-
-				} else {
-					// player is standing
-
-				//	Play2Animations(new int[] { 41, 51 }, new int[] { 2 }, AnimGroup.MyWalkCycle,
-				//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.IdleArmed);
-
-					if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
-						PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
-					} else {
-						PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
-					}
-
-				}
-
+				CurrentWeapon.UpdateAnimWhileHolding (m_player);
 			}
 
 		}

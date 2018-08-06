@@ -258,6 +258,17 @@ namespace SanAndreasUnity.Utilities
         }
 
 
+		public static float GetTimePerc (this AnimationState state)
+		{
+			return state.time / state.length;
+		}
+
+		public static void SetTimePerc (this AnimationState state, float perc)
+		{
+			state.time = state.length * perc;
+		}
+
+
 		public	static	void	Invoke( this Component component, string methodName, params object[] args ) {
 
 			var method = component.GetType().GetMethod( methodName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public );

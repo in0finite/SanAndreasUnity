@@ -24,6 +24,7 @@ namespace SanAndreasUnity.Behaviours
         private FrameContainer _frames;
         public FrameContainer Frames { get { return _frames; } }
         private Frame _root;
+		public Frame RootFrame { get { return _root; } }
 
         private readonly Dictionary<string, Anim> _loadedAnims
             = new Dictionary<string, Anim>();
@@ -274,6 +275,11 @@ namespace SanAndreasUnity.Behaviours
             return animState;
         }
 
+		public AnimationState PlayAnim (AnimId animId)
+		{
+			return PlayAnim (animId.AnimGroup, animId.AnimIndex);
+		}
+
 		public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, bool resetModelStateIfAnimChanged, bool resetAnimStateIfAnimChanged)
 		{
 			bool animChanged = this.AnimGroup != group || this.animIndex != anim;
@@ -293,6 +299,11 @@ namespace SanAndreasUnity.Behaviours
 			}
 
 			return state;
+		}
+
+		public AnimationState PlayAnim(AnimId animId, bool resetModelStateIfAnimChanged, bool resetAnimStateIfAnimChanged)
+		{
+			return PlayAnim (animId.AnimGroup, animId.AnimIndex, resetModelStateIfAnimChanged, resetAnimStateIfAnimChanged);
 		}
 
         public AnimationState AddMixingTransform(AnimGroup group, AnimIndex anim, Transform mix)

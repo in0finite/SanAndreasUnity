@@ -2,8 +2,12 @@
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Weapons;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
+using SanAndreasUnity.Importing.Animation;
+using System.Reflection;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -86,11 +90,29 @@ namespace SanAndreasUnity.Behaviours
 		public Texture2D HudTexture { get; private set; }
 
 
-		private static GameObject weaponsContainer = null;
+		private static List<System.Type> s_weaponTypes = new List<System.Type> ();
+
+		private static GameObject s_weaponsContainer = null;
 
 		public static Texture2D CrosshairTexture { get; set; }
 		public static Texture2D FistTexture { get; set; }
 
+		public AnimationState AimAnimState { get; protected set; }
+		//public bool IsInsideFireAnim { get { return this.AimAnimState != null && this.AimAnimState.enabled && this.AimAnimState.time > this.AimAnimMaxTime; } }
+		public Transform GunFlash { get; private set; }
+
+
+
+		static Weapon ()
+		{
+			// obtain all weapon types
+			var myType = typeof (Weapon);
+			foreach (Assembly a in System.AppDomain.CurrentDomain.GetAssemblies())
+			{
+				s_weaponTypes.AddRange (a.GetTypes ().Where (t => t.IsSubclassOf (myType)));
+			}
+
+		}
 
 
 		public static Weapon Load (int modelId)
@@ -99,23 +121,27 @@ namespace SanAndreasUnity.Behaviours
 			if (null == def)
 				return null;
 
+			WeaponData weaponData = WeaponData.LoadedWeaponsData.FirstOrDefault (wd => wd.modelId1 == def.Id);
+			if (null == weaponData)
+				return null;
+
 			var geoms = Geometry.Load (def.ModelName, def.TextureDictionaryName);
 			if (null == geoms)
 				return null;
 
-			if (null == weaponsContainer) {
-				weaponsContainer = new GameObject ("Weapons");
+			if (null == s_weaponsContainer) {
+				s_weaponsContainer = new GameObject ("Weapons");
 			//	weaponsContainer.SetActive (false);
 			}
 
 			GameObject go = new GameObject (def.ModelName);
-			go.transform.SetParent (weaponsContainer.transform);
+			go.transform.SetParent (s_weaponsContainer.transform);
 
 			geoms.AttachFrames (go.transform, MaterialFlags.Default);
 
-			Weapon weapon = go.AddComponent<Weapon> ();
+			Weapon weapon = AddWeaponComponent (go, weaponData);
 			weapon.definition = def;
-			weapon.data = WeaponData.LoadedWeaponsData.FirstOrDefault (wd => wd.modelId1 == def.Id);
+			weapon.data = weaponData;
 			// cache gun aiming offset
 			if (weapon.data.gunData != null)
 				weapon.gunAimingOffset = weapon.data.gunData.aimingOffset;
@@ -130,6 +156,22 @@ namespace SanAndreasUnity.Behaviours
 			return weapon;
 		}
 
+		private static Weapon AddWeaponComponent (GameObject go, WeaponData data)
+		{
+			// find type which inherits Weapon class, and whose name matches the one in data
+
+			string typeName = data.weaponType.Replace ("_", "");
+
+			var type = s_weaponTypes.Where (t => 0 == string.Compare (t.Name, typeName, true)).FirstOrDefault ();
+
+			if (type != null) {
+				return (Weapon)go.AddComponent (type);
+			} else {
+				return go.AddComponent<Weapon> ();
+			}
+
+		}
+
 
 		public bool HasFlag( GunFlag gunFlag ) {
 
@@ -140,7 +182,39 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-		public bool CanSprintWithIt {
+		protected virtual void Awake ()
+		{
+			this.GunFlash = this.transform.FindChildRecursive("gunflash");
+		}
+
+		protected virtual void Start ()
+		{
+
+		}
+
+		protected virtual void Update ()
+		{
+
+			// enable/disable gun flash
+			if (this.GunFlash != null) {
+				bool shouldBeVisible = false;
+
+				if (AimAnimState != null && AimAnimState.enabled) {
+					// aim anim is being played
+
+					if (AimAnimState.time.BetweenExclusive (this.AimAnimMaxTime, this.AimAnimMaxTime + this.GunFlashDuration)) {
+						// muzzle flash should be visible
+						shouldBeVisible = true;
+					}
+				}
+
+				this.GunFlash.gameObject.SetActive (shouldBeVisible);
+			}
+
+		}
+
+
+		public virtual bool CanSprintWithIt {
 			get {
 				if (this.HasFlag (GunFlag.AIMWITHARM))
 					return true;
@@ -151,6 +225,180 @@ namespace SanAndreasUnity.Behaviours
 
 				return true;
 			}
+		}
+
+		public virtual AnimId IdleAnim {
+			get {
+				if (this.HasFlag (GunFlag.AIMWITHARM)) {
+					return new AnimId (AnimGroup.WalkCycle, AnimIndex.Idle);
+				} else {
+					return new AnimId (AnimGroup.MyWalkCycle, AnimIndex.IdleArmed);
+				}
+			}
+		}
+
+		public virtual AnimId WalkAnim {
+			get {
+				if (this.HasFlag (GunFlag.AIMWITHARM)) {
+					return new AnimId (AnimGroup.WalkCycle, AnimIndex.Walk);
+				} else {
+					return new AnimId (AnimGroup.Gun, AnimIndex.WALK_armed);
+				}
+			}
+		}
+
+		public virtual AnimId RunAnim {
+			get {
+				if (this.HasFlag (GunFlag.AIMWITHARM)) {
+					return new AnimId (AnimGroup.WalkCycle, AnimIndex.Run);
+				} else {
+					return new AnimId (AnimGroup.Gun, AnimIndex.run_armed);
+				}
+			}
+		}
+
+		public virtual AnimId AimAnim {
+			get {
+				return new AnimId (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
+			}
+		}
+
+		public virtual float AimAnimMaxTime {
+			get {
+				return Weapons.WeaponsManager.ConvertAnimTime (this.data.gunData.animLoopStart);
+			}
+		}
+
+		public virtual float AimAnimFireMaxTime {
+			get {
+				return Weapons.WeaponsManager.ConvertAnimTime (this.data.gunData.animLoopEnd);
+			}
+		}
+
+		public virtual float GunFlashDuration {
+			get {
+				return Weapons.WeaponsManager.Instance.GunFlashDuration;
+			}
+		}
+
+		public virtual void UpdateAnimWhileAiming (Player player)
+		{
+			var CurrentWeapon = this;
+			var PlayerModel = player.PlayerModel;
+
+
+		//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
+		//		AnimGroup.MyWalkCycle, AnimIndex.IdleArmed, AnimIndex.GUN_STAND);
+
+			if (CurrentWeapon.HasFlag (GunFlag.AIMWITHARM)) {
+				// aim with arm
+				// eg: pistol, tec9, sawnoff
+
+//					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
+//					state.wrapMode = WrapMode.ClampForever;
+//					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
+//						state.normalizedTime = m_aimWithArmMaxAnimTime;
+
+				var state = PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
+				//state.RemoveMixingTransform (PlayerModel.Spine);
+
+				// rotate right upper arm to match direction of player
+				// we'll need a few adjustments, because arm's right vector is player's forward vector,
+				// and arm's forward vector is player's down vector => arm's up is player's left
+				Vector3 lookAtPos = player.transform.position - player.transform.up * 500;
+				Vector3 dir = -player.transform.right;
+				PlayerModel.RightUpperArm.LookAt( lookAtPos, dir);
+				// also rotate right hand
+				PlayerModel.RightHand.LookAt (lookAtPos, dir);
+
+			} else {
+
+				//	PlayerModel.PlayUpperLayerAnimations (AnimGroup.Rifle, AnimGroup.WalkCycle, AnimIndex.RIFLE_fire, AnimIndex.Idle);
+
+				var state = PlayerModel.PlayAnim (this.AimAnim, true, true);
+				AimAnimState = state;
+				state.wrapMode = WrapMode.ClampForever;
+
+				//this.IsInsideFireAnim = false;
+
+				if (state.time > this.AimAnimMaxTime) {
+					//this.IsInsideFireAnim = true;
+
+					if (player.WeaponHolder.IsFiring) {
+						state.enabled = true;
+
+						// check if anim reached end
+						if(state.time >= this.AimAnimFireMaxTime) {
+							// anim reached end, revert it to start
+
+							state.time = this.AimAnimMaxTime;
+							player.AnimComponent.Sample ();
+
+							// no longer firing
+							player.WeaponHolder.IsFiring = false;
+						}
+					} else {
+						// check if we should start firing
+
+						if (player.WeaponHolder.IsFireOn) {
+							// we should start firing
+							player.WeaponHolder.IsFiring = true;
+						} else {
+							// we should remain in aim state
+							state.time = this.AimAnimMaxTime;
+							player.AnimComponent.Sample ();
+							state.enabled = false;
+						}
+					}
+				}
+
+			}
+
+		}
+
+		public virtual void UpdateAnimWhileHolding (Player player)
+		{
+			var CurrentWeapon = this;
+			var PlayerModel = player.PlayerModel;
+
+			if (player.IsRunning) {
+
+				PlayerModel.PlayAnim (CurrentWeapon.RunAnim);
+
+			} else if (player.IsWalking) {
+
+				PlayerModel.PlayAnim (CurrentWeapon.WalkAnim);
+
+			} else if (player.IsSprinting) {
+
+				if (CurrentWeapon.CanSprintWithIt) {
+					PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
+				} else {
+					PlayerModel.PlayAnim (CurrentWeapon.IdleAnim);
+				}
+
+			} else {
+				// player is standing
+
+				PlayerModel.PlayAnim (CurrentWeapon.IdleAnim);
+
+			}
+
+		}
+
+		public virtual void UpdateGunFlashRotation (Player player)
+		{
+
+			if (null == this.GunFlash)
+				return;
+
+			if (!this.GunFlash.gameObject.activeInHierarchy)
+				return;
+
+			float delta = Weapons.WeaponsManager.Instance.GunFlashRotationSpeed * Time.deltaTime;
+
+			this.GunFlash.rotation *= Quaternion.AngleAxis (delta, Vector3.right);
+
 		}
 
 	}

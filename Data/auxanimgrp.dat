@@ -81,10 +81,58 @@ default, weapons, weapons, 17
 	SHP_Tray_Pose
 end
 
-default, colt45, colt45, 3
+default, colt45, colt45, 7
 	colt45_fire
 	COLT45_RELOAD
 	colt45_crouchfire
+	colt45_fire_2hands
+	2guns_crouchfire
+	colt45_crouchreload
+	sawnoff_reload
+end
+
+default, silenced, silenced, 4
+	CrouchReload
+	SilenceCrouchfire
+	Silence_fire
+	Silence_reload
+end
+
+default, python, python, 5
+	python_crouchfire
+	python_crouchreload
+	python_fire
+	python_fire_poor
+	python_reload
+end
+
+default, shotgun, shotgun, 3
+	shotgun_crouchfire
+	shotgun_fire
+	shotgun_fire_poor
+end
+
+default, buddy, buddy, 5
+	buddy_crouchfire
+	buddy_crouchreload
+	buddy_fire
+	buddy_fire_poor
+	buddy_fire_reload
+end
+
+default, tec, tec, 4
+	TEC_crouchfire
+	TEC_crouchreload
+	TEC_fire
+	TEC_reload
+end
+
+default, uzi, uzi, 5
+	UZI_crouchfire
+	UZI_crouchreload
+	UZI_fire
+	UZI_fire_poor
+	UZI_reload
 end
 
 default, rifle, rifle, 5
@@ -95,18 +143,16 @@ default, rifle, rifle, 5
 	RIFLE_load
 end
 
-default, shotgun, shotgun, 3
-	shotgun_crouchfire
-	shotgun_fire
-	shotgun_fire_poor
-end
-
 default, rocket, rocket, 5
 	idle_rocket
 	RocketFire
 	run_rocket
 	walk_rocket
 	WALK_start_rocket
+end
+
+default, flame, flame, 1
+	FLAME_fire
 end
 
 default, grenade, grenade, 3

@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 114366052828304570}
   - component: {fileID: 114659537100185892}
   - component: {fileID: 114195546318360620}
+  - component: {fileID: 114805125582614736}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -79,3 +80,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionKey: 112
+--- !u!114 &114805125582614736
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1297494511425690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b19ecbdc94cb426782bb12647cbe133, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_animConvertMultiplier: 3.25
+  m_gunFlashDuration: 0.07
+  m_gunFlashRotationSpeed: 3600
