@@ -28,6 +28,9 @@ namespace SanAndreasUnity.Behaviours
 			if (IsInVehicle)
 				return;
 
+			if (this.IsAiming || this.WeaponHolder.IsFiring)
+				return;
+
 			var seat = vehicle.GetSeat (seatAlignment);
 			if (null == seat)
 				return;

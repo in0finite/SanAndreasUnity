@@ -22,9 +22,11 @@ namespace SanAndreasUnity.Behaviours {
 		public	bool	autoAddWeapon = false;
 
 		public	bool	IsAimOn { get; set; }
-		public	bool	IsAiming { get { return this.IsAimOn && this.IsHoldingWeapon && !m_player.IsInVehicle; } }
+		public	bool	IsAiming { get; private set; }
 
+		public	bool	IsFiring { get; set; }
 		public	bool	IsFireOn { get; set; }
+		//public	float	TimeWhenStartedFiring { get; private set; }
 
 		public	Weapon	CurrentWeapon { get ; private set ; }
 		private	Transform	CurrentWeaponTransform { get { return CurrentWeapon != null ? CurrentWeapon.transform : null; } }
@@ -95,6 +97,27 @@ namespace SanAndreasUnity.Behaviours {
 
 			if (CurrentWeapon != null)
 				CurrentWeapon.UpdateGunFlashRotation (m_player);
+
+			// update aiming state
+
+			if (this.IsAiming) {
+				// check if we should exit aiming state
+				if (!this.IsHoldingWeapon || m_player.IsInVehicle || !this.IsAimOn) {
+					if (!this.IsFiring) {
+						this.IsAiming = false;
+					}
+				}
+			} else {
+				// check if we should enter aiming state
+				if (this.IsHoldingWeapon && this.IsAimOn && !m_player.IsInVehicle) {
+					this.IsAiming = true;
+				}
+			}
+
+			// update firing state
+
+			if (!this.IsAiming)
+				this.IsFiring = false;
 
 		}
 

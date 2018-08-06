@@ -98,6 +98,7 @@ namespace SanAndreasUnity.Behaviours
 		public static Texture2D FistTexture { get; set; }
 
 		public AnimationState AimAnimState { get; protected set; }
+		//public bool IsInsideFireAnim { get { return this.AimAnimState != null && this.AimAnimState.enabled && this.AimAnimState.time > this.AimAnimMaxTime; } }
 		public Transform GunFlash { get; private set; }
 
 
@@ -318,20 +319,36 @@ namespace SanAndreasUnity.Behaviours
 				AimAnimState = state;
 				state.wrapMode = WrapMode.ClampForever;
 
+				//this.IsInsideFireAnim = false;
+
 				if (state.time > this.AimAnimMaxTime) {
-					if (player.WeaponHolder.IsFireOn) {
+					//this.IsInsideFireAnim = true;
+
+					if (player.WeaponHolder.IsFiring) {
 						state.enabled = true;
 
 						// check if anim reached end
 						if(state.time >= this.AimAnimFireMaxTime) {
 							// anim reached end, revert it to start
+
 							state.time = this.AimAnimMaxTime;
 							player.AnimComponent.Sample ();
+
+							// no longer firing
+							player.WeaponHolder.IsFiring = false;
 						}
 					} else {
-						state.time = this.AimAnimMaxTime;
-						player.AnimComponent.Sample ();
-						state.enabled = false;
+						// check if we should start firing
+
+						if (player.WeaponHolder.IsFireOn) {
+							// we should start firing
+							player.WeaponHolder.IsFiring = true;
+						} else {
+							// we should remain in aim state
+							state.time = this.AimAnimMaxTime;
+							player.AnimComponent.Sample ();
+							state.enabled = false;
+						}
 					}
 				}
 
