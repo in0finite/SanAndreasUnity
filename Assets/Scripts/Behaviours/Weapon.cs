@@ -98,6 +98,7 @@ namespace SanAndreasUnity.Behaviours
 		public static Texture2D FistTexture { get; set; }
 
 		public AnimationState AimAnimState { get; protected set; }
+		private	float	m_aimAnimTimeForAimWithArmWeapon = 0f;
 		//public bool IsInsideFireAnim { get { return this.AimAnimState != null && this.AimAnimState.enabled && this.AimAnimState.time > this.AimAnimMaxTime; } }
 		public Transform GunFlash { get; private set; }
 
@@ -194,23 +195,7 @@ namespace SanAndreasUnity.Behaviours
 
 		protected virtual void Update ()
 		{
-
-			// enable/disable gun flash
-			if (this.GunFlash != null) {
-				bool shouldBeVisible = false;
-
-				if (AimAnimState != null && AimAnimState.enabled) {
-					// aim anim is being played
-
-					if (AimAnimState.time.BetweenExclusive (this.AimAnimMaxTime, this.AimAnimMaxTime + this.GunFlashDuration)) {
-						// muzzle flash should be visible
-						shouldBeVisible = true;
-					}
-				}
-
-				this.GunFlash.gameObject.SetActive (shouldBeVisible);
-			}
-
+			
 		}
 
 
@@ -299,8 +284,44 @@ namespace SanAndreasUnity.Behaviours
 //					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
 //						state.normalizedTime = m_aimWithArmMaxAnimTime;
 
-				var state = PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
+				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
 				//state.RemoveMixingTransform (PlayerModel.Spine);
+
+				// update fire state
+
+				m_aimAnimTimeForAimWithArmWeapon += Time.deltaTime;
+
+				if (player.WeaponHolder.NumFramesSinceStartedAiming <= 1 || player.WeaponHolder.NumFramesSinceSwitchedWeapon <= 1) {
+					m_aimAnimTimeForAimWithArmWeapon = 0f;
+				}
+
+				if (m_aimAnimTimeForAimWithArmWeapon > this.AimAnimMaxTime) {
+
+					if (player.WeaponHolder.IsFiring) {
+						
+						// check if anim reached end
+						if(m_aimAnimTimeForAimWithArmWeapon >= this.AimAnimFireMaxTime) {
+							// anim reached end, revert it to start
+
+							m_aimAnimTimeForAimWithArmWeapon = this.AimAnimMaxTime;
+
+							// no longer firing
+							player.WeaponHolder.IsFiring = false;
+						}
+					} else {
+						// check if we should start firing
+
+						if (player.WeaponHolder.IsFireOn) {
+							// we should start firing
+							player.WeaponHolder.IsFiring = true;
+						} else {
+							// we should remain in aim state
+							m_aimAnimTimeForAimWithArmWeapon = this.AimAnimMaxTime;
+						}
+					}
+
+				}
+
 
 				// rotate right upper arm to match direction of player
 				// we'll need a few adjustments, because arm's right vector is player's forward vector,
@@ -319,36 +340,40 @@ namespace SanAndreasUnity.Behaviours
 				AimAnimState = state;
 				state.wrapMode = WrapMode.ClampForever;
 
-				//this.IsInsideFireAnim = false;
+				this.UpdateFireAnim (player, state);
+			}
 
-				if (state.time > this.AimAnimMaxTime) {
-					//this.IsInsideFireAnim = true;
+		}
 
-					if (player.WeaponHolder.IsFiring) {
-						state.enabled = true;
+		protected virtual void UpdateFireAnim (Player player, AnimationState state)
+		{
+			
+			if (state.time > this.AimAnimMaxTime) {
+				
+				if (player.WeaponHolder.IsFiring) {
+					state.enabled = true;
 
-						// check if anim reached end
-						if(state.time >= this.AimAnimFireMaxTime) {
-							// anim reached end, revert it to start
+					// check if anim reached end
+					if(state.time >= this.AimAnimFireMaxTime) {
+						// anim reached end, revert it to start
 
-							state.time = this.AimAnimMaxTime;
-							player.AnimComponent.Sample ();
+						state.time = this.AimAnimMaxTime;
+						player.AnimComponent.Sample ();
 
-							// no longer firing
-							player.WeaponHolder.IsFiring = false;
-						}
+						// no longer firing
+						player.WeaponHolder.IsFiring = false;
+					}
+				} else {
+					// check if we should start firing
+
+					if (player.WeaponHolder.IsFireOn) {
+						// we should start firing
+						player.WeaponHolder.IsFiring = true;
 					} else {
-						// check if we should start firing
-
-						if (player.WeaponHolder.IsFireOn) {
-							// we should start firing
-							player.WeaponHolder.IsFiring = true;
-						} else {
-							// we should remain in aim state
-							state.time = this.AimAnimMaxTime;
-							player.AnimComponent.Sample ();
-							state.enabled = false;
-						}
+						// we should remain in aim state
+						state.time = this.AimAnimMaxTime;
+						player.AnimComponent.Sample ();
+						state.enabled = false;
 					}
 				}
 
@@ -382,6 +407,33 @@ namespace SanAndreasUnity.Behaviours
 
 				PlayerModel.PlayAnim (CurrentWeapon.IdleAnim);
 
+			}
+
+		}
+
+		public virtual void EnableOrDisableGunFlash (Player player)
+		{
+			
+			// enable/disable gun flash
+			if (this.GunFlash != null) {
+				
+				bool shouldBeVisible = false;
+
+				if (this.HasFlag (GunFlag.AIMWITHARM)) {
+					shouldBeVisible = m_aimAnimTimeForAimWithArmWeapon.BetweenExclusive (this.AimAnimMaxTime, this.AimAnimMaxTime + this.GunFlashDuration);
+				} else {
+
+					if (AimAnimState != null && AimAnimState.enabled) {
+						// aim anim is being played
+
+						if (AimAnimState.time.BetweenExclusive (this.AimAnimMaxTime, this.AimAnimMaxTime + this.GunFlashDuration)) {
+							// muzzle flash should be visible
+							shouldBeVisible = true;
+						}
+					}
+				}
+
+				this.GunFlash.gameObject.SetActive (shouldBeVisible);
 			}
 
 		}

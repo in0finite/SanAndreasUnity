@@ -22,15 +22,45 @@ namespace SanAndreasUnity.Behaviours {
 		public	bool	autoAddWeapon = false;
 
 		public	bool	IsAimOn { get; set; }
-		public	bool	IsAiming { get; private set; }
+		private	bool	m_isAiming = false;
+		public	bool	IsAiming {
+			get { return m_isAiming; }
+			private set {
+				if (value == m_isAiming)
+					return;
+				if (value) {
+					m_timeWhenStartedAiming = Time.time;
+					m_frameWhenStartedAiming = Time.frameCount;
+				}
+				m_isAiming = value;
+			}
+		}
+		private	float	m_timeWhenStartedAiming = 0f;
+		public	float	TimeSinceStartedAiming { get { return Time.time - m_timeWhenStartedAiming; } }
+		private	int		m_frameWhenStartedAiming = 0;
+		public	int		NumFramesSinceStartedAiming { get { return Time.frameCount - m_frameWhenStartedAiming; } }
 
-		public	bool	IsFiring { get; set; }
+		private	bool	m_isFiring = false;
+		public	bool	IsFiring {
+			get { return m_isFiring; }
+			set {
+				if (value == m_isFiring)
+					return;
+				if (value)
+					this.TimeWhenStartedFiring = Time.time;
+				m_isFiring = value;
+			}
+		}
 		public	bool	IsFireOn { get; set; }
-		//public	float	TimeWhenStartedFiring { get; private set; }
+		public	float	TimeWhenStartedFiring { get; private set; }
+		public	float	TimeSinceStartedFiring { get { return Time.time - this.TimeWhenStartedFiring; } }
 
 		public	Weapon	CurrentWeapon { get ; private set ; }
 		private	Transform	CurrentWeaponTransform { get { return CurrentWeapon != null ? CurrentWeapon.transform : null; } }
         
+		private	int		m_frameWhenSwitchedWeapon = 0;
+		public	int		NumFramesSinceSwitchedWeapon { get { return Time.frameCount - m_frameWhenSwitchedWeapon; } }
+
 
 		public Vector3 SpineOffset;
 
@@ -95,8 +125,10 @@ namespace SanAndreasUnity.Behaviours {
 
 			this.UpdateWeaponTransform ();
 
-			if (CurrentWeapon != null)
+			if (CurrentWeapon != null) {
+				CurrentWeapon.EnableOrDisableGunFlash (m_player);
 				CurrentWeapon.UpdateGunFlashRotation (m_player);
+			}
 
 			// update aiming state
 
@@ -292,6 +324,8 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 			currentWeaponSlot = slotIndex;
+
+			m_frameWhenSwitchedWeapon = Time.frameCount;
 		}
 
 		private static void HideWeapon (Weapon weapon)
