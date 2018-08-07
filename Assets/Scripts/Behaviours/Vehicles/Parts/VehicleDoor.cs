@@ -103,18 +103,29 @@ public class VehicleDoor : VehicleBehaviour
 
         force = (vehicleBody.mass * .015f) * Mathf.Pow(vehicleBody.angularVelocity.magnitude, 2) * Vector3.Distance(vehicle.transform.TransformPoint(vehicleBody.centerOfMass), transform.position);
 
-        if (_isLocked && force > 100 && Random.value < lockHealth / 100f)
-            isLocked = false;
-
-        // If rotation from the hinge is 0 (== can be closed) block the door
-        if ((transform.localEulerAngles.y < 1 || transform.localEulerAngles.y > 359) && !_isLocked && (1f - Random.value) < lockHealth / 100f)
-            isLocked = true;
+        if(!TryOpenDoor()) // !IsLocked == Opened
+            TryCloseDoor();
 
         if (force > lastForce && allowedToDebug)
         {
             //Debug.Log("NEW MAX: " + drag);
             lastForce = force;
         }
+    }
+
+    private bool TryOpenDoor()
+    {
+        if (_isLocked && force > 100 && Random.value < lockHealth / 100f)
+            isLocked = false;
+
+        return isLocked;
+    }
+
+    private void TryCloseDoor()
+    {
+        // If rotation from the hinge is 0 (== can be closed) block the door
+        if ((transform.localEulerAngles.y < 1 || transform.localEulerAngles.y > 359) && !_isLocked && (1f - Random.value) < lockHealth / 100f)
+            isLocked = true;
     }
 
     private void OnDrawGizmos()
@@ -124,7 +135,7 @@ public class VehicleDoor : VehicleBehaviour
 
     public override void OnVehicleCollisionEnter(Collision collision)
     {
-        Debug.Log("Hi collision!!");
+        TryOpenDoor();
     }
 
     public override void OnVehicleCollisionExit(Collision collision)
@@ -139,7 +150,7 @@ public class VehicleDoor : VehicleBehaviour
 
     public override void OnVehicleTriggerEnter(Collider other)
     {
-        Debug.Log("Hi trigger!!");
+        
     }
 
     public override void OnVehicleTriggerExit(Collider other)

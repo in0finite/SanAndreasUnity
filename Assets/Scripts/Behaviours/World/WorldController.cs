@@ -9,6 +9,8 @@ namespace SanAndreasUnity.Behaviours.World
     // TODO: TimeFactor -> AngleFactor
     public class WorldController : MonoBehaviour
     {
+        public static WorldController me;
+
         public const float dayCycleMins = 24,
                            relMinSecs = 1; // That means that one second in real life in one minute in game
 
@@ -41,13 +43,14 @@ namespace SanAndreasUnity.Behaviours.World
         {
             get
             {
-                return ((dayTimeCounter * AngleFactor) % 360).BetweenInclusive(180, 360);
+                return me.light.transform.eulerAngles.x.BetweenInclusive(180, 360);
             }
         }
 
         private void Awake()
         {
             light = dirLight.GetComponent<Light>();
+            me = this;
         }
 
         // Use this for initialization
