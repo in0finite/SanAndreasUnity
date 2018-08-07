@@ -1,5 +1,4 @@
 ﻿using SanAndreasUnity.Utilities;
-using System;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
@@ -21,7 +20,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public TimeState startTimeState;
 
-        private Light light;
+        private new Light light;
 
         public static float TimeFactor
         {
@@ -93,25 +92,29 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
-        // Must review
-        public static void SetTime(TimeState time)
+        // Must review: It doesn't work fine
+        public static void SetTime(TimeState time, bool callback = true)
         {
             switch (time)
             {
                 case TimeState.Dawn:
                     dayTimeCounter = dayCount > 0 ? GetRoundedTime(TimeFactor) : 0;
+                    if(callback) F.SendMessageToObjectsOfType<MonoBehaviour>("OnDawnTime");
                     break;
 
                 case TimeState.Noon:
                     dayTimeCounter = dayCount > 0 ? GetRoundedTime(90 * TimeFactor) : TimeFactor * 90;
+                    if (callback) F.SendMessageToObjectsOfType<MonoBehaviour>("OnNoonTime");
                     break;
 
                 case TimeState.Dusk:
                     dayTimeCounter = dayCount > 0 ? GetRoundedTime(180 * TimeFactor) : TimeFactor * 180;
+                    if (callback) F.SendMessageToObjectsOfType<MonoBehaviour>("OnDuskTime");
                     break;
 
                 case TimeState.Midnight:
                     dayTimeCounter = dayCount > 0 ? GetRoundedTime(270 * TimeFactor) : TimeFactor * 270;
+                    if (callback) F.SendMessageToObjectsOfType<MonoBehaviour>("OnMidnightTime");
                     break;
             }
 
