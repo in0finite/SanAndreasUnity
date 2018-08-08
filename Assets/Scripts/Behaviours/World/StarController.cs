@@ -47,11 +47,13 @@ public class StarController : MonoBehaviour
     private void StartPlaying()
     {
         if (!particleSystem.isPlaying)
-            particleSystem.Play(); //InvokeRepeating("KeepPlaying", 0, particleSystem.main.duration);
+            particleSystem.Play(); 
+        //InvokeRepeating("KeepPlaying", 0, particleSystem.main.duration);
     }
 
     public void KeepPlaying()
     {
+        // I keep this, because I can emit as stars as I need
         particleSystem.Play();
     }
 

@@ -398,18 +398,6 @@ Prefab:
       propertyPath: WaterPrefab
       value: 
       objectReference: {fileID: 1631170489}
-    - target: {fileID: 4799468605602808, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 200
-      objectReference: {fileID: 0}
-    - target: {fileID: 4799468605602808, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 200
-      objectReference: {fileID: 0}
-    - target: {fileID: 4799468605602808, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 200
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0
