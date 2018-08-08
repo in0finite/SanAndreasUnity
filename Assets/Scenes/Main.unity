@@ -390,14 +390,84 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
-      propertyPath: Focus
-      value: 
-      objectReference: {fileID: 1117230324}
     - target: {fileID: 11455068, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
       propertyPath: WaterPrefab
       value: 
       objectReference: {fileID: 1631170489}
+    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: Focus
+      value: 
+      objectReference: {fileID: 1117230324}
+    - target: {fileID: 198482710293227328, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: moveWithCustomTransform
+      value: 
+      objectReference: {fileID: 1315600947}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.key1.r
+      value: 0.7830189
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.key1.g
+      value: 0.7830189
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.key1.b
+      value: 0.7830189
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.key2.r
+      value: 0.4431373
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.key2.g
+      value: 0.5764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.key2.b
+      value: 0.80392164
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.ctime1
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.ctime2
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.m_NumColorKeys
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.key0.r
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.key0.g
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayFogColor.key0.b
+      value: 0.39215687
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0
@@ -463,6 +533,11 @@ Transform:
   m_PrefabParentObject: {fileID: 4792283653009728, guid: 3b4f69035cdf45d4c9bf28466d8d3ff1,
     type: 2}
   m_PrefabInternal: {fileID: 830101605}
+--- !u!4 &1315600947 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4388436116821042, guid: 9d45d42a7408c1e4ab325d6840364b84,
+    type: 2}
+  m_PrefabInternal: {fileID: 592530377}
 --- !u!108 &1430544495 stripped
 Light:
   m_PrefabParentObject: {fileID: 10808534, guid: b6900baf9f552ba46ad27d4ada4d5489,
