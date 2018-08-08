@@ -50,7 +50,7 @@ namespace SanAndreasUnity.Behaviours.World
         {
             get
             {
-                return tickCounter * TickAngleFactor;
+                return tickCounter * AngleFactor;
             }
         }
 
