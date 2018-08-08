@@ -348,6 +348,36 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114465114813913128, guid: 3b4f69035cdf45d4c9bf28466d8d3ff1,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114465114813913128, guid: 3b4f69035cdf45d4c9bf28466d8d3ff1,
+        type: 2}
+      propertyPath: startDistance
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 114465114813913128, guid: 3b4f69035cdf45d4c9bf28466d8d3ff1,
+        type: 2}
+      propertyPath: useRadialDistance
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114465114813913128, guid: 3b4f69035cdf45d4c9bf28466d8d3ff1,
+        type: 2}
+      propertyPath: distanceFog
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114465114813913128, guid: 3b4f69035cdf45d4c9bf28466d8d3ff1,
+        type: 2}
+      propertyPath: excludeFarPixels
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114465114813913128, guid: 3b4f69035cdf45d4c9bf28466d8d3ff1,
+        type: 2}
+      propertyPath: heightFog
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3b4f69035cdf45d4c9bf28466d8d3ff1, type: 2}
   m_IsPrefabParent: 0
@@ -403,71 +433,6 @@ Prefab:
       propertyPath: moveWithCustomTransform
       value: 
       objectReference: {fileID: 1315600947}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.key1.r
-      value: 0.7830189
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.key1.g
-      value: 0.7830189
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.key1.b
-      value: 0.7830189
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.key2.r
-      value: 0.4431373
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.key2.g
-      value: 0.5764706
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.key2.b
-      value: 0.80392164
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.ctime1
-      value: 65535
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.ctime2
-      value: 65535
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.m_NumColorKeys
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.key0.r
-      value: 0.39215687
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.key0.g
-      value: 0.39215687
-      objectReference: {fileID: 0}
-    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: nightDayFogColor.key0.b
-      value: 0.39215687
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0
