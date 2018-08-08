@@ -405,23 +405,23 @@ Prefab:
       objectReference: {fileID: 1631170489}
     - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0.29883623
+      value: 0.17860618
       objectReference: {fileID: 0}
     - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0.64085644
+      value: -0.82139385
       objectReference: {fileID: 0}
     - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0.64085644
+      value: 0.38302222
       objectReference: {fileID: 0}
     - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
       propertyPath: m_LocalRotation.w
-      value: -0.29883623
+      value: 0.38302222
       objectReference: {fileID: 0}
     - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 270
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -520,6 +520,11 @@ Prefab:
         type: 2}
       propertyPath: nightDayAmbientIntensity.m_Curve.Array.data[1].outWeight
       value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}

@@ -166,14 +166,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 153756}
-  m_LocalRotation: {x: -0.17860633, y: 0.82139367, z: -0.3830222, w: -0.38302246}
+  m_LocalRotation: {x: 0.17860618, y: -0.82139385, z: 0.38302222, w: 0.38302222}
   m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4799468605602808}
   m_Father: {fileID: 499186}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: -130, z: 0}
 --- !u!4 &418232
 Transform:
   m_ObjectHideFlags: 1
@@ -881,11 +881,60 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 7
     m_NumAlphaKeys: 2
-  maxIntensity: 1
-  minIntensity: 0
+  nightDaySkyTint:
+    serializedVersion: 2
+    key0: {r: 0, g: 0, b: 0, a: 1}
+    key1: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
+  nightDayAmbientIntensity:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.00053825084
+      value: 1.9994531
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.999941
+      value: 1.0010983
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   minPoint: -0.2
-  maxAmbient: 0
-  minAmbient: 0
   minAmbientPoint: -0.2
   nightDayFogColor:
     serializedVersion: 2
@@ -942,7 +991,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   fogScale: 1
   dayAtmosphereThickness: 1.2
-  nightAtmosphereThickness: 1.4
+  nightAtmosphereThickness: 0.5
   dayRotateSpeed: {x: -2, y: 0, z: 0}
   nightRotateSpeed: {x: -3, y: 0, z: 0}
 --- !u!114 &114077829182571006
