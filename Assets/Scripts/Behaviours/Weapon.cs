@@ -433,6 +433,8 @@ namespace SanAndreasUnity.Behaviours
 					}
 				}
 
+				shouldBeVisible = shouldBeVisible && player.IsFiring;
+
 				this.GunFlash.gameObject.SetActive (shouldBeVisible);
 			}
 

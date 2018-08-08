@@ -26,11 +26,11 @@ Can help us to develop this? In that case, join us on discord so we can discuss 
 
 ## Screenshots
 
-![screen shot 2017-04-01 at 00 01 31](https://cloud.githubusercontent.com/assets/557828/24571347/d95f11a0-1670-11e7-9e8e-d2a511d9f929.png)
-
 ![screen shot 2017-04-01 at 00 03 25](https://cloud.githubusercontent.com/assets/557828/24571348/d964f098-1670-11e7-8759-0160dbf5bcb5.png)
 
 ![screen shot 2017-04-01 at 00 02 13](https://cloud.githubusercontent.com/assets/557828/24571349/d96b7c24-1670-11e7-997d-ae15913481f8.png)
+
+![](https://i.imgur.com/HX978mr.png)
 
 ## Videos
 
@@ -42,20 +42,12 @@ Can help us to develop this? In that case, join us on discord so we can discuss 
 
 [![Basic car physics](http://files.facepunch.com/ziks/2015/April/12/vidthumb2.png)](http://files.facepunch.com/layla/2015/April/06/2015-04-06_04-32-12.mp4)
 
-#### Ped AI testing from Bigbossbro08
+###
 
-[![Ped AI testing](http://img.youtube.com/vi/vkspMT_7PDQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=vkspMT_7PDQ)
+[![](http://img.youtube.com/vi/4DpdcawFjG4/0.jpg)](https://www.youtube.com/watch?v=4DpdcawFjG4)
 
-#### Some hud updates from Darkenn
-
-[![Some hud updates](http://img.youtube.com/vi/tLbJCoZfyJo/maxresdefault.jpg)](https://www.youtube.com/watch?v=tLbJCoZfyJo)
-
-#### Drone Flight Simulator from xythobuz
+### Drone flight simulator
 
 [![Drone Flight Simulator](http://img.youtube.com/vi/xUAy7KBpkOs/maxresdefault.jpg)](https://www.youtube.com/watch?v=xUAy7KBpkOs)
 
-
-## Resources
-
-* [GTAModding Wiki](http://www.gtamodding.com/wiki/Main_Page)
 
