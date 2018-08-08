@@ -114,11 +114,11 @@ namespace SanAndreasUnity.Behaviours.World
 
                 if(LightComponentAngle == 0)
                     F.SendMessageToObjectsOfType<MonoBehaviour>("OnDawnTime");
-                else if (LightComponentAngle % 90 == 0)
+                else if (LightComponentAngle == 90)
                     F.SendMessageToObjectsOfType<MonoBehaviour>("OnNoonTime");
-                else if (LightComponentAngle % 180 == 0)
+                else if (LightComponentAngle == 180)
                     F.SendMessageToObjectsOfType<MonoBehaviour>("OnDuskTime");
-                else if (LightComponentAngle % 270 == 0)
+                else if (LightComponentAngle == 270)
                     F.SendMessageToObjectsOfType<MonoBehaviour>("OnMidnightTime");
 
                 // Range: Dusk .. Dawn

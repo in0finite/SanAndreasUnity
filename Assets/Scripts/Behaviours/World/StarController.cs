@@ -47,7 +47,7 @@ public class StarController : MonoBehaviour
     private void StartPlaying()
     {
         if (!particleSystem.isPlaying)
-            InvokeRepeating("KeepPlaying", 0, particleSystem.main.duration);
+            particleSystem.Play(); //InvokeRepeating("KeepPlaying", 0, particleSystem.main.duration);
     }
 
     public void KeepPlaying()
@@ -59,7 +59,7 @@ public class StarController : MonoBehaviour
     {
         if (particleSystem.isPlaying)
         {
-            CancelInvoke();
+            //CancelInvoke();
             particleSystem.Stop();
         }
     }
