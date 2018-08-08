@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.28729308, g: 0.9811321, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -358,6 +358,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayAmbientIntensity.m_Curve.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 499186, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -398,6 +403,124 @@ Prefab:
       propertyPath: WaterPrefab
       value: 
       objectReference: {fileID: 1631170489}
+    - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0.29883623
+      objectReference: {fileID: 0}
+    - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0.64085644
+      objectReference: {fileID: 0}
+    - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0.64085644
+      objectReference: {fileID: 0}
+    - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: -0.29883623
+      objectReference: {fileID: 0}
+    - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 270
+      objectReference: {fileID: 0}
+    - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -130
+      objectReference: {fileID: 0}
+    - target: {fileID: 406580, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightAtmosphereThickness
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDaySkyTint.key0.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDaySkyTint.key0.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDaySkyTint.key0.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: maxIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDaySkyTint.key1.r
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDaySkyTint.key1.g
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDaySkyTint.key1.b
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayAmbientIntensity.m_Curve.Array.data[0].time
+      value: 0.00053825084
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayAmbientIntensity.m_Curve.Array.data[0].value
+      value: 1.9994531
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayAmbientIntensity.m_Curve.Array.data[0].tangentMode
+      value: 136
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayAmbientIntensity.m_Curve.Array.data[0].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayAmbientIntensity.m_Curve.Array.data[0].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayAmbientIntensity.m_Curve.Array.data[1].time
+      value: 0.999941
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayAmbientIntensity.m_Curve.Array.data[1].value
+      value: 1.0010983
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayAmbientIntensity.m_Curve.Array.data[1].tangentMode
+      value: 136
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayAmbientIntensity.m_Curve.Array.data[1].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 114010711098919560, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: nightDayAmbientIntensity.m_Curve.Array.data[1].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0

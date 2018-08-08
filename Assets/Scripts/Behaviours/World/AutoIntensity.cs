@@ -3,14 +3,15 @@ using UnityEngine;
 
 public class AutoIntensity : MonoBehaviour
 {
-    public Gradient nightDayColor;
+    public Gradient nightDayColor, nightDaySkyTint;
 
-    public float maxIntensity = 3f;
-    public float minIntensity = 0f;
+    public AnimationCurve nightDayAmbientIntensity;
+    //public float maxIntensity = 3f;
+    //public float minIntensity = 0f;
     public float minPoint = -0.2f;
 
-    public float maxAmbient = 1f;
-    public float minAmbient = 0f;
+    //public float maxAmbient = 1f;
+    //public float minAmbient = 0f;
     public float minAmbientPoint = -0.2f;
 
     public Gradient nightDayFogColor;
@@ -41,14 +42,11 @@ public class AutoIntensity : MonoBehaviour
 
         float tRange = 1 - minPoint;
         float dot = Mathf.Clamp01((Vector3.Dot(mainLight.transform.forward, Vector3.down) - minPoint) / tRange);
-        float i = ((maxIntensity - minIntensity) * dot) + minIntensity;
-
-        //mainLight.intensity = i;
 
         tRange = 1 - minAmbientPoint;
         dot = Mathf.Clamp01((Vector3.Dot(mainLight.transform.forward, Vector3.down) - minAmbientPoint) / tRange);
-        i = ((maxAmbient - minAmbient) * dot) + minAmbient;
-        //RenderSettings.ambientIntensity = i;
+
+        RenderSettings.ambientIntensity = nightDayAmbientIntensity.Evaluate(dot);
 
         mainLight.color = nightDayColor.Evaluate(dot);
         RenderSettings.ambientLight = mainLight.color;
@@ -56,8 +54,9 @@ public class AutoIntensity : MonoBehaviour
         RenderSettings.fogColor = nightDayFogColor.Evaluate(dot);
         RenderSettings.fogDensity = fogDensityCurve.Evaluate(dot) * fogScale;
 
-        i = ((dayAtmosphereThickness - nightAtmosphereThickness) * dot) + nightAtmosphereThickness;
+        float i = ((dayAtmosphereThickness - nightAtmosphereThickness) * dot) + nightAtmosphereThickness;
         skyMat.SetFloat("_AtmosphereThickness", i);
+        EnviromentController.SetSkyColor(nightDaySkyTint.Evaluate(dot));
 
         if (dot > 0)
             transform.Rotate(dayRotateSpeed * Time.deltaTime * skySpeed);

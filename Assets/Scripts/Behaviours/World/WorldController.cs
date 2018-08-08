@@ -22,6 +22,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         private new Light light;
 
+        // Number of time ticks in a second
         public static float TimeFactor
         {
             get
@@ -98,9 +99,6 @@ namespace SanAndreasUnity.Behaviours.World
         // Update is called once per frame
         private void FixedUpdate()
         {
-            //360 = 24 minutos
-            //x = Time.deltaTime
-
             if (dirLight != null)
             {
                 float angle = LightAngle % 360;
@@ -112,14 +110,7 @@ namespace SanAndreasUnity.Behaviours.World
                 }
 
                 dirLight.rotation = Quaternion.Euler(angle, -130, 0);
-                ++tickCounter; //Fix this, rotation goes quickly
-                //dayTimeCounter += AngleFactor;
-
-                /*if(dayTimeCounter % 1 == 0)
-                {
-                    Debug.Log(TimeFactor);
-                    Debug.Log(AngleFactor);
-                }*/
+                ++tickCounter;
 
                 if(LightComponentAngle == 0)
                     F.SendMessageToObjectsOfType<MonoBehaviour>("OnDawnTime");
@@ -141,25 +132,21 @@ namespace SanAndreasUnity.Behaviours.World
             switch (time)
             {
                 case TimeState.Dawn:
-                    //dayTimeCounter = dayCount > 0 ? GetRoundedTime(TimeFactor) : 0;
                     LightComponentAngle = 0;
                     if(callback) F.SendMessageToObjectsOfType<MonoBehaviour>("OnDawnTime");
                     break;
 
                 case TimeState.Noon:
-                    //dayTimeCounter = dayCount > 0 ? GetRoundedTime(90 * TimeFactor) : TimeFactor * 90;
                     LightComponentAngle = 90;
                     if (callback) F.SendMessageToObjectsOfType<MonoBehaviour>("OnNoonTime");
                     break;
 
                 case TimeState.Dusk:
-                    //dayTimeCounter = dayCount > 0 ? GetRoundedTime(180 * TimeFactor) : TimeFactor * 180;
                     LightComponentAngle = 180;
                     if (callback) F.SendMessageToObjectsOfType<MonoBehaviour>("OnDuskTime");
                     break;
 
                 case TimeState.Midnight:
-                    //dayTimeCounter = dayCount > 0 ? GetRoundedTime(270 * TimeFactor) : TimeFactor * 270;
                     LightComponentAngle = 270;
                     if (callback) F.SendMessageToObjectsOfType<MonoBehaviour>("OnMidnightTime");
                     break;
@@ -174,13 +161,5 @@ namespace SanAndreasUnity.Behaviours.World
         {
             tickCounter = dayCount * CompleteTickCycle + LightComponentAngle * CompleteTickCycle / 360;
         }
-
-        /*private static float GetRoundedTime(float X)
-        {
-            float completeDay = 360 * TimeFactor;
-            //Debug.LogWarning("Days: "+dayCount);
-
-            return completeDay * dayCount + X;
-        }*/
     }
 }
