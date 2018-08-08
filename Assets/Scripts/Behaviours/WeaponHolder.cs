@@ -326,6 +326,8 @@ namespace SanAndreasUnity.Behaviours {
 			currentWeaponSlot = slotIndex;
 
 			m_frameWhenSwitchedWeapon = Time.frameCount;
+
+			this.IsFiring = false;
 		}
 
 		private static void HideWeapon (Weapon weapon)
