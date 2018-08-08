@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
 {
-    public enum TimeState { Dawn, Noon, Dusk, Midnight }
+    public enum TimeState { Dawn = 0, Noon = 90, Dusk = 180, Midnight = 270 }
 
     // TODO: TimeFactor -> AngleFactor
     public class WorldController : MonoBehaviour

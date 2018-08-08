@@ -13,8 +13,8 @@ public class StarController : MonoBehaviour
     {
         sky = RenderSettings.skybox;
         particleSystem = GetComponent<ParticleSystem>();
-        if (WorldController.IsNight && (particleSystem.isStopped || particleSystem.isPaused)) particleSystem.Play();
-        else if (!WorldController.IsNight && particleSystem.isPlaying) particleSystem.Stop();
+        if (WorldController.IsNight && !particleSystem.isPlaying) StartPlaying();
+        else StopPlaying();
     }
 
     // Update is called once per frame
@@ -47,12 +47,20 @@ public class StarController : MonoBehaviour
     private void StartPlaying()
     {
         if (!particleSystem.isPlaying)
-            particleSystem.Play();
+            InvokeRepeating("KeepPlaying", 0, particleSystem.main.duration);
+    }
+
+    public void KeepPlaying()
+    {
+        particleSystem.Play();
     }
 
     private void StopPlaying()
     {
         if (particleSystem.isPlaying)
+        {
+            CancelInvoke();
             particleSystem.Stop();
+        }
     }
 }
