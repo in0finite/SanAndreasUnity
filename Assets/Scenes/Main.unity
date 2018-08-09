@@ -204,6 +204,16 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114930254477277170, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: ColorFloatStore.keys.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 114930254477277170, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: ColorFloatStore.values.Array.size
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 499186, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -254,6 +264,26 @@ Prefab:
       propertyPath: Camera
       value: 
       objectReference: {fileID: 1117230323}
+    - target: {fileID: 114930254477277170, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: ColorFloatStore.keys.Array.data[12].r
+      value: 0.23137257
+      objectReference: {fileID: 0}
+    - target: {fileID: 114930254477277170, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: ColorFloatStore.keys.Array.data[12].g
+      value: 0.42352945
+      objectReference: {fileID: 0}
+    - target: {fileID: 114930254477277170, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: ColorFloatStore.keys.Array.data[12].b
+      value: 0.18431373
+      objectReference: {fileID: 0}
+    - target: {fileID: 114930254477277170, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: ColorFloatStore.keys.Array.data[12].a
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0

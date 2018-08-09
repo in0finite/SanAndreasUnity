@@ -1,4 +1,6 @@
-﻿using Cadenza.Collections;
+﻿//#define TESTING
+
+using Cadenza.Collections;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
 using System;
@@ -537,8 +539,7 @@ public static class ZHelpers
 
     public static IEnumerator CalculateLightPolution(Dictionary<Color, float> colorVals, bool debugging = false)
     { // I should create an array for the different types (with an enum)
-        IEnumerable<Color> colors = null, // Only for debug purposes 
-                           uColors = colorVals.Keys; 
+        IEnumerable<Color> uColors = colorVals.Keys;
 
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -548,12 +549,14 @@ public static class ZHelpers
 
             Rect mapRect = GetMapRect(zone.ToRect(), debugging);
 
-            /*if (mapRect.GetPixelCount() > 10000000)
+#if TESTING
+            if (mapRect.GetPixelCount() > 10000000)
             {
                 if (debugging) Debug.LogFormat("Buggy zone {0} (R: {1}; C: {2})", zone.name, mapRect, mapRect.GetPixelCount());
                 yield return null;
                 continue;
-            }*/
+            }
+#endif
 
             try
             {
@@ -562,7 +565,6 @@ public static class ZHelpers
                 if (pixels == null || (pixels != null && pixels.Length == 0))
                 {
                     Debug.LogWarningFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
-                    //Debug.Break();
                     continue;
                 }
 
@@ -577,8 +579,6 @@ public static class ZHelpers
                 var c = t.GroupBy(x => x)
                          .Select(g => new { Value = g.Key, Count = g.Count() });
 
-                //colors = pixels.Distinct();
-
                 sw.Stop();
 
                 float s = 0;
@@ -589,11 +589,9 @@ public static class ZHelpers
                 });
                 Debug.LogFormat("Sum: {0}; Count: {1}", s, c.Count());
 
-                zone.m_lightPollution = c.Sum(x => x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0)) / c.Count();
+                zone.m_lightPollution = c.Sum(x => x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0)) / mapRect.GetPixelCount();
 
-                //if(debugging)
-                Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
-                Debug.Break();
+                if(debugging) Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
 
                 sw.Start();
             }

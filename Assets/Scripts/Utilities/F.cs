@@ -663,20 +663,14 @@ namespace SanAndreasUnity.Utilities
             return (int)((Mathf.Abs(r.x) + r.width) * (Mathf.Abs(r.y) + r.height));
         }
 
-        public static Color ColorThreshold(this Color c1, Color c2, float percentage)
+        public static float ColorThreshold(this Color c1, Color c2)
         {
-            float p = 1f - percentage;
-            if (Mathf.Abs(c1.r - c2.r) > p || Mathf.Abs(c1.g - c2.g) > p || Mathf.Abs(c1.b - c2.b) > p)
-                return c1;
-            return c2;
+            return (Mathf.Abs(c1.r - c2.r) + Mathf.Abs(c1.g - c2.g) + Mathf.Abs(c1.b - c2.b)) / 3;
         }
 
         public static Color ColorMultiThreshold(this Color c1, IEnumerable<Color> cs, float percentage)
-        { // La muestra = 7 colores que tenemos para cada suelo
-            foreach (Color c2 in cs) // Recorremos todos los colores de la muestra
-                if (c1 == c1.ColorThreshold(c2, percentage)) // Si el color coincide en más de un 90% con algun color de la muestra
-                    return c2; // Entonces devolveremos el color de la muestra
-            return c1;
+        {
+            return cs.OrderBy(x => x.ColorThreshold(c1)).FirstOrDefault();
         }
     }
 }
