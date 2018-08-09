@@ -236,57 +236,24 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114958467600150634, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: Camera
-      value: 
-      objectReference: {fileID: 1117230323}
-    - target: {fileID: 11455068, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
-      propertyPath: WaterPrefab
-      value: 
-      objectReference: {fileID: 1631170489}
-    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
-      propertyPath: Focus
-      value: 
-      objectReference: {fileID: 1117230324}
     - target: {fileID: 198482710293227328, guid: b6900baf9f552ba46ad27d4ada4d5489,
         type: 2}
       propertyPath: moveWithCustomTransform
       value: 
       objectReference: {fileID: 1315600947}
-    - target: {fileID: 199375908597572040, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: m_Materials.Array.data[0]
+    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: Focus
       value: 
-      objectReference: {fileID: 2100000, guid: c150636b6570d1b418e128657f3471dc, type: 2}
-    - target: {fileID: 199128755862108690, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: m_Materials.Array.data[0]
+      objectReference: {fileID: 1117230324}
+    - target: {fileID: 11455068, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: WaterPrefab
       value: 
-      objectReference: {fileID: 2100000, guid: 32bc97b7d0029d34fac55b76ea095383, type: 2}
-    - target: {fileID: 199083235595341338, guid: b6900baf9f552ba46ad27d4ada4d5489,
+      objectReference: {fileID: 1631170489}
+    - target: {fileID: 114958467600150634, guid: b6900baf9f552ba46ad27d4ada4d5489,
         type: 2}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: Camera
       value: 
-      objectReference: {fileID: 2100000, guid: a20e5b4dc9268ed429d041a8de712388, type: 2}
-    - target: {fileID: 1993570882468202, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1130006379661492, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 198387567078247996, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: EmissionModule.enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 198387567078247996, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: EmissionModule.rateOverTime.scalar
-      value: 0
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1117230323}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0

@@ -11,12 +11,14 @@ public class StarController : MonoBehaviour
 {
     private Material sky;
     private new ParticleSystem particleSystem;
-    private static Dictionary<Color, int> weightedColors;
+
+    // WIP
+    //private static Dictionary<Color, int> weightedColors;
 
     // Use this for initialization
     private void Start()
     {
-        weightedColors = new Dictionary<Color, int>()
+        /*weightedColors = new Dictionary<Color, int>()
         {
             { Color.white, 60 },
             { new Color32(190, 210, 255, 255), 10 }, // Light blue
@@ -25,7 +27,7 @@ public class StarController : MonoBehaviour
             { new Color32(190, 255, 190, 255), 5 }, // Light green
             { new Color32(255, 190, 255, 255), 5 }, // Light purple
             { new Color32(255, 190, 190, 255), 5 }  // Light red
-        };
+        };*/
 
         sky = RenderSettings.skybox;
         particleSystem = GetComponent<ParticleSystem>();
@@ -64,21 +66,8 @@ public class StarController : MonoBehaviour
     {
         if (!particleSystem.isPlaying)
         {
-            particleSystem.Play();
-            /*for(int i = 0; i < particleSystem.main.maxParticles; ++i)
-            {
-                Color color = weightedColors.AsEnumerable().PickWeighted();
-                //ParticleSystem.MainModule psMain = particleSystem.main;
-                //psMain.startColor = color;
-                var pars = new ParticleSystem.EmitParams();
-
-                pars.startColor = color;
-
-                particleSystem.Emit(pars, 1);
-            }*/
-
             // maxParticles ... depeding on the zone
-            int count = particleSystem.main.maxParticles;
+            /*int count = particleSystem.main.maxParticles;
             particleSystem.Emit(count);
 
             ParticleSystem.Particle[] ps = new ParticleSystem.Particle[count];
@@ -86,7 +75,7 @@ public class StarController : MonoBehaviour
             Dictionary<Color, int> sum = new Dictionary<Color, int>();
 
             ps.ForEach((x) => {
-                x.startColor = WeightedRandomizer.From(weightedColors).TakeOne();
+                x.color = WeightedRandomizer.From(weightedColors).TakeOne();
                 if (!sum.ContainsKey(x.startColor))
                     sum.Add(x.startColor, 1);
                 else
@@ -97,7 +86,9 @@ public class StarController : MonoBehaviour
 
             sum.ForEach((x) => {
                 Debug.LogFormat("Color: {0}; Times: {1}", x.Key, x.Value);
-            });
+            });*/
+
+            particleSystem.Play();
         }
         //InvokeRepeating("KeepPlaying", 0, particleSystem.main.duration);
     }
