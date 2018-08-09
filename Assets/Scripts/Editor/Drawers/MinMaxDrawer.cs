@@ -27,7 +27,10 @@ public class MinMaxDrawer : PropertyDrawer
             float maxLimit = minMax.MaxLimit;
 
             // and ask unity to draw them all nice for us!
+            GUILayout.BeginHorizontal();
             EditorGUI.MinMaxSlider(position, label, ref minValue, ref maxValue, minLimit, maxLimit);
+            GUILayout.Label(string.Format("({0} - {1})", minValue.ToString("F2"), maxValue.ToString("F2")));
+            GUILayout.EndHorizontal();
 
             var vec = Vector2.zero; // save the results into the property!
             vec.x = minValue;
