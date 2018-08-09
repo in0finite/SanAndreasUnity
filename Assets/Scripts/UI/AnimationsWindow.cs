@@ -144,13 +144,10 @@ namespace SanAndreasUnity.UI {
 			GUILayout.Space (3);
 
 			GUILayout.Label ("Last played anim:");
-			try {
-				AnimationState lastAnimState = model.AnimComponent[ model.GetAnimName (model.AnimGroup, model.animIndex) ];
-				DisplayStatsForAnim (lastAnimState);
-			} catch {
-				
-			}
 
+			if (model.LastAnimState != null)
+				DisplayStatsForAnim (model.LastAnimState);
+			
 			GUILayout.Space (7);
 
 			GUILayout.Label ("Root frame velocity: " + model.RootFrame.LocalVelocity);

@@ -18,15 +18,17 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- replace video and some images in readme ; add instruction to open scene ;
+- Readme: add instruction to open scene ;
 
-- Anims must be player by their name
+- Anims must be played by their name
 
 - Vehicles window: it's too slow - use pages ; display additional info ;
 
 - Jump ??
 
 - Remove editor scripts for destroying player model
+
+- Remove unneeded assets
 
 - Work on a menu like MTA:SA (F1)
 

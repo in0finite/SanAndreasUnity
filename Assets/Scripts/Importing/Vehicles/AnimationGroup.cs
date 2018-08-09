@@ -209,12 +209,34 @@ namespace SanAndreasUnity.Importing.Animation
 		private AnimIndex animIndex;
 		public AnimIndex AnimIndex { get { return this.animIndex; } }
 
+		private string fileName;
+		public string FileName { get { return this.fileName; } }
+
+		private string animName;
+		public string AnimName { get { return this.animName; } }
+
+		private bool usesAnimGroup;
+		public bool UsesAnimGroup { get { return this.usesAnimGroup; } }
+
+
 		public AnimId (AnimGroup animGroup, AnimIndex animIndex)
 		{
 			this.animGroup = animGroup;
 			this.animIndex = animIndex;
+			this.fileName = null;
+			this.animName = null;
+			this.usesAnimGroup = true;
 		}
-		
+
+		public AnimId (string fileName, string animName)
+		{
+			this.animGroup = AnimGroup.None;
+			this.animIndex = AnimIndex.None;
+			this.fileName = fileName;
+			this.animName = animName;
+			this.usesAnimGroup = false;
+		}
+
 	}
 
     public class AnimationGroup
