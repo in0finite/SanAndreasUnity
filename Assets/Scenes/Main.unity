@@ -254,6 +254,21 @@ Prefab:
       propertyPath: moveWithCustomTransform
       value: 
       objectReference: {fileID: 1315600947}
+    - target: {fileID: 199375908597572040, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c150636b6570d1b418e128657f3471dc, type: 2}
+    - target: {fileID: 199128755862108690, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 32bc97b7d0029d34fac55b76ea095383, type: 2}
+    - target: {fileID: 199083235595341338, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a20e5b4dc9268ed429d041a8de712388, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0
