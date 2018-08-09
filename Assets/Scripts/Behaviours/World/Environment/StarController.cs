@@ -55,6 +55,8 @@ public class StarController : MonoBehaviour
 
         if(MiniMap.Instance.MapTexture != null && !IsLoaded)
         {
+            if(ColorFloats.Count > 1)
+                ZHelpers.CalculateLightPolution(ColorFloats);
 
             IsLoaded = true;
         }

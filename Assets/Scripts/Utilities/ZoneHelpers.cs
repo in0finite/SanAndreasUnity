@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours;
+using Cadenza.Collections;
 
 public class ZoneHelpers
 {
@@ -459,6 +460,15 @@ public class SZone
 		return pos.x >= zone.vmin.x && pos.x <= zone.vmax.x && pos.y >= zone.vmin.z && pos.y <= zone.vmax.z;
 	}
 
+    public Rect ToRect()
+    {
+        return new Rect(minPos2D, maxPos2D);
+    }
+
+    public Vector2 ToVector()
+    {
+        return minPos2D;
+    }
 }
 
 public static class ZHelpers
@@ -470,7 +480,7 @@ public static class ZHelpers
         get
         {
             if (_mapDims == null)
-                _mapDims = GetMapRect();
+                _mapDims = GetMapDimension();
 
             return _mapDims;
         }
@@ -500,7 +510,7 @@ public static class ZHelpers
                         (Mathf.Abs(mapDimensions.width) + zoneRect.width) * mapFactor.x, (Mathf.Abs(mapDimensions.height) + zoneRect.height) * mapFactor.y);
     }
 
-    private static Rect GetMapRect()
+    private static Rect GetMapDimension()
     {
         float min_x = SZone.AllZones.Min(z => z.vmin.x), min_y = SZone.AllZones.Min(z => z.vmin.y), min_z = SZone.AllZones.Min(z => z.vmin.z),
               max_x = SZone.AllZones.Max(z => z.vmax.x), max_y = SZone.AllZones.Max(z => z.vmax.y), max_z = SZone.AllZones.Max(z => z.vmax.z);
@@ -509,10 +519,35 @@ public static class ZHelpers
     }
 
     public static void CalculateLightPolution(Dictionary<Color, float> colorVals)
-    {
+    { // I should create an array for the different types (with an enum)
+        List<Color> colors = new List<Color>();
+        int height = MiniMap.texSize * MiniMap.tileEdge;
+
+        Dictionary<Color, int> colorMap = new Dictionary<Color, int>();
+        colorVals.ForEach((x) => {
+            colorMap.Add(x.Key, 0);
+        });
+
         foreach(SZone zone in SZone.AllZones)
         {
-            
+            Rect mapRect = GetMapRect(zone.ToRect());
+
+            for(int x = (int)mapRect.x; x < mapRect.width; ++x)
+                for(int y = (int)mapRect.y; y < mapRect.height; ++y)
+                {
+                    Color c = MiniMap.Instance.MapTexture.GetPixel(x, height - y - 1);
+
+                    if (colorMap.ContainsKey(c))
+                        ++colorMap[c];
+
+                    if (!colors.Contains(c))
+                        colors.Add(c);
+                }
+
+            zone.m_lightPollution = colorMap.Sum(x => x.Value * colorVals[x.Key]) / colorMap.Keys.Count;
+            Debug.LogFormat("Light poluttion in {0} is about {1}!", zone.name, zone.m_lightPollution.ToString("F2"));
         }
+
+        Debug.LogFormat("There are {0} types of colors in the map!", colors.Count);
     }
 }
