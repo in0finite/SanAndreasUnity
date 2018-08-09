@@ -5,15 +5,17 @@ public class WeatherController : ColorController
 {
     public override ColorFloatDictionary serializedMapColor { get; set; }
 
+    public static WeatherController Instance;
+
     // Use this for initialization
     private void Start()
     {
-        if (!Application.isPlaying) return;
+        Instance = this;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (!Application.isPlaying) return;
+
     }
 }

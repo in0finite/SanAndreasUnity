@@ -32,8 +32,6 @@ public class StarController : ColorController
     // Use this for initialization
     private void Start()
     {
-        if (!Application.isPlaying) return;
-
         /*weightedColors = new Dictionary<Color, int>()
         {
             { Color.white, 60 },
@@ -56,8 +54,6 @@ public class StarController : ColorController
     // Update is called once per frame
     private void Update()
     {
-        if (!Application.isPlaying) return;
-
         transform.rotation = transform.rotation;
         transform.position = Player.InstancePos;
     }

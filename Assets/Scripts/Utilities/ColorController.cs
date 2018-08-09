@@ -2,7 +2,6 @@
 using UnityEngine;
 
 // Inherit this monoBehaviour if you want to have a button to set your mapColor 
-[ExecuteInEditMode]
 public abstract class ColorController : MonoBehaviour
 {
     public ColorFloatDictionary _mapColor = new ColorFloatDictionary();

@@ -22,6 +22,7 @@ public class StarControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
+        GUILayout.Label("Map color -- This weights the light pollution.");
         ColorControllerEditor.OnInspectorGUI((ColorController)target, serializedObject);
     }
 }
@@ -32,6 +33,7 @@ public class WeatherControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
+        GUILayout.Label("Map color -- This weights the temperature.\n0,5 means half, I can use negative values,\nbut I prefer to keep them until there is snow or something like that.");
         ColorControllerEditor.OnInspectorGUI((ColorController)target, serializedObject);
     }
 }

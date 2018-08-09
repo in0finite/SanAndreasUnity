@@ -409,7 +409,7 @@ public class SZone
     public string name;
 
     public float m_lightPollution, m_temperature;
-    public bool m_lpCalc;
+    public bool m_calculated;
 
     public const string defaultZoneName = "San Andreas";
 
@@ -557,15 +557,20 @@ public static class ZHelpers
         return new Rect(min_x, min_z, max_x, max_z);
     }
 
-    public static void CalculateZoneStats(ColorFloatDictionary colorVals, bool debugging = false)
-    { // I should create an array for the different types (with an enum)
-        IEnumerable<Color> uColors = colorVals.Keys;
+    public static void CalculateZoneStats(ColorFloatDictionary[] vals, Action<SZone, int, float> act, bool debugging = false)
+    {
+        // I should create an array for the different types (with an enum)
 
-        Stopwatch sw = Stopwatch.StartNew();
-
-        foreach (SZone zone in SZone.AllZones)
+        int w = 0;
+        foreach (ColorFloatDictionary colorVals in vals)
         {
-            Rect mapRect = GetMapRect(zone.ToRect(), debugging);
+            IEnumerable<Color> uColors = colorVals.Keys;
+
+            Stopwatch sw = Stopwatch.StartNew();
+
+            foreach (SZone zone in SZone.AllZones)
+            {
+                Rect mapRect = GetMapRect(zone.ToRect(), debugging);
 
 #if TESTING
             if (mapRect.GetPixelCount() > 10000000)
@@ -576,17 +581,17 @@ public static class ZHelpers
             }
 #endif
 
-            try
-            {
-                var pixels = MiniMap.Instance.MapTexture.GetPixels((int)mapRect.x, (int)mapRect.y, (int)mapRect.width, (int)mapRect.height);
-
-                if (debugging) Debug.Log("Ellapsed: "+sw.ElapsedMilliseconds);
-
-                if (pixels == null || (pixels != null && pixels.Length == 0))
+                try
                 {
-                    Debug.LogWarningFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
-                    continue;
-                }
+                    var pixels = MiniMap.Instance.MapTexture.GetPixels((int)mapRect.x, (int)mapRect.y, (int)mapRect.width, (int)mapRect.height);
+
+                    if (debugging) Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
+
+                    if (pixels == null || (pixels != null && pixels.Length == 0))
+                    {
+                        Debug.LogWarningFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
+                        continue;
+                    }
 
 #if TESTING
                 int count = pixels.Length;
@@ -596,20 +601,20 @@ public static class ZHelpers
                 if (debugging) Debug.LogFormat("There was {0} null pixels!", count);
 #endif
 
-                var t = pixels.Select(x => x.ColorMultiThreshold(uColors, threshold));
+                    var t = pixels.Select(x => x.ColorMultiThreshold(uColors, threshold));
 
-                if (debugging) Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
+                    if (debugging) Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
 
-                var c = t.GroupBy(x => x)
-                         .Select(g => new { Value = g.Key, Count = g.Count() });
+                    var c = t.GroupBy(x => x)
+                             .Select(g => new { Value = g.Key, Count = g.Count() });
 
-                if (debugging)
-                {
-                    Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
-                    Debug.Break();
-                }
+                    if (debugging)
+                    {
+                        Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
+                        Debug.Break();
+                    }
 
-                sw.Stop();
+                    sw.Stop();
 
 #if TESTING
                 float s = 0;
@@ -627,22 +632,38 @@ public static class ZHelpers
                 if(debugging) Debug.LogFormat("Sum: {0}; Count: {1}", s, c.Count());
 #endif
 
-                zone.m_lightPollution = c.Sum(x => x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0)) / mapRect.GetPixelCount();
-                zone.m_lpCalc = true;
+                    act(zone, w, c.Sum(x => x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0)) / mapRect.GetPixelCount());
 
-                if(debugging) Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
+                    if (debugging) Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
 
-                sw.Start();
+                    sw.Start();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogErrorFormat("There was a problem with the zone called {0}", zone.name);
+                    Debug.LogError(ex);
+                    continue;
+                }
             }
-            catch(Exception ex)
-            {
-                Debug.LogErrorFormat("There was a problem with the zone called {0}", zone.name);
-                Debug.LogError(ex);
-                continue;
-            }
+
+            sw.Stop();
+            ++w;
         }
+    }
 
-        sw.Stop();
+    public static void CalculateZoneStats(ColorFloatDictionary starColors, ColorFloatDictionary weatherColors)
+    {
+        Debug.Log("Starting calculating zones stats!");
+
+        CalculateZoneStats(new ColorFloatDictionary[] { starColors, weatherColors }, (zone, i, val) => 
+        {
+            if (i == 0)
+                zone.m_lightPollution = val;
+            else
+                zone.m_temperature = val;
+
+            zone.m_calculated = true;
+        });
     }
 
     public static void Awake()
@@ -659,8 +680,8 @@ public static class ZHelpers
     {
         if (MiniMap.Instance.MapTexture != null && !StatsCalculated)
         {
-            if (StarController.Instance.serializedMapColor.Count > 1)
-                CalculateZoneStats(StarController.Instance.serializedMapColor);
+            //if (StarController.Instance.serializedMapColor.Count > 1)
+            CalculateZoneStats(StarController.Instance.serializedMapColor, WeatherController.Instance.serializedMapColor);
 
             StatsCalculated = true;
         }
