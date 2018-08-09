@@ -474,7 +474,7 @@ public class SZone
 
     public Rect ToRect()
     {
-        return new Rect(minPos2D, maxPos2D);
+        return new Rect(minPos2D.x, minPos2D.y, maxPos2D.x, maxPos2D.y);
     }
 
     public Vector2 ToVector()
@@ -491,7 +491,7 @@ public static class ZHelpers
     {
         get
         {
-            if (_mapDims == null)
+            if (_mapDims == default(Rect))
                 _mapDims = GetMapDimension();
 
             return _mapDims;
@@ -516,10 +516,14 @@ public static class ZHelpers
         return new Vector2((Mathf.Abs(mapDimensions.x) + zoneCoord.x) * mapFactor.x, (Mathf.Abs(mapDimensions.y) + zoneCoord.y) * mapFactor.y);
     }
 
-    public static Rect GetMapRect(Rect zoneRect)
+    public static Rect GetMapRect(Rect zoneRect, bool debugging = true)
     {
-        return new Rect((Mathf.Abs(mapDimensions.x) + zoneRect.x) * mapFactor.x, (Mathf.Abs(mapDimensions.y) + zoneRect.y) * mapFactor.y,
-                        (Mathf.Abs(mapDimensions.width) + zoneRect.width) * mapFactor.x, (Mathf.Abs(mapDimensions.height) + zoneRect.height) * mapFactor.y);
+        Rect r = new Rect((Mathf.Abs(mapDimensions.x) + zoneRect.x) * mapFactor.x, (Mathf.Abs(mapDimensions.y) + zoneRect.y) * mapFactor.y,
+                        (mapDimensions.width - zoneRect.width) * mapFactor.x, (mapDimensions.height - zoneRect.height) * mapFactor.y);
+
+        if(debugging) Debug.LogFormat("Factor: {0}; ZoneRect: {1}; Final Rect: {2}", mapFactor, zoneRect, r);
+
+        return r;
     }
 
     private static Rect GetMapDimension()
@@ -530,15 +534,9 @@ public static class ZHelpers
         return new Rect(min_x, min_z, max_x, max_z);
     }
 
-    public static IEnumerator CalculateLightPolution(Dictionary<Color, float> colorVals, bool debugging = true)
+    public static IEnumerator CalculateLightPolution(Dictionary<Color, float> colorVals, bool debugging = false)
     { // I should create an array for the different types (with an enum)
-        IEnumerable<Color> colors = null;
-        int height = MiniMap.texSize * MiniMap.tileEdge;
-
-        //Dictionary<Color, int> colorMap = new Dictionary<Color, int>();
-        /*colorVals.ForEach((x) => {
-            colorMap.Add(x.Key, 0);
-        });*/
+        IEnumerable<Color> colors = null; // Only for debug purposes 
 
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -546,14 +544,14 @@ public static class ZHelpers
         {
             yield return null;
 
-            Rect mapRect = GetMapRect(zone.ToRect());
+            Rect mapRect = GetMapRect(zone.ToRect(), debugging);
 
-            if (mapRect.GetPixelCount() > 100000)
+            /*if (mapRect.GetPixelCount() > 10000000)
             {
                 if (debugging) Debug.LogFormat("Buggy zone {0} (R: {1}; C: {2})", zone.name, mapRect, mapRect.GetPixelCount());
                 yield return null;
                 continue;
-            }
+            }*/
 
             try
             {
@@ -561,7 +559,8 @@ public static class ZHelpers
 
                 if (pixels == null || (pixels != null && pixels.Length == 0))
                 {
-                    Debug.LogWarningFormat("There wasn't pixels! ({0})", zone.name);
+                    Debug.LogWarningFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
+                    //Debug.Break();
                     continue;
                 }
 
@@ -569,7 +568,7 @@ public static class ZHelpers
                 pixels.RemoveAll(x => x == null);
                 count -= pixels.Length;
 
-                if (debugging) Debug.LogFormat("There was {0} null pixels!");
+                if (debugging) Debug.LogFormat("There was {0} null pixels!", count);
 
                 var c = pixels.GroupBy(x => x)
                               .Select(g => new { Value = g.Key, Count = g.Count() });
@@ -579,7 +578,7 @@ public static class ZHelpers
                 sw.Stop();
 
                 zone.m_lightPollution = c.Sum(x => x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0)) / c.Count();
-                if (debugging) Debug.LogFormat("Light poluttion in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
+                if (debugging) Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
 
                 sw.Start();
             }
