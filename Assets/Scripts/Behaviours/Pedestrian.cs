@@ -12,11 +12,13 @@ namespace SanAndreasUnity.Behaviours
     public class Pedestrian : MonoBehaviour
     {
         
-        private AnimGroup _curAnimGroup = AnimGroup.None;
-        private AnimIndex _curAnim = AnimIndex.None;
-        
-		public AnimGroup AnimGroup { get { return _curAnimGroup; } }
-		public AnimIndex animIndex { get { return _curAnim; } }
+		private AnimationState m_lastAnimState;
+		/// <summary> State of last played anim. </summary>
+		public AnimationState LastAnimState { get { return m_lastAnimState; } }
+
+		private AnimId m_lastAnimId;
+		/// <summary> Last played anim. </summary>
+		public AnimId LastAnimId { get { return m_lastAnimId; } }
 
 		private UnityEngine.Animation _anim { get; set; }
 		public UnityEngine.Animation AnimComponent { get { return _anim; } }
@@ -150,9 +152,8 @@ namespace SanAndreasUnity.Behaviours
 
             LoadModel(Definition.ModelName, Definition.TextureDictionaryName);
 
-            _curAnim = AnimIndex.None;
-            //	_curAnim = "" ;
-            _curAnimGroup = AnimGroup.None;
+            m_lastAnimId = default (AnimId);
+			m_lastAnimState = null;
 
             _anim = gameObject.GetComponent<UnityEngine.Animation>();
 
@@ -180,42 +181,6 @@ namespace SanAndreasUnity.Behaviours
             LoadAnim(AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND);
 
             //	LoadAllAnimations ();
-        }
-
-
-        public void ChangeSpineRotation(Vector3 bulletdir, Vector3 adir, float rotationSpeed, ref Vector3 tempSpineLocalEulerAngles, ref Quaternion targetRot, ref Quaternion spineRotationLastFrame)
-        {
-            //Rotate the spine bone so the gun (roughly) aims at the target
-            Spine.rotation = Quaternion.FromToRotation(bulletdir, adir) * Spine.rotation;
-
-            tempSpineLocalEulerAngles = Spine.localEulerAngles;
-
-
-            //Stop our agent from breaking their back by rotating too far
-            tempSpineLocalEulerAngles = new Vector3(ResetIfTooHigh(tempSpineLocalEulerAngles.x, 90),
-                                                    ResetIfTooHigh(tempSpineLocalEulerAngles.y, 90),
-                                                    ResetIfTooHigh(tempSpineLocalEulerAngles.z, 90));
-
-            Spine.localEulerAngles = tempSpineLocalEulerAngles;
-            targetRot = Spine.rotation;
-
-            //Smoothly rotate to the new position.  
-            Spine.rotation = Quaternion.Slerp(spineRotationLastFrame, targetRot, Time.deltaTime * rotationSpeed);
-            spineRotationLastFrame = Spine.rotation;
-        }
-        
-        public static float ResetIfTooHigh(float r, float lim)
-        {
-
-            if (r > 180)
-                r -= 360;
-
-            if (r < -lim || r > lim)
-            {
-                return 0;
-            }
-            else
-                return r;
         }
 
 
@@ -261,34 +226,34 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-		public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, PlayMode playMode = PlayMode.StopAll)
+		public AnimationState PlayAnim (AnimId animId, PlayMode playMode = PlayMode.StopAll)
         {
-            var animState = LoadAnim(group, anim);
+			var animState = animId.UsesAnimGroup ? LoadAnim (animId.AnimGroup, animId.AnimIndex) : LoadAnim (animId.AnimName, animId.FileName);
             if (null == animState)
                 return null;
 
-            _curAnimGroup = group;
-            _curAnim = anim;
+			m_lastAnimId = animId;
+			m_lastAnimState = animState;
 
-            _anim.Play(animState.name, playMode);
+            _anim.Play (animState.name, playMode);
 
             return animState;
         }
 
-		public AnimationState PlayAnim (AnimId animId)
+		public AnimationState PlayAnim (AnimGroup animGroup, AnimIndex animIndex, PlayMode playMode = PlayMode.StopAll)
 		{
-			return PlayAnim (animId.AnimGroup, animId.AnimIndex);
+			return PlayAnim (new AnimId (animGroup, animIndex), playMode);
 		}
 
-		public AnimationState PlayAnim(AnimGroup group, AnimIndex anim, bool resetModelStateIfAnimChanged, bool resetAnimStateIfAnimChanged)
+		public AnimationState PlayAnim (AnimId animId, bool resetModelStateIfAnimChanged, bool resetAnimStateIfAnimChanged)
 		{
-			bool animChanged = this.AnimGroup != group || this.animIndex != anim;
+			bool animChanged = !animId.Equals (m_lastAnimId);
 
 			if (resetModelStateIfAnimChanged && animChanged) {
 				this.ResetModelState ();
 			}
 
-			var state = PlayAnim (group, anim);
+			var state = PlayAnim (animId);
 
 			if (resetAnimStateIfAnimChanged && animChanged) {
 				state.enabled = true;
@@ -300,39 +265,6 @@ namespace SanAndreasUnity.Behaviours
 
 			return state;
 		}
-
-		public AnimationState PlayAnim(AnimId animId, bool resetModelStateIfAnimChanged, bool resetAnimStateIfAnimChanged)
-		{
-			return PlayAnim (animId.AnimGroup, animId.AnimIndex, resetModelStateIfAnimChanged, resetAnimStateIfAnimChanged);
-		}
-
-        public AnimationState AddMixingTransform(AnimGroup group, AnimIndex anim, Transform mix)
-        {
-            var animState = LoadAnim(group, anim);
-            if (null == animState)
-                return null;
-
-            _curAnimGroup = group;
-            _curAnim = anim;
-
-            animState.AddMixingTransform(mix);
-
-            return animState;
-        }
-
-        public AnimationState RemoveMixingTransform(AnimGroup group, AnimIndex anim, Transform mix)
-        {
-            var animState = LoadAnim(group, anim);
-            if (null == animState)
-                return null;
-
-            _curAnimGroup = group;
-            _curAnim = anim;
-
-            animState.RemoveMixingTransform(mix);
-
-            return animState;
-        }
 
         public void PlayUpperLayerAnimations(
            AnimGroup upperLayerGroup, AnimGroup group, AnimIndex upperLayerIndex, AnimIndex animIndex)
@@ -380,169 +312,90 @@ namespace SanAndreasUnity.Behaviours
             //	PlayerModel._anim.Blend( );
         }
 
-        public AnimationState AddMixingTransform(AnimGroup group, AnimIndex anim, Transform mix, bool recursive)
+        
+
+
+
+
+        public Anim GetAnim (AnimGroup group, AnimIndex anim)
         {
-            var animState = LoadAnim(group, anim);
-            if (null == animState)
-                return null;
-
-            _curAnimGroup = group;
-            _curAnim = anim;
-
-            animState.AddMixingTransform(mix, recursive);
-
-            return animState;
-        }
-
-        public AnimationState Blend(AnimGroup group, AnimIndex anim)
-        {
-            var animState = LoadAnim(group, anim);
-            if (null == animState)
-                return null;
-
-            _curAnimGroup = group;
-            _curAnim = anim;
-
-            animState.AddMixingTransform(Spine);
-
-            _anim.Blend(animState.name);
-
-            return animState;
-        }
-
-        public AnimationState Blend(AnimGroup group, AnimIndex anim, float targetWeight)
-        {
-            var animState = LoadAnim(group, anim);
-            if (null == animState)
-                return null;
-
-            _curAnimGroup = group;
-            _curAnim = anim;
-
-            animState.AddMixingTransform(Spine);
-
-            _anim.Blend(animState.name, targetWeight);
-
-            return animState;
-        }
-
-        public AnimationState Blend(AnimGroup group, AnimIndex anim, float targetWeight, float fadeLength)
-        {
-            var animState = LoadAnim(group, anim);
-            if (null == animState)
-                return null;
-
-            _curAnimGroup = group;
-            _curAnim = anim;
-
-            animState.AddMixingTransform(Spine);
-
-            _anim.Blend(animState.name, targetWeight, fadeLength);
-
-            return animState;
-        }
-
-        public AnimationState CrossFadeAnim(AnimGroup group, AnimIndex anim, float duration, PlayMode playMode)
-        {
-            var animState = LoadAnim(group, anim);
-            if (null == animState)
-                return null;
-
-            _curAnimGroup = group;
-            _curAnim = anim;
-
-            _anim.CrossFade(animState.name, duration, playMode);
-
-            return animState;
-        }
-
-        public AnimationState CrossFadeAnimQueued(AnimGroup group, AnimIndex anim, float duration, QueueMode queueMode, PlayMode playMode)
-        {
-            var animState = LoadAnim(group, anim);
-            if (null == animState)
-                return null;
-
-            _curAnimGroup = group;
-            _curAnim = anim;
-
-            _anim.CrossFadeQueued(animState.name, duration, queueMode, playMode);
-
-            return animState;
-        }
-
-
-        public Anim GetAnim(AnimGroup group, AnimIndex anim)
-        {
-            var animGroup = AnimationGroup.Get(Definition.AnimGroupName, group);
-
-            var animName = animGroup[anim];
+            string animName = GetAnimName (group, anim);
+			if (string.IsNullOrEmpty (animName))
+				return null;
 
             Anim result;
-            return _loadedAnims.TryGetValue(animName, out result) ? result : null;
+            return _loadedAnims.TryGetValue (animName, out result) ? result : null;
         }
 
-        public string GetAnimName(AnimGroup group, AnimIndex anim)
+        public string GetAnimName (AnimGroup group, AnimIndex anim)
         {
-            var animGroup = AnimationGroup.Get(Definition.AnimGroupName, group);
+			string animName = null, fileName = null;
+			if (GetAnimNameAndFile (group, anim, ref animName, ref fileName))
+				return animName;
 
-            return animGroup[anim];
+			return null;
         }
 
+		public bool GetAnimNameAndFile (AnimGroup group, AnimIndex anim, ref string animName, ref string fileName)
+		{
+			if (anim == AnimIndex.None)
+				return false;
+			
+			if (group == AnimGroup.None)
+				return false;
+			
+			if (null == this.Definition || string.IsNullOrEmpty (this.Definition.AnimGroupName))
+				return false;
 
-        private AnimationState LoadAnim(AnimGroup group, AnimIndex anim)
+			var animGroup = AnimationGroup.Get (this.Definition.AnimGroupName, group);
+			if (null == animGroup)
+				return false;
+
+			animName = animGroup [anim];
+			fileName = animGroup.FileName;
+
+			return true;
+		}
+
+
+        private AnimationState LoadAnim (AnimGroup group, AnimIndex anim)
         {
-            if (anim == AnimIndex.None)
-            {
-                return null;
-            }
-            //	if ("" == anim)
-            //		return null;
+			string animName = null, fileName = null;
+			if (GetAnimNameAndFile (group, anim, ref animName, ref fileName))
+				return LoadAnim (animName, fileName);
 
-            if (group == AnimGroup.None)
-            {
-                return null;
-            }
+			return null;
+        }
 
-			if (Definition == null || string.IsNullOrEmpty (Definition.AnimGroupName))
-				return null;
-			
-            var animGroup = AnimationGroup.Get(Definition.AnimGroupName, group);
-            if (null == animGroup)
-                return null;
-			
-            var animName = animGroup[anim];
-            //	var animName = anim ;
-            //	if (!animGroup.HasAnimation (animName))
-            //		return null;
+		private AnimationState LoadAnim (string animName, string fileName)
+		{
+			AnimationState state = null;
 
-            AnimationState state;
-
-            if (!_loadedAnims.ContainsKey(animName))
-            {
-				var importedAnim = Anim.Load(animGroup.FileName, animName, _frames);
+			if (!_loadedAnims.ContainsKey(animName))
+			{
+				var importedAnim = Anim.Load(fileName, animName, _frames);
 				if (importedAnim != null && importedAnim.Clip != null)
-                {
-                    _loadedAnims.Add(animName, importedAnim);
-                    _anim.AddClip(importedAnim.Clip, animName);
-                    state = _anim[animName];
-                }
-                else
-                {
-                    state = null;
-					Debug.LogWarningFormat ("Failed to load anim - file: {0}, anim name: {1}", animGroup.FileName, animName);
-                }
-            }
-            else
-            {
-                state = _anim[animName];
-            }
+				{
+					_loadedAnims.Add(animName, importedAnim);
+					_anim.AddClip(importedAnim.Clip, animName);
+					state = _anim[animName];
+				}
+				else
+				{
+					Debug.LogErrorFormat ("Failed to load anim - file: {0}, anim name: {1}", fileName, animName);
+				}
+			}
+			else
+			{
+				state = _anim[animName];
+			}
 
-            return state;
-        }
+			return state;
+		}
 
-        public void LoadAllAnimations()
+		private void LoadAllAnimations()
         {
-            foreach (Dictionary<AnimGroup, AnimationGroup> dict in AnimationGroup._sGroups.Values)
+			foreach (var dict in AnimationGroup._sGroups.Values)
             {
                 foreach (AnimationGroup animGroup in dict.Values)
                 {
