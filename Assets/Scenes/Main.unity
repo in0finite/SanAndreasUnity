@@ -483,6 +483,69 @@ MonoBehaviour:
   heatTexture: {fileID: 2800000, guid: d13f1555fc6b67c4c93e9668d530b735, type: 3}
   heatShader: {fileID: 4800000, guid: b4d62d455f49a3f45b9a1ee7f508e18b, type: 3}
   m_strength: 1
+--- !u!114 &830101608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 830101606}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97e9b95cf609d96409b6c40519432957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  filterType: 1
+  preview: 0
+  previewScale: {x: 1, y: 1, z: 1}
+  movementScale: 0
+  rotationScale: 1
+  maxVelocity: 8
+  minVelocity: 0.1
+  velocityScale: 0.375
+  softZDistance: 0.005
+  velocityDownsample: 1
+  excludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  shader: {fileID: 4800000, guid: 85a88efa8c871af4a9d17c64791b6f4f, type: 3}
+  dx11MotionBlurShader: {fileID: 4800000, guid: f1b13d7a80660504a858ea24cfa418c6,
+    type: 3}
+  replacementClear: {fileID: 4800000, guid: 7699c5fbfa27745a1abe111ab7bf9785, type: 3}
+  noiseTexture: {fileID: 2800000, guid: e80c3c84ea861404d8a427db8b7abf04, type: 3}
+  jitter: 0.05
+  showVelocity: 0
+  showVelocityScale: 1
+--- !u!114 &830101609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 830101606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f0686baeeeee4428801e3eb4f20c67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  QualityLevel: 1
+  QualitySteps: 1
+  MotionScale: 3
+  CameraMotionMult: 1
+  ObjectMotionMult: 1
+  MinVelocity: 1
+  MaxVelocity: 10
+  DepthThreshold: 0.01
+  Noise: 0
+  OverlayCameras: []
+  CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  AutoRegisterObjs: 1
+  MinResetDeltaDist: 1000
+  ResetFrameDelay: 1
+  WorkerThreads: 0
+  SystemThreadPool: 0
+  ForceCPUOnly: 0
+  DebugMode: 0
 --- !u!1001 &1013556954
 Prefab:
   m_ObjectHideFlags: 0
