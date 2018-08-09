@@ -518,7 +518,7 @@ public static class ZHelpers
         return new Rect(min_x, min_z, max_x, max_z);
     }
 
-    public static void CalculateLightPolution(Dictionary<Color, float> colorVals)
+    public static IEnumerator CalculateLightPolution(Dictionary<Color, float> colorVals)
     { // I should create an array for the different types (with an enum)
         List<Color> colors = new List<Color>();
         int height = MiniMap.texSize * MiniMap.tileEdge;
@@ -531,6 +531,12 @@ public static class ZHelpers
         foreach(SZone zone in SZone.AllZones)
         {
             Rect mapRect = GetMapRect(zone.ToRect());
+
+            if(mapRect.GetPixelCount() > 100000)
+            {
+                Debug.LogFormat("Buggy zone {0} (R: {1}; C: {2})", zone.name, mapRect, mapRect.GetPixelCount());
+                continue;
+            }
 
             for(int x = (int)mapRect.x; x < mapRect.width; ++x)
                 for(int y = (int)mapRect.y; y < mapRect.height; ++y)

@@ -657,5 +657,10 @@ namespace SanAndreasUnity.Utilities
             UnityEditor.Handles.EndGUI();
         }
 #endif
+
+        public static int GetPixelCount(this Rect r)
+        {
+            return (int)((Mathf.Abs(r.x) + r.width) * (Mathf.Abs(r.y) + r.height));
+        }
     }
 }
