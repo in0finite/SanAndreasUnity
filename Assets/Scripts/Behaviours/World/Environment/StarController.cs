@@ -12,6 +12,18 @@ public class StarController : MonoBehaviour
     private Material sky;
     private new ParticleSystem particleSystem;
 
+    [MinMax(100, 1000)]
+    public Vector2 m_starRange;
+
+    [SerializeField]
+    private ColorFloatDictionary ColorFloatStore = ColorFloatDictionary.New<ColorFloatDictionary>();
+    private Dictionary<Color, float> ColorFloats
+    {
+        get { return ColorFloatStore.dictionary; }
+    }
+
+    private bool IsLoaded;
+
     // WIP
     //private static Dictionary<Color, int> weightedColors;
 
@@ -40,6 +52,12 @@ public class StarController : MonoBehaviour
     {
         transform.rotation = transform.rotation;
         transform.position = Player.InstancePos;
+
+        if(MiniMap.Instance.MapTexture != null && !IsLoaded)
+        {
+
+            IsLoaded = true;
+        }
     }
 
     public void OnDawnTime()

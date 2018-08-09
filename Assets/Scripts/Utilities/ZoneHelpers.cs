@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Behaviours;
 
 public class ZoneHelpers
 {
@@ -401,10 +402,11 @@ public class SZone
 
 	public string name;
 
+    public float m_lightPollution, m_temperature;
+
 	public const string defaultZoneName = "San Andreas";
 
 	public static SZone[] AllZones { get { return ZoneHelpers.zoneInfoList; } }
-
 
 	public SZone (int x1, int z1, int y1, int x2, int z2, int y2, string n)
 	{
@@ -461,8 +463,56 @@ public class SZone
 
 public static class ZHelpers
 {
+    private static Rect _mapDims;
+
+    public static Rect mapDimensions
+    {
+        get
+        {
+            if (_mapDims == null)
+                _mapDims = GetMapRect();
+
+            return _mapDims;
+        }
+    }
+
+    private static Vector2 mapFactor
+    {
+        get
+        {
+            return new Vector2((MiniMap.texSize * MiniMap.tileEdge) / (Mathf.Abs(mapDimensions.x) + mapDimensions.width), (MiniMap.texSize * MiniMap.tileEdge) / (Mathf.Abs(mapDimensions.y) + mapDimensions.height));
+        }
+    }
+
     public static bool IsInside(this Vector3 p, Vector3 vmin, Vector3 vmax)
     {
         return p.x >= vmin.x && p.x <= vmax.x && p.y >= vmin.y && p.y <= vmax.y && p.z >= vmin.z && p.z <= vmax.z;
+    }
+
+    public static Vector2 GetMapCoord(Vector2 zoneCoord)
+    {
+        return new Vector2((Mathf.Abs(mapDimensions.x) + zoneCoord.x) * mapFactor.x, (Mathf.Abs(mapDimensions.y) + zoneCoord.y) * mapFactor.y);
+    }
+
+    public static Rect GetMapRect(Rect zoneRect)
+    {
+        return new Rect((Mathf.Abs(mapDimensions.x) + zoneRect.x) * mapFactor.x, (Mathf.Abs(mapDimensions.y) + zoneRect.y) * mapFactor.y,
+                        (Mathf.Abs(mapDimensions.width) + zoneRect.width) * mapFactor.x, (Mathf.Abs(mapDimensions.height) + zoneRect.height) * mapFactor.y);
+    }
+
+    private static Rect GetMapRect()
+    {
+        float min_x = SZone.AllZones.Min(z => z.vmin.x), min_y = SZone.AllZones.Min(z => z.vmin.y), min_z = SZone.AllZones.Min(z => z.vmin.z),
+              max_x = SZone.AllZones.Max(z => z.vmax.x), max_y = SZone.AllZones.Max(z => z.vmax.y), max_z = SZone.AllZones.Max(z => z.vmax.z);
+
+        return new Rect(min_x, min_z, max_x, max_z);
+    }
+
+    public static void CalculateLightPolution(Dictionary<Color, float> colorVals)
+    {
+        foreach(SZone zone in SZone.AllZones)
+        {
+            
+        }
     }
 }
