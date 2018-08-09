@@ -58,6 +58,7 @@ Assets/StreamingAssets/logs/*.gz
 Assets/StreamingAssets/*.meta
 Assets/FromAssetStore/LlamaSoftware/LightLod/Demo/
 Assets/FromAssetStore/SpriteLights/Scenes/
+Packages/
 
 # Clean-up
 
