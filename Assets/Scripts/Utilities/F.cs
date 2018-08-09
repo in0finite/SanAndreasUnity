@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Random = System.Random;
 
 namespace SanAndreasUnity.Utilities
 {

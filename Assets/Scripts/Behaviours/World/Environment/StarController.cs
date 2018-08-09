@@ -1,5 +1,9 @@
-﻿using SanAndreasUnity.Behaviours;
+﻿using Fclp.Internals.Extensions;
+using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.World;
+using SanAndreasUnity.Utilities;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(ParticleSystem))]
@@ -7,10 +11,22 @@ public class StarController : MonoBehaviour
 {
     private Material sky;
     private new ParticleSystem particleSystem;
+    private static Dictionary<Color, int> weightedColors;
 
     // Use this for initialization
     private void Start()
     {
+        weightedColors = new Dictionary<Color, int>()
+        {
+            { Color.white, 60 },
+            { new Color32(190, 210, 255, 255), 10 }, // Light blue
+            { new Color32(255, 231, 165, 255), 10 }, // Light orange
+            { new Color32(255, 255, 190, 255), 5 }, // Light yellow
+            { new Color32(190, 255, 190, 255), 5 }, // Light green
+            { new Color32(255, 190, 255, 255), 5 }, // Light purple
+            { new Color32(255, 190, 190, 255), 5 }  // Light red
+        };
+
         sky = RenderSettings.skybox;
         particleSystem = GetComponent<ParticleSystem>();
         if (WorldController.IsNight && !particleSystem.isPlaying) StartPlaying();
@@ -47,7 +63,42 @@ public class StarController : MonoBehaviour
     private void StartPlaying()
     {
         if (!particleSystem.isPlaying)
-            particleSystem.Play(); 
+        {
+            particleSystem.Play();
+            /*for(int i = 0; i < particleSystem.main.maxParticles; ++i)
+            {
+                Color color = weightedColors.AsEnumerable().PickWeighted();
+                //ParticleSystem.MainModule psMain = particleSystem.main;
+                //psMain.startColor = color;
+                var pars = new ParticleSystem.EmitParams();
+
+                pars.startColor = color;
+
+                particleSystem.Emit(pars, 1);
+            }*/
+
+            // maxParticles ... depeding on the zone
+            int count = particleSystem.main.maxParticles;
+            particleSystem.Emit(count);
+
+            ParticleSystem.Particle[] ps = new ParticleSystem.Particle[count];
+            particleSystem.GetParticles(ps);
+            Dictionary<Color, int> sum = new Dictionary<Color, int>();
+
+            ps.ForEach((x) => {
+                x.startColor = WeightedRandomizer.From(weightedColors).TakeOne();
+                if (!sum.ContainsKey(x.startColor))
+                    sum.Add(x.startColor, 1);
+                else
+                    ++sum[x.startColor];
+            });
+
+            particleSystem.SetParticles(ps, count);
+
+            sum.ForEach((x) => {
+                Debug.LogFormat("Color: {0}; Times: {1}", x.Key, x.Value);
+            });
+        }
         //InvokeRepeating("KeepPlaying", 0, particleSystem.main.duration);
     }
 
