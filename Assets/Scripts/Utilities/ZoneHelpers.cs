@@ -5,6 +5,8 @@ using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours;
 using Cadenza.Collections;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 public class ZoneHelpers
 {
@@ -518,7 +520,7 @@ public static class ZHelpers
         return new Rect(min_x, min_z, max_x, max_z);
     }
 
-    public static IEnumerator CalculateLightPolution(Dictionary<Color, float> colorVals)
+    public static IEnumerator CalculateLightPolution(Dictionary<Color, float> colorVals, bool debugging = true)
     { // I should create an array for the different types (with an enum)
         List<Color> colors = new List<Color>();
         int height = MiniMap.texSize * MiniMap.tileEdge;
@@ -528,17 +530,25 @@ public static class ZHelpers
             colorMap.Add(x.Key, 0);
         });
 
+        Stopwatch sw = Stopwatch.StartNew();
+
         foreach(SZone zone in SZone.AllZones)
         {
+            if(debugging) Debug.Log("aaa");
             Rect mapRect = GetMapRect(zone.ToRect());
 
-            if(mapRect.GetPixelCount() > 100000)
+            if (debugging) Debug.Log("bbb");
+
+            if (mapRect.GetPixelCount() > 100000)
             {
                 Debug.LogFormat("Buggy zone {0} (R: {1}; C: {2})", zone.name, mapRect, mapRect.GetPixelCount());
+                yield return null;
                 continue;
             }
 
-            for(int x = (int)mapRect.x; x < mapRect.width; ++x)
+            if (debugging) Debug.Log("ccc");
+
+            for (int x = (int)mapRect.x; x < mapRect.width; ++x)
                 for(int y = (int)mapRect.y; y < mapRect.height; ++y)
                 {
                     Color c = MiniMap.Instance.MapTexture.GetPixel(x, height - y - 1);
@@ -550,9 +560,19 @@ public static class ZHelpers
                         colors.Add(c);
                 }
 
+            if (debugging) Debug.Log("ddd");
+
+            sw.Stop();
+
             zone.m_lightPollution = colorMap.Sum(x => x.Value * colorVals[x.Key]) / colorMap.Keys.Count;
-            Debug.LogFormat("Light poluttion in {0} is about {1}!", zone.name, zone.m_lightPollution.ToString("F2"));
+            Debug.LogFormat("Light poluttion in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
+
+            sw.Start();
+
+            yield return null;
         }
+
+        sw.Stop();
 
         Debug.LogFormat("There are {0} types of colors in the map!", colors.Count);
     }
