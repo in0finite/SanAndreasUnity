@@ -269,6 +269,14 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: a20e5b4dc9268ed429d041a8de712388, type: 2}
+    - target: {fileID: 1993570882468202, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1130006379661492, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0
@@ -456,6 +464,25 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3b4f69035cdf45d4c9bf28466d8d3ff1, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &830101606 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1045569797766274, guid: 3b4f69035cdf45d4c9bf28466d8d3ff1,
+    type: 2}
+  m_PrefabInternal: {fileID: 830101605}
+--- !u!114 &830101607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 830101606}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5285e7affe8956c47aedc300040ab802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heatTexture: {fileID: 2800000, guid: d13f1555fc6b67c4c93e9668d530b735, type: 3}
+  heatShader: {fileID: 4800000, guid: b4d62d455f49a3f45b9a1ee7f508e18b, type: 3}
+  m_strength: 1
 --- !u!1001 &1013556954
 Prefab:
   m_ObjectHideFlags: 0
