@@ -1,6 +1,7 @@
 ﻿using Cadenza.Collections;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -557,6 +558,19 @@ public static class ZHelpers
             try
             {
                 var pixels = MiniMap.Instance.MapTexture.GetPixels((int)mapRect.x, (int)mapRect.y, (int)mapRect.width, (int)mapRect.height);
+
+                if (pixels == null || (pixels != null && pixels.Length == 0))
+                {
+                    Debug.LogWarningFormat("There wasn't pixels! ({0})", zone.name);
+                    continue;
+                }
+
+                int count = pixels.Length;
+                pixels.RemoveAll(x => x == null);
+                count -= pixels.Length;
+
+                if (debugging) Debug.LogFormat("There was {0} null pixels!");
+
                 var c = pixels.GroupBy(x => x)
                               .Select(g => new { Value = g.Key, Count = g.Count() });
 
@@ -569,9 +583,10 @@ public static class ZHelpers
 
                 sw.Start();
             }
-            catch
+            catch(Exception ex)
             {
-                Debug.LogErrorFormat("There was a problem with {0} zone", zone.name);
+                Debug.LogErrorFormat("There was a problem with the zone called {0}", zone.name);
+                Debug.LogError(ex);
                 continue;
             }
 
@@ -580,6 +595,6 @@ public static class ZHelpers
 
         sw.Stop();
 
-        Debug.LogFormat("There are {0} types of colors in the map!", colors.Count());
+        Debug.LogFormat("There are {0} types of colors in the map!", colors != null ? colors.Count() : 0);
     }
 }
