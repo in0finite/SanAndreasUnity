@@ -254,6 +254,11 @@ Prefab:
       propertyPath: Camera
       value: 
       objectReference: {fileID: 1117230323}
+    - target: {fileID: 198387567078247996, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 1000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0
