@@ -662,5 +662,20 @@ namespace SanAndreasUnity.Utilities
         {
             return (int)((Mathf.Abs(r.x) + r.width) * (Mathf.Abs(r.y) + r.height));
         }
+
+        public static Color ColorThreshold(this Color c1, Color c2, float percentage)
+        {
+            if ((Mathf.Abs(c1.r - c2.r) + Mathf.Abs(c1.g - c2.g) + Mathf.Abs(c1.b - c2.b)) / 3 < percentage)
+                return c1;
+            return c2;
+        }
+
+        public static Color ColorMultiThreshold(this Color c1, IEnumerable<Color> cs, float percentage)
+        {
+            foreach (Color c2 in cs)
+                if (c1 == c1.ColorThreshold(c2, percentage))
+                    return c2;
+            return c1;
+        }
     }
 }

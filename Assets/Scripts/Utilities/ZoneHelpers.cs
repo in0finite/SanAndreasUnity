@@ -485,6 +485,7 @@ public class SZone
 
 public static class ZHelpers
 {
+    private const float threshold = .9f;
     private static Rect _mapDims;
 
     public static Rect mapDimensions
@@ -536,7 +537,8 @@ public static class ZHelpers
 
     public static IEnumerator CalculateLightPolution(Dictionary<Color, float> colorVals, bool debugging = false)
     { // I should create an array for the different types (with an enum)
-        IEnumerable<Color> colors = null; // Only for debug purposes 
+        IEnumerable<Color> colors = null, // Only for debug purposes 
+                           uColors = colorVals.Keys; 
 
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -570,15 +572,28 @@ public static class ZHelpers
 
                 if (debugging) Debug.LogFormat("There was {0} null pixels!", count);
 
-                var c = pixels.GroupBy(x => x)
-                              .Select(g => new { Value = g.Key, Count = g.Count() });
+                var t = pixels.Select(x => x.ColorMultiThreshold(uColors, threshold));
 
-                colors = pixels.Distinct();
+                var c = t.GroupBy(x => x)
+                         .Select(g => new { Value = g.Key, Count = g.Count() });
+
+                //colors = pixels.Distinct();
 
                 sw.Stop();
 
+                float s = 0;
+                c.ForEach((x) =>
+                {
+                    Debug.LogFormat("Pixels ({0}): {1} => Sum: {1} * {2} = {3}", x.Value, x.Count, (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0), x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0));
+                    s += x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0);
+                });
+                Debug.LogFormat("Sum: {0}; Count: {1}", s, c.Count());
+
                 zone.m_lightPollution = c.Sum(x => x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0)) / c.Count();
-                if (debugging) Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
+
+                //if(debugging)
+                Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
+                Debug.Break();
 
                 sw.Start();
             }
