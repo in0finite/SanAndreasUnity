@@ -7,22 +7,24 @@ using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(ParticleSystem))]
-public class StarController : MonoBehaviour
+public class StarController : ColorController
 {
+    public static StarController Instance;
+
     private Material sky;
     private new ParticleSystem particleSystem;
 
     [MinMax(100, 1000)]
     public Vector2 m_starRange;
 
-    [SerializeField]
+    public override ColorFloatDictionary serializedMapColor { get; set; }
+
+    /*[SerializeField]
     private ColorFloatDictionary ColorFloatStore = ColorFloatDictionary.New<ColorFloatDictionary>();
-    private Dictionary<Color, float> ColorFloats
+    public Dictionary<Color, float> ColorFloats
     {
         get { return ColorFloatStore.dictionary; }
-    }
-
-    private bool IsLoaded;
+    }*/
 
     // WIP
     //private static Dictionary<Color, int> weightedColors;
@@ -30,6 +32,8 @@ public class StarController : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
+        if (!Application.isPlaying) return;
+
         /*weightedColors = new Dictionary<Color, int>()
         {
             { Color.white, 60 },
@@ -41,6 +45,8 @@ public class StarController : MonoBehaviour
             { new Color32(255, 190, 190, 255), 5 }  // Light red
         };*/
 
+        Instance = this;
+
         sky = RenderSettings.skybox;
         particleSystem = GetComponent<ParticleSystem>();
         if (WorldController.IsNight && !particleSystem.isPlaying) StartPlaying();
@@ -50,16 +56,10 @@ public class StarController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (!Application.isPlaying) return;
+
         transform.rotation = transform.rotation;
         transform.position = Player.InstancePos;
-
-        if(MiniMap.Instance.MapTexture != null && !IsLoaded)
-        {
-            if(ColorFloats.Count > 1)
-                StartCoroutine(ZHelpers.CalculateLightPolution(ColorFloats));
-
-            IsLoaded = true;
-        }
     }
 
     public void OnDawnTime()

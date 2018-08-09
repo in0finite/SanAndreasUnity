@@ -409,6 +409,7 @@ public class SZone
     public string name;
 
     public float m_lightPollution, m_temperature;
+    public bool m_lpCalc;
 
     public const string defaultZoneName = "San Andreas";
 
@@ -485,8 +486,27 @@ public class SZone
     }
 }
 
+public enum GroundType { Building, Asphalt, LightPavement, Pavement, Grass, DryGrass, Sand, Dirt, Mud, Water, Rails, Tunnel }
+
 public static class ZHelpers
 {
+    public static Dictionary<GroundType, Color> mapColors = new Dictionary<GroundType, Color>()
+    {
+        { GroundType.Building, Color.white },
+        { GroundType.Asphalt, Color.black },
+        { GroundType.LightPavement, new Color32(206, 207, 206, 255) },
+        { GroundType.Pavement, new Color32(156, 154, 156, 255) },
+        { GroundType.Grass, new Color32(57, 107, 41, 255) },
+        { GroundType.DryGrass, new Color32(123, 148, 57, 255) },
+        { GroundType.Sand, new Color32(231, 190, 107, 255) },
+        { GroundType.Dirt, new Color32(156, 134, 115, 255) },
+        { GroundType.Mud, new Color32(123, 101, 90, 255) },
+        { GroundType.Water, new Color32(115, 138, 173, 255) },
+        { GroundType.Rails, new Color32(74, 4, 0, 255) },
+        { GroundType.Tunnel, new Color32(107, 105, 99, 255) }
+    };
+    private static bool StatsCalculated;
+
     private const float threshold = .9f;
     private static Rect _mapDims;
 
@@ -537,7 +557,7 @@ public static class ZHelpers
         return new Rect(min_x, min_z, max_x, max_z);
     }
 
-    public static IEnumerator CalculateLightPolution(Dictionary<Color, float> colorVals, bool debugging = false)
+    public static void CalculateZoneStats(ColorFloatDictionary colorVals, bool debugging = false)
     { // I should create an array for the different types (with an enum)
         IEnumerable<Color> uColors = colorVals.Keys;
 
@@ -545,8 +565,6 @@ public static class ZHelpers
 
         foreach (SZone zone in SZone.AllZones)
         {
-            yield return null;
-
             Rect mapRect = GetMapRect(zone.ToRect(), debugging);
 
 #if TESTING
@@ -562,34 +580,55 @@ public static class ZHelpers
             {
                 var pixels = MiniMap.Instance.MapTexture.GetPixels((int)mapRect.x, (int)mapRect.y, (int)mapRect.width, (int)mapRect.height);
 
+                if (debugging) Debug.Log("Ellapsed: "+sw.ElapsedMilliseconds);
+
                 if (pixels == null || (pixels != null && pixels.Length == 0))
                 {
                     Debug.LogWarningFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
                     continue;
                 }
 
+#if TESTING
                 int count = pixels.Length;
                 pixels.RemoveAll(x => x == null);
                 count -= pixels.Length;
 
                 if (debugging) Debug.LogFormat("There was {0} null pixels!", count);
+#endif
 
                 var t = pixels.Select(x => x.ColorMultiThreshold(uColors, threshold));
+
+                if (debugging) Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
 
                 var c = t.GroupBy(x => x)
                          .Select(g => new { Value = g.Key, Count = g.Count() });
 
+                if (debugging)
+                {
+                    Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
+                    Debug.Break();
+                }
+
                 sw.Stop();
 
+#if TESTING
                 float s = 0;
                 c.ForEach((x) =>
                 {
-                    Debug.LogFormat("Pixels ({0}): {1} => Sum: {1} * {2} = {3}", x.Value, x.Count, (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0), x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0));
+                    if (debugging)
+                    {
+                        Debug.LogFormat("Pixels ({0}): {1} => Sum: {1} * {2} = {3}", x.Value, x.Count, (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0), x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0));
+                        Debug.Break();
+                    }
+
                     s += x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0);
                 });
-                Debug.LogFormat("Sum: {0}; Count: {1}", s, c.Count());
+
+                if(debugging) Debug.LogFormat("Sum: {0}; Count: {1}", s, c.Count());
+#endif
 
                 zone.m_lightPollution = c.Sum(x => x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0)) / mapRect.GetPixelCount();
+                zone.m_lpCalc = true;
 
                 if(debugging) Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
 
@@ -601,12 +640,29 @@ public static class ZHelpers
                 Debug.LogError(ex);
                 continue;
             }
-
-            yield return null;
         }
 
         sw.Stop();
+    }
 
-        Debug.LogFormat("There are {0} types of colors in the map!", colors != null ? colors.Count() : 0);
+    public static void Awake()
+    {
+
+    }
+
+    public static void Start()
+    {
+
+    }
+
+    public static void Update()
+    {
+        if (MiniMap.Instance.MapTexture != null && !StatsCalculated)
+        {
+            if (StarController.Instance.serializedMapColor.Count > 1)
+                CalculateZoneStats(StarController.Instance.serializedMapColor);
+
+            StatsCalculated = true;
+        }
     }
 }

@@ -155,6 +155,21 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f1fb24ea8c25e644cb89baa25b4a8bff, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &137498145 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 143544, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+  m_PrefabInternal: {fileID: 504261043}
+--- !u!114 &137498146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 137498145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61b9c4c52650d0e4d8641ea22107edba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &359993517
 Prefab:
   m_ObjectHideFlags: 0
@@ -204,6 +219,16 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114930254477277170, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: _mapColor.m_keys.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114930254477277170, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: _mapColor.m_values.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 114930254477277170, guid: b6900baf9f552ba46ad27d4ada4d5489,
         type: 2}
       propertyPath: ColorFloatStore.keys.Array.size
@@ -283,6 +308,11 @@ Prefab:
         type: 2}
       propertyPath: ColorFloatStore.keys.Array.data[12].a
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114930254477277170, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: m_starRange.y
+      value: 401.8905
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}

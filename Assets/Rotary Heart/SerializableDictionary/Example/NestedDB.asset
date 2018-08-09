@@ -1,0 +1,230 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c2746ac6d3d924bb04108285ea0aff, type: 3}
+  m_Name: NestedDB
+  m_EditorClassIdentifier: 
+  nested:
+    reorderableList:
+      canAdd: 1
+      canRemove: 1
+      draggable: 1
+      expandable: 1
+      multipleSelection: 1
+      label:
+        m_Text: Key Values
+        m_Image: {fileID: 0}
+        m_Tooltip: 
+      headerHeight: 18
+      footerHeight: 13
+      slideEasing: 0.15
+      verticalSpacing: 2
+      showDefaultBackground: 1
+      elementDisplayType: 0
+      elementNameProperty: 
+      elementNameOverride: 
+      elementIcon: {fileID: 0}
+    reqReferences: {fileID: 0}
+    _keyValues:
+    - Test
+    - Test2
+    _keys:
+    - Test
+    - Test2
+    _values:
+    - id: Test
+      enumVal: 0
+      nestedData:
+        reorderableList:
+          canAdd: 1
+          canRemove: 1
+          draggable: 1
+          expandable: 1
+          multipleSelection: 1
+          label:
+            m_Text: Key Values
+            m_Image: {fileID: 0}
+            m_Tooltip: 
+          headerHeight: 18
+          footerHeight: 13
+          slideEasing: 0.15
+          verticalSpacing: 2
+          showDefaultBackground: 1
+          elementDisplayType: 0
+          elementNameProperty: 
+          elementNameOverride: 
+          elementIcon: {fileID: 0}
+        reqReferences: {fileID: 0}
+        _keyValues: 000000000200000003000000
+        _keys: 000000000200000003000000
+        _values:
+        - prefab: {fileID: 0}
+          speed: 0
+          color: {r: 1, g: 0, b: 0, a: 0}
+          deepNested:
+            reorderableList:
+              canAdd: 1
+              canRemove: 1
+              draggable: 1
+              expandable: 1
+              multipleSelection: 1
+              label:
+                m_Text: Key Values
+                m_Image: {fileID: 0}
+                m_Tooltip: 
+              headerHeight: 18
+              footerHeight: 13
+              slideEasing: 0.15
+              verticalSpacing: 2
+              showDefaultBackground: 1
+              elementDisplayType: 0
+              elementNameProperty: 
+              elementNameOverride: 
+              elementIcon: {fileID: 0}
+            reqReferences: {fileID: 0}
+            _keyValues: 0200000000000000
+            _keys: 0200000000000000
+            _values:
+            - 
+            - 
+        - prefab: {fileID: 0}
+          speed: 0
+          color: {r: 1, g: 1, b: 1, a: 0}
+          deepNested:
+            reorderableList:
+              canAdd: 1
+              canRemove: 1
+              draggable: 1
+              expandable: 1
+              multipleSelection: 1
+              label:
+                m_Text: Key Values
+                m_Image: {fileID: 0}
+                m_Tooltip: 
+              headerHeight: 18
+              footerHeight: 13
+              slideEasing: 0.15
+              verticalSpacing: 2
+              showDefaultBackground: 1
+              elementDisplayType: 0
+              elementNameProperty: 
+              elementNameOverride: 
+              elementIcon: {fileID: 0}
+            reqReferences: {fileID: 0}
+            _keyValues: 
+            _keys: 
+            _values: []
+        - prefab: {fileID: 0}
+          speed: 0
+          color: {r: 0, g: 1, b: 0.8344829, a: 0}
+          deepNested:
+            reorderableList:
+              canAdd: 1
+              canRemove: 1
+              draggable: 1
+              expandable: 1
+              multipleSelection: 1
+              label:
+                m_Text: Key Values
+                m_Image: {fileID: 0}
+                m_Tooltip: 
+              headerHeight: 18
+              footerHeight: 13
+              slideEasing: 0.15
+              verticalSpacing: 2
+              showDefaultBackground: 1
+              elementDisplayType: 0
+              elementNameProperty: 
+              elementNameOverride: 
+              elementIcon: {fileID: 0}
+            reqReferences: {fileID: 0}
+            _keyValues: 
+            _keys: 
+            _values: []
+    - id: Test2
+      enumVal: 0
+      nestedData:
+        reorderableList:
+          canAdd: 1
+          canRemove: 1
+          draggable: 1
+          expandable: 1
+          multipleSelection: 1
+          label:
+            m_Text: Key Values
+            m_Image: {fileID: 0}
+            m_Tooltip: 
+          headerHeight: 18
+          footerHeight: 13
+          slideEasing: 0.15
+          verticalSpacing: 2
+          showDefaultBackground: 1
+          elementDisplayType: 0
+          elementNameProperty: 
+          elementNameOverride: 
+          elementIcon: {fileID: 0}
+        reqReferences: {fileID: 0}
+        _keyValues: 0500000001000000
+        _keys: 0500000001000000
+        _values:
+        - prefab: {fileID: 0}
+          speed: 0
+          color: {r: 0, g: 0.048275948, b: 1, a: 0}
+          deepNested:
+            reorderableList:
+              canAdd: 1
+              canRemove: 1
+              draggable: 1
+              expandable: 1
+              multipleSelection: 1
+              label:
+                m_Text: Key Values
+                m_Image: {fileID: 0}
+                m_Tooltip: 
+              headerHeight: 18
+              footerHeight: 13
+              slideEasing: 0.15
+              verticalSpacing: 2
+              showDefaultBackground: 1
+              elementDisplayType: 0
+              elementNameProperty: 
+              elementNameOverride: 
+              elementIcon: {fileID: 0}
+            reqReferences: {fileID: 0}
+            _keyValues: 
+            _keys: 
+            _values: []
+        - prefab: {fileID: 0}
+          speed: 0
+          color: {r: 1, g: 0.80689657, b: 0, a: 0}
+          deepNested:
+            reorderableList:
+              canAdd: 1
+              canRemove: 1
+              draggable: 1
+              expandable: 1
+              multipleSelection: 1
+              label:
+                m_Text: Key Values
+                m_Image: {fileID: 0}
+                m_Tooltip: 
+              headerHeight: 18
+              footerHeight: 13
+              slideEasing: 0.15
+              verticalSpacing: 2
+              showDefaultBackground: 1
+              elementDisplayType: 0
+              elementNameProperty: 
+              elementNameOverride: 
+              elementIcon: {fileID: 0}
+            reqReferences: {fileID: 0}
+            _keyValues: 
+            _keys: 
+            _values: []

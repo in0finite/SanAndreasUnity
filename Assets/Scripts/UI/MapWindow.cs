@@ -583,7 +583,7 @@ namespace SanAndreasUnity.UI {
 					Rect renderRect;
 					if (this.GetMapItemRenderRect (rect, out renderRect)) {
 						GUI.Box (renderRect, "");
-						GUIUtils.CenteredLabel (renderRect.center, zone.name);
+						GUIUtils.CenteredLabel (renderRect.center, zone.m_lpCalc ? string.Format("{0}\nLP: {1}", zone.name, zone.m_lightPollution.ToString("F2")) : zone.name);
 					}
 
 				}
