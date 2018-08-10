@@ -578,7 +578,7 @@ public static class ZHelpers
         }), m_taskCancellation.Token).ContinueWith((t) => { IsStatsTaskFinished = true; });
     }
 
-    public static void CalculateZoneStats(ColorFloatDictionary[] vals, Action<SZone, int, float> act, bool debugging = true)
+    public static void CalculateZoneStats(ColorFloatDictionary[] vals, Action<SZone, int, float> act, bool debugging = false)
     {
         List<int> areSame = new List<int>();
         ColorFloatDictionary firstVal = vals[0];
@@ -596,7 +596,17 @@ public static class ZHelpers
 
         Stopwatch sw = Stopwatch.StartNew();
 
-        Debug.Log("Starting Parallel work!");
+        Debug.LogFormat("Starting Parallel work with {0} color dictionaries!\nEach one contains {1} colors", vals.Length, string.Join(", ", vals.Select(x => x.Keys.Count.ToString())));
+
+        if (debugging)
+        {
+            int m = 0;
+            foreach (ColorFloatDictionary v in vals)
+            {
+                Debug.LogFormat("The colors for the dictionary #{0}:\n\n{1}", m, string.Join(Environment.NewLine, v.Select(x => string.Format("(K) {0}: {1} (V)", x.Key, x.Value))));
+                ++m;
+            }
+        }
 
         long lastSw = 0;
 
@@ -640,7 +650,7 @@ public static class ZHelpers
 
                 if (isIdentical)
                 {
-                    IEnumerable<ColorDistinction> c = GetDistinctColors(uColors, sw, pixels);
+                    IEnumerable<ColorDistinction> c = GetDistinctColors(uColors, sw, pixels, debugging);
 
                     sw.Stop();
 
@@ -653,7 +663,7 @@ public static class ZHelpers
 
                     foreach (SameIndexes index in sameIndexes)
                     {
-                        IEnumerable<ColorDistinction> c = GetDistinctColors(vals[index.indexes.FirstOrDefault()].Keys, sw, pixels);
+                        IEnumerable<ColorDistinction> c = GetDistinctColors(vals[index.indexes.FirstOrDefault()].Keys, sw, pixels, debugging);
 
                         foreach (int w in index.indexes)
                             CallColorAction(act, zone, vals, c, w, mapRect, debugging);
@@ -679,9 +689,11 @@ public static class ZHelpers
         sw.Stop();
     }
 
-    private static IEnumerable<ColorDistinction> GetDistinctColors(IEnumerable<Color> uColors, Stopwatch sw, IEnumerable<Color> pixels)
+    private static IEnumerable<ColorDistinction> GetDistinctColors(IEnumerable<Color> uColors, Stopwatch sw, IEnumerable<Color> pixels, bool debugging = true)
     {
         var t = pixels.Select(x => x.ColorMultiThreshold(uColors, threshold));
+
+        if (debugging) Debug.LogFormat("Pixels: {0}; MultiThreshold: {1}", pixels.Count(), t.Count());
 
         var c = t.GroupBy(x => x)
                  .Select(g => new ColorDistinction { Value = g.Key, Count = g.Count() });
@@ -701,13 +713,11 @@ public static class ZHelpers
         c.ForEach((x) =>
         {
             Debug.LogFormat("Pixels ({0}): {1} => Sum: {1} * {2} = {3}", x.Value, x.Count, (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0), x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0));
-            Debug.Break();
 
             s += x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0);
         });
 
         Debug.LogFormat("Sum: {0}; Count: {1}", s, c.Count());
-        Debug.Break();
     }
 
     private static IEnumerable<SameIndexes> GenerateSameIndexes(IEnumerable<int> sameIndexes, int totalLength)
@@ -733,7 +743,7 @@ public static class ZHelpers
     {
         if (MiniMap.Instance.MapTexture != null && !AreStatsCalculated)
         {
-            CalculateZoneStats(StarController.Instance.serializedMapColor, WeatherController.Instance.serializedMapColor);
+            CalculateZoneStats(StarController.Instance.GetMap(), WeatherController.Instance.GetMap());
             AreStatsCalculated = true;
         }
     }

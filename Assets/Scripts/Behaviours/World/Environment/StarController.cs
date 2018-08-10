@@ -17,8 +17,6 @@ public class StarController : ColorController
     [MinMax(100, 1000)]
     public Vector2 m_starRange;
 
-    public override ColorFloatDictionary serializedMapColor { get; set; }
-
     /*[SerializeField]
     private ColorFloatDictionary ColorFloatStore = ColorFloatDictionary.New<ColorFloatDictionary>();
     public Dictionary<Color, float> ColorFloats

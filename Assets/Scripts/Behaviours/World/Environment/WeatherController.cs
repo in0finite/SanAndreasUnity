@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class WeatherController : ColorController
 {
-    public override ColorFloatDictionary serializedMapColor { get; set; }
-
     public static WeatherController Instance;
 
     // Use this for initialization

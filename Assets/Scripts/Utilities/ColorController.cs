@@ -7,10 +7,20 @@ public abstract class ColorController : MonoBehaviour
     public ColorFloatDictionary _mapColor = new ColorFloatDictionary();
 
     [SerializeField]
-    public abstract ColorFloatDictionary serializedMapColor { get; set; }
-
-    private void Awake()
+    public ColorFloatDictionary serializedMapColor
     {
-        serializedMapColor = new ColorFloatDictionary();
+        get
+        {
+            return _mapColor;
+        }
+        set
+        {
+            _mapColor = value;
+        }
+    }
+
+    public ColorFloatDictionary GetMap()
+    {
+        return _mapColor;
     }
 }
