@@ -516,6 +516,8 @@ public static class ZHelpers
     private static Task m_statsCalculation;
     private static CancellationTokenSource m_taskCancellation = new CancellationTokenSource();
 
+    private static Action<SZone, int, float> m_zoneAction;
+
     public static Rect mapDimensions
     {
         get
@@ -567,18 +569,10 @@ public static class ZHelpers
     {
         Debug.Log("Starting calculating zones stats!");
 
-        m_statsCalculation = Task.Factory.StartNew(() => CalculateZoneStats(new ColorFloatDictionary[] { starColors, weatherColors }, (zone, i, val) =>
-        {
-            if (i == 0)
-                zone.m_lightPollution = val;
-            else
-                zone.m_temperature = val;
-
-            zone.m_calculated = true;
-        }), m_taskCancellation.Token).ContinueWith((t) => { IsStatsTaskFinished = true; });
+        m_statsCalculation = Task.Factory.StartNew(() => CalculateZoneStats(new ColorFloatDictionary[] { starColors, weatherColors }), m_taskCancellation.Token).ContinueWith((t) => { IsStatsTaskFinished = true; });
     }
 
-    public static void CalculateZoneStats(ColorFloatDictionary[] vals, Action<SZone, int, float> act, bool debugging = false)
+    public static void CalculateZoneStats(ColorFloatDictionary[] vals, bool debugging = false)
     {
         List<int> areSame = new List<int>();
         ColorFloatDictionary firstVal = vals[0];
@@ -655,7 +649,7 @@ public static class ZHelpers
                     sw.Stop();
 
                     for (int w = 0; w < vals.Length; ++w)
-                        CallColorAction(act, zone, vals, c, w, mapRect, debugging);
+                        CallColorAction(zone, vals, c, w, mapRect, debugging);
                 }
                 else
                 {
@@ -666,7 +660,7 @@ public static class ZHelpers
                         IEnumerable<ColorDistinction> c = GetDistinctColors(vals[index.indexes.FirstOrDefault()].Keys, sw, pixels, debugging);
 
                         foreach (int w in index.indexes)
-                            CallColorAction(act, zone, vals, c, w, mapRect, debugging);
+                            CallColorAction(zone, vals, c, w, mapRect, debugging);
                     }
                 }
 
@@ -701,23 +695,17 @@ public static class ZHelpers
         return c;
     }
 
-    private static void CallColorAction(Action<SZone, int, float> act, SZone zone, ColorFloatDictionary[] vals, IEnumerable<ColorDistinction> c, int w, Rect mapRect, bool debugging = true)
+    private static void CallColorAction(SZone zone, ColorFloatDictionary[] vals, IEnumerable<ColorDistinction> c, int w, Rect mapRect, bool debugging = true)
     {
-        if (debugging) DebuggingColors(c, vals, w);
-        act(zone, w, c.Sum(x => x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)) / mapRect.GetPixelCount());
+        float val = c.Sum(x => x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)) / mapRect.GetPixelCount();
+        if (debugging || val < .01f) DebuggingColors(c, vals, w, val, zone);
+        m_zoneAction(zone, w, val);
     }
 
-    private static void DebuggingColors(IEnumerable<ColorDistinction> c, ColorFloatDictionary[] vals, int w)
+    private static void DebuggingColors(IEnumerable<ColorDistinction> c, ColorFloatDictionary[] vals, int w, float val, SZone zone, bool debugSum = false)
     {
-        float s = 0;
-        c.ForEach((x) =>
-        {
-            Debug.LogFormat("Pixels ({0}): {1} => Sum: {1} * {2} = {3}", x.Value, x.Count, (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0), x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0));
-
-            s += x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0);
-        });
-
-        Debug.LogFormat("Sum: {0}; Count: {1}", s, c.Count());
+        Debug.LogFormat("Value: {0}; Zone: {1}; Index: {2}\n\n{3}", val, zone.name, w, string.Join(Environment.NewLine, c.Select(x => string.Format("Pixels ({0}): {1} => Sum: {1} * {2} = {3}", x.Value, x.Count, (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0), x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)))));
+        if(debugSum) Debug.LogFormat("Sum: {0}; Count: {1}", val, c.Count());
     }
 
     private static IEnumerable<SameIndexes> GenerateSameIndexes(IEnumerable<int> sameIndexes, int totalLength)
@@ -733,6 +721,15 @@ public static class ZHelpers
 
     public static void Awake()
     {
+        m_zoneAction = (zone, i, val) =>
+        {
+            if (i == 0)
+                zone.m_lightPollution = val;
+            else
+                zone.m_temperature = val;
+
+            zone.m_calculated = true;
+        };
     }
 
     public static void Start()
