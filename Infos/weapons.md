@@ -44,9 +44,7 @@ These are the useful parameters in weapons.dat :
 
 ### TODO
 
-- bug when aiming with hand
-
-- when weapon is switched, stop firing
+- fire : aim anim will loop ; gun flash needs some anim (or just rotate it)
 
 - play 2 anims at the same time - this is needed for: reloading, aim and move at the same time, 
 
