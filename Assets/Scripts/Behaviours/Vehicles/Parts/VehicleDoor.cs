@@ -46,6 +46,8 @@ public class VehicleDoor : VehicleBehaviour
     //private MeshCollider okCollider, damCollider;
     private NonConvexMeshCollider okCollider, damCollider;
 
+    private ProgressBarHelper lockBar;
+
     public static VehicleDoor InitializateDoor(Transform door, Vehicle vehicle)
     {
         if (door == null) return null;
@@ -73,6 +75,8 @@ public class VehicleDoor : VehicleBehaviour
         CheckDoorState();
 
         joint.breakForce = 5000 / vehicle.HandlingData.CollisionDamageMult;
+
+        lockBar = ProgressBarHelper.Init(transform, transform.position + Vector3.right * .1f, transform.right, Vector3.one * .3f);
 
         //string prefix = transform.name.Substring(0, 7);
 

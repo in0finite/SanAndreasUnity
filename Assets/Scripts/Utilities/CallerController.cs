@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
 // This is used only for attached MonoBehaviour calls
+// And for get prefabs
 public class CallerController : MonoBehaviour
 {
     public static CallerController Instance;
+
+    public GameObject progressBar;
 
     private void Awake()
     {
