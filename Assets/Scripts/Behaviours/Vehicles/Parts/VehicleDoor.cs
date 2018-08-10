@@ -130,7 +130,9 @@ public class VehicleDoor : VehicleBehaviour
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         F.DrawString(transform.position, transform.localEulerAngles.y.ToString("F2"));
+#endif
     }
 
     public override void OnVehicleCollisionEnter(Collision collision)

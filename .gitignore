@@ -83,3 +83,4 @@ config.user.json
 anim.txt
 *.app
 *.ppm
+*.7z

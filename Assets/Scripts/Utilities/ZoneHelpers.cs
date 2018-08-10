@@ -751,7 +751,7 @@ public static class ZHelpers
 
         if (!IsStatsTaskFinished)
         {
-            GUI.Label(new Rect(5, Screen.height - 45, 450, 25), string.Format("Loaded {0} of {1} ({2}%) -- Current: {3}", m_zonesLoaded, SZone.AllZones.Length, (p * 100f).ToString("F2"), SZone.AllZones[Mathf.Clamp(m_zonesLoaded, 0, SZone.AllZones.Length - 1)].name));
+            GUI.Label(new Rect(5, Screen.height - 45, 450, 25), string.Format("Loaded {0} of {1} zones ({2}%) -- Current: {3}", m_zonesLoaded, SZone.AllZones.Length, (p * 100f).ToString("F2"), SZone.AllZones[Mathf.Clamp(m_zonesLoaded, 0, SZone.AllZones.Length - 1)].name));
             GUIUtils.DrawBar(new Rect(5, Screen.height - 20, 350, 15), p, new Vector4(200, 200, 200, 255) / 256.0f, new Vector4(128, 128, 128, 255) / 256.0f, 2f);
         }
     }
