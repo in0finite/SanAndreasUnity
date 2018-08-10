@@ -4,12 +4,14 @@ using Cadenza.Collections;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
+using CielaSpike;
 using Debug = UnityEngine.Debug;
+using System.Collections;
 
 public class ZoneHelpers
 {
@@ -505,7 +507,9 @@ public static class ZHelpers
         { GroundType.Rails, new Color32(74, 4, 0, 255) },
         { GroundType.Tunnel, new Color32(107, 105, 99, 255) }
     };
-    private static bool StatsCalculated;
+
+    private static bool AreStatsCalculated;
+    private static int m_zonesLoaded = 0;
 
     private const float threshold = .9f;
     private static Rect _mapDims;
@@ -544,7 +548,7 @@ public static class ZHelpers
         Rect r = new Rect((Mathf.Abs(mapDimensions.x) + zoneRect.x) * mapFactor.x, (Mathf.Abs(mapDimensions.y) + zoneRect.y) * mapFactor.y,
                         (mapDimensions.width - zoneRect.width) * mapFactor.x, (mapDimensions.height - zoneRect.height) * mapFactor.y);
 
-        if(debugging) Debug.LogFormat("Factor: {0}; ZoneRect: {1}; Final Rect: {2}", mapFactor, zoneRect, r);
+        if (debugging) Debug.LogFormat("Factor: {0}; ZoneRect: {1}; Final Rect: {2}", mapFactor, zoneRect, r);
 
         return r;
     }
@@ -557,20 +561,28 @@ public static class ZHelpers
         return new Rect(min_x, min_z, max_x, max_z);
     }
 
-    public static void CalculateZoneStats(ColorFloatDictionary[] vals, Action<SZone, int, float> act, bool debugging = false)
+    public static IEnumerator CalculateZoneStats(ColorFloatDictionary[] vals, Action<SZone, int, float> act, bool debugging = false)
     {
         // I should create an array for the different types (with an enum)
 
-        int w = 0;
-        foreach (ColorFloatDictionary colorVals in vals)
-        {
-            IEnumerable<Color> uColors = colorVals.Keys;
+        List<int> areSame = new List<int>();
+        ColorFloatDictionary firstVal = vals[0];
 
-            Stopwatch sw = Stopwatch.StartNew();
-
-            foreach (SZone zone in SZone.AllZones)
+        for (int i = 1; i < vals.Length; ++i)
+            if (firstVal.Keys == vals[i])
             {
-                Rect mapRect = GetMapRect(zone.ToRect(), debugging);
+                areSame.Add(i);
+            }
+
+        bool isIdentical = areSame.Count == vals.Length;
+
+        IEnumerable<Color> uColors = isIdentical ? vals[0].Keys : null;
+
+        Stopwatch sw = Stopwatch.StartNew();
+
+        foreach (SZone zone in SZone.AllZones)
+        {
+            Rect mapRect = GetMapRect(zone.ToRect(), debugging);
 
 #if TESTING
             if (mapRect.GetPixelCount() > 10000000)
@@ -581,17 +593,21 @@ public static class ZHelpers
             }
 #endif
 
-                try
+            yield return Ninja.JumpToUnity;
+
+            IEnumerable<Color> pixels = MiniMap.Instance.MapTexture.GetPixels((int)mapRect.x, (int)mapRect.y, (int)mapRect.width, (int)mapRect.height).AsEnumerable();
+
+            yield return Ninja.JumpBack;
+
+            try
+            {
+                if (debugging) Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
+
+                if (pixels == null || (pixels != null && pixels.Count() == 0))
                 {
-                    var pixels = MiniMap.Instance.MapTexture.GetPixels((int)mapRect.x, (int)mapRect.y, (int)mapRect.width, (int)mapRect.height);
-
-                    if (debugging) Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
-
-                    if (pixels == null || (pixels != null && pixels.Length == 0))
-                    {
-                        Debug.LogWarningFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
-                        continue;
-                    }
+                    Debug.LogWarningFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
+                    continue;
+                }
 
 #if TESTING
                 int count = pixels.Length;
@@ -601,18 +617,9 @@ public static class ZHelpers
                 if (debugging) Debug.LogFormat("There was {0} null pixels!", count);
 #endif
 
-                    var t = pixels.Select(x => x.ColorMultiThreshold(uColors, threshold));
-
-                    if (debugging) Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
-
-                    var c = t.GroupBy(x => x)
-                             .Select(g => new { Value = g.Key, Count = g.Count() });
-
-                    if (debugging)
-                    {
-                        Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
-                        Debug.Break();
-                    }
+                if (isIdentical)
+                {
+                    IEnumerable<ColorDistinction> c = GetDistinctColors(uColors, sw, pixels, debugging);
 
                     sw.Stop();
 
@@ -632,30 +639,79 @@ public static class ZHelpers
                 if(debugging) Debug.LogFormat("Sum: {0}; Count: {1}", s, c.Count());
 #endif
 
-                    act(zone, w, c.Sum(x => x.Count * (colorVals.ContainsKey(x.Value) ? colorVals[x.Value] : 0)) / mapRect.GetPixelCount());
-
-                    if (debugging) Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
-
-                    sw.Start();
+                    for (int w = 0; w < vals.Length; ++w)
+                    {
+                        CallColorAction(act, zone, vals, c, w, mapRect);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Debug.LogErrorFormat("There was a problem with the zone called {0}", zone.name);
-                    Debug.LogError(ex);
-                    continue;
-                }
-            }
+                    IEnumerable<SameIndexes> sameIndexes = GenerateSameIndexes(areSame, vals.Length);
 
-            sw.Stop();
-            ++w;
+                    foreach(SameIndexes index in sameIndexes)
+                    {
+                        IEnumerable<ColorDistinction> c = GetDistinctColors(vals[index.indexes.FirstOrDefault()].Keys, sw, pixels, debugging);
+
+                        foreach(int w in index.indexes)
+                            CallColorAction(act, zone, vals, c, w, mapRect);
+                    }
+                }
+
+                if (debugging) Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
+                ++m_zonesLoaded;
+
+                sw.Start();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogErrorFormat("There was a problem with the zone called {0}", zone.name);
+                Debug.LogError(ex);
+                continue;
+            }
         }
+
+        sw.Stop();
     }
 
-    public static void CalculateZoneStats(ColorFloatDictionary starColors, ColorFloatDictionary weatherColors)
+    private static IEnumerable<ColorDistinction> GetDistinctColors(IEnumerable<Color> uColors, Stopwatch sw, IEnumerable<Color> pixels, bool debugging = true)
+    {
+        var t = pixels.Select(x => x.ColorMultiThreshold(uColors, threshold));
+
+        if (debugging) Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
+
+        var c = t.GroupBy(x => x)
+                 .Select(g => new ColorDistinction { Value = g.Key, Count = g.Count() });
+
+        if (debugging)
+        {
+            Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
+            Debug.Break();
+        }
+
+        return c;
+    }
+
+    private static void CallColorAction(Action<SZone, int, float> act, SZone zone, ColorFloatDictionary[] vals, IEnumerable<ColorDistinction> c, int w, Rect mapRect)
+    {
+        act(zone, w, c.Sum(x => x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)) / mapRect.GetPixelCount());
+    }
+
+    private static IEnumerable<SameIndexes> GenerateSameIndexes(IEnumerable<int> sameIndexes, int totalLength)
+    {
+        for(int i = 0; i < totalLength; ++i)
+        {
+            if (!sameIndexes.Contains(i))
+                yield return new SameIndexes() { indexes = (new int[] { i }).AsEnumerable() };
+        }
+
+        yield return new SameIndexes() { indexes = sameIndexes };
+    }
+
+    public static IEnumerator CalculateZoneStats(ColorFloatDictionary starColors, ColorFloatDictionary weatherColors)
     {
         Debug.Log("Starting calculating zones stats!");
 
-        CalculateZoneStats(new ColorFloatDictionary[] { starColors, weatherColors }, (zone, i, val) => 
+        yield return CalculateZoneStats(new ColorFloatDictionary[] { starColors, weatherColors }, (zone, i, val) =>
         {
             if (i == 0)
                 zone.m_lightPollution = val;
@@ -668,7 +724,6 @@ public static class ZHelpers
 
     public static void Awake()
     {
-
     }
 
     public static void Start()
@@ -678,12 +733,30 @@ public static class ZHelpers
 
     public static void Update()
     {
-        if (MiniMap.Instance.MapTexture != null && !StatsCalculated)
+        if (MiniMap.Instance.MapTexture != null && !AreStatsCalculated)
         {
-            //if (StarController.Instance.serializedMapColor.Count > 1)
-            CalculateZoneStats(StarController.Instance.serializedMapColor, WeatherController.Instance.serializedMapColor);
-
-            StatsCalculated = true;
+            CallerController.Instance.StartCoroutineAsync(CalculateZoneStats(StarController.Instance.serializedMapColor, WeatherController.Instance.serializedMapColor));
+            AreStatsCalculated = true;
         }
     }
+
+    public static void OnGUI()
+    {
+        if (!Loader.HasLoaded) return;
+
+        float p = (float)m_zonesLoaded / SZone.AllZones.Length;
+        GUI.Label(new Rect(5, Screen.height - 50, 250, 25), "Loaded "+ m_zonesLoaded + " of "+ SZone.AllZones.Length + " ("+p.ToString("F2")+"%}) -- Current: "+ SZone.AllZones[m_zonesLoaded].name);
+        GUIUtils.DrawBar(new Rect(5, Screen.height - 20, 250, 15), p, new Vector4(200, 200, 200, 255) / 256.0f, new Vector4(128, 128, 128, 255) / 256.0f, 2f);
+    }
+}
+
+public class ColorDistinction
+{
+    public Color Value;
+    public int Count;
+}
+
+public class SameIndexes
+{
+    public IEnumerable<int> indexes;
 }

@@ -3,8 +3,12 @@
 // This is used only for attached MonoBehaviour calls
 public class CallerController : MonoBehaviour
 {
+    public static CallerController Instance;
+
     private void Awake()
     {
+        Instance = this;
+
         ZHelpers.Awake();
     }
 
@@ -18,5 +22,10 @@ public class CallerController : MonoBehaviour
     private void Update()
     {
         ZHelpers.Update();
+    }
+
+    private void OnGUI()
+    {
+        ZHelpers.OnGUI();
     }
 }
