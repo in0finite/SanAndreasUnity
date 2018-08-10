@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class VehicleDoor : VehicleBehaviour
 {
+    private const float sqr_damageDist = 20;
+
     private bool _isLeft;
 
     private bool _isLocked;
@@ -68,7 +70,7 @@ public class VehicleDoor : VehicleBehaviour
         body = GetComponent<Rigidbody>();
         joint = GetComponent<HingeJoint>();
 
-        _isLocked = true;
+        CheckDoorState();
 
         joint.breakForce = 5000 / vehicle.HandlingData.CollisionDamageMult;
 
@@ -103,8 +105,7 @@ public class VehicleDoor : VehicleBehaviour
 
         force = (vehicleBody.mass * .015f) * Mathf.Pow(vehicleBody.angularVelocity.magnitude, 2) * Vector3.Distance(vehicle.transform.TransformPoint(vehicleBody.centerOfMass), transform.position);
 
-        if(!TryOpenDoor()) // !IsLocked == Opened
-            TryCloseDoor();
+
 
         if (force > lastForce && allowedToDebug)
         {
@@ -115,17 +116,50 @@ public class VehicleDoor : VehicleBehaviour
 
     private bool TryOpenDoor()
     {
-        if (_isLocked && force > 100 && Random.value < lockHealth / 100f)
+        if (force > 100 && GetChance(false))
             isLocked = false;
 
         return isLocked;
     }
 
-    private void TryCloseDoor()
+    private void TryCloseDoor(bool debuging = false)
     {
-        // If rotation from the hinge is 0 (== can be closed) block the door
-        if ((transform.localEulerAngles.y < 1 || transform.localEulerAngles.y > 359) && !_isLocked && (1f - Random.value) < lockHealth / 100f)
-            isLocked = true;
+        if (debuging)
+        {
+            // If rotation from the hinge is 0 (== can be closed) block the door
+            float v = 0;
+            bool angle = transform.localEulerAngles.y < 1 || transform.localEulerAngles.y > 359, chance = GetChance(true, out v);
+            Debug.LogFormat("Angle: {0}; Chance: {1} ({2} > {3})", angle, chance, v, lockHealth / 100f);
+            Debug.Break();
+            if (angle && chance)
+                isLocked = true;
+        }
+        else
+        {
+            if ((transform.localEulerAngles.y < 1 || transform.localEulerAngles.y > 359) && GetChance(true))
+                isLocked = true;
+        }
+    }
+
+    private bool GetChance(bool isClosing)
+    {
+        float val = 0;
+        return GetChance(isClosing, out val);
+    }
+
+    private bool GetChance(bool isClosing, out float val)
+    {
+        val = Random.value;
+        return isClosing ? val < lockHealth / 100f : val < (1f - lockHealth / 100f);
+    }
+
+    private void CheckDoorState()
+    { // Nested bools before
+        if (isLocked)
+            TryOpenDoor(); // !IsLocked == Opened
+
+        if (!isLocked)
+            TryCloseDoor();
     }
 
     private void OnDrawGizmos()
@@ -138,6 +172,8 @@ public class VehicleDoor : VehicleBehaviour
     public override void OnVehicleCollisionEnter(Collision collision)
     {
         TryOpenDoor();
+        if ((collision.contacts[0].point - transform.position).magnitude < sqr_damageDist)
+            lockHealth -= force / 1000f;
     }
 
     public override void OnVehicleCollisionExit(Collision collision)

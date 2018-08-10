@@ -696,7 +696,7 @@ public static class ZHelpers
     private static void CallColorAction(SZone zone, ColorFloatDictionary[] vals, IEnumerable<ColorDistinction> c, int w, Rect mapRect, bool debugging = true)
     {
         float val = c.Sum(x => x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)) / mapRect.GetPixelCount();
-        if (debugging || val < .01f) DebuggingColors(c, vals, w, val, zone);
+        if (debugging || val < .001f) DebuggingColors(c, vals, w, val, zone);
         m_zoneAction(zone, w, val);
     }
 
