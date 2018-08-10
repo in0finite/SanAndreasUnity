@@ -704,7 +704,7 @@ public static class ZHelpers
 
     private static void DebuggingColors(IEnumerable<ColorDistinction> c, ColorFloatDictionary[] vals, int w, float val, SZone zone, bool debugSum = false)
     {
-        Debug.LogFormat("Value: {0}; Zone: {1}; Index: {2}\n\n{3}", val, zone.name, w, string.Join(Environment.NewLine, c.Select(x => string.Format("Pixels ({0}): {1} => Sum: {1} * {2} = {3}", x.Value, x.Count, (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0), x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)))));
+        Debug.LogFormat("Value: {0}; Zone: {1}; Index: {2}\n\n{3}", val, zone.name, w, string.Join(Environment.NewLine, c.Select(x => string.Format("{0}: {1} => Sum: {1} * {2} = {3}", mapColors.FirstOrDefault(n => n.Value == x.Value).Key.ToString(), x.Count, (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0), x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)))));
         if(debugSum) Debug.LogFormat("Sum: {0}; Count: {1}", val, c.Count());
     }
 
