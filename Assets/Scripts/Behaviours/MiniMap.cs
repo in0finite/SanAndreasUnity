@@ -126,7 +126,7 @@ namespace SanAndreasUnity.Behaviours
 
         public Texture2D SeaPixel { get { return this.seaPixel; } }
 
-        public IEnumerable<Color> MapColors { get; set; }
+        public Color[] MapColors { get; set; }
 
         #endregion "Properties"
 
@@ -217,11 +217,12 @@ namespace SanAndreasUnity.Behaviours
             Debug.Log("Finished loading minimap textures!");
         }
 
-        private static IEnumerable<Color> GetMapColors(Texture2D mapTexture)
+        private static Color[] GetMapColors(Texture2D mapTexture)
         {
-            for (int x = 0; x < mapSize; ++x)
-                for (int y = 0; y < mapSize; ++y)
-                    yield return mapTexture.GetPixel(x, mapSize - y - 1);
+            //for (int x = 0; x < mapSize; ++x)
+            //    for (int y = 0; y < mapSize; ++y)
+            //yield 
+                return mapTexture.GetPixels(0,0, mapSize, mapSize); //mapSize - y - 1);
         }
 
         // --------------------------------
