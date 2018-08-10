@@ -590,7 +590,7 @@ public static class ZHelpers
 
         Stopwatch sw = Stopwatch.StartNew();
 
-        Debug.LogFormat("Starting Parallel work with {0} color dictionaries!\nEach one contains {1} colors", vals.Length, string.Join(", ", vals.Select(x => x.Keys.Count.ToString())));
+        Debug.LogFormat("Starting Parallel work with {0} color dictionaries and {1} pixels!\nEach one contains {2} colors", vals.Length, colors.Length, string.Join(", ", vals.Select(x => x.Keys.Count.ToString())));
 
         if (debugging)
         {
@@ -628,11 +628,8 @@ public static class ZHelpers
 
             try
             {
-                if (pixels == null) //|| (pixels != null && pixels.Count() == 0))
-                {
-                    Debug.LogWarningFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
-                    return;
-                }
+                if (pixels == null || (pixels != null && pixels.Count() == 0))
+                    Debug.LogErrorFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
 
 #if TESTING
                 int count = pixels.Length;
@@ -664,11 +661,11 @@ public static class ZHelpers
                     }
                 }
 
-                //if(m_zonesLoaded + 1 == SZone.AllZones.Length)
-                //    pixels.Clear();
-
                 if (debugging) Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
                 if (m_zonesLoaded < SZone.AllZones.Length) ++m_zonesLoaded; //Interlocked.Increment(ref m_zonesLoaded);
+
+                if (m_zonesLoaded == SZone.AllZones.Length - 1)
+                    colors = null;
 
                 sw = Stopwatch.StartNew();
             }
@@ -687,10 +684,11 @@ public static class ZHelpers
     {
         var t = pixels.Select(x => x.ColorMultiThreshold(uColors, threshold));
 
-        if (debugging) Debug.LogFormat("Pixels: {0}; MultiThreshold: {1}", pixels.Count(), t.Count());
-
         var c = t.GroupBy(x => x)
                  .Select(g => new ColorDistinction { Value = g.Key, Count = g.Count() });
+
+        //if (debugging || c.Count() == 0)
+        //    Debug.LogErrorFormat("Color distiction is null!\nPixels: {0}; MultiThreshold: {1}", pixels.Count(), t.Count());
 
         return c;
     }
@@ -758,10 +756,15 @@ public static class ZHelpers
         }
     }
 
-    public static void OnApplicationQuit()
+    public static void OnDisable()
     {
         if (m_statsCalculation != null && m_taskCancellation != null)
             m_taskCancellation.Cancel();
+    }
+
+    public static void OnApplicationQuit()
+    {
+
     }
 }
 

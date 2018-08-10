@@ -679,7 +679,21 @@ namespace SanAndreasUnity.Utilities
 
             if (width == 0 || height == 0) yield break;
 
-            foreach(Color c in or)
+            if (x > width)
+            {
+                int _x = x;
+                x = width;
+                width = _x;
+            }
+
+            if (y > height)
+            {
+                int _y = y;
+                y = height;
+                height = _y;
+            }
+
+            foreach (Color c in or)
             {
                 int _y = i / width,
                     _x = i % height;
