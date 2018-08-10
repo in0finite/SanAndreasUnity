@@ -595,7 +595,7 @@ public static class ZHelpers
             }
 #endif
 
-                List<Color> pixels = MiniMap.Instance.MapColors.Cut((int)mapRect.x, (int)mapRect.y, (int)mapRect.width, (int)mapRect.height);
+                IEnumerable<Color> pixels = MiniMap.Instance.MapColors.Cut((int)mapRect.x, (int)mapRect.y, (int)mapRect.width, (int)mapRect.height);
 
                 try
                 {
@@ -655,8 +655,8 @@ public static class ZHelpers
                         }
                     }
 
-                    if(m_zonesLoaded + 1 == SZone.AllZones.Length)
-                        pixels.Clear();
+                    //if(m_zonesLoaded + 1 == SZone.AllZones.Length)
+                    //    pixels.Clear();
 
                     if (debugging) Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
                     ++m_zonesLoaded;
