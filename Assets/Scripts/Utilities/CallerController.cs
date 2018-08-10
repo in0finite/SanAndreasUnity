@@ -28,4 +28,9 @@ public class CallerController : MonoBehaviour
     {
         ZHelpers.OnGUI();
     }
+
+    private void OnApplicationQuit()
+    {
+        ZHelpers.OnApplicationQuit();
+    }
 }
