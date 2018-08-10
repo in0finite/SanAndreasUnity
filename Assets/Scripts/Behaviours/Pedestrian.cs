@@ -12,13 +12,15 @@ namespace SanAndreasUnity.Behaviours
     public class Pedestrian : MonoBehaviour
     {
         
-		private AnimationState m_lastAnimState;
 		/// <summary> State of last played anim. </summary>
-		public AnimationState LastAnimState { get { return m_lastAnimState; } }
+		public AnimationState LastAnimState { get; private set; }
 
-		private AnimId m_lastAnimId;
+		public AnimationState LastSecondaryAnimState { get; private set; }
+
 		/// <summary> Last played anim. </summary>
-		public AnimId LastAnimId { get { return m_lastAnimId; } }
+		public AnimId LastAnimId { get; private set; }
+
+		public AnimId LastSecondaryAnimId { get; private set; }
 
 		private UnityEngine.Animation _anim { get; set; }
 		public UnityEngine.Animation AnimComponent { get { return _anim; } }
@@ -65,15 +67,19 @@ namespace SanAndreasUnity.Behaviours
 
 		public Transform Head { get; private set; }
 
+		public Transform Neck { get; private set; }
+
         public Transform Spine { get; private set; }
+
         public Transform R_Thigh { get; private set; }
         public Transform L_Thigh { get; private set; }
 
         private Player _player;
 
-
 		/// <summary> Speed of the model extracted from animation. </summary>
         public float Speed { get; private set; }
+
+		private Dictionary<AnimationState, List<Transform>> m_mixedTransforms = new Dictionary<AnimationState, List<Transform>>();
 
 
 
@@ -152,8 +158,10 @@ namespace SanAndreasUnity.Behaviours
 
             LoadModel(Definition.ModelName, Definition.TextureDictionaryName);
 
-            m_lastAnimId = default (AnimId);
-			m_lastAnimState = null;
+            LastAnimId = default (AnimId);
+			LastSecondaryAnimId = default (AnimId);
+			LastAnimState = null;
+			LastSecondaryAnimState = null;
 
             _anim = gameObject.GetComponent<UnityEngine.Animation>();
 
@@ -207,6 +215,7 @@ namespace SanAndreasUnity.Behaviours
 			RightForeArm = _frames.GetByName (" R ForeArm").transform;
 			LeftForeArm = _frames.GetByName (" L ForeArm").transform;
 			Head = _frames.GetByName (" Head").transform;
+			Neck = _frames.GetByName (" Neck").transform;
 			Spine = _frames.GetByName(" Spine").transform;
             R_Thigh = _frames.GetByName(" R Thigh").transform;
             L_Thigh = _frames.GetByName(" L Thigh").transform;
@@ -228,12 +237,17 @@ namespace SanAndreasUnity.Behaviours
 
 		public AnimationState PlayAnim (AnimId animId, PlayMode playMode = PlayMode.StopAll)
         {
-			var animState = animId.UsesAnimGroup ? LoadAnim (animId.AnimGroup, animId.AnimIndex) : LoadAnim (animId.AnimName, animId.FileName);
+			var animState = LoadAnim (animId);
             if (null == animState)
                 return null;
 
-			m_lastAnimId = animId;
-			m_lastAnimState = animState;
+			LastAnimId = animId;
+			LastSecondaryAnimId = new AnimId ();
+			LastAnimState = animState;
+			LastSecondaryAnimState = null;
+
+			//animState.layer = 0;
+			RemoveAllMixingTransforms (animState);
 
             _anim.Play (animState.name, playMode);
 
@@ -247,7 +261,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public AnimationState PlayAnim (AnimId animId, bool resetModelStateIfAnimChanged, bool resetAnimStateIfAnimChanged)
 		{
-			bool animChanged = !animId.Equals (m_lastAnimId);
+			bool animChanged = !animId.Equals (LastAnimId);
 
 			if (resetModelStateIfAnimChanged && animChanged) {
 				this.ResetModelState ();
@@ -264,6 +278,55 @@ namespace SanAndreasUnity.Behaviours
 			}
 
 			return state;
+		}
+
+		public bool Play2Anims (AnimId animIdA, AnimId animIdB)
+		{
+			// load anims
+
+			var stateA = LoadAnim (animIdA);
+			var stateB = LoadAnim (animIdB);
+
+			if (null == stateA || null == stateB)
+				return false;
+
+			// reset model state if anims changed
+
+			bool animsChanged = !animIdA.Equals (LastAnimId) || !animIdB.Equals (LastSecondaryAnimId);
+
+			if (animsChanged) {
+				//ResetModelState ();
+			}
+
+			// play anims
+
+			// are mixing transforms and layers preserved ? - probably
+
+			RemoveAllMixingTransforms (stateA);
+			RemoveAllMixingTransforms (stateB);
+
+			AddMixingTransform (stateA, this.Spine, true);
+
+			AddMixingTransform (stateB, _root.transform, false);
+			AddMixingTransform (stateB, this.L_Thigh, true);
+			AddMixingTransform (stateB, this.R_Thigh, true);
+
+			stateA.layer = 0;
+			stateB.layer = 1;
+
+			this.AnimComponent.Play( stateA.clip.name, PlayMode.StopSameLayer);
+			this.AnimComponent.Play( stateB.clip.name, PlayMode.StopSameLayer);
+
+
+			// assign last anims
+
+			LastAnimId = animIdA;
+			LastSecondaryAnimId = animIdB;
+			LastAnimState = stateA;
+			LastSecondaryAnimState = stateB;
+
+
+			return true;
 		}
 
         public void PlayUpperLayerAnimations(
@@ -312,9 +375,51 @@ namespace SanAndreasUnity.Behaviours
             //	PlayerModel._anim.Blend( );
         }
 
+		public bool AddMixingTransform (AnimationState state, Transform tr, bool recursive)
+		{
+			List<Transform> list;
+			if (m_mixedTransforms.TryGetValue (state, out list)) {
+				if (list.Contains (tr))
+					return false;
+				state.AddMixingTransform (tr, recursive);
+				list.Add (tr);
+				return true;
+			} else {
+				state.AddMixingTransform (tr, recursive);
+				list = new List<Transform> (){ tr };
+				m_mixedTransforms.Add (state, list);
+				return true;
+			}
+		}
+
+		public bool RemoveMixingTransform (AnimationState state, Transform tr)
+		{
+			List<Transform> list;
+			if (m_mixedTransforms.TryGetValue (state, out list)) {
+				if (!list.Contains (tr))
+					return false;
+				state.RemoveMixingTransform (tr);
+				list.Remove (tr);
+				return true;
+			} else {
+				return false;
+			}
+		}
         
-
-
+		public int RemoveAllMixingTransforms (AnimationState state)
+		{
+			List<Transform> list;
+			if (m_mixedTransforms.TryGetValue (state, out list)) {
+				int count = list.Count;
+				foreach (var mix in list) {
+					state.RemoveMixingTransform (mix);
+				}
+				list.Clear ();
+				return count;
+			} else {
+				return 0;
+			}
+		}
 
 
         public Anim GetAnim (AnimGroup group, AnimIndex anim)
@@ -391,6 +496,11 @@ namespace SanAndreasUnity.Behaviours
 			}
 
 			return state;
+		}
+
+		private AnimationState LoadAnim (AnimId animId)
+		{
+			return animId.UsesAnimGroup ? LoadAnim (animId.AnimGroup, animId.AnimIndex) : LoadAnim (animId.AnimName, animId.FileName);
 		}
 
 		private void LoadAllAnimations()
