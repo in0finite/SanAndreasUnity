@@ -672,5 +672,25 @@ namespace SanAndreasUnity.Utilities
         {
             return cs.OrderBy(x => x.ColorThreshold(c1)).FirstOrDefault();
         }
+
+        public static List<Color> Cut(this List<Color> or, int x, int y, int width, int height)
+        {
+            List<Color> l = new List<Color>();
+
+            int side = (int)Mathf.Sqrt(or.Count()), i = 0;
+
+            foreach(Color c in or)
+            {
+                int _y = i / side,
+                    _x = i % side;
+
+                if (_x >= x && _y >= y && _x <= width && _y <= height)
+                    l.Add(c);
+
+                ++i;
+            }
+
+            return l;
+        }
     }
 }

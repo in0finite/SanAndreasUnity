@@ -3,7 +3,9 @@ using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Utilities;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -124,6 +126,8 @@ namespace SanAndreasUnity.Behaviours
 
         public Texture2D SeaPixel { get { return this.seaPixel; } }
 
+        public List<Color> MapColors { get; set; }
+
         #endregion "Properties"
 
         public static void AssingMinimap()
@@ -163,6 +167,7 @@ namespace SanAndreasUnity.Behaviours
             }
 
             Debug.Log("Merging all map sprites into one sprite.");
+
             for (int i = 0; i < tileCount; i++)
             {
                 // Offset
@@ -193,6 +198,8 @@ namespace SanAndreasUnity.Behaviours
                         mapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
             }
 
+            MapColors = GetMapColors(mapTexture);
+
             Debug.Log("Finished merging minimap!");
             mapTexture.Apply();
             mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
@@ -208,6 +215,17 @@ namespace SanAndreasUnity.Behaviours
             waypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
 
             Debug.Log("Finished loading minimap textures!");
+        }
+
+        private static List<Color> GetMapColors(Texture2D mapTexture)
+        {
+            List<Color> l = new List<Color>();
+
+            for (int x = 0; x < mapSize; ++x)
+                for (int y = 0; y < mapSize; ++y)
+                    l.Add(mapTexture.GetPixel(x, mapSize - y - 1));
+
+            return l;
         }
 
         // --------------------------------
