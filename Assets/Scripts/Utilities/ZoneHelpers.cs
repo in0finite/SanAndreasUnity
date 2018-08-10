@@ -4,13 +4,14 @@ using Cadenza.Collections;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
-using System.Collections;
+using Random = System.Random;
 
 public class ZoneHelpers
 {
@@ -513,6 +514,10 @@ public static class ZHelpers
     private const float threshold = .9f;
     private static Rect _mapDims;
 
+    private static ConcurrentBag<ValueProcessing> processing = new ConcurrentBag<ValueProcessing>();
+    private static Dictionary<int, bool> processed = new Dictionary<int, bool>();
+    private static Action<SZone, int, float> processedAction;
+
     public static Rect mapDimensions
     {
         get
@@ -560,7 +565,7 @@ public static class ZHelpers
         return new Rect(min_x, min_z, max_x, max_z);
     }
 
-    public static void CalculateZoneStats(ColorFloatDictionary[] vals, Action<SZone, int, float> act, bool debugging = false)
+    public static void CalculateZoneStats(ColorFloatDictionary[] vals, bool debugging = false)
     {
         // I should create an array for the different types (with an enum)
 
@@ -578,6 +583,7 @@ public static class ZHelpers
         IEnumerable<Color> uColors = isIdentical ? vals[0].Keys : null;
 
         Stopwatch sw = Stopwatch.StartNew();
+        Random rnd = new Random();
 
         Debug.Log("Starting Parallel work!");
 
@@ -601,7 +607,7 @@ public static class ZHelpers
                 {
                     if (debugging) Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
 
-                    if (pixels == null || (pixels != null && pixels.Count() == 0))
+                    if (pixels == null) //|| (pixels != null && pixels.Count() == 0))
                     {
                         Debug.LogWarningFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
                         return;
@@ -638,9 +644,7 @@ public static class ZHelpers
 #endif
 
                         for (int w = 0; w < vals.Length; ++w)
-                        {
-                            CallColorAction(act, zone, vals, c, w, mapRect);
-                        }
+                            processing.Add(new ValueProcessing(zone, vals, c, w, mapRect, rnd.Next(0, short.MaxValue)));
                     }
                     else
                     {
@@ -651,7 +655,7 @@ public static class ZHelpers
                             IEnumerable<ColorDistinction> c = GetDistinctColors(vals[index.indexes.FirstOrDefault()].Keys, sw, pixels, debugging);
 
                             foreach (int w in index.indexes)
-                                CallColorAction(act, zone, vals, c, w, mapRect);
+                                processing.Add(new ValueProcessing(zone, vals, c, w, mapRect, rnd.Next(0, short.MaxValue)));
                         }
                     }
 
@@ -677,6 +681,8 @@ public static class ZHelpers
 
     private static IEnumerable<ColorDistinction> GetDistinctColors(IEnumerable<Color> uColors, Stopwatch sw, IEnumerable<Color> pixels, bool debugging = true)
     {
+        if (pixels == null) yield break;
+
         var t = pixels.Select(x => x.ColorMultiThreshold(uColors, threshold));
 
         if (debugging) Debug.Log("Ellapsed: " + sw.ElapsedMilliseconds);
@@ -690,12 +696,21 @@ public static class ZHelpers
             Debug.Break();
         }
 
-        return c;
+        foreach (ColorDistinction x in c)
+            yield return x;
     }
 
-    private static void CallColorAction(Action<SZone, int, float> act, SZone zone, ColorFloatDictionary[] vals, IEnumerable<ColorDistinction> c, int w, Rect mapRect)
+    private static void CallColorAction(SZone zone, ColorFloatDictionary[] vals, IEnumerable<ColorDistinction> c, int w, Rect mapRect, int id)
     {
-        act(zone, w, c.Sum(x => x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)) / mapRect.GetPixelCount());
+        /*float s = 0;
+
+        foreach (ColorDistinction x in c)
+            s += x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0);
+
+        s /= mapRect.GetPixelCount();*/
+
+        if(c != null) processedAction(zone, w, c.Sum(x => x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)) / mapRect.GetPixelCount());
+        processed[id] = true;
     }
 
     private static IEnumerable<SameIndexes> GenerateSameIndexes(IEnumerable<int> sameIndexes, int totalLength)
@@ -713,7 +728,12 @@ public static class ZHelpers
     {
         Debug.Log("Starting calculating zones stats!");
 
-        CalculateZoneStats(new ColorFloatDictionary[] { starColors, weatherColors }, (zone, i, val) =>
+        CalculateZoneStats(new ColorFloatDictionary[] { starColors, weatherColors });
+    }
+
+    public static void Awake()
+    {
+        processedAction = (zone, i, val) =>
         {
             if (i == 0)
                 zone.m_lightPollution = val;
@@ -721,11 +741,7 @@ public static class ZHelpers
                 zone.m_temperature = val;
 
             zone.m_calculated = true;
-        });
-    }
-
-    public static void Awake()
-    {
+        };
     }
 
     public static void Start()
@@ -740,6 +756,25 @@ public static class ZHelpers
             CalculateZoneStats(StarController.Instance.serializedMapColor, WeatherController.Instance.serializedMapColor);
             AreStatsCalculated = true;
         }
+
+        if(processing.Count > 0)
+        {
+            processing.ForEach((valueProcessing) =>
+            {
+                if(valueProcessing == null)
+                    Debug.Break();
+                if (!processed.ContainsKey(valueProcessing.id))
+                {
+                    processed.Add(valueProcessing.id, false);
+                    CallColorAction(valueProcessing.zone, valueProcessing.vals, valueProcessing.distinction, valueProcessing.index, valueProcessing.mapRect, valueProcessing.id);
+                }
+            });
+        }
+
+        /*if (processed.Any(x => x.Value))
+            processed.Where(x => x.Value).ForEach((v) => {
+                processing.Remove(processing.FirstOrDefault(x => x.id == v.Key));
+            });*/
     }
 
     public static void OnGUI()
@@ -761,4 +796,25 @@ public class ColorDistinction
 public class SameIndexes
 {
     public IEnumerable<int> indexes;
+}
+
+public class ValueProcessing
+{
+    public SZone zone;
+    public int index, id;
+    public IEnumerable<ColorDistinction> distinction;
+    public Rect mapRect;
+    public ColorFloatDictionary[] vals;
+
+    private ValueProcessing() { }
+
+    public ValueProcessing(SZone zone, ColorFloatDictionary[] vals, IEnumerable<ColorDistinction> c, int w, Rect mapRect, int i)
+    {
+        this.zone = zone;
+        index = w;
+        distinction = c;
+        this.vals = vals;
+        this.mapRect = mapRect;
+        id = i;
+    }
 }

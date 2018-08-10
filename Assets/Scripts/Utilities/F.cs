@@ -675,12 +675,14 @@ namespace SanAndreasUnity.Utilities
 
         public static IEnumerable<Color> Cut(this IEnumerable<Color> or, int x, int y, int width, int height)
         {
-            int side = (int)Mathf.Sqrt(or.Count()), i = 0;
+            int i = 0;
+
+            if (width == 0 || height == 0) yield break;
 
             foreach(Color c in or)
             {
-                int _y = i / side,
-                    _x = i % side;
+                int _y = i / height,
+                    _x = i % width;
 
                 if (_x >= x && _y >= y && _x <= width && _y <= height)
                     yield return c;
