@@ -527,7 +527,7 @@ public static class ZHelpers
     private static Action<SZone, int, float> m_zoneAction;
 
     private static StringBuilder logger = new StringBuilder();
-    private static float m_startedTime;
+    private static Stopwatch m_statsMeasurement;
 
     public static Rect mapDimensions
     {
@@ -560,12 +560,10 @@ public static class ZHelpers
         return new Vector2((Mathf.Abs(mapDimensions.x) + zoneCoord.x) * mapFactor.x, (Mathf.Abs(mapDimensions.y) + zoneCoord.y) * mapFactor.y);
     }
 
-    public static Rect GetMapRect(Rect zoneRect, bool debugging = true)
+    public static Rect GetMapRect(Rect zoneRect)
     {
         Rect r = new Rect((Mathf.Abs(mapDimensions.x) + zoneRect.x) * mapFactor.x, (Mathf.Abs(mapDimensions.y) + zoneRect.y) * mapFactor.y,
                         (mapDimensions.width - zoneRect.width) * mapFactor.x, (mapDimensions.height - zoneRect.height) * mapFactor.y);
-
-        //if (debugging) Debug.LogFormat("Factor: {0}; ZoneRect: {1}; Final Rect: {2}", mapFactor, zoneRect, r);
 
         return r;
     }
@@ -582,7 +580,7 @@ public static class ZHelpers
     {
         Debug.Log("Starting calculating zones stats!");
 
-        m_startedTime = Time.time;
+        m_statsMeasurement = Stopwatch.StartNew();
         m_statsCalculation = Task.Factory.StartNew(() => CalculateZoneStats(new ColorFloatDictionary[] { starColors, weatherColors }), m_taskCancellation.Token)
             .ContinueWith(FinishedStats);
     }
@@ -591,9 +589,9 @@ public static class ZHelpers
     {
         if (t.Result)
         {
-            float m_timeSpent = Time.time - m_startedTime;
+            m_statsMeasurement.Stop();
 
-            logger.AppendFormat("Time spent on calculating zone stats: {0} s", m_timeSpent);
+            logger.AppendFormat("Time spent on calculating zone stats: {0} ms", m_statsMeasurement.ElapsedMilliseconds.ToString("F2"));
             File.WriteAllText(Path.Combine(Application.streamingAssetsPath, "ZoneStats.txt"), logger.ToString());
         }
 
@@ -637,15 +635,15 @@ public static class ZHelpers
         // Parallel.ForEach
         SZone.AllZones.ForEach(zone =>
         {
+            Rect mapRect = GetMapRect(zone.ToRect());
+
             if (debugging)
             {
                 if (m_zonesLoaded > 0)
                     logger.AppendLine(Separator);
 
-                logger.AppendFormat("Started with '{0}' zone.", zone.name);
+                logger.AppendFormat("Started with '{0}' zone ({1} pixels)", zone.name, mapRect.GetPixelCount());
             }
-
-            Rect mapRect = GetMapRect(zone.ToRect(), debugging);
 
 #if TESTING
             if (mapRect.GetPixelCount() > 10000000)
@@ -662,12 +660,12 @@ public static class ZHelpers
 
                 if (debugging)
                 {
-                    Debug.Log("Cut ellapsed: " + (sw.ElapsedMilliseconds - lastSw) + " ms");
+                    logger.AppendFormat("[{0}] Cut ellapsed: {1}", zone.name, (sw.ElapsedMilliseconds - lastSw) + " ms");
                     lastSw = sw.ElapsedMilliseconds;
                 }
 
                 if (pixels == null || (pixels != null && pixels.Count() == 0))
-                    Debug.LogErrorFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
+                    logger.AppendFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
 
 #if TESTING
                 int count = pixels.Length;
