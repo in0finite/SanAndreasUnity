@@ -7,6 +7,9 @@ public class VehicleCollider : MonoBehaviour
     private new Collider collider;
     private VehicleBehaviour[] behaviours;
 
+    private float lastColStay, lastTriggerStay;
+    private const float delayColStay = .05f, delayTriggerStay = .05f;
+
     public static VehicleCollider Init(GameObject gameObject, Vehicle vehicle, VehicleBehaviour[] vehicleBehaviour = null)
     {
         VehicleCollider collider = gameObject.AddComponent<VehicleCollider>();
@@ -47,7 +50,8 @@ public class VehicleCollider : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        SendCollision("OnVehicleCollisionStay", collision);
+        if (Time.time - lastColStay > delayColStay) SendCollision("OnVehicleCollisionStay", collision);
+        lastColStay = Time.time;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -62,7 +66,8 @@ public class VehicleCollider : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        SendTrigger("OnVehicleTriggerStay", other);
+        if (Time.time - lastTriggerStay > delayTriggerStay) SendTrigger("OnVehicleTriggerStay", other);
+        lastTriggerStay = Time.time;
     }
 
     private void SendCollision(string method, Collision collision)
