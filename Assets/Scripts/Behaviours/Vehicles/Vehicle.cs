@@ -71,7 +71,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         // Doors
         private IEnumerable<VehicleDoor> vehicleDoors;
+
         private float _doorTimer;
+        private string doorStats;
+        private bool moreThan2Doors;
 
         private const float doorDisplayInterval = .3f;
 
@@ -79,11 +82,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             get
             {
-                if(hasInit)
+                if (hasInit)
                     return m_lightDict[VehicleLight.RearLeft].lightComponent.intensity > 0 || m_lightDict[VehicleLight.RearRight].lightComponent.intensity > 0;
                 return false;
             }
         }
+
 #if CLIENT
         protected override void OnAwake()
         {
@@ -345,7 +349,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 else
                 {
                     //if(hasRearBrightness)
-                        SetMultipleLights(VehicleLight.Rear, 0f);
+                    SetMultipleLights(VehicleLight.Rear, 0f);
                 }
             }
             else
@@ -376,16 +380,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 if (Time.time - _doorTimer > doorDisplayInterval)
                 {
-                    GUI.BeginGroup(new Rect(Screen.width - 205, Screen.height - 205 - 50, 200, 200));
-                    GUI.Box(new Rect(0, 0, 200, 200), "");
-                    GUI.Label(new Rect(5, 5, 200, 35), "Vehicle Stats", new GUIStyle("label") { fontSize = 30, fontStyle = FontStyle.Bold });
-                    bool moreThan2Doors = vehicleDoors.Count() > 2;
-                    GUI.Label(new Rect(5, 45, 200, moreThan2Doors ? 40 : 20), string.Format("Doors: {0}",
+                    moreThan2Doors = vehicleDoors.Count() > 2;
+                    doorStats = string.Format("Doors: {0}",
                         string.Join(" | ", vehicleDoors.Select((x, i) =>
-                        string.Format("({0}) {1}{2}", x.transform.name.Substring(5, 2).ToUpper(), x.LockHealth.ToString("F2"), moreThan2Doors && i == 1 ? Environment.NewLine : "")))));
-                    GUI.EndGroup();
+                        string.Format("({0}) {1}{2}", x.transform.name.Substring(5, 2).ToUpper(), x.LockHealth.ToString("F2"), moreThan2Doors && i == 1 ? Environment.NewLine : ""))));
                     _doorTimer = Time.time;
                 }
+
+                GUI.BeginGroup(new Rect(Screen.width - 205, Screen.height - 205 - 50, 200, 200));
+                GUI.Box(new Rect(0, 0, 200, 200), "");
+                GUI.Label(new Rect(5, 5, 200, 35), "Vehicle Stats", new GUIStyle("label") { fontSize = 30, fontStyle = FontStyle.Bold });
+                GUI.Label(new Rect(5, 45, 200, moreThan2Doors ? 40 : 20), doorStats);
+                GUI.EndGroup();
             }
         }
 

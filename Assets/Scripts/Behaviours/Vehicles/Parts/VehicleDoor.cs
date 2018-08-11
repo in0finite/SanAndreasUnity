@@ -119,7 +119,7 @@ public class VehicleDoor : VehicleBehaviour
 
     private bool TryOpenDoor()
     {
-        if (force > 100 && GetChance(false))
+        if (GetChance(false))
             isLocked = false;
 
         return isLocked;
@@ -153,7 +153,7 @@ public class VehicleDoor : VehicleBehaviour
     private bool GetChance(bool isClosing, out float val)
     {
         val = Random.value;
-        return isClosing ? val < lockHealth / 100f : val < (1f - lockHealth / 100f);
+        return isClosing ? val < lockHealth / 100f : val < (Mathf.InverseLerp(500, 0, force) - Mathf.Clamp01(lockHealth / 100f));
     }
 
     private void CheckDoorState()
@@ -179,7 +179,7 @@ public class VehicleDoor : VehicleBehaviour
         float d = (collision.contacts[0].point - transform.position).magnitude;
         force = collision.relativeVelocity.magnitude;
 
-        float dam = force * Mathf.InverseLerp(sqr_damageDist, 0, d) / 5f;
+        float dam = force * Mathf.InverseLerp(sqr_damageDist, 0, d) / 10f;
 
         lockHealth -= dam;
         hingeHealth -= dam * 1.25f;
