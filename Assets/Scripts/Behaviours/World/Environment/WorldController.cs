@@ -22,6 +22,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         private new Light light;
 
+        private static bool m_setStartingTime;
+
         // Number of time ticks in a second
         public static float TimeFactor
         {
@@ -93,7 +95,18 @@ namespace SanAndreasUnity.Behaviours.World
         // Use this for initialization
         private void Start()
         {
-            SetTime(startTimeState);
+            
+        }
+
+        private void Update()
+        {
+            if (!Loader.HasLoaded) return;
+
+            if(!m_setStartingTime)
+            {
+                SetTime(startTimeState);
+                m_setStartingTime = true;
+            }
         }
 
         // Update is called once per frame

@@ -60,7 +60,7 @@ namespace SanAndreasUnity.Importing.Animation
         GetOutRight = 7,
 		CAR_closedoor_LHS = 8,
 		CAR_closedoor_RHS,
-		CAR_close_LHS,
+        CAR_close_LHS,
 		CAR_close_RHS,
 
 		// Gun
