@@ -11,6 +11,8 @@ public class ProgressBarHelper : MonoBehaviour
     [Range(0, 1)]
     public float testPercentage;
 
+    private bool testing;
+
     private float _percentage;
     public float percentage
     {
@@ -28,22 +30,35 @@ public class ProgressBarHelper : MonoBehaviour
             fillRenderer.material.color = c;
             backgroundRenderer.material.color = darkC;
 
-            fillTransform.position = new Vector3(1, 1, (1 - _percentage) / 2 * 10);
+            fillTransform.localPosition = new Vector3(0, 0, (1 - _percentage) / 2 * 10);
             fillTransform.localScale = new Vector3(1, 1, _percentage);
         }
     }
 
-    public static ProgressBarHelper Init(Transform transform, Vector3 position, Vector3 direction, Vector3 scale)
+    public static ProgressBarHelper Init(Transform transform, Vector3 position, Vector3 direction, Vector3 scale, bool debug = false)
+    {
+        return Init(transform, position, Quaternion.LookRotation(direction), scale, debug);
+    }
+
+    public static ProgressBarHelper Init(Transform transform, Vector3 position, Quaternion rotation, Vector3 scale, bool debug = false)
     {
         GameObject obj = Instantiate(CallerController.Instance.progressBar);
 
         obj.transform.parent = transform;
 
         obj.transform.position = position;
-        obj.transform.rotation = Quaternion.LookRotation(direction);
+        obj.transform.localRotation = rotation;
         obj.transform.localScale = scale;
 
-        return obj.GetComponent<ProgressBarHelper>();
+        //Transform fillT = obj.transform.FindChildRecursive("GameObject");
+
+        //fillT.transform.localPosition = new Vector3(0, fillSeparation, 0);
+
+        ProgressBarHelper helper = obj.GetComponent<ProgressBarHelper>();
+
+        helper.testing = debug;
+
+        return helper;
     }
 
     // Use this for initialization
@@ -58,6 +73,6 @@ public class ProgressBarHelper : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        percentage = testPercentage;
+        if(testing) percentage = testPercentage;
     }
 }

@@ -30,7 +30,7 @@ public class VehicleDoor : VehicleBehaviour
                 joint.limits = limits;
             }
 
-            Debug.LogFormat("{0} {1} from {2}", _isLocked ? "Closing" : "Opening", transform.name, vehicle.name);
+            //Debug.LogFormat("{0} {1} from {2}", _isLocked ? "Closing" : "Opening", transform.name, vehicle.name);
         }
     }
 
@@ -41,14 +41,16 @@ public class VehicleDoor : VehicleBehaviour
     private Rigidbody body, vehicleBody;
     private Vehicle vehicle;
 
-    private float lockHealth = 100;
+    [HideInInspector] public float lockHealth = 100;
     private HingeJoint joint;
     //private MeshCollider okCollider, damCollider;
     private NonConvexMeshCollider okCollider, damCollider;
 
     private ProgressBarHelper lockBar;
+    private float forceSum, lastForceSum;
+    private bool calculatingForce, impacting;
 
-    public static VehicleDoor InitializateDoor(Transform door, Vehicle vehicle)
+    public static VehicleDoor InitializateDoor(Transform door, Vehicle vehicle, bool progressBar)
     {
         if (door == null) return null;
 
@@ -60,6 +62,9 @@ public class VehicleDoor : VehicleBehaviour
         doorObj._isLeft = doorObj.name.Contains("_lf_") || doorObj.name.Contains("_lr_");
 
         doorObj.allowedToDebug = doorObj.name.Contains("_lf_");
+
+        if(progressBar)
+            doorObj.lockBar = ProgressBarHelper.Init(doorObj.transform, doorObj.transform.position + Vector3.right * (doorObj._isLeft ? .3f : -.3f), Quaternion.Euler(0, 0, doorObj._isLeft ? 90 : -90), Vector3.one * .1f);
 
         return doorObj;
     }
@@ -75,8 +80,6 @@ public class VehicleDoor : VehicleBehaviour
         CheckDoorState();
 
         joint.breakForce = 5000 / vehicle.HandlingData.CollisionDamageMult;
-
-        lockBar = ProgressBarHelper.Init(transform, transform.position + Vector3.right * .1f, transform.right, Vector3.one * .3f);
 
         //string prefix = transform.name.Substring(0, 7);
 
@@ -107,15 +110,35 @@ public class VehicleDoor : VehicleBehaviour
     {
         //drag = body.angularVelocity.magnitude;
 
-        force = (vehicleBody.mass * .015f) * Mathf.Pow(vehicleBody.angularVelocity.magnitude, 2) * Vector3.Distance(vehicle.transform.TransformPoint(vehicleBody.centerOfMass), transform.position);
+        //force = (vehicleBody.mass * .015f) * Mathf.Pow(vehicleBody.angularVelocity.magnitude, 2) * Vector3.Distance(vehicle.transform.TransformPoint(vehicleBody.centerOfMass), transform.position);
 
+        if(lockBar != null) lockBar.percentage = lockHealth / 100f;
 
-
-        if (force > lastForce && allowedToDebug)
+        /*if (force > lastForce && allowedToDebug)
         {
             //Debug.Log("NEW MAX: " + drag);
             lastForce = force;
+        }*/
+
+        /*if (calculatingForce)
+        {
+            Debug.Log("Force Sum: " + forceSum);
+            forceSum = 0;
         }
+
+        if (forceSum != lastForceSum && forceSum > 0 && !calculatingForce)
+            impacting = true;
+
+        if(calculatingForce)
+            calculatingForce = false;
+
+        if (impacting && lastForceSum == forceSum)
+        {
+            calculatingForce = true;
+            impacting = false;
+        }
+
+        lastForceSum = forceSum;*/
     }
 
     private bool TryOpenDoor()
@@ -176,8 +199,14 @@ public class VehicleDoor : VehicleBehaviour
     public override void OnVehicleCollisionEnter(Collision collision)
     {
         TryOpenDoor();
-        if ((collision.contacts[0].point - transform.position).magnitude < sqr_damageDist)
-            lockHealth -= force / 1000f;
+        //if ((collision.contacts[0].point - transform.position).magnitude < sqr_damageDist)
+
+        force = collision.relativeVelocity.magnitude;
+        lockHealth -= force / 1000f;
+
+        //Debug.LogFormat("Force at collision: {0}", force);
+
+        forceSum += force;
     }
 
     public override void OnVehicleCollisionExit(Collision collision)

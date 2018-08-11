@@ -1,6 +1,7 @@
 ﻿using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private bool _colorsChanged;
 
         private VehicleController _controller;
+
+        private List<VehicleBehaviour> behaviours;
+
+        // Doors
+        private IEnumerable<VehicleDoor> vehicleDoors;
 
         private bool hasRearBrightness
         {
@@ -162,10 +168,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public VehicleController StartControlling()
         { // Must review: Maybe can cause some leaks
-            List<VehicleBehaviour> behaviours = new List<VehicleBehaviour>();
+            behaviours = new List<VehicleBehaviour>();
 
             behaviours.AddRange(SetAllCarLights());
-            behaviours.AddRange(SetAllDoors());
+
+            vehicleDoors = SetAllDoors().Cast<VehicleDoor>();
+            behaviours.AddRange(vehicleDoors);
             SetAllCollider(behaviours.ToArray());
 
             hasInit = true;
@@ -202,7 +210,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             foreach (Transform door in doors)
             {
                 // Initializate VehicleDoor script here
-                yield return VehicleDoor.InitializateDoor(door, this);
+                yield return VehicleDoor.InitializateDoor(door, this, false);
             }
         }
 
@@ -357,6 +365,21 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             //    NetworkingFixedUpdate();
             PhysicsFixedUpdate();
+        }
+
+        private void OnGUI()
+        {
+            if (HasDriver)
+            {
+                GUI.BeginGroup(new Rect(Screen.width - 205, Screen.height - 205 - 50, 200, 200));
+                GUI.Box(new Rect(0, 0, 200, 200), "");
+                GUI.Label(new Rect(5, 5, 200, 35), "Vehicle Stats", new GUIStyle("label") { fontSize = 30, fontStyle = FontStyle.Bold });
+                bool moreThan2Doors = vehicleDoors.Count() > 2;
+                GUI.Label(new Rect(5, 45, 200, moreThan2Doors ? 40 : 20), string.Format("Doors: {0}", 
+                    string.Join(" | ", vehicleDoors.Select((x, i) => 
+                    string.Format("({0}) {1}{2}", x.transform.name.Substring(5, 2).ToUpper(), x.lockHealth.ToString("F2"), moreThan2Doors && i == 1 ? Environment.NewLine : "")))));
+                GUI.EndGroup();
+            }
         }
 
         private IEnumerator DelayedBlinkersTurnOff()
