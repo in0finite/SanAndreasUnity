@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class VehicleDoor : VehicleBehaviour
 {
-    private const float sqr_damageDist = 20;
+    private const float sqr_damageDist = 50;
 
     private bool _isLeft;
 
@@ -58,7 +58,7 @@ public class VehicleDoor : VehicleBehaviour
     private float forceSum, lastForceSum;
     private bool calculatingForce, impacting;
 
-    public static VehicleDoor InitializateDoor(Transform door, Vehicle vehicle, bool progressBar)
+    public static VehicleDoor Init(Transform door, Vehicle vehicle, bool progressBar)
     {
         if (door == null) return null;
 
@@ -74,7 +74,7 @@ public class VehicleDoor : VehicleBehaviour
         if(progressBar)
             doorObj.lockBar = ProgressBarHelper.Init(doorObj.transform, doorObj.transform.position + Vector3.right * (doorObj._isLeft ? .3f : -.3f), Quaternion.Euler(0, 0, doorObj._isLeft ? 90 : -90), Vector3.one * .1f);
 
-        return doorObj;
+        return door.gameObject.GetComponent<VehicleDoor>();
     }
 
 	// Use this for initialization
@@ -209,8 +209,12 @@ public class VehicleDoor : VehicleBehaviour
         TryOpenDoor();
         //if ((collision.contacts[0].point - transform.position).magnitude < sqr_damageDist)
 
+        float d = (collision.contacts[0].point - transform.position).magnitude;
         force = collision.relativeVelocity.magnitude;
-        lockHealth -= force / 1000f;
+        lockHealth -= force * Mathf.InverseLerp(sqr_damageDist, 0, d) / 100f;
+
+        //Debug.LogFormat("D: {0} = {1}", d, Mathf.InverseLerp(0, sqr_damageDist, d));
+        //Debug.Break();
 
         //Debug.LogFormat("Force at collision: {0}", force);
 

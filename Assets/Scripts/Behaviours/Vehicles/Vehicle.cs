@@ -210,7 +210,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             foreach (Transform door in doors)
             {
                 // Initializate VehicleDoor script here
-                yield return VehicleDoor.InitializateDoor(door, this, false);
+                yield return VehicleDoor.Init(door, this, false);
             }
         }
 
