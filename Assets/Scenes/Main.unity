@@ -282,24 +282,24 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 11455068, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
-      propertyPath: WaterPrefab
+    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: Focus
       value: 
-      objectReference: {fileID: 1631170489}
-    - target: {fileID: 198482710293227328, guid: b6900baf9f552ba46ad27d4ada4d5489,
-        type: 2}
-      propertyPath: moveWithCustomTransform
-      value: 
-      objectReference: {fileID: 1315600947}
+      objectReference: {fileID: 1117230324}
     - target: {fileID: 114958467600150634, guid: b6900baf9f552ba46ad27d4ada4d5489,
         type: 2}
       propertyPath: Camera
       value: 
       objectReference: {fileID: 1117230323}
-    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
-      propertyPath: Focus
+    - target: {fileID: 198482710293227328, guid: b6900baf9f552ba46ad27d4ada4d5489,
+        type: 2}
+      propertyPath: moveWithCustomTransform
       value: 
-      objectReference: {fileID: 1117230324}
+      objectReference: {fileID: 1315600947}
+    - target: {fileID: 11455068, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: WaterPrefab
+      value: 
+      objectReference: {fileID: 1631170489}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0

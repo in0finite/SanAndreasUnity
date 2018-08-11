@@ -6,7 +6,9 @@ using SanAndreasUnity.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -507,6 +509,12 @@ public static class ZHelpers
         { GroundType.Tunnel, new Color32(107, 105, 99, 255) }
     };
 
+    public static Dictionary<int, string> indexMeaning = new Dictionary<int, string>()
+    {
+        { 0, "Light pollution" },
+        { 1, "Temperature" }
+    };
+
     private static bool AreStatsCalculated, IsStatsTaskFinished;
     private static int m_zonesLoaded = 0;
 
@@ -517,6 +525,9 @@ public static class ZHelpers
     private static CancellationTokenSource m_taskCancellation = new CancellationTokenSource();
 
     private static Action<SZone, int, float> m_zoneAction;
+
+    private static StringBuilder logger = new StringBuilder();
+    private static float m_startedTime;
 
     public static Rect mapDimensions
     {
@@ -536,6 +547,8 @@ public static class ZHelpers
             return new Vector2((MiniMap.texSize * MiniMap.tileEdge) / (Mathf.Abs(mapDimensions.x) + mapDimensions.width), (MiniMap.texSize * MiniMap.tileEdge) / (Mathf.Abs(mapDimensions.y) + mapDimensions.height));
         }
     }
+
+    public static string Separator { get { return new string('-', 30); } }
 
     public static bool IsInside(this Vector3 p, Vector3 vmin, Vector3 vmax)
     {
@@ -569,10 +582,25 @@ public static class ZHelpers
     {
         Debug.Log("Starting calculating zones stats!");
 
-        m_statsCalculation = Task.Factory.StartNew(() => CalculateZoneStats(new ColorFloatDictionary[] { starColors, weatherColors }), m_taskCancellation.Token).ContinueWith((t) => { IsStatsTaskFinished = true; });
+        m_startedTime = Time.time;
+        m_statsCalculation = Task.Factory.StartNew(() => CalculateZoneStats(new ColorFloatDictionary[] { starColors, weatherColors }), m_taskCancellation.Token)
+            .ContinueWith(FinishedStats);
     }
 
-    public static void CalculateZoneStats(ColorFloatDictionary[] vals, bool debugging = false)
+    private static void FinishedStats(Task<bool> t)
+    {
+        if (t.Result)
+        {
+            float m_timeSpent = Time.time - m_startedTime;
+
+            logger.AppendFormat("Time spent on calculating zone stats: {0} s", m_timeSpent);
+            File.WriteAllText(Path.Combine(Application.streamingAssetsPath, "ZoneStats.txt"), logger.ToString());
+        }
+
+        IsStatsTaskFinished = true;
+    }
+
+    public static bool CalculateZoneStats(ColorFloatDictionary[] vals, bool debugging = true)
     {
         List<int> areSame = new List<int>();
         ColorFloatDictionary firstVal = vals[0];
@@ -590,14 +618,16 @@ public static class ZHelpers
 
         Stopwatch sw = Stopwatch.StartNew();
 
-        Debug.LogFormat("Starting Parallel work with {0} color dictionaries and {1} pixels!\nEach one contains {2} colors", vals.Length, colors.Length, string.Join(", ", vals.Select(x => x.Keys.Count.ToString())));
+        string m_startedWith = string.Format("Starting Parallel work with {0} color dictionaries and {1} pixels!\nEach one contains {2} colors", vals.Length, colors.Length, string.Join(", ", vals.Select(x => x.Keys.Count.ToString())));
+        Debug.Log(m_startedWith);
+        if (debugging) logger.AppendLine(m_startedWith);
 
         if (debugging)
         {
             int m = 0;
             foreach (ColorFloatDictionary v in vals)
             {
-                Debug.LogFormat("The colors for the dictionary #{0}:\n\n{1}", m, string.Join(Environment.NewLine, v.Select(x => string.Format("(K) {0}: {1} (V)", x.Key, x.Value))));
+                logger.AppendFormat("The colors for the dictionary #{0}:\n\n{1}", m, string.Join(Environment.NewLine, v.Select(x => string.Format("(K) {0}: {1} (V)", x.Key, x.Value))));
                 ++m;
             }
         }
@@ -607,6 +637,14 @@ public static class ZHelpers
         // Parallel.ForEach
         SZone.AllZones.ForEach(zone =>
         {
+            if (debugging)
+            {
+                if (m_zonesLoaded > 0)
+                    logger.AppendLine(Separator);
+
+                logger.AppendFormat("Started with '{0}' zone.", zone.name);
+            }
+
             Rect mapRect = GetMapRect(zone.ToRect(), debugging);
 
 #if TESTING
@@ -618,16 +656,16 @@ public static class ZHelpers
             }
 #endif
 
-            IEnumerable<Color> pixels = colors.Cut((int)mapRect.x, (int)mapRect.y, (int)mapRect.width, (int)mapRect.height);
-
-            if (debugging)
-            {
-                Debug.Log("Cut ellapsed: " + (sw.ElapsedMilliseconds - lastSw) + " ms");
-                lastSw = sw.ElapsedMilliseconds;
-            }
-
             try
             {
+                IEnumerable<Color> pixels = colors.Cut((int)mapRect.x, (int)mapRect.y, (int)mapRect.width, (int)mapRect.height);
+
+                if (debugging)
+                {
+                    Debug.Log("Cut ellapsed: " + (sw.ElapsedMilliseconds - lastSw) + " ms");
+                    lastSw = sw.ElapsedMilliseconds;
+                }
+
                 if (pixels == null || (pixels != null && pixels.Count() == 0))
                     Debug.LogErrorFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
 
@@ -643,10 +681,8 @@ public static class ZHelpers
                 {
                     IEnumerable<ColorDistinction> c = GetDistinctColors(uColors, sw, pixels, debugging);
 
-                    sw.Stop();
-
                     for (int w = 0; w < vals.Length; ++w)
-                        CallColorAction(zone, vals, c, w, mapRect, debugging);
+                        CallColorAction(zone, vals, c, w, ref sw, mapRect, debugging);
                 }
                 else
                 {
@@ -657,11 +693,10 @@ public static class ZHelpers
                         IEnumerable<ColorDistinction> c = GetDistinctColors(vals[index.indexes.FirstOrDefault()].Keys, sw, pixels, debugging);
 
                         foreach (int w in index.indexes)
-                            CallColorAction(zone, vals, c, w, mapRect, debugging);
+                            CallColorAction(zone, vals, c, w, ref sw, mapRect, debugging);
                     }
                 }
 
-                if (debugging) Debug.LogFormat("Light polution in {0} is {1}! (Loaded in {2} ms)", zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
                 if (m_zonesLoaded < SZone.AllZones.Length) ++m_zonesLoaded; //Interlocked.Increment(ref m_zonesLoaded);
 
                 if (m_zonesLoaded == SZone.AllZones.Length - 1)
@@ -678,6 +713,8 @@ public static class ZHelpers
         });
 
         sw.Stop();
+
+        return debugging;
     }
 
     private static IEnumerable<ColorDistinction> GetDistinctColors(IEnumerable<Color> uColors, Stopwatch sw, IEnumerable<Color> pixels, bool debugging = true)
@@ -693,17 +730,32 @@ public static class ZHelpers
         return c;
     }
 
-    private static void CallColorAction(SZone zone, ColorFloatDictionary[] vals, IEnumerable<ColorDistinction> c, int w, Rect mapRect, bool debugging = true)
+    private static void CallColorAction(SZone zone, ColorFloatDictionary[] vals, IEnumerable<ColorDistinction> c, int w, ref Stopwatch sw, Rect mapRect, bool debugging = true)
     {
         float val = c.Sum(x => x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)) / mapRect.GetPixelCount();
-        if (debugging || val < .001f) DebuggingColors(c, vals, w, val, zone);
+        if (debugging)
+        {
+            logger.AppendLine();
+            logger.AppendLine(Separator);
+            logger.AppendFormat("Starting color debugging for {0}:", zone.name);
+            logger.AppendLine();
+            DebuggingColors(c, vals, w, val, zone);
+            logger.AppendLine(Separator);
+            logger.AppendLine();
+        }
+
+        sw.Stop();
+
+        if (debugging)
+            logger.AppendFormat("{0} in {1} is {2}! (Loaded in {3} ms)", indexMeaning[w], zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
+
         m_zoneAction(zone, w, val);
     }
 
     private static void DebuggingColors(IEnumerable<ColorDistinction> c, ColorFloatDictionary[] vals, int w, float val, SZone zone, bool debugSum = false)
     {
-        Debug.LogFormat("Value: {0}; Zone: {1}; Index: {2}\n\n{3}", val, zone.name, w, string.Join(Environment.NewLine, c.Select(x => string.Format("{0}: {1} => Sum: {1} * {2} = {3}", mapColors.FirstOrDefault(n => n.Value == x.Value).Key.ToString(), x.Count, (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0), x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)))));
-        if(debugSum) Debug.LogFormat("Sum: {0}; Count: {1}", val, c.Count());
+        logger.AppendFormat("Value: {0}; Zone: {1}; Index: {2}\n\n{3}", val, zone.name, w, string.Join(Environment.NewLine, c.Select(x => string.Format("{0}: {1} => Sum: {1} * {2} = {3}", mapColors.FirstOrDefault(n => n.Value == x.Value).Key.ToString(), x.Count, (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0), x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)))));
+        if (debugSum) logger.AppendFormat("Sum: {0}; Count: {1}", val, c.Count());
     }
 
     private static IEnumerable<SameIndexes> GenerateSameIndexes(IEnumerable<int> sameIndexes, int totalLength)
@@ -764,7 +816,6 @@ public static class ZHelpers
 
     public static void OnApplicationQuit()
     {
-
     }
 }
 
