@@ -153,7 +153,7 @@ public class VehicleDoor : VehicleBehaviour
     private bool GetChance(bool isClosing, out float val)
     {
         val = Random.value;
-        return isClosing ? val < lockHealth / 100f : val < (Mathf.InverseLerp(500, 0, force) - Mathf.Clamp01(lockHealth / 100f));
+        return isClosing ? val < lockHealth / 100f : val < 1f - Mathf.Clamp01(Mathf.Clamp01(lockHealth / 100f) - Mathf.InverseLerp(500, 0, force));
     }
 
     private void CheckDoorState()

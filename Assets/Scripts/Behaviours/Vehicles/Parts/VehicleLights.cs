@@ -34,6 +34,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             set
             {
                 _isNightToggled = value;
+                _isPowered = value;
                 if (canPower) SetLight(_isNightToggled ? (isRear ? rearLightIntensity : frontLightIntensity) : 0);
             }
         }
@@ -55,22 +56,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
 
-            VehicleLights lights = parent.gameObject.AddComponent<VehicleLights>();
-
             Transform lightObj = new GameObject(GetLightName(light)).transform;
             lightObj.parent = parent;
+
+            VehicleLights lights = lightObj.gameObject.AddComponent<VehicleLights>();
 
             Quaternion rot = IsFrontLight(light) ? Quaternion.identity : Quaternion.Euler(Vector3.right * 180);
 
             lightObj.localPosition = pos;
             lightObj.localRotation = rot;
 
-            lights.lightComponent = lightObj.gameObject.AddComponent<Light>();
-
             lights.lightType = light;
             lights.vehicle = vehicle;
-
-            lights.SetLightProps();
 
             vehicle.m_lightDict.Add(light, lights);
 
@@ -203,6 +200,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 {
                     _isPowered = value;
                     SetLight(_isPowered ? frontLightIntensity : 0);
+
+                    Debug.LogFormat("Toggling lights {0}!", _isPowered ? "on" : "off");
                 }
             }
         }
@@ -210,19 +209,21 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         // Use this for initialization
         private void Start()
         {
-            lightComponent = GetComponent<Light>();
-            _isPowered = true;
+            Light light = GetComponent<Light>();
+            lightComponent = light == null ? gameObject.AddComponent<Light>() : light;
+
+            SetLightProps();
+
+            //_isPowered = true; // By default, lights are powered (because of SetProps method)
+
             IsNightToggled = WorldController.IsNight;
         }
 
         // Update is called once per frame
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.L) && !isRear)
-            {
-                Debug.Log("Toggling lights");
-                isPowered = !isPowered;
-            }
+            if (vehicle.HasDriver && Input.GetKeyDown(KeyCode.L) && !isRear)
+                isPowered = !_isPowered;
         }
 
         public void OnDuskTime()
@@ -267,19 +268,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public void SetLight(float brightness)
         {
             brightness = Mathf.Clamp01(brightness);
-
-            if (lightComponent != null)
-            {
-                if (brightness > 0 && !lightComponent.enabled)
-                {
-                    lightComponent.enabled = true;
-                    lightComponent.intensity = brightness;
-                }
-                else
-                {
-                    lightComponent.enabled = false;
-                }
-            }
+            if(lightComponent != null) lightComponent.intensity = brightness;
 
             vehicle.SetLight((int)Mathf.Log((int)lightType, 2), brightness);
         }
