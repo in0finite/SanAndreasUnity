@@ -115,9 +115,6 @@ public class VehicleDoor : VehicleBehaviour
         //force = (vehicleBody.mass * .015f) * Mathf.Pow(vehicleBody.angularVelocity.magnitude, 2) * Vector3.Distance(vehicle.transform.TransformPoint(vehicleBody.centerOfMass), transform.position);
 
         if(lockBar != null) lockBar.percentage = lockHealth / 100f;
-
-        if (hingeHealth <= 0)
-            Destroy(gameObject.GetComponent<HingeJoint>());
     }
 
     private bool TryOpenDoor()
@@ -182,10 +179,13 @@ public class VehicleDoor : VehicleBehaviour
         float d = (collision.contacts[0].point - transform.position).magnitude;
         force = collision.relativeVelocity.magnitude;
 
-        float dam = force * Mathf.InverseLerp(sqr_damageDist, 0, d) / 100f;
+        float dam = force * Mathf.InverseLerp(sqr_damageDist, 0, d) / 5f;
 
         lockHealth -= dam;
-        hingeHealth -= dam * 3;
+        hingeHealth -= dam * 1.25f;
+
+        if (hingeHealth <= 0 && Random.value < 1 / 3f) // 33% de que se caiga
+            Destroy(gameObject.GetComponent<HingeJoint>());
     }
 
     public override void OnVehicleCollisionExit(Collision collision)
