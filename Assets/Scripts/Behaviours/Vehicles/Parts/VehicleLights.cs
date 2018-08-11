@@ -46,13 +46,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             Transform blinker = vehicle.transform.FindChildRecursive(parent.name + "2");
 
-            //There is a bug, if the blinker is set the vehicle can't steer
             VehicleBlinker.Init(gameObject.transform, lightRet, vehicle);
 
             return lightRet;
         }
 
-        public static VehicleLights Init(Transform parent, Vehicle vehicle, VehicleLight light, Vector3 pos, out GameObject go)
+        private static VehicleLights Init(Transform parent, Vehicle vehicle, VehicleLight light, Vector3 pos, out GameObject go)
         {
             if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
 
@@ -213,8 +212,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             lightComponent = light == null ? gameObject.AddComponent<Light>() : light;
 
             SetLightProps();
-
-            //_isPowered = true; // By default, lights are powered (because of SetProps method)
 
             IsNightToggled = WorldController.IsNight;
         }

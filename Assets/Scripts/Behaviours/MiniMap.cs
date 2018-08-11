@@ -110,7 +110,7 @@ namespace SanAndreasUnity.Behaviours
                     _zName = SZone.GetZoneName(ZoneHelpers.zoneInfoList, playerPos);
                 }
 
-                return _zName;
+                return string.IsNullOrEmpty(_zName) ? SZone.defaultZoneName : _zName;
             }
         }
 
@@ -625,6 +625,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnGUI()
         {
+            if (!Loader.HasLoaded) return;
             if (!isReady || !toggleInfo) return;
 
             if (!toggleMap)
