@@ -336,9 +336,52 @@ namespace SanAndreasUnity.Behaviours
 
 				//	PlayerModel.PlayUpperLayerAnimations (AnimGroup.Rifle, AnimGroup.WalkCycle, AnimIndex.RIFLE_fire, AnimIndex.Idle);
 
-				var state = PlayerModel.PlayAnim (this.AimAnim, true, true);
+				AnimationState state = null;
+
+				if (player.IsRunning && player.Movement.sqrMagnitude > float.Epsilon) {
+					// walk and aim at the same time
+
+					float angle = Vector3.Angle (player.Movement, player.transform.forward);
+
+					if (angle > 110) {
+						// move backward
+						PlayerModel.Play2Anims( this.AimAnim, new AnimId(AnimGroup.Gun, AnimIndex.GunMove_BWD) );
+					} else if (angle > 70) {
+						// strafe - move left/right
+						float rightAngle = Vector3.Angle( player.Movement, player.transform.right );
+						if (rightAngle > 90) {
+							// left
+							PlayerModel.Play2Anims( this.AimAnim, new AnimId(AnimGroup.Gun, AnimIndex.GunMove_L) );
+						} else {
+							// right
+							PlayerModel.Play2Anims( this.AimAnim, new AnimId(AnimGroup.Gun, AnimIndex.GunMove_R) );
+						}
+
+						// we have to reset local position of root frame - for some reason, anim is changing position
+					//	PlayerModel.RootFrame.transform.localPosition = Vector3.zero;
+						Importing.Conversion.Animation.RemovePositionCurves( PlayerModel.LastSecondaryAnimState.clip, PlayerModel.Frames );
+
+						PlayerModel.VelocityAxis = 0;
+					} else {
+						// move forward
+						PlayerModel.Play2Anims( this.AimAnim, new AnimId(AnimGroup.Gun, AnimIndex.GunMove_FWD) );
+					}
+
+					PlayerModel.LastAnimState.wrapMode = WrapMode.ClampForever;
+					state = PlayerModel.LastAnimState;
+
+				} else {
+					// just aim
+
+					//state = PlayerModel.PlayAnim (this.AimAnim, true, false);
+					PlayerModel.Play2Anims( this.AimAnim, this.IdleAnim );
+
+					state = PlayerModel.LastAnimState;
+					state.wrapMode = WrapMode.ClampForever;
+				}
+
 				AimAnimState = state;
-				state.wrapMode = WrapMode.ClampForever;
+
 
 				this.UpdateFireAnim (player, state);
 			}

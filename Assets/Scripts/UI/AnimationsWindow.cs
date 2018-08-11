@@ -13,6 +13,7 @@ namespace SanAndreasUnity.UI {
 		private	float m_lastContentHeight = 0;
 		private bool m_displayWalkcycleAnims = false;
 		private bool m_displayAnimStats = false;
+		private Vector2 m_headerScrollViewPos = Vector2.zero;
 
 
 
@@ -48,7 +49,7 @@ namespace SanAndreasUnity.UI {
 
 			float headerHeight = m_displayAnimStats ? 200 : 60;
 
-			GUILayout.BeginArea (new Rect (0, 0, this.windowRect.width, headerHeight));
+			m_headerScrollViewPos = GUILayout.BeginScrollView (m_headerScrollViewPos, GUILayout.Height(headerHeight));
 
 			if (playerExists)
 				Player.Instance.shouldPlayAnims = !GUILayout.Toggle( !Player.Instance.shouldPlayAnims, "Override player anims" );
@@ -62,7 +63,7 @@ namespace SanAndreasUnity.UI {
 				DisplayAnimStats ();
 			}
 
-			GUILayout.EndArea ();
+			GUILayout.EndScrollView ();
 
 
 			// display anim groups and their anims
@@ -141,13 +142,19 @@ namespace SanAndreasUnity.UI {
 				DisplayStatsForAnim (animState);
 			}
 
-			GUILayout.Space (3);
 
-			GUILayout.Label ("Last played anim:");
-
-			if (model.LastAnimState != null)
+			if (model.LastAnimState != null) {
+				GUILayout.Space (3);
+				GUILayout.Label ("Last played anim:");
 				DisplayStatsForAnim (model.LastAnimState);
-			
+			}
+
+			if (model.LastSecondaryAnimState != null) {
+				GUILayout.Space (3);
+				GUILayout.Label ("Last secondary played anim:");
+				DisplayStatsForAnim (model.LastSecondaryAnimState);
+			}
+
 			GUILayout.Space (7);
 
 			GUILayout.Label ("Root frame velocity: " + model.RootFrame.LocalVelocity);

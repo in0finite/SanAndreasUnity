@@ -94,6 +94,11 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
+		void Start ()
+		{
+			PlayerModel.onLateUpdate += this.UpdateWeaponTransform;
+		}
+
 		void OnLoaderFinished ()
 		{
 			if (this.autoAddWeapon)
@@ -171,8 +176,8 @@ namespace SanAndreasUnity.Behaviours {
 			// this should be done after all other skeleton changes
 			// idk why this boolean has to be checked - there are some race conditions with animations
 			// - if we don't check it, weapons will start shaking
-			if (this.IsAiming)
-				UpdateWeaponTransform ();
+		//	if (this.IsAiming)
+		//		UpdateWeaponTransform ();
 
 		}
 
