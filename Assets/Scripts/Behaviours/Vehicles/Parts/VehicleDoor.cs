@@ -34,14 +34,22 @@ public class VehicleDoor : VehicleBehaviour
         }
     }
 
+    public float LockHealth
+    {
+        get
+        {
+            return lockHealth;
+        }
+    }
+
     public float force;
 
-    private float lastForce;
+    //private float lastForce;
     private bool allowedToDebug;
     private Rigidbody body, vehicleBody;
     private Vehicle vehicle;
 
-    [HideInInspector] public float lockHealth = 100;
+    private float lockHealth = 100;
     private HingeJoint joint;
     //private MeshCollider okCollider, damCollider;
     private NonConvexMeshCollider okCollider, damCollider;

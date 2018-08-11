@@ -377,7 +377,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 bool moreThan2Doors = vehicleDoors.Count() > 2;
                 GUI.Label(new Rect(5, 45, 200, moreThan2Doors ? 40 : 20), string.Format("Doors: {0}", 
                     string.Join(" | ", vehicleDoors.Select((x, i) => 
-                    string.Format("({0}) {1}{2}", x.transform.name.Substring(5, 2).ToUpper(), x.lockHealth.ToString("F2"), moreThan2Doors && i == 1 ? Environment.NewLine : "")))));
+                    string.Format("({0}) {1}{2}", x.transform.name.Substring(5, 2).ToUpper(), x.LockHealth.ToString("F2"), moreThan2Doors && i == 1 ? Environment.NewLine : "")))));
                 GUI.EndGroup();
             }
         }
