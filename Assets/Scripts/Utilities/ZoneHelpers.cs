@@ -618,14 +618,19 @@ public static class ZHelpers
 
         string m_startedWith = string.Format("Starting Parallel work with {0} color dictionaries and {1} pixels!\nEach one contains {2} colors", vals.Length, colors.Length, string.Join(", ", vals.Select(x => x.Keys.Count.ToString())));
         Debug.Log(m_startedWith);
-        if (debugging) logger.AppendLine(m_startedWith);
+        if (debugging)
+        {
+            logger.AppendLine(m_startedWith.Replace("\n", Environment.NewLine));
+            logger.AppendLine();
+        }
 
         if (debugging)
         {
             int m = 0;
             foreach (ColorFloatDictionary v in vals)
             {
-                logger.AppendFormat("The colors for the dictionary #{0}:\n\n{1}", m, string.Join(Environment.NewLine, v.Select(x => string.Format("(K) {0}: {1} (V)", x.Key, x.Value))));
+                logger.AppendFormat("The colors for the dictionary #{0}:{2}{2}{1}", m, string.Join(Environment.NewLine, v.Select(x => string.Format("K: {0} | V: {1}", x.Key, x.Value))), Environment.NewLine);
+                logger.AppendLine();
                 ++m;
             }
         }
@@ -640,9 +645,15 @@ public static class ZHelpers
             if (debugging)
             {
                 if (m_zonesLoaded > 0)
+                {
+                    logger.AppendLine();
                     logger.AppendLine(Separator);
+                    logger.AppendLine();
+                }
 
+                logger.AppendLine();
                 logger.AppendFormat("Started with '{0}' zone ({1} pixels)", zone.name, mapRect.GetPixelCount());
+                logger.AppendLine();
             }
 
 #if TESTING
@@ -661,11 +672,15 @@ public static class ZHelpers
                 if (debugging)
                 {
                     logger.AppendFormat("[{0}] Cut ellapsed: {1}", zone.name, (sw.ElapsedMilliseconds - lastSw) + " ms");
+                    logger.AppendLine();
                     lastSw = sw.ElapsedMilliseconds;
                 }
 
                 if (pixels == null || (pixels != null && pixels.Count() == 0))
+                {
                     logger.AppendFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
+                    logger.AppendLine();
+                }
 
 #if TESTING
                 int count = pixels.Length;
@@ -704,8 +719,9 @@ public static class ZHelpers
             }
             catch (Exception ex)
             {
-                Debug.LogErrorFormat("There was a problem with the zone called {0}", zone.name);
-                Debug.LogError(ex);
+                logger.AppendFormat("There was a problem with the zone called {0}", zone.name);
+                logger.AppendLine(ex.Message);
+                logger.AppendLine();
                 return;
             }
         });
@@ -733,7 +749,6 @@ public static class ZHelpers
         float val = c.Sum(x => x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)) / mapRect.GetPixelCount();
         if (debugging)
         {
-            logger.AppendLine();
             logger.AppendLine(Separator);
             logger.AppendFormat("Starting color debugging for {0}:", zone.name);
             logger.AppendLine();
@@ -745,7 +760,10 @@ public static class ZHelpers
         sw.Stop();
 
         if (debugging)
+        {
             logger.AppendFormat("{0} in {1} is {2}! (Loaded in {3} ms)", indexMeaning[w], zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
+            logger.AppendLine();
+        }
 
         m_zoneAction(zone, w, val);
     }
@@ -754,6 +772,7 @@ public static class ZHelpers
     {
         logger.AppendFormat("Value: {0}; Zone: {1}; Index: {2}\n\n{3}", val, zone.name, w, string.Join(Environment.NewLine, c.Select(x => string.Format("{0}: {1} => Sum: {1} * {2} = {3}", mapColors.FirstOrDefault(n => n.Value == x.Value).Key.ToString(), x.Count, (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0), x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)))));
         if (debugSum) logger.AppendFormat("Sum: {0}; Count: {1}", val, c.Count());
+        logger.AppendLine();
     }
 
     private static IEnumerable<SameIndexes> GenerateSameIndexes(IEnumerable<int> sameIndexes, int totalLength)
