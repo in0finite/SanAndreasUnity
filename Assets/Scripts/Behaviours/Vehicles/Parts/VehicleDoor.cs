@@ -1,7 +1,5 @@
 ﻿using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Utilities;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class VehicleDoor : VehicleBehaviour
@@ -49,14 +47,12 @@ public class VehicleDoor : VehicleBehaviour
     private Rigidbody body, vehicleBody;
     private Vehicle vehicle;
 
-    private float lockHealth = 100;
+    private float lockHealth = 100, hingeHealth = 100f;
     private HingeJoint joint;
     //private MeshCollider okCollider, damCollider;
-    private NonConvexMeshCollider okCollider, damCollider;
+    //private NonConvexMeshCollider okCollider, damCollider;
 
     private ProgressBarHelper lockBar;
-    private float forceSum, lastForceSum;
-    private bool calculatingForce, impacting;
 
     public static VehicleDoor Init(Transform door, Vehicle vehicle, bool progressBar)
     {
@@ -116,37 +112,12 @@ public class VehicleDoor : VehicleBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        //drag = body.angularVelocity.magnitude;
-
         //force = (vehicleBody.mass * .015f) * Mathf.Pow(vehicleBody.angularVelocity.magnitude, 2) * Vector3.Distance(vehicle.transform.TransformPoint(vehicleBody.centerOfMass), transform.position);
 
         if(lockBar != null) lockBar.percentage = lockHealth / 100f;
 
-        /*if (force > lastForce && allowedToDebug)
-        {
-            //Debug.Log("NEW MAX: " + drag);
-            lastForce = force;
-        }*/
-
-        /*if (calculatingForce)
-        {
-            Debug.Log("Force Sum: " + forceSum);
-            forceSum = 0;
-        }
-
-        if (forceSum != lastForceSum && forceSum > 0 && !calculatingForce)
-            impacting = true;
-
-        if(calculatingForce)
-            calculatingForce = false;
-
-        if (impacting && lastForceSum == forceSum)
-        {
-            calculatingForce = true;
-            impacting = false;
-        }
-
-        lastForceSum = forceSum;*/
+        if (hingeHealth <= 0)
+            Destroy(gameObject.GetComponent<HingeJoint>());
     }
 
     private bool TryOpenDoor()
@@ -207,18 +178,14 @@ public class VehicleDoor : VehicleBehaviour
     public override void OnVehicleCollisionEnter(Collision collision)
     {
         TryOpenDoor();
-        //if ((collision.contacts[0].point - transform.position).magnitude < sqr_damageDist)
 
         float d = (collision.contacts[0].point - transform.position).magnitude;
         force = collision.relativeVelocity.magnitude;
-        lockHealth -= force * Mathf.InverseLerp(sqr_damageDist, 0, d) / 100f;
 
-        //Debug.LogFormat("D: {0} = {1}", d, Mathf.InverseLerp(0, sqr_damageDist, d));
-        //Debug.Break();
+        float dam = force * Mathf.InverseLerp(sqr_damageDist, 0, d) / 100f;
 
-        //Debug.LogFormat("Force at collision: {0}", force);
-
-        forceSum += force;
+        lockHealth -= dam;
+        hingeHealth -= dam * 3;
     }
 
     public override void OnVehicleCollisionExit(Collision collision)
