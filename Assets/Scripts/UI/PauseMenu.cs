@@ -52,7 +52,7 @@ namespace SanAndreasUnity.UI {
 
 		void Update () {
 
-			if (Input.GetKeyDown (KeyCode.Escape)) {
+			if (Loader.HasLoaded && Input.GetKeyDown (KeyCode.Escape)) {
 				
 				if (IsOpened) {
 					// if there is a modal window, close it, otherwise close pause menu
