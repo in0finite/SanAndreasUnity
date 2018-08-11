@@ -1,13 +1,10 @@
-﻿//#define TESTING
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.IO;
 using GTAConfig = SanAndreasUnity.Utilities.Config;
 using System;
-using SanAndreasUnity.Utilities;
 
 public class DevProfiles
 {
@@ -20,45 +17,9 @@ public class DevProfiles
             if (_obj == null)
                 _obj = DeserializeProfiles();
 
-#if TESTING
-            Debug.LogWarning("_obj null?: "+(_obj == null));
-#endif
-
             return _obj;
         }
     }
-
-#if TESTING
-    public static int ActiveProfile
-    {
-        get
-        {
-            try
-            {
-                Debug.Log("Available keys: "+string.Join(", ", obj.Properties().Select(p => p.Name)));
-
-                var a = obj[GTAConfig.const_active_dev_profile];
-
-                Debug.LogWarning("a null?: "+(a == null));
-
-                var b = a.ToObject<int>();
-
-                Debug.LogWarning("b null?: " + (b == null));
-
-                var c = b.FirstOrDefault(x => x.Key == SystemInfo.deviceUniqueIdentifier);
-
-                Debug.LogWarning("c null?: " + (c.Equals(default(IEnumerable<KeyValuePair<string, int>>))));
-
-                return c.Value;
-            }
-            catch(Exception ex)
-            {
-                Debug.LogError(ex.Message);
-                return -1;
-            }
-        }
-    }
-#else
     public static int ActiveProfile
     {
         get
@@ -73,22 +34,6 @@ public class DevProfiles
             }
         }
     }
-
-    /*public static string ActiveProfilePath
-    {
-        get
-        {
-            try
-            {
-                return GTAConfig.Get<List<string>>(GTAConfig.const_dev_profiles).Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[ActiveProfile];
-            }
-            catch
-            {
-                throw new Exception(string.Format("You must set the GTA path, because if not the game won't launch. You can set it manually using this id: '{0}', or setting it with the Editor popup.", SystemInfo.deviceUniqueIdentifier));
-            }
-        }
-    }*/
-#endif
 
     public static string ActiveProfilePath
     {
@@ -123,10 +68,6 @@ public class DevProfiles
     {
         string configPath = GTAConfig.UserFileName;
 
-#if TESTING
-        Debug.Log(configPath);
-#endif
-
         contents = File.ReadAllText(configPath);
 
         return contents.JsonDeserialize<JObject>();
@@ -141,7 +82,6 @@ public class DevProfiles
 
     public static string CheckDevProfiles(Func<string> folderList)
     {
-        //game_path = Environment.GetEnvironmentVariable("ProgramFiles"); //...
         string game_path = "",
                contents = "";
 
@@ -231,7 +171,6 @@ public class DevProfiles
 
         if (devDict == null || (devDict != null && devDict.Count == 0)) return false;
 
-        //Debug.LogFormat("Index: {0}; Count: {1}", index, devDict.Count - 1);
         return index <= devDict.Count;
     }
 
