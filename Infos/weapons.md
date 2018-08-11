@@ -44,9 +44,9 @@ These are the useful parameters in weapons.dat :
 
 ### TODO
 
-- play 2 anims at the same time - this is needed for: reloading, aim and move at the same time, 
+- reloading
 
-- problematic anims: move/fire with heavy weapons, 
+- problematic anims: 
 
 - when aiming with single-arm weapons - play the same idle anim for all models ?
 
@@ -59,8 +59,6 @@ These are the useful parameters in weapons.dat :
 - rotate the pelvis instead of spine (because thighs look ugly)
 
 - run and aim at the same time with single-arm weapons
-
-- walk and aim at the same time ; strafe ;
 
 - play separate anim for: minigun and flame thrower, 
 

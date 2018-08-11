@@ -440,13 +440,18 @@ namespace SanAndreasUnity.Behaviours
 				this.Movement = this.Movement.WithXAndZ ();
 
 				// change heading to match movement input
-                if (Movement.sqrMagnitude > float.Epsilon)
-                {
-					Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
-                }
+                //if (Movement.sqrMagnitude > float.Epsilon)
+                //{
+				//	Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
+                //}
 
 				// change velocity based on movement input and current speed extracted from anim
-                var vDiff = Movement * PlayerModel.Speed - new Vector3(Velocity.x, 0f, Velocity.z);
+
+				float modelVel = Mathf.Abs( PlayerModel.Velocity [PlayerModel.VelocityAxis] );
+				//Vector3 localMovement = this.transform.InverseTransformDirection (this.Movement);
+				//Vector3 globalMovement = this.transform.TransformDirection( Vector3.Scale( localMovement, modelVel ) );
+
+				Vector3 vDiff = this.Movement * modelVel - new Vector3(Velocity.x, 0f, Velocity.z);
 				Velocity += vDiff;
 
 				// apply gravity

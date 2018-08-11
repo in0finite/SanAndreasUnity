@@ -64,6 +64,10 @@ namespace SanAndreasUnity.Importing.Animation
 		CAR_close_RHS,
 
 		// Gun
+		GunMove_BWD = 2,
+		GunMove_FWD,
+		GunMove_L,
+		GunMove_R,
 		run_armed = 12,
 		WALK_armed = 17,
 

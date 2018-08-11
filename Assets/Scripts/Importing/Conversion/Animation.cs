@@ -17,6 +17,21 @@ namespace SanAndreasUnity.Importing.Conversion
     {
         private const float TimeScale = 1f / 64f;
 
+		private class Axis
+		{
+			public string Name { get; set; }
+			public UVector3 Mask { get; set; }
+		}
+
+		private static Axis[] s_translateAxes = new Axis[] {
+			new Axis (){ Name = "x", Mask = new UVector3(1f, 0f, 0f) },
+			new Axis (){ Name = "y", Mask = new UVector3(0f, 1f, 0f) },
+			new Axis (){ Name = "z", Mask = new UVector3(0f, 0f, 1f) },
+		};
+
+		//private static Dictionary<UnityEngine.AnimationClip, List<AnimationCurve>> s_curvesPerClip = new Dictionary<AnimationClip, List<AnimationCurve>> ();
+
+
         private static UnityEngine.AnimationClip Convert(Clip animation, FrameContainer frames,
             out UVector3 rootStart, out UVector3 rootEnd)
         {
@@ -28,12 +43,6 @@ namespace SanAndreasUnity.Importing.Conversion
                 new { Name = "y", Mask = new UVector4(0f, 1f, 0f, 0f) },
                 new { Name = "z", Mask = new UVector4(0f, 0f, 1f, 0f) },
                 new { Name = "w", Mask = new UVector4(0f, 0f, 0f, 1f) }
-            };
-
-            var translateAxes = new[] {
-                new { Name = "x", Mask = new UVector3(1f, 0f, 0f) },
-                new { Name = "y", Mask = new UVector3(0f, 1f, 0f) },
-                new { Name = "z", Mask = new UVector3(0f, 0f, 1f) },
             };
 
             var root = animation.Bones.FirstOrDefault(x => x.BoneId == 0);
@@ -54,6 +63,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
                 string bonePath = frame.Path;
 
+				AnimationCurve curve;
+
                 var axisAngle = bFrames.ToDictionary(x => x, x =>
                 {
                     var q = Types.Convert(x.Rotation);
@@ -69,8 +80,12 @@ namespace SanAndreasUnity.Importing.Conversion
                             UVector4.Dot(axisAngle[x], axis.Mask)))
                         .ToArray();
 
+					curve = new UnityEngine.AnimationCurve (keys);
+					
                     clip.SetCurve(bonePath, typeof(Transform), "localRotation." + axis.Name,
-                        new UnityEngine.AnimationCurve(keys));
+						curve);
+
+					//OnCurveAddedToClip (clip, curve);
                 }
 
                 var converted = bFrames.Select(x => Types.Convert(x.Translation)).ToArray();
@@ -90,7 +105,7 @@ namespace SanAndreasUnity.Importing.Conversion
                         : (converted[next] - converted[prev]) / (nextTime - prevTime);
                 }).ToArray();
 
-                foreach (var translateAxis in translateAxes)
+                foreach (var translateAxis in s_translateAxes)
                 {
                     var positions = bFrames
                         .Select((x, i) => new Keyframe(x.Time * TimeScale,
@@ -115,6 +130,41 @@ namespace SanAndreasUnity.Importing.Conversion
 
             return clip;
         }
+
+//		public static AnimationCurve[] GetAllCurvesForClip (UnityEngine.AnimationClip clip)
+//		{
+//			if (s_curvesPerClip.ContainsKey (clip)) {
+//				return s_curvesPerClip [clip].ToArray ();
+//			} else {
+//				return new AnimationCurve[0];
+//			}
+//		}
+
+		public static void RemovePositionCurves (UnityEngine.AnimationClip clip, FrameContainer frames)
+		{
+
+			foreach (var frame in frames) {
+				
+				string bonePath = frame.Path;
+
+//				foreach (var translateAxis in s_translateAxes) {
+//					clip.SetCurve (bonePath, typeof(Transform), "localPosition." + translateAxis.Name, null);
+//				}
+
+				clip.SetCurve (bonePath, typeof(Transform), "m_LocalPosition", null);
+			}
+
+		}
+
+//		private static void OnCurveAddedToClip (UnityEngine.AnimationClip clip, AnimationCurve curve)
+//		{
+//			if (s_curvesPerClip.ContainsKey (clip)) {
+//				s_curvesPerClip [clip].Add (curve);
+//			} else {
+//				s_curvesPerClip.Add (clip, new List<AnimationCurve> (){ curve });
+//			}
+//		}
+
 
         private class Package
         {

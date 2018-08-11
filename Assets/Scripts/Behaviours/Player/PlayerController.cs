@@ -229,10 +229,8 @@ namespace SanAndreasUnity.Behaviours
 			_player.WeaponHolder.IsAimOn = _player.WeaponHolder.IsHoldingWeapon && Input.GetMouseButton (1);
 			_player.WeaponHolder.IsFireOn = _player.WeaponHolder.IsHoldingWeapon && Input.GetMouseButton (0);
 
-			if (!_player.WeaponHolder.IsAimOn)
+			//if (!_player.WeaponHolder.IsAimOn)
             {
-				// player is not aiming
-
 				// give input to player
 
 				_player.IsJumpOn = Input.GetKey (KeyCode.LeftShift);
@@ -258,6 +256,14 @@ namespace SanAndreasUnity.Behaviours
                	
                 _player.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
                     new Vector3(1f, 0f, 1f)).normalized;
+
+				// player heading should be assigned here, not in Player class, but only if player is not aiming
+				if (!_player.IsAiming) {
+					if (_player.Movement.sqrMagnitude > float.Epsilon) {
+						_player.Heading = _player.Movement;
+					}
+				}
+
             }
 
 

@@ -22,6 +22,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public AnimId LastSecondaryAnimId { get; private set; }
 
+		private readonly AnimId m_invalidAnimId = new AnimId ();
+
 		private UnityEngine.Animation _anim { get; set; }
 		public UnityEngine.Animation AnimComponent { get { return _anim; } }
 
@@ -76,10 +78,15 @@ namespace SanAndreasUnity.Behaviours
 
         private Player _player;
 
-		/// <summary> Speed of the model extracted from animation. </summary>
-        public float Speed { get; private set; }
+		/// <summary> Velocity of the model extracted from animation. </summary>
+		public Vector3 Velocity { get; private set; }
+
+		/// <summary> Velocity axis to use. </summary>
+		public int VelocityAxis { get; set; }
 
 		private Dictionary<AnimationState, List<Transform>> m_mixedTransforms = new Dictionary<AnimationState, List<Transform>>();
+
+		public event System.Action onLateUpdate = delegate {};
 
 
 
@@ -97,15 +104,17 @@ namespace SanAndreasUnity.Behaviours
             if (IsInVehicle)
             {
                 // 'Anchor' pedestrian model into the vehicle
-                Speed = 0.0f;
+				this.Velocity = Vector3.zero;
                 trans.parent.localPosition = VehicleParentOffset;
             }
             else
             {
                 // Store movement defined by animation for pedestrian model
-                Speed = _root.LocalVelocity.z;
+                this.Velocity = _root.LocalVelocity;
                 trans.parent.localPosition = new Vector3(0f, -trans.localPosition.y * .5f, -trans.localPosition.z);
             }
+
+			this.onLateUpdate ();
         }
 
         private void Update()
@@ -158,8 +167,8 @@ namespace SanAndreasUnity.Behaviours
 
             LoadModel(Definition.ModelName, Definition.TextureDictionaryName);
 
-            LastAnimId = default (AnimId);
-			LastSecondaryAnimId = default (AnimId);
+			LastAnimId = m_invalidAnimId;
+			LastSecondaryAnimId = m_invalidAnimId;
 			LastAnimState = null;
 			LastSecondaryAnimState = null;
 
@@ -242,9 +251,12 @@ namespace SanAndreasUnity.Behaviours
                 return null;
 
 			LastAnimId = animId;
-			LastSecondaryAnimId = new AnimId ();
+			LastSecondaryAnimId = m_invalidAnimId;
 			LastAnimState = animState;
 			LastSecondaryAnimState = null;
+
+			// reset velocity axis
+			this.VelocityAxis = 2;
 
 			//animState.layer = 0;
 			RemoveAllMixingTransforms (animState);
@@ -261,7 +273,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public AnimationState PlayAnim (AnimId animId, bool resetModelStateIfAnimChanged, bool resetAnimStateIfAnimChanged)
 		{
-			bool animChanged = !animId.Equals (LastAnimId);
+			bool animChanged = !animId.Equals (LastAnimId) || !m_invalidAnimId.Equals (LastSecondaryAnimId);
 
 			if (resetModelStateIfAnimChanged && animChanged) {
 				this.ResetModelState ();
@@ -297,6 +309,9 @@ namespace SanAndreasUnity.Behaviours
 			if (animsChanged) {
 				//ResetModelState ();
 			}
+
+			// reset velocity axis
+			this.VelocityAxis = 2;
 
 			// play anims
 
