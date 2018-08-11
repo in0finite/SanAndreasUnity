@@ -37,6 +37,7 @@ namespace SanAndreasUnity.UI {
 
 			return
 			"V - Spawn vehicle\n\n" +
+			"F - Flip car\n\n" +
 			"P - Change pedestrian model\n\n" +
 			"W/A/S/D - Move player\n\n" +
 			"Left Shift - Jump / Fly fast\n\n" +

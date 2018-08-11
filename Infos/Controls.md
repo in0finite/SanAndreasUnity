@@ -12,9 +12,9 @@ L Shift - Run / Fly fast
 
 Mouse Scroll - Zoom in / out player camera
 
-F1 - Toggle debug menu
+F1 / Escape - Toggle debug menu
 
-F2 - Open console
+F2 - Open / Close console - Implementing
 
 T - Enable debug flying mode
 

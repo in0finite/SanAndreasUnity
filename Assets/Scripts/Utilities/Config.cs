@@ -55,10 +55,8 @@ namespace SanAndreasUnity.Utilities
 
         static Config()
         {
-            if (!File.Exists(UserFilePath))
-            {
+            if (!File.Exists(UserFilePath) || File.Exists(UserFilePath) && string.IsNullOrEmpty(File.ReadAllText(UserFilePath)))
                 File.WriteAllText(UserFilePath, "{\r\n    // Specify overrides here\r\n}\r\n");
-            }
 
             _substitutions = new Dictionary<string, string>();
 

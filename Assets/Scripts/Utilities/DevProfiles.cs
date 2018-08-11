@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿//#define TESTING
+
+using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
 using System.Linq;
@@ -17,17 +19,53 @@ public class DevProfiles
         {
             if (_obj == null)
                 _obj = DeserializeProfiles();
+
+#if TESTING
+            Debug.LogWarning("_obj null?: "+(_obj == null));
+#endif
+
             return _obj;
         }
     }
 
+#if TESTING
     public static int ActiveProfile
     {
         get
         {
             try
             {
-                return obj[GTAConfig.const_active_dev_profile].ToObject<Dictionary<string, int>>().FirstOrDefault(x => x.Key == SystemInfo.deviceUniqueIdentifier).Value;
+                Debug.Log("Available keys: "+string.Join(", ", obj.Properties().Select(p => p.Name)));
+
+                var a = obj[GTAConfig.const_active_dev_profile];
+
+                Debug.LogWarning("a null?: "+(a == null));
+
+                var b = a.ToObject<int>();
+
+                Debug.LogWarning("b null?: " + (b == null));
+
+                var c = b.FirstOrDefault(x => x.Key == SystemInfo.deviceUniqueIdentifier);
+
+                Debug.LogWarning("c null?: " + (c.Equals(default(IEnumerable<KeyValuePair<string, int>>))));
+
+                return c.Value;
+            }
+            catch(Exception ex)
+            {
+                Debug.LogError(ex.Message);
+                return -1;
+            }
+        }
+    }
+#else
+    public static int ActiveProfile
+    {
+        get
+        {
+            try
+            {
+                return obj[GTAConfig.const_active_dev_profile].ToObject<int>();
             }
             catch
             {
@@ -36,18 +74,27 @@ public class DevProfiles
         }
     }
 
-    public static string ActiveProfilePath
+    /*public static string ActiveProfilePath
     {
         get
         {
             try
             {
-                return GTAConfig.Get<Dictionary<string, string[]>>(GTAConfig.const_dev_profiles).Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[ActiveProfile];
+                return GTAConfig.Get<List<string>>(GTAConfig.const_dev_profiles).Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault().Value[ActiveProfile];
             }
             catch
             {
-				throw new Exception(string.Format("You must set the GTA path, because if not the game won't launch. You can set it manually using this id: '{0}', or setting it with the Editor popup.", SystemInfo.deviceUniqueIdentifier));
+                throw new Exception(string.Format("You must set the GTA path, because if not the game won't launch. You can set it manually using this id: '{0}', or setting it with the Editor popup.", SystemInfo.deviceUniqueIdentifier));
             }
+        }
+    }*/
+#endif
+
+    public static string ActiveProfilePath
+    {
+        get
+        {
+            return GTAConfig.Get<List<string>>(GTAConfig.const_dev_profiles)[ActiveProfile];
         }
     }
 
@@ -57,7 +104,7 @@ public class DevProfiles
         {
             try
             {
-                return _obj[GTAConfig.const_dev_profiles].ToObject<Dictionary<string, string[]>>().Last().Value.Last();
+                return _obj[GTAConfig.const_dev_profiles].ToObject<List<string>>().Last();
             }
             catch
             {
@@ -75,6 +122,11 @@ public class DevProfiles
     private static JObject DeserializeProfiles(out string contents)
     {
         string configPath = GTAConfig.UserFileName;
+
+#if TESTING
+        Debug.Log(configPath);
+#endif
+
         contents = File.ReadAllText(configPath);
 
         return contents.JsonDeserialize<JObject>();
@@ -82,13 +134,9 @@ public class DevProfiles
 
     public static string GetPathFromProfileAt(int index)
     {
-        Dictionary<string, string[]> devs = _obj[GTAConfig.const_dev_profiles].ToObject<Dictionary<string, string[]>>();
-        var dev = devs.Where(x => x.Key == SystemInfo.deviceUniqueIdentifier).FirstOrDefault();
-        if (null == dev.Value)
-            return null;
-        if (index >= dev.Value.Length)
-            return null;
-        return dev.Value[index];
+        List<string> devs = _obj[GTAConfig.const_dev_profiles].ToObject<List<string>>();
+
+        return devs[index];
     }
 
     public static string CheckDevProfiles(Func<string> folderList)
@@ -129,46 +177,38 @@ public class DevProfiles
         return game_path;
     }
 
-    public static void AddNewPath(string path, bool setActive = true, string id = "")
+    public static void AddNewPath(string path, bool setActive = true)
     {
-        if (string.IsNullOrEmpty(id)) id = SystemInfo.deviceUniqueIdentifier;
-
         var objDev = _obj[GTAConfig.const_dev_profiles];
 
-        Dictionary<string, string[]> devs = objDev != null ? objDev.ToObject<Dictionary<string, string[]>>() : new Dictionary<string, string[]>();
-        if (devs.ContainsKey(id))
-        {
-            if (!devs[id].Contains(path)) devs[id] = devs[id].Add(path);
-        }
-        else
-            devs.Add(id, new string[] { path });
+        List<string> devs = objDev != null ? objDev.ToObject<List<string>>() : new List<string>();
 
-        _obj[GTAConfig.const_dev_profiles] = JObject.FromObject(devs);
+        devs.Add(path);
+
+        _obj[GTAConfig.const_dev_profiles] = JArray.FromObject(devs);
 
         if (setActive)
-            SetDevActiveIndex(ref _obj, devs[id].Length - 1);
+            SetDevActiveIndex(ref _obj, devs.Count - 1);
     }
 
-    public static void EditPath(int index, string path, bool setActive = true, string id = "")
+    public static void EditPath(int index, string path, bool setActive = true)
     {
-        if (string.IsNullOrEmpty(id)) id = SystemInfo.deviceUniqueIdentifier;
-
         var objDev = _obj[GTAConfig.const_dev_profiles];
 
         if (objDev == null) return;
 
-        Dictionary<string, string[]> devs = objDev.ToObject<Dictionary<string, string[]>>();
+        List<string> devs = objDev.ToObject<List<string>>();
 
-        if (!devs.ContainsKey(id)) return;
+        if (index > devs.Count) return;
 
         try
         {
-            devs[id][index] = path;
+            devs[index] = path;
 
-            _obj[GTAConfig.const_dev_profiles] = JObject.FromObject(devs);
+            _obj[GTAConfig.const_dev_profiles] = JArray.FromObject(devs);
 
             if (setActive)
-                SetDevActiveIndex(ref _obj, devs[id].Length - 1);
+                SetDevActiveIndex(ref _obj, devs.Count - 1);
         }
         catch
         {
@@ -176,18 +216,9 @@ public class DevProfiles
         }
     }
 
-    public static void SetDevActiveIndex(ref JObject __obj, int index, string id = "")
+    public static void SetDevActiveIndex(ref JObject __obj, int index)
     {
-        if (string.IsNullOrEmpty(id)) id = SystemInfo.deviceUniqueIdentifier;
-        var activeDev = __obj[GTAConfig.const_active_dev_profile];
-
-        var dictDev = activeDev != null ? activeDev.ToObject<Dictionary<string, int>>() : new Dictionary<string, int>();
-        if (dictDev.ContainsKey(id))
-            dictDev[id] = index;
-        else
-            dictDev.Add(id, index);
-
-        __obj[GTAConfig.const_active_dev_profile] = JObject.FromObject(dictDev);
+        __obj[GTAConfig.const_active_dev_profile] = index;
     }
 
     public static bool ExistDevIndex(int index)
@@ -196,7 +227,7 @@ public class DevProfiles
 
         if (devObj == null) return false;
 
-        var devDict = devObj.ToObject<Dictionary<string, string[]>>();
+        var devDict = devObj.ToObject<List<string>>();
 
         if (devDict == null || (devDict != null && devDict.Count == 0)) return false;
 

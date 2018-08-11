@@ -12,16 +12,18 @@ namespace SanAndreasUnity.Utilities
         private const int CHAR_TEXTURE_WIDTH = 6;
         private const string characters = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-        public static void Init()
+        public static TextGizmo Init()
         {
             tg = new TextGizmo();
+
+            return tg;
         }
 
         /* singleton constructor */
 
         private TextGizmo()
         {
-            editorCamera = Camera.current;
+            editorCamera = Camera.main;
             texturePathLookup = new Dictionary<char, string>();
             for (int c = 0; c < characters.Length; c++)
             {
