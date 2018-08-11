@@ -21,7 +21,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
     public class VehicleLights : VehicleBehaviour
     {
-        public const float frontLightIntensity = 1.5f, rearLightIntensity = .7f, lightContactDistance = 5;
+        public const float frontLightIntensity = 1.5f, rearLightIntensity = .7f, lightContactDistance = .7f;
         private bool _isNightToggled;
         public VehicleLight lightType;
 
@@ -235,9 +235,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public override void OnVehicleCollisionEnter(Collision collision)
         {
-            if (isOk && (collision.contacts[0].point - transform.position).sqrMagnitude < lightContactDistance)
+            if (isOk && (collision.contacts[0].point - transform.position).magnitude < lightContactDistance)
             {
-                Debug.LogFormat("{0} has broken!!", lightType);
+                //Debug.LogFormat("{0} has broken!!", lightType);
                 isOk = false;
             }
         }
