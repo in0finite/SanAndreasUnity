@@ -19,10 +19,24 @@ namespace SanAndreasUnity.Importing.Archive
 
     public static class ArchiveManager
     {
+        private static string _dir;
         public static string GameDir
         {
-            //Debug.Log("Path: " + DevProfiles.ActiveProfilePath);
-            get { return DevProfiles.ActiveProfilePath; }
+            get
+            {
+                try
+                {
+                    return DevProfiles.ActiveProfilePath;
+                }
+                catch
+                {
+                    return _dir;
+                }
+            }
+            set
+            {
+                _dir = value;
+            }
         }
 
         public static string ModelsDir { get { return Path.Combine(GameDir, "models"); } }

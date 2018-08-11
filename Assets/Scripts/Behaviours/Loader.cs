@@ -32,6 +32,9 @@ namespace SanAndreasUnity.Behaviours
         private static string[] archivePaths;
         private static IArchive[] archives;
 
+        private static FileBrowser m_fileBrowser;
+        private static bool m_selectedPath;
+
 		public class LoadingStep
 		{
 			public IEnumerator Coroutine { get; private set; }
@@ -127,6 +130,14 @@ namespace SanAndreasUnity.Behaviours
 			var stopwatch = System.Diagnostics.Stopwatch.StartNew ();
 
 			Debug.Log("Started loading GTA");
+
+            if (string.IsNullOrEmpty(ArchiveManager.GameDir))
+            {
+                m_fileBrowser = new FileBrowser(new Rect(5, 5, 600, 500), "Select GTA Path", FileSelectedCallback) { BrowserType = FileBrowserType.Directory };
+                m_fileBrowser.Toggle();
+
+                yield return new WaitUntil(() => m_selectedPath);
+            }
 
 			// wait a few frames - to "unblock" the program, and to let other scripts initialize before
 			// registering their loading steps
@@ -386,36 +397,45 @@ namespace SanAndreasUnity.Behaviours
             if (HasLoaded)
                 return;
 
-			// background
+            // background
 
-			if (CurrentSplashTex != null) {
-				GUIUtils.DrawTextureWithYFlipped (new Rect (0, 0, Screen.width, Screen.height), CurrentSplashTex);
-			} else {
-				GUIUtils.DrawRect (new Rect (0, 0, Screen.width, Screen.height), Color.black);
-			}
+            if (CurrentSplashTex != null)
+            {
+                GUIUtils.DrawTextureWithYFlipped(new Rect(0, 0, Screen.width, Screen.height), CurrentSplashTex);
+            }
+            else
+            {
+                GUIUtils.DrawRect(new Rect(0, 0, Screen.width, Screen.height), Color.black);
+            }
 
-            // display loading progress
+            if (m_fileBrowser != null && !m_selectedPath)
+                m_fileBrowser.OnGUI();
+            else
+            {
+                // display loading progress
 
-			GUILayout.BeginArea(new Rect(10, 5, 400, Screen.height));
+                GUILayout.BeginArea(new Rect(10, 5, 400, Screen.height));
 
-			// current status
-			GUILayout.Label("<size=25>" + LoadingStatus + "</size>");
+                // current status
+                GUILayout.Label("<size=25>" + LoadingStatus + "</size>");
 
-			// progress bar
-			GUILayout.Space (10);
-			DisplayProgressBar ();
+                // progress bar
+                GUILayout.Space(10);
+                DisplayProgressBar();
 
-			// display error
-			if (m_hasErrors) {
-				GUILayout.Space (20);
-				GUILayout.Label("<size=20>" + "The following exception occured during the current step:\n" + "</size>" + m_loadException.ToString ());
-			}
+                // display error
+                if (m_hasErrors)
+                {
+                    GUILayout.Space(20);
+                    GUILayout.Label("<size=20>" + "The following exception occured during the current step:\n" + "</size>" + m_loadException.ToString());
+                }
 
-			// display all steps
-//			GUILayout.Space (10);
-//			DisplayAllSteps ();
+                // display all steps
+                //			GUILayout.Space (10);
+                //			DisplayAllSteps ();
 
-            GUILayout.EndArea();
+                GUILayout.EndArea();
+            }
 
         }
 
@@ -447,5 +467,15 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
+        private static void FileSelectedCallback(string path)
+        {
+            DevProfiles.AddNewPath(path);
+            DevProfiles.SaveChanges();
+
+            // Load this time with this path
+            ArchiveManager.GameDir = path;
+
+            m_selectedPath = true;
+        }
     }
 }

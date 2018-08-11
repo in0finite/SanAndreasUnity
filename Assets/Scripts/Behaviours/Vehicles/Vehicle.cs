@@ -1,32 +1,15 @@
 ﻿using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
-    public enum VehicleLight
-    {
-        FrontLeft = 1,
-        FrontRight = 2,
-
-        RearLeft = 4,
-        RearRight = 8,
-
-        Front = FrontLeft | FrontRight,
-        Rear = RearLeft | RearRight,
-
-        All = Front | Rear
-    }
-
-    public enum VehicleBlinkerMode
-    {
-        None, Left, Right, Emergency
-    }
-
 #if CLIENT
     public partial class Vehicle : Networking.Networkable
 #else
@@ -34,13 +17,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public partial class Vehicle : MonoBehaviour
 #endif
     {
+        public float angularVelocity;
+
         private static int _sLayer = -1;
 
-        [HideInInspector]
-        public Light m_frontLeftLight, m_frontRightLight, m_rearLeftLight, m_rearRightLight;
-
-        private bool frontLeftLightOk = true, frontRightLightOk = true, rearLeftLightOk = true, rearRightLightOk = true,
-                    m_frontLeftLightPowered = true, m_frontRightLightPowered = true, m_rearLeftLightPowered = true, m_rearRightLightPowered = true;
+        public Dictionary<VehicleLight, VehicleLights> m_lightDict = new Dictionary<VehicleLight, VehicleLights>();
 
         private const float blinkerSum = 1.5f;
 
@@ -48,57 +29,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         internal VehicleBlinkerMode blinkerMode;
 
-        public bool m_frontLeftLightOk
-        {
-            get
-            {
-                return frontLeftLightOk;
-            }
-            set
-            {
-                frontLeftLightOk = value;
-                SetLight(VehicleLight.FrontLeft, value ? 1 : 0);
-            }
-        }
-
-        public bool m_frontRightLightOk
-        {
-            get
-            {
-                return frontRightLightOk;
-            }
-            set
-            {
-                frontRightLightOk = value;
-                SetLight(VehicleLight.FrontRight, value ? 1 : 0);
-            }
-        }
-
-        public bool m_rearLeftLightOk
-        {
-            get
-            {
-                return rearLeftLightOk;
-            }
-            set
-            {
-                rearLeftLightOk = value;
-                SetLight(VehicleLight.RearLeft, value ? 1 : 0);
-            }
-        }
-
-        public bool m_rearRightLightOk
-        {
-            get
-            {
-                return rearRightLightOk;
-            }
-            set
-            {
-                rearRightLightOk = value;
-                SetLight(VehicleLight.RearRight, value ? 1 : 0);
-            }
-        }
+        private bool hasInit;
 
         public static int Layer
         {
@@ -132,28 +63,30 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private readonly int[] _colors = { 0, 0, 0, 0 };
         private readonly float[] _lights = { 1f, 1f, 1f, 1f };
         private MaterialPropertyBlock _props;
-        private bool _colorsChanged, _isNightToggled;
+        private bool _colorsChanged;
 
-        private const float constRearNightIntensity = .7f;
+        private VehicleController _controller;
 
-        public bool IsNightToggled
+        private List<VehicleBehaviour> behaviours;
+
+        // Doors
+        private IEnumerable<VehicleDoor> vehicleDoors;
+
+        private float _doorTimer;
+        private string doorStats;
+        private bool moreThan2Doors;
+
+        private const float doorDisplayInterval = .3f;
+
+        private bool hasRearBrightness
         {
             get
             {
-                return _isNightToggled;
-            }
-            set
-            {
-                _isNightToggled = value;
-
-                SetLight(VehicleLight.FrontLeft, _isNightToggled ? VehicleAPI.frontLightIntensity : 0);
-                SetLight(VehicleLight.FrontRight, _isNightToggled ? VehicleAPI.frontLightIntensity : 0);
-                SetLight(VehicleLight.RearLeft, _isNightToggled ? constRearNightIntensity : 0);
-                SetLight(VehicleLight.RearRight, _isNightToggled ? constRearNightIntensity : 0);
+                if (hasInit)
+                    return m_lightDict[VehicleLight.RearLeft].lightComponent.intensity > 0 || m_lightDict[VehicleLight.RearRight].lightComponent.intensity > 0;
+                return false;
             }
         }
-
-        private VehicleController _controller;
 
 #if CLIENT
         protected override void OnAwake()
@@ -182,45 +115,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
-        private Light GetLight(VehicleLight light)
+        public Light GetLight(VehicleLight light)
         {
-            //if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
-            switch (light)
-            {
-                case VehicleLight.FrontLeft:
-                    return m_frontLeftLight;
+            if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
 
-                case VehicleLight.FrontRight:
-                    return m_frontRightLight;
-
-                case VehicleLight.RearLeft:
-                    return m_rearLeftLight;
-
-                case VehicleLight.RearRight:
-                    return m_rearRightLight;
-            }
-
-            return null;
+            return m_lightDict[light].lightComponent;
         }
 
-        private bool IsLightOk(VehicleLight light)
+        public bool IsLightOk(VehicleLight light)
         {
-            switch (light)
-            {
-                case VehicleLight.FrontLeft:
-                    return m_frontLeftLightOk;
+            if (light == VehicleLight.All || light == VehicleLight.Front || light == VehicleLight.Rear) throw new System.Exception("Light must be right or left, can't be general!");
 
-                case VehicleLight.FrontRight:
-                    return m_frontRightLightOk;
-
-                case VehicleLight.RearLeft:
-                    return m_rearLeftLightOk;
-
-                case VehicleLight.RearRight:
-                    return m_rearRightLightOk;
-            }
-
-            return true;
+            return m_lightDict[light].canPower;
         }
 
         private bool IsAnyLightPowered()
@@ -230,46 +136,33 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return false;
         }
 
-        public void SetLight(VehicleLight light, float brightness)
+        public void SetLight(int index, float brightness)
         {
-            brightness = Mathf.Clamp01(brightness);
+            if (_lights[index] == brightness) return; // Avoid flooding at light events
 
+            _lights[index] = brightness;
+            _colorsChanged = true;
+        }
+
+        public void SetMultipleLights(VehicleLight light, float brightness)
+        {
             for (var i = 0; i < 4; ++i)
             {
                 var bit = 1 << i;
                 if (((int)light & bit) == bit)
                 {
-                    VehicleLight parsedLight = (VehicleLight)bit; //VehicleAPI.ParseFromBit(i);
-
-                    if (IsLightOk(parsedLight))
+                    if (hasInit)
                     {
-                        Light lightObj = GetLight(parsedLight);
-                        bool mustRearPower = _isNightToggled && !VehicleAPI.IsFrontLight(light);
+                        VehicleLight parsedLight = (VehicleLight)bit;
+                        VehicleLights lights = m_lightDict[parsedLight];
+                        float bright = lights.isOk && lights.isRear && WorldController.IsNight ? VehicleLights.rearLightIntensity : brightness;
 
-                        if (brightness > 0 || mustRearPower)
-                        {
-                            if (lightObj != null && !lightObj.enabled)
-                            {
-                                lightObj.enabled = true;
-                                lightObj.intensity = mustRearPower ? constRearNightIntensity : brightness;
-                            }
-                        }
-                        else
-                        {
-                            if (lightObj != null) lightObj.enabled = false;
-                        }
-
-                        SetLight(i, mustRearPower ? constRearNightIntensity : brightness);
+                        if (lights.canPower) lights.SetLight(brightness);
                     }
+                    else
+                        SetLight(i, brightness);
                 }
             }
-        }
-
-        private void SetLight(int index, float brightness)
-        {
-            if (_lights[index] == brightness) return;
-            _lights[index] = brightness;
-            _colorsChanged = true;
         }
 
         public VehicleDef Definition { get; private set; }
@@ -281,12 +174,54 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public bool IsControlling { get { return _controller != null; } }
 
         public VehicleController StartControlling()
-        {
-            SetAllCarLights();
+        { // Must review: Maybe can cause some leaks
+            behaviours = new List<VehicleBehaviour>();
+
+            behaviours.AddRange(SetAllCarLights());
+
+            vehicleDoors = SetAllDoors().Cast<VehicleDoor>();
+            behaviours.AddRange(vehicleDoors);
+            SetAllCollider(behaviours.ToArray());
+
+            hasInit = true;
+
             return _controller ?? (_controller = gameObject.AddComponent<VehicleController>());
         }
 
-        public void SetAllCarLights()
+        public void SetAllCollider(VehicleBehaviour[] vehicleBehaviour)
+        {
+            //Set collider detector on the same place that Rigidbody
+            VehicleCollider.Init(gameObject, this, vehicleBehaviour);
+        }
+
+        public IEnumerable<VehicleBehaviour> SetAllDoors()
+        {
+            Transform FrontLeftDoor = this.GetComponentWithName<Transform>("door_lf_dummy"),
+                      FrontRightDoor = this.GetComponentWithName<Transform>("door_rf_dummy"),
+                      RearLeftDoor = this.GetComponentWithName<Transform>("door_lr_dummy"),
+                      RearRightDoor = this.GetComponentWithName<Transform>("door_rr_dummy");
+
+            bool IsTwoDoorsVehicle = RearLeftDoor == null && RearRightDoor == null;
+
+            List<Transform> doors = new List<Transform>();
+
+            doors.Add(FrontLeftDoor);
+            doors.Add(FrontRightDoor);
+
+            if (!IsTwoDoorsVehicle)
+            {
+                doors.Add(RearLeftDoor);
+                doors.Add(RearRightDoor);
+            }
+
+            foreach (Transform door in doors)
+            {
+                // Initializate VehicleDoor script here
+                yield return VehicleDoor.Init(door, this, false);
+            }
+        }
+
+        public IEnumerable<VehicleBehaviour> SetAllCarLights()
         {
             // Implemented: Add lights
 
@@ -297,20 +232,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (headlights != null)
             {
-                m_frontLeftLight = VehicleAPI.SetCarLight(vh, headlights, VehicleLight.FrontLeft);
-                m_frontRightLight = VehicleAPI.SetCarLight(vh, headlights, VehicleLight.FrontRight);
+                yield return VehicleLights.Init(headlights, vh, VehicleLight.FrontLeft);
+                yield return VehicleLights.Init(headlights, vh, VehicleLight.FrontRight);
             }
 
             if (taillights != null)
             {
-                m_rearLeftLight = VehicleAPI.SetCarLight(vh, taillights, VehicleLight.RearLeft);
-                m_rearRightLight = VehicleAPI.SetCarLight(vh, taillights, VehicleLight.RearRight);
+                yield return VehicleLights.Init(taillights, vh, VehicleLight.RearLeft);
+                yield return VehicleLights.Init(taillights, vh, VehicleLight.RearRight);
             }
-
-            m_frontLeftLightOk = m_frontLeftLight != null;
-            m_frontRightLightOk = m_frontRightLight != null;
-            m_rearLeftLightOk = m_rearLeftLight != null;
-            m_rearRightLightOk = m_rearRightLight != null;
         }
 
         public SeatAlignment FindClosestSeat(Vector3 position)
@@ -404,33 +334,29 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (HasDriver)
             {
-                if(Input.GetKeyDown(KeyCode.F))
+                // Flip car
+                if (Input.GetKeyDown(KeyCode.F))
                 {
-                    if(Vector3.Dot(transform.up, Vector3.down) > 0)
+                    if (Vector3.Dot(transform.up, Vector3.down) > 0)
                     {
                         transform.position += Vector3.up * 1.5f;
                         transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 0);
                     }
                 }
 
-                if (Input.GetKeyDown(KeyCode.L))
-                {
-                    m_frontLeftLightPowered = !m_frontLeftLight;
-                    m_frontRightLightPowered = !m_frontRightLightPowered;
-
-                    SetLight(VehicleLight.FrontLeft, m_frontLeftLightPowered ? VehicleAPI.frontLightIntensity : 0);
-                    SetLight(VehicleLight.FrontRight, m_frontRightLightPowered ? VehicleAPI.frontLightIntensity : 0);
-                }
-
                 if (Braking > 0.125f)
-                    SetLight(VehicleLight.Rear, 1f);
+                    SetMultipleLights(VehicleLight.Rear, 1f);
                 else
-                    SetLight(VehicleLight.Rear, 0f);
+                {
+                    //if(hasRearBrightness)
+                    SetMultipleLights(VehicleLight.Rear, 0f);
+                }
             }
             else
             {
                 if (IsAnyLightPowered())
-                    SetLight(VehicleLight.All, 0f);
+                    SetMultipleLights(VehicleLight.All, 0f);
+
                 Braking = 1f;
             }
 
@@ -442,8 +368,31 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void FixedUpdate()
         {
+            //angularVelocity = GetComponent<Rigidbody>().angularVelocity.magnitude;
+
             //    NetworkingFixedUpdate();
             PhysicsFixedUpdate();
+        }
+
+        private void OnGUI()
+        {
+            if (HasDriver)
+            {
+                if (Time.time - _doorTimer > doorDisplayInterval)
+                {
+                    moreThan2Doors = vehicleDoors.Count() > 2;
+                    doorStats = string.Format("Doors: {0}",
+                        string.Join(" | ", vehicleDoors.Select((x, i) =>
+                        string.Format("({0}) {1}{2}", x.transform.name.Substring(5, 2).ToUpper(), x.LockHealth.ToString("F2"), moreThan2Doors && i == 1 ? Environment.NewLine : ""))));
+                    _doorTimer = Time.time;
+                }
+
+                GUI.BeginGroup(new Rect(Screen.width - 205, Screen.height - 205 - 50, 200, 200));
+                GUI.Box(new Rect(0, 0, 200, 200), "");
+                GUI.Label(new Rect(5, 5, 200, 35), "Vehicle Stats", new GUIStyle("label") { fontSize = 30, fontStyle = FontStyle.Bold });
+                GUI.Label(new Rect(5, 45, 200, moreThan2Doors ? 40 : 20), doorStats);
+                GUI.EndGroup();
+            }
         }
 
         private IEnumerator DelayedBlinkersTurnOff()

@@ -1,8 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿//#define TESTING
+
+using Cadenza.Collections;
+using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class ZoneHelpers
 {
@@ -392,77 +402,447 @@ public class SZone
 {
     public Vector3 vmin, vmax;
 
-	public Vector2 minPos2D { get { return new Vector2 (this.vmin.x, this.vmin.z); } }
-	public Vector2 maxPos2D { get { return new Vector2 (this.vmax.x, this.vmax.z); } }
-	public Vector3 centerPos { get { return (this.vmin + this.vmax) * 0.5f; } }
+    public Vector2 minPos2D { get { return new Vector2(this.vmin.x, this.vmin.z); } }
+    public Vector2 maxPos2D { get { return new Vector2(this.vmax.x, this.vmax.z); } }
+    public Vector3 centerPos { get { return (this.vmin + this.vmax) * 0.5f; } }
 
-	public float volume { get { Vector3 size = this.vmax - this.vmin; return size.x * size.y * size.z; } }
-	public float squaredSize { get { Vector2 size = this.maxPos2D - this.minPos2D; return size.x * size.y; } }
+    public float volume { get { Vector3 size = this.vmax - this.vmin; return size.x * size.y * size.z; } }
+    public float squaredSize { get { Vector2 size = this.maxPos2D - this.minPos2D; return size.x * size.y; } }
 
-	public string name;
+    public string name;
 
-	public const string defaultZoneName = "San Andreas";
+    public float m_lightPollution, m_temperature;
+    public bool m_calculated;
 
-	public static SZone[] AllZones { get { return ZoneHelpers.zoneInfoList; } }
+    public const string defaultZoneName = "San Andreas";
 
+    public static SZone[] AllZones { get { return ZoneHelpers.zoneInfoList; } }
 
-	public SZone (int x1, int z1, int y1, int x2, int z2, int y2, string n)
-	{
-		vmin = new Vector3 (x1, y1, z1);
-		vmax = new Vector3 (x2, y2, z2);
-		name = n;
-	}
+    public SZone(int x1, int z1, int y1, int x2, int z2, int y2, string n)
+    {
+        vmin = new Vector3(x1, y1, z1);
+        vmax = new Vector3(x2, y2, z2);
+        name = n;
+    }
 
-	public static string GetZoneName (SZone[] sZones, Vector3 worldPos)
-	{
-		try {
-			return sZones.Where (x => worldPos.IsInside (x.vmin, x.vmax))
-			//	.Select (x => new { Center = x.centerPos, Zone = x })
-			//	.OrderBy (x => Vector3.Distance (worldPos, x.Center))
-				.OrderBy(x => x.volume)
-			//	.Select (x => x.Zone)
-				.FirstOrDefault ()
-				.name;
-		} catch {
-			return defaultZoneName;
-		}
-	}
+    public static string GetZoneName(SZone[] sZones, Vector3 worldPos)
+    {
+        try
+        {
+            return sZones.Where(x => worldPos.IsInside(x.vmin, x.vmax))
+                //	.Select (x => new { Center = x.centerPos, Zone = x })
+                //	.OrderBy (x => Vector3.Distance (worldPos, x.Center))
+                .OrderBy(x => x.volume)
+                //	.Select (x => x.Zone)
+                .FirstOrDefault()
+                .name;
+        }
+        catch
+        {
+            return defaultZoneName;
+        }
+    }
 
-	public static string GetZoneName (SZone[] sZones, Vector2 worldPos2D)
-	{
-		try {
-			return sZones.Where (x => IsInside( worldPos2D, x ))
-			//	.Select (x => new { Center = (x.minPos2D + x.maxPos2D) * 0.5f, Zone = x })
-			//	.OrderBy (x => Vector2.Distance (worldPos2D, x.Center))
-				.OrderBy( x => x.squaredSize )
-			//	.Select (x => x.Zone)
-				.FirstOrDefault ()
-				.name;
-		} catch {
-			return defaultZoneName;
-		}
-	}
+    public static string GetZoneName(SZone[] sZones, Vector2 worldPos2D)
+    {
+        try
+        {
+            return sZones.Where(x => IsInside(worldPos2D, x))
+                //	.Select (x => new { Center = (x.minPos2D + x.maxPos2D) * 0.5f, Zone = x })
+                //	.OrderBy (x => Vector2.Distance (worldPos2D, x.Center))
+                .OrderBy(x => x.squaredSize)
+                //	.Select (x => x.Zone)
+                .FirstOrDefault()
+                .name;
+        }
+        catch
+        {
+            return defaultZoneName;
+        }
+    }
 
-	public static string GetZoneName( Vector3 worldPos, bool use2DPos = false ) {
-		if (use2DPos)
-			return GetZoneName (worldPos.ToVec2WithXAndZ ());
-		return GetZoneName (ZoneHelpers.zoneInfoList, worldPos);
-	}
+    public static string GetZoneName(Vector3 worldPos, bool use2DPos = false)
+    {
+        if (use2DPos)
+            return GetZoneName(worldPos.ToVec2WithXAndZ());
+        return GetZoneName(ZoneHelpers.zoneInfoList, worldPos);
+    }
 
-	public static string GetZoneName( Vector2 worldPos2D ) {
-		return GetZoneName (ZoneHelpers.zoneInfoList, worldPos2D);
-	}
+    public static string GetZoneName(Vector2 worldPos2D)
+    {
+        return GetZoneName(ZoneHelpers.zoneInfoList, worldPos2D);
+    }
 
-	public static bool IsInside(Vector2 pos, SZone zone) {
-		return pos.x >= zone.vmin.x && pos.x <= zone.vmax.x && pos.y >= zone.vmin.z && pos.y <= zone.vmax.z;
-	}
+    public static bool IsInside(Vector2 pos, SZone zone)
+    {
+        return pos.x >= zone.vmin.x && pos.x <= zone.vmax.x && pos.y >= zone.vmin.z && pos.y <= zone.vmax.z;
+    }
 
+    public Rect ToRect()
+    {
+        return new Rect(minPos2D.x, minPos2D.y, maxPos2D.x, maxPos2D.y);
+    }
+
+    public Vector2 ToVector()
+    {
+        return minPos2D;
+    }
 }
+
+public enum GroundType { Building, Asphalt, LightPavement, Pavement, Grass, DryGrass, Sand, Dirt, Mud, Water, Rails, Tunnel }
 
 public static class ZHelpers
 {
+    public static Dictionary<GroundType, Color> mapColors = new Dictionary<GroundType, Color>()
+    {
+        { GroundType.Building, Color.white },
+        { GroundType.Asphalt, Color.black },
+        { GroundType.LightPavement, new Color32(206, 207, 206, 255) },
+        { GroundType.Pavement, new Color32(156, 154, 156, 255) },
+        { GroundType.Grass, new Color32(57, 107, 41, 255) },
+        { GroundType.DryGrass, new Color32(123, 148, 57, 255) },
+        { GroundType.Sand, new Color32(231, 190, 107, 255) },
+        { GroundType.Dirt, new Color32(156, 134, 115, 255) },
+        { GroundType.Mud, new Color32(123, 101, 90, 255) },
+        { GroundType.Water, new Color32(115, 138, 173, 255) },
+        { GroundType.Rails, new Color32(74, 4, 0, 255) },
+        { GroundType.Tunnel, new Color32(107, 105, 99, 255) }
+    };
+
+    public static Dictionary<int, string> indexMeaning = new Dictionary<int, string>()
+    {
+        { 0, "Light pollution" },
+        { 1, "Temperature" }
+    };
+
+    private static bool AreStatsCalculated, IsStatsTaskFinished;
+    private static int m_zonesLoaded = 0;
+
+    private const float threshold = .9f;
+    private static Rect _mapDims;
+
+    private static Task m_statsCalculation;
+    private static CancellationTokenSource m_taskCancellation = new CancellationTokenSource();
+
+    private static Action<SZone, int, float> m_zoneAction;
+
+    private static StringBuilder logger = new StringBuilder();
+    private static Stopwatch m_statsMeasurement;
+
+    public static Rect mapDimensions
+    {
+        get
+        {
+            if (_mapDims == default(Rect))
+                _mapDims = GetMapDimension();
+
+            return _mapDims;
+        }
+    }
+
+    private static Vector2 mapFactor
+    {
+        get
+        {
+            return new Vector2((MiniMap.texSize * MiniMap.tileEdge) / (Mathf.Abs(mapDimensions.x) + mapDimensions.width), (MiniMap.texSize * MiniMap.tileEdge) / (Mathf.Abs(mapDimensions.y) + mapDimensions.height));
+        }
+    }
+
+    public static string Separator { get { return new string('-', 30); } }
+
     public static bool IsInside(this Vector3 p, Vector3 vmin, Vector3 vmax)
     {
         return p.x >= vmin.x && p.x <= vmax.x && p.y >= vmin.y && p.y <= vmax.y && p.z >= vmin.z && p.z <= vmax.z;
     }
+
+    public static Vector2 GetMapCoord(Vector2 zoneCoord)
+    {
+        return new Vector2((Mathf.Abs(mapDimensions.x) + zoneCoord.x) * mapFactor.x, (Mathf.Abs(mapDimensions.y) + zoneCoord.y) * mapFactor.y);
+    }
+
+    public static Rect GetMapRect(Rect zoneRect)
+    {
+        Rect r = new Rect((Mathf.Abs(mapDimensions.x) + zoneRect.x) * mapFactor.x, (Mathf.Abs(mapDimensions.y) + zoneRect.y) * mapFactor.y,
+                        (mapDimensions.width - zoneRect.width) * mapFactor.x, (mapDimensions.height - zoneRect.height) * mapFactor.y);
+
+        return r;
+    }
+
+    private static Rect GetMapDimension()
+    {
+        float min_x = SZone.AllZones.Min(z => z.vmin.x), min_y = SZone.AllZones.Min(z => z.vmin.y), min_z = SZone.AllZones.Min(z => z.vmin.z),
+              max_x = SZone.AllZones.Max(z => z.vmax.x), max_y = SZone.AllZones.Max(z => z.vmax.y), max_z = SZone.AllZones.Max(z => z.vmax.z);
+
+        return new Rect(min_x, min_z, max_x, max_z);
+    }
+
+    public static void CalculateZoneStats(ColorFloatDictionary starColors, ColorFloatDictionary weatherColors)
+    {
+        Debug.Log("Starting calculating zones stats!");
+
+        m_statsMeasurement = Stopwatch.StartNew();
+        m_statsCalculation = Task.Factory.StartNew(() => CalculateZoneStats(new ColorFloatDictionary[] { starColors, weatherColors }), m_taskCancellation.Token)
+            .ContinueWith(FinishedStats);
+    }
+
+    private static void FinishedStats(Task<bool> t)
+    {
+        if (t.Result)
+        {
+            m_statsMeasurement.Stop();
+
+            logger.AppendFormat("Time spent on calculating zone stats: {0} ms", m_statsMeasurement.ElapsedMilliseconds.ToString("F2"));
+            File.WriteAllText(Path.Combine(Application.streamingAssetsPath, "ZoneStats.txt"), logger.ToString());
+        }
+
+        IsStatsTaskFinished = true;
+    }
+
+    public static bool CalculateZoneStats(ColorFloatDictionary[] vals, bool debugging = true)
+    {
+        List<int> areSame = new List<int>();
+        ColorFloatDictionary firstVal = vals[0];
+
+        for (int i = 1; i < vals.Length; ++i)
+            if (firstVal.Keys == vals[i])
+            {
+                areSame.Add(i);
+            }
+
+        bool isIdentical = areSame.Count == vals.Length;
+
+        IEnumerable<Color> uColors = isIdentical ? vals[0].Keys : null;
+        Color[] colors = MiniMap.Instance.MapColors;
+
+        Stopwatch sw = Stopwatch.StartNew();
+
+        string m_startedWith = string.Format("Starting Parallel work with {0} color dictionaries and {1} pixels!\nEach one contains {2} colors", vals.Length, colors.Length, string.Join(", ", vals.Select(x => x.Keys.Count.ToString())));
+        Debug.Log(m_startedWith);
+        if (debugging)
+        {
+            logger.AppendLine(m_startedWith.Replace("\n", Environment.NewLine));
+            logger.AppendLine();
+        }
+
+        if (debugging)
+        {
+            int m = 0;
+            foreach (ColorFloatDictionary v in vals)
+            {
+                logger.AppendFormat("The colors for the dictionary #{0}:{2}{2}{1}", m, string.Join(Environment.NewLine, v.Select(x => string.Format("K: {0} | V: {1}", x.Key, x.Value))), Environment.NewLine);
+                logger.AppendLine();
+                ++m;
+            }
+        }
+
+        long lastSw = 0;
+
+        // Parallel.ForEach
+        SZone.AllZones.ForEach(zone =>
+        {
+            Rect mapRect = GetMapRect(zone.ToRect());
+
+            if (debugging)
+            {
+                if (m_zonesLoaded > 0)
+                {
+                    logger.AppendLine();
+                    logger.AppendLine(Separator);
+                    logger.AppendLine();
+                }
+
+                logger.AppendLine();
+                logger.AppendFormat("Started with '{0}' zone ({1} pixels)", zone.name, mapRect.GetPixelCount());
+                logger.AppendLine();
+            }
+
+#if TESTING
+            if (mapRect.GetPixelCount() > 10000000)
+            {
+                if (debugging) Debug.LogFormat("Buggy zone {0} (R: {1}; C: {2})", zone.name, mapRect, mapRect.GetPixelCount());
+                yield return null;
+                continue;
+            }
+#endif
+
+            try
+            {
+                IEnumerable<Color> pixels = colors.Cut((int)mapRect.x, (int)mapRect.y, (int)mapRect.width, (int)mapRect.height);
+
+                if (debugging)
+                {
+                    logger.AppendFormat("[{0}] Cut ellapsed: {1}", zone.name, (sw.ElapsedMilliseconds - lastSw) + " ms");
+                    logger.AppendLine();
+                    lastSw = sw.ElapsedMilliseconds;
+                }
+
+                if (pixels == null || (pixels != null && pixels.Count() == 0))
+                {
+                    logger.AppendFormat("There wasn't pixels! ({0} -- R: {1})", zone.name, mapRect);
+                    logger.AppendLine();
+                }
+
+#if TESTING
+                int count = pixels.Length;
+                pixels.RemoveAll(x => x == null);
+                count -= pixels.Length;
+
+                if (debugging) Debug.LogFormat("There was {0} null pixels!", count);
+#endif
+
+                if (isIdentical)
+                {
+                    IEnumerable<ColorDistinction> c = GetDistinctColors(uColors, sw, pixels, debugging);
+
+                    for (int w = 0; w < vals.Length; ++w)
+                        CallColorAction(zone, vals, c, w, ref sw, mapRect, debugging);
+                }
+                else
+                {
+                    IEnumerable<SameIndexes> sameIndexes = GenerateSameIndexes(areSame, vals.Length);
+
+                    foreach (SameIndexes index in sameIndexes)
+                    {
+                        IEnumerable<ColorDistinction> c = GetDistinctColors(vals[index.indexes.FirstOrDefault()].Keys, sw, pixels, debugging);
+
+                        foreach (int w in index.indexes)
+                            CallColorAction(zone, vals, c, w, ref sw, mapRect, debugging);
+                    }
+                }
+
+                if (m_zonesLoaded < SZone.AllZones.Length) ++m_zonesLoaded; //Interlocked.Increment(ref m_zonesLoaded);
+
+                if (m_zonesLoaded == SZone.AllZones.Length - 1)
+                    colors = null;
+
+                sw = Stopwatch.StartNew();
+            }
+            catch (Exception ex)
+            {
+                logger.AppendFormat("There was a problem with the zone called {0}", zone.name);
+                logger.AppendLine(ex.Message);
+                logger.AppendLine();
+                return;
+            }
+        });
+
+        sw.Stop();
+
+        return debugging;
+    }
+
+    private static IEnumerable<ColorDistinction> GetDistinctColors(IEnumerable<Color> uColors, Stopwatch sw, IEnumerable<Color> pixels, bool debugging = true)
+    {
+        var t = pixels.Select(x => x.ColorMultiThreshold(uColors, threshold));
+
+        var c = t.GroupBy(x => x)
+                 .Select(g => new ColorDistinction { Value = g.Key, Count = g.Count() });
+
+        //if (debugging || c.Count() == 0)
+        //    Debug.LogErrorFormat("Color distiction is null!\nPixels: {0}; MultiThreshold: {1}", pixels.Count(), t.Count());
+
+        return c;
+    }
+
+    private static void CallColorAction(SZone zone, ColorFloatDictionary[] vals, IEnumerable<ColorDistinction> c, int w, ref Stopwatch sw, Rect mapRect, bool debugging = true)
+    {
+        float val = c.Sum(x => x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)) / mapRect.GetPixelCount();
+        if (debugging)
+        {
+            logger.AppendLine(Separator);
+            logger.AppendFormat("Starting color debugging for {0}:", zone.name);
+            logger.AppendLine();
+            DebuggingColors(c, vals, w, val, zone);
+            logger.AppendLine(Separator);
+            logger.AppendLine();
+        }
+
+        sw.Stop();
+
+        if (debugging)
+        {
+            logger.AppendFormat("{0} in {1} is {2}! (Loaded in {3} ms)", indexMeaning[w], zone.name, zone.m_lightPollution.ToString("F2"), sw.ElapsedMilliseconds.ToString("F2"));
+            logger.AppendLine();
+        }
+
+        m_zoneAction(zone, w, val);
+    }
+
+    private static void DebuggingColors(IEnumerable<ColorDistinction> c, ColorFloatDictionary[] vals, int w, float val, SZone zone, bool debugSum = false)
+    {
+        logger.AppendFormat("Value: {0}; Zone: {1}; Index: {2}\n\n{3}", val, zone.name, w, string.Join(Environment.NewLine, c.Select(x => string.Format("{0}: {1} => Sum: {1} * {2} = {3}", mapColors.FirstOrDefault(n => n.Value == x.Value).Key.ToString(), x.Count, (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0), x.Count * (vals[w].ContainsKey(x.Value) ? vals[w][x.Value] : 0)))));
+        if (debugSum) logger.AppendFormat("Sum: {0}; Count: {1}", val, c.Count());
+        logger.AppendLine();
+    }
+
+    private static IEnumerable<SameIndexes> GenerateSameIndexes(IEnumerable<int> sameIndexes, int totalLength)
+    {
+        for (int i = 0; i < totalLength; ++i)
+        {
+            if (!sameIndexes.Contains(i))
+                yield return new SameIndexes() { indexes = (new int[] { i }).AsEnumerable() };
+        }
+
+        yield return new SameIndexes() { indexes = sameIndexes };
+    }
+
+    public static void Awake()
+    {
+        m_zoneAction = (zone, i, val) =>
+        {
+            if (i == 0)
+                zone.m_lightPollution = val;
+            else
+                zone.m_temperature = val;
+
+            zone.m_calculated = true;
+        };
+    }
+
+    public static void Start()
+    {
+    }
+
+    public static void Update()
+    {
+        if (MiniMap.Instance.MapTexture != null && !AreStatsCalculated)
+        {
+            CalculateZoneStats(StarController.Instance.GetMap(), WeatherController.Instance.GetMap());
+            AreStatsCalculated = true;
+        }
+    }
+
+    public static void OnGUI()
+    {
+        if (!Loader.HasLoaded) return;
+
+        float p = (float)m_zonesLoaded / SZone.AllZones.Length;
+
+        if (!IsStatsTaskFinished)
+        {
+            GUI.Label(new Rect(5, Screen.height - 45, 450, 25), string.Format("Loaded {0} of {1} zones ({2}%) -- Current: {3}", m_zonesLoaded, SZone.AllZones.Length, (p * 100f).ToString("F2"), SZone.AllZones[Mathf.Clamp(m_zonesLoaded, 0, SZone.AllZones.Length - 1)].name));
+            GUIUtils.DrawBar(new Rect(5, Screen.height - 20, 350, 15), p, new Vector4(200, 200, 200, 255) / 256.0f, new Vector4(128, 128, 128, 255) / 256.0f, 2f);
+        }
+    }
+
+    public static void OnDisable()
+    {
+        if (m_statsCalculation != null && m_taskCancellation != null)
+            m_taskCancellation.Cancel();
+    }
+
+    public static void OnApplicationQuit()
+    {
+    }
+}
+
+public class ColorDistinction
+{
+    public Color Value;
+    public int Count;
+}
+
+public class SameIndexes
+{
+    public IEnumerable<int> indexes;
 }

@@ -3,7 +3,9 @@ using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Utilities;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
@@ -108,7 +110,7 @@ namespace SanAndreasUnity.Behaviours
                     _zName = SZone.GetZoneName(ZoneHelpers.zoneInfoList, playerPos);
                 }
 
-                return _zName;
+                return string.IsNullOrEmpty(_zName) ? SZone.defaultZoneName : _zName;
             }
         }
 
@@ -123,6 +125,8 @@ namespace SanAndreasUnity.Behaviours
         public Texture2D BlackPixel { get { return this.blackPixel; } }
 
         public Texture2D SeaPixel { get { return this.seaPixel; } }
+
+        public Color[] MapColors { get; set; }
 
         #endregion "Properties"
 
@@ -163,6 +167,7 @@ namespace SanAndreasUnity.Behaviours
             }
 
             Debug.Log("Merging all map sprites into one sprite.");
+
             for (int i = 0; i < tileCount; i++)
             {
                 // Offset
@@ -193,6 +198,8 @@ namespace SanAndreasUnity.Behaviours
                         mapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
             }
 
+            MapColors = GetMapColors(mapTexture);
+
             Debug.Log("Finished merging minimap!");
             mapTexture.Apply();
             mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
@@ -208,6 +215,14 @@ namespace SanAndreasUnity.Behaviours
             waypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
 
             Debug.Log("Finished loading minimap textures!");
+        }
+
+        private static Color[] GetMapColors(Texture2D mapTexture)
+        {
+            //for (int x = 0; x < mapSize; ++x)
+            //    for (int y = 0; y < mapSize; ++y)
+            //yield 
+                return mapTexture.GetPixels(0,0, mapSize, mapSize); //mapSize - y - 1);
         }
 
         // --------------------------------
@@ -610,6 +625,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnGUI()
         {
+            if (!Loader.HasLoaded) return;
             if (!isReady || !toggleInfo) return;
 
             if (!toggleMap)
@@ -663,16 +679,13 @@ namespace SanAndreasUnity.Behaviours
                 GUILayout.BeginArea(new Rect(mapScroll, mapRect * curZoom));
 
                 GUI.DrawTexture(new Rect(mapZoomPos, mapRect * curZoom), mapTexture);
-                //if (Event.current.type.Equals(EventType.Repaint))
-                //GUI.DrawTexture(new Rect(10, 10, 100, 100), mapTexture);
 
                 GUI.DrawTexture(new Rect(Vector2.zero, Vector2.one * 16), blackPixel);
 
                 // WIP: I have to load move cursor
-                // WIP: I have to load map bars
                 // WIP: I have to load marker
-                // WIP: Draw player pointer & undescovered zones
-                // + drag & drop
+                // WIP: Dont draw undescovered zones
+                // + drag & drop + scroll w/ mouse
 
                 GUILayout.EndArea();
                 GUILayout.EndArea();

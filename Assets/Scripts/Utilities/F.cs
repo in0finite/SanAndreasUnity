@@ -3,12 +3,15 @@ using SanAndreasUnity.Behaviours.Vehicles;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Random = System.Random;
 
 namespace SanAndreasUnity.Utilities
 {
@@ -595,6 +598,145 @@ namespace SanAndreasUnity.Utilities
 
 			return texture;
 		}
+
+        /// <summary>
+        /// Converts a given DateTime into a Unix timestamp
+        /// </summary>
+        /// <param name="value">Any DateTime</param>
+        /// <returns>The given DateTime in Unix timestamp format</returns>
+        public static int ToUnixTimestamp(this DateTime value)
+        {
+            return (int)Math.Truncate((value.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+        }
+
+        /// <summary>
+        /// Gets a Unix timestamp representing the current moment
+        /// </summary>
+        /// <param name="ignored">Parameter ignored</param>
+        /// <returns>Now expressed as a Unix timestamp</returns>
+        public static int UnixTimestamp(this DateTime ignored)
+        {
+            return (int)Math.Truncate((DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds);
+        }
+
+        // Extrated from: https://dotnetcodr.com/2015/01/23/how-to-compress-and-decompress-files-with-gzip-in-net-c/
+        public static void CompressFile(string fileToCompressPath, string fileNameZip)
+        {
+            FileInfo fileToBeGZipped = new FileInfo(fileToCompressPath);
+            FileInfo gzipFileName = new FileInfo(string.Concat(fileNameZip, ".gz"));
+
+            using (FileStream fileToBeZippedAsStream = fileToBeGZipped.OpenRead())
+            {
+                using (FileStream gzipTargetAsStream = gzipFileName.Create())
+                {
+                    using (GZipStream gzipStream = new GZipStream(gzipTargetAsStream, CompressionMode.Compress))
+                    {
+                        try
+                        {
+                            fileToBeZippedAsStream.CopyTo(gzipStream);
+                            Debug.LogFormat("'{0}' zipped as '{1}.gz'", Path.GetFileName(fileToCompressPath), Path.GetFileName(fileNameZip));
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogError(ex.Message);
+                        }
+                    }
+                }
+            }
+        }
+
+#if UNITY_EDITOR
+        public static void DrawString(Vector3 worldPos, string text, Color? colour = null)
+        {
+            UnityEditor.Handles.BeginGUI();
+            if (colour.HasValue) GUI.color = colour.Value;
+            var view = UnityEditor.SceneView.currentDrawingSceneView;
+            Vector3 screenPos = view.camera.WorldToScreenPoint(worldPos);
+            Vector2 size = GUI.skin.label.CalcSize(new GUIContent(text));
+            GUI.Label(new Rect(screenPos.x - (size.x / 2), -screenPos.y + view.position.height + 4, size.x, size.y), text);
+            UnityEditor.Handles.EndGUI();
+        }
+#endif
+
+        public static int GetPixelCount(this Rect r)
+        {
+            return (int)((Mathf.Abs(r.x) + r.width) * (Mathf.Abs(r.y) + r.height));
+        }
+
+        public static float ColorThreshold(this Color c1, Color c2)
+        {
+            return (Mathf.Abs(c1.r - c2.r) + Mathf.Abs(c1.g - c2.g) + Mathf.Abs(c1.b - c2.b)) / 3;
+        }
+
+        public static Color ColorMultiThreshold(this Color c1, IEnumerable<Color> cs, float percentage)
+        {
+            return cs.OrderBy(x => x.ColorThreshold(c1)).FirstOrDefault();
+        }
+
+        public static IEnumerable<Color> Cut(this IEnumerable<Color> or, int x, int y, int width, int height)
+        {
+            int i = 0;
+
+            if (width == 0 || height == 0) yield break;
+
+            if (x > width)
+            {
+                int _x = x;
+                x = width;
+                width = _x;
+            }
+
+            if (y > height)
+            {
+                int _y = y;
+                y = height;
+                height = _y;
+            }
+
+            foreach (Color c in or)
+            {
+                int _y = i / width,
+                    _x = i % height;
+
+                if (_x >= x && _y >= y && _x <= width && _y <= height)
+                    yield return c;
+
+                ++i;
+            }
+
+        }
+
+        /// <summary>
+        /// Creates color with corrected brightness.
+        /// </summary>
+        /// <param name="color">Color to correct.</param>
+        /// <param name="correctionFactor">The brightness correction factor. Must be between -1 and 1. 
+        /// Negative values produce darker colors.</param>
+        /// <returns>
+        /// Corrected <see cref="Color"/> structure.
+        /// </returns>
+        public static Color ChangeColorBrightness(this Color color, float correctionFactor)
+        {
+            float red = color.r;
+            float green = color.g;
+            float blue = color.b;
+
+            if (correctionFactor < 0)
+            {
+                correctionFactor = 1 + correctionFactor;
+                red *= correctionFactor;
+                green *= correctionFactor;
+                blue *= correctionFactor;
+            }
+            else
+            {
+                red = (1 - red) * correctionFactor + red;
+                green = (1 - green) * correctionFactor + green;
+                blue = (1 - blue) * correctionFactor + blue;
+            }
+
+            return new Color(red, green, blue);
+        }
 
     }
 }

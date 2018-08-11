@@ -16,7 +16,7 @@ public class DLLFileWrapperInspector : UnityEditor.Experimental.AssetImporters.A
 
     private bool _ignore, lastIgnore;
 
-    private static DLLFileWrapperInspector me;
+    private static DLLFileWrapperInspector Instance;
 
     private string fileName
     {
@@ -28,7 +28,7 @@ public class DLLFileWrapperInspector : UnityEditor.Experimental.AssetImporters.A
 
     public override void OnEnable()
     {
-        me = this;
+        Instance = this;
         Target = (PluginImporter)target;
 
         if (DLLManager.ExistsKey(fileName))
@@ -99,12 +99,12 @@ public class DLLFileWrapperInspector : UnityEditor.Experimental.AssetImporters.A
 
     public static void IgnoreAssembly(PluginImporter Target, bool _ignore)
     {
-        Debug.LogFormat("{0}gnoring {1} assembly!", _ignore ? "I" : "Dei", me.fileName);
+        Debug.LogFormat("{0}gnoring {1} assembly!", _ignore ? "I" : "Dei", Instance.fileName);
         if (Target == null) return;
         Target.SetCompatibleWithAnyPlatform(!_ignore);
         Target.SetCompatibleWithEditor(!_ignore);
         AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate); // WIP: This doesn't actually works, scripts have to be reloaded manually
-        DLLManager.SetBool(me.fileName, _ignore);
+        DLLManager.SetBool(Instance.fileName, _ignore);
     }
 
     /*private delegate Compatibility ValueSwitcher(Compatibility value);

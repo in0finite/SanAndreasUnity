@@ -81,6 +81,10 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsSprinting { get; set; }
 		public bool IsJumpOn { get; set; }
 
+        public float JumpTimer { get { return jumpTimer; } }
+
+        public float AntiBunnyHopFactor { get { return antiBunnyHopFactor; } }
+
         public Vector3 Velocity { get; private set; }
 		/// <summary> Current movement input. </summary>
         public Vector3 Movement { get; set; }
@@ -150,6 +154,8 @@ namespace SanAndreasUnity.Behaviours
 						mat.EnableKeyword ("_SPECULARHIGHLIGHTS_OFF");
 						mat.SetFloat ("_SpecularHighlights", 0f);
 					}
+
+                    RenderSettings.reflectionIntensity = 0;
 				} catch {
 				}
 			}
@@ -459,9 +465,11 @@ namespace SanAndreasUnity.Behaviours
                     ? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
 
                 // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
-				if (!this.IsJumpOn)
-                    jumpTimer++;
-                else if (jumpTimer >= antiBunnyHopFactor)
+				if (!IsJumpOn)
+                    ++jumpTimer;
+
+                // !_player.IsRunning && _player.JumpTimer >= _player.AntiBunnyHopFactor
+                if (IsJumpOn && IsGrounded && jumpTimer >= antiBunnyHopFactor)
                 {
                     Velocity += Vector3.up * jumpSpeed;
                     jumpTimer = 0;
