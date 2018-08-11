@@ -71,6 +71,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         // Doors
         private IEnumerable<VehicleDoor> vehicleDoors;
+        private float _doorTimer;
+
+        private const float doorDisplayInterval = .3f;
 
         private bool hasRearBrightness
         {
@@ -371,14 +374,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             if (HasDriver)
             {
-                GUI.BeginGroup(new Rect(Screen.width - 205, Screen.height - 205 - 50, 200, 200));
-                GUI.Box(new Rect(0, 0, 200, 200), "");
-                GUI.Label(new Rect(5, 5, 200, 35), "Vehicle Stats", new GUIStyle("label") { fontSize = 30, fontStyle = FontStyle.Bold });
-                bool moreThan2Doors = vehicleDoors.Count() > 2;
-                GUI.Label(new Rect(5, 45, 200, moreThan2Doors ? 40 : 20), string.Format("Doors: {0}", 
-                    string.Join(" | ", vehicleDoors.Select((x, i) => 
-                    string.Format("({0}) {1}{2}", x.transform.name.Substring(5, 2).ToUpper(), x.LockHealth.ToString("F2"), moreThan2Doors && i == 1 ? Environment.NewLine : "")))));
-                GUI.EndGroup();
+                if (Time.time - _doorTimer > doorDisplayInterval)
+                {
+                    GUI.BeginGroup(new Rect(Screen.width - 205, Screen.height - 205 - 50, 200, 200));
+                    GUI.Box(new Rect(0, 0, 200, 200), "");
+                    GUI.Label(new Rect(5, 5, 200, 35), "Vehicle Stats", new GUIStyle("label") { fontSize = 30, fontStyle = FontStyle.Bold });
+                    bool moreThan2Doors = vehicleDoors.Count() > 2;
+                    GUI.Label(new Rect(5, 45, 200, moreThan2Doors ? 40 : 20), string.Format("Doors: {0}",
+                        string.Join(" | ", vehicleDoors.Select((x, i) =>
+                        string.Format("({0}) {1}{2}", x.transform.name.Substring(5, 2).ToUpper(), x.LockHealth.ToString("F2"), moreThan2Doors && i == 1 ? Environment.NewLine : "")))));
+                    GUI.EndGroup();
+                    _doorTimer = Time.time;
+                }
             }
         }
 
