@@ -469,7 +469,7 @@ namespace SanAndreasUnity.Behaviours
                     ++jumpTimer;
 
                 // !_player.IsRunning && _player.JumpTimer >= _player.AntiBunnyHopFactor
-                if (IsJumpOn && !IsSprinting && IsGrounded && jumpTimer >= antiBunnyHopFactor)
+                if (IsJumpOn && IsGrounded && jumpTimer >= antiBunnyHopFactor)
                 {
                     Velocity += Vector3.up * jumpSpeed;
                     jumpTimer = 0;
