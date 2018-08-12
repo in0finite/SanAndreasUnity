@@ -9,7 +9,9 @@
   "sv_name": "San Anreas Unity Server",
   "sv_max_connections": 32,
   "sv_port": 14242,
-  "game_dir" : "C:/Program Files (x86)/Rockstar Games/GTA San Andreas",
+
+  "game_dir" : "",
+
   "archive_paths": [
     "${game_dir}",
     "${game_dir}/models/gta3.img",
@@ -21,12 +23,14 @@
     "${game_dir}/data/paths/carrec.img",
     "${game_dir}/data/script/script.img"
   ],
+
   "item_paths": [
     "${game_dir}/data/gta.dat",
     "${game_dir}/data/vehicles.ide",
     "${game_dir}/data/peds.ide",
     "${game_dir}/data/default.ide"
   ],
+
   "handling_path": "${game_dir}/data/handling.cfg",
   "water_path": "${game_dir}/data/water.dat",
   "car_colors_path": "${game_dir}/data/carcols.dat",
@@ -35,4 +39,5 @@
     "${data_dir}/auxanimgrp.dat"
   ],
   "weapons_path": "${game_dir}/data/weapon.dat"
+  
 }

@@ -6,7 +6,7 @@ public class xGUILayout
 
     public static int SelectionList(int selected, GUIContent[] list)
     {
-        return SelectionList(selected, list, "List Item", null);
+        return SelectionList(selected, list, "button", null);
     }
 
     public static int SelectionList(int selected, GUIContent[] list, GUIStyle elementStyle)
@@ -16,7 +16,7 @@ public class xGUILayout
 
     public static int SelectionList(int selected, GUIContent[] list, DoubleClickCallback callback)
     {
-        return SelectionList(selected, list, "List Item", callback);
+        return SelectionList(selected, list, "button", callback);
     }
 
     public static int SelectionList(int selected, GUIContent[] list, GUIStyle elementStyle, DoubleClickCallback callback)
@@ -28,11 +28,10 @@ public class xGUILayout
             if (hover && Event.current.type == EventType.MouseDown && Event.current.clickCount == 1) // added " && Event.current.clickCount == 1"
             {
                 selected = i;
-                Event.current.Use();
+				Event.current.Use();
             }
-            else if (hover && callback != null && Event.current.type == EventType.MouseDown && Event.current.clickCount == 2) //Changed from MouseUp to MouseDown
+			else if (hover && callback != null && Event.current.type == EventType.MouseDown && Event.current.clickCount == 2) //Changed from MouseUp to MouseDown
             {
-                Debug.Log("Works !");
                 callback(i);
                 Event.current.Use();
             }
@@ -46,7 +45,7 @@ public class xGUILayout
 
     public static int SelectionList(int selected, string[] list)
     {
-        return SelectionList(selected, list, "List Item", null);
+        return SelectionList(selected, list, "button", null);
     }
 
     public static int SelectionList(int selected, string[] list, GUIStyle elementStyle)
@@ -56,7 +55,7 @@ public class xGUILayout
 
     public static int SelectionList(int selected, string[] list, DoubleClickCallback callback)
     {
-        return SelectionList(selected, list, "List Item", callback);
+        return SelectionList(selected, list, "button", callback);
     }
 
     public static int SelectionList(int selected, string[] list, GUIStyle elementStyle, DoubleClickCallback callback)

@@ -128,7 +128,7 @@ namespace SanAndreasUnity.Behaviours {
 				
 			}
 
-			this.UpdateWeaponTransform ();
+			//this.UpdateWeaponTransform ();
 
 			if (CurrentWeapon != null) {
 				CurrentWeapon.EnableOrDisableGunFlash (m_player);

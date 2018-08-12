@@ -65,6 +65,9 @@ namespace SanAndreasUnity.Behaviours
 		public static Texture2D SplashTex1 { get; set; }
 		public static Texture2D SplashTex2 { get; set; }
 
+		private static bool m_showFileBrowser = false;
+		private static FileBrowser m_fileBrowser = null;
+
 
 
 		void Start ()
@@ -80,6 +83,7 @@ namespace SanAndreasUnity.Behaviours
 		{
 			
 			LoadingStep[] steps = new LoadingStep[] {
+				new LoadingStep ( StepSelectGTAPath(), "Select path to GTA", 0.0f ),
 				new LoadingStep ( StepGetPaths, "Loading archive paths", 0.03f ),
 				new LoadingStep ( StepLoadArchives, "Loading archives", 1.7f ),
 				new LoadingStep ( StepLoadSplashScreen, "Loading splash screen", 0.06f ),
@@ -211,6 +215,35 @@ namespace SanAndreasUnity.Behaviours
 			Debug.LogException (ex);
 		}
 
+
+		private static IEnumerator StepSelectGTAPath ()
+		{
+			yield return null;
+
+			string path = Config.GetPath(Config.const_game_dir);
+
+			if (string.IsNullOrEmpty (path)) {
+				// path is not set
+				// show file browser to user to select path
+				m_showFileBrowser = true;
+			} else {
+				yield break;
+			}
+
+			// wait until user selects a path
+			while (m_showFileBrowser) {
+				yield return null;
+			}
+
+			// refresh path
+			path = Config.GetPath(Config.const_game_dir);
+
+			if (string.IsNullOrEmpty (path)) {
+				// path was not set
+				throw new System.Exception ("Path to GTA was not set");
+			}
+
+		}
 
 		private static void StepGetPaths ()
 		{
@@ -417,6 +450,8 @@ namespace SanAndreasUnity.Behaviours
 
             GUILayout.EndArea();
 
+			DisplayFileBrowser ();
+
         }
 
 		private static void DisplayAllSteps ()
@@ -444,6 +479,26 @@ namespace SanAndreasUnity.Behaviours
 
 			float progressPerc = GetProgressPerc ();
 			GUIUtils.DrawBar( rect, progressPerc, new Vector4(149, 185, 244, 255) / 256.0f, new Vector4(92, 147, 237, 255) / 256.0f, 2f );
+
+		}
+
+		private static void DisplayFileBrowser ()
+		{
+			if (!m_showFileBrowser)
+				return;
+
+			if (null == m_fileBrowser) {
+				Rect rect = GUIUtils.GetCenteredRect (new Vector2 (550, 350));
+
+				m_fileBrowser = new FileBrowser(rect, "Select path to GTA", (string path) => {
+					m_showFileBrowser = false;
+					Config.SetString (Config.const_game_dir, path);
+					Config.SaveUserConfig ();
+				} );
+				m_fileBrowser.BrowserType = FileBrowserType.Directory;
+			}
+
+			m_fileBrowser.OnGUI ();
 
 		}
 

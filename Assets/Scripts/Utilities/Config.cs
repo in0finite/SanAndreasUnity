@@ -52,18 +52,25 @@ namespace SanAndreasUnity.Utilities
 
         private static readonly Dictionary<string, string> _substitutions;
 
+
         static Config()
         {
+			_root = new JObject ();
+			_user = new JObject ();
+
+			_substitutions = new Dictionary<string, string>();
+
             if (!File.Exists(UserFilePath))
             {
-                File.WriteAllText(UserFilePath, "{\r\n    // Specify overrides here\r\n}\r\n");
+                //File.WriteAllText(UserFilePath, "{\r\n    // Specify overrides here\r\n}\r\n");
+				SaveUserConfig ();
             }
-
-            _substitutions = new Dictionary<string, string>();
 
             _root = JObject.Parse(File.ReadAllText(FilePath));
             _user = JObject.Parse(File.ReadAllText(UserFilePath));
+
         }
+
 
         private static TVal ConvertVal<TVal>(JToken val)
         {
@@ -131,5 +138,16 @@ namespace SanAndreasUnity.Utilities
                 .Select(x => ReplaceSubstitutions((string)x))
                 .ToArray();
         }
+
+		public static void SetString (string key, string value)
+		{
+			_user [key] = value;
+		}
+
+		public static void SaveUserConfig ()
+		{
+			File.WriteAllText (UserFilePath, _user.ToString (Newtonsoft.Json.Formatting.Indented));
+		}
+
     }
 }
