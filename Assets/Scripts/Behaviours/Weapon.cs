@@ -248,6 +248,14 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
+        public virtual AnimId AimIdle
+        {
+            get
+            {
+                return new AnimId(AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND);
+            }
+        }
+
 		public virtual float AimAnimMaxTime {
 			get {
 				return Weapons.WeaponsManager.ConvertAnimTime (this.data.gunData.animLoopStart);
@@ -374,7 +382,7 @@ namespace SanAndreasUnity.Behaviours
 					// just aim
 
 					//state = PlayerModel.PlayAnim (this.AimAnim, true, false);
-					PlayerModel.Play2Anims( this.AimAnim, this.IdleAnim );
+					PlayerModel.Play2Anims( this.AimAnim, this.AimIdle );
 
 					state = PlayerModel.LastAnimState;
 					state.wrapMode = WrapMode.ClampForever;
