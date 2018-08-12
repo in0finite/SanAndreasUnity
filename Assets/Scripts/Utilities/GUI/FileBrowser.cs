@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using System;
-using System.IO;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 
 /*
 	File browser for selecting files or folders at runtime.
@@ -159,17 +159,17 @@ public class FileBrowser
         m_browserType = FileBrowserType.File;
         m_callback = (s) =>
         {
-            if (callback != null) callback(s);
+            callback?.Invoke(s);
             m_path = s;
         };
-
-        DirectoryImage = m_directoryImage ?? Resources.Load<Texture2D>("Icons/folder"); //No estoy seguro de si esto funcionará
-        FileImage = m_fileImage ?? Resources.Load<Texture2D>("Icons/file");
 
         m_skin = Resources.Load<GUISkin>("Skins/File Browser");
 
         SetNewDirectory(Directory.GetCurrentDirectory());
         SwitchDirectoryNow();
+
+        DirectoryImage = m_directoryImage ?? Resources.Load<Texture2D>("Icons/folder");
+        FileImage = m_fileImage ?? Resources.Load<Texture2D>("Icons/file");
     }
 
     public string GetPath()
@@ -192,13 +192,12 @@ public class FileBrowser
 
     protected void SwitchDirectoryNow()
     {
-        if (m_newDirectory == null || m_currentDirectory == m_newDirectory)
-        {
-            return;
-        }
+        if (m_newDirectory == null || m_currentDirectory == m_newDirectory) return;
+
         m_currentDirectory = m_newDirectory;
         m_scrollPosition = Vector2.zero;
         m_selectedDirectory = m_selectedNonMatchingDirectory = m_selectedFile = -1;
+
         ReadDirectoryContents();
     }
 
@@ -206,6 +205,12 @@ public class FileBrowser
     {
         if (m_currentDirectory == "/")
         {
+            m_currentDirectoryParts = new string[] { "" };
+            m_currentDirectoryMatches = false;
+        }
+        else
+        {
+            m_currentDirectoryParts = m_currentDirectory.Split(Path.DirectorySeparatorChar);
             //... some code, not importent here
             if (SelectionPattern != null)
             {
@@ -222,82 +227,72 @@ public class FileBrowser
             }
             else
             {
-                m_currentDirectoryParts = m_currentDirectory.Split(Path.DirectorySeparatorChar);
-                if (SelectionPattern != null)
-                {
-                    string[] generation = Directory.GetDirectories(
-                        Path.GetDirectoryName(m_currentDirectory),
-                        SelectionPattern
-                    );
-                    m_currentDirectoryMatches = Array.IndexOf(generation, m_currentDirectory) >= 0;
-                }
-                else
-                {
-                    m_currentDirectoryMatches = false;
-                }
+                m_currentDirectoryMatches = false;
             }
-
-            if (BrowserType == FileBrowserType.File || SelectionPattern == null)
-            {
-                m_directories = Directory.GetDirectories(m_currentDirectory);
-                m_nonMatchingDirectories = new string[0];
-            }
-            else
-            {
-                m_directories = Directory.GetDirectories(m_currentDirectory, SelectionPattern);
-                var nonMatchingDirectories = new List<string>();
-                foreach (string directoryPath in Directory.GetDirectories(m_currentDirectory))
-                {
-                    if (Array.IndexOf(m_directories, directoryPath) < 0)
-                    {
-                        nonMatchingDirectories.Add(directoryPath);
-                    }
-                }
-                m_nonMatchingDirectories = nonMatchingDirectories.ToArray();
-                for (int i = 0; i < m_nonMatchingDirectories.Length; ++i)
-                {
-                    int lastSeparator = m_nonMatchingDirectories[i].LastIndexOf(Path.DirectorySeparatorChar);
-                    m_nonMatchingDirectories[i] = m_nonMatchingDirectories[i].Substring(lastSeparator + 1);
-                }
-                Array.Sort(m_nonMatchingDirectories);
-            }
-
-            for (int i = 0; i < m_directories.Length; ++i)
-            {
-                m_directories[i] = m_directories[i].Substring(m_directories[i].LastIndexOf(Path.DirectorySeparatorChar) + 1);
-            }
-
-            if (BrowserType == FileBrowserType.Directory || SelectionPattern == null)
-            {
-                m_files = Directory.GetFiles(m_currentDirectory);
-                m_nonMatchingFiles = new string[0];
-            }
-            else
-            {
-                m_files = Directory.GetFiles(m_currentDirectory, SelectionPattern);
-                var nonMatchingFiles = new List<string>();
-                foreach (string filePath in Directory.GetFiles(m_currentDirectory))
-                {
-                    if (Array.IndexOf(m_files, filePath) < 0)
-                    {
-                        nonMatchingFiles.Add(filePath);
-                    }
-                }
-                m_nonMatchingFiles = nonMatchingFiles.ToArray();
-                for (int i = 0; i < m_nonMatchingFiles.Length; ++i)
-                {
-                    m_nonMatchingFiles[i] = Path.GetFileName(m_nonMatchingFiles[i]);
-                }
-                Array.Sort(m_nonMatchingFiles);
-            }
-            for (int i = 0; i < m_files.Length; ++i)
-            {
-                m_files[i] = Path.GetFileName(m_files[i]);
-            }
-            Array.Sort(m_files);
-            BuildContent();
-            m_newDirectory = null;
         }
+
+        if (BrowserType == FileBrowserType.File || SelectionPattern == null)
+        {
+            m_directories = Directory.GetDirectories(m_currentDirectory);
+            m_nonMatchingDirectories = new string[0];
+        }
+        else
+        {
+            m_directories = Directory.GetDirectories(m_currentDirectory, SelectionPattern);
+            var nonMatchingDirectories = new List<string>();
+            foreach (string directoryPath in Directory.GetDirectories(m_currentDirectory))
+            {
+                if (Array.IndexOf(m_directories, directoryPath) < 0)
+                {
+                    nonMatchingDirectories.Add(directoryPath);
+                }
+            }
+            m_nonMatchingDirectories = nonMatchingDirectories.ToArray();
+            for (int i = 0; i < m_nonMatchingDirectories.Length; ++i)
+            {
+                int lastSeparator = m_nonMatchingDirectories[i].LastIndexOf(Path.DirectorySeparatorChar);
+                m_nonMatchingDirectories[i] = m_nonMatchingDirectories[i].Substring(lastSeparator + 1);
+            }
+            Array.Sort(m_nonMatchingDirectories);
+        }
+
+        for (int i = 0; i < m_directories.Length; ++i)
+        {
+            m_directories[i] = m_directories[i].Substring(m_directories[i].LastIndexOf(Path.DirectorySeparatorChar) + 1);
+        }
+
+        if (BrowserType == FileBrowserType.Directory || SelectionPattern == null)
+        {
+            m_files = Directory.GetFiles(m_currentDirectory);
+            m_nonMatchingFiles = new string[0];
+        }
+        else
+        {
+            m_files = Directory.GetFiles(m_currentDirectory, SelectionPattern);
+            var nonMatchingFiles = new List<string>();
+            foreach (string filePath in Directory.GetFiles(m_currentDirectory))
+            {
+                if (Array.IndexOf(m_files, filePath) < 0)
+                {
+                    nonMatchingFiles.Add(filePath);
+                }
+            }
+            m_nonMatchingFiles = nonMatchingFiles.ToArray();
+            for (int i = 0; i < m_nonMatchingFiles.Length; ++i)
+            {
+                m_nonMatchingFiles[i] = Path.GetFileName(m_nonMatchingFiles[i]);
+            }
+            Array.Sort(m_nonMatchingFiles);
+        }
+
+        for (int i = 0; i < m_files.Length; ++i)
+        {
+            m_files[i] = Path.GetFileName(m_files[i]);
+        }
+
+        Array.Sort(m_files);
+        BuildContent();
+        m_newDirectory = null;
     }
 
     protected void BuildContent()
@@ -328,7 +323,8 @@ public class FileBrowser
     {
         if (!m_toggle) return;
 
-        GUI.skin = m_skin;
+        if(m_skin != null)
+            GUI.skin = m_skin;
 
         GUILayout.BeginArea(
             m_screenRect,

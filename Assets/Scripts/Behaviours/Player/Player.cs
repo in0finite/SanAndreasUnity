@@ -150,6 +150,8 @@ namespace SanAndreasUnity.Behaviours
 						mat.EnableKeyword ("_SPECULARHIGHLIGHTS_OFF");
 						mat.SetFloat ("_SpecularHighlights", 0f);
 					}
+
+                    RenderSettings.reflectionIntensity = 0;
 				} catch {
 				}
 			}

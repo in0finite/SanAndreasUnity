@@ -29,8 +29,10 @@ public class NonConvexMeshCollider : MonoBehaviour
     public bool createColliderChildGameObject = true;
     public int boxesPerEdge = 20;
 
-    public void Calculate()
+    public Collider[] Calculate(int layer = -1)
     {
+        List<Collider> cols = new List<Collider>();
+
         if (boxesPerEdge > 100)
             boxesPerEdge = 100;
         if (boxesPerEdge < 1)
@@ -38,8 +40,8 @@ public class NonConvexMeshCollider : MonoBehaviour
 
         var go = gameObject;
         var meshFilter = go.GetComponent<MeshFilter>();
-        if (meshFilter == null) return;
-        if (meshFilter.sharedMesh == null) return;
+        if (meshFilter == null) return null;
+        if (meshFilter.sharedMesh == null) return null;
         var rbdy = go.GetComponent<Rigidbody>();
         var hadNonKinematicRigidbody = false;
         if (rbdy != null && !rbdy.isKinematic)
@@ -87,8 +89,12 @@ public class NonConvexMeshCollider : MonoBehaviour
             foreach (var b in mergedBoxes)
             {
                 var bc = (createColliderChildGameObject ? collidersGo : go).AddComponent<BoxCollider>();
+
+                if(layer >= 0) bc.gameObject.layer = layer;
                 bc.size = b.Size;
                 bc.center = b.Center;
+
+                cols.Add(bc);
             }
             Debug.Log("NonConvexMeshCollider: " + mergedBoxes.Length + " box colliders created");
 
@@ -112,6 +118,8 @@ public class NonConvexMeshCollider : MonoBehaviour
                 rbdy.useGravity = true;
             DestroyImmediate(tempParent);
         }
+
+        return cols.ToArray();
     }
 
     private Box[] MergeBoxes(Box[] boxes)

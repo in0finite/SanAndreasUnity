@@ -19,8 +19,8 @@ TagManager:
   - Vehicle
   - World
   - Player
-  - 
-  - 
+  - CarCollider
+  - DoorCollider
   - 
   - 
   - 

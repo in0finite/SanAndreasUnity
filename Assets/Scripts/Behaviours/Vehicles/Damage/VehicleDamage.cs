@@ -73,8 +73,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private ContactPoint nullContact = new ContactPoint();
 
-        private const float lightContactDistance = 5;
-
         //Only for debug
         public Vector3 lastContact = Vector3.zero;
 
@@ -364,7 +362,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                                     lastContact = damagePoint;
                                 }
 
-                                if (vp != null)
+                                /*if (vp != null)
                                 {
                                     if (vp.m_frontLeftLight != null && vp.m_frontLeftLightOk && (damagePoint - vp.m_frontLeftLight.transform.position).sqrMagnitude < lightContactDistance)
                                         vp.m_frontLeftLightOk = false;
@@ -377,7 +375,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                                     if (vp.m_rearRightLight != null && vp.m_rearRightLightOk && (damagePoint - vp.m_rearRightLight.transform.position).sqrMagnitude < lightContactDistance)
                                         vp.m_rearRightLightOk = false;
-                                }
+                                }*/
                             }
                         }
 
@@ -691,7 +689,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         }
 
         //Draw collisionIgnoreHeight gizmos
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
             Vector3 startPoint = transform.TransformPoint(Vector3.up * collisionIgnoreHeight);
             Gizmos.color = Color.red;
