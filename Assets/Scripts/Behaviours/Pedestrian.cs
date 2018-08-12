@@ -344,52 +344,6 @@ namespace SanAndreasUnity.Behaviours
 			return true;
 		}
 
-        public void PlayUpperLayerAnimations(
-           AnimGroup upperLayerGroup, AnimGroup group, AnimIndex upperLayerIndex, AnimIndex animIndex)
-        {
-            LoadAnim(upperLayerGroup, upperLayerIndex);
-
-            _anim[GetAnimName(upperLayerGroup, upperLayerIndex)].layer = 1;
-
-            AnimationState state = PlayAnim(upperLayerGroup, upperLayerIndex, PlayMode.StopSameLayer);
-
-            state.normalizedTime = 1;
-
-            //state.AddMixingTransform(Spine, true);
-
-            //foreach (Transform t in Spine.GetComponentInChildren<Transform>())
-            //{
-            //    //	runState.wrapMode = WrapMode.Loop;
-            //}
-
-            LoadAnim(group, animIndex);
-
-            _anim[GetAnimName(group, animIndex)].layer = 0;
-
-            state = PlayAnim(group, animIndex, PlayMode.StopSameLayer);
-
-			state.AddMixingTransform(_root.transform, false);
-
-            state.AddMixingTransform(L_Thigh, true);
-
-            //foreach (Transform t in L_Thigh.GetComponentInChildren<Transform>())
-            //{
-            //    //	state.RemoveMixingTransform(f.transform);
-            //    //	state.wrapMode = WrapMode.Loop;
-            //}
-
-            state.AddMixingTransform(R_Thigh, true);
-
-            //foreach (Transform t in R_Thigh.GetComponentInChildren<Transform>())
-            //{
-            //    //	state.RemoveMixingTransform(f.transform);
-            //    //	state.wrapMode = WrapMode.Loop;
-            //}
-            //state.weight = animationBlendWeight;
-
-            //	PlayerModel._anim.Blend( );
-        }
-
 		public bool AddMixingTransform (AnimationState state, Transform tr, bool recursive)
 		{
 			List<Transform> list;
