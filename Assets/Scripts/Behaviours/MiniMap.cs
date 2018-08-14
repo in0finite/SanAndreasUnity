@@ -76,19 +76,7 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        private int _vCount = 0;
         private float _gTimer;
-
-        private int VehicleCount
-        {
-            get
-            {
-                if (_gTimer == 0)
-                    _vCount = Object.FindObjectsOfType<Vehicle>().Length;
-
-                return _vCount;
-            }
-        }
 
         private string _zName;
 
@@ -610,6 +598,9 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnGUI()
         {
+			if (!Loader.HasLoaded)
+				return;
+
             if (!isReady || !toggleInfo) return;
 
             if (!toggleMap)
@@ -623,7 +614,7 @@ namespace SanAndreasUnity.Behaviours
 
                 GUI.DrawTexture(labelRect, blackPixel);
                 GUI.Label(labelRect,
-                    string.Format("x: {0}, y: {1}, z: {2} ({3})", pPos.x.ToString("F2"), pPos.y.ToString("F2"), pPos.z.ToString("F2"), VehicleCount),
+                    string.Format("x: {0}, y: {1}, z: {2}", pPos.x.ToString("F2"), pPos.y.ToString("F2"), pPos.z.ToString("F2")),
                     style);
 
                 Rect zoneRect = new Rect(uiSize / 2 - uiSize / (2 * 3), 25, uiSize / 3, 25);
