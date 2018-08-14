@@ -612,12 +612,16 @@ namespace SanAndreasUnity.Behaviours
                 Vector2 labelSize = new Vector2(uiSize, 25);
                 Rect labelRect = new Rect(Vector2.zero, labelSize);
 
-                GUI.DrawTexture(labelRect, blackPixel);
-                GUI.Label(labelRect,
-                    string.Format("x: {0}, y: {1}, z: {2}", pPos.x.ToString("F2"), pPos.y.ToString("F2"), pPos.z.ToString("F2")),
-                    style);
+				// display player pos
 
-                Rect zoneRect = new Rect(uiSize / 2 - uiSize / (2 * 3), 25, uiSize / 3, 25);
+//                GUI.DrawTexture(labelRect, blackPixel);
+//                GUI.Label(labelRect,
+//                    string.Format("x: {0}, y: {1}, z: {2}", pPos.x.ToString("F2"), pPos.y.ToString("F2"), pPos.z.ToString("F2")),
+//                    style);
+
+				// display current zone name
+
+				Rect zoneRect = labelRect; //new Rect(uiSize / 2 - uiSize / (2 * 3), 25, uiSize / 3, 25);
 
                 GUI.DrawTexture(zoneRect, blackPixel);
                 GUI.Label(zoneRect, ZoneName, style);
