@@ -61,6 +61,24 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
+		public static void SetMaxFps (int maxFps)
+		{
+			QualitySettings.vSyncCount = 0;
+			Application.targetFrameRate = maxFps;
+		}
+
+		public static int GetMaxFps ()
+		{
+			if (!IsFpsLimited ())
+				return 0;
+			return Application.targetFrameRate;
+		}
+
+		public static bool IsFpsLimited ()
+		{
+			return QualitySettings.vSyncCount == 0;
+		}
+
 	}
 
 }

@@ -97,6 +97,11 @@ namespace SanAndreasUnity.Utilities
             return v > min && v < max;
         }
 
+		public static int RoundToInt(this float f)
+		{
+			return Mathf.RoundToInt (f);
+		}
+
         public static double DateTimeToUnixTimestamp(this DateTime dateTime)
         {
             return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -

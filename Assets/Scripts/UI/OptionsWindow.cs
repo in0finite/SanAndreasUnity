@@ -10,6 +10,23 @@ namespace SanAndreasUnity.UI {
 		/// </summary>
 		public	static	event System.Action	onGUI = delegate {};
 
+		public class FloatInput
+		{
+			public string description = "";
+			public float value;
+			public float OldValue { get; internal set; }
+			public float minValue;
+			public float maxValue;
+			public bool IsChanged { get; internal set; }
+
+			public FloatInput (string description, float minValue, float maxValue)
+			{
+				this.description = description;
+				this.minValue = minValue;
+				this.maxValue = maxValue;
+			}
+		}
+
 
 
 		OptionsWindow() {
@@ -67,6 +84,14 @@ namespace SanAndreasUnity.UI {
 			GUILayout.Label(description + " : " + value);
 			float newValue = GUILayout.HorizontalSlider( value, min, max );
 			return newValue;
+		}
+
+		public	static	bool	FloatSlider(FloatInput floatInput)
+		{
+			floatInput.OldValue = floatInput.value;
+			floatInput.value = FloatSlider (floatInput.value, floatInput.minValue, floatInput.maxValue, floatInput.description );
+			floatInput.IsChanged = floatInput.value != floatInput.OldValue;
+			return floatInput.IsChanged;
 		}
 
 		public	static	T	MultipleOptions<T>( T currentValue, string description, params T[] allValues ) {
