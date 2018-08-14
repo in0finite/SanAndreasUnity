@@ -21,7 +21,7 @@ namespace SanAndreasUnity.Settings {
 
 			if (Cell.Instance) {
 				
-				Cell.Instance.loadParkedVehicles = GUILayout.Toggle( Cell.Instance.loadParkedVehicles, "Load parked vehicles");
+				//Cell.Instance.loadParkedVehicles = GUILayout.Toggle( Cell.Instance.loadParkedVehicles, "Load parked vehicles");
 
 				//GUILayout.Label ("Max draw distance:");
 				//Cell.Instance.maxDrawDistance = GUILayout.HorizontalSlider (Cell.Instance.maxDrawDistance, 50f, 1000f);

@@ -19,7 +19,7 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- What to do before making a release: don't show minimap label while loading ; change starting pos ; don't load parked vehicles ;
+- What to do before making a release: change starting pos ; remove 'Turning off blinkers' log ;
 
 - Readme: add instruction to open scene ;
 

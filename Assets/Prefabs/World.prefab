@@ -412,7 +412,7 @@ MonoBehaviour:
   divisionLoadOrderDistanceFactor: 16
   divisionRefreshDistanceDelta: 1
   maxDrawDistance: 500
-  loadParkedVehicles: 1
+  loadParkedVehicles: 0
 --- !u!114 &11450014
 MonoBehaviour:
   m_ObjectHideFlags: 1
