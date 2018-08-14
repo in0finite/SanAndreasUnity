@@ -33,15 +33,15 @@ public class PedActions
     private static void RemoveUnnamed()
     {
         GameObject playerModel = GameObject.Find("PlayerModel");
+		if (null == playerModel)
+			return;
 
-        playerModel.GetComponents<FrameContainer>().ForEach(x => x.SafeDestroy());
+        //playerModel.GetComponents<FrameContainer>().ForEach(x => x.SafeDestroy());
 
-        try
-        {
-            playerModel.GetComponentsInChildren<Component>().Where(x => x.GetType() != typeof(Transform) && x.transform.parent == playerModel.transform).Select(x => x.gameObject).ForEach(x => x.SafeDestroy());
-        }
-        catch { }
-
-        EditorSceneManager.SaveOpenScenes();
+        
+       	//playerModel.GetComponentsInChildren<Component>().Where(x => x.GetType() != typeof(Transform) && x.transform.parent == playerModel.transform).Select(x => x.gameObject).ForEach(x => x.SafeDestroy());
+        
+        
+        //EditorSceneManager.SaveOpenScenes();
     }
 }
