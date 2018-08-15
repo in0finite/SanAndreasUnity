@@ -289,7 +289,7 @@ public class FileBrowser {
 		GUILayout.BeginHorizontal();
 		GUILayout.FlexibleSpace();
 
-		if (GUILayout.Button("Cancel", GUILayout.Width(50))) {
+		if (SanAndreasUnity.Utilities.GUIUtils.ButtonWithCalculatedSize("Cancel")) {
 			m_callback(null);
 		}
 
@@ -308,7 +308,9 @@ public class FileBrowser {
 			}
 		}
 
-		if (GUILayout.Button("Select", GUILayout.Width(50))) {
+		string selectButtonText = BrowserType == FileBrowserType.File ? "Select" : "Select current folder";
+
+		if (SanAndreasUnity.Utilities.GUIUtils.ButtonWithCalculatedSize (selectButtonText)) {
 			if (BrowserType == FileBrowserType.File) {
 				m_callback(Path.Combine(m_currentDirectory, m_files[m_selectedFile]));
 			} else {

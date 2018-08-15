@@ -103,7 +103,7 @@ public class VehicleBlinker : MonoBehaviour
         // Must review
         if (vehicle.HasDriver && !ShouldBePowered && blinkerSwitch)
         {
-            Debug.Log("Turning off blinkers!");
+            //Debug.Log("Turning off blinkers!");
             blinkerSwitch = false;
         }
     }
