@@ -177,7 +177,7 @@ namespace SanAndreasUnity.Behaviours {
 			// idk why this boolean has to be checked - there are some race conditions with animations
 			// - if we don't check it, weapons will start shaking
 		//	if (this.IsAiming)
-		//		UpdateWeaponTransform ();
+			UpdateWeaponTransform ();
 
 		}
 
