@@ -42,6 +42,8 @@ public class FileBrowser {
 	}
 	protected string m_filePattern;
 
+	protected List<string> m_drives = new List<string> ();
+
 	// Optional image for directories
 	public Texture2D DirectoryImage {
 		get {
@@ -141,13 +143,22 @@ public class FileBrowser {
 	}
 
 	protected void ReadDirectoryContents() {
+
+		// refresh list of drives
+		try {
+			m_drives.Clear ();
+			m_drives.AddRange( Directory.GetLogicalDrives () );
+		} catch {
+		
+		}
+
 		if (m_currentDirectory == "/") {
 			m_currentDirectoryParts = new string[] {""};
 			m_currentDirectoryMatches = false;
 		} else {
 			m_currentDirectoryParts = m_currentDirectory.Split(Path.DirectorySeparatorChar);
 			if (SelectionPattern != null) {
-				string[] generation = Directory.GetDirectories(
+				string[] generation = GetDirectories(
 					Path.GetDirectoryName(m_currentDirectory),
 					SelectionPattern
 				);
@@ -158,12 +169,12 @@ public class FileBrowser {
 		}
 
 		if (BrowserType == FileBrowserType.File || SelectionPattern == null) {
-			m_directories = Directory.GetDirectories(m_currentDirectory);
+			m_directories = GetDirectories(m_currentDirectory);
 			m_nonMatchingDirectories = new string[0];
 		} else {
-			m_directories = Directory.GetDirectories(m_currentDirectory, SelectionPattern);
+			m_directories = GetDirectories(m_currentDirectory, SelectionPattern);
 			var nonMatchingDirectories = new List<string>();
-			foreach (string directoryPath in Directory.GetDirectories(m_currentDirectory)) {
+			foreach (string directoryPath in GetDirectories(m_currentDirectory)) {
 				if (Array.IndexOf(m_directories, directoryPath) < 0) {
 					nonMatchingDirectories.Add(directoryPath);
 				}
@@ -181,12 +192,12 @@ public class FileBrowser {
 		}
 
 		if (BrowserType == FileBrowserType.Directory || SelectionPattern == null) {
-			m_files = Directory.GetFiles(m_currentDirectory);
+			m_files = GetFiles(m_currentDirectory);
 			m_nonMatchingFiles = new string[0];
 		} else {
-			m_files = Directory.GetFiles(m_currentDirectory, SelectionPattern);
+			m_files = GetFiles(m_currentDirectory, SelectionPattern);
 			var nonMatchingFiles = new List<string>();
-			foreach (string filePath in Directory.GetFiles(m_currentDirectory)) {
+			foreach (string filePath in GetFiles(m_currentDirectory)) {
 				if (Array.IndexOf(m_files, filePath) < 0) {
 					nonMatchingFiles.Add(filePath);
 				}
@@ -197,13 +208,54 @@ public class FileBrowser {
 			}
 			Array.Sort(m_nonMatchingFiles);
 		}
+
 		for (int i = 0; i < m_files.Length; ++i) {
 			m_files[i] = Path.GetFileName(m_files[i]);
 		}
+
 		Array.Sort(m_files);
+
 		BuildContent();
+
 		m_newDirectory = null;
 	}
+
+	static string[] GetFiles (string path, string searchPattern)
+	{
+		try {
+			return Directory.GetFiles( path, searchPattern );
+		} catch {
+			return new string[0];
+		}
+	}
+
+	static string[] GetFiles (string path)
+	{
+		try {
+			return Directory.GetFiles( path );
+		} catch {
+			return new string[0];
+		}
+	}
+
+	static string[] GetDirectories (string path, string searchPattern)
+	{
+		try {
+			return Directory.GetDirectories( path, searchPattern );
+		} catch {
+			return new string[0];
+		}
+	}
+
+	static string[] GetDirectories (string path)
+	{
+		try {
+			return Directory.GetDirectories( path );
+		} catch {
+			return new string[0];
+		}
+	}
+
 
 	protected void BuildContent() {
 		m_directoriesWithImages = new GUIContent[m_directories.Length];
@@ -225,12 +277,30 @@ public class FileBrowser {
 	}
 
 	public void OnGUI() {
+		
 		GUILayout.BeginArea(
 			m_screenRect,
 			m_name,
 			GUI.skin.window
 		);
+
+		// display drives
+		if (m_drives.Count > 0) {
+			GUILayout.BeginHorizontal();
+
+			foreach (var drive in m_drives) {
+				if (GUILayout.Button (drive)) {
+					SetNewDirectory (drive);
+				}
+			}
+
+			GUILayout.FlexibleSpace();
+			GUILayout.EndHorizontal ();
+		}
+
+		// display directory parts
 		GUILayout.BeginHorizontal();
+
 		for (int parentIndex = 0; parentIndex < m_currentDirectoryParts.Length; ++parentIndex) {
 			if (parentIndex == m_currentDirectoryParts.Length - 1) {
 				GUILayout.Label(m_currentDirectoryParts[parentIndex], CentredText);
@@ -242,8 +312,10 @@ public class FileBrowser {
 				SetNewDirectory(parentDirectoryName);
 			}
 		}
+
 		GUILayout.FlexibleSpace();
 		GUILayout.EndHorizontal();
+
 		m_scrollPosition = GUILayout.BeginScrollView(
 			m_scrollPosition,
 			false,
