@@ -3,6 +3,7 @@ using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Weapons;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Behaviours.Weapons;
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
@@ -278,6 +279,7 @@ namespace SanAndreasUnity.Behaviours
 		{
 			var CurrentWeapon = this;
 			var PlayerModel = player.PlayerModel;
+			var model = player.PlayerModel;
 
 
 		//	this.Play2Animations (new int[]{ 41, 51 }, new int[]{ 2 }, AnimGroup.MyWalkCycle,
@@ -287,13 +289,19 @@ namespace SanAndreasUnity.Behaviours
 				// aim with arm
 				// eg: pistol, tec9, sawnoff
 
-//					var state = PlayerModel.PlayAnim (AnimGroup.Colt45, AnimIndex.colt45_fire);
-//					state.wrapMode = WrapMode.ClampForever;
-//					if (state.normalizedTime > m_aimWithArmMaxAnimTime)
-//						state.normalizedTime = m_aimWithArmMaxAnimTime;
+				model.Play2Anims (new AnimId (AnimGroup.Colt45, AnimIndex.colt45_fire), this.IdleAnim);
 
+				AimAnimState = model.LastAnimState;
+				model.LastAnimState.wrapMode = WrapMode.ClampForever;
+
+				model.RemoveAllMixingTransforms (model.LastAnimState);
+				model.AddMixingTransform (model.LastAnimState, model.Neck, true);
+
+				this.UpdateFireAnim (player, model.LastAnimState);
+
+
+				/*
 				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
-				//state.RemoveMixingTransform (PlayerModel.Spine);
 
 				// update fire state
 
@@ -329,16 +337,108 @@ namespace SanAndreasUnity.Behaviours
 					}
 
 				}
+				*/
 
 
-				// rotate right upper arm to match direction of player
+				float timePerc = Mathf.Clamp01 (model.LastAnimState.time / this.AimAnimMaxTime);
+
+				// rotate arm to match direction of player
+
 				// we'll need a few adjustments, because arm's right vector is player's forward vector,
 				// and arm's forward vector is player's down vector => arm's up is player's left
-				Vector3 lookAtPos = player.transform.position - player.transform.up * 500;
-				Vector3 dir = -player.transform.right;
-				PlayerModel.RightUpperArm.LookAt( lookAtPos, dir);
-				// also rotate right hand
-				PlayerModel.RightHand.LookAt (lookAtPos, dir);
+			//	Vector3 forward = - player.transform.right ; // -player.transform.up;
+			//	Vector3 up = player.transform.up; // -player.transform.right;
+			//	Vector3 lookAtPos = player.transform.position + forward * 500;
+
+				model.ResetFrameState (model.RightUpperArm);
+				model.ResetFrameState (model.RightForeArm);
+				model.ResetFrameState (model.RightHand);
+
+				Vector3 aimDir = player.Camera.transform.forward;
+				Vector3 aimDirLocal = player.transform.InverseTransformDirection (aimDir);
+
+				bool isAimingOnOppositeSide = aimDirLocal.x < 0f;
+				float oppositeSideAngle = Vector3.Angle( Vector3.forward, aimDirLocal.WithXAndZ () );
+				bool isAimingBack = aimDirLocal.z < 0f;
+
+				Quaternion startRot = Quaternion.LookRotation( -player.transform.up, player.transform.forward ); // Quaternion.Euler (WeaponsManager.Instance.AIMWITHARM_upperArmStartRotationEulers);
+				Quaternion endRot = Quaternion.LookRotation (aimDir); //Quaternion.LookRotation( forward, up );
+			//	Vector3 endForwardLocal = new Vector3(0.9222f, -0.3429f, 0.179f);
+			//	Vector3 endUpLocal = new Vector3(-0.3522f, -0.9357f, 0.02171f);
+				Quaternion endRotForeArm = endRot;
+
+				if (isAimingBack) {
+					// aim in the air
+
+					endRot = Quaternion.LookRotation ( Vector3.Lerp(-player.transform.up, player.transform.forward, 0.7f).normalized );
+
+					// we need to apply rotation that is opposite of given offset for x axis - to assure that forehand's up matches ped's back
+					Quaternion q = Quaternion.AngleAxis( 90f - WeaponsManager.Instance.AIMWITHARM_foreArmRotationOffset.x, player.transform.up );
+					endRotForeArm = Quaternion.LookRotation (q * player.transform.up, q * (-player.transform.forward));
+
+				} else if (isAimingOnOppositeSide) {
+					// upper arm will slightly follow direction of aiming, but only along y and z axes
+					// forearm will have direction of aiming
+
+					Vector3 dir = aimDirLocal;
+					dir.x = 0; // no looking left or right
+					if (oppositeSideAngle != 0) {
+					//	dir.y = Mathf.Sign (dir.y) * ( Mathf.Abs (dir.y) - 1.0f * oppositeSideAngle / 90f );
+						dir.y -= 1.0f * oppositeSideAngle / 90f;
+						dir.z += 1.0f * oppositeSideAngle / 90f;
+						if (dir.y > 0)
+							dir.y /= (1.0f + oppositeSideAngle / 90f);
+					//	if (Mathf.Abs(dir.y) > dir.z)
+					//		dir.z = Mathf.Abs(dir.y);
+					}
+					dir.Normalize ();
+					dir = player.transform.TransformDirection (dir);
+					endRot = Quaternion.LookRotation (dir);
+				}
+
+				// lerp
+				Quaternion rot = Quaternion.Lerp( startRot, endRot, timePerc );
+				Quaternion rotForeArm = Quaternion.Lerp (startRot, endRotForeArm, timePerc);
+
+				if (timePerc == 1.0f) {
+				//	Vector3 localForward = player.transform.InverseTransformDirection (model.RightUpperArm.forward);
+				//	Vector3 localUp = player.transform.InverseTransformDirection (model.RightUpperArm.up);
+				//	Debug.LogFormat ("local forward {0}, local up {1}", localForward.ToString("G4"), localUp.ToString("G4"));
+				}
+
+			//	Quaternion deltaRot = Quaternion.FromToRotation (Vector3.forward, aimDirLocal);
+
+			//	Quaternion worldRot = player.transform.TransformRotation( rot );
+
+			//	worldRot *= deltaRot;
+
+				// assign new rotation
+				// 'rot' is in player space
+			//	model.RightUpperArm.rotation = worldRot;
+
+			//	Quaternion convertRot = Quaternion.Euler (WeaponsManager.Instance.AIMWITHARM_upperArmEndRotationEulers);
+
+				// head rotation
+			//	Quaternion headRot = isAimingBack ? player.transform.rotation : Quaternion.LookRotation (aimDir);
+			//	headRot = Quaternion.Lerp( model.Head.rotation, headRot, 0.3f);
+
+
+				// set new rotations and apply aim rotation offsets
+
+			//	model.Head.rotation = headRot;
+			//	model.Head.Rotate ();
+
+				model.RightClavicle.Rotate (WeaponsManager.Instance.AIMWITHARM_clavicleRotationOffset);
+
+				model.RightUpperArm.rotation = rot;
+				model.RightUpperArm.Rotate (WeaponsManager.Instance.AIMWITHARM_upperArmRotationOffset);
+
+				model.RightForeArm.rotation = rotForeArm;
+				model.RightForeArm.Rotate (WeaponsManager.Instance.AIMWITHARM_foreArmRotationOffset);
+
+				model.RightHand.localRotation = Quaternion.identity;
+				model.RightHand.Rotate (WeaponsManager.Instance.AIMWITHARM_handRotationOffset);
+
 
 			} else {
 
@@ -470,9 +570,11 @@ namespace SanAndreasUnity.Behaviours
 				
 				bool shouldBeVisible = false;
 
-				if (this.HasFlag (GunFlag.AIMWITHARM)) {
-					shouldBeVisible = m_aimAnimTimeForAimWithArmWeapon.BetweenExclusive (this.AimAnimMaxTime, this.AimAnimMaxTime + this.GunFlashDuration);
-				} else {
+//				if (this.HasFlag (GunFlag.AIMWITHARM)) {
+//					shouldBeVisible = m_aimAnimTimeForAimWithArmWeapon.BetweenExclusive (this.AimAnimMaxTime, this.AimAnimMaxTime + this.GunFlashDuration);
+//				}
+//				else
+				{
 
 					if (AimAnimState != null && AimAnimState.enabled) {
 						// aim anim is being played
@@ -484,7 +586,7 @@ namespace SanAndreasUnity.Behaviours
 					}
 				}
 
-				shouldBeVisible = shouldBeVisible && player.IsFiring;
+				shouldBeVisible &= player.IsFiring;
 
 				this.GunFlash.gameObject.SetActive (shouldBeVisible);
 			}

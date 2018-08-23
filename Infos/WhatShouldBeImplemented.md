@@ -19,9 +19,15 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- What to do before making a release: change starting pos ;
+- Game should not throw exception when failed to save config.user.json, nor when trying to load config
+
+- When failed to load arhive, exception should be thrown
+
+- What to do before making a release: change starting pos ? ;
 
 - Readme: add instruction to open scene ;
+
+- Validate path to GTA ?
 
 - Anims must be played by their name
 
@@ -32,6 +38,8 @@
 - Remove editor scripts for destroying player model
 
 - Remove unneeded assets
+
+- Bug when ped gets down to low heights (trying to move him back to starting location, and causing shaking)
 
 - Work on a menu like MTA:SA (F1)
 

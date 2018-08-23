@@ -44,6 +44,10 @@ These are the useful parameters in weapons.dat :
 
 ### TODO
 
+- aiming with single-arm weapons
+
+- damage system
+
 - reloading
 
 - problematic anims: 
@@ -52,7 +56,7 @@ These are the useful parameters in weapons.dat :
 
 - spine should be rotated locally, not globally ? - some models have different rotation of spine in the idle anim, which means that their spine will not look at the same place - possible solution would be to play the same idle anim on all models
 
-- whem anim is changed, reset model state
+- whem anim is changed, reset model state ?
 
 - right after the model is loaded, reset model state
 

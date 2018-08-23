@@ -4,6 +4,7 @@ using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Animation;
 using UnityEngine;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -67,6 +68,9 @@ namespace SanAndreasUnity.Behaviours
 		public Transform LeftForeArm { get; private set; }
 		public Transform RightForeArm { get; private set; }
 
+		public Transform LeftClavicle { get; private set; }
+		public Transform RightClavicle { get; private set; }
+
 		public Transform Head { get; private set; }
 
 		public Transform Neck { get; private set; }
@@ -75,6 +79,25 @@ namespace SanAndreasUnity.Behaviours
 
         public Transform R_Thigh { get; private set; }
         public Transform L_Thigh { get; private set; }
+
+		public class FrameAnimData
+		{
+			public Vector3 pos;
+			public Quaternion rot;
+			public Vector3 velocity;
+			public Frame frame;
+
+			public FrameAnimData (Vector3 pos, Quaternion rot, Vector3 velocity, Frame frame)
+			{
+				this.pos = pos;
+				this.rot = rot;
+				this.velocity = velocity;
+				this.frame = frame;
+			}
+		}
+
+		private List<FrameAnimData> m_originalFrameDatas = new List<FrameAnimData> ();
+		public List<FrameAnimData> OriginalFrameDatas { get { return m_originalFrameDatas; } }
 
         private Player _player;
 
@@ -124,15 +147,17 @@ namespace SanAndreasUnity.Behaviours
             {
                 if (!loadedModelOnStartup)
                 {
+					loadedModelOnStartup = true;
+
                     _player.OnSpawn();
 
                     // load model on startup
-                    Debug.Log("Loading pedestrian model after startup.");
+                    //Debug.Log("Loading pedestrian model after startup.");
 					Load (m_startingPedId);
-                    // and play animation
-                    PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle, PlayMode.StopAll);
 
-                    loadedModelOnStartup = true;
+                    // and play animation
+					PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle);
+
                 }
             }
 
@@ -179,6 +204,18 @@ namespace SanAndreasUnity.Behaviours
                 _anim = gameObject.AddComponent<UnityEngine.Animation>();
             }
 
+			// save original model state
+			var state = PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle);
+
+			if (state != null) {
+				state.time = 0f;
+				this.AnimComponent.Sample ();
+			}
+
+			this.SaveModelState ();
+
+			// load some anims
+
             LoadAnim(AnimGroup.WalkCycle, AnimIndex.Walk);
             LoadAnim(AnimGroup.WalkCycle, AnimIndex.Run);
             LoadAnim(AnimGroup.WalkCycle, AnimIndex.Panicked);
@@ -207,6 +244,7 @@ namespace SanAndreasUnity.Behaviours
             {
                 Destroy(_frames.Root.gameObject);
                 Destroy(_frames);
+				_frames = null;
                 _loadedAnims.Clear();
             }
 
@@ -223,6 +261,8 @@ namespace SanAndreasUnity.Behaviours
 			LeftUpperArm = _frames.GetByName (" L UpperArm").transform;
 			RightForeArm = _frames.GetByName (" R ForeArm").transform;
 			LeftForeArm = _frames.GetByName (" L ForeArm").transform;
+			RightClavicle = _frames.GetByName ("Bip01 R Clavicle").transform;
+			LeftClavicle = _frames.GetByName ("Bip01 L Clavicle").transform;
 			Head = _frames.GetByName (" Head").transform;
 			Neck = _frames.GetByName (" Neck").transform;
 			Spine = _frames.GetByName(" Spine").transform;
@@ -237,9 +277,45 @@ namespace SanAndreasUnity.Behaviours
 		public void ResetModelState ()
 		{
 
-			var state = PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
-			state.normalizedTime = 0;
-			AnimComponent.Sample ();
+			//var state = PlayAnim (AnimGroup.WalkCycle, AnimIndex.Idle);
+			//state.normalizedTime = 0;
+			//AnimComponent.Sample ();
+
+			foreach (var frameData in m_originalFrameDatas) {
+				if (null == frameData.frame)
+					continue;
+				ResetFrameState (frameData);
+			}
+
+		}
+
+		private void SaveModelState ()
+		{
+			m_originalFrameDatas.Clear ();
+
+			foreach (var frame in this.Frames) {
+				m_originalFrameDatas.Add (new FrameAnimData (frame.transform.localPosition, frame.transform.localRotation, 
+					frame.LocalVelocity, frame));
+			}
+		}
+
+		private void ResetFrameState (FrameAnimData frameData)
+		{
+			frameData.frame.transform.localPosition = frameData.pos;
+			frameData.frame.transform.localRotation = frameData.rot;
+			frameData.frame.LocalVelocity = frameData.velocity;
+		}
+
+		public void ResetFrameState (Transform frameTransform)
+		{
+			Frame frame = frameTransform.GetComponent<Frame> ();
+			if (null == frame)
+				return;
+
+			var frameData = m_originalFrameDatas.FirstOrDefault( f => f.frame == frame );
+			if (frameData != null) {
+				ResetFrameState (frameData);
+			}
 
 		}
 

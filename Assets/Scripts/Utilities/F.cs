@@ -214,6 +214,39 @@ namespace SanAndreasUnity.Utilities
 			return Vector3.Distance (t.position, pos);
 		}
 
+		public static Quaternion CreateRotationAroundAxes (Vector3 degrees)
+		{
+			Quaternion rotation = Quaternion.identity;
+
+			if (degrees.x != 0)
+				rotation *= Quaternion.AngleAxis (degrees.x, Vector3.right);
+
+			if (degrees.y != 0)
+				rotation *= Quaternion.AngleAxis (degrees.y, Vector3.up);
+
+			if (degrees.z != 0)
+				rotation *= Quaternion.AngleAxis (degrees.z, Vector3.forward);
+			
+			return rotation;
+		}
+
+		public static Vector3 TransformDirection (this Quaternion rot, Vector3 dir)
+		{
+			return rot * dir;
+		}
+
+		/// <summary>
+		/// Transforms the rotation from local space to world space.
+		/// </summary>
+		public static Quaternion TransformRotation (this Transform tr, Quaternion rot)
+		{
+			Vector3 localForward = rot * Vector3.forward;
+			Vector3 localUp = rot * Vector3.up;
+
+			return Quaternion.LookRotation (tr.TransformDirection (localForward), tr.TransformDirection (localUp));
+		}
+
+
         public static object FromHex(this string hexString, Type type, CultureInfo info)
         {
             var argTypes = new[] { typeof(string), typeof(NumberStyles), typeof(IFormatProvider) };

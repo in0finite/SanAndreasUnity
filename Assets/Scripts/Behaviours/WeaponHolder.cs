@@ -242,17 +242,19 @@ namespace SanAndreasUnity.Behaviours {
 
 		private void RotateSpine ()
 		{
+			if (!this.IsAiming)
+				return;
 
-			if (this.IsAiming)
-			{
-				PlayerModel.Spine.LookAt(Camera.transform.position + Camera.transform.forward * 500);
+			if (this.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
+				return;
+			
+			PlayerModel.Spine.LookAt(Camera.transform.position + Camera.transform.forward * 500);
 
-				Vector3 eulers = this.SpineOffset;
-				if (this.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
-					eulers.y = 0;
-				PlayerModel.Spine.Rotate (eulers);
-			//	PlayerModel.ChangeSpineRotation (this.CurrentWeaponTransform.forward, Camera.transform.position + Camera.transform.forward * Camera.farClipPlane - this.CurrentWeaponTransform.position, SpineRotationSpeed, ref tempSpineLocalEulerAngles, ref targetRot, ref spineRotationLastFrame);
-			}
+			Vector3 eulers = this.SpineOffset;
+			if (this.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
+				eulers.y = 0;
+			PlayerModel.Spine.Rotate (eulers);
+		//	PlayerModel.ChangeSpineRotation (this.CurrentWeaponTransform.forward, Camera.transform.position + Camera.transform.forward * Camera.farClipPlane - this.CurrentWeaponTransform.position, SpineRotationSpeed, ref tempSpineLocalEulerAngles, ref targetRot, ref spineRotationLastFrame);
 
 		}
 
@@ -263,6 +265,9 @@ namespace SanAndreasUnity.Behaviours {
 				return;
 
 			if (!this.IsAiming)
+				return;
+
+			if (this.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
 				return;
 
 //			Vector3 lookAtPos = Camera.transform.position + Camera.transform.forward * 500;

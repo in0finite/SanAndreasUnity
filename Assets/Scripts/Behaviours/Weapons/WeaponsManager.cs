@@ -15,6 +15,19 @@ namespace SanAndreasUnity.Behaviours.Weapons
 		[SerializeField] [Range(0.0f, 7200.0f)] private float m_gunFlashRotationSpeed = 1800.0f;
 		public float GunFlashRotationSpeed { get { return m_gunFlashRotationSpeed; } set { m_gunFlashRotationSpeed = value; } }
 
+		public Vector3 AIMWITHARM_clavicleRotationOffset = Vector3.zero;
+		public Vector3 AIMWITHARM_upperArmRotationOffset = Vector3.zero;
+		public Vector3 AIMWITHARM_foreArmRotationOffset = Vector3.zero;
+		public Vector3 AIMWITHARM_handRotationOffset = Vector3.zero;
+
+		public bool AIMWITHARM_controlUpperArm = true;
+		public bool AIMWITHARM_controlForeArm = true;
+		public bool AIMWITHARM_controlHand = true;
+
+		// relative to player
+		public Vector3 AIMWITHARM_upperArmStartRotationEulers = new Vector3 (-1.686f, 164.627f, -97.904f);
+		public Vector3 AIMWITHARM_upperArmEndRotationEulers = new Vector3 (150f, -90f, 0f);
+
 
 		public static WeaponsManager Instance { get; private set; }
 
