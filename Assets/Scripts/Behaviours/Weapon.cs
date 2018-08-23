@@ -419,14 +419,15 @@ namespace SanAndreasUnity.Behaviours
 			//	Quaternion convertRot = Quaternion.Euler (WeaponsManager.Instance.AIMWITHARM_upperArmEndRotationEulers);
 
 				// head rotation
-			//	Quaternion headRot = isAimingBack ? player.transform.rotation : Quaternion.LookRotation (aimDir);
+				Vector3 clampedAimDir = F.ClampDirection (aimDir, player.transform.forward, WeaponsManager.Instance.AIMWITHARM_maxHeadRotationAngle);
+				Quaternion headRot = isAimingBack ? player.transform.rotation : Quaternion.LookRotation (clampedAimDir);
 			//	headRot = Quaternion.Lerp( model.Head.rotation, headRot, 0.3f);
 
 
 				// set new rotations and apply aim rotation offsets
 
-			//	model.Head.rotation = headRot;
-			//	model.Head.Rotate ();
+				model.Head.rotation = headRot;
+				model.Head.Rotate (WeaponsManager.Instance.AIMWITHARM_headRotationOffset);
 
 				model.RightClavicle.Rotate (WeaponsManager.Instance.AIMWITHARM_clavicleRotationOffset);
 

@@ -246,6 +246,19 @@ namespace SanAndreasUnity.Utilities
 			return Quaternion.LookRotation (tr.TransformDirection (localForward), tr.TransformDirection (localUp));
 		}
 
+		public static Vector3 ClampDirection (Vector3 dir, Vector3 referenceVec, float maxAngle)
+		{
+			float angle = Vector3.Angle (dir, referenceVec);
+			if (angle > maxAngle) {
+				// needs to be clamped
+
+				return Vector3.RotateTowards( dir, referenceVec, (angle - maxAngle) * Mathf.Deg2Rad, 0f );
+			//	Vector3.Lerp( dir, referenceVec, );
+			}
+
+			return dir;
+		}
+
 
         public static object FromHex(this string hexString, Type type, CultureInfo info)
         {

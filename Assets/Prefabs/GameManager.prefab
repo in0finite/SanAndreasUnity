@@ -94,6 +94,7 @@ MonoBehaviour:
   m_animConvertMultiplier: 3.25
   m_gunFlashDuration: 0.07
   m_gunFlashRotationSpeed: 3600
+  AIMWITHARM_headRotationOffset: {x: 0, y: 0, z: 90}
   AIMWITHARM_clavicleRotationOffset: {x: 0, y: 0, z: 0}
   AIMWITHARM_upperArmRotationOffset: {x: 150, y: -90, z: 0}
   AIMWITHARM_foreArmRotationOffset: {x: 150, y: -90, z: 0}
@@ -103,3 +104,4 @@ MonoBehaviour:
   AIMWITHARM_controlHand: 1
   AIMWITHARM_upperArmStartRotationEulers: {x: -1.686, y: 164.627, z: -97.904}
   AIMWITHARM_upperArmEndRotationEulers: {x: 170, y: -90, z: -2.412}
+  AIMWITHARM_maxHeadRotationAngle: 50
