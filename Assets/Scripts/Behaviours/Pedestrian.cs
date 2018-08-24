@@ -74,11 +74,17 @@ namespace SanAndreasUnity.Behaviours
 		public Transform Head { get; private set; }
 
 		public Transform Neck { get; private set; }
+		public Transform LBreast { get; private set; }
+		public Transform RBreast { get; private set; }
+
+		public Transform UpperSpine { get; private set; }
+		public Transform Belly { get; private set; }
 
         public Transform Spine { get; private set; }
-
         public Transform R_Thigh { get; private set; }
         public Transform L_Thigh { get; private set; }
+
+		public Transform Pelvis { get; private set; }
 
 		public class FrameAnimData
 		{
@@ -205,6 +211,8 @@ namespace SanAndreasUnity.Behaviours
             }
 
 			// save original model state
+			// TODO: we should first reset all anim parameters (eg mixing transforms) ?
+
 			var state = PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle);
 
 			if (state != null) {
@@ -265,9 +273,15 @@ namespace SanAndreasUnity.Behaviours
 			LeftClavicle = _frames.GetByName ("Bip01 L Clavicle").transform;
 			Head = _frames.GetByName (" Head").transform;
 			Neck = _frames.GetByName (" Neck").transform;
+			LBreast = _frames.GetByName ("L breast").transform;
+			RBreast = _frames.GetByName ("R breast").transform;
+			UpperSpine = _frames.GetByName (" Spine1").transform;
+			Belly = _frames.GetByName ("Belly").transform;
 			Spine = _frames.GetByName(" Spine").transform;
             R_Thigh = _frames.GetByName(" R Thigh").transform;
             L_Thigh = _frames.GetByName(" L Thigh").transform;
+			Pelvis = _frames.GetByName(" Pelvis").transform;
+
         }
 
 		/// <summary>
@@ -368,7 +382,7 @@ namespace SanAndreasUnity.Behaviours
 			return state;
 		}
 
-		public bool Play2Anims (AnimId animIdA, AnimId animIdB)
+		public bool Play2Anims (AnimId animIdA, AnimId animIdB, bool resetModelStateIfAnimChanged = false)
 		{
 			// load anims
 
@@ -382,8 +396,8 @@ namespace SanAndreasUnity.Behaviours
 
 			bool animsChanged = !animIdA.Equals (LastAnimId) || !animIdB.Equals (LastSecondaryAnimId);
 
-			if (animsChanged) {
-				//ResetModelState ();
+			if (animsChanged && resetModelStateIfAnimChanged) {
+				ResetModelState ();
 			}
 
 			// reset velocity axis
@@ -417,6 +431,13 @@ namespace SanAndreasUnity.Behaviours
 			LastSecondaryAnimState = stateB;
 
 
+			// if model state was reset, sample the animation, because otherwise, model will remain in original state for 1 frame
+			// TODO: this should be done by caller, because not all animation parameters are set (eg mixing transforms)
+			if (animsChanged && resetModelStateIfAnimChanged) {
+				this.AnimComponent.Sample ();
+			}
+
+
 			return true;
 		}
 
@@ -435,6 +456,12 @@ namespace SanAndreasUnity.Behaviours
 				m_mixedTransforms.Add (state, list);
 				return true;
 			}
+		}
+
+		public void AddMixingTransforms (AnimationState state, params Transform[] transforms)
+		{
+			foreach (var tr in transforms)
+				AddMixingTransform (state, tr, false);
 		}
 
 		public bool RemoveMixingTransform (AnimationState state, Transform tr)

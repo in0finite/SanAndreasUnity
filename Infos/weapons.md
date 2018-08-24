@@ -44,7 +44,7 @@ These are the useful parameters in weapons.dat :
 
 ### TODO
 
-- aiming with single-arm weapons
+- aiming with single-arm weapons: reset model state ; move while aiming ;
 
 - damage system
 
