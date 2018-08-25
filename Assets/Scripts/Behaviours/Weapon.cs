@@ -213,6 +213,14 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
+		public virtual bool CanTurnWhileAiming {
+			get {
+				if (this.HasFlag (GunFlag.AIMWITHARM))
+					return true;
+				return false;
+			}
+		}
+
 		public virtual AnimId IdleAnim {
 			get {
 				if (this.HasFlag (GunFlag.AIMWITHARM)) {
@@ -241,6 +249,33 @@ namespace SanAndreasUnity.Behaviours
 					return new AnimId (AnimGroup.Gun, AnimIndex.run_armed);
 				}
 			}
+		}
+
+		public virtual AnimId GetAnimBasedOnMovement (Player player, bool canSprint)
+		{
+			
+			if (player.IsRunning) {
+
+				return this.RunAnim;
+
+			} else if (player.IsWalking) {
+
+				return this.WalkAnim;
+
+			} else if (player.IsSprinting) {
+
+				if (canSprint) {
+					return new AnimId (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
+				} else {
+					return this.IdleAnim;
+				}
+
+			} else {
+				// player is standing
+
+				return this.IdleAnim;
+			}
+
 		}
 
 		public virtual AnimId AimAnim {
@@ -289,7 +324,7 @@ namespace SanAndreasUnity.Behaviours
 				// aim with arm
 				// eg: pistol, tec9, sawnoff
 
-				model.Play2Anims (new AnimId (AnimGroup.Colt45, AnimIndex.colt45_fire), this.IdleAnim, true);
+				model.Play2Anims (new AnimId (AnimGroup.Colt45, AnimIndex.colt45_fire), this.GetAnimBasedOnMovement (player, false), true);
 
 				AimAnimState = model.LastAnimState;
 				model.LastAnimState.wrapMode = WrapMode.ClampForever;
@@ -538,32 +573,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public virtual void UpdateAnimWhileHolding (Player player)
 		{
-			var CurrentWeapon = this;
-			var PlayerModel = player.PlayerModel;
-
-			if (player.IsRunning) {
-
-				PlayerModel.PlayAnim (CurrentWeapon.RunAnim);
-
-			} else if (player.IsWalking) {
-
-				PlayerModel.PlayAnim (CurrentWeapon.WalkAnim);
-
-			} else if (player.IsSprinting) {
-
-				if (CurrentWeapon.CanSprintWithIt) {
-					PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
-				} else {
-					PlayerModel.PlayAnim (CurrentWeapon.IdleAnim);
-				}
-
-			} else {
-				// player is standing
-
-				PlayerModel.PlayAnim (CurrentWeapon.IdleAnim);
-
-			}
-
+			player.PlayerModel.PlayAnim (this.GetAnimBasedOnMovement (player, this.CanSprintWithIt));
 		}
 
 		public virtual void EnableOrDisableGunFlash (Player player)
