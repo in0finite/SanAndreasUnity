@@ -258,7 +258,8 @@ namespace SanAndreasUnity.Behaviours
                     new Vector3(1f, 0f, 1f)).normalized;
 
 				// player heading should be assigned here, not in Player class, but only if player is not aiming
-				if (!_player.IsAiming) {
+			//	if (!_player.IsAiming)
+				{
 					if (_player.Movement.sqrMagnitude > float.Epsilon) {
 						_player.Heading = _player.Movement;
 					}

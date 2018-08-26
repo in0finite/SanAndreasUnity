@@ -411,6 +411,11 @@ namespace SanAndreasUnity.Behaviours
             if (IsInVehicle) return;
 
 
+			if (this.IsAiming && this.CurrentWeapon != null && !this.CurrentWeapon.CanTurnInDirectionOtherThanAiming) {
+				// ped heading can only be the same as ped direction
+				this.Heading = this.WeaponHolder.AimDirection;
+			}
+
 			// player can look only along X and Z axis
 			this.Heading = this.Heading.WithXAndZ ().normalized;
 

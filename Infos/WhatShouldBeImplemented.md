@@ -21,6 +21,8 @@
 
 - Fix weapon.dat float parsing
 
+- Remove unneeded files from Infos folder
+
 - Game should not throw exception when failed to save config.user.json, nor when trying to load config
 
 - When failed to load arhive, exception should be thrown

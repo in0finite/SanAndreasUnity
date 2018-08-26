@@ -40,6 +40,15 @@ namespace SanAndreasUnity.Behaviours {
 		private	int		m_frameWhenStartedAiming = 0;
 		public	int		NumFramesSinceStartedAiming { get { return Time.frameCount - m_frameWhenStartedAiming; } }
 
+		public	Vector3	AimDirection {
+			get {
+				if (this.IsAiming && this.Camera != null)
+					return this.Camera.transform.forward;
+				else
+					return this.transform.forward;
+			}
+		}
+
 		private	bool	m_isFiring = false;
 		public	bool	IsFiring {
 			get { return m_isFiring; }

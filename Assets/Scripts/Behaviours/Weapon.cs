@@ -213,7 +213,7 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		public virtual bool CanTurnWhileAiming {
+		public virtual bool CanTurnInDirectionOtherThanAiming {
 			get {
 				if (this.HasFlag (GunFlag.AIMWITHARM))
 					return true;
