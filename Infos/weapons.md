@@ -48,6 +48,8 @@ These are the useful parameters in weapons.dat :
 
 - damage system
 
+- if space is held while aiming, and then aiming is turned off, the ped continues to move (or something like that)
+
 - reloading
 
 - problematic anims: 

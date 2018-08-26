@@ -397,7 +397,7 @@ namespace SanAndreasUnity.Behaviours
 
 				bool isAimingOnOppositeSide = aimDirLocal.x < 0f;
 				float oppositeSideAngle = Vector3.Angle( Vector3.forward, aimDirLocal.WithXAndZ () );
-				bool isAimingBack = aimDirLocal.z < 0f;
+				bool isAimingBack = oppositeSideAngle > WeaponsManager.Instance.AIMWITHARM_maxAimAngle;
 
 				Quaternion startRot = Quaternion.LookRotation( -player.transform.up, player.transform.forward ); // Quaternion.Euler (WeaponsManager.Instance.AIMWITHARM_upperArmStartRotationEulers);
 				Quaternion endRot = Quaternion.LookRotation (aimDir); //Quaternion.LookRotation( forward, up );

@@ -30,6 +30,8 @@ namespace SanAndreasUnity.Behaviours.Weapons
 		public Vector3 AIMWITHARM_upperArmStartRotationEulers = new Vector3 (-1.686f, 164.627f, -97.904f);
 		public Vector3 AIMWITHARM_upperArmEndRotationEulers = new Vector3 (150f, -90f, 0f);
 
+		[Range(5, 175)] public float AIMWITHARM_maxAimAngle = 90f;
+
 		[Range(0, 90)] public float AIMWITHARM_maxHeadRotationAngle = 75f;
 
 

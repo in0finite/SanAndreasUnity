@@ -104,4 +104,5 @@ MonoBehaviour:
   AIMWITHARM_controlHand: 1
   AIMWITHARM_upperArmStartRotationEulers: {x: -1.686, y: 164.627, z: -97.904}
   AIMWITHARM_upperArmEndRotationEulers: {x: 170, y: -90, z: -2.412}
+  AIMWITHARM_maxAimAngle: 95
   AIMWITHARM_maxHeadRotationAngle: 50
