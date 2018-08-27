@@ -559,6 +559,12 @@ namespace SanAndreasUnity.Behaviours
 					if (player.WeaponHolder.IsFireOn) {
 						// we should start firing
 						player.WeaponHolder.IsFiring = true;
+
+						// update gun flash
+					//	this.EnableOrDisableGunFlash (player);
+						if (this.GunFlash != null)
+							this.GunFlash.gameObject.SetActive (true);
+						this.UpdateGunFlashRotation (player);
 					} else {
 						// we should remain in aim state
 						state.time = this.AimAnimMaxTime;

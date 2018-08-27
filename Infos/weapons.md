@@ -44,7 +44,13 @@ These are the useful parameters in weapons.dat :
 
 ### TODO
 
-- aiming with single-arm weapons: reset model state - it should be done by caller, after mixing transforms are set up ; move while aiming ;
+- aiming with single-arm weapons: reset model state - it should be done by caller, after mixing transforms are set up ;
+
+- update gun flash after started firing - that way, it will be visible even on low FPS
+
+- play separate anim for tec9 ?
+
+- let aim anim to control head (or spine ?), in order to better simulate bullet firing ?
 
 - damage system
 
