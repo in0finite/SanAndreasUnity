@@ -20,7 +20,7 @@ Press Escape while in game to open pause menu. You'll see there a lot of utiliti
 
 ## TODO List
 
-Here is an extensive list of [what should be implemented](/Infos/WhatShouldBeImplemented.md).
+Here is an extensive list of [what should be implemented](/Docs/TODO.md).
 
 Can help us to develop this? In that case, join us on discord so we can discuss about it.
 
