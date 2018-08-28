@@ -44,8 +44,6 @@ These are the useful parameters in weapons.dat :
 
 ### TODO
 
-- test walking
-
 - play separate anim for tec9 ?
 
 - let aim anim to control head (or spine ?), in order to better simulate bullet firing ?

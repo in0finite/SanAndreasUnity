@@ -86,7 +86,7 @@ namespace SanAndreasUnity.Importing.Weapons
 					return false;
 				char c = hexFlags [index];
 
-				int hex = int.Parse (c.ToString (), System.Globalization.NumberStyles.HexNumber);
+				int hex = ParseInt (c.ToString (), System.Globalization.NumberStyles.HexNumber);
 				return (hex & ( 1 << s_groupedFlags [index].IndexOf (flag) )) != 0;
 			}
 
@@ -209,23 +209,23 @@ namespace SanAndreasUnity.Importing.Weapons
 				string part = parts [partIndex];
 
 				if (field.FieldType == typeof(int)) {
-					field.SetValue (obj, int.Parse (part));
+					field.SetValue (obj, ParseInt (part));
 				} else if (field.FieldType == typeof(float)) {
-					field.SetValue (obj, float.Parse (part));
+					field.SetValue (obj, ParseFloat (part));
 				} else if (field.FieldType == typeof(string)) {
 					field.SetValue (obj, part);
 				} else if (field.FieldType == typeof(UnityEngine.Vector3)) {
 					UnityEngine.Vector3 vec3 = new UnityEngine.Vector3 ();
 
-					vec3.x = float.Parse (part);
+					vec3.x = ParseFloat (part);
 					partIndex++;
 
 					part = parts [partIndex];
-					vec3.y = float.Parse (part);
+					vec3.y = ParseFloat (part);
 					partIndex++;
 
 					part = parts [partIndex];
-					vec3.z = float.Parse (part);
+					vec3.z = ParseFloat (part);
 
 					field.SetValue (obj, vec3);
 				}
@@ -237,6 +237,21 @@ namespace SanAndreasUnity.Importing.Weapons
 			}
 
 			return partIndex;
+		}
+
+		private static float ParseFloat (string str)
+		{
+			return float.Parse( str, System.Globalization.CultureInfo.InvariantCulture );
+		}
+
+		private static int ParseInt (string str)
+		{
+			return int.Parse( str, System.Globalization.CultureInfo.InvariantCulture );
+		}
+
+		private static int ParseInt (string str, System.Globalization.NumberStyles numberStyles)
+		{
+			return int.Parse( str, numberStyles, System.Globalization.CultureInfo.InvariantCulture );
 		}
 
 	}
