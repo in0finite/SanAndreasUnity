@@ -380,9 +380,15 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnDrawGizmosSelected()
         {
+			if (null == _player)
+				return;
+
             Gizmos.color = Color.white;
 
+			// draw enter vehicle radius
             Gizmos.DrawWireSphere(transform.position, EnterVehicleRadius);
+
+			// find closest vehicle in entering range
 
             var vehicles = FindObjectsOfType<Vehicle>()
                 .Where(x => Vector3.Distance(transform.position, x.FindClosestSeatTransform(transform.position).position) < EnterVehicleRadius)
@@ -390,11 +396,14 @@ namespace SanAndreasUnity.Behaviours
 
             foreach (var vehicle in vehicles)
             {
+				// draw all seats
                 foreach (var seat in vehicle.Seats)
                 {
                     Gizmos.color = Color.red;
                     Gizmos.DrawWireSphere(seat.Parent.position, 0.1f);
                 }
+
+				// draw closest seat
 
                 var closestSeat = vehicle.FindClosestSeat(transform.position);
 
