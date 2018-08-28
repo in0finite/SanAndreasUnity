@@ -10,12 +10,8 @@ namespace SanAndreasUnity.Behaviours
     [RequireComponent(typeof(Player))]
     public class PlayerController : MonoBehaviour
     {
-        #region Private fields
-
+        
 		public	static	PlayerController	Instance { get ; private set ; }
-		public	static	PlayerController	FindInstance() {
-			return FindObjectOfType<PlayerController> ();
-		}
 
         private Player _player;
 
@@ -23,18 +19,6 @@ namespace SanAndreasUnity.Behaviours
         private float _yaw;
 
 		public static bool _showVel = true;
-
-        public static bool _showMenu
-        {
-            get
-            {
-				return UI.PauseMenu.IsOpened;
-            }
-            set
-            {
-				UI.PauseMenu.IsOpened = value;
-            }
-        }
 
         // Alpha speedometer
         private const float velTimer = 1 / 4f;
@@ -48,10 +32,7 @@ namespace SanAndreasUnity.Behaviours
         private Vector2 _smoothMouse = Vector2.zero;
         private Vector3 targetDirection = Vector3.forward;
 
-        #endregion Private fields
-
-        #region Inspector Fields
-
+        
         public Vector2 CursorSensitivity = new Vector2(2f, 2f);
 
         public float CarCameraDistance = 6.0f;
@@ -67,6 +48,9 @@ namespace SanAndreasUnity.Behaviours
 
 		[SerializeField] private bool m_smoothMovement = false;
 
+		[SerializeField] private KeyCode m_walkKey = KeyCode.LeftAlt;
+		[SerializeField] private KeyCode m_sprintKey = KeyCode.Space;
+		[SerializeField] private KeyCode m_jumpKey = KeyCode.LeftShift;
 
 
         public float CurVelocity
@@ -80,14 +64,8 @@ namespace SanAndreasUnity.Behaviours
 		public Vector3 CameraFocusPos { get { return _player.transform.position + Vector3.up * 0.5f; } }
 		public Vector3 CameraFocusPosVehicle { get { return _player.CurrentVehicle.transform.position; } }
 
-        #endregion Inspector Fields
-
-        #region Properties
-
         public Camera Camera { get { return _player.Camera; } }
         public Pedestrian PlayerModel { get { return _player.PlayerModel; } }
-
-        #endregion Properties
 
 
 
@@ -233,7 +211,7 @@ namespace SanAndreasUnity.Behaviours
             {
 				// give input to player
 
-				_player.IsJumpOn = Input.GetKey (KeyCode.LeftShift);
+				_player.IsJumpOn = Input.GetKey (m_jumpKey);
 
 				Vector3 inputMove = Vector3.zero;
 				if (m_smoothMovement)
@@ -245,9 +223,9 @@ namespace SanAndreasUnity.Behaviours
                 {
                     inputMove.Normalize();
 
-					if (Input.GetKey (KeyCode.LeftAlt))
+					if (Input.GetKey (m_walkKey))
 						_player.IsWalking = true;
-					else if (Input.GetKey (KeyCode.Space))
+					else if (Input.GetKey (m_sprintKey))
 						_player.IsSprinting = true;
 					else
 						_player.IsRunning = true;

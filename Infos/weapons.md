@@ -44,7 +44,7 @@ These are the useful parameters in weapons.dat :
 
 ### TODO
 
-- aiming with single-arm weapons: reset model state - it should be done by caller, after mixing transforms are set up ;
+- test walking
 
 - play separate anim for tec9 ?
 
@@ -52,7 +52,7 @@ These are the useful parameters in weapons.dat :
 
 - damage system
 
-- if space is held while aiming, and then aiming is turned off, the ped continues to move (or something like that)
+- if space (and also walk key) is held while aiming, and then aiming is turned off, the ped continues to move (or something like that)
 
 - improve aiming with AIMWITHARM weapons - upper arm should follow right vector of aiming, when aiming to side
 
@@ -61,6 +61,8 @@ These are the useful parameters in weapons.dat :
 - right after weapon is switched, update transform of weapon
 
 - guns flash rotation speed should be randomized
+
+- when lerping upper arm transform toward player forward vector, arm is going on the opposite side - it seems that it depends on world rotation of player
 
 - problematic anims: 
 
