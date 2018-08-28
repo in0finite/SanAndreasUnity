@@ -19,11 +19,7 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- Rename Infos folder
-
 - Game should not throw exception when failed to save config.user.json, nor when trying to load config
-
-- When failed to load arhive, exception should be thrown
 
 - What to do before making a release: change starting pos ? ;
 

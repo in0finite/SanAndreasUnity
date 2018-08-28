@@ -267,7 +267,7 @@ namespace SanAndreasUnity.Behaviours
 				}
 				else
 				{
-					Debug.LogError("Archive not found: " + path);
+					throw new System.Exception("Archive not found: " + path);
 				}
 			}
 
