@@ -23,6 +23,11 @@ namespace SanAndreasUnity.Behaviours
 
 		public AnimId LastSecondaryAnimId { get; private set; }
 
+		/// <summary> Did anims changed when played them last time ? </summary>
+		public bool AnimsChanged { get { return this.FirstAnimChanged || this.SecondAnimChanged; } }
+		public bool FirstAnimChanged { get; private set; }
+		public bool SecondAnimChanged { get; private set; }
+
 		private readonly AnimId m_invalidAnimId = new AnimId ();
 
 		private UnityEngine.Animation _anim { get; set; }
@@ -336,9 +341,14 @@ namespace SanAndreasUnity.Behaviours
 
 		public AnimationState PlayAnim (AnimId animId, PlayMode playMode = PlayMode.StopAll)
         {
+			this.FirstAnimChanged = this.SecondAnimChanged = false;
+
 			var animState = LoadAnim (animId);
             if (null == animState)
                 return null;
+
+			this.FirstAnimChanged = !animId.Equals (LastAnimId);
+			this.SecondAnimChanged = !m_invalidAnimId.Equals (LastSecondaryAnimId);
 
 			LastAnimId = animId;
 			LastSecondaryAnimId = m_invalidAnimId;
@@ -361,29 +371,11 @@ namespace SanAndreasUnity.Behaviours
 			return PlayAnim (new AnimId (animGroup, animIndex), playMode);
 		}
 
-		public AnimationState PlayAnim (AnimId animId, bool resetModelStateIfAnimChanged, bool resetAnimStateIfAnimChanged)
+		public bool Play2Anims (AnimId animIdA, AnimId animIdB)
 		{
-			bool animChanged = !animId.Equals (LastAnimId) || !m_invalidAnimId.Equals (LastSecondaryAnimId);
 
-			if (resetModelStateIfAnimChanged && animChanged) {
-				this.ResetModelState ();
-			}
+			this.FirstAnimChanged = this.SecondAnimChanged = false;
 
-			var state = PlayAnim (animId);
-
-			if (resetAnimStateIfAnimChanged && animChanged) {
-				state.enabled = true;
-				state.normalizedTime = 0;
-				state.speed = 1;
-				state.weight = 1;
-				state.wrapMode = this.AnimComponent.wrapMode;
-			}
-
-			return state;
-		}
-
-		public bool Play2Anims (AnimId animIdA, AnimId animIdB, bool resetModelStateIfAnimChanged = false)
-		{
 			// load anims
 
 			var stateA = LoadAnim (animIdA);
@@ -391,14 +383,9 @@ namespace SanAndreasUnity.Behaviours
 
 			if (null == stateA || null == stateB)
 				return false;
-
-			// reset model state if anims changed
-
-			bool animsChanged = !animIdA.Equals (LastAnimId) || !animIdB.Equals (LastSecondaryAnimId);
-
-			if (animsChanged && resetModelStateIfAnimChanged) {
-				ResetModelState ();
-			}
+			
+			this.FirstAnimChanged = !animIdA.Equals (LastAnimId);
+			this.SecondAnimChanged = !animIdB.Equals (LastSecondaryAnimId);
 
 			// reset velocity axis
 			this.VelocityAxis = 2;
@@ -422,20 +409,12 @@ namespace SanAndreasUnity.Behaviours
 			this.AnimComponent.Play( stateA.clip.name, PlayMode.StopSameLayer);
 			this.AnimComponent.Play( stateB.clip.name, PlayMode.StopSameLayer);
 
-
 			// assign last anims
 
 			LastAnimId = animIdA;
 			LastSecondaryAnimId = animIdB;
 			LastAnimState = stateA;
 			LastSecondaryAnimState = stateB;
-
-
-			// if model state was reset, sample the animation, because otherwise, model will remain in original state for 1 frame
-			// TODO: this should be done by caller, because not all animation parameters are set (eg mixing transforms)
-			if (animsChanged && resetModelStateIfAnimChanged) {
-				this.AnimComponent.Sample ();
-			}
 
 
 			return true;

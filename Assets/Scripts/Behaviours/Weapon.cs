@@ -324,7 +324,7 @@ namespace SanAndreasUnity.Behaviours
 				// aim with arm
 				// eg: pistol, tec9, sawnoff
 
-				model.Play2Anims (new AnimId (AnimGroup.Colt45, AnimIndex.colt45_fire), this.GetAnimBasedOnMovement (player, false), true);
+				model.Play2Anims (new AnimId (AnimGroup.Colt45, AnimIndex.colt45_fire), this.GetAnimBasedOnMovement (player, false));
 
 				AimAnimState = model.LastAnimState;
 				model.LastAnimState.wrapMode = WrapMode.ClampForever;
@@ -334,6 +334,13 @@ namespace SanAndreasUnity.Behaviours
 
 				model.AddMixingTransform (model.LastSecondaryAnimState, model.LeftClavicle, true);
 				model.AddMixingTransforms (model.LastSecondaryAnimState, model.Pelvis, model.Belly, model.Spine, model.UpperSpine, model.RBreast, model.LBreast, model.Neck);
+
+				if (model.AnimsChanged) {
+					// reset model state
+					model.ResetModelState ();
+					// sample the animation, because otherwise, model will remain in original state for 1 frame
+					model.AnimComponent.Sample ();
+				}
 
 				this.UpdateFireAnim (player, model.LastAnimState);
 
