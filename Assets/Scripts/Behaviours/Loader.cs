@@ -29,8 +29,7 @@ namespace SanAndreasUnity.Behaviours
 		private static bool m_hasErrors = false;
 		private static System.Exception m_loadException;
 
-        private static string[] archivePaths;
-        private static IArchive[] archives;
+		private static IArchive[] s_archives;
 
 		public class LoadingStep
 		{
@@ -85,7 +84,6 @@ namespace SanAndreasUnity.Behaviours
 			LoadingStep[] steps = new LoadingStep[] {
 				new LoadingStep ( StepLoadConfig, "Loading config", 0.02f ),
 				new LoadingStep ( StepSelectGTAPath(), "Select path to GTA", 0.0f ),
-				new LoadingStep ( StepGetPaths, "Loading archive paths", 0.03f ),
 				new LoadingStep ( StepLoadArchives, "Loading archives", 1.7f ),
 				new LoadingStep ( StepLoadSplashScreen, "Loading splash screen", 0.06f ),
 				new LoadingStep ( StepSetSplash1, "Set splash 1" ),
@@ -251,14 +249,11 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		private static void StepGetPaths ()
-		{
-			archivePaths = Config.GetPaths("archive_paths");
-		}
-
 		private static void StepLoadArchives ()
 		{
-			
+
+			string[] archivePaths = Config.GetPaths("archive_paths");
+
 			List<IArchive> listArchives = new List<IArchive>();
 
 			foreach (var path in archivePaths)
@@ -277,7 +272,7 @@ namespace SanAndreasUnity.Behaviours
 				}
 			}
 
-			archives = listArchives.FindAll(a => a != null).ToArray();
+			s_archives = listArchives.FindAll(a => a != null).ToArray();
 
 		}
 
@@ -308,7 +303,7 @@ namespace SanAndreasUnity.Behaviours
 			
 			int numCollisionFiles = 0;
 
-			foreach (var archive in archives)
+			foreach (var archive in s_archives)
 			{
 				foreach (var colFile in archive.GetFileNamesWithExtension(".col"))
 				{
