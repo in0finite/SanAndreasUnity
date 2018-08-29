@@ -318,6 +318,17 @@ namespace SanAndreasUnity.Utilities
 		}
 
 
+		public static void RunExceptionSafe (System.Action function)
+		{
+			try {
+				function();
+			} catch(System.Exception ex) {
+				try {
+					Debug.LogException (ex);
+				} catch {}
+			}
+		}
+
 		public	static	void	Invoke( this Component component, string methodName, params object[] args ) {
 
 			var method = component.GetType().GetMethod( methodName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public );

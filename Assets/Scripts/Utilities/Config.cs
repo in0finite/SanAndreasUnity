@@ -47,31 +47,14 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
-        private static readonly JObject _root;
-        private static readonly JObject _user;
 
-        private static readonly Dictionary<string, string> _substitutions;
+		private static JObject _root = new JObject ();
+		private static JObject _user = new JObject ();
 
-
-        static Config()
-        {
-			_root = new JObject ();
-			_user = new JObject ();
-
-			_substitutions = new Dictionary<string, string>();
-
-            if (!File.Exists(UserFilePath))
-            {
-                //File.WriteAllText(UserFilePath, "{\r\n    // Specify overrides here\r\n}\r\n");
-				SaveUserConfig ();
-            }
-
-            _root = JObject.Parse(File.ReadAllText(FilePath));
-            _user = JObject.Parse(File.ReadAllText(UserFilePath));
-
-        }
+		private static readonly Dictionary<string, string> _substitutions = new Dictionary<string, string> ();
 
 
+        
         private static TVal ConvertVal<TVal>(JToken val)
         {
             try
@@ -144,9 +127,30 @@ namespace SanAndreasUnity.Utilities
 			_user [key] = value;
 		}
 
+		public static void Load ()
+		{
+			_root = new JObject ();
+			_user = new JObject ();
+			_substitutions.Clear ();
+
+
+			_root = JObject.Parse (File.ReadAllText (FilePath));
+
+			if (File.Exists (UserFilePath))
+			{
+				_user = JObject.Parse (File.ReadAllText (UserFilePath));
+			}
+
+		}
+
 		public static void SaveUserConfig ()
 		{
 			File.WriteAllText (UserFilePath, _user.ToString (Newtonsoft.Json.Formatting.Indented));
+		}
+
+		public static void SaveUserConfigSafe ()
+		{
+			F.RunExceptionSafe (() => SaveUserConfig ());
 		}
 
     }

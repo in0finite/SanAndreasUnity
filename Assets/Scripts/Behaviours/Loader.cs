@@ -83,6 +83,7 @@ namespace SanAndreasUnity.Behaviours
 		{
 			
 			LoadingStep[] steps = new LoadingStep[] {
+				new LoadingStep ( StepLoadConfig, "Loading config", 0.02f ),
 				new LoadingStep ( StepSelectGTAPath(), "Select path to GTA", 0.0f ),
 				new LoadingStep ( StepGetPaths, "Loading archive paths", 0.03f ),
 				new LoadingStep ( StepLoadArchives, "Loading archives", 1.7f ),
@@ -215,6 +216,11 @@ namespace SanAndreasUnity.Behaviours
 			Debug.LogException (ex);
 		}
 
+
+		private static void StepLoadConfig ()
+		{
+			Config.Load ();
+		}
 
 		private static IEnumerator StepSelectGTAPath ()
 		{
@@ -493,7 +499,7 @@ namespace SanAndreasUnity.Behaviours
 				m_fileBrowser = new FileBrowser(rect, "Select path to GTA", (string path) => {
 					m_showFileBrowser = false;
 					Config.SetString (Config.const_game_dir, path);
-					Config.SaveUserConfig ();
+					Config.SaveUserConfigSafe ();
 				} );
 				m_fileBrowser.BrowserType = FileBrowserType.Directory;
 			}
