@@ -52,7 +52,8 @@ namespace SanAndreasUnity.UI {
 
 		void Update () {
 
-			if (Input.GetKeyDown (KeyCode.Escape)) {
+			// toggle pause menu
+			if (Loader.HasLoaded && Input.GetKeyDown (KeyCode.Escape)) {
 				
 				if (IsOpened) {
 					// if there is a modal window, close it, otherwise close pause menu
