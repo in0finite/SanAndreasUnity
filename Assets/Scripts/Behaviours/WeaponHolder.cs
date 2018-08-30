@@ -347,6 +347,9 @@ namespace SanAndreasUnity.Behaviours {
 			m_frameWhenSwitchedWeapon = Time.frameCount;
 
 			this.IsFiring = false;
+
+			this.UpdateWeaponTransform ();
+
 		}
 
 		private static void HideWeapon (Weapon weapon)
@@ -377,6 +380,9 @@ namespace SanAndreasUnity.Behaviours {
 			if (slotIndex == currentWeaponSlot) {
 				// update current weapon variable
 				CurrentWeapon = weapons [slotIndex];
+
+				// update it's transform
+				this.UpdateWeaponTransform ();
 			} else {
 				// hide the newly created weapon
 				HideWeapon (weapons[slotIndex]);
