@@ -56,23 +56,15 @@ These are the useful parameters in weapons.dat :
 
 - reloading
 
-- right after weapon is switched, update transform of weapon ; also do it when weapon is given to ped ;
-
 - when lerping upper arm transform toward player forward vector, arm is going on the opposite side - it seems that it depends on world rotation of player
-
-- problematic anims: 
-
-- when aiming with single-arm weapons - play the same idle anim for all models ?
 
 - spine should be rotated locally, not globally ? - some models have different rotation of spine in the idle anim, which means that their spine will not look at the same place - possible solution would be to play the same idle anim on all models
 
-- whem anim is changed, reset model state ?
-
-- right after the model is loaded, reset model state
+- right after the model is loaded, reset model state - it's already done ?
 
 - rotate the pelvis instead of spine (because thighs look ugly)
 
-- run and aim at the same time with single-arm weapons
+- rotate neck instead of spine, when following direction of aiming
 
 - play separate anim for: minigun and flame thrower, 
 

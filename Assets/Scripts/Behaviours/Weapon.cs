@@ -284,7 +284,7 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-        public virtual AnimId AimIdle
+        public virtual AnimId AimAnimLowerPart
         {
             get
             {
@@ -528,7 +528,10 @@ namespace SanAndreasUnity.Behaviours
 					// just aim
 
 					//state = PlayerModel.PlayAnim (this.AimAnim, true, false);
-					PlayerModel.Play2Anims( this.AimAnim, this.AimIdle );
+					PlayerModel.Play2Anims( this.AimAnim, this.AimAnimLowerPart );
+
+					// some anims don't set root frame velocity, so we have to set it
+					PlayerModel.RootFrame.LocalVelocity = Vector3.zero;
 
 					state = PlayerModel.LastAnimState;
 					state.wrapMode = WrapMode.ClampForever;

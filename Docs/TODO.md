@@ -31,6 +31,12 @@
 
 - Jump
 
+- Add settings: run in background ; shadow settings ;
+
+- Pause menu can be switched on during loading ?
+
+- Pin windows - pinned windows are visible even when pause menu is not
+
 - Remove editor scripts for destroying player model
 
 - Remove unneeded assets
