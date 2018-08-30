@@ -56,9 +56,7 @@ These are the useful parameters in weapons.dat :
 
 - reloading
 
-- right after weapon is switched, update transform of weapon
-
-- guns flash rotation speed should be randomized
+- right after weapon is switched, update transform of weapon ; also do it when weapon is given to ped ;
 
 - when lerping upper arm transform toward player forward vector, arm is going on the opposite side - it seems that it depends on world rotation of player
 

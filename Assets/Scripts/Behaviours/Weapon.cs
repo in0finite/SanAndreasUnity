@@ -629,7 +629,8 @@ namespace SanAndreasUnity.Behaviours
 			if (!this.GunFlash.gameObject.activeInHierarchy)
 				return;
 
-			float delta = Weapons.WeaponsManager.Instance.GunFlashRotationSpeed * Time.deltaTime;
+			float randomFactor = Random.Range (0.75f, 1.25f);
+			float delta = WeaponsManager.Instance.GunFlashRotationSpeed * Time.deltaTime * randomFactor;
 
 			this.GunFlash.rotation *= Quaternion.AngleAxis (delta, Vector3.right);
 
