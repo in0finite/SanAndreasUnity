@@ -659,9 +659,21 @@ namespace SanAndreasUnity.Behaviours
 			this.UpdateGunFlashRotation (ped);
 
 			// fire projectile
+			F.RunExceptionSafe( () => this.FireProjectile (ped) );
 
 
 			return true;
+		}
+
+		protected virtual void FireProjectile (Player ped)
+		{
+			// obtain fire position and direction
+
+			// raycast against all (non-breakable ?) objects
+
+			// if target object has damageable script, inflict damage to it
+
+
 		}
 
 	}

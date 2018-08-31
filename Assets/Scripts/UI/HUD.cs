@@ -88,6 +88,8 @@ namespace SanAndreasUnity.UI {
 
 			var rect = GUIUtils.GetCornerRect (screenCorner, size, padding);
 
+			Player ped = Player.Instance;
+
 			// draw icon for current weapon
 
 			Weapon weapon = Player.Instance.CurrentWeapon;
@@ -137,7 +139,7 @@ namespace SanAndreasUnity.UI {
 			float barHeight = 8f; //rect.height / 10f;
 			float barWidth = rect.width * 0.5f;
 			Rect healthBarRect = new Rect (rect.width * 0.5f, texRect.yMax - barHeight, barWidth, barHeight);
-			DrawBar( healthBarRect, 1.0f, healthColor, healthBackgroundColor );
+			DrawBar( healthBarRect, ped.Health / ped.MaxHealth, healthColor, healthBackgroundColor );
 
 		}
 

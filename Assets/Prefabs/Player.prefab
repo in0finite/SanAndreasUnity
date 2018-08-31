@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114099438993920694}
   - component: {fileID: 114173420020992462}
   - component: {fileID: 114879899237604226}
+  - component: {fileID: 114220037769542022}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -109,6 +110,8 @@ MonoBehaviour:
   jumpSpeed: 8
   antiBumpFactor: 0.75
   antiBunnyHopFactor: 1
+  m_maxHealth: 100
+  m_enterVehicleRadius: 2
 --- !u!114 &114173420020992462
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -124,10 +127,40 @@ MonoBehaviour:
   CarCameraDistance: 6
   PlayerCameraDistance: 3
   clampInDegrees: {x: 60, y: 60}
-  EnterVehicleRadius: 5
   smoothing: {x: 10, y: 10}
   m_doSmooth: 0
   m_smoothMovement: 0
+  m_walkKey: 308
+  m_sprintKey: 32
+  m_jumpKey: 304
+--- !u!114 &114220037769542022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1273918895060814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62374ff6df2c74f9699075492ef7fdb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_health: 100
+  m_onDamage:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114220037769542022}
+        m_MethodName: HandleDamageByDefault
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114671475596742702
 MonoBehaviour:
   m_ObjectHideFlags: 1
