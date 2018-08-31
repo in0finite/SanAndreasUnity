@@ -570,15 +570,9 @@ namespace SanAndreasUnity.Behaviours
 				} else {
 					// check if we should start firing
 
-					if (player.WeaponHolder.IsFireOn) {
-						// we should start firing
-						player.WeaponHolder.IsFiring = true;
+					if (player.WeaponHolder.IsFireOn && this.TryFire (player)) {
+						// we started firing
 
-						// update gun flash
-					//	this.EnableOrDisableGunFlash (player);
-						if (this.GunFlash != null)
-							this.GunFlash.gameObject.SetActive (true);
-						this.UpdateGunFlashRotation (player);
 					} else {
 						// we should remain in aim state
 						state.time = this.AimAnimMaxTime;
@@ -641,6 +635,33 @@ namespace SanAndreasUnity.Behaviours
 
 			this.GunFlash.rotation *= Quaternion.AngleAxis (delta, Vector3.right);
 
+		}
+
+
+		public virtual bool TryFire (Player ped)
+		{
+			if (ped.IsFiring)
+				return false;
+
+			// check if there is ammo in clip
+			if (this.AmmoInClip < 1)
+				return false;
+
+			ped.IsFiring = true;
+
+			// reduce ammo
+			this.AmmoInClip --;
+
+			// update gun flash
+		//	this.EnableOrDisableGunFlash (ped);
+			if (this.GunFlash != null)
+				this.GunFlash.gameObject.SetActive (true);
+			this.UpdateGunFlashRotation (ped);
+
+			// fire projectile
+
+
+			return true;
 		}
 
 	}
