@@ -390,6 +390,11 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
+		public Weapon GetWeaponAtSlot (int slotIndex)
+		{
+			return this.weapons [slotIndex];
+		}
+
 		public void RemoveAllWeapons() {
 
 			this.SwitchWeapon (-1);
@@ -424,6 +429,12 @@ namespace SanAndreasUnity.Behaviours {
 				WeaponData chosenWeaponData = grp.ElementAt (index);
 
 				this.SetWeaponAtSlot (chosenWeaponData.modelId1, grp.Key);
+
+				// add some ammo
+				Weapon weapon = this.GetWeaponAtSlot( grp.Key );
+				weapon.AmmoInClip = weapon.AmmoClipSize;
+				weapon.AmmoOutsideOfClip = weapon.AmmoClipSize * Random.Range( 0, 11 );
+
 			}
 
 		}

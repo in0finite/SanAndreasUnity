@@ -85,8 +85,12 @@ namespace SanAndreasUnity.Behaviours
 
 		public int SlotIndex { get { return this.Data.weaponslot; } }
 
-	//	public int totalAmmo = 0;
-	//	public int ammoInClip = 0;
+		public bool IsGun { get { return this.data.gunData != null; } }
+
+		public int AmmoClipSize { get { return this.data.gunData != null ? this.data.gunData.ammoClip : 0 ; } }
+		public int AmmoInClip { get; set; }
+		public int AmmoOutsideOfClip { get; set; }
+		public int TotalAmmo { get { return this.AmmoInClip + this.AmmoOutsideOfClip; } }
 
 		public Texture2D HudTexture { get; private set; }
 

@@ -10,6 +10,15 @@ namespace SanAndreasUnity.Utilities
 
 		private	static	GUIStyle	styleWithBackground = new GUIStyle ();
 
+		private static GUIStyle s_centeredLabelStyle = null;
+		public static GUIStyle CenteredLabelStyle {
+			get {
+				if (null == s_centeredLabelStyle)
+					s_centeredLabelStyle = new GUIStyle (GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
+				return s_centeredLabelStyle;
+			}
+		}
+
 
 
         public static Rect GetCornerRect(ScreenCorner corner, Vector2 size, Vector2? padding = null)

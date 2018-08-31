@@ -90,14 +90,16 @@ namespace SanAndreasUnity.UI {
 
 			// draw icon for current weapon
 
+			Weapon weapon = Player.Instance.CurrentWeapon;
+
 			Rect texRect = rect;
 			texRect.width *= 0.4f;
 			texRect.height *= 0.5f;
 
 			Texture2D tex;
-			if (Player.Instance.CurrentWeapon != null)
+			if (weapon != null)
 			{
-				tex = Player.Instance.CurrentWeapon.HudTexture;
+				tex = weapon.HudTexture;
 			}
 			else
 			{
@@ -115,6 +117,20 @@ namespace SanAndreasUnity.UI {
 
 				GUI.matrix = savedMatrix;
 			}
+
+			// ammo
+
+			if (weapon != null && weapon.IsGun)
+			{
+				string str = string.Format ("<b>{0}-{1}</b>", weapon.AmmoOutsideOfClip, weapon.AmmoInClip);
+
+				// draw it at the bottom of weapon icon
+				Vector2 desiredSize = GUIUtils.CalcScreenSizeForText (str, GUIUtils.CenteredLabelStyle);
+				Rect ammoRect = new Rect (new Vector2 (texRect.position.x, texRect.yMax - desiredSize.y / 2.0f), new Vector2 (texRect.width, desiredSize.y));
+
+				GUI.Label (ammoRect, str, GUIUtils.CenteredLabelStyle);
+			}
+
 
 			// health bar
 
