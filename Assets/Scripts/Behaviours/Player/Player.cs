@@ -96,9 +96,6 @@ namespace SanAndreasUnity.Behaviours
 		private Coroutine m_findGroundCoroutine;
 
 		public Damageable Damageable { get; private set; }
-		public float Health { get { return this.Damageable.Health; } set { this.Damageable.Health = value; } }
-		[SerializeField] private float m_maxHealth = 100f;
-		public float MaxHealth { get { return m_maxHealth; } set { m_maxHealth = value; } }
 
         #endregion Properties
 
@@ -503,6 +500,16 @@ namespace SanAndreasUnity.Behaviours
 			this.IsJumpOn = false;
 		}
 
+
+		void OnGUI ()
+		{
+			if (!Loader.HasLoaded)
+				return;
+
+			if (PedManager.Instance.displayHealthBarAbovePeds)
+				this.DrawHealthBar ();
+
+		}
 
 		void OnDrawGizmosSelected ()
 		{

@@ -31,7 +31,7 @@
 
 - Jump
 
-- Add settings: run in background ; shadow settings ;
+- Add settings: run in background ; shadow settings ; toggle minimap ;
 
 - Pin windows - pinned windows are visible even when pause menu is not
 

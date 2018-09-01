@@ -7,6 +7,8 @@ namespace SanAndreasUnity.UI {
 	
 	public class HUD : MonoBehaviour {
 
+		public static HUD Instance { get; private set; }
+
 		public float crosshairSize = 16;
 		public ScaleMode crosshairScaleMode = ScaleMode.StretchToFill;
 
@@ -18,8 +20,8 @@ namespace SanAndreasUnity.UI {
 		public Color healthBackgroundColor = (Color.red + Color.black) * 0.5f;
 
 
-		void Start () {
-			
+		void Awake () {
+			Instance = this;
 		}
 
 		void Update () {

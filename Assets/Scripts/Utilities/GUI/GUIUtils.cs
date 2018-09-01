@@ -127,6 +127,36 @@ namespace SanAndreasUnity.Utilities
 
 		}
 
+		public static Rect GetRectForBarAsBillboard (Vector3 worldPos, float worldWidth, float worldHeight, Camera cam)
+		{
+
+			Vector3 camRight = cam.transform.right;
+		//	Vector3 camUp = cam.transform.up;
+
+//			Vector3 upperLeft = worldPos - camRight * worldWidth * 0.5f + camUp * worldHeight * 0.5f;
+//			Vector3 upperRight = upperLeft + camRight * worldWidth;
+//			Vector3 lowerLeft = upperLeft - camUp * worldHeight;
+//			Vector3 lowerRight = lowerLeft + camRight * worldWidth;
+
+			Vector3 leftWorld = worldPos - camRight * worldWidth * 0.5f;
+			Vector3 rightWorld = worldPos + camRight * worldWidth * 0.5f;
+
+			Vector3 leftScreen = cam.WorldToScreenPoint (leftWorld);
+			Vector3 rightScreen = cam.WorldToScreenPoint (rightWorld);
+
+			if (leftScreen.z < 0 || rightScreen.z < 0)
+				return Rect.zero;
+
+			// transform to gui coordinates
+			leftScreen.y = Screen.height - leftScreen.y;
+			rightScreen.y = Screen.height - rightScreen.y;
+
+			float screenWidth = rightScreen.x - leftScreen.x;
+			float screenHeight = screenWidth * worldHeight / worldWidth;
+
+			return new Rect (new Vector2(leftScreen.x, leftScreen.y - screenHeight * 0.5f), new Vector2(screenWidth, screenHeight) );
+		}
+
 		public	static	void	CenteredLabel(Vector2 pos, string text) {
 
 			Vector2 size = CalcScreenSizeForText (text, GUI.skin.label);
