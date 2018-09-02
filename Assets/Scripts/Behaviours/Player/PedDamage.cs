@@ -7,19 +7,42 @@ namespace SanAndreasUnity.Behaviours
 	
 	public partial class Player : MonoBehaviour {
 
+		public Damageable Damageable { get; private set; }
+
 		public float Health { get { return this.Damageable.Health; } set { this.Damageable.Health = value; } }
 		[SerializeField] private float m_maxHealth = 100f;
 		public float MaxHealth { get { return m_maxHealth; } set { m_maxHealth = value; } }
 
+		public Bar HealthBar { get; private set; }
 
+
+
+		void AwakeForDamage ()
+		{
+			this.Damageable = this.GetComponent<Damageable> ();
+
+			// create health bar
+
+			this.HealthBar = Object.Instantiate (GameManager.Instance.barPrefab, this.transform).GetComponentOrLogError<Bar> ();
+		//	this.HealthBar.SetBorderWidth (0.1f);
+			this.HealthBar.SetFillPerc (1f);
+			this.HealthBar.BarSize = new Vector3 (PedManager.Instance.healthBarWorldWidth, PedManager.Instance.healthBarWorldHeight, 1.0f);
+			this.HealthBar.BackgroundColor = UI.HUD.Instance.healthBackgroundColor;
+			this.HealthBar.FillColor = UI.HUD.Instance.healthColor;
+			this.HealthBar.BorderColor = Color.black;
+
+		}
+
+		void UpdateDamageStuff ()
+		{
+			this.HealthBar.SetFillPerc (this.Health / this.MaxHealth);
+			this.HealthBar.transform.position = this.GetPosForHealthBar ();
+		}
 
 		public void DrawHealthBar ()
 		{
-			if (null == this.PlayerModel.Head)
-				return;
-
-			Vector3 pos = this.PlayerModel.Head.position;
-			pos += this.transform.up * PedManager.Instance.healthBarVerticalOffset;
+			
+			Vector3 pos = this.GetPosForHealthBar ();
 
 			Rect rect = GUIUtils.GetRectForBarAsBillboard (pos, PedManager.Instance.healthBarWorldWidth, 
 				PedManager.Instance.healthBarWorldHeight, Camera.main);
@@ -30,6 +53,17 @@ namespace SanAndreasUnity.Behaviours
 			float borderWidth = Mathf.Min( 2f, rect.height / 4f );
 			GUIUtils.DrawBar( rect, this.Health / this.MaxHealth, UI.HUD.Instance.healthColor, UI.HUD.Instance.healthBackgroundColor, borderWidth );
 
+		}
+
+		private Vector3 GetPosForHealthBar ()
+		{
+			if (null == this.PlayerModel.Head)
+				return this.transform.position;
+
+			Vector3 pos = this.PlayerModel.Head.position;
+			pos += this.transform.up * PedManager.Instance.healthBarVerticalOffset;
+
+			return pos;
 		}
 
 

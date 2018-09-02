@@ -95,8 +95,6 @@ namespace SanAndreasUnity.Behaviours
 
 		private Coroutine m_findGroundCoroutine;
 
-		public Damageable Damageable { get; private set; }
-
         #endregion Properties
 
 
@@ -118,7 +116,8 @@ namespace SanAndreasUnity.Behaviours
 
             characterController = GetComponent<CharacterController>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
-			this.Damageable = this.GetComponent<Damageable> ();
+
+			this.AwakeForDamage ();
 
         }
 
@@ -325,6 +324,8 @@ namespace SanAndreasUnity.Behaviours
                 FindGround();
             }
 
+			this.UpdateDamageStuff ();
+
 		//	IsWalking = IsRunning = false;
 
         }
@@ -506,8 +507,6 @@ namespace SanAndreasUnity.Behaviours
 			if (!Loader.HasLoaded)
 				return;
 
-			if (PedManager.Instance.displayHealthBarAbovePeds)
-				this.DrawHealthBar ();
 
 		}
 

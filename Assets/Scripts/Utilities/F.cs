@@ -246,6 +246,12 @@ namespace SanAndreasUnity.Utilities
 			return Quaternion.LookRotation (tr.TransformDirection (localForward), tr.TransformDirection (localUp));
 		}
 
+		public static void SetGlobalScale (this Transform tr, Vector3 globalScale)
+		{
+			Vector3 parentGlobalScale = tr.parent != null ? tr.parent.lossyScale : Vector3.one;
+			tr.localScale = Vector3.Scale (globalScale, parentGlobalScale.Inverted () );
+		}
+
 		public static Vector3 ClampDirection (Vector3 dir, Vector3 referenceVec, float maxAngle)
 		{
 			float angle = Vector3.Angle (dir, referenceVec);
@@ -592,6 +598,11 @@ namespace SanAndreasUnity.Utilities
 
 		public static Vector3 WithXAndZ( this Vector3 vec3 ) {
 			return new Vector3 (vec3.x, 0f, vec3.z);
+		}
+
+		public static Vector3 Inverted (this Vector3 vec3)
+		{
+			return new Vector3 (1.0f / vec3.x, 1.0f / vec3.y, 1.0f / vec3.z);
 		}
 
 		/// <summary>

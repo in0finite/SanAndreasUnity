@@ -56,6 +56,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pedPrefab: {fileID: 1246736317761792, guid: bb8a7229f5c124b06be709ab5a7ff007, type: 2}
+  barPrefab: {fileID: 1593438409806284, guid: 92671d073b68a421fa8cf12bd74315cb, type: 2}
 --- !u!114 &114366052828304570
 MonoBehaviour:
   m_ObjectHideFlags: 1

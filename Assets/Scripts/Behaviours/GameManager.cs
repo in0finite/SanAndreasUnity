@@ -11,6 +11,8 @@ namespace SanAndreasUnity.Behaviours {
 
 		public GameObject pedPrefab;
 
+		public GameObject barPrefab;
+
 
 
 
