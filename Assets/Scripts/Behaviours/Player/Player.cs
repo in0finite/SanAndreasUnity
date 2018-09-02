@@ -124,6 +124,8 @@ namespace SanAndreasUnity.Behaviours
         void Start()
         {
             //MySetupLocalPlayer ();
+
+			this.StartForDamage ();
         }
 
 		void OnEnable ()

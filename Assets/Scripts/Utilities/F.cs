@@ -175,6 +175,19 @@ namespace SanAndreasUnity.Utilities
 			return comp;
 		}
 
+		public static T GetComponentOrThrow<T> (this GameObject go) where T : Component
+		{
+			T comp = go.GetComponent<T> ();
+			if (null == comp)
+				throw new MissingComponentException (string.Format ("Failed to get component of type: {0}, on game object: {1}", typeof(T), go.name));
+			return comp;
+		}
+
+		public static T GetComponentOrThrow<T> (this Component comp) where T : Component
+		{
+			return comp.gameObject.GetComponentOrThrow<T> ();
+		}
+
 		public static T GetComponentOrLogError<T> (this GameObject go) where T : Component
 		{
 			T comp = go.GetComponent<T> ();

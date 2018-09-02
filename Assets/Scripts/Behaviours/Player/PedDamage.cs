@@ -19,24 +19,39 @@ namespace SanAndreasUnity.Behaviours
 
 		void AwakeForDamage ()
 		{
-			this.Damageable = this.GetComponent<Damageable> ();
+			this.Damageable = this.GetComponentOrThrow<Damageable> ();
 
-			// create health bar
+		}
 
-			this.HealthBar = Object.Instantiate (GameManager.Instance.barPrefab, this.transform).GetComponentOrLogError<Bar> ();
-		//	this.HealthBar.SetBorderWidth (0.1f);
-			this.HealthBar.SetFillPerc (1f);
-			this.HealthBar.BarSize = new Vector3 (PedManager.Instance.healthBarWorldWidth, PedManager.Instance.healthBarWorldHeight, 1.0f);
+		void StartForDamage ()
+		{
+			this.CreateHealthBar ();
+
+		}
+
+		void CreateHealthBar ()
+		{
+			this.HealthBar = Object.Instantiate (GameManager.Instance.barPrefab, this.transform).GetComponentOrThrow<Bar> ();
+			//	this.HealthBar.SetBorderWidth (0.1f);
 			this.HealthBar.BackgroundColor = UI.HUD.Instance.healthBackgroundColor;
 			this.HealthBar.FillColor = UI.HUD.Instance.healthColor;
 			this.HealthBar.BorderColor = Color.black;
 
+			this.UpdateHealthBar ();
 		}
 
 		void UpdateDamageStuff ()
 		{
+			this.UpdateHealthBar ();
+		}
+
+		void UpdateHealthBar ()
+		{
+			this.HealthBar.BarSize = new Vector3 (PedManager.Instance.healthBarWorldWidth, PedManager.Instance.healthBarWorldHeight, 1.0f);
 			this.HealthBar.SetFillPerc (this.Health / this.MaxHealth);
 			this.HealthBar.transform.position = this.GetPosForHealthBar ();
+			this.HealthBar.MaxHeightOnScreen = PedManager.Instance.healthBarMaxScreenHeight;
+
 		}
 
 		public void DrawHealthBar ()

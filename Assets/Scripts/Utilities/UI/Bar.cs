@@ -18,7 +18,11 @@ namespace SanAndreasUnity.Utilities
 		public Color BackgroundColor { get { return this.BackgroundRenderer.material.color; } set { this.BackgroundRenderer.material.color = value; } }
 		public Color FillColor { get { return this.FillRenderer.material.color; } set { this.FillRenderer.material.color = value; } }
 
-		public Vector3 BarSize { get { return this.transform.lossyScale; } set { this.transform.SetGlobalScale( value ); } }
+		[SerializeField] private Vector3 m_barSize = new Vector3 (1f, 0.2f, 1f);
+		public Vector3 BarSize { get { return m_barSize; } set { m_barSize = value; } }
+
+		[SerializeField] private float m_maxHeightOnScreen = 10f;
+		public float MaxHeightOnScreen { get { return m_maxHeightOnScreen; } set { m_maxHeightOnScreen = value; } }
 
 		public bool faceTowardsCamera = true;
 
@@ -37,9 +41,59 @@ namespace SanAndreasUnity.Utilities
 
 		void Update ()
 		{
+			Camera cam = Camera.main;
 
-			if (this.faceTowardsCamera && Camera.main != null) {
-				this.transform.rotation = Camera.main.transform.rotation;
+			// update size
+			this.transform.SetGlobalScale (this.BarSize);
+
+			if (cam)
+			{
+				if (this.faceTowardsCamera)
+				{
+					// make rotation same as camera's rotation
+					this.transform.rotation = cam.transform.rotation;
+
+					if (this.MaxHeightOnScreen > 0)
+					{
+						// limit height on screen
+
+						// get current height on screen
+
+						Vector3 top = this.transform.position + this.transform.up * this.transform.lossyScale.y * 0.5f;
+						Vector3 bottom = this.transform.position - this.transform.up * this.transform.lossyScale.y * 0.5f;
+
+						Vector3 screenTop = cam.WorldToScreenPoint( top );
+						Vector3 screenBottom = cam.WorldToScreenPoint( bottom );
+
+						if (screenTop.z >= 0 && screenBottom.z >= 0)
+						{
+							float heightOnScreen = Mathf.Abs( screenTop.y - screenBottom.y );
+							if (heightOnScreen > this.MaxHeightOnScreen)
+							{
+								// reduce height of bar
+
+								float ratio = this.MaxHeightOnScreen / heightOnScreen;
+
+								Vector3 newSize = this.transform.lossyScale;
+								newSize.y *= ratio;
+								this.transform.SetGlobalScale( newSize );
+
+
+//								Vector3 screenCenter = (screenTop + screenBottom) * 0.5f;
+//
+//								Vector3 wantedScreenTop = screenCenter;
+//								wantedScreenTop.y += this.MaxHeightOnScreen * 0.5f;
+//
+//								Vector3 wantedScreenBottom = screenCenter;
+//								wantedScreenBottom.y -= this.MaxHeightOnScreen * 0.5f;
+
+
+							}
+						}
+
+					}
+				}
+
 			}
 
 		}
