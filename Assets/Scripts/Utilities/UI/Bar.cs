@@ -78,16 +78,6 @@ namespace SanAndreasUnity.Utilities
 								newSize.y *= ratio;
 								this.transform.SetGlobalScale( newSize );
 
-
-//								Vector3 screenCenter = (screenTop + screenBottom) * 0.5f;
-//
-//								Vector3 wantedScreenTop = screenCenter;
-//								wantedScreenTop.y += this.MaxHeightOnScreen * 0.5f;
-//
-//								Vector3 wantedScreenBottom = screenCenter;
-//								wantedScreenBottom.y -= this.MaxHeightOnScreen * 0.5f;
-
-
 							}
 						}
 

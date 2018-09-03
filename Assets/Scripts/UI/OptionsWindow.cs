@@ -10,20 +10,35 @@ namespace SanAndreasUnity.UI {
 		/// </summary>
 		public	static	event System.Action	onGUI = delegate {};
 
-		public class FloatInput
+		public class Input<T>
 		{
 			public string description = "";
-			public float value;
-			public float OldValue { get; internal set; }
-			public float minValue;
-			public float maxValue;
+			public T value;
+			public T OldValue { get; internal set; }
 			public bool IsChanged { get; internal set; }
 
-			public FloatInput (string description, float minValue, float maxValue)
+			public Input (string description)
 			{
 				this.description = description;
+			}
+		}
+
+		public class FloatInput : Input<float>
+		{
+			public float minValue;
+			public float maxValue;
+
+			public FloatInput (string description, float minValue, float maxValue) : base (description)
+			{
 				this.minValue = minValue;
 				this.maxValue = maxValue;
+			}
+		}
+
+		public class BoolInput : Input<bool>
+		{
+			public BoolInput (string description) : base (description)
+			{
 			}
 		}
 
@@ -61,8 +76,6 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.Space (20);
 
-			// options to add: show FPS counter, show minimap, 
-
 		}
 
 
@@ -92,6 +105,16 @@ namespace SanAndreasUnity.UI {
 			floatInput.value = FloatSlider (floatInput.value, floatInput.minValue, floatInput.maxValue, floatInput.description );
 			floatInput.IsChanged = floatInput.value != floatInput.OldValue;
 			return floatInput.IsChanged;
+		}
+
+		public	static	bool	Toggle (BoolInput input)
+		{
+			input.OldValue = input.value;
+
+			input.value = GUILayout.Toggle( input.value, input.description );
+
+			input.IsChanged = input.value != input.OldValue;
+			return input.IsChanged;
 		}
 
 		public	static	T	MultipleOptions<T>( T currentValue, string description, params T[] allValues ) {
