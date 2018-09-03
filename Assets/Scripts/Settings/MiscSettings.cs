@@ -9,10 +9,24 @@ namespace SanAndreasUnity.Settings {
 
 	public class MiscSettings : MonoBehaviour {
 		
-		OptionsWindow.FloatInput m_timeScaleInput = new OptionsWindow.FloatInput( "Time scale", 0f, 4f );
-		OptionsWindow.BoolInput m_displayHealthBarsInput = new OptionsWindow.BoolInput ("Display health bar above peds");
-		OptionsWindow.BoolInput m_displayMinimapInput = new OptionsWindow.BoolInput ("Display minimap");
-		OptionsWindow.BoolInput m_runInBackgroundInput = new OptionsWindow.BoolInput ("Run in background");
+		OptionsWindow.FloatInput m_timeScaleInput = new OptionsWindow.FloatInput( "Time scale", 0f, 4f ) {
+			getValue = () => Time.timeScale,
+			setValue = (value) => { Time.timeScale = value; }
+		};
+		OptionsWindow.BoolInput m_displayHealthBarsInput = new OptionsWindow.BoolInput ("Display health bar above peds") {
+			isAvailable = () => PedManager.Instance != null,
+			getValue = () => PedManager.Instance.displayHealthBarAbovePeds,
+			setValue = (value) => { PedManager.Instance.displayHealthBarAbovePeds = value; }
+		};
+		OptionsWindow.BoolInput m_displayMinimapInput = new OptionsWindow.BoolInput ("Display minimap") {
+			isAvailable = () => MiniMap.Instance != null,
+			getValue = () => MiniMap.Instance.gameObject.activeSelf,
+			setValue = (value) => { MiniMap.Instance.gameObject.SetActive (value); }
+		};
+		OptionsWindow.BoolInput m_runInBackgroundInput = new OptionsWindow.BoolInput ("Run in background") {
+			getValue = () => Application.runInBackground,
+			setValue = (value) => { Application.runInBackground = value; }
+		};
 
 
 
@@ -27,34 +41,13 @@ namespace SanAndreasUnity.Settings {
 			GUILayout.Label ("\nMISC\n");
 
 
-			m_timeScaleInput.value = Time.timeScale;
-			if (OptionsWindow.FloatSlider (m_timeScaleInput)) {
-				Time.timeScale = m_timeScaleInput.value;
-			}
+			OptionsWindow.Input (m_timeScaleInput);
 
-			if (PedManager.Instance)
-			{
-				m_displayHealthBarsInput.value = PedManager.Instance.displayHealthBarAbovePeds;
-				if (OptionsWindow.Toggle (m_displayHealthBarsInput))
-				{
-					PedManager.Instance.displayHealthBarAbovePeds = m_displayHealthBarsInput.value;
-				}
-			}
+			OptionsWindow.Input (m_runInBackgroundInput);
 
-			if (MiniMap.Instance)
-			{
-				m_displayMinimapInput.value = MiniMap.Instance.gameObject.activeSelf;
-				if (OptionsWindow.Toggle (m_displayMinimapInput))
-				{
-					MiniMap.Instance.gameObject.SetActive (m_displayMinimapInput.value);
-				}
-			}
+			OptionsWindow.Input (m_displayHealthBarsInput);
 
-			m_runInBackgroundInput.value = Application.runInBackground;
-			if (OptionsWindow.Toggle (m_runInBackgroundInput))
-			{
-				Application.runInBackground = m_runInBackgroundInput.value;
-			}
+			OptionsWindow.Input (m_displayMinimapInput);
 
 		}
 

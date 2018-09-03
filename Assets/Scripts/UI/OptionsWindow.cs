@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace SanAndreasUnity.UI {
 
@@ -10,17 +11,24 @@ namespace SanAndreasUnity.UI {
 		/// </summary>
 		public	static	event System.Action	onGUI = delegate {};
 
-		public class Input<T>
+
+		public abstract class Input<T>
 		{
 			public string description = "";
-			public T value;
-			public T OldValue { get; internal set; }
-			public bool IsChanged { get; internal set; }
+		//	public T value;
+		//	public T OldValue { get; internal set; }
+		//	public bool IsChanged { get; internal set; }
+
+			public System.Func<T> getValue = () => default(T);
+			public System.Action<T> setValue = (val) => {};
+			public System.Func<bool> isAvailable = () => true;
 
 			public Input (string description)
 			{
 				this.description = description;
 			}
+
+			public abstract T Display (T currentValue);
 		}
 
 		public class FloatInput : Input<float>
@@ -33,12 +41,22 @@ namespace SanAndreasUnity.UI {
 				this.minValue = minValue;
 				this.maxValue = maxValue;
 			}
+
+			public override float Display (float currentValue)
+			{
+				return OptionsWindow.FloatSlider (currentValue, this.minValue, this.maxValue, this.description);
+			}
 		}
 
 		public class BoolInput : Input<bool>
 		{
 			public BoolInput (string description) : base (description)
 			{
+			}
+
+			public override bool Display (bool currentValue)
+			{
+				return GUILayout.Toggle (currentValue, this.description);
 			}
 		}
 
@@ -99,24 +117,6 @@ namespace SanAndreasUnity.UI {
 			return newValue;
 		}
 
-		public	static	bool	FloatSlider(FloatInput floatInput)
-		{
-			floatInput.OldValue = floatInput.value;
-			floatInput.value = FloatSlider (floatInput.value, floatInput.minValue, floatInput.maxValue, floatInput.description );
-			floatInput.IsChanged = floatInput.value != floatInput.OldValue;
-			return floatInput.IsChanged;
-		}
-
-		public	static	bool	Toggle (BoolInput input)
-		{
-			input.OldValue = input.value;
-
-			input.value = GUILayout.Toggle( input.value, input.description );
-
-			input.IsChanged = input.value != input.OldValue;
-			return input.IsChanged;
-		}
-
 		public	static	T	MultipleOptions<T>( T currentValue, string description, params T[] allValues ) {
 
 			GUILayout.Label (description + " : " + currentValue.ToString ());
@@ -135,6 +135,30 @@ namespace SanAndreasUnity.UI {
 			GUILayout.EndHorizontal ();
 
 			return newValue;
+		}
+
+		public	static	T	Enum<T>( T currentValue, string description ) where T : struct {
+
+			var values = System.Enum.GetValues (typeof(T));
+
+			var newValue = MultipleOptions (currentValue, description, values.Cast<T> ().ToArray ());
+			return newValue;
+		}
+
+		public	static	void	Input<T>( Input<T> input )
+		{
+			if (!input.isAvailable ())
+				return;
+
+			var oldValue = input.getValue ();
+
+			var newValue = input.Display (oldValue);
+
+			if (!newValue.Equals( oldValue ))
+			{
+				input.setValue (newValue);
+			}
+
 		}
 
 	}

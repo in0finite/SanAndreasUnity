@@ -10,7 +10,11 @@ namespace SanAndreasUnity.Settings {
 	public class QualitySettings : MonoBehaviour {
 
 		string[] qualitySettingsNames;
-		OptionsWindow.FloatInput m_fpsInput = new OptionsWindow.FloatInput( "Max fps", 0f, 200f );
+
+		OptionsWindow.FloatInput m_fpsInput = new OptionsWindow.FloatInput( "Max fps", 0f, 200f ) {
+			getValue = () => Behaviours.GameManager.GetMaxFps (),
+			setValue = (value) => { Behaviours.GameManager.SetMaxFps (value.RoundToInt ()); }
+		};
 
 
 		void Start () {
@@ -25,10 +29,7 @@ namespace SanAndreasUnity.Settings {
 			GUILayout.Label ("\nQUALITY\n");
 
 
-			m_fpsInput.value = Behaviours.GameManager.GetMaxFps ();
-			if (OptionsWindow.FloatSlider (m_fpsInput)) {
-				Behaviours.GameManager.SetMaxFps (m_fpsInput.value.RoundToInt ());
-			}
+			OptionsWindow.Input (m_fpsInput);
 
 			Quality.antiAliasing = UI.OptionsWindow.MultipleOptions( Quality.antiAliasing,
 				"Anti aliasing", 0, 2, 4);
@@ -42,6 +43,11 @@ namespace SanAndreasUnity.Settings {
 
 			Quality.shadowDistance = UI.OptionsWindow.FloatSlider (Quality.shadowDistance,
 				0, 200, "Shadow distance");
+
+//			Quality.shadowCascades;
+//			Quality.shadowProjection;
+//			Quality.shadowResolution;
+//			Quality.shadows;
 
 
 		}
