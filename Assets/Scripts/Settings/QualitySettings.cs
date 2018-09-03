@@ -15,6 +15,12 @@ namespace SanAndreasUnity.Settings {
 			getValue = () => Behaviours.GameManager.GetMaxFps (),
 			setValue = (value) => { Behaviours.GameManager.SetMaxFps (value.RoundToInt ()); }
 		};
+		OptionsWindow.MultipleOptionsInput<int> m_antiAliasingInput = new OptionsWindow.MultipleOptionsInput<int>() {
+			description = "Anti aliasing",
+			getValue = () => Quality.antiAliasing,
+			setValue = (value) => { Quality.antiAliasing = value; },
+			Options = new int[]{0, 2, 4}
+		};
 		OptionsWindow.FloatInput m_shadowDistanceInput = new OptionsWindow.FloatInput( "Shadow distance", 0f, 200f ) {
 			getValue = () => Quality.shadowDistance,
 			setValue = (value) => { Quality.shadowDistance = value; }
@@ -30,9 +36,20 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { Quality.shadowResolution = value; }
 		};
 		OptionsWindow.EnumInput<ShadowQuality> m_shadowQualityInput = new OptionsWindow.EnumInput<ShadowQuality>() {
-			description = "Shadow quality",
+			description = "Shadows",
 			getValue = () => Quality.shadows,
 			setValue = (value) => { Quality.shadows = value; }
+		};
+		OptionsWindow.MultipleOptionsInput<int> m_shadowCascadesInput = new OptionsWindow.MultipleOptionsInput<int>() {
+			description = "Num shadow cascades",
+			getValue = () => Quality.shadowCascades,
+			setValue = (value) => { Quality.shadowCascades = value; },
+			Options = new int[]{1, 2, 4}
+		};
+		OptionsWindow.EnumInput<AnisotropicFiltering> m_anisotropicFilteringInput = new OptionsWindow.EnumInput<AnisotropicFiltering>() {
+			description = "Anisotropic filtering",
+			getValue = () => Quality.anisotropicFiltering,
+			setValue = (value) => { Quality.anisotropicFiltering = value; }
 		};
 
 
@@ -51,8 +68,7 @@ namespace SanAndreasUnity.Settings {
 
 			OptionsWindow.Input (m_fpsInput);
 
-			Quality.antiAliasing = UI.OptionsWindow.MultipleOptions( Quality.antiAliasing,
-				"Anti aliasing", 0, 2, 4);
+			OptionsWindow.Input (m_antiAliasingInput);
 
 			string newLevel = UI.OptionsWindow.MultipleOptions( this.qualitySettingsNames[Quality.GetQualityLevel()],
 				"Quality level", this.qualitySettingsNames);
@@ -61,12 +77,13 @@ namespace SanAndreasUnity.Settings {
 				Quality.SetQualityLevel (newLevelIndex);
 			}
 
+			OptionsWindow.Input (m_shadowQualityInput);
 			OptionsWindow.Input (m_shadowDistanceInput);
-
-//			Quality.shadowCascades;
 			OptionsWindow.Input (m_shadowProjectionInput);
 			OptionsWindow.Input (m_shadowResolutionInput);
-			OptionsWindow.Input (m_shadowQualityInput);
+			OptionsWindow.Input (m_shadowCascadesInput);
+
+			OptionsWindow.Input (m_anisotropicFilteringInput);
 
 		}
 

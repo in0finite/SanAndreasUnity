@@ -75,6 +75,16 @@ namespace SanAndreasUnity.UI {
 			}
 		}
 
+		public class MultipleOptionsInput<T> : Input<T>
+		{
+			public T[] Options { get; set; }
+
+			public override T Display (T currentValue)
+			{
+				return OptionsWindow.MultipleOptions (currentValue, this.description, this.Options);
+			}
+		}
+
 
 
 		OptionsWindow() {
