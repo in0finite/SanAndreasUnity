@@ -31,7 +31,7 @@
 
 - Jump
 
-- Add settings: run in background ; shadow settings ; toggle minimap ; health bar settings ;
+- Add settings: run in background ; shadow settings ;
 
 - Add utility: spawn 5 peds ;
 
