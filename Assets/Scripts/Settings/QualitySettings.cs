@@ -15,6 +15,26 @@ namespace SanAndreasUnity.Settings {
 			getValue = () => Behaviours.GameManager.GetMaxFps (),
 			setValue = (value) => { Behaviours.GameManager.SetMaxFps (value.RoundToInt ()); }
 		};
+		OptionsWindow.FloatInput m_shadowDistanceInput = new OptionsWindow.FloatInput( "Shadow distance", 0f, 200f ) {
+			getValue = () => Quality.shadowDistance,
+			setValue = (value) => { Quality.shadowDistance = value; }
+		};
+		OptionsWindow.EnumInput<ShadowProjection> m_shadowProjectionInput = new OptionsWindow.EnumInput<ShadowProjection>() {
+			description = "Shadow projection",
+			getValue = () => Quality.shadowProjection,
+			setValue = (value) => { Quality.shadowProjection = value; }
+		};
+		OptionsWindow.EnumInput<ShadowResolution> m_shadowResolutionInput = new OptionsWindow.EnumInput<ShadowResolution>() {
+			description = "Shadow resolution",
+			getValue = () => Quality.shadowResolution,
+			setValue = (value) => { Quality.shadowResolution = value; }
+		};
+		OptionsWindow.EnumInput<ShadowQuality> m_shadowQualityInput = new OptionsWindow.EnumInput<ShadowQuality>() {
+			description = "Shadow quality",
+			getValue = () => Quality.shadows,
+			setValue = (value) => { Quality.shadows = value; }
+		};
+
 
 
 		void Start () {
@@ -41,14 +61,12 @@ namespace SanAndreasUnity.Settings {
 				Quality.SetQualityLevel (newLevelIndex);
 			}
 
-			Quality.shadowDistance = UI.OptionsWindow.FloatSlider (Quality.shadowDistance,
-				0, 200, "Shadow distance");
+			OptionsWindow.Input (m_shadowDistanceInput);
 
 //			Quality.shadowCascades;
-//			Quality.shadowProjection;
-//			Quality.shadowResolution;
-//			Quality.shadows;
-
+			OptionsWindow.Input (m_shadowProjectionInput);
+			OptionsWindow.Input (m_shadowResolutionInput);
+			OptionsWindow.Input (m_shadowQualityInput);
 
 		}
 

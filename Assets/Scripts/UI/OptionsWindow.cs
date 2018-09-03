@@ -23,12 +23,18 @@ namespace SanAndreasUnity.UI {
 			public System.Action<T> setValue = (val) => {};
 			public System.Func<bool> isAvailable = () => true;
 
+
+			public Input ()
+			{
+			}
+
 			public Input (string description)
 			{
 				this.description = description;
 			}
 
 			public abstract T Display (T currentValue);
+
 		}
 
 		public class FloatInput : Input<float>
@@ -57,6 +63,15 @@ namespace SanAndreasUnity.UI {
 			public override bool Display (bool currentValue)
 			{
 				return GUILayout.Toggle (currentValue, this.description);
+			}
+		}
+
+		public class EnumInput<T> : Input<T> where T : struct
+		{
+			
+			public override T Display (T currentValue)
+			{
+				return OptionsWindow.Enum (currentValue, this.description);
 			}
 		}
 
