@@ -22,7 +22,7 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = new Rect(Screen.width / 2 - 100, 10, 200, 150);
+			this.windowRect = new Rect(Screen.width / 2 - 100, 10, 200, 180);
 		}
 
 
@@ -44,6 +44,22 @@ namespace SanAndreasUnity.UI {
 			if (GUILayout.Button("Change player model"))
 			{
 				CharacterModelChanger.ChangePedestrianModel();
+			}
+
+			if (GUILayout.Button("Spawn 5 peds"))
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					Player.SpawnPed (Player.RandomPedId);
+				}
+			}
+
+			if (GUILayout.Button("Spawn 5 stalker peds"))
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					Player.SpawnPedStalker (Player.RandomPedId);
+				}
 			}
 
 			if (GUILayout.Button("Destroy all vehicles"))

@@ -62,6 +62,10 @@ namespace SanAndreasUnity.Behaviours
 
 		public SanAndreasUnity.Importing.Items.Definitions.PedestrianDef PedDef { get { return this.PlayerModel.Definition; } }
 
+		public const int kMinPedId = 9;
+		public const int kMaxPedId = 288;
+		public static int RandomPedId { get { return Random.Range (Player.kMinPedId, Player.kMaxPedId + 1); } }
+
         public Vector3 Position
         {
             get { return transform.localPosition; }

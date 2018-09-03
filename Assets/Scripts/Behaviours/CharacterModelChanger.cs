@@ -29,12 +29,11 @@ public class CharacterModelChanger : MonoBehaviour
 
     public static void ChangePedestrianModel(Pedestrian ped, int newModelId)
     {
-        // model id range: 9 - 288
+        
+		if (-1 == newModelId)
+			newModelId = Player.RandomPedId;
 
-        if (-1 == newModelId)
-            newModelId = Random.Range(9, 289);
-
-        if (newModelId < 9 || newModelId > 288)
+		if (newModelId < Player.kMinPedId || newModelId > Player.kMaxPedId)
         {
             return;
         }
@@ -44,8 +43,9 @@ public class CharacterModelChanger : MonoBehaviour
         {
             ped.Load(newModelId);
         }
-        catch (System.NullReferenceException)
+        catch (System.NullReferenceException ex)
         {
+			Debug.LogException (ex);
             ChangePedestrianModel(ped, -1);
         }
     }

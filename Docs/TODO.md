@@ -31,9 +31,7 @@
 
 - Jump
 
-- Add settings: run in background ; shadow settings ;
-
-- Add utility: spawn 5 peds ;
+- Add settings: shadow settings ;
 
 - Pin windows - pinned windows are visible even when pause menu is not
 
