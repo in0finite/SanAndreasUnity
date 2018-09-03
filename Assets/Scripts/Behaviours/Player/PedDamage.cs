@@ -47,10 +47,16 @@ namespace SanAndreasUnity.Behaviours
 
 		void UpdateHealthBar ()
 		{
-			this.HealthBar.BarSize = new Vector3 (PedManager.Instance.healthBarWorldWidth, PedManager.Instance.healthBarWorldHeight, 1.0f);
-			this.HealthBar.SetFillPerc (this.Health / this.MaxHealth);
-			this.HealthBar.transform.position = this.GetPosForHealthBar ();
-			this.HealthBar.MaxHeightOnScreen = PedManager.Instance.healthBarMaxScreenHeight;
+			bool shouldBeVisible = PedManager.Instance.displayHealthBarAbovePeds && this != Player.Instance;
+			this.HealthBar.gameObject.SetActive (shouldBeVisible);
+
+			if (shouldBeVisible)
+			{
+				this.HealthBar.BarSize = new Vector3 (PedManager.Instance.healthBarWorldWidth, PedManager.Instance.healthBarWorldHeight, 1.0f);
+				this.HealthBar.SetFillPerc (this.Health / this.MaxHealth);
+				this.HealthBar.transform.position = this.GetPosForHealthBar ();
+				this.HealthBar.MaxHeightOnScreen = PedManager.Instance.healthBarMaxScreenHeight;
+			}
 
 		}
 

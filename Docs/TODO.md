@@ -19,7 +19,7 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- What to do before making a release: change starting pos ? ;
+- What to do before making a release: change starting pos ? ; change company name ; add logo ;
 
 - Readme: add instruction to open scene ; remove 'after building binary' part of text ;
 
@@ -31,7 +31,9 @@
 
 - Jump
 
-- Add settings: run in background ; shadow settings ; toggle minimap ;
+- Add settings: run in background ; shadow settings ; toggle minimap ; health bar settings ;
+
+- Add utility: spawn 5 peds ;
 
 - Pin windows - pinned windows are visible even when pause menu is not
 
