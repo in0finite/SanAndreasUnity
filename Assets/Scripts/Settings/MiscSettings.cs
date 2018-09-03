@@ -12,6 +12,7 @@ namespace SanAndreasUnity.Settings {
 		OptionsWindow.FloatInput m_timeScaleInput = new OptionsWindow.FloatInput( "Time scale", 0f, 4f );
 		OptionsWindow.BoolInput m_displayHealthBarsInput = new OptionsWindow.BoolInput ("Display health bar above peds");
 		OptionsWindow.BoolInput m_displayMinimapInput = new OptionsWindow.BoolInput ("Display minimap");
+		OptionsWindow.BoolInput m_runInBackgroundInput = new OptionsWindow.BoolInput ("Run in background");
 
 
 
@@ -47,6 +48,12 @@ namespace SanAndreasUnity.Settings {
 				{
 					MiniMap.Instance.gameObject.SetActive (m_displayMinimapInput.value);
 				}
+			}
+
+			m_runInBackgroundInput.value = Application.runInBackground;
+			if (OptionsWindow.Toggle (m_runInBackgroundInput))
+			{
+				Application.runInBackground = m_runInBackgroundInput.value;
 			}
 
 		}
