@@ -27,6 +27,8 @@ namespace SanAndreasUnity.UI
 		static readonly GUIContent collapseLabel = new GUIContent("Collapse", "Hide repeated messages.");
 	//	const int margin = 20;
 
+		private static readonly LogType[] s_allLogTypes = (LogType[]) System.Enum.GetValues (typeof(LogType));
+
 		static readonly Dictionary<LogType, Color> logTypeColors = new Dictionary<LogType, Color>
 		{
 			{ LogType.Assert, Color.white },
@@ -53,6 +55,8 @@ namespace SanAndreasUnity.UI
 			{ LogType.Log, true },
 			{ LogType.Warning, true },
 		};
+
+		private Dictionary<LogType, int> m_numMessagesPerType = new Dictionary<LogType, int> ();
 
 
 
@@ -81,7 +85,7 @@ namespace SanAndreasUnity.UI
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = Utilities.GUIUtils.GetCenteredRect( new Vector2(500, 400) );
+			this.windowRect = Utilities.GUIUtils.GetCenteredRect( new Vector2(550, 400) );
 		}
 
 		void Update()
@@ -132,11 +136,15 @@ namespace SanAndreasUnity.UI
 			// Used to determine height of accumulated log labels.
 			GUILayout.BeginVertical();
 
-			var visibleLogs = logs.Where(IsLogVisible);
+			foreach (LogType logType in s_allLogTypes)
+				m_numMessagesPerType [logType] = 0;
 
-			foreach (Log log in visibleLogs)
+			foreach (Log log in logs)
 			{
-				DrawLog(log);
+				if (IsLogVisible (log))
+					DrawLog (log);
+
+				m_numMessagesPerType [log.type] += (isCollapsed ? 1 : log.count);
 			}
 
 			GUILayout.EndVertical();
@@ -163,10 +171,12 @@ namespace SanAndreasUnity.UI
 				logs.Clear();
 			}
 
-			foreach (LogType logType in Enum.GetValues(typeof(LogType)))
+			foreach (LogType logType in s_allLogTypes)
 			{
-				var currentState = logTypeFilters[logType];
-				var label = logType.ToString();
+				bool currentState = logTypeFilters[logType];
+				int count = m_numMessagesPerType [logType];
+				string label = logType.ToString() + ( (count > 0) ? (" [" + count + "]") : "" );
+
 				logTypeFilters[logType] = GUILayout.Toggle(currentState, label, GUILayout.ExpandWidth(false));
 				GUILayout.Space(20);
 			}
