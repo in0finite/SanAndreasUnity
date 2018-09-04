@@ -40,6 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4615557407145958}
   - component: {fileID: 114435663141359712}
+  - component: {fileID: 114592069113923140}
   - component: {fileID: 114924086961640034}
   - component: {fileID: 114611395026534988}
   - component: {fileID: 114636911127793484}
@@ -221,6 +222,28 @@ MonoBehaviour:
     height: 157.5
   useScrollView: 0
   numPedsPerPage: 30
+--- !u!114 &114592069113923140
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693201817607148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c526ed17adca405e83c352cf842f516, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: Console
+  m_isOpenedByDefault: 0
+  windowRect:
+    serializedVersion: 2
+    x: 75
+    y: 173.5
+    width: 150
+    height: 347
+  useScrollView: 0
+  restrictLogCount: 1
+  maxLogCount: 1000
 --- !u!114 &114604904801458000
 MonoBehaviour:
   m_ObjectHideFlags: 1
