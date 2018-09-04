@@ -33,7 +33,7 @@
 
 - Exceptions are thrown for some ped models - mostly from inside LoadAnim()
 
-- Add settings: shadow settings for cascades ;
+- Persist settings
 
 - Pin windows - pinned windows are visible even when pause menu is not
 
