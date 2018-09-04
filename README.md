@@ -8,11 +8,12 @@ This won't be a complete re-implementation of the game, but we're hoping to buil
 
 ## Setup Instructions
 
-Before starting the game, you need to set path to gta installation (you will be asked for path when project is opened).
+- open the project
+- open main scene located at Assets/Scenes/Main.unity
+- press Play button
 
-Also, after building binary, you need to copy 'Data' folder to 'game_name'_Data folder. The script which should do that, doesn't work right now.
+When running for the first time, the game will ask you for path to GTA installation, and will store that path in config.user.json. If you ever need to change the path, you can just edit this file.
 
-**Note:** It seems that it has been fixed, but it must be reviewed.
 
 ## In-game controls
 

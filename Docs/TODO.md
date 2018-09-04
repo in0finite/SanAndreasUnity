@@ -19,9 +19,7 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- What to do before making a release: change starting pos ? ; change company name ; add logo ;
-
-- Readme: add instruction to open scene ; remove 'after building binary' part of text ;
+- What to do before making a release: change starting pos ? ;
 
 - Validate path to GTA ?
 
