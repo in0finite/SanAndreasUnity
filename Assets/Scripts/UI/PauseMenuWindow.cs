@@ -49,6 +49,11 @@ namespace SanAndreasUnity.UI {
 
 		private	bool	m_hasStarted = false;
 
+		[SerializeField]	private	float	m_spaceBeforeContent = 0f;
+		public float SpaceBeforeContent { get { return m_spaceBeforeContent; } set { m_spaceBeforeContent = value; } }
+		[SerializeField]	private	float	m_spaceAfterContent = 0f;
+		public float SpaceAfterContent { get { return m_spaceAfterContent; } set { m_spaceAfterContent = value; } }
+
 
 
 		void WindowStart() {
@@ -135,7 +140,11 @@ namespace SanAndreasUnity.UI {
 
 
 			if (!this.IsMinimized) {
-				
+				// draw contents inside window
+
+				if (this.SpaceBeforeContent > 0)
+					GUILayout.Space (this.SpaceBeforeContent);
+
 				if (this.useScrollView)
 					this.scrollPos = GUILayout.BeginScrollView (this.scrollPos);
 
@@ -143,7 +152,10 @@ namespace SanAndreasUnity.UI {
 
 				if (this.useScrollView)
 					GUILayout.EndScrollView ();
-				
+
+				if (this.SpaceAfterContent > 0)
+					GUILayout.Space (this.SpaceAfterContent);
+
 			}
 
 

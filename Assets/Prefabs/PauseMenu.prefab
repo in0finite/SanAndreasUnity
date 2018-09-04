@@ -128,6 +128,8 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 1
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
 --- !u!114 &114299782105903270
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -170,6 +172,8 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 0
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
 --- !u!114 &114396965753478646
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -190,6 +194,8 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 1
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
 --- !u!114 &114435663141359712
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -221,6 +227,8 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 0
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
   numPedsPerPage: 30
 --- !u!114 &114592069113923140
 MonoBehaviour:
@@ -242,6 +250,8 @@ MonoBehaviour:
     width: 150
     height: 347
   useScrollView: 0
+  m_spaceBeforeContent: 15
+  m_spaceAfterContent: 5
   restrictLogCount: 1
   maxLogCount: 1000
 --- !u!114 &114604904801458000
@@ -264,6 +274,8 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 1
+  m_spaceBeforeContent: 15
+  m_spaceAfterContent: 10
 --- !u!114 &114611395026534988
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -284,6 +296,8 @@ MonoBehaviour:
     width: 200
     height: 100
   useScrollView: 1
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
 --- !u!114 &114636911127793484
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -304,6 +318,8 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 1
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
 --- !u!114 &114753158958291610
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -324,6 +340,8 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 0
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
 --- !u!114 &114769417846371336
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -344,6 +362,8 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 1
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
 --- !u!114 &114911863237150764
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -364,6 +384,8 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 1
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
 --- !u!114 &114921708719520758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -395,3 +417,5 @@ MonoBehaviour:
     width: 250
     height: 330
   useScrollView: 0
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
