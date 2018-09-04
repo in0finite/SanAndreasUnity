@@ -25,13 +25,14 @@ namespace SanAndreasUnity.UI
 
 		static readonly GUIContent clearLabel = new GUIContent("Clear", "Clear the contents of the console.");
 		static readonly GUIContent collapseLabel = new GUIContent("Collapse", "Hide repeated messages.");
-	//	const int margin = 20;
 
-		private static readonly LogType[] s_allLogTypes = (LogType[]) System.Enum.GetValues (typeof(LogType));
+		private static readonly LogType[] s_allLogTypes = new LogType[] {
+			LogType.Log, LogType.Warning, LogType.Error, LogType.Exception, LogType.Assert
+		};
 
 		static readonly Dictionary<LogType, Color> logTypeColors = new Dictionary<LogType, Color>
 		{
-			{ LogType.Assert, Color.white },
+			{ LogType.Assert, Color.red },
 			{ LogType.Error, Color.red },
 			{ LogType.Exception, Color.red },
 			{ LogType.Log, Color.white },
@@ -40,12 +41,8 @@ namespace SanAndreasUnity.UI
 
 		bool isCollapsed;
 		public bool IsCollapsed { get { return this.isCollapsed; } set { this.isCollapsed = value; } }
-	//	bool isVisible;
 		readonly List<Log> logs = new List<Log>();
 		readonly ConcurrentQueue<Log> queuedLogs = new ConcurrentQueue<Log>();
-
-	//	Vector2 scrollPos;
-	//	Rect windowRect = new Rect(margin, margin, Screen.width - (margin * 2), Screen.height - (margin * 2));
 
 		readonly Dictionary<LogType, bool> logTypeFilters = new Dictionary<LogType, bool>
 		{
@@ -95,6 +92,11 @@ namespace SanAndreasUnity.UI
 		}
 
 		#endregion
+
+		static void RestoreContentColor ()
+		{
+			GUI.contentColor = Color.white;
+		}
 
 		void DrawCollapsedLog(Log log)
 		{
@@ -166,31 +168,40 @@ namespace SanAndreasUnity.UI
 		{
 			GUILayout.BeginHorizontal();
 
-			if (GUILayout.Button(clearLabel))
-			{
-				logs.Clear();
-			}
-
 			foreach (LogType logType in s_allLogTypes)
 			{
 				bool currentState = logTypeFilters[logType];
 				int count = m_numMessagesPerType [logType];
 				string label = logType.ToString() + ( (count > 0) ? (" [" + count + "]") : "" );
 
-				logTypeFilters[logType] = GUILayout.Toggle(currentState, label, GUILayout.ExpandWidth(false));
-				GUILayout.Space(20);
+				GUI.contentColor = logTypeColors [logType];
+				logTypeFilters[logType] = GUILayout.Toggle (currentState, label, GUILayout.ExpandWidth(false));
+				GUILayout.Space(15);
 			}
 
-			isCollapsed = GUILayout.Toggle(isCollapsed, collapseLabel, GUILayout.ExpandWidth(false));
-
 			GUILayout.EndHorizontal();
+
+			RestoreContentColor ();
+
+			GUILayout.BeginHorizontal ();
+
+			if (GUILayout.Button (clearLabel, GUILayout.ExpandWidth(false)))
+			{
+				logs.Clear();
+			}
+
+			GUILayout.Space (10);
+
+			isCollapsed = GUILayout.Toggle (isCollapsed, collapseLabel, GUILayout.ExpandWidth(false));
+
+			GUILayout.EndHorizontal ();
 		}
 
 		void DrawWindow()
 		{
 			DrawLogList();
+			GUILayout.Space (5);
 			DrawToolbar();
-
 		}
 
 		protected override void OnWindowGUI ()
