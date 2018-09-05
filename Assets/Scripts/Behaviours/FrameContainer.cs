@@ -33,9 +33,15 @@ namespace SanAndreasUnity.Behaviours
             _boneIdDict = _frames.Where(x => x.BoneId > -1).ToDictionary(x => x.BoneId, x => x);
         }
 
-        public Frame GetByName(string name)
+		public Frame GetByName(string name, bool ignoreWhiteSpaces = false)
         {
-            return _frames.FirstOrDefault(x => x.Name == name);
+			if (ignoreWhiteSpaces)
+				name = name.Replace (" ", "");
+
+			if (ignoreWhiteSpaces)
+				return _frames.FirstOrDefault (x => x.Name.Replace (" ", "") == name);
+			else
+				return _frames.FirstOrDefault (x => x.Name == name);
         }
 
         public Frame GetByIndex(int index)

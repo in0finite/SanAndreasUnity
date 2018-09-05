@@ -207,6 +207,8 @@ namespace SanAndreasUnity.Behaviours
 			LastAnimState = null;
 			LastSecondaryAnimState = null;
 
+			m_originalFrameDatas.Clear ();
+
 			_anim = this.gameObject.GetOrAddComponent<UnityEngine.Animation> ();
 
 			LoadModel(Definition.ModelName, Definition.TextureDictionaryName);
@@ -260,28 +262,47 @@ namespace SanAndreasUnity.Behaviours
             var geoms = Geometry.Load(modelName, txds);
             _frames = geoms.AttachFrames(transform, MaterialFlags.Default);
 
+			// we have to remove white spaces from frame names and their game objects, because some models
+			// have white spaces, and some don't - and we need to have the same frame names for all models,
+			// otherwise animations will not work on all of them
+			foreach (var frame in _frames)
+			{
+				frame.Name = frame.Name.Replace (" ", "");
+				frame.gameObject.name = frame.Name;
+			}
+
+
             _root = _frames.GetByName("Root");
 
-            m_rightFinger = _frames.GetByName(" R Finger").transform;
-            m_leftFinger = _frames.GetByName(" L Finger").transform;
-			m_rightHand = _frames.GetByName (" R Hand").transform;
-			m_leftHand = _frames.GetByName (" L Hand").transform;
-			RightUpperArm = _frames.GetByName (" R UpperArm").transform;
-			LeftUpperArm = _frames.GetByName (" L UpperArm").transform;
-			RightForeArm = _frames.GetByName (" R ForeArm").transform;
-			LeftForeArm = _frames.GetByName (" L ForeArm").transform;
-			RightClavicle = _frames.GetByName ("Bip01 R Clavicle").transform;
-			LeftClavicle = _frames.GetByName ("Bip01 L Clavicle").transform;
-			Head = _frames.GetByName (" Head").transform;
-			Neck = _frames.GetByName (" Neck").transform;
-			LBreast = _frames.GetByName ("L breast").transform;
-			RBreast = _frames.GetByName ("R breast").transform;
-			UpperSpine = _frames.GetByName (" Spine1").transform;
-			Belly = _frames.GetByName ("Belly").transform;
-			Spine = _frames.GetByName(" Spine").transform;
-            R_Thigh = _frames.GetByName(" R Thigh").transform;
-            L_Thigh = _frames.GetByName(" L Thigh").transform;
-			Pelvis = _frames.GetByName(" Pelvis").transform;
+			System.Func<string, Transform> getFrame = (string frameName) => {
+				Frame frame = _frames.GetByName (frameName, true);
+				if(null == frame) {
+					Debug.LogErrorFormat("Failed to find frame by name '{0}' on model '{1}'", frameName, modelName);
+					return null;
+				}
+				return frame.transform;
+			};
+
+            m_rightFinger = getFrame(" R Finger");
+            m_leftFinger = getFrame(" L Finger");
+			m_rightHand = getFrame (" R Hand");
+			m_leftHand = getFrame (" L Hand");
+			RightUpperArm = getFrame (" R UpperArm");
+			LeftUpperArm = getFrame (" L UpperArm");
+			RightForeArm = getFrame (" R ForeArm");
+			LeftForeArm = getFrame (" L ForeArm");
+			RightClavicle = getFrame ("Bip01 R Clavicle");
+			LeftClavicle = getFrame ("Bip01 L Clavicle");
+			Head = getFrame (" Head");
+			Neck = getFrame (" Neck");
+			LBreast = getFrame ("L breast");
+			RBreast = getFrame ("R breast");
+			UpperSpine = getFrame (" Spine1");
+			Belly = getFrame ("Belly");
+			Spine = getFrame(" Spine");
+            R_Thigh = getFrame(" R Thigh");
+            L_Thigh = getFrame(" L Thigh");
+			Pelvis = getFrame(" Pelvis");
 
         }
 

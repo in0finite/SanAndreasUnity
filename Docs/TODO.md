@@ -29,7 +29,7 @@
 
 - Jump
 
-- Exceptions are thrown for some ped models - mostly from inside LoadAnim() ; model ids: 165, 166, 
+- Exceptions are thrown for some ped models - mostly from inside LoadAnim() ; model ids: 165, 166, WMYST, 
 
 - Don't teleport when in vehicle
 

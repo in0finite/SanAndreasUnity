@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Behaviours
 
         public int Index { get; private set; }
         public int BoneId { get; private set; }
-        public string Name { get; private set; }
+		public string Name { get; internal set; }
 
         public Frame Parent { get; internal set; }
         public int ParentIndex { get; internal set; }
