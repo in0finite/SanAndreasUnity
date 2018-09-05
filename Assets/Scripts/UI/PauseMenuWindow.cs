@@ -132,12 +132,6 @@ namespace SanAndreasUnity.UI {
 				}
 			}
 
-			if (this.IsMinimized) {
-				// need to manually draw window title - for some reason, it's not drawn when window height is small
-				Utilities.GUIUtils.CenteredLabel( this.windowRect.position + new Vector2(this.windowRect.width / 2.0f, kMinimizedWindowHeight / 2.0f), 
-					this.windowName);
-			}
-
 
 			if (!this.IsMinimized) {
 				// draw contents inside window
