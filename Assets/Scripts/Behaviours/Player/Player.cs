@@ -190,6 +190,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public void Teleport(Vector3 position, Quaternion rotation) {
 
+			if (this.IsInVehicle)
+				return;
+
 			this.transform.position = position;
 			this.transform.rotation = rotation;
 

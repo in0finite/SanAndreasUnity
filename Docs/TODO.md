@@ -31,11 +31,7 @@
 
 - Exceptions are thrown for some ped models - model ids: WMYST, 0, special peds at the end, 
 
-- Don't teleport when in vehicle
-
 - Persist settings
-
-- Don't draw window title separately
 
 - Pin windows - pinned windows are visible even when pause menu is not
 
