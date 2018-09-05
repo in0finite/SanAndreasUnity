@@ -18,10 +18,10 @@ namespace SanAndreasUnity.Behaviours
 
 			var go = Instantiate (GameManager.Instance.pedPrefab, pos, rot);
 
-			var player = go.GetComponentOrLogError<Player> ();
+			var player = go.GetComponentOrThrow<Player> ();
 			player.PlayerModel.StartingPedId = def.Id;
 
-			go.name = "Ped " + def.ModelName;
+			go.name = "Ped " + def.ModelName + " " + def.Id;
 
 			return player;
 		}
