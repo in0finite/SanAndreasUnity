@@ -29,9 +29,13 @@
 
 - Jump
 
-- Exceptions are thrown for some ped models - mostly from inside LoadAnim()
+- Exceptions are thrown for some ped models - mostly from inside LoadAnim() ; model ids: 165, 166, 
+
+- Don't teleport when in vehicle
 
 - Persist settings
+
+- Don't draw window title separately
 
 - Pin windows - pinned windows are visible even when pause menu is not
 

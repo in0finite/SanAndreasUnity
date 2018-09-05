@@ -5,6 +5,7 @@ using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Animation;
 using UnityEngine;
 using System.Linq;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -201,19 +202,14 @@ namespace SanAndreasUnity.Behaviours
 			PedestrianId = id;
 			Definition = newDefinition;
 
-            LoadModel(Definition.ModelName, Definition.TextureDictionaryName);
-
 			LastAnimId = m_invalidAnimId;
 			LastSecondaryAnimId = m_invalidAnimId;
 			LastAnimState = null;
 			LastSecondaryAnimState = null;
 
-            _anim = gameObject.GetComponent<UnityEngine.Animation>();
+			_anim = this.gameObject.GetOrAddComponent<UnityEngine.Animation> ();
 
-            if (_anim == null)
-            {
-                _anim = gameObject.AddComponent<UnityEngine.Animation>();
-            }
+			LoadModel(Definition.ModelName, Definition.TextureDictionaryName);
 
 			// save original model state
 			// TODO: we should first reset all anim parameters (eg mixing transforms) ?
