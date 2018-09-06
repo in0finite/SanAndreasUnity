@@ -65,6 +65,8 @@ namespace SanAndreasUnity.UI {
 			public abstract T Display (T currentValue);
 
 			public override void Load () {
+				if (!this.isAvailable ())
+					return;
 				if (!PlayerPrefs.HasKey (this.description))
 					return;
 				string str = PlayerPrefs.GetString (this.description, null);
@@ -76,6 +78,8 @@ namespace SanAndreasUnity.UI {
 			public abstract T Load (string str);
 
 			public override void Save () {
+				if (!this.isAvailable ())
+					return;
 				string str = this.SaveAsString (this.getValue ());
 				if (str != null)
 					PlayerPrefs.SetString (this.description, str);
