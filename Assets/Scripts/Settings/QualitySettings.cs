@@ -66,9 +66,9 @@ namespace SanAndreasUnity.Settings {
 			GUILayout.Label ("\nQUALITY\n");
 
 
-			OptionsWindow.Input (m_fpsInput);
+			OptionsWindow.DisplayInput (m_fpsInput);
 
-			OptionsWindow.Input (m_antiAliasingInput);
+			OptionsWindow.DisplayInput (m_antiAliasingInput);
 
 			string newLevel = UI.OptionsWindow.MultipleOptions( this.qualitySettingsNames[Quality.GetQualityLevel()],
 				"Quality level", this.qualitySettingsNames);
@@ -77,13 +77,13 @@ namespace SanAndreasUnity.Settings {
 				Quality.SetQualityLevel (newLevelIndex);
 			}
 
-			OptionsWindow.Input (m_shadowQualityInput);
-			OptionsWindow.Input (m_shadowDistanceInput);
-			OptionsWindow.Input (m_shadowProjectionInput);
-			OptionsWindow.Input (m_shadowResolutionInput);
-			OptionsWindow.Input (m_shadowCascadesInput);
+			OptionsWindow.DisplayInput (m_shadowQualityInput);
+			OptionsWindow.DisplayInput (m_shadowDistanceInput);
+			OptionsWindow.DisplayInput (m_shadowProjectionInput);
+			OptionsWindow.DisplayInput (m_shadowResolutionInput);
+			OptionsWindow.DisplayInput (m_shadowCascadesInput);
 
-			OptionsWindow.Input (m_anisotropicFilteringInput);
+			OptionsWindow.DisplayInput (m_anisotropicFilteringInput);
 
 		}
 

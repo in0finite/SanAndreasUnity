@@ -150,6 +150,7 @@ namespace SanAndreasUnity.UI {
 				if (this.SpaceAfterContent > 0)
 					GUILayout.Space (this.SpaceAfterContent);
 
+				this.OnWindowGUIAfterContent ();
 			}
 
 
@@ -160,6 +161,10 @@ namespace SanAndreasUnity.UI {
 
 		protected virtual void OnWindowGUI() {
 			
+		}
+
+		protected virtual void OnWindowGUIAfterContent() {
+
 		}
 
 

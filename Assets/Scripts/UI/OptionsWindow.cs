@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.UI {
 
@@ -12,13 +13,24 @@ namespace SanAndreasUnity.UI {
 		public	static	event System.Action	onGUI = delegate {};
 
 
-		public abstract class Input<T>
+		public enum InputPersistType
+		{
+			None,
+			OnStart,
+			AfterLoaderFinishes
+		}
+
+		public abstract class Input
 		{
 			public string description = "";
-		//	public T value;
-		//	public T OldValue { get; internal set; }
-		//	public bool IsChanged { get; internal set; }
+			public InputPersistType persistType = InputPersistType.None;
 
+			public abstract void Load ();
+			public abstract void Save ();
+		}
+
+		public abstract class Input<T> : Input
+		{
 			public System.Func<T> getValue = () => default(T);
 			public System.Action<T> setValue = (val) => {};
 			public System.Func<bool> isAvailable = () => true;
@@ -34,6 +46,27 @@ namespace SanAndreasUnity.UI {
 			}
 
 			public abstract T Display (T currentValue);
+
+			public override void Load () {
+				if (!PlayerPrefs.HasKey (this.description))
+					return;
+				string str = PlayerPrefs.GetString (this.description, null);
+				if (str != null)
+				{
+					this.setValue (this.Load (str));
+				}
+			}
+			public abstract T Load (string str);
+
+			public override void Save () {
+				string str = this.SaveAsString (this.getValue ());
+				if (str != null)
+					PlayerPrefs.SetString (this.description, str);
+			}
+
+			public virtual string SaveAsString (T value) {
+				return value.ToString ();
+			}
 
 		}
 
@@ -52,6 +85,11 @@ namespace SanAndreasUnity.UI {
 			{
 				return OptionsWindow.FloatSlider (currentValue, this.minValue, this.maxValue, this.description);
 			}
+
+			public override float Load (string str)
+			{
+				return float.Parse (str, System.Globalization.CultureInfo.InvariantCulture);
+			}
 		}
 
 		public class BoolInput : Input<bool>
@@ -64,6 +102,11 @@ namespace SanAndreasUnity.UI {
 			{
 				return GUILayout.Toggle (currentValue, this.description);
 			}
+
+			public override bool Load (string str)
+			{
+				return bool.Parse (str);
+			}
 		}
 
 		public class EnumInput<T> : Input<T> where T : struct
@@ -72,6 +115,11 @@ namespace SanAndreasUnity.UI {
 			public override T Display (T currentValue)
 			{
 				return OptionsWindow.Enum (currentValue, this.description);
+			}
+
+			public override T Load (string str)
+			{
+				return (T) System.Enum.Parse (typeof(T), str);
 			}
 		}
 
@@ -83,7 +131,21 @@ namespace SanAndreasUnity.UI {
 			{
 				return OptionsWindow.MultipleOptions (currentValue, this.description, this.Options);
 			}
+
+			public override T Load (string str)
+			{
+				int index = this.Options.FindIndex (t => this.SaveAsString (t) == str);
+				if (index < 0)
+					throw new System.ArgumentException (
+						string.Format ("Error loading multiple options of type {0} - specified option '{1}' was not found", 
+							typeof(T), str));
+
+				return this.Options [index];
+			}
 		}
+
+
+		private static List<OptionsWindow.Input> s_registeredInputs = new List<OptionsWindow.Input> ();
 
 
 
@@ -107,6 +169,13 @@ namespace SanAndreasUnity.UI {
 			windowHeight = Mathf.Min (windowHeight, windowWidth * 9 / 16);
 			this.windowRect = Utilities.GUIUtils.GetCenteredRect (new Vector2 (windowWidth, windowHeight));
 
+			LoadSettings (InputPersistType.OnStart);
+
+		}
+
+		void OnLoaderFinished ()
+		{
+			LoadSettings (InputPersistType.AfterLoaderFinishes);
 		}
 
 
@@ -119,6 +188,26 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.Space (20);
 
+		}
+
+		protected override void OnWindowGUIAfterContent ()
+		{
+			GUILayout.BeginHorizontal ();
+			GUILayout.FlexibleSpace ();
+
+			// display Save button
+			if (GUILayout.Button ("Save", GUILayout.ExpandWidth (false)))
+				SaveSettings ();
+
+			GUILayout.Space (5);
+
+			// display Load button
+			if (GUILayout.Button ("Load", GUILayout.ExpandWidth (false)))
+				LoadSettings ();
+
+			GUILayout.EndHorizontal ();
+
+			GUILayout.Space (5);
 		}
 
 
@@ -170,7 +259,7 @@ namespace SanAndreasUnity.UI {
 			return newValue;
 		}
 
-		public	static	void	Input<T>( Input<T> input )
+		public	static	void	DisplayInput<T>( Input<T> input )
 		{
 			if (!input.isAvailable ())
 				return;
@@ -183,6 +272,47 @@ namespace SanAndreasUnity.UI {
 			{
 				input.setValue (newValue);
 			}
+
+		}
+
+
+		public static void RegisterInput (Input input)
+		{
+			s_registeredInputs.AddIfNotPresent ( input );
+		}
+
+		public static void LoadSettings (InputPersistType persistType)
+		{
+			var inputs = s_registeredInputs.Where (input => input.persistType == persistType).ToArray ();
+
+			Debug.Log ("The following inputs will be loaded: " + string.Join(", ", inputs.Select( i => i.description )));
+
+			foreach (var input in inputs)
+			{
+				F.RunExceptionSafe (() => input.Load ());
+			}
+
+		}
+
+		public static void LoadSettings ()
+		{
+			LoadSettings (InputPersistType.OnStart);
+			if (Behaviours.Loader.HasLoaded)
+				LoadSettings (InputPersistType.AfterLoaderFinishes);
+		}
+
+		public static void SaveSettings ()
+		{
+			var inputs = s_registeredInputs.Where (input => input.persistType != InputPersistType.None).ToArray ();
+
+			Debug.Log ("The following inputs will be saved: " + string.Join(", ", inputs.Select( i => i.description )));
+
+			foreach (var input in inputs)
+			{
+				F.RunExceptionSafe (() => input.Save ());
+			}
+
+			PlayerPrefs.Save ();
 
 		}
 
