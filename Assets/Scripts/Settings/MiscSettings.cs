@@ -40,7 +40,10 @@ namespace SanAndreasUnity.Settings {
 			};
 
 			foreach (var input in inputs)
+			{
+				input.category = "MISC";
 				OptionsWindow.RegisterInput (input);
+			}
 
 		}
 
@@ -52,16 +55,6 @@ namespace SanAndreasUnity.Settings {
 
 		void OnOptionsGUI() {
 
-			GUILayout.Label ("\nMISC\n");
-
-
-			OptionsWindow.DisplayInput (m_timeScaleInput);
-
-			OptionsWindow.DisplayInput (m_runInBackgroundInput);
-
-			OptionsWindow.DisplayInput (m_displayHealthBarsInput);
-
-			OptionsWindow.DisplayInput (m_displayMinimapInput);
 
 		}
 

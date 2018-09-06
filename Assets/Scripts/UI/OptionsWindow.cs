@@ -24,9 +24,11 @@ namespace SanAndreasUnity.UI {
 		{
 			public string description = "";
 			public InputPersistType persistType = InputPersistType.None;
+			public string category = "";
 
 			public abstract void Load ();
 			public abstract void Save ();
+			public abstract void Display ();
 		}
 
 		public abstract class Input<T> : Input
@@ -43,6 +45,21 @@ namespace SanAndreasUnity.UI {
 			public Input (string description)
 			{
 				this.description = description;
+			}
+
+			public override void Display ()
+			{
+				if (!this.isAvailable ())
+					return;
+
+				var oldValue = this.getValue ();
+
+				var newValue = this.Display (oldValue);
+
+				if (!newValue.Equals( oldValue ))
+				{
+					this.setValue (newValue);
+				}
 			}
 
 			public abstract T Display (T currentValue);
@@ -184,6 +201,19 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.Space (10);
 
+			// draw inputs
+
+			foreach (var grouping in s_registeredInputs.GroupBy (i => i.category))
+			{
+				GUILayout.Label ("\n" + grouping.Key + "\n");
+
+				foreach (var input in grouping)
+				{
+					input.Display ();
+				}
+			}
+
+
 			onGUI ();
 
 			GUILayout.Space (20);
@@ -261,18 +291,7 @@ namespace SanAndreasUnity.UI {
 
 		public	static	void	DisplayInput<T>( Input<T> input )
 		{
-			if (!input.isAvailable ())
-				return;
-
-			var oldValue = input.getValue ();
-
-			var newValue = input.Display (oldValue);
-
-			if (!newValue.Equals( oldValue ))
-			{
-				input.setValue (newValue);
-			}
-
+			input.Display ();
 		}
 
 
