@@ -7,48 +7,60 @@ namespace SanAndreasUnity.Settings {
 	
 	public class PlayerSettings : MonoBehaviour {
 
+		OptionsWindow.FloatInput m_jumpSpeedInput = new OptionsWindow.FloatInput() {
+			description = "Jump speed",
+			minValue = 3,
+			maxValue = 30,
+			isAvailable = () => Player.Instance != null,
+			getValue = () => Player.Instance.jumpSpeed,
+			setValue = (value) => { Player.Instance.jumpSpeed = value; },
+		};
+		OptionsWindow.FloatInput m_turnSpeedInput = new OptionsWindow.FloatInput() {
+			description = "Turn speed",
+			minValue = 3,
+			maxValue = 30,
+			isAvailable = () => Player.Instance != null,
+			getValue = () => Player.Instance.TurnSpeed,
+			setValue = (value) => { Player.Instance.TurnSpeed = value; },
+		};
+		OptionsWindow.FloatInput m_enterVehicleRadiusInput = new OptionsWindow.FloatInput() {
+			description = "Enter vehicle radius",
+			minValue = 1,
+			maxValue = 15,
+			isAvailable = () => Player.Instance != null,
+			getValue = () => Player.Instance.EnterVehicleRadius,
+			setValue = (value) => { Player.Instance.EnterVehicleRadius = value; },
+		};
+
+		OptionsWindow.BoolInput m_showSpeedometerInput = new OptionsWindow.BoolInput() {
+			description = "Show speedometer",
+			isAvailable = () => PlayerController.Instance != null,
+			getValue = () => PlayerController._showVel,
+			setValue = (value) => { PlayerController._showVel = value; },
+		};
+		OptionsWindow.FloatInput m_mouseSensitivityXInput = new OptionsWindow.FloatInput() {
+			description = "Mouse sensitivity x",
+			minValue = 0.2f,
+			maxValue = 10f,
+			isAvailable = () => PlayerController.Instance != null,
+			getValue = () => PlayerController.Instance.CursorSensitivity.x,
+			setValue = (value) => { PlayerController.Instance.CursorSensitivity.x = value; },
+		};
+		OptionsWindow.FloatInput m_mouseSensitivityYInput = new OptionsWindow.FloatInput() {
+			description = "Mouse sensitivity y",
+			minValue = 0.2f,
+			maxValue = 10f,
+			isAvailable = () => PlayerController.Instance != null,
+			getValue = () => PlayerController.Instance.CursorSensitivity.y,
+			setValue = (value) => { PlayerController.Instance.CursorSensitivity.y = value; },
+		};
 
 
-		void Start () {
 
-			UI.OptionsWindow.onGUI += this.OnOptionsGUI;
-
-		}
-
-		void OnOptionsGUI() {
-
-			GUILayout.Label ("\nPLAYER\n");
-
-			if (null == Player.Instance) {
-				GUILayout.Label ("Player object not found");
-				return;
-			}
-
-			//GUILayout.Label ("Jump speed:");
-			//Player.Instance.jumpSpeed = GUILayout.HorizontalSlider (Player.Instance.jumpSpeed, 3f, 30f);
-			OptionsWindow.FloatSlider( ref Player.Instance.jumpSpeed, 3f, 30f, "Jump speed");
-
-			//GUILayout.Label ("Turn speed:");
-			//Player.Instance.TurnSpeed = GUILayout.HorizontalSlider (Player.Instance.TurnSpeed, 3f, 30f);
-			OptionsWindow.FloatSlider( ref Player.Instance.TurnSpeed, 3f, 30f, "Turn speed");
-
-			Player.Instance.EnterVehicleRadius = OptionsWindow.FloatSlider (Player.Instance.EnterVehicleRadius, 1.0f, 15f, "Enter vehicle radius");
-
-
-			if (PlayerController.Instance != null) {
-				
-				PlayerController._showVel = GUILayout.Toggle (PlayerController._showVel, "Show speedometer");
-
-				//GUILayout.Label ("Mouse sensitivity x:");
-				//PlayerController.Instance.CursorSensitivity.x = GUILayout.HorizontalSlider (PlayerController.Instance.CursorSensitivity.x, 0.2f, 10f);
-				OptionsWindow.FloatSlider (ref PlayerController.Instance.CursorSensitivity.x, 0.2f, 10f, "Mouse sensitivity x");
-
-				//GUILayout.Label ("Mouse sensitivity y:");
-				//PlayerController.Instance.CursorSensitivity.y = GUILayout.HorizontalSlider (PlayerController.Instance.CursorSensitivity.y, 0.2f, 10f);
-				OptionsWindow.FloatSlider (ref PlayerController.Instance.CursorSensitivity.y, 0.2f, 10f, "Mouse sensitivity y");
-
-			}
-
+		void Awake ()
+		{
+			OptionsWindow.RegisterInputs ("PLAYER", m_jumpSpeedInput, m_turnSpeedInput, m_enterVehicleRadiusInput, 
+				m_showSpeedometerInput, m_mouseSensitivityXInput, m_mouseSensitivityYInput);
 		}
 
 	}

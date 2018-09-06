@@ -117,6 +117,8 @@ namespace SanAndreasUnity.UI {
 
 		public class BoolInput : Input<bool>
 		{
+			public BoolInput () { }
+
 			public BoolInput (string description) : base (description)
 			{
 			}
