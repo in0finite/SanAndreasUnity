@@ -9,11 +9,12 @@ namespace SanAndreasUnity.Settings {
 
 	public class QualitySettings : MonoBehaviour {
 
-		string[] qualitySettingsNames;
+		static string[] s_qualitySettingsNames;
 
 		OptionsWindow.FloatInput m_fpsInput = new OptionsWindow.FloatInput( "Max fps", 0f, 200f ) {
 			getValue = () => Behaviours.GameManager.GetMaxFps (),
-			setValue = (value) => { Behaviours.GameManager.SetMaxFps (value.RoundToInt ()); }
+			setValue = (value) => { Behaviours.GameManager.SetMaxFps (value.RoundToInt ()); },
+			persistType = OptionsWindow.InputPersistType.AfterLoaderFinishes
 		};
 		OptionsWindow.MultipleOptionsInput<int> m_antiAliasingInput = new OptionsWindow.MultipleOptionsInput<int>() {
 			description = "Anti aliasing",
@@ -51,41 +52,30 @@ namespace SanAndreasUnity.Settings {
 			getValue = () => Quality.anisotropicFiltering,
 			setValue = (value) => { Quality.anisotropicFiltering = value; }
 		};
+		OptionsWindow.MultipleOptionsInput<string> m_qualityLevelInput = new OptionsWindow.MultipleOptionsInput<string>() {
+			description = "Quality level",
+			getValue = () => s_qualitySettingsNames[ Quality.GetQualityLevel() ],
+			setValue = (value) => { Quality.SetQualityLevel (System.Array.FindIndex (s_qualitySettingsNames, n => n == value)); }
+		};
 
 
 
-		void Start () {
+		void Awake ()
+		{
+			
+			s_qualitySettingsNames = m_qualityLevelInput.Options = Quality.names;
 
-			UI.OptionsWindow.onGUI += this.OnOptionsGUI;
+			var inputs = new OptionsWindow.Input[]{ m_fpsInput, m_antiAliasingInput, m_qualityLevelInput, m_shadowQualityInput, m_shadowDistanceInput,
+				m_shadowProjectionInput, m_shadowResolutionInput, m_shadowCascadesInput, m_anisotropicFilteringInput };
 
-			this.qualitySettingsNames = Quality.names;
-		}
-
-		void OnOptionsGUI() {
-
-			GUILayout.Label ("\nQUALITY\n");
-
-
-			OptionsWindow.DisplayInput (m_fpsInput);
-
-			OptionsWindow.DisplayInput (m_antiAliasingInput);
-
-			string newLevel = UI.OptionsWindow.MultipleOptions( this.qualitySettingsNames[Quality.GetQualityLevel()],
-				"Quality level", this.qualitySettingsNames);
-			int newLevelIndex = System.Array.FindIndex (this.qualitySettingsNames, n => n == newLevel);
-			if (Quality.GetQualityLevel () != newLevelIndex) {
-				Quality.SetQualityLevel (newLevelIndex);
+			foreach (var input in inputs)
+			{
+				input.category = "QUALITY";
+				OptionsWindow.RegisterInput (input);
 			}
 
-			OptionsWindow.DisplayInput (m_shadowQualityInput);
-			OptionsWindow.DisplayInput (m_shadowDistanceInput);
-			OptionsWindow.DisplayInput (m_shadowProjectionInput);
-			OptionsWindow.DisplayInput (m_shadowResolutionInput);
-			OptionsWindow.DisplayInput (m_shadowCascadesInput);
-
-			OptionsWindow.DisplayInput (m_anisotropicFilteringInput);
-
 		}
+
 
 	}
 

@@ -47,16 +47,6 @@ namespace SanAndreasUnity.Settings {
 
 		}
 
-		void Start () {
-
-			UI.OptionsWindow.onGUI += this.OnOptionsGUI;
-
-		}
-
-		void OnOptionsGUI() {
-
-
-		}
 
 	}
 
