@@ -92,6 +92,8 @@ namespace SanAndreasUnity.UI {
 			public float minValue;
 			public float maxValue;
 
+			public FloatInput () { }
+
 			public FloatInput (string description, float minValue, float maxValue) : base (description)
 			{
 				this.minValue = minValue;
@@ -298,6 +300,15 @@ namespace SanAndreasUnity.UI {
 		public static void RegisterInput (Input input)
 		{
 			s_registeredInputs.AddIfNotPresent ( input );
+		}
+
+		public static void RegisterInputs (string category, params Input[] inputs)
+		{
+			foreach (var input in inputs)
+			{
+				input.category = category;
+				RegisterInput (input);
+			}
 		}
 
 		public static void LoadSettings (InputPersistType persistType)

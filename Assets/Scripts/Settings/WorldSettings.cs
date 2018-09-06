@@ -1,34 +1,26 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Behaviours.World;
+using SanAndreasUnity.UI;
 
 namespace SanAndreasUnity.Settings {
 
 	public class WorldSettings : MonoBehaviour {
 
+		OptionsWindow.FloatInput m_maxDrawDistanceInput = new OptionsWindow.FloatInput() {
+			description = "Max draw distance",
+			minValue = 50,
+			maxValue = 1000,
+			isAvailable = () => Cell.Instance != null,
+			getValue = () => Cell.Instance.maxDrawDistance,
+			setValue = (value) => { Cell.Instance.maxDrawDistance = value; },
+			persistType = OptionsWindow.InputPersistType.AfterLoaderFinishes
+		};
 
 
-		void Start () {
-
-			UI.OptionsWindow.onGUI += this.OnOptionsGUI;
-
-		}
-
-		void OnOptionsGUI() {
-
-			GUILayout.Label ("\nWORLD\n");
-
-
-			if (Cell.Instance) {
-				
-				//Cell.Instance.loadParkedVehicles = GUILayout.Toggle( Cell.Instance.loadParkedVehicles, "Load parked vehicles");
-
-				//GUILayout.Label ("Max draw distance:");
-				//Cell.Instance.maxDrawDistance = GUILayout.HorizontalSlider (Cell.Instance.maxDrawDistance, 50f, 1000f);
-				UI.OptionsWindow.FloatSlider( ref Cell.Instance.maxDrawDistance, 50f, 1000f, "Max draw distance");
-
-			}
-
+		void Awake ()
+		{
+			OptionsWindow.RegisterInputs ("WORLD", m_maxDrawDistanceInput);
 		}
 
 	}
