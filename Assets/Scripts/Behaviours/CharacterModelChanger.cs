@@ -27,7 +27,7 @@ public class CharacterModelChanger : MonoBehaviour
         }
     }
 
-    public static void ChangePedestrianModel(Pedestrian ped, int newModelId)
+    public static void ChangePedestrianModel(PedModel ped, int newModelId)
     {
         
 		if (-1 == newModelId)

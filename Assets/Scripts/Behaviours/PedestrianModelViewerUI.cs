@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PedestrianModelViewerUI : MonoBehaviour
 {
-    public Pedestrian pedestrian = null;
+    public PedModel pedestrian = null;
 
     
     private void OnGUI()

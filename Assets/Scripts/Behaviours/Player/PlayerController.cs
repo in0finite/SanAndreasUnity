@@ -65,7 +65,7 @@ namespace SanAndreasUnity.Behaviours
 		public Vector3 CameraFocusPosVehicle { get { return _player.CurrentVehicle.transform.position; } }
 
         public Camera Camera { get { return _player.Camera; } }
-        public Pedestrian PlayerModel { get { return _player.PlayerModel; } }
+        public PedModel PlayerModel { get { return _player.PlayerModel; } }
 
 
 

@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Behaviours
 {
     using Anim = SanAndreasUnity.Importing.Conversion.Animation;
 
-    public class Pedestrian : MonoBehaviour
+    public class PedModel : MonoBehaviour
     {
         
 		/// <summary> State of last played anim. </summary>

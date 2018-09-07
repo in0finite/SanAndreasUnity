@@ -33,7 +33,7 @@ namespace SanAndreasUnity.Behaviours
         #region Inspector Fields
 
         public Camera Camera;
-        public Pedestrian PlayerModel;
+        public PedModel PlayerModel;
 
 		public bool shouldPlayAnims = true;
 

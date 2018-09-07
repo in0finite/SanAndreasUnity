@@ -10,7 +10,7 @@ namespace SanAndreasUnity.Behaviours {
 	public class WeaponHolder : MonoBehaviour {
 
 		private	Player	m_player;
-		public	Pedestrian	PlayerModel { get { return m_player.PlayerModel; } }
+		public	PedModel	PlayerModel { get { return m_player.PlayerModel; } }
 		public	Camera	Camera { get { return m_player.Camera; } }
 
 		private	Weapon[]	weapons = new Weapon[(int)WeaponSlot.Count];
