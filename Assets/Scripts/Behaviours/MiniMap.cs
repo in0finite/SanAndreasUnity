@@ -71,8 +71,8 @@ namespace SanAndreasUnity.Behaviours
         {
             get
             {
-                if (player == null) return Vector3.zero;
-                return player.transform.position;
+                if (m_ped == null) return Vector3.zero;
+                return m_ped.transform.position;
             }
         }
 
@@ -203,7 +203,7 @@ namespace SanAndreasUnity.Behaviours
         #region Private fields
 
         // Texture & control flags
-        private Ped player;
+		private Ped m_ped;
 
         private PlayerController playerController;
 
@@ -264,7 +264,7 @@ namespace SanAndreasUnity.Behaviours
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
             {
-                player = playerObj.GetComponent<Ped>();
+                m_ped = playerObj.GetComponent<Ped>();
                 playerController = playerObj.GetComponent<PlayerController>();
             }
 
@@ -560,8 +560,8 @@ namespace SanAndreasUnity.Behaviours
             if (northPivot != null)
                 northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
 
-            if (playerImage != null && player != null)
-                playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (player.transform.eulerAngles.y + 180));
+            if (playerImage != null && m_ped != null)
+                playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (m_ped.transform.eulerAngles.y + 180));
         }
 
         private IEnumerator ChangeZoom(bool isIncreasing)

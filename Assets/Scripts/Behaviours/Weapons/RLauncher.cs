@@ -32,19 +32,19 @@ namespace SanAndreasUnity.Behaviours.Weapons
 			}
 		}
 
-		public override void UpdateAnimWhileHolding (Ped player)
+		public override void UpdateAnimWhileHolding (Ped ped)
 		{
-			if (player.IsSprinting) {
+			if (ped.IsSprinting) {
 				// because anim reports incorrect velocity (it gives positive velocity, but it should give 0),
 				// we have to make some fixes
 
-				player.PlayerModel.PlayAnim (this.IdleAnim);
+				ped.PlayerModel.PlayAnim (this.IdleAnim);
 				//state.normalizedTime = 0f;
 				//player.AnimComponent.Sample ();
 				//state.enabled = false;
-				player.PlayerModel.RootFrame.LocalVelocity = Vector3.zero;
+				ped.PlayerModel.RootFrame.LocalVelocity = Vector3.zero;
 			} else {
-				base.UpdateAnimWhileHolding (player);
+				base.UpdateAnimWhileHolding (ped);
 			}
 		}
 

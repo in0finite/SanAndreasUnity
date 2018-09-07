@@ -233,10 +233,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             public Transform Parent { get; set; }
 
-			/// <summary> Player that is occupying this seat. </summary>
-			public Ped Player { get; internal set; }
+			/// <summary> Ped that is occupying this seat. </summary>
+			public Ped OccupyingPed { get; internal set; }
 
-			public bool IsTaken { get { return this.Player != null; } }
+			public bool IsTaken { get { return this.OccupyingPed != null; } }
 
             public bool IsLeftHand
             {

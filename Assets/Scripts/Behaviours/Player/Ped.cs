@@ -13,15 +13,15 @@ namespace SanAndreasUnity.Behaviours
 {
     [RequireComponent(typeof(CharacterController))]
 #if CLIENT
-    public partial class Player : Networking.Networkable
+	public partial class Ped : Networking.Networkable
 #else
     public partial class Ped : MonoBehaviour
 #endif
     {
         #region Private Fields
 
-		private static List<Ped> s_allPlayers = new List<Ped> ();
-		public static Ped[] AllPlayers { get { return s_allPlayers.ToArray (); } }
+		private static List<Ped> s_allPeds = new List<Ped> ();
+		public static Ped[] AllPeds { get { return s_allPeds.ToArray (); } }
 
 		private WeaponHolder m_weaponHolder;
 		public WeaponHolder WeaponHolder { get { return m_weaponHolder; } }
@@ -134,12 +134,12 @@ namespace SanAndreasUnity.Behaviours
 
 		void OnEnable ()
 		{
-			s_allPlayers.Add (this);
+			s_allPeds.Add (this);
 		}
 
 		void OnDisable ()
 		{
-			s_allPlayers.Remove (this);
+			s_allPeds.Remove (this);
 		}
 
         private IEnumerator GPUAdjust()

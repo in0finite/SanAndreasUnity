@@ -18,12 +18,12 @@ namespace SanAndreasUnity.Behaviours
 
 			var go = Instantiate (GameManager.Instance.pedPrefab, pos, rot);
 
-			var player = go.GetComponentOrThrow<Ped> ();
-			player.PlayerModel.StartingPedId = def.Id;
+			var ped = go.GetComponentOrThrow<Ped> ();
+			ped.PlayerModel.StartingPedId = def.Id;
 
 			go.name = "Ped " + def.ModelName + " " + def.Id;
 
-			return player;
+			return ped;
 		}
 
 		public static Ped SpawnPed (int pedId, Vector3 pos, Quaternion rot)
@@ -45,8 +45,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public static PedStalker SpawnPedStalker (int pedId, Vector3 pos, Quaternion rot)
 		{
-			var player = SpawnPed (pedId, pos, rot);
-			return player.gameObject.GetOrAddComponent<PedStalker> ();
+			var ped = SpawnPed (pedId, pos, rot);
+			return ped.gameObject.GetOrAddComponent<PedStalker> ();
 		}
 
 		public static PedStalker SpawnPedStalker (int pedId)

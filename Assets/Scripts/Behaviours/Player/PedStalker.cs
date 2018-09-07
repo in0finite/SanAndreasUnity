@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Behaviours
 	public class PedStalker : MonoBehaviour
 	{
 
-		public Ped Player { get; private set; }
+		public Ped MyPed { get; private set; }
 
 		public float stoppingDistance = 3;
 
@@ -17,14 +17,14 @@ namespace SanAndreasUnity.Behaviours
 
 		void Awake ()
 		{
-			this.Player = this.GetComponentOrLogError<Ped> ();
+			this.MyPed = this.GetComponentOrLogError<Ped> ();
 		}
 
 		void Update ()
 		{
 
 			// reset input
-			this.Player.ResetInput ();
+			this.MyPed.ResetInput ();
 
 			// follow player instance
 
@@ -33,7 +33,7 @@ namespace SanAndreasUnity.Behaviours
 				Vector3 targetPos = Ped.InstancePos;
 				float currentStoppingDistance = this.stoppingDistance;
 
-				if (Ped.Instance.IsInVehicleSeat && !this.Player.IsInVehicle) {
+				if (Ped.Instance.IsInVehicleSeat && !this.MyPed.IsInVehicle) {
 					// find a free vehicle seat to enter vehicle
 
 					var vehicle = Ped.Instance.CurrentVehicle;
@@ -45,9 +45,9 @@ namespace SanAndreasUnity.Behaviours
 
 					if (closestfreeSeat != null) {
 						// check if it is in range
-						if (closestfreeSeat.tr.Distance (this.transform.position) < this.Player.EnterVehicleRadius) {
+						if (closestfreeSeat.tr.Distance (this.transform.position) < this.MyPed.EnterVehicleRadius) {
 							// the seat is in range
-							this.Player.EnterVehicle (vehicle, closestfreeSeat.sa);
+							this.MyPed.EnterVehicle (vehicle, closestfreeSeat.sa);
 						} else {
 							// the seat is not in range
 							// move towards this seat
@@ -56,15 +56,15 @@ namespace SanAndreasUnity.Behaviours
 						}
 					}
 
-				} else if (!Ped.Instance.IsInVehicle && this.Player.IsInVehicleSeat) {
+				} else if (!Ped.Instance.IsInVehicle && this.MyPed.IsInVehicleSeat) {
 					// target player is not in vehicle, and ours is
 					// exit the vehicle
 
-					this.Player.ExitVehicle ();
+					this.MyPed.ExitVehicle ();
 				}
 
 
-				if (this.Player.IsInVehicle)
+				if (this.MyPed.IsInVehicle)
 					return;
 
 				Vector3 diff = targetPos - this.transform.position;
@@ -74,9 +74,9 @@ namespace SanAndreasUnity.Behaviours
 				{
 					Vector3 diffDir = diff.normalized;
 
-					this.Player.IsRunning = true;
-					this.Player.Movement = diffDir;
-					this.Player.Heading = diffDir;
+					this.MyPed.IsRunning = true;
+					this.MyPed.Movement = diffDir;
+					this.MyPed.Heading = diffDir;
 				}
 
 			}

@@ -255,18 +255,18 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		public virtual AnimId GetAnimBasedOnMovement (Ped player, bool canSprint)
+		public virtual AnimId GetAnimBasedOnMovement (Ped ped, bool canSprint)
 		{
 			
-			if (player.IsRunning) {
+			if (ped.IsRunning) {
 
 				return this.RunAnim;
 
-			} else if (player.IsWalking) {
+			} else if (ped.IsWalking) {
 
 				return this.WalkAnim;
 
-			} else if (player.IsSprinting) {
+			} else if (ped.IsSprinting) {
 
 				if (canSprint) {
 					return new AnimId (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
@@ -549,12 +549,12 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		protected virtual void UpdateFireAnim (Ped player, AnimationState state)
+		protected virtual void UpdateFireAnim (Ped ped, AnimationState state)
 		{
 			
 			if (state.time > this.AimAnimMaxTime) {
 				
-				if (player.WeaponHolder.IsFiring) {
+				if (ped.WeaponHolder.IsFiring) {
 					state.enabled = true;
 
 					// check if anim reached end
@@ -562,21 +562,21 @@ namespace SanAndreasUnity.Behaviours
 						// anim reached end, revert it to start
 
 						state.time = this.AimAnimMaxTime;
-						player.AnimComponent.Sample ();
+						ped.AnimComponent.Sample ();
 
 						// no longer firing
-						player.WeaponHolder.IsFiring = false;
+						ped.WeaponHolder.IsFiring = false;
 					}
 				} else {
 					// check if we should start firing
 
-					if (player.WeaponHolder.IsFireOn && this.TryFire (player)) {
+					if (ped.WeaponHolder.IsFireOn && this.TryFire (ped)) {
 						// we started firing
 
 					} else {
 						// we should remain in aim state
 						state.time = this.AimAnimMaxTime;
-						player.AnimComponent.Sample ();
+						ped.AnimComponent.Sample ();
 						state.enabled = false;
 					}
 				}
@@ -585,12 +585,12 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		public virtual void UpdateAnimWhileHolding (Ped player)
+		public virtual void UpdateAnimWhileHolding (Ped ped)
 		{
-			player.PlayerModel.PlayAnim (this.GetAnimBasedOnMovement (player, this.CanSprintWithIt));
+			ped.PlayerModel.PlayAnim (this.GetAnimBasedOnMovement (ped, this.CanSprintWithIt));
 		}
 
-		public virtual void EnableOrDisableGunFlash (Ped player)
+		public virtual void EnableOrDisableGunFlash (Ped ped)
 		{
 			
 			// enable/disable gun flash
@@ -614,14 +614,14 @@ namespace SanAndreasUnity.Behaviours
 					}
 				}
 
-				shouldBeVisible &= player.IsFiring;
+				shouldBeVisible &= ped.IsFiring;
 
 				this.GunFlash.gameObject.SetActive (shouldBeVisible);
 			}
 
 		}
 
-		public virtual void UpdateGunFlashRotation (Ped player)
+		public virtual void UpdateGunFlashRotation (Ped ped)
 		{
 
 			if (null == this.GunFlash)

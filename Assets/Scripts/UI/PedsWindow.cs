@@ -152,7 +152,7 @@ namespace SanAndreasUnity.UI {
 		private static void KillAllPeds ()
 		{
 
-			foreach (var p in Ped.AllPlayers) {
+			foreach (var p in Ped.AllPeds) {
 				if (p == Ped.Instance)
 					continue;
 				Destroy (p.gameObject);

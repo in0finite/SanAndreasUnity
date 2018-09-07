@@ -42,7 +42,7 @@ namespace SanAndreasUnity.Behaviours
 
 			CurrentVehicle = vehicle;
 			CurrentVehicleSeat = seat;
-			seat.Player = this;
+			seat.OccupyingPed = this;
 
 			characterController.enabled = false;
 
@@ -168,7 +168,7 @@ namespace SanAndreasUnity.Behaviours
 
 			CurrentVehicle = null;
 			CurrentVehicleSeat = null;
-			seat.Player = null;
+			seat.OccupyingPed = null;
 
 			transform.localPosition = PlayerModel.VehicleParentOffset;
 			transform.localRotation = Quaternion.identity;
