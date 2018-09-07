@@ -111,7 +111,7 @@ namespace SanAndreasUnity.Behaviours
 		private List<FrameAnimData> m_originalFrameDatas = new List<FrameAnimData> ();
 		public List<FrameAnimData> OriginalFrameDatas { get { return m_originalFrameDatas; } }
 
-        private Ped _player;
+		private Ped m_ped;
 
 		/// <summary> Velocity of the model extracted from animation. </summary>
 		public Vector3 Velocity { get; private set; }
@@ -127,7 +127,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Awake()
         {
-			_player = this.GetComponentInParent<Ped> ();
+			m_ped = this.GetComponentInParent<Ped> ();
         }
 
         private void LateUpdate()
@@ -161,7 +161,7 @@ namespace SanAndreasUnity.Behaviours
                 {
 					loadedModelOnStartup = true;
 
-                    _player.OnSpawn();
+                    m_ped.OnSpawn();
 
                     // load model on startup
                     //Debug.Log("Loading pedestrian model after startup.");

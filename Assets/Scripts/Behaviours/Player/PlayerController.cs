@@ -13,7 +13,7 @@ namespace SanAndreasUnity.Behaviours
         
 		public	static	PlayerController	Instance { get ; private set ; }
 
-        private Ped _player;
+		private Ped m_ped;
 
         private float _pitch;
         private float _yaw;
@@ -41,7 +41,7 @@ namespace SanAndreasUnity.Behaviours
         //public Vector2 PitchClamp = new Vector2(-89f, 89f);
         public Vector2 clampInDegrees = new Vector2(90, 60);
 
-		public float EnterVehicleRadius { get { return _player.EnterVehicleRadius; } }
+		public float EnterVehicleRadius { get { return m_ped.EnterVehicleRadius; } }
 
         public Vector2 smoothing = new Vector2(10, 10);
         public bool m_doSmooth = true;
@@ -61,18 +61,18 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-		public Vector3 CameraFocusPos { get { return _player.transform.position + Vector3.up * 0.5f; } }
-		public Vector3 CameraFocusPosVehicle { get { return _player.CurrentVehicle.transform.position; } }
+		public Vector3 CameraFocusPos { get { return m_ped.transform.position + Vector3.up * 0.5f; } }
+		public Vector3 CameraFocusPosVehicle { get { return m_ped.CurrentVehicle.transform.position; } }
 
-        public Camera Camera { get { return _player.Camera; } }
-        public PedModel PlayerModel { get { return _player.PlayerModel; } }
+        public Camera Camera { get { return m_ped.Camera; } }
+        public PedModel PlayerModel { get { return m_ped.PlayerModel; } }
 
 
 
         private void Awake()
         {
             Instance = this;
-            _player = GetComponent<Ped>();
+            m_ped = GetComponent<Ped>();
 
         }
 
@@ -83,15 +83,15 @@ namespace SanAndreasUnity.Behaviours
 
             
             // Shohw flying / noclip states
-            if (_player.enableFlying || _player.enableNoclip)
+            if (m_ped.enableFlying || m_ped.enableNoclip)
             {
-                int height = (_player.enableFlying && _player.enableNoclip) ? 50 : 25;
+                int height = (m_ped.enableFlying && m_ped.enableNoclip) ? 50 : 25;
                 GUILayout.BeginArea(new Rect(Screen.width - 140, Screen.height - height, 140, height));
 
-                if (_player.enableFlying)
+                if (m_ped.enableFlying)
                     GUILayout.Label("Flying-mode enabled!");
 
-                if (_player.enableNoclip)
+                if (m_ped.enableNoclip)
                     GUILayout.Label("Noclip-mode enabled!");
 
                 GUILayout.EndArea();
@@ -128,27 +128,27 @@ namespace SanAndreasUnity.Behaviours
 
 
 			// reset player input
-			_player.ResetMovementInput ();
+			m_ped.ResetMovementInput ();
 			
 
-            if (!_player.enableFlying && !_player.IsInVehicle && Input.GetKeyDown(KeyCode.T))
+            if (!m_ped.enableFlying && !m_ped.IsInVehicle && Input.GetKeyDown(KeyCode.T))
             {
-                _player.enableFlying = true;
-                _player.Movement = new Vector3(0f, 0f, 0f); // disable current movement
+                m_ped.enableFlying = true;
+                m_ped.Movement = new Vector3(0f, 0f, 0f); // disable current movement
                 PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
             }
-            else if (_player.enableFlying && Input.GetKeyDown(KeyCode.T))
+            else if (m_ped.enableFlying && Input.GetKeyDown(KeyCode.T))
             {
-                _player.enableFlying = false;
+                m_ped.enableFlying = false;
             }
 
-            if (!_player.IsInVehicle && Input.GetKeyDown(KeyCode.R))
+            if (!m_ped.IsInVehicle && Input.GetKeyDown(KeyCode.R))
             {
-                _player.enableNoclip = !_player.enableNoclip;
-                _player.characterController.detectCollisions = !_player.enableNoclip;
-                if (_player.enableNoclip && !_player.enableFlying)
+                m_ped.enableNoclip = !m_ped.enableNoclip;
+                m_ped.characterController.detectCollisions = !m_ped.enableNoclip;
+                if (m_ped.enableNoclip && !m_ped.enableFlying)
                 {
-                    _player.Movement = new Vector3(0f, 0f, 0f); // disable current movement
+                    m_ped.Movement = new Vector3(0f, 0f, 0f); // disable current movement
                     PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
                 }
             }
@@ -160,18 +160,18 @@ namespace SanAndreasUnity.Behaviours
 			if (!GameManager.CanPlayerReadInput()) return;
 
 
-            if (Input.GetButtonDown("Use") && _player.IsInVehicle)
+            if (Input.GetButtonDown("Use") && m_ped.IsInVehicle)
             {
-                _player.ExitVehicle();
+                m_ped.ExitVehicle();
 
                 return;
             }
 
             
-			if (_player.IsInVehicle) return;
+			if (m_ped.IsInVehicle) return;
 
 
-            if (_player.enableFlying || _player.enableNoclip)
+            if (m_ped.enableFlying || m_ped.enableNoclip)
             {
                 var up_down = 0.0f;
 
@@ -186,32 +186,32 @@ namespace SanAndreasUnity.Behaviours
 
                 var inputMove = new Vector3(Input.GetAxis("Horizontal"), up_down, Input.GetAxis("Vertical"));
 
-                _player.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
+                m_ped.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
                     new Vector3(1f, 1f, 1f)).normalized;
 
-                _player.Movement *= 10.0f;
+                m_ped.Movement *= 10.0f;
 
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
-                    _player.Movement *= 10.0f;
+                    m_ped.Movement *= 10.0f;
                 }
                 else if (Input.GetKey(KeyCode.Z))
                 {
-                    _player.Movement *= 100.0f;
+                    m_ped.Movement *= 100.0f;
                 }
 
                 return;
             }
 
 
-			_player.WeaponHolder.IsAimOn = _player.WeaponHolder.IsHoldingWeapon && Input.GetMouseButton (1);
-			_player.WeaponHolder.IsFireOn = _player.WeaponHolder.IsHoldingWeapon && Input.GetMouseButton (0);
+			m_ped.WeaponHolder.IsAimOn = m_ped.WeaponHolder.IsHoldingWeapon && Input.GetMouseButton (1);
+			m_ped.WeaponHolder.IsFireOn = m_ped.WeaponHolder.IsHoldingWeapon && Input.GetMouseButton (0);
 
 			//if (!_player.WeaponHolder.IsAimOn)
             {
 				// give input to player
 
-				_player.IsJumpOn = Input.GetKey (m_jumpKey);
+				m_ped.IsJumpOn = Input.GetKey (m_jumpKey);
 
 				Vector3 inputMove = Vector3.zero;
 				if (m_smoothMovement)
@@ -224,22 +224,22 @@ namespace SanAndreasUnity.Behaviours
                     inputMove.Normalize();
 
 					if (Input.GetKey (m_walkKey))
-						_player.IsWalking = true;
+						m_ped.IsWalking = true;
 					else if (Input.GetKey (m_sprintKey))
-						_player.IsSprinting = true;
+						m_ped.IsSprinting = true;
 					else
-						_player.IsRunning = true;
+						m_ped.IsRunning = true;
 
                 }
                	
-                _player.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
+                m_ped.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
                     new Vector3(1f, 0f, 1f)).normalized;
 
 				// player heading should be assigned here, not in Player class
 			//	if (!_player.IsAiming)
 				{
-					if (_player.Movement.sqrMagnitude > float.Epsilon) {
-						_player.Heading = _player.Movement;
+					if (m_ped.Movement.sqrMagnitude > float.Epsilon) {
+						m_ped.Heading = m_ped.Movement;
 					}
 				}
 
@@ -257,7 +257,7 @@ namespace SanAndreasUnity.Behaviours
             {
                 var seat = vehicle.FindClosestSeat(transform.position);
 
-                _player.EnterVehicle(vehicle, seat);
+                m_ped.EnterVehicle(vehicle, seat);
 
                 break;
             }
@@ -317,7 +317,7 @@ namespace SanAndreasUnity.Behaviours
 
 
 			// this must be called from here (right after the camera transform is changed), otherwise camera will shake
-			_player.WeaponHolder.RotatePlayerInDirectionOfAiming ();
+			m_ped.WeaponHolder.RotatePlayerInDirectionOfAiming ();
 
 
 			// cast a ray from player to camera to see if it hits anything
@@ -331,7 +331,7 @@ namespace SanAndreasUnity.Behaviours
 			if (!GameManager.CanPlayerReadInput ())
 				scrollValue = 0;
 
-			if (_player.IsInVehicle)
+			if (m_ped.IsInVehicle)
 			{
 				CarCameraDistance = Mathf.Clamp (CarCameraDistance - scrollValue, 2.0f, 32.0f);
 				distance = CarCameraDistance;
@@ -339,15 +339,15 @@ namespace SanAndreasUnity.Behaviours
 				// cast towards current camera position
 			//	castDir = (Camera.transform.position - castFrom).normalized;
 			}
-			else if (_player.IsAiming)
+			else if (m_ped.IsAiming)
 			{
 				castFrom = this.CameraFocusPos;
 
 				// use distance from gun aiming offset ?
-				if (_player.CurrentWeapon.GunAimingOffset != null) {
+				if (m_ped.CurrentWeapon.GunAimingOffset != null) {
 				//	Vector3 desiredCameraPos = this.transform.TransformPoint (- _player.CurrentWeapon.GunAimingOffset.Aim) + Vector3.up * .5f;
 				//	Vector3 desiredCameraPos = this.transform.TransformPoint( new Vector3(0.8f, 1.0f, -1) );
-					Vector3 desiredCameraPos = this.CameraFocusPos + Camera.transform.TransformVector( _player.WeaponHolder.cameraAimOffset );
+					Vector3 desiredCameraPos = this.CameraFocusPos + Camera.transform.TransformVector( m_ped.WeaponHolder.cameraAimOffset );
 					Vector3 diff = desiredCameraPos - castFrom;
 					distance = diff.magnitude;
 					castDir = diff.normalized;
@@ -380,7 +380,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnDrawGizmosSelected()
         {
-			if (null == _player)
+			if (null == m_ped)
 				return;
 
             Gizmos.color = Color.white;

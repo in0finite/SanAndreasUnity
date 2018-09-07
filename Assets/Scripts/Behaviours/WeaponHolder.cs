@@ -9,9 +9,9 @@ namespace SanAndreasUnity.Behaviours {
 	
 	public class WeaponHolder : MonoBehaviour {
 
-		private	Ped	m_player;
-		public	PedModel	PlayerModel { get { return m_player.PlayerModel; } }
-		public	Camera	Camera { get { return m_player.Camera; } }
+		private	Ped	m_ped;
+		public	PedModel	PlayerModel { get { return m_ped.PlayerModel; } }
+		public	Camera	Camera { get { return m_ped.Camera; } }
 
 		private	Weapon[]	weapons = new Weapon[(int)WeaponSlot.Count];
 
@@ -99,7 +99,7 @@ namespace SanAndreasUnity.Behaviours {
 
         void Awake () {
 			
-			m_player = this.GetComponent<Ped> ();
+			m_ped = this.GetComponent<Ped> ();
 
 		}
 
@@ -140,22 +140,22 @@ namespace SanAndreasUnity.Behaviours {
 			//this.UpdateWeaponTransform ();
 
 			if (CurrentWeapon != null) {
-				CurrentWeapon.EnableOrDisableGunFlash (m_player);
-				CurrentWeapon.UpdateGunFlashRotation (m_player);
+				CurrentWeapon.EnableOrDisableGunFlash (m_ped);
+				CurrentWeapon.UpdateGunFlashRotation (m_ped);
 			}
 
 			// update aiming state
 
 			if (this.IsAiming) {
 				// check if we should exit aiming state
-				if (!this.IsHoldingWeapon || m_player.IsInVehicle || !this.IsAimOn) {
+				if (!this.IsHoldingWeapon || m_ped.IsInVehicle || !this.IsAimOn) {
 					if (!this.IsFiring) {
 						this.IsAiming = false;
 					}
 				}
 			} else {
 				// check if we should enter aiming state
-				if (this.IsHoldingWeapon && this.IsAimOn && !m_player.IsInVehicle) {
+				if (this.IsHoldingWeapon && this.IsAimOn && !m_ped.IsInVehicle) {
 					this.IsAiming = true;
 				}
 			}
@@ -203,20 +203,20 @@ namespace SanAndreasUnity.Behaviours {
 		private void UpdateAnims ()
 		{
 
-			if (!m_player.shouldPlayAnims)
+			if (!m_ped.shouldPlayAnims)
 				return;
 
 			if (this.IsAiming) {
 				// player is aiming
 				// play appropriate anim
-				CurrentWeapon.UpdateAnimWhileAiming (m_player);
+				CurrentWeapon.UpdateAnimWhileAiming (m_ped);
 			}
 
-			if (!m_player.IsInVehicle && !this.IsAiming && this.IsHoldingWeapon) {
+			if (!m_ped.IsInVehicle && !this.IsAiming && this.IsHoldingWeapon) {
 				// player is not aiming, but is holding a weapon
 				// update current anim
 
-				CurrentWeapon.UpdateAnimWhileHolding (m_player);
+				CurrentWeapon.UpdateAnimWhileHolding (m_ped);
 			}
 
 		}
@@ -297,7 +297,7 @@ namespace SanAndreasUnity.Behaviours {
 			forward.y = 0;
 			forward.Normalize ();
 		//	m_player.transform.forward = forward;
-			m_player.Heading = forward;
+			m_ped.Heading = forward;
 
 		}
 

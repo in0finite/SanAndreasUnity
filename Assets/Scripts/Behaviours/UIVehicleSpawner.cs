@@ -7,13 +7,13 @@ public class UIVehicleSpawner : MonoBehaviour
     public KeyCode spawnKey = KeyCode.V;
 
     private PlayerController _playerController;
-    private Ped _player;
+	private Ped m_ped;
 
     // Use this for initialization
     private void Start()
     {
         _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
-        _player = GameObject.Find("Player").GetComponent<Ped>();
+        m_ped = GameObject.Find("Player").GetComponent<Ped>();
 
     }
 
