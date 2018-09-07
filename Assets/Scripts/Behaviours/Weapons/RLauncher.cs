@@ -32,8 +32,10 @@ namespace SanAndreasUnity.Behaviours.Weapons
 			}
 		}
 
-		public override void UpdateAnimWhileHolding (Ped ped)
+		public override void UpdateAnimWhileHolding ()
 		{
+			Ped ped = m_ped;
+
 			if (ped.IsSprinting) {
 				// because anim reports incorrect velocity (it gives positive velocity, but it should give 0),
 				// we have to make some fixes
@@ -44,7 +46,7 @@ namespace SanAndreasUnity.Behaviours.Weapons
 				//state.enabled = false;
 				ped.PlayerModel.RootFrame.LocalVelocity = Vector3.zero;
 			} else {
-				base.UpdateAnimWhileHolding (ped);
+				base.UpdateAnimWhileHolding ();
 			}
 		}
 

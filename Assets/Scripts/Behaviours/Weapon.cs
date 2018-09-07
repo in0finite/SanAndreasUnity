@@ -94,6 +94,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public Texture2D HudTexture { get; private set; }
 
+		protected Ped m_ped { get; private set; }
+		public Ped PedOwner { get { return m_ped; } internal set { m_ped = value; } }
+
 
 		private static List<System.Type> s_weaponTypes = new List<System.Type> ();
 
@@ -255,9 +258,10 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		public virtual AnimId GetAnimBasedOnMovement (Ped ped, bool canSprint)
+		public virtual AnimId GetAnimBasedOnMovement (bool canSprint)
 		{
-			
+			Ped ped = m_ped;
+
 			if (ped.IsRunning) {
 
 				return this.RunAnim;
@@ -314,8 +318,9 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		public virtual void UpdateAnimWhileAiming (Ped player)
+		public virtual void UpdateAnimWhileAiming ()
 		{
+			Ped player = m_ped;
 			var CurrentWeapon = this;
 			var PlayerModel = player.PlayerModel;
 			var model = player.PlayerModel;
@@ -328,7 +333,7 @@ namespace SanAndreasUnity.Behaviours
 				// aim with arm
 				// eg: pistol, tec9, sawnoff
 
-				model.Play2Anims (new AnimId (AnimGroup.Colt45, AnimIndex.colt45_fire), this.GetAnimBasedOnMovement (player, false));
+				model.Play2Anims (new AnimId (AnimGroup.Colt45, AnimIndex.colt45_fire), this.GetAnimBasedOnMovement (false));
 
 				AimAnimState = model.LastAnimState;
 				model.LastAnimState.wrapMode = WrapMode.ClampForever;
@@ -346,7 +351,7 @@ namespace SanAndreasUnity.Behaviours
 					model.AnimComponent.Sample ();
 				}
 
-				this.UpdateFireAnim (player, model.LastAnimState);
+				this.UpdateFireAnim (model.LastAnimState);
 
 
 				/*
@@ -544,14 +549,15 @@ namespace SanAndreasUnity.Behaviours
 				AimAnimState = state;
 
 
-				this.UpdateFireAnim (player, state);
+				this.UpdateFireAnim (state);
 			}
 
 		}
 
-		protected virtual void UpdateFireAnim (Ped ped, AnimationState state)
+		protected virtual void UpdateFireAnim (AnimationState state)
 		{
-			
+			Ped ped = m_ped;
+
 			if (state.time > this.AimAnimMaxTime) {
 				
 				if (ped.WeaponHolder.IsFiring) {
@@ -570,7 +576,7 @@ namespace SanAndreasUnity.Behaviours
 				} else {
 					// check if we should start firing
 
-					if (ped.WeaponHolder.IsFireOn && this.TryFire (ped)) {
+					if (ped.WeaponHolder.IsFireOn && this.TryFire ()) {
 						// we started firing
 
 					} else {
@@ -585,14 +591,16 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		public virtual void UpdateAnimWhileHolding (Ped ped)
+		public virtual void UpdateAnimWhileHolding ()
 		{
-			ped.PlayerModel.PlayAnim (this.GetAnimBasedOnMovement (ped, this.CanSprintWithIt));
+			Ped ped = m_ped;
+			ped.PlayerModel.PlayAnim (this.GetAnimBasedOnMovement (this.CanSprintWithIt));
 		}
 
-		public virtual void EnableOrDisableGunFlash (Ped ped)
+		public virtual void EnableOrDisableGunFlash ()
 		{
-			
+			Ped ped = m_ped;
+
 			// enable/disable gun flash
 			if (this.GunFlash != null) {
 				
@@ -621,7 +629,7 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		public virtual void UpdateGunFlashRotation (Ped ped)
+		public virtual void UpdateGunFlashRotation ()
 		{
 
 			if (null == this.GunFlash)
@@ -638,8 +646,10 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-		public virtual bool TryFire (Ped ped)
+		public virtual bool TryFire ()
 		{
+			Ped ped = m_ped;
+
 			if (ped.IsFiring)
 				return false;
 
@@ -656,16 +666,16 @@ namespace SanAndreasUnity.Behaviours
 		//	this.EnableOrDisableGunFlash (ped);
 			if (this.GunFlash != null)
 				this.GunFlash.gameObject.SetActive (true);
-			this.UpdateGunFlashRotation (ped);
+			this.UpdateGunFlashRotation ();
 
 			// fire projectile
-			F.RunExceptionSafe( () => this.FireProjectile (ped) );
+			F.RunExceptionSafe( () => this.FireProjectile () );
 
 
 			return true;
 		}
 
-		protected virtual void FireProjectile (Ped ped)
+		protected virtual void FireProjectile ()
 		{
 			// obtain fire position and direction
 

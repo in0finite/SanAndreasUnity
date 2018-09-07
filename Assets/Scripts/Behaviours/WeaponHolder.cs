@@ -140,8 +140,8 @@ namespace SanAndreasUnity.Behaviours {
 			//this.UpdateWeaponTransform ();
 
 			if (CurrentWeapon != null) {
-				CurrentWeapon.EnableOrDisableGunFlash (m_ped);
-				CurrentWeapon.UpdateGunFlashRotation (m_ped);
+				CurrentWeapon.EnableOrDisableGunFlash ();
+				CurrentWeapon.UpdateGunFlashRotation ();
 			}
 
 			// update aiming state
@@ -209,14 +209,14 @@ namespace SanAndreasUnity.Behaviours {
 			if (this.IsAiming) {
 				// player is aiming
 				// play appropriate anim
-				CurrentWeapon.UpdateAnimWhileAiming (m_ped);
+				CurrentWeapon.UpdateAnimWhileAiming ();
 			}
 
 			if (!m_ped.IsInVehicle && !this.IsAiming && this.IsHoldingWeapon) {
 				// player is not aiming, but is holding a weapon
 				// update current anim
 
-				CurrentWeapon.UpdateAnimWhileHolding (m_ped);
+				CurrentWeapon.UpdateAnimWhileHolding ();
 			}
 
 		}
@@ -381,10 +381,12 @@ namespace SanAndreasUnity.Behaviours {
 			
 			// destroy current weapon at this slot
 			if (weapons [slotIndex] != null) {
-				Destroy (weapons [slotIndex].gameObject);
+				DestroyWeapon (weapons [slotIndex]);
 			}
 
 			weapons [slotIndex] = Weapon.Load (weaponId);
+
+			weapons [slotIndex].PedOwner = m_ped;
 
 			if (slotIndex == currentWeaponSlot) {
 				// update current weapon variable
@@ -410,10 +412,16 @@ namespace SanAndreasUnity.Behaviours {
 
 			for (int i = 0; i < this.weapons.Length; i++) {
 				if (this.weapons [i] != null)
-					Destroy (this.weapons [i].gameObject);
+					DestroyWeapon (this.weapons [i]);
 				this.weapons [i] = null;
 			}
 
+		}
+
+		private static void DestroyWeapon (Weapon w)
+		{
+			Destroy (w.gameObject);
+			w.PedOwner = null;
 		}
 
 
