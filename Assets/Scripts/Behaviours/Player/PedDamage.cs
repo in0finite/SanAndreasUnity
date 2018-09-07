@@ -5,7 +5,7 @@ using SanAndreasUnity.Utilities;
 namespace SanAndreasUnity.Behaviours
 {
 	
-	public partial class Player : MonoBehaviour {
+	public partial class Ped : MonoBehaviour {
 
 		public Damageable Damageable { get; private set; }
 
@@ -47,7 +47,7 @@ namespace SanAndreasUnity.Behaviours
 
 		void UpdateHealthBar ()
 		{
-			bool shouldBeVisible = PedManager.Instance.displayHealthBarAbovePeds && this != Player.Instance;
+			bool shouldBeVisible = PedManager.Instance.displayHealthBarAbovePeds && this != Ped.Instance;
 			this.HealthBar.gameObject.SetActive (shouldBeVisible);
 
 			if (shouldBeVisible)

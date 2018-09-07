@@ -111,7 +111,7 @@ namespace SanAndreasUnity.Behaviours
 		private List<FrameAnimData> m_originalFrameDatas = new List<FrameAnimData> ();
 		public List<FrameAnimData> OriginalFrameDatas { get { return m_originalFrameDatas; } }
 
-        private Player _player;
+        private Ped _player;
 
 		/// <summary> Velocity of the model extracted from animation. </summary>
 		public Vector3 Velocity { get; private set; }
@@ -127,7 +127,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Awake()
         {
-			_player = this.GetComponentInParent<Player> ();
+			_player = this.GetComponentInParent<Ped> ();
         }
 
         private void LateUpdate()

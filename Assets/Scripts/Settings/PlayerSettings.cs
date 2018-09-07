@@ -11,25 +11,25 @@ namespace SanAndreasUnity.Settings {
 			description = "Jump speed",
 			minValue = 3,
 			maxValue = 30,
-			isAvailable = () => Player.Instance != null,
-			getValue = () => Player.Instance.jumpSpeed,
-			setValue = (value) => { Player.Instance.jumpSpeed = value; },
+			isAvailable = () => Ped.Instance != null,
+			getValue = () => Ped.Instance.jumpSpeed,
+			setValue = (value) => { Ped.Instance.jumpSpeed = value; },
 		};
 		OptionsWindow.FloatInput m_turnSpeedInput = new OptionsWindow.FloatInput() {
 			description = "Turn speed",
 			minValue = 3,
 			maxValue = 30,
-			isAvailable = () => Player.Instance != null,
-			getValue = () => Player.Instance.TurnSpeed,
-			setValue = (value) => { Player.Instance.TurnSpeed = value; },
+			isAvailable = () => Ped.Instance != null,
+			getValue = () => Ped.Instance.TurnSpeed,
+			setValue = (value) => { Ped.Instance.TurnSpeed = value; },
 		};
 		OptionsWindow.FloatInput m_enterVehicleRadiusInput = new OptionsWindow.FloatInput() {
 			description = "Enter vehicle radius",
 			minValue = 1,
 			maxValue = 15,
-			isAvailable = () => Player.Instance != null,
-			getValue = () => Player.Instance.EnterVehicleRadius,
-			setValue = (value) => { Player.Instance.EnterVehicleRadius = value; },
+			isAvailable = () => Ped.Instance != null,
+			getValue = () => Ped.Instance.EnterVehicleRadius,
+			setValue = (value) => { Ped.Instance.EnterVehicleRadius = value; },
 		};
 
 		OptionsWindow.BoolInput m_showSpeedometerInput = new OptionsWindow.BoolInput() {

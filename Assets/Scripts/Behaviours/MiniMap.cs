@@ -203,7 +203,7 @@ namespace SanAndreasUnity.Behaviours
         #region Private fields
 
         // Texture & control flags
-        private Player player;
+        private Ped player;
 
         private PlayerController playerController;
 
@@ -264,7 +264,7 @@ namespace SanAndreasUnity.Behaviours
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
             {
-                player = playerObj.GetComponent<Player>();
+                player = playerObj.GetComponent<Ped>();
                 playerController = playerObj.GetComponent<PlayerController>();
             }
 

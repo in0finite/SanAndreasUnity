@@ -44,7 +44,7 @@ namespace SanAndreasUnity.UI {
 		protected override void OnWindowGUI ()
 		{
 
-			bool playerExists = Player.Instance != null;
+			bool playerExists = Ped.Instance != null;
 
 
 			float[] widthPercsLabels = new float[]{ 0.1f, 0.3f, 0.25f, 0.25f };
@@ -56,7 +56,7 @@ namespace SanAndreasUnity.UI {
 			// info about current ped
 			if (playerExists) {
 				GUILayout.Label ("Current ped:");
-				this.DisplayPed( GetLayoutRect( rowHeight ), Player.Instance.PedDef, false, true, widthPercsLabels, 
+				this.DisplayPed( GetLayoutRect( rowHeight ), Ped.Instance.PedDef, false, true, widthPercsLabels, 
 					widthPercsButtons, buttonSpacing );
 			}
 
@@ -124,18 +124,18 @@ namespace SanAndreasUnity.UI {
 					if (playerExists) {
 						itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
 						if (GUI.Button (itemRect, "Switch")) {
-							Player.Instance.PlayerModel.Load (def.Id);
+							Ped.Instance.PlayerModel.Load (def.Id);
 						}
 					}
 
 					itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
 					if (GUI.Button (itemRect, "Spawn")) {
-						Player.SpawnPed (def.Id);
+						Ped.SpawnPed (def.Id);
 					}
 
 					itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
 					if (GUI.Button (itemRect, "Spawn stalker")) {
-						Player.SpawnPedStalker (def.Id);
+						Ped.SpawnPedStalker (def.Id);
 					}
 
 				}
@@ -152,8 +152,8 @@ namespace SanAndreasUnity.UI {
 		private static void KillAllPeds ()
 		{
 
-			foreach (var p in Player.AllPlayers) {
-				if (p == Player.Instance)
+			foreach (var p in Ped.AllPlayers) {
+				if (p == Ped.Instance)
 					continue;
 				Destroy (p.gameObject);
 			}

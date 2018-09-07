@@ -32,14 +32,14 @@ namespace SanAndreasUnity.Behaviours.Networking
 
 #endif
 
-        private readonly Dictionary<IRemote, Player> _players;
+        private readonly Dictionary<IRemote, Ped> _players;
         private readonly System.Random _random = new System.Random();
 
         public List<UnityEngine.Transform> PlayerSpawns = new List<UnityEngine.Transform>();
 
         public Server()
         {
-            _players = new Dictionary<IRemote, Player>();
+            _players = new Dictionary<IRemote, Ped>();
 
             if (Config.Get<bool>("sv_listen"))
             {

@@ -255,7 +255,7 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		public virtual AnimId GetAnimBasedOnMovement (Player player, bool canSprint)
+		public virtual AnimId GetAnimBasedOnMovement (Ped player, bool canSprint)
 		{
 			
 			if (player.IsRunning) {
@@ -314,7 +314,7 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		public virtual void UpdateAnimWhileAiming (Player player)
+		public virtual void UpdateAnimWhileAiming (Ped player)
 		{
 			var CurrentWeapon = this;
 			var PlayerModel = player.PlayerModel;
@@ -549,7 +549,7 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		protected virtual void UpdateFireAnim (Player player, AnimationState state)
+		protected virtual void UpdateFireAnim (Ped player, AnimationState state)
 		{
 			
 			if (state.time > this.AimAnimMaxTime) {
@@ -585,12 +585,12 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		public virtual void UpdateAnimWhileHolding (Player player)
+		public virtual void UpdateAnimWhileHolding (Ped player)
 		{
 			player.PlayerModel.PlayAnim (this.GetAnimBasedOnMovement (player, this.CanSprintWithIt));
 		}
 
-		public virtual void EnableOrDisableGunFlash (Player player)
+		public virtual void EnableOrDisableGunFlash (Ped player)
 		{
 			
 			// enable/disable gun flash
@@ -621,7 +621,7 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		public virtual void UpdateGunFlashRotation (Player player)
+		public virtual void UpdateGunFlashRotation (Ped player)
 		{
 
 			if (null == this.GunFlash)
@@ -638,7 +638,7 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-		public virtual bool TryFire (Player ped)
+		public virtual bool TryFire (Ped ped)
 		{
 			if (ped.IsFiring)
 				return false;
@@ -665,7 +665,7 @@ namespace SanAndreasUnity.Behaviours
 			return true;
 		}
 
-		protected virtual void FireProjectile (Player ped)
+		protected virtual void FireProjectile (Ped ped)
 		{
 			// obtain fire position and direction
 

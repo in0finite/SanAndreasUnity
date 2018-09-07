@@ -29,10 +29,10 @@ namespace SanAndreasUnity.UI {
 		protected override void OnWindowGUI ()
 		{
 
-			if (Player.Instance) {
+			if (Ped.Instance) {
 				// display player position
 			//	Vector2 pos = new Vector2 (_player.transform.position.x + 3000, 6000 - (_player.transform.position.z + 3000));
-				GUILayout.Label ("Pos: " + Player.InstancePos);
+				GUILayout.Label ("Pos: " + Ped.InstancePos);
 			}
 
 			if (GUILayout.Button ("Spawn random vehicle")) {
@@ -50,7 +50,7 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int i = 0; i < 5; i++)
 				{
-					Player.SpawnPed (Player.RandomPedId);
+					Ped.SpawnPed (Ped.RandomPedId);
 				}
 			}
 
@@ -58,14 +58,14 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int i = 0; i < 5; i++)
 				{
-					Player.SpawnPedStalker (Player.RandomPedId);
+					Ped.SpawnPedStalker (Ped.RandomPedId);
 				}
 			}
 
 			if (GUILayout.Button("Destroy all vehicles"))
 			{
 				var vehicles = FindObjectsOfType<Behaviours.Vehicles.Vehicle> ();
-				var vehicleToIgnore = Player.Instance != null ? Player.Instance.CurrentVehicle : null;
+				var vehicleToIgnore = Ped.Instance != null ? Ped.Instance.CurrentVehicle : null;
 
 				foreach (var v in vehicles) {
 					if (v != vehicleToIgnore)

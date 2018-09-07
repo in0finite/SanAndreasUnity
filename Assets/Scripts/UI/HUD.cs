@@ -33,11 +33,11 @@ namespace SanAndreasUnity.UI {
 			if (!Loader.HasLoaded)
 				return;
 
-			if (null == Player.Instance)
+			if (null == Ped.Instance)
 				return;
 
 			// draw crosshair
-			if (Player.Instance.IsAiming) {
+			if (Ped.Instance.IsAiming) {
 				DrawCrosshair( new Vector2(Screen.width * 0.5f, Screen.height * 0.5f), Vector2.one * this.crosshairSize, this.crosshairScaleMode );
 			}
 
@@ -90,11 +90,11 @@ namespace SanAndreasUnity.UI {
 
 			var rect = GUIUtils.GetCornerRect (screenCorner, size, padding);
 
-			Player ped = Player.Instance;
+			Ped ped = Ped.Instance;
 
 			// draw icon for current weapon
 
-			Weapon weapon = Player.Instance.CurrentWeapon;
+			Weapon weapon = Ped.Instance.CurrentWeapon;
 
 			Rect texRect = rect;
 			texRect.width *= 0.4f;

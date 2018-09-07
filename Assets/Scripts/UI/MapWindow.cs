@@ -64,10 +64,10 @@ namespace SanAndreasUnity.UI {
 
 		public	void	FocusOnPlayer() {
 
-			if (null == Player.Instance)
+			if (null == Ped.Instance)
 				return;
 
-			Vector3 playerWorldPos = Player.Instance.transform.position;
+			Vector3 playerWorldPos = Ped.Instance.transform.position;
 			//	Vector2 focusWorldPos = new Vector2 (playerWorldPos.x, playerWorldPos.z);
 			//	Vector2 focusPosNormalized = focusPos / MiniMap.mapEdge;
 			Vector2 focusPos = MiniMap.WorldPosToMapPos(playerWorldPos);
@@ -236,7 +236,7 @@ namespace SanAndreasUnity.UI {
 			if (!m_isWaypointPlaced)
 				return;
 
-			Player.Instance.Teleport (MiniMap.MapPosToWorldPos (m_waypointMapPos));
+			Ped.Instance.Teleport (MiniMap.MapPosToWorldPos (m_waypointMapPos));
 
 		}
 
@@ -325,7 +325,7 @@ namespace SanAndreasUnity.UI {
 
 			if (null == MiniMap.Instance)
 				return;
-			if (null == Player.Instance)
+			if (null == Ped.Instance)
 				return;
 
 
@@ -355,8 +355,8 @@ namespace SanAndreasUnity.UI {
 				Rect labelRect = new Rect (Vector2.zero, labelSize);
 
 				GUI.DrawTexture (labelRect, blackPixel);
-				if (Player.Instance != null) {
-					Vector3 pPos = Player.Instance.transform.position;
+				if (Ped.Instance != null) {
+					Vector3 pPos = Ped.Instance.transform.position;
 					GUI.Label (labelRect,
 						string.Format ("x: {0}, y: {1}, z: {2}", pPos.x.ToString ("F2"), pPos.y.ToString ("F2"), pPos.z.ToString ("F2")),
 						style);
@@ -525,9 +525,9 @@ namespace SanAndreasUnity.UI {
 			// second row - info
 			GUILayout.BeginHorizontal (GUILayout.MaxWidth (infoAreaRect.width));
 
-			GUILayout.Label ("Player world pos: " + Player.Instance.transform.position);
+			GUILayout.Label ("Player world pos: " + Ped.Instance.transform.position);
 			GUILayout.Space (5);
-			GUILayout.Label ("Player minimap pos: " + MiniMap.WorldPosToMapPos (Player.Instance.transform.position));
+			GUILayout.Label ("Player minimap pos: " + MiniMap.WorldPosToMapPos (Ped.Instance.transform.position));
 			GUILayout.Space (5);
 			GUILayout.Label ("Focus pos: " + this.GetFocusPosition ());
 			GUILayout.Space (5);
@@ -567,7 +567,7 @@ namespace SanAndreasUnity.UI {
 
 
 			// draw player pointer
-			this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, (int) m_playerPointerSize );
+			this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Ped.Instance.transform.position, Ped.Instance.transform.forward, (int) m_playerPointerSize );
 			//	this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, 10 );
 			//	this.DrawItemOnMap( blackPixel, Player.Instance.transform.position, 50 );
 

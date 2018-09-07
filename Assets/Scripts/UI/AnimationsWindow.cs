@@ -44,7 +44,7 @@ namespace SanAndreasUnity.UI {
 //			}
 
 
-			bool playerExists = Player.Instance != null;
+			bool playerExists = Ped.Instance != null;
 
 
 			float headerHeight = m_displayAnimStats ? 200 : 60;
@@ -52,7 +52,7 @@ namespace SanAndreasUnity.UI {
 			m_headerScrollViewPos = GUILayout.BeginScrollView (m_headerScrollViewPos, GUILayout.Height(headerHeight));
 
 			if (playerExists)
-				Player.Instance.shouldPlayAnims = !GUILayout.Toggle( !Player.Instance.shouldPlayAnims, "Override player anims" );
+				Ped.Instance.shouldPlayAnims = !GUILayout.Toggle( !Ped.Instance.shouldPlayAnims, "Override player anims" );
 
 			m_displayWalkcycleAnims = GUILayout.Toggle( m_displayWalkcycleAnims, "Display walkcycle anims");
 
@@ -106,8 +106,8 @@ namespace SanAndreasUnity.UI {
 						if (playerExists) {
 							// display button which will play the anim
 							if (GUI.Button (rect, animName)) {
-								Player.Instance.PlayerModel.ResetModelState ();
-								Player.Instance.PlayerModel.PlayAnim( animGroup.Type, AnimIndexUtil.Get(i) );
+								Ped.Instance.PlayerModel.ResetModelState ();
+								Ped.Instance.PlayerModel.PlayAnim( animGroup.Type, AnimIndexUtil.Get(i) );
 							}
 						} else {
 							GUI.Label (rect, animName);
@@ -127,7 +127,7 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.Space (5);
 
-			var model = Player.Instance.PlayerModel;
+			var model = Ped.Instance.PlayerModel;
 
 			int numActiveClips = model.AnimComponent.OfType<AnimationState>().Where(a => a.enabled).Count();
 			GUILayout.Label("Currently played anims [" + numActiveClips + "] :");

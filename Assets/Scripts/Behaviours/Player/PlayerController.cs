@@ -7,13 +7,13 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
-    [RequireComponent(typeof(Player))]
+    [RequireComponent(typeof(Ped))]
     public class PlayerController : MonoBehaviour
     {
         
 		public	static	PlayerController	Instance { get ; private set ; }
 
-        private Player _player;
+        private Ped _player;
 
         private float _pitch;
         private float _yaw;
@@ -72,7 +72,7 @@ namespace SanAndreasUnity.Behaviours
         private void Awake()
         {
             Instance = this;
-            _player = GetComponent<Player>();
+            _player = GetComponent<Ped>();
 
         }
 

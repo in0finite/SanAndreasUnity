@@ -21,9 +21,9 @@ public class CharacterModelChanger : MonoBehaviour
 
     public static void ChangePedestrianModel()
     {
-        if (Player.Instance != null)
+        if (Ped.Instance != null)
         {
-			ChangePedestrianModel(Player.Instance.PlayerModel, -1);
+			ChangePedestrianModel(Ped.Instance.PlayerModel, -1);
         }
     }
 
@@ -31,9 +31,9 @@ public class CharacterModelChanger : MonoBehaviour
     {
         
 		if (-1 == newModelId)
-			newModelId = Player.RandomPedId;
+			newModelId = Ped.RandomPedId;
 
-		if (newModelId < Player.kMinPedId || newModelId > Player.kMaxPedId)
+		if (newModelId < Ped.kMinPedId || newModelId > Ped.kMaxPedId)
         {
             return;
         }

@@ -7,18 +7,18 @@ using SanAndreasUnity.Importing.Items.Definitions;
 namespace SanAndreasUnity.Behaviours
 {
 	
-	public partial class Player : MonoBehaviour
+	public partial class Ped : MonoBehaviour
 	{
 
 
 
-		public static Player SpawnPed (PedestrianDef def, Vector3 pos, Quaternion rot)
+		public static Ped SpawnPed (PedestrianDef def, Vector3 pos, Quaternion rot)
 		{
 			CheckPedPrefab ();
 
 			var go = Instantiate (GameManager.Instance.pedPrefab, pos, rot);
 
-			var player = go.GetComponentOrThrow<Player> ();
+			var player = go.GetComponentOrThrow<Ped> ();
 			player.PlayerModel.StartingPedId = def.Id;
 
 			go.name = "Ped " + def.ModelName + " " + def.Id;
@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Behaviours
 			return player;
 		}
 
-		public static Player SpawnPed (int pedId, Vector3 pos, Quaternion rot)
+		public static Ped SpawnPed (int pedId, Vector3 pos, Quaternion rot)
 		{
 			var def = Item.GetDefinition<PedestrianDef> (pedId);
 			if (null == def)
@@ -34,7 +34,7 @@ namespace SanAndreasUnity.Behaviours
 			return SpawnPed (def, pos, rot);
 		}
 
-		public static Player SpawnPed (int pedId)
+		public static Ped SpawnPed (int pedId)
 		{
 			Vector3 pos;
 			Quaternion rot;
@@ -63,14 +63,14 @@ namespace SanAndreasUnity.Behaviours
 			pos = Vector3.zero;
 			rot = Quaternion.identity;
 
-			if (Player.Instance != null) {
+			if (Ped.Instance != null) {
 
 				Vector3 offset = Random.onUnitSphere;
 				offset.y = 0f;
 				offset.Normalize ();
 				offset *= Random.Range (5f, 15f);
 
-				pos = Player.Instance.transform.TransformPoint (offset);
+				pos = Ped.Instance.transform.TransformPoint (offset);
 				rot = Random.rotation;
 
 				return true;

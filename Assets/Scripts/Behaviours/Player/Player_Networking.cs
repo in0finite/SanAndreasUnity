@@ -15,7 +15,7 @@ namespace SanAndreasUnity.Behaviours
     public partial class Player : Networking.Networkable
 #else
 
-    public partial class Player : MonoBehaviour
+    public partial class Ped : MonoBehaviour
 #endif
     {
 #if PROTOBUF

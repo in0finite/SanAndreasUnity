@@ -32,7 +32,7 @@ namespace SanAndreasUnity.Behaviours.Weapons
 			}
 		}
 
-		public override void UpdateAnimWhileHolding (Player player)
+		public override void UpdateAnimWhileHolding (Ped player)
 		{
 			if (player.IsSprinting) {
 				// because anim reports incorrect velocity (it gives positive velocity, but it should give 0),

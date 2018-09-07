@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Behaviours
 	public class PedStalker : MonoBehaviour
 	{
 
-		public Player Player { get; private set; }
+		public Ped Player { get; private set; }
 
 		public float stoppingDistance = 3;
 
@@ -17,7 +17,7 @@ namespace SanAndreasUnity.Behaviours
 
 		void Awake ()
 		{
-			this.Player = this.GetComponentOrLogError<Player> ();
+			this.Player = this.GetComponentOrLogError<Ped> ();
 		}
 
 		void Update ()
@@ -28,18 +28,18 @@ namespace SanAndreasUnity.Behaviours
 
 			// follow player instance
 
-			if (Player.Instance != null) {
+			if (Ped.Instance != null) {
 
-				Vector3 targetPos = Player.InstancePos;
+				Vector3 targetPos = Ped.InstancePos;
 				float currentStoppingDistance = this.stoppingDistance;
 
-				if (Player.Instance.IsInVehicleSeat && !this.Player.IsInVehicle) {
+				if (Ped.Instance.IsInVehicleSeat && !this.Player.IsInVehicle) {
 					// find a free vehicle seat to enter vehicle
 
-					var vehicle = Player.Instance.CurrentVehicle;
+					var vehicle = Ped.Instance.CurrentVehicle;
 					//	var seat = Player.Instance.CurrentVehicleSeatAlignment;
 
-					var closestfreeSeat = Player.GetFreeSeats (vehicle).Select (sa => new { sa = sa, tr = vehicle.GetSeatTransform (sa) })
+					var closestfreeSeat = Ped.GetFreeSeats (vehicle).Select (sa => new { sa = sa, tr = vehicle.GetSeatTransform (sa) })
 						.OrderBy (s => s.tr.Distance (this.transform.position))
 						.FirstOrDefault ();
 
@@ -56,7 +56,7 @@ namespace SanAndreasUnity.Behaviours
 						}
 					}
 
-				} else if (!Player.Instance.IsInVehicle && this.Player.IsInVehicleSeat) {
+				} else if (!Ped.Instance.IsInVehicle && this.Player.IsInVehicleSeat) {
 					// target player is not in vehicle, and ours is
 					// exit the vehicle
 

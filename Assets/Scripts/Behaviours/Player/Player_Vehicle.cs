@@ -9,7 +9,7 @@ using System.Linq;
 namespace SanAndreasUnity.Behaviours
 {
 	
-	public partial class Player : MonoBehaviour {
+	public partial class Ped : MonoBehaviour {
 
 		[SerializeField] private float m_enterVehicleRadius = 2.0f;
 		public float EnterVehicleRadius { get { return m_enterVehicleRadius; } set { m_enterVehicleRadius = value; } }

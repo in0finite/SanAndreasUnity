@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Behaviours {
 	
 	public class WeaponHolder : MonoBehaviour {
 
-		private	Player	m_player;
+		private	Ped	m_player;
 		public	PedModel	PlayerModel { get { return m_player.PlayerModel; } }
 		public	Camera	Camera { get { return m_player.Camera; } }
 
@@ -99,7 +99,7 @@ namespace SanAndreasUnity.Behaviours {
 
         void Awake () {
 			
-			m_player = this.GetComponent<Player> ();
+			m_player = this.GetComponent<Ped> ();
 
 		}
 

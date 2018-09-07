@@ -15,13 +15,13 @@ namespace SanAndreasUnity.Behaviours
 #if CLIENT
     public partial class Player : Networking.Networkable
 #else
-    public partial class Player : MonoBehaviour
+    public partial class Ped : MonoBehaviour
 #endif
     {
         #region Private Fields
 
-		private static List<Player> s_allPlayers = new List<Player> ();
-		public static Player[] AllPlayers { get { return s_allPlayers.ToArray (); } }
+		private static List<Ped> s_allPlayers = new List<Ped> ();
+		public static Ped[] AllPlayers { get { return s_allPlayers.ToArray (); } }
 
 		private WeaponHolder m_weaponHolder;
 		public WeaponHolder WeaponHolder { get { return m_weaponHolder; } }
@@ -64,7 +64,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public const int kMinPedId = 9;
 		public const int kMaxPedId = 288;
-		public static int RandomPedId { get { return Random.Range (Player.kMinPedId, Player.kMaxPedId + 1); } }
+		public static int RandomPedId { get { return Random.Range (Ped.kMinPedId, Ped.kMaxPedId + 1); } }
 
         public Vector3 Position
         {
@@ -102,7 +102,7 @@ namespace SanAndreasUnity.Behaviours
         #endregion Properties
 
 
-		public	static	Player	Instance { get ; private set ; }
+		public	static	Ped	Instance { get ; private set ; }
 
 		/// <summary>Position of player instance.</summary>
 		public	static	Vector3	InstancePos { get { return Instance.transform.position; } }

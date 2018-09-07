@@ -45,7 +45,7 @@ namespace SanAndreasUnity.UI {
 		protected override void OnWindowGUI ()
 		{
 
-			if (null == Player.Instance) {
+			if (null == Ped.Instance) {
 				GUILayout.Label ("Player object not found");
 				return;
 			}
@@ -59,7 +59,7 @@ namespace SanAndreasUnity.UI {
 
 				if (GUILayout.Button (spawnLocation.name))
 				{
-					Player.Instance.Teleport (spawnLocation.position, spawnLocation.rotation);
+					Ped.Instance.Teleport (spawnLocation.position, spawnLocation.rotation);
 				}
 			}
 
