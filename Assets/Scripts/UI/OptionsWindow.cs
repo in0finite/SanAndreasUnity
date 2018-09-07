@@ -171,6 +171,8 @@ namespace SanAndreasUnity.UI {
 
 
 		private static List<OptionsWindow.Input> s_registeredInputs = new List<OptionsWindow.Input> ();
+		private static int s_currentTabIndex = 0;
+		private static string[] s_categories;
 
 
 
@@ -204,14 +206,34 @@ namespace SanAndreasUnity.UI {
 		}
 
 
+		protected override void OnWindowGUIBeforeContent ()
+		{
+			s_categories = s_registeredInputs.Select (i => i.category).Distinct ().ToArray ();
+
+			if (s_categories.Length > 0)
+			{
+				s_currentTabIndex = GUIUtils.TabsControl (s_currentTabIndex, s_categories);
+
+				GUILayout.Space (20);
+			}
+		}
+
 		protected override void OnWindowGUI ()
 		{
-
-			GUILayout.Space (10);
-
+			
 			// draw inputs
 
-			foreach (var grouping in s_registeredInputs.GroupBy (i => i.category))
+			if (s_categories.Length > 0)
+			{
+				foreach (var input in s_registeredInputs.Where( i => i.category == s_categories[s_currentTabIndex] ))
+				{
+					input.Display ();
+				}
+			}
+
+			/*
+			var groupings = s_registeredInputs.GroupBy (i => i.category);
+			foreach (var grouping in groupings)
 			{
 				GUILayout.Label ("\n" + grouping.Key + "\n");
 
@@ -220,11 +242,10 @@ namespace SanAndreasUnity.UI {
 					input.Display ();
 				}
 			}
+			*/
 
 
 			onGUI ();
-
-			GUILayout.Space (20);
 
 		}
 

@@ -127,6 +127,11 @@ namespace SanAndreasUnity.Utilities
 
 		}
 
+		public static int TabsControl (int currentTabIndex, params string[] tabNames)
+		{
+			return GUILayout.Toolbar (currentTabIndex, tabNames);
+		}
+
 		public static Rect GetRectForBarAsBillboard (Vector3 worldPos, float worldWidth, float worldHeight, Camera cam)
 		{
 

@@ -139,6 +139,8 @@ namespace SanAndreasUnity.UI {
 				if (this.SpaceBeforeContent > 0)
 					GUILayout.Space (this.SpaceBeforeContent);
 
+				this.OnWindowGUIBeforeContent ();
+
 				if (this.useScrollView)
 					this.scrollPos = GUILayout.BeginScrollView (this.scrollPos);
 
@@ -157,6 +159,10 @@ namespace SanAndreasUnity.UI {
 			if (this.isDraggable)
 				GUI.DragWindow ();
 			
+		}
+
+		protected virtual void OnWindowGUIBeforeContent() {
+
 		}
 
 		protected virtual void OnWindowGUI() {
