@@ -44,6 +44,9 @@ namespace SanAndreasUnity.UI {
 			// draw hud
 			DrawHud( this.hudScreenCorner, this.hudSize, this.hudPadding, this.healthColor, this.healthBackgroundColor );
 
+			// draw dot in the middle of screen
+			GUIUtils.DrawRect( GUIUtils.GetCenteredRect( new Vector2(2f, 2f) ), Color.red );
+
 		}
 
 		public static void DrawCrosshair (Vector2 screenPos, Vector2 size, ScaleMode scaleMode) {

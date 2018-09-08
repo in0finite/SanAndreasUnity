@@ -729,11 +729,8 @@ namespace SanAndreasUnity.Behaviours
 			{
 				if (m_ped.IsLocalPlayer && m_ped.Camera != null)
 				{
-					// we need crosshair position on screen
-					Vector3 crosshairPos = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
-
 					// find ray going into the world
-					Ray ray = m_ped.Camera.ScreenPointToRay( crosshairPos );
+					Ray ray = m_ped.Camera.GetRayFromCenter ();
 
 					// raycast
 					RaycastHit hit;

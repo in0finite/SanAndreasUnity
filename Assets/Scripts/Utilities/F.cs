@@ -685,13 +685,19 @@ namespace SanAndreasUnity.Utilities
 		}
 
 
+		public static Ray GetRayFromCenter (this Camera cam)
+		{
+			Vector3 viewportPos = new Vector3 (0.5f, 0.5f, 0f);
+			return cam.ViewportPointToRay (viewportPos);
+		}
+
+
 		public static void GizmosDrayLineFromCamera ()
 		{
 			if (null == Camera.main)
 				return;
 
-			Vector3 screenPos = new Vector3 (Screen.width * 0.5f, Screen.height * 0.5f, 0f);
-			Ray ray = Camera.main.ScreenPointToRay (screenPos);
+			Ray ray = Camera.main.GetRayFromCenter ();
 
 			Gizmos.DrawLine (ray.origin, ray.origin + ray.direction * Camera.main.farClipPlane);
 		}
