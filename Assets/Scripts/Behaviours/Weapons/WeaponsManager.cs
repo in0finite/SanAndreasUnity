@@ -15,6 +15,9 @@ namespace SanAndreasUnity.Behaviours.Weapons
 		[SerializeField] [Range(0.0f, 7200.0f)] private float m_gunFlashRotationSpeed = 1800.0f;
 		public float GunFlashRotationSpeed { get { return m_gunFlashRotationSpeed; } set { m_gunFlashRotationSpeed = value; } }
 
+		[Space(10)]
+		[Header("AIMWITHARM")]
+
 		public Vector3 AIMWITHARM_headRotationOffset = Vector3.zero;
 
 		public Vector3 AIMWITHARM_clavicleRotationOffset = Vector3.zero;
@@ -34,8 +37,13 @@ namespace SanAndreasUnity.Behaviours.Weapons
 
 		[Range(0, 90)] public float AIMWITHARM_maxHeadRotationAngle = 75f;
 
+		[Space(15)]
+
+		public LayerMask projectileRaycastMask = Physics.DefaultRaycastLayers;
+
 
 		public static WeaponsManager Instance { get; private set; }
+
 
 
 		void Awake ()

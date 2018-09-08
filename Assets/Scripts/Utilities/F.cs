@@ -618,6 +618,8 @@ namespace SanAndreasUnity.Utilities
 			return new Vector3 (1.0f / vec3.x, 1.0f / vec3.y, 1.0f / vec3.z);
 		}
 
+		public static Color OrangeColor { get { return Color.Lerp (Color.yellow, Color.red, 0.5f); } }
+
 		/// <summary>
 		/// Clamps all coordinates between 0 and 1.
 		/// </summary>
@@ -680,6 +682,18 @@ namespace SanAndreasUnity.Utilities
 			texture.Apply ();
 
 			return texture;
+		}
+
+
+		public static void GizmosDrayLineFromCamera ()
+		{
+			if (null == Camera.main)
+				return;
+
+			Vector3 screenPos = new Vector3 (Screen.width * 0.5f, Screen.height * 0.5f, 0f);
+			Ray ray = Camera.main.ScreenPointToRay (screenPos);
+
+			Gizmos.DrawLine (ray.origin, ray.origin + ray.direction * Camera.main.farClipPlane);
 		}
 
     }

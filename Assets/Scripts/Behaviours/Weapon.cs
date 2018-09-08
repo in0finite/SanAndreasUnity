@@ -646,6 +646,12 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
+		#region Firing
+
+		public float MaxRange { get { return this.Data.weaponRange; } }
+
+		public float Damage { get { return this.Data.gunData.damage; } }
+
 		public virtual bool TryFire ()
 		{
 			Ped ped = m_ped;
@@ -679,11 +685,121 @@ namespace SanAndreasUnity.Behaviours
 		{
 			// obtain fire position and direction
 
+			Vector3 firePos = this.GetFirePos ();
+			Vector3 fireDir = this.GetFireDir ();
+
 			// raycast against all (non-breakable ?) objects
 
-			// if target object has damageable script, inflict damage to it
+			RaycastHit hit;
+			if (this.ProjectileRaycast (firePos, fireDir, out hit))
+			{
+				// if target object has damageable script, inflict damage to it
+
+				var damageable = hit.transform.GetComponent<Damageable> ();
+				if (damageable)
+				{
+					// ray hit something that can be damaged
+					// damage it
+					damageable.Damage( new DamageInfo() { amount = this.Damage } );
+				}
+			}
+
+		}
+
+		public bool ProjectileRaycast (Vector3 source, Vector3 dir, out RaycastHit hit)
+		{
+			return Physics.Raycast (source, dir, out hit, this.MaxRange, WeaponsManager.Instance.projectileRaycastMask);
+		}
+
+		public virtual Vector3 GetFirePos ()
+		{
+			Vector3 firePos;
+
+			if (this.GunFlash != null)
+				firePos = this.GunFlash.transform.position;
+			else
+				firePos = this.transform.TransformPoint (this.Data.gunData.fireOffset);
+
+			return firePos;
+		}
+
+		public virtual Vector3 GetFireDir ()
+		{
+			if (m_ped)
+			{
+				if (m_ped.IsLocalPlayer && m_ped.Camera != null)
+				{
+					// we need crosshair position on screen
+					Vector3 crosshairPos = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+
+					// find ray going into the world
+					Ray ray = m_ped.Camera.ScreenPointToRay( crosshairPos );
+
+					// raycast
+					RaycastHit hit;
+					if (this.ProjectileRaycast (ray.origin, ray.direction, out hit))
+					{
+						return (hit.point - this.GetFirePos ()).normalized;
+					}
+
+					// if any object is hit, direction will be from fire position to hit point
+
+					// if not, direction will be same as aim direction
+
+				}
+
+				return m_ped.WeaponHolder.AimDirection;
+			}
+			else if (this.GunFlash)
+				return this.GunFlash.transform.right;
+			else
+				return this.transform.right;
+		}
+
+		#endregion
 
 
+		public virtual void OnDrawGizmosSelected ()
+		{
+			// draw rays from gun
+
+
+			Vector3 firePos = this.GetFirePos ();
+
+			// ray based on transform
+			Gizmos.color = Color.yellow;
+			GizmosDrawCastedRay (firePos, this.transform.right);
+
+			// ray based on gun flash transform
+			if (this.GunFlash != null)
+			{
+				Gizmos.color = F.OrangeColor;
+				GizmosDrawCastedRay (firePos, this.GunFlash.transform.right);
+			}
+
+			// ray based on aiming direction
+			if (m_ped != null)
+			{
+				Gizmos.color = Color.red;
+				GizmosDrawCastedRay (firePos, m_ped.WeaponHolder.AimDirection);
+			}
+
+			// ray based on firing direction
+			Gizmos.color = Color.black;
+			GizmosDrawCastedRay (firePos, this.GetFireDir ());
+
+		}
+
+		public void GizmosDrawCastedRay (Vector3 source, Vector3 dir)
+		{
+			float distance = 100f;
+			RaycastHit hit;
+			if (this.ProjectileRaycast (source, dir, out hit))
+			{
+				distance = hit.distance;
+			}
+
+			Gizmos.DrawLine (source, source + dir * distance);
 		}
 
 	}

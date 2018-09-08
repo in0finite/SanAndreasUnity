@@ -459,12 +459,14 @@ namespace SanAndreasUnity.Behaviours {
 
 		void OnDrawGizmosSelected ()
 		{
-			// draw ray from gun
+			// draw gizmos for current weapon
 
 			if (CurrentWeapon != null) {
-				Gizmos.color = Color.red;
-				Gizmos.DrawRay (CurrentWeaponTransform.position, CurrentWeaponTransform.forward);
+				CurrentWeapon.OnDrawGizmosSelected ();
 			}
+
+			// draw line from camera
+			F.GizmosDrayLineFromCamera ();
 
 		}
 
