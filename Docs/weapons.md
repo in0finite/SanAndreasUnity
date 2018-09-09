@@ -69,10 +69,6 @@ These are the useful parameters in weapons.dat :
 
 - particles on place of hit
 
-- draw lasers from guns
-
-- change fire direction when aiming back (with AIMWITHARM weapons)
-
 - display inflicted damage as on-screen message
 
 - die animation ; ped needs to have IsDead bool variable - code has to be adapted ;

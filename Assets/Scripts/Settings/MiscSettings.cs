@@ -4,6 +4,7 @@ using System.Linq;
 using SanAndreasUnity.UI;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Behaviours.Weapons;
 
 namespace SanAndreasUnity.Settings {
 
@@ -30,13 +31,19 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { Application.runInBackground = value; },
 			persistType = OptionsWindow.InputPersistType.AfterLoaderFinishes
 		};
+		OptionsWindow.BoolInput m_drawLineFromGunInput = new OptionsWindow.BoolInput ("Draw line from gun") {
+			isAvailable = () => WeaponsManager.Instance != null,
+			getValue = () => WeaponsManager.Instance.drawLineFromGun,
+			setValue = (value) => { WeaponsManager.Instance.drawLineFromGun = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
 
 
 
 		void Awake ()
 		{
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_displayHealthBarsInput, m_displayMinimapInput,
-				m_runInBackgroundInput
+				m_runInBackgroundInput, m_drawLineFromGunInput
 			};
 
 			foreach (var input in inputs)

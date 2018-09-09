@@ -41,6 +41,8 @@ namespace SanAndreasUnity.Behaviours.Weapons
 
 		public LayerMask projectileRaycastMask = Physics.DefaultRaycastLayers;
 
+		public bool drawLineFromGun = false;
+
 
 		public static WeaponsManager Instance { get; private set; }
 

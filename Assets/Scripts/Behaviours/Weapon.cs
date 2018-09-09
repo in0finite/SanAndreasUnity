@@ -205,7 +205,14 @@ namespace SanAndreasUnity.Behaviours
 
 		protected virtual void Update ()
 		{
-			
+
+			if (WeaponsSettings.drawLineFromGun)
+			{
+				Vector3 start, end;
+				this.GetLineFromGun (out start, out end);
+				GLDebug.DrawLine (start, end, Color.red, 0, true);
+			}
+
 		}
 
 
@@ -728,6 +735,21 @@ namespace SanAndreasUnity.Behaviours
 		public bool ProjectileRaycast (Vector3 source, Vector3 dir, out RaycastHit hit)
 		{
 			return Physics.Raycast (source, dir, out hit, this.MaxRange, WeaponsManager.Instance.projectileRaycastMask);
+		}
+
+		public void GetLineFromGun (out Vector3 start, out Vector3 end)
+		{
+			float distance = this.MaxRange;
+			Vector3 firePos = this.GetFirePos ();
+			Vector3 fireDir = this.GetFireDir ();
+			RaycastHit hit;
+			if (this.ProjectileRaycast (firePos, fireDir, out hit))
+			{
+				distance = hit.distance;
+			}
+
+			start = firePos;
+			end = firePos + fireDir * distance;
 		}
 
 		public virtual Vector3 GetFirePos ()
