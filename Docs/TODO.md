@@ -31,8 +31,6 @@
 
 - Exceptions are thrown for some ped models - model ids: WMYST, 0, special peds at the end, 
 
-- Button to give ammo to all weapons
-
 - Create custom inspector for ped - it will display info from ped definition
 
 - Pin windows - pinned windows are visible even when pause menu is not

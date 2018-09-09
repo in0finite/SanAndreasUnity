@@ -41,10 +41,22 @@ namespace SanAndreasUnity.UI {
 			bool playerExists = Ped.Instance != null;
 
 
-			// button to remove all weapons from player
-			if (playerExists) {
-				if (GUILayout.Button ("Remove all weapons", GUILayout.Width(120)))
+			if (playerExists)
+			{
+				GUILayout.BeginHorizontal ();
+
+				if (GUILayout.Button ("Remove all weapons", GUILayout.ExpandWidth(false)))
 					Ped.Instance.WeaponHolder.RemoveAllWeapons ();
+				
+				GUILayout.Space (5);
+
+				if (GUILayout.Button ("Give ammo", GUILayout.ExpandWidth (false)))
+				{
+					foreach (var weapon in Ped.Instance.WeaponHolder.AllWeapons)
+						WeaponHolder.AddRandomAmmoAmountToWeapon (weapon);
+				}
+				
+				GUILayout.EndHorizontal ();
 				GUILayout.Space (15);
 			}
 

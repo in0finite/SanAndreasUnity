@@ -14,6 +14,7 @@ namespace SanAndreasUnity.Behaviours {
 		public	Camera	Camera { get { return m_ped.Camera; } }
 
 		private	Weapon[]	weapons = new Weapon[(int)WeaponSlot.Count];
+		public	Weapon[]	AllWeapons { get { return this.weapons.Where (w => w != null).ToArray (); } }
 
 		private	int		currentWeaponSlot = -1;
 		public	int		CurrentWeaponSlot { get { return this.currentWeaponSlot; } }
@@ -449,11 +450,16 @@ namespace SanAndreasUnity.Behaviours {
 
 				// add some ammo
 				Weapon weapon = this.GetWeaponAtSlot( grp.Key );
-				weapon.AmmoInClip = weapon.AmmoClipSize;
-				weapon.AmmoOutsideOfClip = weapon.AmmoClipSize * Random.Range( 0, 11 );
-
+				AddRandomAmmoAmountToWeapon (weapon);
 			}
 
+		}
+
+		public static void AddRandomAmmoAmountToWeapon (Weapon weapon)
+		{
+			weapon.AmmoInClip = weapon.AmmoClipSize;
+			weapon.AmmoOutsideOfClip += weapon.AmmoClipSize * Random.Range( 0, 11 );
+			weapon.AmmoOutsideOfClip += Random.Range (50, 200);
 		}
 
 
@@ -466,7 +472,7 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 			// draw line from camera
-			F.GizmosDrayLineFromCamera ();
+			F.GizmosDrawLineFromCamera ();
 
 		}
 

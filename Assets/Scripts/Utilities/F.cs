@@ -692,7 +692,7 @@ namespace SanAndreasUnity.Utilities
 		}
 
 
-		public static void GizmosDrayLineFromCamera ()
+		public static void GizmosDrawLineFromCamera ()
 		{
 			if (null == Camera.main)
 				return;

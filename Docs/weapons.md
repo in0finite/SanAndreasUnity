@@ -48,8 +48,6 @@ These are the useful parameters in weapons.dat :
 
 - let aim anim to control head (or spine ?), in order to better simulate bullet firing ?
 
-- damage system
-
 - improve aiming with AIMWITHARM weapons - upper arm should follow right vector of aiming, when aiming to side
 
 - reloading
@@ -65,4 +63,25 @@ These are the useful parameters in weapons.dat :
 - rotate neck instead of spine, when following direction of aiming
 
 - play separate anim for: minigun and flame thrower, 
+
+
+#### Damage system
+
+- particles on place of hit
+
+- draw lasers from guns
+
+- change fire direction when aiming back (with AIMWITHARM weapons)
+
+- display inflicted damage as on-screen message
+
+- die animation ; ped needs to have IsDead bool variable - code has to be adapted ;
+
+- we need to raycast against ped mesh, not capsule collider ; also need to detect which part of body was hit
+
+- adapt vehicles to damage system
+
+- decals
+
+
 
