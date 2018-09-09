@@ -100,6 +100,8 @@ namespace SanAndreasUnity.Behaviours
 
 		private static List<System.Type> s_weaponTypes = new List<System.Type> ();
 
+		protected WeaponsManager WeaponsSettings { get { return WeaponsManager.Instance; } }
+
 		private static GameObject s_weaponsContainer = null;
 
 		public static Texture2D CrosshairTexture { get; set; }
@@ -316,6 +318,23 @@ namespace SanAndreasUnity.Behaviours
 			get {
 				return Weapons.WeaponsManager.Instance.GunFlashDuration;
 			}
+		}
+
+		public bool IsAimingBack () {
+
+			if (null == m_ped)
+				return false;
+
+			if (!this.HasFlag (GunFlag.AIMWITHARM))
+				return false;
+
+			if (!m_ped.IsAiming)
+				return false;
+			
+			Vector3 aimDirLocal = m_ped.transform.InverseTransformDirection (m_ped.AimDirection);
+
+			float oppositeSideAngle = Vector3.Angle( Vector3.forward, aimDirLocal.WithXAndZ () );
+			return oppositeSideAngle > WeaponsSettings.AIMWITHARM_maxAimAngle;
 		}
 
 		public virtual void UpdateAnimWhileAiming ()
@@ -725,8 +744,12 @@ namespace SanAndreasUnity.Behaviours
 
 		public virtual Vector3 GetFireDir ()
 		{
+			
 			if (m_ped)
 			{
+				if (this.IsAimingBack ())
+					return m_ped.transform.up;
+
 				if (m_ped.IsLocalPlayer && m_ped.Camera != null)
 				{
 					// find ray going into the world

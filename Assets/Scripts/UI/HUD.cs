@@ -19,6 +19,9 @@ namespace SanAndreasUnity.UI {
 		public Color healthColor = Color.red;
 		public Color healthBackgroundColor = (Color.red + Color.black) * 0.5f;
 
+		public bool drawRedDotOnScreenCenter = false;
+
+
 
 		void Awake () {
 			Instance = this;
@@ -45,7 +48,8 @@ namespace SanAndreasUnity.UI {
 			DrawHud( this.hudScreenCorner, this.hudSize, this.hudPadding, this.healthColor, this.healthBackgroundColor );
 
 			// draw dot in the middle of screen
-			GUIUtils.DrawRect( GUIUtils.GetCenteredRect( new Vector2(2f, 2f) ), Color.red );
+			if (this.drawRedDotOnScreenCenter)
+				GUIUtils.DrawRect (GUIUtils.GetCenteredRect (new Vector2 (2f, 2f)), Color.red);
 
 		}
 
