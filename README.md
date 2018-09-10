@@ -1,10 +1,24 @@
+
 # San Andreas Unity
+
+<br>
+
+<div align="center">
+    <img src="https://i.imgur.com/aIojfPW.png" width="320" height="320">
+    <br>
+    <a href="https://discord.gg/p6jjud5"> <img src="https://img.shields.io/discord/454006273751515152.svg"></a>
+    &nbsp;
+    <a href="https://gtaforums.com/topic/912395-san-andreas-unity/"> <img src="http://i.imgur.com/Fatp2jZ.png" width="50" height="30"></a>
+    &nbsp;
+    <a href="https://www.youtube.com/channel/UCsslP7vqD06AMh6JlEy0pkg"> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/71px-YouTube_full-color_icon_%282017%29.svg.png" width="30" height="21"> </a>
+</div>
+
+<br>
 
 We're porting [GTA: San Andreas](http://www.rockstargames.com/sanandreas/) to Unity!
 
 This won't be a complete re-implementation of the game, but we're hoping to build something similar to [Multi Theft Auto](http://www.mtasa.com/) with assets streamed from an existing installation of San Andreas.
 
-[![Discord](https://img.shields.io/badge/Discord-chat-blue.svg)](https://discord.gg/CzNvg5T)
 
 ## Setup Instructions
 
@@ -23,7 +37,7 @@ Press Escape while in game to open pause menu. You'll see there a lot of utiliti
 
 Here is an extensive list of [what should be implemented](/Docs/TODO.md).
 
-Can help us to develop this? In that case, join us on discord so we can discuss about it.
+Can help us to develop this ? In that case, join us on discord so we can discuss about it.
 
 ## Screenshots
 
@@ -47,7 +61,7 @@ Can help us to develop this? In that case, join us on discord so we can discuss 
 
 [![](http://img.youtube.com/vi/4DpdcawFjG4/0.jpg)](https://www.youtube.com/watch?v=4DpdcawFjG4)
 
-### Drone flight simulator
+###
 
 [![Drone Flight Simulator](http://img.youtube.com/vi/xUAy7KBpkOs/maxresdefault.jpg)](https://www.youtube.com/watch?v=xUAy7KBpkOs)
 
