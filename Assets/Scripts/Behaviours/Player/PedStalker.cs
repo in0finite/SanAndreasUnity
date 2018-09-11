@@ -6,48 +6,38 @@ using System.Linq;
 namespace SanAndreasUnity.Behaviours
 {
 	
-	public class PedStalker : MonoBehaviour
+	public class PedStalker : Ped
 	{
-
-		public Ped MyPed { get; private set; }
-
 		public float stoppingDistance = 3;
-
-
-
-		void Awake ()
-		{
-			this.MyPed = this.GetComponentOrLogError<Ped> ();
-		}
 
 		void Update ()
 		{
 
 			// reset input
-			this.MyPed.ResetInput ();
+			ResetInput ();
 
 			// follow player instance
 
-			if (Ped.Instance != null) {
+			if (Instance != null) {
 
-				Vector3 targetPos = Ped.InstancePos;
-				float currentStoppingDistance = this.stoppingDistance;
+				Vector3 targetPos = PlayerController.Instance.transform.position;
+				float currentStoppingDistance = stoppingDistance;
 
-				if (Ped.Instance.IsInVehicleSeat && !this.MyPed.IsInVehicle) {
+				if (IsInVehicleSeat && !IsInVehicle) {
 					// find a free vehicle seat to enter vehicle
 
-					var vehicle = Ped.Instance.CurrentVehicle;
+					var vehicle = CurrentVehicle;
 					//	var seat = Player.Instance.CurrentVehicleSeatAlignment;
 
-					var closestfreeSeat = Ped.GetFreeSeats (vehicle).Select (sa => new { sa = sa, tr = vehicle.GetSeatTransform (sa) })
+					var closestfreeSeat = GetFreeSeats (vehicle).Select (sa => new { sa = sa, tr = vehicle.GetSeatTransform (sa) })
 						.OrderBy (s => s.tr.Distance (this.transform.position))
 						.FirstOrDefault ();
 
 					if (closestfreeSeat != null) {
 						// check if it is in range
-						if (closestfreeSeat.tr.Distance (this.transform.position) < this.MyPed.EnterVehicleRadius) {
+						if (closestfreeSeat.tr.Distance (this.transform.position) < EnterVehicleRadius) {
 							// the seat is in range
-							this.MyPed.EnterVehicle (vehicle, closestfreeSeat.sa);
+							EnterVehicle (vehicle, closestfreeSeat.sa);
 						} else {
 							// the seat is not in range
 							// move towards this seat
@@ -56,15 +46,15 @@ namespace SanAndreasUnity.Behaviours
 						}
 					}
 
-				} else if (!Ped.Instance.IsInVehicle && this.MyPed.IsInVehicleSeat) {
+				} else if (!IsInVehicle && IsInVehicleSeat) {
 					// target player is not in vehicle, and ours is
 					// exit the vehicle
 
-					this.MyPed.ExitVehicle ();
+					ExitVehicle ();
 				}
 
 
-				if (this.MyPed.IsInVehicle)
+				if (IsInVehicle)
 					return;
 
 				Vector3 diff = targetPos - this.transform.position;
@@ -74,9 +64,9 @@ namespace SanAndreasUnity.Behaviours
 				{
 					Vector3 diffDir = diff.normalized;
 
-					this.MyPed.IsRunning = true;
-					this.MyPed.Movement = diffDir;
-					this.MyPed.Heading = diffDir;
+					IsRunning = true;
+					Movement = diffDir;
+					Heading = diffDir;
 				}
 
 			}

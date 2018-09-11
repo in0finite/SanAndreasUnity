@@ -11,7 +11,6 @@ namespace SanAndreasUnity.Behaviours {
 
 		private	Ped	m_ped;
 		public	PedModel	PlayerModel { get { return m_ped.PlayerModel; } }
-		public	Camera	Camera { get { return m_ped.Camera; } }
 
 		private	Weapon[]	weapons = new Weapon[(int)WeaponSlot.Count];
 		public	Weapon[]	AllWeapons { get { return this.weapons.Where (w => w != null).ToArray (); } }
@@ -43,8 +42,8 @@ namespace SanAndreasUnity.Behaviours {
 
 		public	Vector3	AimDirection {
 			get {
-				if (this.IsAiming && this.Camera != null)
-					return this.Camera.transform.forward;
+				if (this.IsAiming && Camera.main != null)
+					return Camera.main.transform.forward;
 				else
 					return this.transform.forward;
 			}
@@ -267,7 +266,7 @@ namespace SanAndreasUnity.Behaviours {
 			if (this.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
 				return;
 			
-			PlayerModel.Spine.LookAt(Camera.transform.position + Camera.transform.forward * 500);
+			PlayerModel.Spine.LookAt(Camera.main.transform.position + Camera.main.transform.forward * 500);
 
 			Vector3 eulers = this.SpineOffset;
 			if (this.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
@@ -294,7 +293,7 @@ namespace SanAndreasUnity.Behaviours {
 //
 //			m_player.transform.LookAt (lookAtPos, Vector3.up);
 
-			Vector3 forward = Camera.transform.forward;
+			Vector3 forward = Camera.main.transform.forward;
 			forward.y = 0;
 			forward.Normalize ();
 		//	m_player.transform.forward = forward;

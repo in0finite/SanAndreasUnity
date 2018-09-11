@@ -28,9 +28,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 accel = 0f;
             }
 
-            _vehicle.Accelerator = accel;
-            _vehicle.Steering = Input.GetAxis("Horizontal");
-            _vehicle.Braking = brake;
+            if (Input.GetButton("Use"))
+            {
+                _vehicle.Accelerator = -1;
+                _vehicle.Braking = 1;
+            }
+            else
+            {
+                _vehicle.Accelerator = accel;
+                _vehicle.Steering = Input.GetAxis("Horizontal");
+                _vehicle.Braking = brake;
+            }
         }
     }
 }

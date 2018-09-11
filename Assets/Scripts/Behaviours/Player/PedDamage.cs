@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public Damageable Damageable { get; private set; }
 
-		public float Health { get { return this.Damageable.Health; } set { this.Damageable.Health = value; } }
+        public float Health;
 		[SerializeField] private float m_maxHealth = 100f;
 		public float MaxHealth { get { return m_maxHealth; } set { m_maxHealth = value; } }
 
@@ -47,7 +47,7 @@ namespace SanAndreasUnity.Behaviours
 
 		void UpdateHealthBar ()
 		{
-			bool shouldBeVisible = PedManager.Instance.displayHealthBarAbovePeds && this != Ped.Instance;
+			bool shouldBeVisible = PedManager.Instance.displayHealthBarAbovePeds && this != PlayerController.Instance;
 			this.HealthBar.gameObject.SetActive (shouldBeVisible);
 
 			if (shouldBeVisible)

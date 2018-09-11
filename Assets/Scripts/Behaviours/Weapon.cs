@@ -434,7 +434,7 @@ namespace SanAndreasUnity.Behaviours
 				model.ResetFrameState (model.RightForeArm);
 				model.ResetFrameState (model.RightHand);
 
-				Vector3 aimDir = player.Camera.transform.forward;
+				Vector3 aimDir = Camera.main.transform.forward;
 				Vector3 aimDirLocal = player.transform.InverseTransformDirection (aimDir);
 
 				bool isAimingOnOppositeSide = aimDirLocal.x < 0f;
@@ -772,10 +772,10 @@ namespace SanAndreasUnity.Behaviours
 				if (this.IsAimingBack ())
 					return m_ped.transform.up;
 
-				if (m_ped.IsLocalPlayer && m_ped.Camera != null)
+				if (m_ped.IsLocalPlayer && Camera.main != null)
 				{
 					// find ray going into the world
-					Ray ray = m_ped.Camera.GetRayFromCenter ();
+					Ray ray = Camera.main.GetRayFromCenter ();
 
 					// raycast
 					RaycastHit hit;

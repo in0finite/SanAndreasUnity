@@ -49,8 +49,8 @@ namespace SanAndreasUnity.Behaviours
 
 			if (IsLocalPlayer)
 			{
-				if (Camera != null) {
-					Camera.transform.SetParent (seat.Parent, true);
+				if (Camera.main != null) {
+					Camera.main.transform.SetParent (seat.Parent, true);
 				}
 
 				/*
@@ -134,10 +134,12 @@ namespace SanAndreasUnity.Behaviours
 			if (seat.IsDriver)
 			{
 				PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
+                CurrentVehicle.StartControlling();
 			}
 			else
 			{
 				PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
+                CurrentVehicle.StopControlling();
 			}
 
 		}
@@ -181,8 +183,8 @@ namespace SanAndreasUnity.Behaviours
 
 			// change camera parent
 			if (IsLocalPlayer) {
-				if (Camera != null) {
-					Camera.transform.SetParent (null, true);
+				if (Camera.main != null) {
+					Camera.main.transform.SetParent (null, true);
 				}
 			}
 

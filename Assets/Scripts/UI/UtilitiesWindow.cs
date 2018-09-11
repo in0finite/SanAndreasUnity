@@ -32,7 +32,7 @@ namespace SanAndreasUnity.UI {
 			if (Ped.Instance) {
 				// display player position
 			//	Vector2 pos = new Vector2 (_player.transform.position.x + 3000, 6000 - (_player.transform.position.z + 3000));
-				GUILayout.Label ("Pos: " + Ped.InstancePos);
+				GUILayout.Label ("Pos: " + PlayerController.Instance.transform.position);
 			}
 
 			if (GUILayout.Button ("Spawn random vehicle")) {

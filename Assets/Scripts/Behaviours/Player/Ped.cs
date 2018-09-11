@@ -8,15 +8,13 @@ using Debug = UnityEngine.Debug;
 using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace SanAndreasUnity.Behaviours
 {
     [RequireComponent(typeof(CharacterController))]
-#if CLIENT
-	public partial class Ped : Networking.Networkable
-#else
+    [RequireComponent(typeof(WeaponHolder))]
     public partial class Ped : MonoBehaviour
-#endif
     {
         #region Private Fields
 
@@ -31,8 +29,7 @@ namespace SanAndreasUnity.Behaviours
         #endregion Private Fields
 
         #region Inspector Fields
-
-        public Camera Camera;
+        [Header("Basic Data")]
         public PedModel PlayerModel;
 
 		public bool shouldPlayAnims = true;
@@ -62,9 +59,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public SanAndreasUnity.Importing.Items.Definitions.PedestrianDef PedDef { get { return this.PlayerModel.Definition; } }
 
-		public const int kMinPedId = 9;
+        public const int kMinPedId = 9;
 		public const int kMaxPedId = 288;
-		public static int RandomPedId { get { return Random.Range (Ped.kMinPedId, Ped.kMaxPedId + 1); } }
+		public static int RandomPedId { get { return UnityEngine.Random.Range (Ped.kMinPedId, Ped.kMaxPedId + 1); } }
 
         public Vector3 Position
         {
@@ -105,11 +102,6 @@ namespace SanAndreasUnity.Behaviours
 
 		public	static	Ped	Instance { get ; private set ; }
 
-		/// <summary>Position of player instance.</summary>
-		public	static	Vector3	InstancePos { get { return Instance.transform.position; } }
-
-
-
         
         void Awake()
         {
@@ -131,6 +123,7 @@ namespace SanAndreasUnity.Behaviours
             //MySetupLocalPlayer ();
 
 			this.StartForDamage ();
+            m_weaponHolder = GetComponent<WeaponHolder>();
         }
 
 		void OnEnable ()
@@ -163,17 +156,6 @@ namespace SanAndreasUnity.Behaviours
 				}
 			}
 
-        }
-
-        private void MySetupLocalPlayer()
-        {
-            Camera.gameObject.SetActive(true);
-            Camera.transform.SetParent(null, true);
-
-            Cell.Focus = transform;
-            Cell.PreviewCamera.gameObject.SetActive(false);
-
-            gameObject.AddComponent<PlayerController>();
         }
 
         public void OnSpawn()
@@ -287,21 +269,6 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-#if CLIENT
-
-        private void SetupLocalPlayer()
-        {
-            Camera.gameObject.SetActive(true);
-            Camera.transform.SetParent(null, true);
-
-            Cell.Focus = transform;
-            Cell.PreviewCamera.gameObject.SetActive(false);
-
-            gameObject.AddComponent<PlayerController>();
-        }
-
-#endif
-
         
         private void Update()
         {
@@ -336,11 +303,17 @@ namespace SanAndreasUnity.Behaviours
 
 			this.UpdateDamageStuff ();
 
-		//	IsWalking = IsRunning = false;
+            //	IsWalking = IsRunning = false;
+            PedestrianUpdate();
 
         }
 
-		private void ConstrainPosition() {
+        public virtual void PedestrianUpdate()
+        {
+
+        }
+
+        private void ConstrainPosition() {
 
 			// Constrain to stay inside map
 
@@ -490,15 +463,21 @@ namespace SanAndreasUnity.Behaviours
                 characterController.Move(Velocity * Time.fixedDeltaTime);
             }
 
-//			if(!IsLocalPlayer)
-//            {
-//                Velocity = characterController.velocity;
-//            }
+            //			if(!IsLocalPlayer)
+            //            {
+            //                Velocity = characterController.velocity;
+            //            }
+
+            PedestrianFixedUpdate();
 
         }
 
+        public virtual void PedestrianFixedUpdate()
+        {
 
-		public void ResetInput ()
+        }
+
+        public void ResetInput ()
 		{
 			this.ResetMovementInput ();
 			this.WeaponHolder.IsAimOn = false;
