@@ -46,10 +46,14 @@ public  class GLDebug : MonoBehaviour
 #endif
         //public ScreenRect rect = new ScreenRect (0, 0, 150, 20);
        
-        private List<Line> linesZOn;
-        private List<Line> linesZOff;
+	private List<Line> linesZOn = new List<Line> ();
+	private List<Line> linesZOff = new List<Line> ();
 //        private float milliseconds;
        
+	public Shader zOnShader;
+	public Shader zOffShader;
+
+
         void Awake ()
         {
                 if (instance)
@@ -59,22 +63,23 @@ public  class GLDebug : MonoBehaviour
                 }
                 instance = this;
                 SetMaterial ();
-                linesZOn = new List<Line> ();
-                linesZOff = new List<Line> ();
+        
+				if (null == this.GetComponent<Camera> ())
+				{
+					Debug.LogError ("There should be camera attached to the same game object");
+				}
+
         }
        
     void SetMaterial ()
 	{
-		Shader shader1 = Shader.Find("Debug/GLlineZOn");
-			matZOn = new Material(shader1);
+		matZOn = new Material(this.zOnShader);
 			matZOn.hideFlags = HideFlags.HideAndDontSave;
-            matZOn.shader.hideFlags = HideFlags.HideAndDontSave;
+            //matZOn.shader.hideFlags = HideFlags.HideAndDontSave;
 
-			Shader shader2 = Shader.Find("Debug/GLlineZOff");
-			matZOff = new Material(shader2);
-
+		matZOff = new Material(this.zOffShader);
             matZOff.hideFlags = HideFlags.HideAndDontSave;
-            matZOff.shader.hideFlags = HideFlags.HideAndDontSave;
+            //matZOff.shader.hideFlags = HideFlags.HideAndDontSave;
         }
        
         void Update ()

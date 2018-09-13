@@ -447,6 +447,8 @@ MonoBehaviour:
   toggleKey: 0
   displayLines: 1
   displayGizmos: 0
+  zOnShader: {fileID: 4800000, guid: 6602491fb85d04f7facf2932f1831720, type: 3}
+  zOffShader: {fileID: 4800000, guid: 12cb60961770c4d7e8cc1662ca101fec, type: 3}
 --- !u!108 &1430544495 stripped
 Light:
   m_PrefabParentObject: {fileID: 10808534, guid: b6900baf9f552ba46ad27d4ada4d5489,
