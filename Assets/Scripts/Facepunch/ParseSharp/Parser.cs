@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if !ENABLE_IL2CPP
 using System.Linq.Expressions;
+#endif
 using System.Text.RegularExpressions;
 
 namespace ParseSharp
@@ -528,10 +530,14 @@ namespace ParseSharp
                     typeof(TResult).FullName));
             }
 
+#if !ENABLE_IL2CPP
             var param = Expression.Parameter(typeof(ParseResult), "result");
             var call = Expression.New(ctor, param);
 
             _sCtor = Expression.Lambda<Func<ParseResult, TResult>>(call, param).Compile();
+#else
+            _sCtor = result => (TResult) ctor.Invoke(new object[] {result});
+#endif
         }
 
         internal LateDefinedParser(String name, LateDefinedType type)
