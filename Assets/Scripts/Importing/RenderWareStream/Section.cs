@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+#if !ENABLE_IL2CPP
 using System.Linq.Expressions;
+#endif
 using System.Reflection;
 
 namespace SanAndreasUnity.Importing.RenderWareStream
@@ -75,6 +77,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                 throw new Exception(string.Format("Type {0} "));
             }
 
+#if !ENABLE_IL2CPP
             var header = Expression.Parameter(typeof(SectionHeader), "header");
             var stream = Expression.Parameter(typeof(Stream), "stream");
 
@@ -82,6 +85,9 @@ namespace SanAndreasUnity.Importing.RenderWareStream
             var cast = Expression.Convert(call, typeof(SectionData));
 
             return Expression.Lambda<CtorDelegate>(cast, header, stream).Compile();
+#else
+            return (header, stream) => (SectionData) ctor.Invoke(new object[] {header, stream});
+#endif
         }
 
         private static void FindTypes()

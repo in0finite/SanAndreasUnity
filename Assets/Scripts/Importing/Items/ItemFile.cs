@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+#if !ENABLE_IL2CPP
 using System.Linq.Expressions;
+#endif
 using System.Reflection;
 
 namespace SanAndreasUnity.Importing.Items
@@ -121,12 +123,16 @@ namespace SanAndreasUnity.Importing.Items
 
                 var ctor = type.GetConstructor(new[] { typeof(string) });
 
+#if !ENABLE_IL2CPP
                 var line = Expression.Parameter(typeof(string), "line");
                 var call = Expression.New(ctor, line);
                 var cast = Expression.Convert(call, typeof(TType));
                 var lamb = Expression.Lambda<ItemCtor>(cast, line);
 
                 _sCtors.Add(attrib.Section, lamb.Compile());
+#else
+                _sCtors.Add(attrib.Section, line => (TType) ctor.Invoke(new object[] { line }));
+#endif
             }
         }
 
