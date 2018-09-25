@@ -77,15 +77,14 @@ namespace SanAndreasUnity.Importing.Collision
                         if ((versBuffer[0] == 'O') && (versBuffer[1] == 'L') && (versBuffer[2] == 'L') && ((versBuffer[3] == 0xD0) || (versBuffer[3] == 0xA4) || (versBuffer[3] == 0x8C)))
                         {
                             Debug.Log("Known problem (size off by one). Attempting to fix by adjusting read pointer...");
-                            stream.Position -= 5;
-                            continue;
+                            stream.Position -= 1;
+                            version = Version.COLL;
                         }
                         else
                         {
                             Debug.LogError("Unknown problem. Please report an issue for this!");
+                            break;
                         }
-
-                        break;
                     }
 
                     var modelInfo = new CollisionFileInfo(reader, fileName, version);
