@@ -80,21 +80,13 @@ namespace SanAndreasUnity.Importing.Collision
                     var modelInfo = new CollisionFileInfo(reader, fileName, version);
                     thisFile.Add(modelInfo);
 
-                    try
+                    if (!_sModelNameDict.ContainsKey(modelInfo.Name))
                     {
                         _sModelNameDict.Add(modelInfo.Name, modelInfo);
                     }
-                    catch (System.ArgumentException e)
+                    else
                     {
-                        // The collision file for 'ct_man2' is appearing two times consecutively in my game files. Ignore second one.
-                        if (modelInfo.Name != "ct_man2")
-                        {
-                            Debug.LogError(e.Message);
-                        }
-                        else
-                        {
-                            Debug.Log("Known problem (duplicate ct_man2 collision). Skipping...");
-                        }
+                        _sModelNameDict[modelInfo.Name] = modelInfo;
                     }
                 }
             }
