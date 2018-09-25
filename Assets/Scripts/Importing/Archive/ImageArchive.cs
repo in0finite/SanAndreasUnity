@@ -18,9 +18,9 @@ namespace SanAndreasUnity.Importing.Archive
             public ImageArchiveEntry(BinaryReader reader)
             {
                 Offset = reader.ReadUInt32() << 11;
-                var sizeSecond = reader.ReadUInt16();
-                var sizeFirst = reader.ReadUInt16();
-                Size = (UInt32)((sizeFirst != 0) ? sizeFirst << 11 : sizeSecond << 11);
+                var sizeSecond = (uint) reader.ReadUInt16();
+                var sizeFirst = (uint) reader.ReadUInt16();
+                Size = (sizeFirst != 0) ? sizeFirst << 11 : sizeSecond << 11;
                 Name = reader.ReadString(24);
             }
         }
