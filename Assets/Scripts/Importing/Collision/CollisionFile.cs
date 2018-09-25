@@ -61,29 +61,19 @@ namespace SanAndreasUnity.Importing.Collision
                     if (versBuffer.All(x => x == 0)) break;
 
                     Version version;
-
-                    try
+                    var versString = Encoding.ASCII.GetString(versBuffer);
+                    if (!Enum.TryParse(versString, out version))
                     {
-                        var versString = Encoding.ASCII.GetString(versBuffer);
-                        version = (Version)Enum.Parse(typeof(Version), versString);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogWarningFormat("Error while reading {0} at 0x{1:x} ({2}%)",
-                            fileName, stream.Position - 4, (stream.Position - 4) * 100 / stream.Length);
-                        Debug.LogWarning(e.Message);
-
-                        // The length of 'male01', 'fatmale02' and 'b_wom1' in peds.col seems to be off by 1 in my version. So 'fix' for this case:
-                        if ((versBuffer[0] == 'O') && (versBuffer[1] == 'L') && (versBuffer[2] == 'L') && ((versBuffer[3] == 0xD0) || (versBuffer[3] == 0xA4) || (versBuffer[3] == 0x8C)))
+                        if (versString.Substring(0, 3) == "OLL")
                         {
-                            Debug.Log("Known problem (size off by one). Attempting to fix by adjusting read pointer...");
+                            // Known problem (size off by one). Attempting to fix by adjusting read pointer...
                             stream.Position -= 1;
                             version = Version.COLL;
                         }
                         else
                         {
-                            Debug.LogError("Unknown problem. Please report an issue for this!");
-                            break;
+                            Debug.LogWarningFormat("Error while reading {0} at 0x{1:x} ({2}%)",
+                                fileName, stream.Position - 4, (stream.Position - 4) * 100 / stream.Length);
                         }
                     }
 
