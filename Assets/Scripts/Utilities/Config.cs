@@ -25,14 +25,25 @@ namespace SanAndreasUnity.Utilities
             get { return "config.user.json"; }
         }
 
+		public static string ConfigFilesDirectoryPath
+		{
+			get {
+				#if UNITY_EDITOR || UNITY_STANDALONE
+				return Directory.GetCurrentDirectory ();
+				#else
+				return Application.persistentDataPath;
+				#endif
+			}
+		}
+
         public static string FilePath
         {
-            get { return Path.Combine(Directory.GetCurrentDirectory(), FileName); }
+			get { return Path.Combine(ConfigFilesDirectoryPath, FileName); }
         }
 
         public static string UserFilePath
         {
-            get { return Path.Combine(Directory.GetCurrentDirectory(), UserFileName); }
+			get { return Path.Combine(ConfigFilesDirectoryPath, UserFileName); }
         }
 
         public static string DataPath
@@ -41,8 +52,10 @@ namespace SanAndreasUnity.Utilities
             {
 #if UNITY_EDITOR
                 return Path.Combine(Directory.GetCurrentDirectory(), "Data");
-#else
+#elif UNITY_STANDALONE
                 return Path.Combine(Application.dataPath, "Data");
+#else
+				return Path.Combine(Application.persistentDataPath, "Data");
 #endif
             }
         }
