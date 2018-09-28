@@ -1,4 +1,4 @@
-﻿using SanAndreasUnity.Importing.Collision;
+using SanAndreasUnity.Importing.Collision;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,26 @@ namespace SanAndreasUnity.Importing.Conversion
 
             var indices = faces.SelectMany(x => x.GetIndices()).ToArray();
 
-            mesh.SetIndices(indices, MeshTopology.Triangles, 0);
+            /*This will work too
+            var l = indices.ToList ();
+			var a = indices.Reverse ().ToArray (); 
+			for (int i = 0; i < indices.Reverse ().ToArray ().Length; i++)
+				l.Add (a[i]);
+			indices = l.ToArray();
+
+			mesh.SetTriangles(indices, 0);*/
+            
+            int[] triangles = new int[indices.Length * 2];
+            indices.CopyTo(triangles, 0);
+
+            for (int i = 0; i < indices.Length; i += 3)
+            {
+                int temp = indices[i + 0];
+                indices[i + 0] = indices[i + 1];
+                indices[i + 1] = temp;
+            }
+            indices.CopyTo(triangles, indices.Length);
+            mesh.SetIndices(triangles, MeshTopology.Triangles, 0);
 
             return mesh;
         }
