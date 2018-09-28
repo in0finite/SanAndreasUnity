@@ -24,23 +24,26 @@ namespace SanAndreasUnity.Importing.Conversion
 
             var indices = faces.SelectMany(x => x.GetIndices()).ToArray();
 
-            mesh.SetIndices(indices, MeshTopology.Triangles, 0);
+            /*This will work too
+            var l = indices.ToList ();
+			var a = indices.Reverse ().ToArray (); 
+			for (int i = 0; i < indices.Reverse ().ToArray ().Length; i++)
+				l.Add (a[i]);
+			indices = l.ToArray();
 
-            for (int m = 0; m < mesh.subMeshCount; m++)
+			mesh.SetTriangles(indices, 0);*/
+            
+            int[] triangles = new int[indices.Length * 2];
+            indices.CopyTo(triangles, 0);
+
+            for (int i = 0; i < indices.Length; i += 3)
             {
-                int[] triangles = mesh.GetTriangles(m);
-                int[] trians = triangles;
-                triangles = new int[trians.Length * 2];
-                trians.CopyTo(triangles, 0);
-                for (int i = 0; i < trians.Length; i += 3)
-                {
-                    int temp = trians[i + 0];
-                    trians[i + 0] = trians[i + 1];
-                    trians[i + 1] = temp;
-                }
-                trians.CopyTo(triangles, trians.Length);
-                mesh.SetIndices(triangles, MeshTopology.Triangles, m);
+                int temp = indices[i + 0];
+                indices[i + 0] = indices[i + 1];
+                indices[i + 1] = temp;
             }
+            indices.CopyTo(triangles, indices.Length);
+            mesh.SetIndices(triangles, MeshTopology.Triangles, 0);
 
             return mesh;
         }
