@@ -29,6 +29,13 @@ This won't be a complete re-implementation of the game, but we're hoping to buil
 When running for the first time, the game will ask you for path to GTA installation, and will store that path in config.user.json. If you ever need to change the path, you can just edit this file.
 
 
+## Download
+
+Download it from [here](https://github.com/GTA-ASM/SanAndreasUnity/releases/download/v1.2/SanAndreasUnity.7z) (for windows).
+
+The game is tested on linux, windows, mac, android and ps vita. It supports both Mono and IL2CPP scripting backends, so it can be built for any platform that Unity supports, provided that you can copy PC version of GTASA to target device.
+
+
 ## In-game controls
 
 Press Escape while in game to open pause menu. You'll see there a lot of utilities, and among them, there is a window which shows all controls.
