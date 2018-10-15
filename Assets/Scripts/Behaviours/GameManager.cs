@@ -14,6 +14,9 @@ namespace SanAndreasUnity.Behaviours {
 		public GameObject barPrefab;
 
 
+		/// <summary> Are we in a startup scene ? </summary>
+		public static bool IsInStartupScene { get { return UnityEngine.SceneManagement.SceneManager.GetActiveScene ().buildIndex == 0; } }
+
 
 
 		private void Awake() {
