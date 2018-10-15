@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 114195546318360620}
   - component: {fileID: 114805125582614736}
   - component: {fileID: 114529712737653322}
+  - component: {fileID: 114560248511158306}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -86,6 +87,17 @@ MonoBehaviour:
   healthBarWorldHeight: 0.08
   healthBarMaxScreenHeight: 8
   healthBarVerticalOffset: 0.3
+--- !u!114 &114560248511158306
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1297494511425690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 409653cfe36614ceab3cbfbf9ed04fce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114659537100185892
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -124,3 +136,7 @@ MonoBehaviour:
   AIMWITHARM_upperArmEndRotationEulers: {x: 170, y: -90, z: -2.412}
   AIMWITHARM_maxAimAngle: 95
   AIMWITHARM_maxHeadRotationAngle: 50
+  projectileRaycastMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  drawLineFromGun: 0

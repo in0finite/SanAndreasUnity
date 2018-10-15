@@ -52,6 +52,7 @@ GameObject:
   - component: {fileID: 114396965753478646}
   - component: {fileID: 114184621571316304}
   - component: {fileID: 114509004744246330}
+  - component: {fileID: 114096753951945486}
   m_Layer: 0
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -86,6 +87,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114096753951945486
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1693201817607148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 409653cfe36614ceab3cbfbf9ed04fce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114130700506787182
 MonoBehaviour:
   m_ObjectHideFlags: 1

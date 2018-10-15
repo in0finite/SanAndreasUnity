@@ -204,6 +204,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4450559263798022}
+  - component: {fileID: 114473132252556806}
   m_Layer: 0
   m_Name: UI
   m_TagString: UI
@@ -535,6 +536,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114473132252556806
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1611271869868126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 409653cfe36614ceab3cbfbf9ed04fce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114487661805984862
 MonoBehaviour:
   m_ObjectHideFlags: 1
