@@ -8,6 +8,10 @@ namespace SanAndreasUnity.UI
 	
 	public class MainMenu : MonoBehaviour {
 
+		public float minButtonHeight = 25f;
+		public float minButtonWidth = 70f;
+		public float spaceAtBottom = 15f;
+		public float spaceBetweenButtons = 5f;
 
 
 		void Start ()
@@ -24,38 +28,46 @@ namespace SanAndreasUnity.UI
 
 			// draw buttons at bottom of screen: Main scene, Demo scene, Options, Change path to GTA, Exit
 
-			GUILayout.FlexibleSpace ();
+			GUILayoutOption[] buttonOptions = new GUILayoutOption[]{ GUILayout.MinWidth(minButtonWidth), GUILayout.MinHeight(minButtonHeight) };
+
+			GUILayout.BeginArea (new Rect (0f, Screen.height - (minButtonHeight + spaceAtBottom), Screen.width, minButtonHeight + spaceAtBottom));
+		//	GUILayout.Space (5);
+		//	GUILayout.FlexibleSpace ();
 
 
 			GUILayout.BeginHorizontal ();
 
+			GUILayout.Space (5);
 			GUILayout.FlexibleSpace ();
 
-			if (GUILayout.Button ("Main scene"))
+			if (GUILayout.Button ("Main scene", buttonOptions))
 			{
 				SceneManager.LoadScene ("Main");
 			}
 
-			GUILayout.FlexibleSpace ();
+			GUILayout.Space (this.spaceBetweenButtons);
 
-			if (GUILayout.Button ("Demo scene"))
+			if (GUILayout.Button ("Demo scene", buttonOptions))
 			{
 				SceneManager.LoadScene ("ModelViewer");
 			}
 
-			GUILayout.FlexibleSpace ();
+			GUILayout.Space (this.spaceBetweenButtons);
 
-			if (GUILayout.Button ("Exit"))
+			if (GUILayout.Button ("Exit", buttonOptions))
 			{
 				GameManager.ExitApplication ();
 			}
 
 			GUILayout.FlexibleSpace ();
+			GUILayout.Space (5);
 
 			GUILayout.EndHorizontal ();
 
 			// add some space below buttons
-			GUILayout.Space (15);
+		//	GUILayout.Space (spaceAtBottom);
+
+			GUILayout.EndArea ();
 
 		}
 

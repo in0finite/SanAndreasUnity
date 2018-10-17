@@ -648,6 +648,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f5b556e077dc4e268ae212027bb0276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minButtonHeight: 30
+  minButtonWidth: 80
+  spaceAtBottom: 40
+  spaceBetweenButtons: 30
 --- !u!114 &114768103706765874
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -23,7 +23,7 @@ This won't be a complete re-implementation of the game, but we're hoping to buil
 ## Setup Instructions
 
 - open the project
-- open main scene located at Assets/Scenes/Main.unity
+- open startup scene located at Assets/Scenes/Startup.unity
 - press Play button
 
 When running for the first time, the game will ask you for path to GTA installation, and will store that path in config.user.json. If you ever need to change the path, you can just edit this file.
