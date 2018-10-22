@@ -278,6 +278,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1901320160272788
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4484009134148236}
+  - component: {fileID: 114064859265624614}
+  m_Layer: 0
+  m_Name: Windows
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &4105821110255708
 Transform:
   m_ObjectHideFlags: 1
@@ -335,8 +351,22 @@ Transform:
   - {fileID: 4139429664069144}
   - {fileID: 4623215929862266}
   - {fileID: 4649684838142242}
+  - {fileID: 4484009134148236}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4484009134148236
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1901320160272788}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4450559263798022}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4623215929862266
 Transform:
@@ -410,6 +440,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6f440c6b65774755ba61e110bc899d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114064859265624614
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1901320160272788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd9456433955e448eb1b6abd46c39d07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: Change path to GTA
+  m_isOpenedByDefault: 0
+  windowRect:
+    serializedVersion: 2
+    x: 57.5
+    y: 78.75
+    width: 115
+    height: 157.5
+  useScrollView: 0
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 1
 --- !u!114 &114074779211426578
 MonoBehaviour:
   m_ObjectHideFlags: 1
