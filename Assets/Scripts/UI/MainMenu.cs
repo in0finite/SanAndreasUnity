@@ -16,6 +16,9 @@ namespace SanAndreasUnity.UI
 
 		private static List<System.Action> s_registeredMenuItems = new List<System.Action>();
 
+		private static GUILayoutOption[] s_buttonOptions = new GUILayoutOption[0];
+		public static GUILayoutOption[] ButtonLayoutOptions { get { return s_buttonOptions; } }
+
 
 
 		void Start ()
@@ -32,7 +35,7 @@ namespace SanAndreasUnity.UI
 
 			// draw buttons at bottom of screen: Main scene, Demo scene, Options, Change path to GTA, Exit
 
-			GUILayoutOption[] buttonOptions = new GUILayoutOption[]{ GUILayout.MinWidth(minButtonWidth), GUILayout.MinHeight(minButtonHeight) };
+			s_buttonOptions = new GUILayoutOption[]{ GUILayout.MinWidth(minButtonWidth), GUILayout.MinHeight(minButtonHeight) };
 
 			GUILayout.BeginArea (new Rect (0f, Screen.height - (minButtonHeight + spaceAtBottom), Screen.width, minButtonHeight + spaceAtBottom));
 		//	GUILayout.Space (5);
@@ -44,14 +47,14 @@ namespace SanAndreasUnity.UI
 			GUILayout.Space (5);
 			GUILayout.FlexibleSpace ();
 
-			if (GUILayout.Button ("Main scene", buttonOptions))
+			if (GUILayout.Button ("Main scene", s_buttonOptions))
 			{
 				SceneManager.LoadScene ("Main");
 			}
 
 			GUILayout.Space (this.spaceBetweenButtons);
 
-			if (GUILayout.Button ("Demo scene", buttonOptions))
+			if (GUILayout.Button ("Demo scene", s_buttonOptions))
 			{
 				SceneManager.LoadScene ("ModelViewer");
 			}
@@ -65,7 +68,7 @@ namespace SanAndreasUnity.UI
 				GUILayout.Space (this.spaceBetweenButtons);
 			}
 
-			if (GUILayout.Button ("Exit", buttonOptions))
+			if (GUILayout.Button ("Exit", s_buttonOptions))
 			{
 				GameManager.ExitApplication ();
 			}

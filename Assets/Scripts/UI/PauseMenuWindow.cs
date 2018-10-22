@@ -224,7 +224,7 @@ namespace SanAndreasUnity.UI {
 		{
 			// draw a button in main menu
 
-			if (GUILayout.Button (this.windowName))
+			if (GUILayout.Button (this.windowName, MainMenu.ButtonLayoutOptions))
 			{
 				this.IsOpened = !this.IsOpened;
 			}
