@@ -2,6 +2,7 @@
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using UnityEngine.SceneManagement;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.UI
 {
@@ -12,6 +13,9 @@ namespace SanAndreasUnity.UI
 		public float minButtonWidth = 70f;
 		public float spaceAtBottom = 15f;
 		public float spaceBetweenButtons = 5f;
+
+		private static List<System.Action> s_registeredMenuItems = new List<System.Action>();
+
 
 
 		void Start ()
@@ -54,6 +58,13 @@ namespace SanAndreasUnity.UI
 
 			GUILayout.Space (this.spaceBetweenButtons);
 
+			// draw registered menu items
+			foreach (var item in s_registeredMenuItems)
+			{
+				item ();
+				GUILayout.Space (this.spaceBetweenButtons);
+			}
+
 			if (GUILayout.Button ("Exit", buttonOptions))
 			{
 				GameManager.ExitApplication ();
@@ -69,6 +80,11 @@ namespace SanAndreasUnity.UI
 
 			GUILayout.EndArea ();
 
+		}
+
+		public static void RegisterMenuItem (System.Action action)
+		{
+			s_registeredMenuItems.AddIfNotPresent (action);
 		}
 
 	}
