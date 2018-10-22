@@ -19,6 +19,7 @@ namespace SanAndreasUnity.Behaviours
     {
         
 		public static bool HasLoaded { get; private set; }
+		public static bool IsLoading { get; private set; }
 
 		public static string LoadingStatus { get; private set; }
 
@@ -129,6 +130,8 @@ namespace SanAndreasUnity.Behaviours
 
 			var stopwatch = System.Diagnostics.Stopwatch.StartNew ();
 
+			IsLoading = true;
+
 			Debug.Log("Started loading GTA");
 
 			// wait a few frames - to "unblock" the program, and to let other scripts initialize before
@@ -198,6 +201,7 @@ namespace SanAndreasUnity.Behaviours
 			// all steps finished loading
 
 			HasLoaded = true;
+			IsLoading = false;
 
 			Debug.Log("GTA loading finished in " + stopwatch.Elapsed.TotalSeconds + " seconds");
 

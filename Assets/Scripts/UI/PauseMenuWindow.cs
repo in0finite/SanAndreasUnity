@@ -54,9 +54,15 @@ namespace SanAndreasUnity.UI {
 		[SerializeField]	private	float	m_spaceAfterContent = 0f;
 		public float SpaceAfterContent { get { return m_spaceAfterContent; } set { m_spaceAfterContent = value; } }
 
+		[SerializeField]	private	bool	m_registerInMainMenuOnStart = false;
+		public	bool	IsRegisteredInMainMenu { get; private set; }
+
 
 
 		void WindowStart() {
+
+			if (m_registerInMainMenuOnStart)
+				this.RegisterInMainMenu ();
 
 			if (m_isOpenedByDefault)
 				this.IsOpened = true;
@@ -87,9 +93,15 @@ namespace SanAndreasUnity.UI {
 				this.WindowStart ();
 			}
 
-			if (!PauseMenu.IsOpened || !this.IsOpened)
+			if (Behaviours.Loader.IsLoading)
 				return;
 
+			if (!this.IsOpened)
+				return;
+
+			if (!Behaviours.GameManager.IsInStartupScene && !PauseMenu.IsOpened)
+				return;
+			
 
 			Rect newRect;
 			Rect inputRect = this.windowRect;
@@ -195,6 +207,26 @@ namespace SanAndreasUnity.UI {
 
 			if (GUILayout.Button (text)) {
 				this.IsOpened = ! this.IsOpened;
+			}
+
+		}
+
+		public void RegisterInMainMenu ()
+		{
+			if (this.IsRegisteredInMainMenu)
+				return;
+
+			this.IsRegisteredInMainMenu = true;
+			MainMenu.RegisterMenuItem ( () => this.OnMainMenuGUI() );
+		}
+
+		private void OnMainMenuGUI ()
+		{
+			// draw a button in main menu
+
+			if (GUILayout.Button (this.windowName))
+			{
+				this.IsOpened = !this.IsOpened;
 			}
 
 		}
