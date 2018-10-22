@@ -49,7 +49,16 @@ namespace SanAndreasUnity.UI {
 			Config.Load ();
 
 			// set current directory to game directory
-			m_fileBrowser.CurrentDirectory = Config.GetPath (Config.const_game_dir);
+			string currentGameDir = Config.GetPath (Config.const_game_dir);
+			if (!string.IsNullOrEmpty (currentGameDir))
+			{
+				m_fileBrowser.CurrentDirectory = currentGameDir;
+			}
+			else
+			{
+				// path is not set
+				m_fileBrowser.CurrentDirectory = System.IO.Directory.GetCurrentDirectory ();
+			}
 
 		}
 
