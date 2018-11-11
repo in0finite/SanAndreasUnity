@@ -2,10 +2,6 @@
 
 # What needs to be done before starting work on multiplayer
 
-- add startup scene - where you can choose if you want to start server, or join game
-
-- windows must be visible in startup scene
-
 - create windows for: start new game ; join game ;
 
 - multiple focus transforms for Cell

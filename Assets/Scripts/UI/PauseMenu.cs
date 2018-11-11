@@ -17,16 +17,10 @@ namespace SanAndreasUnity.UI {
 			}
 			set {
 				m_isOpened = value;
-
-				// Why ?
-				if (GameManager.CursorLocked)
-					GameManager.ChangeCursorState(false);
 			}
 		}
 
 		public	static	event System.Action	onDrawItems = delegate {};
-
-		private	static	PlayerController m_playerController;
 
 	//	public	Color	windowsColor = new Color(0.5f, 0.5f, 0.5f, 0.8f);
 	//	private	static	Texture2D	m_windowBackgroundTexture = null;
@@ -35,9 +29,7 @@ namespace SanAndreasUnity.UI {
 
 
 		void Awake () {
-
-			m_playerController = FindObjectOfType<PlayerController> ();
-
+			
 		//	m_windowBackgroundTexture = Utilities.F.CreateTexture (1, 1, this.windowsColor);
 
 		}
@@ -88,7 +80,7 @@ namespace SanAndreasUnity.UI {
 //			}
 
 			// unlock and show cursor while pause menu is opened
-			if (Loader.HasLoaded && m_playerController != null) {
+			if (Loader.HasLoaded) {
 				bool shouldBeLocked = !IsOpened;
 				if (GameManager.CursorLocked != shouldBeLocked)
 					GameManager.ChangeCursorState (shouldBeLocked);
