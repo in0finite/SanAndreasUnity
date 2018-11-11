@@ -452,7 +452,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Change path to GTA
-  m_isOpenedByDefault: 0
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -705,6 +706,9 @@ MonoBehaviour:
   minButtonWidth: 80
   spaceAtBottom: 40
   spaceBetweenButtons: 30
+  drawBackground: 1
+  backgroundColor: {r: 0.064887136, g: 0.04111782, b: 0.11320752, a: 1}
+  drawLogo: 1
 --- !u!114 &114768103706765874
 MonoBehaviour:
   m_ObjectHideFlags: 1

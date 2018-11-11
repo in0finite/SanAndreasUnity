@@ -9,6 +9,8 @@ namespace SanAndreasUnity.Behaviours {
 
 		public static bool CursorLocked { get ; private set ; }
 
+		public Texture2D logoTexture = null;
+
 		public GameObject pedPrefab;
 
 		public GameObject barPrefab;

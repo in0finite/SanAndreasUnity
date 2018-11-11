@@ -542,6 +542,11 @@ namespace SanAndreasUnity.Utilities
             return Texturemap[chipName];
         }
 
+		public static Vector2 GetSize (this Texture2D tex)
+		{
+			return new Vector2 (tex.width, tex.height);
+		}
+
         // Slow method
         public static int CountObjectsInLayer(int layer)
         {

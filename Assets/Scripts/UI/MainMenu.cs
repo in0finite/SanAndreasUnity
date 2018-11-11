@@ -14,6 +14,10 @@ namespace SanAndreasUnity.UI
 		public float spaceAtBottom = 15f;
 		public float spaceBetweenButtons = 5f;
 
+		public bool drawBackground = false;
+		public Color backgroundColor = Color.black;
+		public bool drawLogo = false;
+
 		private static List<System.Action> s_registeredMenuItems = new List<System.Action>();
 
 		private static GUILayoutOption[] s_buttonOptions = new GUILayoutOption[0];
@@ -32,6 +36,23 @@ namespace SanAndreasUnity.UI
 				return;
 
 			// draw main menu gui
+
+			// background
+
+			if (this.drawBackground)
+			{
+				GUIUtils.DrawRect (GUIUtils.ScreenRect, this.backgroundColor);
+			}
+
+			// logo
+
+			if (this.drawLogo)
+			{
+				if (GameManager.Instance.logoTexture != null)
+				{
+					GUI.DrawTexture (GUIUtils.GetCenteredRect (GameManager.Instance.logoTexture.GetSize ()), GameManager.Instance.logoTexture);
+				}
+			}
 
 			// draw buttons at bottom of screen: Main scene, Demo scene, Options, Change path to GTA, Exit
 

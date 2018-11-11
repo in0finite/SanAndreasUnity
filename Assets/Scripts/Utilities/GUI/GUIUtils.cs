@@ -19,6 +19,8 @@ namespace SanAndreasUnity.Utilities
 			}
 		}
 
+		public static Rect ScreenRect { get { return new Rect (0, 0, Screen.width, Screen.height); } }
+
 
 
         public static Rect GetCornerRect(ScreenCorner corner, Vector2 size, Vector2? padding = null)

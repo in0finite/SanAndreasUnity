@@ -21,8 +21,6 @@
 
 - What to do before making a release: change starting pos ? ;
 
-- Hide cursor when game is not paused
-
 - Validate path to GTA ?
 
 - Anims must be played by their name

@@ -56,6 +56,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769ff20407cff41688e681458d8528fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logoTexture: {fileID: 2800000, guid: 7ba03d38f2c9d483eb98097a1990d3ec, type: 3}
   pedPrefab: {fileID: 1246736317761792, guid: bb8a7229f5c124b06be709ab5a7ff007, type: 2}
   barPrefab: {fileID: 1593438409806284, guid: 92671d073b68a421fa8cf12bd74315cb, type: 2}
 --- !u!114 &114366052828304570
