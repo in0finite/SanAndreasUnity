@@ -7,7 +7,8 @@ namespace SanAndreasUnity.UI {
 
 		public	string	windowName = "";
 
-		[SerializeField]	protected	bool	m_isOpenedByDefault = false;
+		[SerializeField]	private	bool	m_isOpenedByDefaultInMainMenu = false;
+		[SerializeField]	private	bool	m_isOpenedByDefaultInPauseMenu = false;
 
 		private	bool	m_isOpened = false;
 		public bool IsOpened {
@@ -64,7 +65,7 @@ namespace SanAndreasUnity.UI {
 			if (m_registerInMainMenuOnStart)
 				this.RegisterInMainMenu ();
 
-			if (m_isOpenedByDefault)
+			if (m_isOpenedByDefaultInMainMenu)
 				this.IsOpened = true;
 
 			this.OnWindowStart ();
@@ -83,6 +84,15 @@ namespace SanAndreasUnity.UI {
 
 		protected virtual void OnWindowClosed() {
 
+		}
+
+
+		protected virtual void OnLoaderFinished ()
+		{
+			if (m_isOpenedByDefaultInPauseMenu)
+			{
+				this.IsOpened = true;
+			}
 		}
 
 

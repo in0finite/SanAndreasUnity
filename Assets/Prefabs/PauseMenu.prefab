@@ -132,7 +132,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Weapons
-  m_isOpenedByDefault: 0
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -142,6 +143,7 @@ MonoBehaviour:
   useScrollView: 1
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
 --- !u!114 &114299782105903270
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -176,7 +178,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Map
-  m_isOpenedByDefault: 0
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -186,6 +189,7 @@ MonoBehaviour:
   useScrollView: 0
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
 --- !u!114 &114396965753478646
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -198,7 +202,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Animations
-  m_isOpenedByDefault: 0
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -208,6 +213,7 @@ MonoBehaviour:
   useScrollView: 1
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
 --- !u!114 &114435663141359712
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -231,7 +237,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Peds
-  m_isOpenedByDefault: 0
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -241,6 +248,7 @@ MonoBehaviour:
   useScrollView: 0
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
   numPedsPerPage: 30
 --- !u!114 &114592069113923140
 MonoBehaviour:
@@ -254,7 +262,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Console
-  m_isOpenedByDefault: 0
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
   windowRect:
     serializedVersion: 2
     x: 75
@@ -264,6 +273,7 @@ MonoBehaviour:
   useScrollView: 0
   m_spaceBeforeContent: 15
   m_spaceAfterContent: 5
+  m_registerInMainMenuOnStart: 0
   restrictLogCount: 1
   maxLogCount: 1000
 --- !u!114 &114604904801458000
@@ -278,7 +288,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Options
-  m_isOpenedByDefault: 0
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -288,6 +299,7 @@ MonoBehaviour:
   useScrollView: 1
   m_spaceBeforeContent: 15
   m_spaceAfterContent: 10
+  m_registerInMainMenuOnStart: 0
 --- !u!114 &114611395026534988
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -300,7 +312,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Utilities
-  m_isOpenedByDefault: 1
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 1
   windowRect:
     serializedVersion: 2
     x: 304
@@ -310,6 +323,7 @@ MonoBehaviour:
   useScrollView: 1
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
 --- !u!114 &114636911127793484
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -322,7 +336,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Controls
-  m_isOpenedByDefault: 0
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -332,6 +347,7 @@ MonoBehaviour:
   useScrollView: 1
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
 --- !u!114 &114753158958291610
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -344,7 +360,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: DayTime
-  m_isOpenedByDefault: 0
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -354,6 +371,7 @@ MonoBehaviour:
   useScrollView: 0
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
 --- !u!114 &114769417846371336
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -366,7 +384,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Vehicle Spawner
-  m_isOpenedByDefault: 0
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -376,6 +395,7 @@ MonoBehaviour:
   useScrollView: 1
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
 --- !u!114 &114911863237150764
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -388,7 +408,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: Teleport
-  m_isOpenedByDefault: 1
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 1
   windowRect:
     serializedVersion: 2
     x: 57.5
@@ -398,6 +419,7 @@ MonoBehaviour:
   useScrollView: 1
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
 --- !u!114 &114921708719520758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -421,7 +443,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowName: World stats
-  m_isOpenedByDefault: 0
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
   windowRect:
     serializedVersion: 2
     x: 10
@@ -431,3 +454,4 @@ MonoBehaviour:
   useScrollView: 0
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
