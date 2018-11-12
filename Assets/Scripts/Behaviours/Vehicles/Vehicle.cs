@@ -282,7 +282,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public VehicleController StartControlling()
         {
-            SetAllCarLights();
+            //SetAllCarLights();
             return _controller ?? (_controller = gameObject.AddComponent<VehicleController>());
         }
 

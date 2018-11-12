@@ -34,7 +34,7 @@
 
 - Remove editor scripts for destroying player model
 
-- Remove unneeded assets
+- Remove unneeded assets: Sockets.cs, DLLs, gta-map, 
 
 - Bug when ped gets down to low heights (trying to move him back to starting location, and causing shaking)
 
@@ -49,7 +49,7 @@
 
 - In-game input settings
 
-- Read sounds: http://www.lysator.liu.se/~creideiki/radio-free-san-andreas/
+- Load sounds
 
 
 #### Vehicles
