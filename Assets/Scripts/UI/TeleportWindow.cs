@@ -22,25 +22,40 @@ namespace SanAndreasUnity.UI {
 
 		}
 
-		void Awake () {
+		void OnSceneChanged (SceneChangedMessage msg) {
 
-			// find all spawn locations
-			var obj = GameObject.Find("Player Spawns");
-			if (obj)
-				_spawns = obj.GetComponentsInChildren<Transform> ().ToList ();
-			
+			_spawns.Clear ();
+
+			if (!GameManager.IsInStartupScene)
+				_spawns = FindSpawnPlaces ().ToList ();
+
+			this.AdjustWindowRect ();
+
 		}
 
 		void Start () {
 			
 			this.RegisterButtonInPauseMenu ();
 
-			// adjust rect
+			this.AdjustWindowRect ();
+		}
+
+
+		public static Transform[] FindSpawnPlaces ()
+		{
+			var obj = GameObject.Find("Player Spawns");
+			if (obj)
+				return obj.GetComponentsInChildren<Transform> ();
+			return new Transform[0];
+		}
+
+
+		private void AdjustWindowRect ()
+		{
 			float width = 260;
 			float height = Mathf.Min( 0.7f * Screen.height, 10 + 25 * _spawns.Count );
 			this.windowRect = new Rect(Screen.width - width - 10, 10, width, height);
 		}
-
 
 		protected override void OnWindowGUI ()
 		{

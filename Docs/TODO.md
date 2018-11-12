@@ -18,8 +18,6 @@
 
 - What to do before making a release: change starting pos ? ;
 
-- Teleport window not showing spawn places
-
 - Load max fps setting in startup scene
 
 - Validate path to GTA ?
