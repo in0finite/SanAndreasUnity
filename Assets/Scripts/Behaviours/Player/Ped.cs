@@ -62,9 +62,16 @@ namespace SanAndreasUnity.Behaviours
 
 		public SanAndreasUnity.Importing.Items.Definitions.PedestrianDef PedDef { get { return this.PlayerModel.Definition; } }
 
-		public const int kMinPedId = 9;
-		public const int kMaxPedId = 288;
-		public static int RandomPedId { get { return Random.Range (Ped.kMinPedId, Ped.kMaxPedId + 1); } }
+		public static int RandomPedId {
+			get {
+				int count = Importing.Items.Item.GetNumDefinitions<Importing.Items.Definitions.PedestrianDef> ();
+				if (count < 1)
+					throw new System.Exception ("No ped definitions found");
+
+				int index = Random.Range (0, count);
+				return Importing.Items.Item.GetDefinitions<Importing.Items.Definitions.PedestrianDef> ().ElementAt (index).Id;
+			}
+		}
 
         public Vector3 Position
         {

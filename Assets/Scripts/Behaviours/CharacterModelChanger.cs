@@ -32,12 +32,7 @@ public class CharacterModelChanger : MonoBehaviour
         
 		if (-1 == newModelId)
 			newModelId = Ped.RandomPedId;
-
-		if (newModelId < Ped.kMinPedId || newModelId > Ped.kMaxPedId)
-        {
-            return;
-        }
-
+		
         // Retry with another random model if this one doesn't work
         try
         {

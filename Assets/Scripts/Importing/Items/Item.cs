@@ -131,6 +131,12 @@ namespace SanAndreasUnity.Importing.Items
             return _definitions.Values.OfType<TDefinition>();
         }
 
+		public static int GetNumDefinitions<TDefinition>()
+			where TDefinition : Definition
+		{
+			return _definitions.Count (pair => pair.Value is TDefinition);
+		}
+
         public static IEnumerable<TPlacement> GetPlacements<TPlacement>(params int[] cellIds)
             where TPlacement : Placement
         {
