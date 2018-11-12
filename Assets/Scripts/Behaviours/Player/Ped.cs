@@ -115,6 +115,8 @@ namespace SanAndreasUnity.Behaviours
 		/// <summary>Position of player instance.</summary>
 		public	static	Vector3	InstancePos { get { return Instance.transform.position; } }
 
+		public bool IsLocalPlayer { get; private set; }
+
 
 
         
