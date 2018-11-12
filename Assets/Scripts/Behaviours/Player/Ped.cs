@@ -469,7 +469,7 @@ namespace SanAndreasUnity.Behaviours
                 // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
 				if (!this.IsJumpOn)
                     jumpTimer++;
-                else if (jumpTimer >= antiBunnyHopFactor)
+				else if (jumpTimer >= antiBunnyHopFactor && this.IsGrounded)
                 {
                     Velocity += Vector3.up * jumpSpeed;
                     jumpTimer = 0;

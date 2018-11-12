@@ -24,8 +24,6 @@
 
 - Vehicles window: it's too slow - use pages ; display additional info ;
 
-- Don't jump while jumping
-
 - Implement proper jumping
 
 - Exceptions are thrown for some ped models - model ids: WMYST, 0, special peds at the end, 
