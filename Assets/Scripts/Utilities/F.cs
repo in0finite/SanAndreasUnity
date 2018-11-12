@@ -1,5 +1,4 @@
-﻿using HtmlAgilityPack;
-using SanAndreasUnity.Behaviours.Vehicles;
+﻿using SanAndreasUnity.Behaviours.Vehicles;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -150,11 +149,6 @@ namespace SanAndreasUnity.Utilities
         {
             value.Length = 0;
             value.Capacity = 0;
-        }
-
-        public static string IndentHtml(this HtmlNode _node)
-        {
-            return _node.OuterHtml.XmlBeautifier().CleanElement("hr").CleanElement("br");
         }
 
         public static String NameOf<T>(this T obj)
