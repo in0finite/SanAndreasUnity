@@ -25,7 +25,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public Camera PreviewCamera;
 
-        public Transform Focus;
+		public List<Transform> focusPoints = new List<Transform> ();
+
         public Water Water;
 
 		public static Cell Instance { get ; private set; }
@@ -184,16 +185,26 @@ namespace SanAndreasUnity.Behaviours.World
 			
             if (_leaves == null) return;
 
+			this.focusPoints.RemoveAll (t => null == t);
+
+			if (this.focusPoints.Count < 1)
+				return;
+
             numDivisionsUpdatedLoadOrder = 0;
             numMapObjectsUpdatedLoadOrder = 0;
             containingDivision = null;
 
             _timer.Reset();
             _timer.Start();
-            var pos = Focus.position;
-            var toLoad = false; // _leaves.Aggregate(false, (current, leaf) => current | leaf.RefreshLoadOrder(pos));
-            foreach (Division leaf in _leaves)
+
+			List<Vector3> positions = this.focusPoints.Select (f => f.position).ToList ();
+
+			bool toLoad = false; // _leaves.Aggregate(false, (current, leaf) => current | leaf.RefreshLoadOrder(pos));
+            
+			foreach (Division leaf in _leaves)
             {
+				Vector3 pos = leaf.GetClosestPosition (positions);
+
                 int count = 0;
                 toLoad |= leaf.RefreshLoadOrder(pos, out count);
                 if (count > 0)
@@ -207,6 +218,7 @@ namespace SanAndreasUnity.Behaviours.World
                     containingDivision = leaf;
                 }
             }
+
             measuredTimes[0] = (float)_timer.Elapsed.TotalMilliseconds;
 
             if (!toLoad) return;

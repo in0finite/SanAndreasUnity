@@ -21,6 +21,10 @@
 
 - What to do before making a release: change starting pos ? ;
 
+- Teleport window not showing spawn places
+
+- Load max fps setting in startup scene
+
 - Validate path to GTA ?
 
 - Anims must be played by their name

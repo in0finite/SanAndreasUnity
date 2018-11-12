@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1430544495}
-  m_IndirectSpecularColor: {r: 0.4465869, g: 0.49642336, b: 0.5748227, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.496413, b: 0.5748156, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -225,6 +225,11 @@ Prefab:
     - {fileID: 114741845841415948, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
   m_IsPrefabParent: 0
+--- !u!4 &592530378 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 4388436116821042, guid: 9d45d42a7408c1e4ab325d6840364b84,
+    type: 2}
+  m_PrefabInternal: {fileID: 592530377}
 --- !u!1 &1117230320
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,6 +402,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: focusPoints.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 499186, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -437,6 +446,10 @@ Prefab:
       propertyPath: Focus
       value: 
       objectReference: {fileID: 1117230324}
+    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
+      propertyPath: focusPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 592530378}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 2}
   m_IsPrefabParent: 0

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -229,13 +230,38 @@ namespace SanAndreasUnity.Behaviours.World
 
         public float GetDistanceSquared(Vector3 pos)
         {
-            if (Contains(pos)) return 0f;
+            if (Contains(pos))
+				return 0f;
 
-            var dx = Mathf.Max(Min.x - pos.x, pos.x - Max.x);
-            var dz = Mathf.Max(Min.y - pos.z, pos.z - Max.y);
-
-            return new Vector2(dx, dz).sqrMagnitude;
+			return GetDistanceSquaredInternal (pos);
         }
+
+		private float GetDistanceSquaredInternal(Vector3 pos)
+		{
+			float dx = Mathf.Max(Min.x - pos.x, pos.x - Max.x);
+			float dz = Mathf.Max(Min.y - pos.z, pos.z - Max.y);
+
+			return new Vector2(dx, dz).sqrMagnitude;
+		}
+
+		public Vector3 GetClosestPosition (List<Vector3> positions)
+		{
+			Vector3 closestPos = positions [0];
+			float smallestDist2 = float.MaxValue;
+			Vector2 center = (this.Min + this.Max) * 0.5f;
+
+			for (int i = 0; i < positions.Count; i++)
+			{
+				float dist2 = Vector2.SqrMagnitude (positions [i].ToVec2WithXAndZ() - center);
+				if (dist2 <= smallestDist2)
+				{
+					smallestDist2 = dist2;
+					closestPos = positions [i];
+				}
+			}
+
+			return closestPos;
+		}
 
         public bool RefreshLoadOrder(Vector3 from, out int numMapObjectsUpdatedLoadOrder)
         {
