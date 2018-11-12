@@ -14,7 +14,7 @@ namespace SanAndreasUnity.Settings {
 		OptionsWindow.FloatInput m_fpsInput = new OptionsWindow.FloatInput( "Max fps", 0f, 200f ) {
 			getValue = () => Behaviours.GameManager.GetMaxFps (),
 			setValue = (value) => { Behaviours.GameManager.SetMaxFps (value.RoundToInt ()); },
-			persistType = OptionsWindow.InputPersistType.AfterLoaderFinishes
+			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 		OptionsWindow.MultipleOptionsInput<int> m_antiAliasingInput = new OptionsWindow.MultipleOptionsInput<int>() {
 			description = "Anti aliasing",

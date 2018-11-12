@@ -18,8 +18,6 @@
 
 - What to do before making a release: change starting pos ? ;
 
-- Load max fps setting in startup scene
-
 - Validate path to GTA ?
 
 - Anims must be played by their name
