@@ -233,16 +233,11 @@ namespace SanAndreasUnity.Behaviours.World
             if (Contains(pos))
 				return 0f;
 
-			return GetDistanceSquaredInternal (pos);
-        }
-
-		private float GetDistanceSquaredInternal(Vector3 pos)
-		{
 			float dx = Mathf.Max(Min.x - pos.x, pos.x - Max.x);
 			float dz = Mathf.Max(Min.y - pos.z, pos.z - Max.y);
 
 			return new Vector2(dx, dz).sqrMagnitude;
-		}
+        }
 
 		public Vector3 GetClosestPosition (List<Vector3> positions)
 		{

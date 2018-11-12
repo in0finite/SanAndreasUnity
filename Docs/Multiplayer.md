@@ -4,8 +4,6 @@
 
 - create windows for: start new game ; join game ;
 
-- multiple focus transforms for Cell - divisions will update based on closest focus point
-
 
 
 # Potential problems

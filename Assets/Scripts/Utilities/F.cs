@@ -348,26 +348,26 @@ namespace SanAndreasUnity.Utilities
 			}
 		}
 
-		public	static	void	Invoke( this Component component, string methodName, params object[] args ) {
+		public	static	void	Invoke( this System.Object obj, string methodName, params object[] args ) {
 
-			var method = component.GetType().GetMethod( methodName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public );
+			var method = obj.GetType().GetMethod( methodName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public );
 			if(method != null) {
-				method.Invoke( component, args );
+				method.Invoke( obj, args );
 			}
 
 		}
 
-		public	static	void	InvokeExceptionSafe( this Component component, string methodName, params object[] args ) {
+		public	static	void	InvokeExceptionSafe( this System.Object obj, string methodName, params object[] args ) {
 
 			try {
-				component.Invoke( methodName, args );
+				obj.Invoke( methodName, args );
 			} catch (System.Exception ex) {
 				Debug.LogException (ex);
 			}
 
 		}
 
-		public static void SendMessageToObjectsOfType<T> (string msg, params object[] args) where T : UnityEngine.Component
+		public static void SendMessageToObjectsOfType<T> (string msg, params object[] args) where T : UnityEngine.Object
 		{
 			var objects = UnityEngine.Object.FindObjectsOfType<T> ();
 

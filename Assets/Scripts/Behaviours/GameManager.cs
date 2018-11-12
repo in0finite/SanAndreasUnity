@@ -1,8 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace SanAndreasUnity.Behaviours {
-	
+
+	public class SceneChangedMessage {
+		public Scene s1;
+		public Scene s2;
+	}
+
 	public class GameManager : MonoBehaviour {
 
 		public static GameManager Instance { get ; private set ; }
@@ -26,6 +32,21 @@ namespace SanAndreasUnity.Behaviours {
 			if (null == Instance)
 				Instance = this;
 
+		}
+
+		void OnEnable ()
+		{
+			SceneManager.activeSceneChanged += this.OnSceneChangedInternal;
+		}
+
+		void OnDisable ()
+		{
+			SceneManager.activeSceneChanged -= this.OnSceneChangedInternal;
+		}
+
+		void OnSceneChangedInternal (Scene s1, Scene s2)
+		{
+			Utilities.F.SendMessageToObjectsOfType<MonoBehaviour>("OnSceneChanged", new SceneChangedMessage() {s1 = s1, s2 = s2});
 		}
 
 		void Start () {
