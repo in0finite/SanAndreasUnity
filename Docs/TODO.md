@@ -34,7 +34,7 @@
 
 - Remove editor scripts for destroying player model
 
-- Remove unneeded assets: gta-map, DLL scripts, 
+- Remove unneeded assets: gta-map, 
 
 - Bug when ped gets down to low heights (trying to move him back to starting location, and causing shaking)
 
