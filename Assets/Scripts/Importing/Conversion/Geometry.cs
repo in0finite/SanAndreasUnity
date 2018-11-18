@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace SanAndreasUnity.Importing.Conversion
 {
@@ -392,6 +393,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             public void AttachCollisionModel(Transform destParent, bool forceConvex = false)
             {
+				Profiler.BeginSample ("AttachCollisionModel");
                 if (_collisions != null)
                 {
                     CollisionModel.Load(_collisions, destParent, forceConvex);
@@ -400,6 +402,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 {
                     CollisionModel.Load(Name, destParent, forceConvex);
                 }
+				Profiler.EndSample ();
             }
 
             public FrameContainer AttachFrames(Transform destParent, MaterialFlags flags)
@@ -507,14 +510,18 @@ namespace SanAndreasUnity.Importing.Conversion
                 return _sLoaded[modelName];
             }
 
+			Profiler.BeginSample ("ReadClump");
             var clump = ArchiveManager.ReadFile<Clump>(modelName + ".dff");
+			Profiler.EndSample ();
 
             if (clump.GeometryList == null)
             {
                 throw new Exception("Invalid mesh");
             }
 
+			Profiler.BeginSample ("Create GeometryParts");
             var loaded = new GeometryParts(modelName, clump, txds);
+			Profiler.EndSample ();
 
             _sLoaded.Add(modelName, loaded);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using UnityEngine.Profiling;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -101,7 +102,9 @@ namespace SanAndreasUnity.Behaviours
 
         public bool RefreshLoadOrder(Vector3 from)
         {
+			Profiler.BeginSample ("MapObject.RefreshLoadOrder", this);
             LoadOrder = OnRefreshLoadOrder(from);
+			Profiler.EndSample ();
             return !float.IsPositiveInfinity(LoadOrder);
         }
 
@@ -111,12 +114,17 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!_loaded)
             {
-                //Debug.Log("-444");
-                _loaded = true;
-                OnLoad();
+				_loaded = true;
+                
+				Profiler.BeginSample ("OnLoad", this);
+				OnLoad();
+				Profiler.EndSample ();
             }
 
+			Profiler.BeginSample ("OnShow", this);
             OnShow();
+			Profiler.EndSample ();
+
             LoadOrder = float.PositiveInfinity;
         }
 

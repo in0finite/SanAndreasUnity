@@ -226,8 +226,12 @@ namespace SanAndreasUnity.Importing.Conversion
             name = name.ToLower();
             if (_sLoaded.ContainsKey(name)) return _sLoaded[name];
 
+			UnityEngine.Profiling.Profiler.BeginSample ("TextureDictionary.Load");
+
             var txd = new TextureDictionary(ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd"));
             _sLoaded.Add(name, txd);
+
+			UnityEngine.Profiling.Profiler.EndSample ();
 
             return txd;
         }

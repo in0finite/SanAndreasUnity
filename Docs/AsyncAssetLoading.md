@@ -11,6 +11,14 @@ We need a way to wait until specific asset is loaded.
 
 First identify what is taking time using Profiler. Maybe not all time goes on loading from disk. Some of it may be spent on converting the mesh.
 
+***
+
+What could take a lot of time:
+
+- loading from disk
+- converting mesh
+- creating Mesh object (setting and applying vertex and index buffers)
+- the same as above, but for textures
 
 ***
 

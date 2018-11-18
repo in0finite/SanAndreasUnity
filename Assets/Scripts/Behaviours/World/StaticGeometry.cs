@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -113,11 +114,11 @@ namespace SanAndreasUnity.Behaviours.World
 
         protected override void OnLoad()
         {
-            //Debug.Log("-444");
-
+            
             if (!_canLoad) return;
 
-            //Debug.Log("-333");
+			Profiler.BeginSample ("StaticGeometry.OnLoad", this);
+
 
             var geoms = Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName);
 
@@ -127,6 +128,8 @@ namespace SanAndreasUnity.Behaviours.World
                 .Select(x => x.ToString())
                 .ToList();
 
+			Profiler.BeginSample ("Add mesh", this);
+
             var mf = gameObject.AddComponent<MeshFilter>();
             var mr = gameObject.AddComponent<MeshRenderer>();
 
@@ -134,17 +137,29 @@ namespace SanAndreasUnity.Behaviours.World
             mr.sharedMaterials = geoms.Geometry[0].GetMaterials(Instance.Object.Flags,
                 mat => mat.SetTexture(NoiseTexId, NoiseTex));
 
+			Profiler.EndSample ();
+
             geoms.AttachCollisionModel(transform);
+
+			Profiler.BeginSample ("Set layer", this);
 
             if (Instance.Object.HasFlag(ObjectFlag.Breakable))
             {
                 gameObject.SetLayerRecursive(BreakableLayer);
             }
+
+			Profiler.EndSample ();
+
+
+			Profiler.EndSample ();
+
         }
 
         protected override void OnShow()
         {
+			Profiler.BeginSample ("StaticGeometry.OnShow");
             IsVisible = LodParent == null || !LodParent.IsVisible;
+			Profiler.EndSample ();
         }
 
         private IEnumerator Fade()

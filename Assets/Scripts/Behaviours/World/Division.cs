@@ -260,6 +260,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public bool RefreshLoadOrder(Vector3 from, out int numMapObjectsUpdatedLoadOrder)
         {
+			UnityEngine.Profiling.Profiler.BeginSample ("Division.RefreshLoadOrder", this);
+
             var toLoad = false;
             numMapObjectsUpdatedLoadOrder = 0;
 
@@ -297,11 +299,15 @@ namespace SanAndreasUnity.Behaviours.World
                 LoadOrder = float.PositiveInfinity;
             }
 
+			UnityEngine.Profiling.Profiler.EndSample ();
+
             return toLoad;
         }
 
         public int LoadWhile(Func<bool> predicate)
         {
+			UnityEngine.Profiling.Profiler.BeginSample ("LoadWhile", this);
+
             int numLoaded = 0;
             foreach (var toLoad in _objects)
             {
@@ -324,6 +330,8 @@ namespace SanAndreasUnity.Behaviours.World
                     }
                 }
             }
+
+			UnityEngine.Profiling.Profiler.EndSample ();
 
             //    return predicate();
             //	return false ;
