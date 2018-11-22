@@ -60,6 +60,7 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
+        public static string GetGameDir { get{ return ReplaceSubstitutions(Get<string>("game_dir")); } }
 
 		private static JObject _root = new JObject ();
 		private static JObject _user = new JObject ();
