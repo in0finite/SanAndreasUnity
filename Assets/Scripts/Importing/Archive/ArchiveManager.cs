@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using System.Runtime.CompilerServices;
 
 namespace SanAndreasUnity.Importing.Archive
 {
@@ -48,18 +49,31 @@ namespace SanAndreasUnity.Importing.Archive
             return arch;
         }
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
         public static bool FileExists(string name)
         {
             return _sLoadedArchives.Any(x => x.ContainsFile(name));
         }
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
         public static Stream ReadFile(string name)
         {
             var arch = _sLoadedArchives.FirstOrDefault(x => x.ContainsFile(name));
             if (arch == null) throw new FileNotFoundException(name);
-            return arch.ReadFile(name);
+
+			// get a stream and build memory stream out of it - this will ensure thread safe access
+
+			var stream = arch.ReadFile(name);
+
+			byte[] buffer = new byte[stream.Length];
+			stream.Read (buffer, 0, (int) stream.Length);
+
+			stream.Dispose ();
+
+			return new MemoryStream (buffer);
         }
 
+		[MethodImpl(MethodImplOptions.Synchronized)]	// not needed
         public static TSection ReadFile<TSection>(string name)
             where TSection : SectionData
         {
