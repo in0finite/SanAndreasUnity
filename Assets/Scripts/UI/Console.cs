@@ -42,7 +42,7 @@ namespace SanAndreasUnity.UI
 		bool isCollapsed;
 		public bool IsCollapsed { get { return this.isCollapsed; } set { this.isCollapsed = value; } }
 		readonly List<Log> logs = new List<Log>();
-		readonly ConcurrentQueue<Log> queuedLogs = new ConcurrentQueue<Log>();
+		readonly Utilities.ConcurrentQueue<Log> queuedLogs = new Utilities.ConcurrentQueue<Log>();
 
 		readonly Dictionary<LogType, bool> logTypeFilters = new Dictionary<LogType, bool>
 		{
@@ -338,40 +338,5 @@ namespace SanAndreasUnity.UI
 		}
 	}
 
-	/// <summary>
-	/// Alternative to System.Collections.Concurrent.ConcurrentQueue
-	/// (It's only available in .NET 4.0 and greater)
-	/// </summary>
-	/// <remarks>
-	/// It's a bit slow (as it uses locks), and only provides a small subset of the interface
-	/// Overall, the implementation is intended to be simple & robust
-	/// </remarks>
-	public class ConcurrentQueue<T>
-	{
-		private readonly System.Object queueLock = new System.Object();
-		private readonly Queue<T> queue = new Queue<T>();
 
-		public void Enqueue(T item)
-		{
-			lock (queueLock)
-			{
-				queue.Enqueue(item);
-			}
-		}
-
-		public bool TryDequeue(out T result)
-		{
-			lock (queueLock)
-			{
-				if (queue.Count == 0)
-				{
-					result = default(T);
-					return false;
-				}
-
-				result = queue.Dequeue();
-				return true;
-			}
-		}
-	}
 }
