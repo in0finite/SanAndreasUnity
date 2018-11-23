@@ -299,7 +299,7 @@ MonoBehaviour:
   useScrollView: 1
   m_spaceBeforeContent: 15
   m_spaceAfterContent: 10
-  m_registerInMainMenuOnStart: 0
+  m_registerInMainMenuOnStart: 1
 --- !u!114 &114611395026534988
 MonoBehaviour:
   m_ObjectHideFlags: 1
