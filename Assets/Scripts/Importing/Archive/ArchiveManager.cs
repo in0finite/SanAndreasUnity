@@ -73,7 +73,7 @@ namespace SanAndreasUnity.Importing.Archive
 			return new MemoryStream (buffer);
         }
 
-		[MethodImpl(MethodImplOptions.Synchronized)]	// not needed
+		[MethodImpl(MethodImplOptions.Synchronized)]	// not needed ?
         public static TSection ReadFile<TSection>(string name)
             where TSection : SectionData
         {

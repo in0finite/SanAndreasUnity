@@ -120,40 +120,51 @@ namespace SanAndreasUnity.Behaviours.World
 			Profiler.BeginSample ("StaticGeometry.OnLoad", this);
 
 
+			// this was previously placed after loading geometry
+			Flags = Enum.GetValues(typeof(ObjectFlag))
+				.Cast<ObjectFlag>()
+				.Where(x => (Instance.Object.Flags & x) == x)
+				.Select(x => x.ToString())
+				.ToList();
+
             var geoms = Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName);
+			OnGeometryLoaded (geoms);
 
-            Flags = Enum.GetValues(typeof(ObjectFlag))
-                .Cast<ObjectFlag>()
-                .Where(x => (Instance.Object.Flags & x) == x)
-                .Select(x => x.ToString())
-                .ToList();
-
-			Profiler.BeginSample ("Add mesh", this);
-
-            var mf = gameObject.AddComponent<MeshFilter>();
-            var mr = gameObject.AddComponent<MeshRenderer>();
-
-            mf.sharedMesh = geoms.Geometry[0].Mesh;
-            mr.sharedMaterials = geoms.Geometry[0].GetMaterials(Instance.Object.Flags,
-                mat => mat.SetTexture(NoiseTexId, NoiseTex));
-
-			Profiler.EndSample ();
-
-            geoms.AttachCollisionModel(transform);
-
-			Profiler.BeginSample ("Set layer", this);
-
-            if (Instance.Object.HasFlag(ObjectFlag.Breakable))
-            {
-                gameObject.SetLayerRecursive(BreakableLayer);
-            }
-
-			Profiler.EndSample ();
+//			Geometry.LoadAsync( Instance.Object.ModelName, new string[] {Instance.Object.TextureDictionaryName}, (geoms) => {
+//				OnGeometryLoaded (geoms);
+//			});
 
 
 			Profiler.EndSample ();
 
         }
+
+		private void OnGeometryLoaded (Geometry.GeometryParts geoms)
+		{
+
+			Profiler.BeginSample ("Add mesh", this);
+
+			var mf = gameObject.AddComponent<MeshFilter>();
+			var mr = gameObject.AddComponent<MeshRenderer>();
+
+			mf.sharedMesh = geoms.Geometry[0].Mesh;
+			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(Instance.Object.Flags,
+				mat => mat.SetTexture(NoiseTexId, NoiseTex));
+
+			Profiler.EndSample ();
+
+			geoms.AttachCollisionModel(transform);
+
+			Profiler.BeginSample ("Set layer", this);
+
+			if (Instance.Object.HasFlag(ObjectFlag.Breakable))
+			{
+				gameObject.SetLayerRecursive(BreakableLayer);
+			}
+
+			Profiler.EndSample ();
+
+		}
 
         protected override void OnShow()
         {

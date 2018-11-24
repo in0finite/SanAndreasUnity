@@ -236,6 +236,33 @@ namespace SanAndreasUnity.Importing.Conversion
             return txd;
         }
 
+		public static void LoadAsync(string name, System.Action<TextureDictionary> onSuccess)
+		{
+			name = name.ToLower();
+			if (_sLoaded.ContainsKey (name))
+			{
+				onSuccess (_sLoaded [name]);
+				return;
+			}
+
+			// read archive file asyncly
+
+			Behaviours.LoadingThread.RegisterJob (new Behaviours.LoadingThread.Job<RenderWareStream.TextureDictionary> () {
+				action = () => {
+					return ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd");
+				},
+				callbackSuccess = (RenderWareStream.TextureDictionary td) => {
+					UnityEngine.Profiling.Profiler.BeginSample ("TextureDictionary()");
+					var txd = new TextureDictionary (td);
+					UnityEngine.Profiling.Profiler.EndSample ();
+
+					_sLoaded.Add(name, txd);
+					onSuccess (txd);
+				}
+			});
+
+		}
+
         public static void AddParent(string dictName, string parentName)
         {
             dictName = dictName.ToLower();

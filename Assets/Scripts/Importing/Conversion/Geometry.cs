@@ -501,6 +501,66 @@ namespace SanAndreasUnity.Importing.Conversion
             return Load(modelName, texDictNames.Select(x => TextureDictionary.Load(x)).ToArray());
         }
 
+		public static void LoadAsync(string modelName, string[] texDictNames, System.Action<GeometryParts> onSuccess)
+		{
+			// load each texture asyncly (or load them all at once ?)
+
+			// copy array to local variable
+			texDictNames = texDictNames.ToArray ();
+
+			if (0 == texDictNames.Length)
+			{
+				LoadAsync( modelName, new TextureDictionary[0], onSuccess );
+				return;
+			}
+
+
+			var loadedTextDicts = new List<TextureDictionary> ();
+
+//			TextureDictionary.LoadAsync( texDictNames[0], (texDict) =>
+//				{
+//					OnTexDictLoadSuccess( modelName, texDict, loadedTextDicts, texDictNames, 0, onSuccess );
+//				});
+
+			for (int i = 0; i < texDictNames.Length; i++)
+			{
+				TextureDictionary.LoadAsync (texDictNames [i], (texDict) => {
+					
+					loadedTextDicts.Add (texDict);
+
+					if (i == texDictNames.Length - 1)
+					{
+						// finished loading all tex dicts
+						LoadAsync (modelName, loadedTextDicts.ToArray (), onSuccess);
+					}
+				});
+			}
+
+		}
+
+//		private static void OnTexDictLoadSuccess (string modelName, TextureDictionary texDict, List<TextureDictionary> loadedTexDicts, string[] texDictNames, 
+//			int currentTexDictIndex, System.Action<GeometryParts> onSuccess)
+//		{
+//
+//			loadedTexDicts.Add (texDict);
+//
+//			currentTexDictIndex++;
+//			if(currentTexDictIndex >= texDictNames.Length)
+//			{
+//				// finished loading all textures
+//				LoadAsync( modelName, loadedTexDicts.ToArray(), onSuccess );
+//				return;
+//			}
+//
+//			// continue with next tex dict
+//			TextureDictionary.LoadAsync( texDictNames[currentTexDictIndex], (td) =>
+//				{
+//					// call myself
+//					OnTexDictLoadSuccess( modelName, td, loadedTexDicts, texDictNames, currentTexDictIndex, onSuccess);
+//				});
+//
+//		}
+
         public static GeometryParts Load(string modelName, params TextureDictionary[] txds)
         {
             modelName = modelName.ToLower();
@@ -527,6 +587,40 @@ namespace SanAndreasUnity.Importing.Conversion
 
             return loaded;
         }
+
+		public static void LoadAsync(string modelName, TextureDictionary[] txds, System.Action<GeometryParts> onSuccess)
+		{
+			modelName = modelName.ToLower();
+
+			if (_sLoaded.ContainsKey(modelName))
+			{
+				onSuccess (_sLoaded [modelName]);
+				return;
+			}
+
+
+			LoadingThread.RegisterJob (new LoadingThread.Job<Clump> () {
+				action = () => {
+					// read archive file in background thread
+					var clump = ArchiveManager.ReadFile<Clump>(modelName + ".dff");
+					return clump;
+				},
+				callbackSuccess = (Clump clump) => {
+					if (clump.GeometryList == null)
+					{
+						throw new Exception("Invalid mesh");
+					}
+
+					// create geometry parts in main thread
+					var loaded = new GeometryParts(modelName, clump, txds);
+
+					_sLoaded.Add( modelName, loaded );
+
+					onSuccess(loaded);
+				},
+			});
+
+		}
 
         public readonly Mesh Mesh;
 
