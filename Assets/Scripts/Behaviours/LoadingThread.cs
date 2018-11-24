@@ -1,24 +1,27 @@
 ﻿using UnityEngine;
 using SanAndreasUnity.Utilities;
 using System.Threading;
+using System.Runtime.CompilerServices;
 
 namespace SanAndreasUnity.Behaviours
 {
 
 	public class LoadingThread : MonoBehaviour {
 		
-		public struct Job
+		public struct Job<T>
 		{
-			public System.Func<object> action;
-			public System.Action<object> callbackSuccess;
-			public System.Action<System.Exception> callbackError;
-			internal object result;
-			internal System.Exception exception;
+			public System.Func<T> action ;
+			public System.Action<T> callbackSuccess ;
+			public System.Action<System.Exception> callbackError ;
+			internal object result ;
+			internal System.Exception exception ;
 		}
 
-		static System.Collections.Concurrent.BlockingCollection<Job> s_jobs = new System.Collections.Concurrent.BlockingCollection<Job> ();
+		static System.Collections.Concurrent.BlockingCollection<Job<object>> s_jobs = new System.Collections.Concurrent.BlockingCollection<Job<object>> ();
 		static Thread s_thread;
-		static System.Collections.Concurrent.BlockingCollection<Job> s_processedJobs = new System.Collections.Concurrent.BlockingCollection<Job> ();
+		static System.Collections.Concurrent.BlockingCollection<Job<object>> s_processedJobs = new System.Collections.Concurrent.BlockingCollection<Job<object>> ();
+
+		static bool s_shouldThreadExit = false;
 
 
 
@@ -33,8 +36,13 @@ namespace SanAndreasUnity.Behaviours
 		{
 			if (s_thread != null)
 			{
-				s_thread.Interrupt ();
-				s_thread.Join (7000);
+				var sw = System.Diagnostics.Stopwatch.StartNew ();
+			//	s_thread.Interrupt ();
+				TellThreadToExit ();
+				if (s_thread.Join (7000))
+					Debug.LogFormat ("Stopped loading thread in {0} ms", sw.Elapsed.TotalMilliseconds);
+				else
+					Debug.LogError ("Failed to stop loading thread");
 			}
 		}
 
@@ -42,14 +50,17 @@ namespace SanAndreasUnity.Behaviours
 
 			// get all processed jobs
 
-			Job job;
+			Job<object> job;
 			while (s_processedJobs.TryTake (out job, 0))
 			{
 				if (job.exception != null)
 				{
 					// error happened
+
 					if (job.callbackError != null)
 						Utilities.F.RunExceptionSafe( () => job.callbackError (job.exception) );
+
+					Debug.LogException (job.exception);
 				}
 				else
 				{
@@ -62,22 +73,43 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-		public static void RegisterJob (Job job)
+		public static void RegisterJob<T> (Job<T> job)
 		{
 			if (null == job.action)
 				return;
 
 			job.exception = null;
 
-			s_jobs.Add (job);
+			var j = new Job<object> () {
+				action = () => job.action(),
+				callbackError = job.callbackError,
+			};
+			if(job.callbackSuccess != null)
+				j.callbackSuccess = (arg) => job.callbackSuccess( (T) arg );
+
+			s_jobs.Add (j);
+		}
+
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		static bool ShouldThreadExit()
+		{
+			return s_shouldThreadExit;
+		}
+
+		[MethodImpl(MethodImplOptions.Synchronized)]
+		static void TellThreadToExit()
+		{
+			s_shouldThreadExit = true;
 		}
 
 		static void ThreadFunction ()
 		{
 
-			while (true)
+			while (!ShouldThreadExit ())
 			{
-				var job = s_jobs.Take ();
+				Job<object> job;
+				if (!s_jobs.TryTake (out job, 200))
+					continue;
 
 				try
 				{
