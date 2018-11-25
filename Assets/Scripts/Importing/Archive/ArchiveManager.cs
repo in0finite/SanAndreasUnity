@@ -18,6 +18,9 @@ namespace SanAndreasUnity.Importing.Archive
         Stream ReadFile(string name);
     }
 
+	/// <summary>
+	/// Handles archive loading and reading. You should never read from archives manually, but always use this class, because it provides thread safety.
+	/// </summary>
     public static class ArchiveManager
     {
         public static string GameDir
@@ -35,6 +38,7 @@ namespace SanAndreasUnity.Importing.Archive
 
         private static readonly List<IArchive> _sLoadedArchives = new List<IArchive>();
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
         public static LooseArchive LoadLooseArchive(string dirPath)
         {
             var arch = LooseArchive.Load(dirPath);
@@ -42,6 +46,7 @@ namespace SanAndreasUnity.Importing.Archive
             return arch;
         }
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
         public static ImageArchive LoadImageArchive(string filePath)
         {
             var arch = ImageArchive.Load(filePath);
@@ -73,7 +78,7 @@ namespace SanAndreasUnity.Importing.Archive
 			return new MemoryStream (buffer);
         }
 
-		[MethodImpl(MethodImplOptions.Synchronized)]	// not needed ?
+		[MethodImpl(MethodImplOptions.Synchronized)]	// ensure section is read, before another thread can read archives
         public static TSection ReadFile<TSection>(string name)
             where TSection : SectionData
         {
