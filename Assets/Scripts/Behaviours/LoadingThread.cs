@@ -13,6 +13,7 @@ namespace SanAndreasUnity.Behaviours
 			public System.Func<T> action ;
 			public System.Action<T> callbackSuccess ;
 			public System.Action<System.Exception> callbackError ;
+			public System.Action<T> callbackFinish;
 			internal object result ;
 			internal System.Exception exception ;
 		}
@@ -68,6 +69,10 @@ namespace SanAndreasUnity.Behaviours
 					if (job.callbackSuccess != null)
 						Utilities.F.RunExceptionSafe( () => job.callbackSuccess (job.result) );
 				}
+
+				// invoke finish callback
+				if (job.callbackFinish != null)
+					F.RunExceptionSafe (() => job.callbackFinish (job.result));
 			}
 
 		}
@@ -86,6 +91,8 @@ namespace SanAndreasUnity.Behaviours
 			};
 			if(job.callbackSuccess != null)
 				j.callbackSuccess = (arg) => job.callbackSuccess( (T) arg );
+			if(job.callbackFinish != null)
+				j.callbackFinish = (arg) => job.callbackFinish( (T) arg );
 
 			s_jobs.Add (j);
 		}
