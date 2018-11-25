@@ -127,12 +127,12 @@ namespace SanAndreasUnity.Behaviours.World
 				.Select(x => x.ToString())
 				.ToList();
 
-            var geoms = Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName);
-			OnGeometryLoaded (geoms);
+            //var geoms = Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName);
+			//OnGeometryLoaded (geoms);
 
-//			Geometry.LoadAsync( Instance.Object.ModelName, new string[] {Instance.Object.TextureDictionaryName}, (geoms) => {
-//				OnGeometryLoaded (geoms);
-//			});
+			Geometry.LoadAsync( Instance.Object.ModelName, new string[] {Instance.Object.TextureDictionaryName}, (geoms) => {
+				OnGeometryLoaded (geoms);
+			});
 
 
 			Profiler.EndSample ();

@@ -218,8 +218,14 @@ namespace SanAndreasUnity.Importing.Conversion
             return new LoadedTexture(tex, src.Alpha);
         }
 
+
         private static readonly Dictionary<string, string> _sParents = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
         private static readonly Dictionary<string, TextureDictionary> _sLoaded = new Dictionary<string, TextureDictionary>(StringComparer.InvariantCultureIgnoreCase);
+		/// <summary>
+		/// Txds currently being loaded. Value represents list of subscribers which will be called when loading is finished.
+		/// </summary>
+		private static readonly Dictionary<string, List<System.Action<TextureDictionary>>> _sLoading = new Dictionary<string, List<Action<TextureDictionary>>> ();
+
 
         public static TextureDictionary Load(string name)
         {
@@ -239,13 +245,27 @@ namespace SanAndreasUnity.Importing.Conversion
 		public static void LoadAsync(string name, System.Action<TextureDictionary> onSuccess)
 		{
 			name = name.ToLower();
+
 			if (_sLoaded.ContainsKey (name))
 			{
 				onSuccess (_sLoaded [name]);
 				return;
 			}
 
+			if (_sLoading.ContainsKey (name))
+			{
+				// this txd is loading
+				// subscribe to finish event
+				_sLoading[name].Add( onSuccess );
+				return;
+			}
+
+			// insert it into loading dict
+			_sLoading [name] = new List<Action<TextureDictionary>>();
+
 			// read archive file asyncly
+
+			TextureDictionary loadedTxd = null;
 
 			Behaviours.LoadingThread.RegisterJob (new Behaviours.LoadingThread.Job<RenderWareStream.TextureDictionary> () {
 				action = () => {
@@ -253,11 +273,23 @@ namespace SanAndreasUnity.Importing.Conversion
 				},
 				callbackSuccess = (RenderWareStream.TextureDictionary td) => {
 					UnityEngine.Profiling.Profiler.BeginSample ("TextureDictionary()");
-					var txd = new TextureDictionary (td);
+					loadedTxd = new TextureDictionary (td);
 					UnityEngine.Profiling.Profiler.EndSample ();
 
-					_sLoaded.Add(name, txd);
-					onSuccess (txd);
+					if(_sLoaded.ContainsKey(name))
+						Debug.LogErrorFormat ("Redundant load of txd: {0}", name);
+					else
+						_sLoaded.Add(name, loadedTxd);
+					
+					onSuccess (loadedTxd);
+				},
+				callbackFinish = (result) => {
+					var list = _sLoading[name];
+					// remove from loading dict
+					_sLoading.Remove( name );
+					// invoke subscribers
+					foreach(var item in list)
+						Utilities.F.RunExceptionSafe( () => item(loadedTxd));
 				}
 			});
 

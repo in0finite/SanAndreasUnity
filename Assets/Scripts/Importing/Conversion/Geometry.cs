@@ -493,6 +493,10 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static readonly Dictionary<string, GeometryParts> _sLoaded
             = new Dictionary<string, GeometryParts>();
+		/// <summary>
+		/// Geometries currently being loaded. Value represents list of subscribers which will be called when loading is finished.
+		/// </summary>
+		private static readonly Dictionary<string, List<System.Action<GeometryParts>>> _sLoading = new Dictionary<string, List<Action<GeometryParts>>> ();
 
         public static int NumGeometryPartsLoaded { get { return _sLoaded.Count; } }
 
@@ -524,11 +528,13 @@ namespace SanAndreasUnity.Importing.Conversion
 
 			for (int i = 0; i < texDictNames.Length; i++)
 			{
+				bool isLast = i == texDictNames.Length - 1;
+
 				TextureDictionary.LoadAsync (texDictNames [i], (texDict) => {
 					
 					loadedTextDicts.Add (texDict);
 
-					if (i == texDictNames.Length - 1)
+					if (isLast)
 					{
 						// finished loading all tex dicts
 						LoadAsync (modelName, loadedTextDicts.ToArray (), onSuccess);
@@ -598,6 +604,19 @@ namespace SanAndreasUnity.Importing.Conversion
 				return;
 			}
 
+			if (_sLoading.ContainsKey (modelName))
+			{
+				// this model is loading
+				// subscribe to finish event
+				_sLoading[modelName].Add( onSuccess );
+				return;
+			}
+
+			// insert it into loading dict
+			_sLoading [modelName] = new List<Action<GeometryParts>>();
+
+
+			GeometryParts loadedGeoms = null;
 
 			LoadingThread.RegisterJob (new LoadingThread.Job<Clump> () {
 				action = () => {
@@ -612,12 +631,23 @@ namespace SanAndreasUnity.Importing.Conversion
 					}
 
 					// create geometry parts in main thread
-					var loaded = new GeometryParts(modelName, clump, txds);
+					loadedGeoms = new GeometryParts(modelName, clump, txds);
 
-					_sLoaded.Add( modelName, loaded );
+					if(_sLoaded.ContainsKey(modelName))
+						Debug.LogErrorFormat ("Redundant load of model: {0}", modelName);
+					else
+						_sLoaded.Add( modelName, loadedGeoms );
 
-					onSuccess(loaded);
+					onSuccess(loadedGeoms);
 				},
+				callbackFinish = (result) => {
+					var list = _sLoading[modelName];
+					// remove from loading dict
+					_sLoading.Remove( modelName );
+					// invoke subscribers
+					foreach(var item in list)
+						Utilities.F.RunExceptionSafe( () => item(loadedGeoms));
+				}
 			});
 
 		}
