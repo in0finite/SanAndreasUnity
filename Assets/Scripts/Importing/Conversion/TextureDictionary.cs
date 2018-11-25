@@ -242,13 +242,13 @@ namespace SanAndreasUnity.Importing.Conversion
             return txd;
         }
 
-		public static void LoadAsync(string name, System.Action<TextureDictionary> onSuccess)
+		public static void LoadAsync(string name, System.Action<TextureDictionary> onFinish)
 		{
 			name = name.ToLower();
 
 			if (_sLoaded.ContainsKey (name))
 			{
-				onSuccess (_sLoaded [name]);
+				onFinish (_sLoaded [name]);
 				return;
 			}
 
@@ -256,12 +256,12 @@ namespace SanAndreasUnity.Importing.Conversion
 			{
 				// this txd is loading
 				// subscribe to finish event
-				_sLoading[name].Add( onSuccess );
+				_sLoading[name].Add( onFinish );
 				return;
 			}
 
 			// insert it into loading dict
-			_sLoading [name] = new List<Action<TextureDictionary>>();
+			_sLoading [name] = new List<Action<TextureDictionary>>(){onFinish};
 
 			// read archive file asyncly
 
@@ -281,7 +281,6 @@ namespace SanAndreasUnity.Importing.Conversion
 					else
 						_sLoaded.Add(name, loadedTxd);
 					
-					onSuccess (loadedTxd);
 				},
 				callbackFinish = (result) => {
 					var list = _sLoading[name];

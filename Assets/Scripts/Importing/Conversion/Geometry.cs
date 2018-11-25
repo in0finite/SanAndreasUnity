@@ -505,7 +505,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return Load(modelName, texDictNames.Select(x => TextureDictionary.Load(x)).ToArray());
         }
 
-		public static void LoadAsync(string modelName, string[] texDictNames, System.Action<GeometryParts> onSuccess)
+		public static void LoadAsync(string modelName, string[] texDictNames, System.Action<GeometryParts> onFinish)
 		{
 			// load each texture asyncly (or load them all at once ?)
 
@@ -514,17 +514,12 @@ namespace SanAndreasUnity.Importing.Conversion
 
 			if (0 == texDictNames.Length)
 			{
-				LoadAsync( modelName, new TextureDictionary[0], onSuccess );
+				LoadAsync( modelName, new TextureDictionary[0], onFinish );
 				return;
 			}
 
 
 			var loadedTextDicts = new List<TextureDictionary> ();
-
-//			TextureDictionary.LoadAsync( texDictNames[0], (texDict) =>
-//				{
-//					OnTexDictLoadSuccess( modelName, texDict, loadedTextDicts, texDictNames, 0, onSuccess );
-//				});
 
 			for (int i = 0; i < texDictNames.Length; i++)
 			{
@@ -537,35 +532,12 @@ namespace SanAndreasUnity.Importing.Conversion
 					if (isLast)
 					{
 						// finished loading all tex dicts
-						LoadAsync (modelName, loadedTextDicts.ToArray (), onSuccess);
+						LoadAsync (modelName, loadedTextDicts.ToArray (), onFinish);
 					}
 				});
 			}
 
 		}
-
-//		private static void OnTexDictLoadSuccess (string modelName, TextureDictionary texDict, List<TextureDictionary> loadedTexDicts, string[] texDictNames, 
-//			int currentTexDictIndex, System.Action<GeometryParts> onSuccess)
-//		{
-//
-//			loadedTexDicts.Add (texDict);
-//
-//			currentTexDictIndex++;
-//			if(currentTexDictIndex >= texDictNames.Length)
-//			{
-//				// finished loading all textures
-//				LoadAsync( modelName, loadedTexDicts.ToArray(), onSuccess );
-//				return;
-//			}
-//
-//			// continue with next tex dict
-//			TextureDictionary.LoadAsync( texDictNames[currentTexDictIndex], (td) =>
-//				{
-//					// call myself
-//					OnTexDictLoadSuccess( modelName, td, loadedTexDicts, texDictNames, currentTexDictIndex, onSuccess);
-//				});
-//
-//		}
 
         public static GeometryParts Load(string modelName, params TextureDictionary[] txds)
         {
@@ -594,13 +566,13 @@ namespace SanAndreasUnity.Importing.Conversion
             return loaded;
         }
 
-		public static void LoadAsync(string modelName, TextureDictionary[] txds, System.Action<GeometryParts> onSuccess)
+		public static void LoadAsync(string modelName, TextureDictionary[] txds, System.Action<GeometryParts> onFinish)
 		{
 			modelName = modelName.ToLower();
 
 			if (_sLoaded.ContainsKey(modelName))
 			{
-				onSuccess (_sLoaded [modelName]);
+				onFinish (_sLoaded [modelName]);
 				return;
 			}
 
@@ -608,12 +580,12 @@ namespace SanAndreasUnity.Importing.Conversion
 			{
 				// this model is loading
 				// subscribe to finish event
-				_sLoading[modelName].Add( onSuccess );
+				_sLoading[modelName].Add( onFinish );
 				return;
 			}
 
 			// insert it into loading dict
-			_sLoading [modelName] = new List<Action<GeometryParts>>();
+			_sLoading [modelName] = new List<Action<GeometryParts>>(){onFinish};
 
 
 			GeometryParts loadedGeoms = null;
@@ -637,8 +609,7 @@ namespace SanAndreasUnity.Importing.Conversion
 						Debug.LogErrorFormat ("Redundant load of model: {0}", modelName);
 					else
 						_sLoaded.Add( modelName, loadedGeoms );
-
-					onSuccess(loadedGeoms);
+					
 				},
 				callbackFinish = (result) => {
 					var list = _sLoading[modelName];

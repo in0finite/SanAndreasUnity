@@ -131,7 +131,8 @@ namespace SanAndreasUnity.Behaviours.World
 			//OnGeometryLoaded (geoms);
 
 			Geometry.LoadAsync( Instance.Object.ModelName, new string[] {Instance.Object.TextureDictionaryName}, (geoms) => {
-				OnGeometryLoaded (geoms);
+				if(geoms != null)
+					OnGeometryLoaded (geoms);
 			});
 
 
