@@ -47,6 +47,9 @@ namespace SanAndreasUnity.Behaviours.World
         // variable used by Division class
         public float divisionRefreshDistanceDelta = 20;
 
+		[Range(0.1f, 3f)]
+		public float divisionsUpdateInterval = 0.3f;
+
         // variable used by MapObject class
         public float maxDrawDistance = 500;
 
@@ -186,7 +189,7 @@ namespace SanAndreasUnity.Behaviours.World
 			{
 				// wait 100 ms
 				float timePassed = 0;
-				while (timePassed < 0.1f)
+				while (timePassed < this.divisionsUpdateInterval)
 				{
 					yield return null;
 					timePassed += Time.unscaledDeltaTime;
