@@ -11,28 +11,35 @@ We need a way to wait until specific asset is loaded.
 
 First identify what is taking time using Profiler. Maybe not all time goes on loading from disk. Some of it may be spent on converting the mesh.
 
+Identified what is taking time:
+
+- loading from disk (mostly takes around 20 ms, and goes up to 70 ms, but for some txds it goes to 100 ms)
+
+- creating mesh (mostly around 10 ms, but can go up to 100 ms)
+
+- attach collision model (mostly below the time to create mesh, but in some cases it goes to more than 100 ms)
+
+- updating divisions - runs almost every frame (especially when loading something), even though you invoke it with 100 ms interval - takes around 30 ms
+
+
 ***
 
-What could take a lot of time:
+## TODO
 
-- loading from disk
-- converting mesh
-- creating Mesh object (setting and applying vertex and index buffers)
-- the same as above, but for textures
+- fix OnShow() for static geometry
 
-***
+- create meshes asyncly (this means converting mesh and it's textures)
 
-API:
+- attach collision model asyncly
 
-LoadJob RegisterFileForLoading(string filePath)
+- update divisions in separate thread ? or optimize division system ?
 
-LoadJob RegisterActionToRun(System.Action action)
+- unload map objects which are not visible to any focus point for given amount of time - this means destroying meshes, materials, textures, and removing references to loaded data in RAM
 
-void WaitForJobToFinish(LoadJob job)
 
-class LoadJob
-{
-	// ...
-	
-}
+## TIPS
+
+- attaching collision model takes a lot of memory - why ?
+
+- dedicated server doesn't need textures - we can detect if we are running as dedicated server, and skip loading textures
 
