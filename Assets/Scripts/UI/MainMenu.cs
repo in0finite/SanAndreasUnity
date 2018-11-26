@@ -68,14 +68,14 @@ namespace SanAndreasUnity.UI
 			GUILayout.Space (5);
 			GUILayout.FlexibleSpace ();
 
-			if (GUILayout.Button ("Main scene", s_buttonOptions))
+			if (GUILayout.Button ("Start game", s_buttonOptions))
 			{
 				SceneManager.LoadScene ("Main");
 			}
 
 			GUILayout.Space (this.spaceBetweenButtons);
 
-			if (GUILayout.Button ("Demo scene", s_buttonOptions))
+			if (GUILayout.Button ("Start demo", s_buttonOptions))
 			{
 				SceneManager.LoadScene ("ModelViewer");
 			}
