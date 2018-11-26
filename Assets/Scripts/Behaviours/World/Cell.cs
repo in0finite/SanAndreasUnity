@@ -63,7 +63,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void Start()
         {
-            InvokeRepeating("UpdateDivisions", 0f, 0.1f);
+            //InvokeRepeating("UpdateDivisions", 0f, 0.1f);
+			StartCoroutine( this.UpdateDivisionsCoroutine () );
         }
 
 
@@ -178,6 +179,25 @@ namespace SanAndreasUnity.Behaviours.World
 
         }
 
+		System.Collections.IEnumerator UpdateDivisionsCoroutine ()
+		{
+
+			while (true)
+			{
+				// wait 100 ms
+				float timePassed = 0;
+				while (timePassed < 0.1f)
+				{
+					yield return null;
+					timePassed += Time.unscaledDeltaTime;
+				}
+
+				F.RunExceptionSafe (() => this.UpdateDivisions ());
+
+			}
+
+		}
+
         private void UpdateDivisions()
         {
 			if (!Loader.HasLoaded)
@@ -201,6 +221,8 @@ namespace SanAndreasUnity.Behaviours.World
 
 			bool toLoad = false; // _leaves.Aggregate(false, (current, leaf) => current | leaf.RefreshLoadOrder(pos));
             
+			UnityEngine.Profiling.Profiler.BeginSample ("Update divisions", this);
+
 			foreach (Division leaf in _leaves)
             {
 				Vector3 pos = leaf.GetClosestPosition (positions);
@@ -219,13 +241,17 @@ namespace SanAndreasUnity.Behaviours.World
                 }
             }
 
+			UnityEngine.Profiling.Profiler.EndSample ();
+
             measuredTimes[0] = (float)_timer.Elapsed.TotalMilliseconds;
 
             if (!toLoad) return;
 
             _timer.Reset();
             _timer.Start();
+			UnityEngine.Profiling.Profiler.BeginSample ("Sort leaves", this);
             _leaves.Sort();
+			UnityEngine.Profiling.Profiler.EndSample ();
             measuredTimes[1] = (float)_timer.Elapsed.TotalMilliseconds;
         }
 
