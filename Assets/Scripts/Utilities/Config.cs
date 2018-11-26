@@ -46,6 +46,14 @@ namespace SanAndreasUnity.Utilities
 			get { return Path.Combine(ConfigFilesDirectoryPath, UserFileName); }
         }
 
+		public static string GamePath
+		{
+			get
+			{
+				return GetPath (const_game_dir);
+			}
+		}
+
         public static string DataPath
         {
             get
