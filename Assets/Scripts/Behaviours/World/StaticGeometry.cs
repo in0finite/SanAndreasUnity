@@ -21,6 +21,7 @@ namespace SanAndreasUnity.Behaviours.World
         protected Instance Instance { get; private set; }
 
         private bool _canLoad;
+		private bool _isGeometryLoaded = false;
         private bool _isVisible;
         private bool _isFading;
 
@@ -165,6 +166,8 @@ namespace SanAndreasUnity.Behaviours.World
 
 			Profiler.EndSample ();
 
+			_isGeometryLoaded = true;
+
 		}
 
         protected override void OnShow()
@@ -178,14 +181,24 @@ namespace SanAndreasUnity.Behaviours.World
         {
             if (_isFading) yield break;
 
-            var mr = GetComponent<MeshRenderer>();
-            if (mr == null) yield break;
-
             _isFading = true;
+
+			// wait until geometry gets loaded
+			while (!_isGeometryLoaded)
+				yield return null;
+
+			var mr = GetComponent<MeshRenderer>();
+			if (mr == null)
+			{
+				_isFading = false;
+				yield break;
+			}
 
             const float fadeRate = 2f;
 
             var pb = new MaterialPropertyBlock();
+
+			// continuously change transparency until object becomes fully opaque or fully transparent
 
             var val = IsVisible ? 0f : -1f;
 
