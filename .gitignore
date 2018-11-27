@@ -50,15 +50,17 @@ Build/Build_Data/StreamingAssets/
 Assets/StreamingAssets/*.log
 Assets/StreamingAssets/*.html
 Assets/StreamingAssets/*.meta
+Assets/Plugins/*.meta
 Assets/FromAssetStore/LlamaSoftware/LightLod/Demo/
 Assets/FromAssetStore/SpriteLights/Scenes/
+Packages/manifest.json
+
+
 
 # Clean-up
 
 VS/
 Assets/StreamingAssets/SAConsole/
-Assets/Plugins/SAPI/
-Assets/Plugins/SAPI.meta
 
 # I have to except one html & log as example
 
