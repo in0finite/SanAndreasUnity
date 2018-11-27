@@ -54,6 +54,7 @@ Assets/Plugins/*.meta
 Assets/FromAssetStore/LlamaSoftware/LightLod/Demo/
 Assets/FromAssetStore/SpriteLights/Scenes/
 Packages/manifest.json
+ProjectSettings/ProjectVersion.txt
 
 
 
