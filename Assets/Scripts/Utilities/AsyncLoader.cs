@@ -19,6 +19,16 @@ namespace SanAndreasUnity.Utilities
 		private readonly Dictionary<TKey, List<System.Action<TObj>>> m_Loading = new Dictionary<TKey, List<System.Action<TObj>>> ();
 
 
+		public AsyncLoader ()
+		{
+		}
+
+		public AsyncLoader (IEqualityComparer<TKey> comparer)
+		{
+			m_Loaded = new Dictionary<TKey, TObj> (comparer);
+			m_Loading = new Dictionary<TKey, List<System.Action<TObj>>> (comparer);
+		}
+
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public int GetNumObjectsLoaded ()
 		{

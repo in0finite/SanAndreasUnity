@@ -220,22 +220,21 @@ namespace SanAndreasUnity.Importing.Conversion
 
 
         private static readonly Dictionary<string, string> _sParents = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-        private static readonly Dictionary<string, TextureDictionary> _sLoaded = new Dictionary<string, TextureDictionary>(StringComparer.InvariantCultureIgnoreCase);
-		/// <summary>
-		/// Txds currently being loaded. Value represents list of subscribers which will be called when loading is finished.
-		/// </summary>
-		private static readonly Dictionary<string, List<System.Action<TextureDictionary>>> _sLoading = new Dictionary<string, List<Action<TextureDictionary>>> ();
+        
+		private static readonly Utilities.AsyncLoader<string, TextureDictionary> s_asyncLoader = 
+			new Utilities.AsyncLoader<string, TextureDictionary> (StringComparer.InvariantCultureIgnoreCase);
 
 
         public static TextureDictionary Load(string name)
         {
             name = name.ToLower();
-            if (_sLoaded.ContainsKey(name)) return _sLoaded[name];
+			if (s_asyncLoader.IsObjectLoaded (name))
+				return s_asyncLoader.GetLoadedObject (name);
 
 			UnityEngine.Profiling.Profiler.BeginSample ("TextureDictionary.Load");
 
             var txd = new TextureDictionary(ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd"));
-            _sLoaded.Add(name, txd);
+			s_asyncLoader.AddToLoadedObjects(name, txd);
 
 			UnityEngine.Profiling.Profiler.EndSample ();
 
@@ -246,22 +245,9 @@ namespace SanAndreasUnity.Importing.Conversion
 		{
 			name = name.ToLower();
 
-			if (_sLoaded.ContainsKey (name))
-			{
-				onFinish (_sLoaded [name]);
+			if (!s_asyncLoader.TryLoadObject (name, onFinish))
 				return;
-			}
-
-			if (_sLoading.ContainsKey (name))
-			{
-				// this txd is loading
-				// subscribe to finish event
-				_sLoading[name].Add( onFinish );
-				return;
-			}
-
-			// insert it into loading dict
-			_sLoading [name] = new List<Action<TextureDictionary>>(){onFinish};
+			
 
 			// read archive file asyncly
 
@@ -276,19 +262,9 @@ namespace SanAndreasUnity.Importing.Conversion
 					loadedTxd = new TextureDictionary (td);
 					UnityEngine.Profiling.Profiler.EndSample ();
 
-					if(_sLoaded.ContainsKey(name))
-						Debug.LogErrorFormat ("Redundant load of txd: {0}", name);
-					else
-						_sLoaded.Add(name, loadedTxd);
-					
 				},
 				callbackFinish = (result) => {
-					var list = _sLoading[name];
-					// remove from loading dict
-					_sLoading.Remove( name );
-					// invoke subscribers
-					foreach(var item in list)
-						Utilities.F.RunExceptionSafe( () => item(loadedTxd));
+					s_asyncLoader.OnObjectFinishedLoading( name, loadedTxd, loadedTxd != null );
 				}
 			});
 
@@ -303,9 +279,9 @@ namespace SanAndreasUnity.Importing.Conversion
 
             _sParents.Add(dictName, parentName);
 
-            if (_sLoaded.ContainsKey(dictName))
+			if (s_asyncLoader.IsObjectLoaded(dictName))
             {
-                _sLoaded[dictName].ParentName = parentName;
+				s_asyncLoader.GetLoadedObject(dictName).ParentName = parentName;
             }
         }
 
