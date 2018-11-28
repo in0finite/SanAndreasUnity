@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using UnityEngine.Profiling;
 
 namespace SanAndreasUnity.Importing.Conversion
 {
@@ -16,6 +17,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static Mesh Convert(IEnumerable<Face> faces, IEnumerable<Vertex> vertices)
         {
+			Profiler.BeginSample ("Convert mesh");
+
             var mesh = new Mesh
             {
                 vertices = vertices.Select(x => Convert(x.Position)).ToArray(),
@@ -44,6 +47,8 @@ namespace SanAndreasUnity.Importing.Conversion
             }
             indices.CopyTo(triangles, indices.Length);
             mesh.SetIndices(triangles, MeshTopology.Triangles, 0);
+
+			Profiler.EndSample ();
 
             return mesh;
         }
@@ -100,6 +105,8 @@ namespace SanAndreasUnity.Importing.Conversion
         private void Add<TCollider>(Surface surface, Action<TCollider> setup)
             where TCollider : Collider
         {
+			Profiler.BeginSample ("Add<" + typeof(TCollider).Name + ">");
+
             if (!_flagGroups.ContainsKey(surface.Flags))
             {
                 var group = new GameObject(string.Format("Group {0}", (int)surface.Flags));
@@ -113,10 +120,14 @@ namespace SanAndreasUnity.Importing.Conversion
             obj.transform.SetParent(_flagGroups[surface.Flags]);
 
             setup(obj.GetComponent<TCollider>());
+
+			Profiler.EndSample ();
         }
 
         private CollisionModel(CollisionFile file)
         {
+			Profiler.BeginSample ("CollisionModel()");
+
             if (_sTemplateParent == null)
             {
                 _sTemplateParent = new GameObject("Collision Templates");
@@ -168,6 +179,9 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             // TODO: MeshCollider
+
+
+			Profiler.EndSample ();
         }
 
         public void Spawn(Transform destParent, bool forceConvex)
@@ -181,6 +195,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (!forceConvex) return;
 
+			Profiler.BeginSample ("Adjust colliders");
+
             foreach (var collider in clone.GetComponentsInChildren<Collider>())
             {
                 var meshCollider = collider as MeshCollider;
@@ -192,6 +208,8 @@ namespace SanAndreasUnity.Importing.Conversion
                     meshCollider.convex = true;
                 }
             }
+
+			Profiler.EndSample ();
         }
     }
 }

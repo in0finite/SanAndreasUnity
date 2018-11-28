@@ -103,7 +103,10 @@ namespace SanAndreasUnity.Importing.Collision
 
         public static CollisionFile FromName(String name)
         {
-            return _sModelNameDict.ContainsKey(name) ? _sModelNameDict[name].Value : null;
+			UnityEngine.Profiling.Profiler.BeginSample ("CollisionFile.FromName()");
+			var cf = _sModelNameDict.ContainsKey(name) ? _sModelNameDict[name].Value : null;
+			UnityEngine.Profiling.Profiler.EndSample ();
+			return cf;
         }
 
         public readonly string Name;

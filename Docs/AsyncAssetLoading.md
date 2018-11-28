@@ -26,8 +26,6 @@ Identified what is taking time:
 
 ## TODO
 
-- fix OnShow() for static geometry
-
 - create meshes asyncly (this means converting mesh and it's textures)
 
 - attach collision model asyncly
@@ -39,7 +37,7 @@ Identified what is taking time:
 
 ## TIPS
 
-- attaching collision model takes a lot of memory - why ?
+- attaching collision model takes a lot of memory - why ? - because it reads archive file
 
 - dedicated server doesn't need textures - we can detect if we are running as dedicated server, and skip loading textures
 
