@@ -491,14 +491,11 @@ namespace SanAndreasUnity.Importing.Conversion
             }
         }
 
-        private static readonly Dictionary<string, GeometryParts> _sLoaded
-            = new Dictionary<string, GeometryParts>();
-		/// <summary>
-		/// Geometries currently being loaded. Value represents list of subscribers which will be called when loading is finished.
-		/// </summary>
-		private static readonly Dictionary<string, List<System.Action<GeometryParts>>> _sLoading = new Dictionary<string, List<Action<GeometryParts>>> ();
 
-        public static int NumGeometryPartsLoaded { get { return _sLoaded.Count; } }
+		private static Utilities.AsyncLoader<string, GeometryParts> s_asyncLoader = new Utilities.AsyncLoader<string, GeometryParts> ();
+
+		public static int NumGeometryPartsLoaded { get { return s_asyncLoader.GetNumObjectsLoaded (); } }
+
 
         public static GeometryParts Load(string modelName, params string[] texDictNames)
         {
@@ -543,9 +540,9 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             modelName = modelName.ToLower();
 
-            if (_sLoaded.ContainsKey(modelName))
+			if (s_asyncLoader.IsObjectLoaded(modelName))
             {
-                return _sLoaded[modelName];
+				return s_asyncLoader.GetLoadedObject (modelName);
             }
 
 			Profiler.BeginSample ("ReadClump");
@@ -561,7 +558,7 @@ namespace SanAndreasUnity.Importing.Conversion
             var loaded = new GeometryParts(modelName, clump, txds);
 			Profiler.EndSample ();
 
-            _sLoaded.Add(modelName, loaded);
+			s_asyncLoader.AddToLoadedObjects (modelName, loaded);
 
             return loaded;
         }
@@ -570,23 +567,12 @@ namespace SanAndreasUnity.Importing.Conversion
 		{
 			modelName = modelName.ToLower();
 
-			if (_sLoaded.ContainsKey(modelName))
+			if (!s_asyncLoader.TryLoadObject (modelName, onFinish))
 			{
-				onFinish (_sLoaded [modelName]);
+				// callback is either called or registered
 				return;
 			}
-
-			if (_sLoading.ContainsKey (modelName))
-			{
-				// this model is loading
-				// subscribe to finish event
-				_sLoading[modelName].Add( onFinish );
-				return;
-			}
-
-			// insert it into loading dict
-			_sLoading [modelName] = new List<Action<GeometryParts>>(){onFinish};
-
+			
 
 			GeometryParts loadedGeoms = null;
 
@@ -605,19 +591,9 @@ namespace SanAndreasUnity.Importing.Conversion
 					// create geometry parts in main thread
 					loadedGeoms = new GeometryParts(modelName, clump, txds);
 
-					if(_sLoaded.ContainsKey(modelName))
-						Debug.LogErrorFormat ("Redundant load of model: {0}", modelName);
-					else
-						_sLoaded.Add( modelName, loadedGeoms );
-					
 				},
 				callbackFinish = (result) => {
-					var list = _sLoading[modelName];
-					// remove from loading dict
-					_sLoading.Remove( modelName );
-					// invoke subscribers
-					foreach(var item in list)
-						Utilities.F.RunExceptionSafe( () => item(loadedGeoms));
+					s_asyncLoader.OnObjectFinishedLoading( modelName, loadedGeoms, loadedGeoms != null );
 				}
 			});
 
