@@ -99,6 +99,32 @@ namespace SanAndreasUnity.Importing.Conversion
             col.Spawn(destParent, forceConvex);
         }
 
+		public static void LoadAsync(string name, CollisionFile file, Transform destParent, bool forceConvex, System.Action onFinish)
+		{
+			// load collision file asyncly, and when it's ready just call the other function
+
+			if (file != null)
+			{
+				// collision file already loaded
+				// just call other function
+
+				Utilities.F.RunExceptionSafe( () => Load(file, destParent, forceConvex) );
+				onFinish ();
+				return;
+			}
+
+			// load collision file asyncly
+			CollisionFile.FromNameAsync (name, (cf) => {
+				// loading finished
+				// call other function
+				if(cf != null)
+					Utilities.F.RunExceptionSafe( () => Load( cf, destParent, forceConvex ) );
+				onFinish ();
+			});
+
+		}
+
+
         private readonly GameObject _template;
         private readonly Dictionary<SurfaceFlags, Transform> _flagGroups;
 

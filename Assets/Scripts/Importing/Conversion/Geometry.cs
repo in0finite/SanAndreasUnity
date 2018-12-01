@@ -371,6 +371,7 @@ namespace SanAndreasUnity.Importing.Conversion
         public class GeometryParts
         {
             private readonly CollisionFile _collisions;
+			public CollisionFile Collisions { get { return _collisions; } }
 
             public readonly string Name;
             public readonly Geometry[] Geometry;

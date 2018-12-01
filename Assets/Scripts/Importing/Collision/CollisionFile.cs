@@ -22,7 +22,8 @@ namespace SanAndreasUnity.Importing.Collision
             public readonly string Name;
             public readonly int ModelId;
 
-            public CollisionFile Value { get { return _value ?? (_value = Load()); } }
+			public CollisionFile Value { get { return _value ?? (_value = Load()); } set { _value = value; } }
+			public bool IsLoaded { get { return _value != null; } }
 
             public CollisionFileInfo(BinaryReader reader, String fileName, Version version)
             {
@@ -43,11 +44,18 @@ namespace SanAndreasUnity.Importing.Collision
                     return new CollisionFile(this, stream);
                 }
             }
+
         }
+
 
         private static readonly Dictionary<String, CollisionFileInfo> _sModelNameDict
             = new Dictionary<string, CollisionFileInfo>(StringComparer.InvariantCultureIgnoreCase);
 
+		private static readonly Utilities.AsyncLoader<String, CollisionFile> s_asyncLoader = 
+			new AsyncLoader<String, CollisionFile> (StringComparer.InvariantCultureIgnoreCase);
+
+
+		// load collision file infos
         public static void Load(string fileName)
         {
             var thisFile = new List<CollisionFileInfo>();
@@ -92,6 +100,23 @@ namespace SanAndreasUnity.Importing.Collision
             }
         }
 
+		private static void LoadAsync (string collFileName, CollisionFileInfo collFileInfo, System.Action<CollisionFile> onFinish)
+		{
+
+			ArchiveManager.ReadFileAsync (collFileName, (stream) => {
+				CollisionFile cf = null;
+				try {
+					using(stream)
+					{
+						cf = new CollisionFile(collFileInfo, stream);
+					}
+				} finally {
+					onFinish (cf);
+				}
+			});
+
+		}
+
         public static CollisionFile Load(Stream stream)
         {
             var reader = new BinaryReader(stream);
@@ -103,11 +128,48 @@ namespace SanAndreasUnity.Importing.Collision
 
         public static CollisionFile FromName(String name)
         {
+			if (s_asyncLoader.IsObjectLoaded (name))
+				return s_asyncLoader.GetLoadedObject (name);
+			
 			UnityEngine.Profiling.Profiler.BeginSample ("CollisionFile.FromName()");
 			var cf = _sModelNameDict.ContainsKey(name) ? _sModelNameDict[name].Value : null;
 			UnityEngine.Profiling.Profiler.EndSample ();
+
+			s_asyncLoader.AddToLoadedObjects (name, cf);
+
 			return cf;
         }
+
+		public static void FromNameAsync(String name, System.Action<CollisionFile> onFinish)
+		{
+			if (!_sModelNameDict.ContainsKey (name))
+			{
+			//	Debug.LogErrorFormat ("Collision model name {0} doesn't exist in dict", name);
+				onFinish (null);
+				return;
+			}
+
+			if (!s_asyncLoader.TryLoadObject (name, onFinish))
+				return;
+
+
+			// load collision file asyncly
+
+			// get the actual name of collision file
+			string collFileName = _sModelNameDict [name].FileName;
+
+			LoadAsync( collFileName, _sModelNameDict[name], (result) => 
+				{
+					// update _value variable in appropriate CollisionFileInfo object
+					_sModelNameDict[name].Value = result;
+
+
+					s_asyncLoader.OnObjectFinishedLoading( name, result, true);
+
+				});
+			
+		}
+
 
         public readonly string Name;
         public readonly int ModelId;

@@ -26,6 +26,8 @@ Identified what is taking time:
 
 ## TODO
 
+- order in which Async functions will return is not equal to order of call to those functions - because some of loading objects may be cached - adjust Geometry.LoadAsync() when loading multiple textures
+
 - create meshes asyncly (this means converting mesh and it's textures)
 
 - attach collision model asyncly

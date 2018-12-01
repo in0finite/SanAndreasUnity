@@ -131,9 +131,18 @@ namespace SanAndreasUnity.Behaviours.World
             //var geoms = Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName);
 			//OnGeometryLoaded (geoms);
 
+			// we could start loading collision model here
+			// - we can't, because we don't know the name of collision file until clump is loaded
+
 			Geometry.LoadAsync( Instance.Object.ModelName, new string[] {Instance.Object.TextureDictionaryName}, (geoms) => {
 				if(geoms != null)
-					OnGeometryLoaded (geoms);
+				{
+					// we can't load collision model asyncly, because it requires a transform to attach to
+					// but, we can load collision file asyncly
+					Importing.Collision.CollisionFile.FromNameAsync( geoms.Collisions != null ? geoms.Collisions.Name : geoms.Name, (cf) => {
+						OnGeometryLoaded (geoms);
+					});
+				}
 			});
 
 
@@ -167,6 +176,12 @@ namespace SanAndreasUnity.Behaviours.World
 			Profiler.EndSample ();
 
 			_isGeometryLoaded = true;
+
+		}
+
+		private void OnCollisionModelAttached ()
+		{
+
 
 		}
 

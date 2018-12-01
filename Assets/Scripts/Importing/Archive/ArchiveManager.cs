@@ -78,6 +78,17 @@ namespace SanAndreasUnity.Importing.Archive
 			return new MemoryStream (buffer);
         }
 
+		// this method should not be synchronized, because thread would block while 
+		// archive is being read, but the thread only wants to register a job and continue
+	//	[MethodImpl(MethodImplOptions.Synchronized)]
+		public static void ReadFileAsync(string name, System.Action<Stream> onFinish)
+		{
+			Behaviours.LoadingThread.RegisterJob (new Behaviours.LoadingThread.Job<Stream> () {
+				action = () => ReadFile( name ),
+				callbackFinish = (stream) => { onFinish(stream); },
+			});
+		}
+
 		[MethodImpl(MethodImplOptions.Synchronized)]	// ensure section is read, before another thread can read archives
         public static TSection ReadFile<TSection>(string name)
             where TSection : SectionData

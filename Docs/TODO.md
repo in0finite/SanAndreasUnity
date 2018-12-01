@@ -18,6 +18,8 @@
 
 - What to do before making a release: change starting pos ? ;
 
+- don't fade high LOD meshes
+
 - Validate path to GTA ?
 
 - Anims must be played by their name
