@@ -521,13 +521,13 @@ namespace SanAndreasUnity.Importing.Conversion
 
 			for (int i = 0; i < texDictNames.Length; i++)
 			{
-				bool isLast = i == texDictNames.Length - 1;
+			//	bool isLast = i == texDictNames.Length - 1;
 
 				TextureDictionary.LoadAsync (texDictNames [i], (texDict) => {
 					
 					loadedTextDicts.Add (texDict);
 
-					if (isLast)
+					if (loadedTextDicts.Count == texDictNames.Length)
 					{
 						// finished loading all tex dicts
 						LoadAsync (modelName, loadedTextDicts.ToArray (), onFinish);
