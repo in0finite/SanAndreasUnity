@@ -15,47 +15,56 @@ namespace SanAndreasUnity.Importing.Conversion
             return new UnityEngine.Vector3(vec.X, vec.Z, vec.Y);
         }
 
-        private static Mesh Convert(IEnumerable<Face> faces, IEnumerable<Vertex> vertices)
+		private static Mesh Convert(IEnumerable<Face> faces, int numFaces, IEnumerable<Vertex> vertices, int numVertices)
         {
 			Profiler.BeginSample ("Convert mesh");
 
+			// create vertices array for the mesh
+			UnityEngine.Vector3[] meshVertices = new UnityEngine.Vector3[numVertices];
+			int i = 0;
+			foreach (var v in vertices) {
+				meshVertices [i] = Convert (v.Position);
+				i++;
+			}
+
             var mesh = new Mesh
             {
-                vertices = vertices.Select(x => Convert(x.Position)).ToArray(),
+				vertices = meshVertices,
                 subMeshCount = 1
             };
 
-            var indices = faces.SelectMany(x => x.GetIndices()).ToArray();
+			// indices
 
-            /*This will work too
-            var l = indices.ToList ();
-			var a = indices.Reverse ().ToArray (); 
-			for (int i = 0; i < indices.Reverse ().ToArray ().Length; i++)
-				l.Add (a[i]);
-			indices = l.ToArray();
+			//var indices = faces.SelectMany(x => x.GetIndices()).ToArray();
 
-			mesh.SetTriangles(indices, 0);*/
-            
-            int[] triangles = new int[indices.Length * 2];
-            indices.CopyTo(triangles, 0);
+			// each face has 3 indices which form a single triangle, and we should also add another one
+			// which faces the opposite direction
+			int[] indices = new int[numFaces * 3 * 2];
 
-            for (int i = 0; i < indices.Length; i += 3)
-            {
-                int temp = indices[i + 0];
-                indices[i + 0] = indices[i + 1];
-                indices[i + 1] = temp;
-            }
-            indices.CopyTo(triangles, indices.Length);
-            mesh.SetIndices(triangles, MeshTopology.Triangles, 0);
+			i = 0;
+			foreach (var f in faces) {
+				indices [i++] = f.A;
+				indices [i++] = f.B;
+				indices [i++] = f.C;
+
+				// triangle with opposite direction
+				indices [i++] = f.B;
+				indices [i++] = f.A;
+				indices [i++] = f.C;
+			}
+
+			mesh.SetIndices(indices, MeshTopology.Triangles, 0);
+
 
 			Profiler.EndSample ();
 
             return mesh;
         }
 
-        private static Mesh Convert(FaceGroup group, IEnumerable<Face> faces, IEnumerable<Vertex> vertices)
+		private static Mesh Convert(FaceGroup group, ICollection<Face> faces, ICollection<Vertex> vertices)
         {
-            return Convert(faces.Skip(group.StartFace).Take(1 + group.EndFace - group.StartFace), vertices);
+			int numFaces = 1 + group.EndFace - group.StartFace;
+			return Convert(faces.Skip(group.StartFace).Take(numFaces), numFaces, vertices, vertices.Count);
         }
 
         private static GameObject _sTemplateParent;
@@ -200,7 +209,7 @@ namespace SanAndreasUnity.Importing.Conversion
             {
                 Add<MeshCollider>(file.Faces[0].Surface, x =>
                 {
-                    x.sharedMesh = Convert(file.Faces, file.Vertices);
+					x.sharedMesh = Convert(file.Faces, file.Faces.Length, file.Vertices, file.Vertices.Length);
                 });
             }
 
