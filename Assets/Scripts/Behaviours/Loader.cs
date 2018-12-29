@@ -88,6 +88,7 @@ namespace SanAndreasUnity.Behaviours
 				new LoadingStep ( StepLoadArchives, "Loading archives", 1.7f ),
 				new LoadingStep ( StepLoadSplashScreen, "Loading splash screen", 0.06f ),
 				new LoadingStep ( StepSetSplash1, "Set splash 1" ),
+				new LoadingStep ( StepLoadAudio, "Loading audio" ),
 				new LoadingStep ( StepLoadCollision, "Loading collision files", 0.9f ),
 				new LoadingStep ( StepLoadItemInfo, "Loading item info", 2.4f ),
 				new LoadingStep ( StepLoadHandling, "Loading handling", 0.01f ),
@@ -300,6 +301,11 @@ namespace SanAndreasUnity.Behaviours
 		private static void StepSetSplash2 ()
 		{
 			CurrentSplashTex = SplashTex2;
+		}
+
+		private static void StepLoadAudio ()
+		{
+			Audio.AudioManager.InitFromLoader (Config.GamePath);
 		}
 
 		private static void StepLoadCollision ()
