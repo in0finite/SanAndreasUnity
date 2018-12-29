@@ -287,6 +287,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4484009134148236}
   - component: {fileID: 114064859265624614}
+  - component: {fileID: 114940213983707650}
   m_Layer: 0
   m_Name: Windows
   m_TagString: Untagged
@@ -769,6 +770,30 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114940213983707650
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1901320160272788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e2fbfb7537d48aa93fda618e34a0a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: Audio
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
+  windowRect:
+    serializedVersion: 2
+    x: 57.5
+    y: 78.75
+    width: 115
+    height: 157.5
+  useScrollView: 1
+  m_spaceBeforeContent: 20
+  m_spaceAfterContent: 10
+  m_registerInMainMenuOnStart: 0
 --- !u!114 &114943004525129146
 MonoBehaviour:
   m_ObjectHideFlags: 1
