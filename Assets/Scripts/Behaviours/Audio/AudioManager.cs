@@ -50,7 +50,7 @@ namespace SanAndreasUnity.Behaviours.Audio
 		}
 
 
-		public static void PlayStreamSound (string streamFileName, int bankIndex)
+		public static AudioClip CreateAudioClipFromStream (string streamFileName, int bankIndex)
 		{
 			AudioStream audio_stream = null;
 			System.DateTime startTime = System.DateTime.Now;
@@ -79,18 +79,21 @@ namespace SanAndreasUnity.Behaviours.Audio
 
 			if (audio_stream != null)
 			{
-				AudioSource audioSource = new GameObject (key).AddComponent<AudioSource> ();
-				audioSource.time = 0.0f;
-				audioSource.clip = audio_stream.AudioClip;
-				audioSource.Play();
-
-				// destroy game object when sound is finished playing
-				Destroy( audioSource.gameObject, audio_stream.AudioClip.length );
+//				AudioSource audioSource = new GameObject (key).AddComponent<AudioSource> ();
+//				audioSource.time = 0.0f;
+//				audioSource.clip = audio_stream.AudioClip;
+//				audioSource.Play();
+//
+//				// destroy game object when sound is finished playing
+//				Destroy( audioSource.gameObject, audio_stream.AudioClip.length );
 
 				System.TimeSpan time_span = System.DateTime.Now - startTime;
 				Debug.Log("\"" + key + "\" took " + time_span.TotalSeconds + " seconds.");
+
+				return audio_stream.AudioClip;
 			}
 
+			return null;
 		}
 
 	}
