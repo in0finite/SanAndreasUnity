@@ -85,6 +85,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0735457b0cfd4a77bab1c58f1d77882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playStartupSound: 1
+  startupSoundTimeOffset: 4
 --- !u!114 &114468774129516696
 MonoBehaviour:
   m_ObjectHideFlags: 1

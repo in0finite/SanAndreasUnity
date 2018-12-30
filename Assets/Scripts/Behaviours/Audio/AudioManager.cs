@@ -10,6 +10,8 @@ namespace SanAndreasUnity.Behaviours.Audio
 	public class AudioManager : MonoBehaviour
 	{
 
+		public static AudioManager Instance { get; private set; }
+
 		private static GTAAudioFiles s_gtaAudioFiles;
 		public static GTAAudioFiles AudioFiles { get { return s_gtaAudioFiles; } }
 
@@ -19,8 +21,16 @@ namespace SanAndreasUnity.Behaviours.Audio
 
 	//	private Dictionary<string, AudioStream> streamsAudioStreams = new Dictionary<string, AudioStream>();
 
+		public bool playStartupSound = true;
+		public float startupSoundTimeOffset = 0f;
+		static AudioSource s_startupAudioSource;
 
 
+
+		void Awake ()
+		{
+			Instance = this;
+		}
 
 		void OnDisable ()
 		{
@@ -35,6 +45,14 @@ namespace SanAndreasUnity.Behaviours.Audio
 			
 		}
 
+		void OnLoaderFinished ()
+		{
+			if (s_startupAudioSource != null)
+			{
+				Destroy (s_startupAudioSource.gameObject);
+			}
+		}
+
 		void Update () {
 			
 		}
@@ -45,7 +63,12 @@ namespace SanAndreasUnity.Behaviours.Audio
 
 			s_gtaAudioFiles = GTAAudio.OpenRead (Path.Combine (gameDir, "audio"));
 
-		//	PlayStreamSound ("Beats", 1);
+			if (Instance.playStartupSound)
+			{
+				s_startupAudioSource = PlayStream ("Beats", 1);
+				if (s_startupAudioSource != null)
+					s_startupAudioSource.time = Instance.startupSoundTimeOffset;
+			}
 
 		}
 
@@ -79,18 +102,29 @@ namespace SanAndreasUnity.Behaviours.Audio
 
 			if (audio_stream != null)
 			{
-//				AudioSource audioSource = new GameObject (key).AddComponent<AudioSource> ();
-//				audioSource.time = 0.0f;
-//				audioSource.clip = audio_stream.AudioClip;
-//				audioSource.Play();
-//
-//				// destroy game object when sound is finished playing
-//				Destroy( audioSource.gameObject, audio_stream.AudioClip.length );
-
 				System.TimeSpan time_span = System.DateTime.Now - startTime;
 				Debug.Log("\"" + key + "\" took " + time_span.TotalSeconds + " seconds.");
 
 				return audio_stream.AudioClip;
+			}
+
+			return null;
+		}
+
+		public static AudioSource PlayStream (string streamFileName, int bankIndex)
+		{
+			var clip = CreateAudioClipFromStream (streamFileName, bankIndex);
+			if (clip != null)
+			{
+				AudioSource audioSource = new GameObject (streamFileName + "." + bankIndex).AddComponent<AudioSource> ();
+				audioSource.time = 0.0f;
+				audioSource.clip = clip;
+				audioSource.Play();
+
+				// destroy game object when sound is finished playing
+				Destroy( audioSource.gameObject, clip.length );
+
+				return audioSource;
 			}
 
 			return null;
