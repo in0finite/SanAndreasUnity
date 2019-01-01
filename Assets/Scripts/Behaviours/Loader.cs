@@ -305,7 +305,7 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void StepLoadAudio ()
 		{
-			Audio.AudioManager.InitFromLoader (Config.GamePath);
+			Audio.AudioManager.InitFromLoader ();
 		}
 
 		private static void StepLoadCollision ()

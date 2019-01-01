@@ -113,6 +113,27 @@ namespace SanAndreasUnity.Behaviours
 		public Transform GunFlash { get; private set; }
 
 
+		// weapon sounds are located in SFX -> GENRL -> BANK 137
+		// these indexes represent indexes of sounds in that bank
+		public static Dictionary<int, int> weaponSoundIndexes = new Dictionary<int, int>() {
+			{WeaponId.Pistol, 6},
+			{WeaponId.PistolSilenced, 24},
+			{WeaponId.DesertEagle, 8},
+			{WeaponId.Shotgun, 21},
+			{WeaponId.Tec9, 0},
+			{WeaponId.MicroUzi, 1},
+			{WeaponId.MP5, 18},
+			{WeaponId.AK47, 3},
+			{WeaponId.M4, 3},
+			{WeaponId.CountryRifle, 26},
+			{WeaponId.SniperRifle, 26},
+			{WeaponId.MiniGun, 11},
+		};
+
+		// used to play weapon sound
+		AudioSource m_audioSource;
+
+
 
 		static Weapon ()
 		{
@@ -163,6 +184,20 @@ namespace SanAndreasUnity.Behaviours
 			} catch {
 				Debug.LogErrorFormat ("Failed to load hud icon for weapon: model {0}, txd {1}", def.ModelName, def.TextureDictionaryName);
 			}
+
+			// weapon sound
+			F.RunExceptionSafe (() => {
+				if (weaponSoundIndexes.ContainsKey (modelId))
+				{
+					var audioSource = go.GetOrAddComponent<AudioSource> ();
+					audioSource.playOnAwake = false;
+					Debug.LogFormat("loading weapon sound, bank index {0}", weaponSoundIndexes [modelId] );
+					var audioClip = Audio.AudioManager.CreateAudioClipFromSfx ("GENRL", 136, 0, 
+						Audio.AudioManager.SfxGENRL137Timings[ weaponSoundIndexes [modelId] ] );
+					audioSource.clip = audioClip;
+					weapon.m_audioSource = audioSource;
+				}
+			});
 
 			return weapon;
 		}
@@ -702,6 +737,38 @@ namespace SanAndreasUnity.Behaviours
 
 			// fire projectile
 			F.RunExceptionSafe( () => this.FireProjectile () );
+
+			// play firing sound
+			F.RunExceptionSafe (() => {
+				if (m_audioSource && m_audioSource.clip)
+				{
+					if(!m_audioSource.isPlaying)
+					{
+//						int bankIndex = weaponSoundIndexes [this.Definition.Id];
+
+//						Audio.AudioManager.SfxGENRL137Timings [bankIndex];
+
+//						int startTimeMs = 0;
+//						int endTimeMs = 0;
+//
+//						float startTime = startTimeMs / 1000f;
+//						float endTime = endTimeMs / 1000f;
+
+//						Debug.LogFormat("playing weapon sound, start time {0}, end time {1}, bank index {2}", startTime, endTime, bankIndex);
+
+//						m_audioSource.Stop();
+//						m_audioSource.time = startTime;
+//						m_audioSource.Play();
+//						m_audioSource.SetScheduledEndTime( AudioSettings.dspTime + (endTime - startTime) );
+
+						Debug.LogFormat("playing weapon sound");
+						m_audioSource.Stop();
+						m_audioSource.time = 0f;
+						m_audioSource.Play();
+
+					}
+				}
+			});
 
 
 			return true;
