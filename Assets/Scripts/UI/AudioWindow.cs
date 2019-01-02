@@ -25,6 +25,10 @@ namespace SanAndreasUnity.UI {
 	//	GTAAudioSharp.GTAAudioStreamsFile m_playingStreamsFile;
 	//	int m_playingBankIndex = -1;
 
+		bool m_playInterval = false;
+		string m_playIntervalStartStr = "00:00.000";
+		string m_playIntervalEndStr = "00:00.000";
+
 
 
 		AudioWindow() {
@@ -121,12 +125,32 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.EndHorizontal ();
 
+			// play interval
+
+			GUILayout.BeginHorizontal ();
+			m_playInterval = GUILayout.Toggle (m_playInterval, "Play interval", GUILayout.Height(20));
+			GUILayout.FlexibleSpace ();
+			if (m_playInterval)
+			{
+				// 2 text fields for start and end
+
+				GUILayout.Label ("From:");
+				m_playIntervalStartStr = GUILayout.TextField (m_playIntervalStartStr, 10, GUILayout.Width(120));
+				GUILayout.Space (10);
+				GUILayout.Label ("To:");
+				m_playIntervalEndStr = GUILayout.TextField (m_playIntervalEndStr, 10, GUILayout.Width(120));
+
+				GUILayout.FlexibleSpace ();
+			}
+			GUILayout.EndHorizontal ();
+			GUILayout.Space (10);
+
 
 			// the rest of the window will be split in 2 parts - left will be the list of all SFXs and streams, and
 			// right will be the list of sounds in currently selected SFX/stream
 
 
-			float startingY = this.toolbarAreaHeight + this.timingAreaHeight + 40f;
+		//	float startingY = this.toolbarAreaHeight + this.timingAreaHeight + 40f;
 
 			GUILayout.BeginHorizontal ();
 
@@ -243,8 +267,26 @@ namespace SanAndreasUnity.UI {
 			}
 
 			m_audioSource.clip = clip;
-			m_audioSource.time = 0f;
-			m_audioSource.Play ();
+
+			if (m_playInterval)
+			{
+				System.TimeSpan timeSpanStart, timeSpanEnd;
+				var fp = System.Globalization.CultureInfo.InvariantCulture;
+				if (System.TimeSpan.TryParseExact (m_playIntervalStartStr, "mm\\:ss\\.fff", fp, out timeSpanStart)
+					&& System.TimeSpan.TryParseExact (m_playIntervalEndStr, "mm\\:ss\\.fff", fp, out timeSpanEnd)
+				    && timeSpanStart.CompareTo (timeSpanEnd) < 0)
+				{
+					m_audioSource.time = (float) timeSpanStart.TotalSeconds;
+					m_audioSource.Play ();
+					m_audioSource.SetScheduledEndTime (AudioSettings.dspTime + (timeSpanEnd.TotalSeconds - timeSpanStart.TotalSeconds));
+				}
+
+			}
+			else
+			{
+				m_audioSource.time = 0f;
+				m_audioSource.Play ();
+			}
 
 		}
 
