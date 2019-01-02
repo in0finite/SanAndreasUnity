@@ -116,18 +116,22 @@ namespace SanAndreasUnity.Behaviours
 		// weapon sounds are located in SFX -> GENRL -> BANK 137
 		// these indexes represent indexes of sounds in that bank
 		public static Dictionary<int, int> weaponSoundIndexes = new Dictionary<int, int>() {
-			{WeaponId.Pistol, 6},
+			{WeaponId.Pistol, 6},	// not correct
 			{WeaponId.PistolSilenced, 24},
-			{WeaponId.DesertEagle, 8},
+			{WeaponId.DesertEagle, 6},
 			{WeaponId.Shotgun, 21},
-			{WeaponId.Tec9, 0},
-			{WeaponId.MicroUzi, 1},
+			{WeaponId.SawnOff, 21},
+			{WeaponId.SPAS12, 22},
+			{WeaponId.Tec9, 1},
+			{WeaponId.MicroUzi, 0},
 			{WeaponId.MP5, 18},
-			{WeaponId.AK47, 3},
+			{WeaponId.AK47, 4},
 			{WeaponId.M4, 3},
 			{WeaponId.CountryRifle, 26},
 			{WeaponId.SniperRifle, 26},
 			{WeaponId.MiniGun, 11},
+		//	{WeaponId.RocketLauncher, 68},
+		//	{WeaponId.RocketLauncherHS, 68},
 		};
 
 		// used to play weapon sound
