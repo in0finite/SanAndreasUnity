@@ -13,9 +13,9 @@ namespace SanAndreasUnity.UI {
 		public float sideBarWidthPerc = 0.25f;
 
 		GTAAudioSharp.GTAAudioStreamsFile m_selectedStreamsFile;
-	//	GTAAudioSharp.GTAAudioSFXFile m_sfxFile;
+		GTAAudioSharp.GTAAudioSFXFile m_selectedSfxFile;
 
-		string m_streamIndexStr = "";
+		string m_bankIndexStr = "";
 
 		Vector2 m_sideBarScrollPos = Vector2.zero;
 
@@ -71,10 +71,19 @@ namespace SanAndreasUnity.UI {
 				if (m_selectedStreamsFile != null)
 				{
 					int index;
-					if (int.TryParse (m_streamIndexStr, out index))
+					if (int.TryParse (m_bankIndexStr, out index))
 					{
 						StartPlaying (AudioManager.CreateAudioClipFromStream (m_selectedStreamsFile.Name, index));
 					}
+				}
+				else if (m_selectedSfxFile != null)
+				{
+					int index;
+					if (int.TryParse (m_bankIndexStr, out index))
+					{
+						StartPlaying (AudioManager.CreateAudioClipFromSfx (m_selectedSfxFile.Name, index, 0, null));
+					}
+
 				}
 			}
 			else if (1 == selectedButtonIndex)
@@ -145,8 +154,8 @@ namespace SanAndreasUnity.UI {
 				GUI.enabled = (null == m_selectedStreamsFile || m_selectedStreamsFile.Name != f.Name);
 				if (GUILayout.Button (string.Format ("{0} [{1}]", f.Name, f.NumBanks)))
 				{
-					// select this stream
-					m_selectedStreamsFile = f;
+					// select this file
+					SelectStreamFile (f);
 				}
 				GUI.enabled = true;
 
@@ -175,7 +184,13 @@ namespace SanAndreasUnity.UI {
 //				rect = NextElement (rect);
 //				GUI.Label (rect, f.NumAudios.ToString ());
 
-				GUILayout.Label (string.Format ("{0} [{1}]", f.Name, f.NumBanks));
+				GUI.enabled = (null == m_selectedSfxFile || m_selectedSfxFile.Name != f.Name);
+				if (GUILayout.Button (string.Format ("{0} [{1}]", f.Name, f.NumBanks)))
+				{
+					// select this file
+					SelectSfxFile (f);
+				}
+				GUI.enabled = true;
 
 			}
 
@@ -189,13 +204,11 @@ namespace SanAndreasUnity.UI {
 
 			// we can't display a list, because there is no way to enumerate all sounds
 			// for now, just display text field for bank index
-			if (m_selectedStreamsFile != null)
-			{
-				GUILayout.Space (5);
-				GUILayout.Label ("Enter bank index:");
-				m_streamIndexStr = GUILayout.TextField (m_streamIndexStr, 6, GUILayout.MaxWidth(150));
-				GUILayout.FlexibleSpace ();
-			}
+
+			GUILayout.Space (5);
+			GUILayout.Label ("Enter bank index:");
+			m_bankIndexStr = GUILayout.TextField (m_bankIndexStr, 6, GUILayout.MaxWidth (150));
+			GUILayout.FlexibleSpace ();
 
 		//	GUILayout.EndArea ();
 
@@ -258,6 +271,18 @@ namespace SanAndreasUnity.UI {
 				else
 					m_audioSource.UnPause ();
 			}
+		}
+
+		public void SelectSfxFile (GTAAudioSharp.GTAAudioSFXFile f)
+		{
+			m_selectedSfxFile = f;
+			m_selectedStreamsFile = null;
+		}
+
+		public void SelectStreamFile (GTAAudioSharp.GTAAudioStreamsFile f)
+		{
+			m_selectedSfxFile = null;
+			m_selectedStreamsFile = f;
 		}
 
 		public float CurrentClipTimePerc {

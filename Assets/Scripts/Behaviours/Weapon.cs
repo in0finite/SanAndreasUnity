@@ -761,7 +761,7 @@ namespace SanAndreasUnity.Behaviours
 //						m_audioSource.Play();
 //						m_audioSource.SetScheduledEndTime( AudioSettings.dspTime + (endTime - startTime) );
 
-						Debug.LogFormat("playing weapon sound");
+					//	Debug.LogFormat("playing weapon sound");
 						m_audioSource.Stop();
 						m_audioSource.time = 0f;
 						m_audioSource.Play();

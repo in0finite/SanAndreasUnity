@@ -25,6 +25,8 @@ namespace SanAndreasUnity.Behaviours.Audio
 		public float startupSoundTimeOffset = 0f;
 		static AudioSource s_startupAudioSource;
 
+		public const int kSfxSampleSize = 2;
+
 	//	static AudioClip s_sfxGENRLClip;
 	//	public static AudioClip SfxGENRLClip { get { return s_sfxGENRLClip; } }
 
@@ -180,70 +182,74 @@ namespace SanAndreasUnity.Behaviours.Audio
 			return null;
 		}
 
-		public static AudioClip CreateAudioClipFromSfx (string sfxName, int bankIndex, int soundIndex, SfxBankAudioData sfxBankAudioData)
+		public static AudioClip CreateAudioClipFromSfx (string sfxFileName, int bankIndex, int audioIndex, SfxBankAudioData? sfxBankAudioData)
 		{
 
+			if (null == s_gtaAudioFiles || bankIndex < 0 || audioIndex < 0)
+				return null;
+			
 			AudioClip ret = null;
-			string sfx_file_name = sfxName;
-			int sfx_bank_index = bankIndex;
-			int sfx_audio_index = soundIndex;
-			string key = sfx_file_name + "." + sfx_bank_index + "." + sfx_audio_index;
+			string clipName = sfxFileName + "." + bankIndex + "." + audioIndex;
 
-			const int sampleSize = 2;
-			int frequency = Mathf.FloorToInt( sfxBankAudioData.bytesPerSecond / sampleSize );
-
-			long audioStreamSize = -1, originalStreamPosition = -1, audioStreamSampleRate = -1;
-
-			if ((s_gtaAudioFiles != null) && (sfx_bank_index >= 0) && (sfx_audio_index >= 0))
+			try
 			{
-				try
+				using (GTAAudioStream audio_stream = s_gtaAudioFiles.OpenSFXAudioStreamByName(sfxFileName, (uint)bankIndex, (uint)audioIndex))
 				{
-					using (GTAAudioStream audio_stream = s_gtaAudioFiles.OpenSFXAudioStreamByName(sfx_file_name, (uint)sfx_bank_index, (uint)sfx_audio_index))
+					if (audio_stream != null)
 					{
-						if (audio_stream != null)
-						{
-							// this audio stream holds all sounds from this bank
+						// this audio stream holds all sounds from this bank
 
-							audioStreamSize = audio_stream.Length;
-							originalStreamPosition = audio_stream.Position;
-							audioStreamSampleRate = audio_stream.SampleRate;
+						int freq = sfxBankAudioData.HasValue ? Mathf.RoundToInt( KbsToFreq( sfxBankAudioData.Value.bitrateKbs ) ) : audio_stream.SampleRate ;
+						int offsetInBytes = sfxBankAudioData.HasValue ? sfxBankAudioData.Value.offsetInBytes : 0 ;
+						int sizeInBytes = sfxBankAudioData.HasValue ? sfxBankAudioData.Value.sizeInBytes : (int) audio_stream.Length ;
 
-							audio_stream.Position = sfxBankAudioData.offsetInBytes;
+						ret = CreateAudioClipFromSfx (clipName, audio_stream, offsetInBytes, sizeInBytes, freq);
 
-							byte[] int_pcm = new byte[sfxBankAudioData.sizeInBytes];
-							if (audio_stream.Read(int_pcm, 0, int_pcm.Length) == int_pcm.Length)
-							{
-								float[] float_pcm = new float[int_pcm.Length / sizeof(short)];
-								for (int i = 0; i < float_pcm.Length; i++)
-								{
-									float_pcm[i] = Mathf.Clamp(((short)(int_pcm[i * sizeof(short)] | (int_pcm[(i * sizeof(short)) + 1] << 8)) / 32767.5f), -1.0f, 1.0f);
-								}
-								ret = AudioClip.Create(key, float_pcm.Length, 1, frequency, false);
-								ret.SetData(float_pcm, 0);
-
-								Debug.LogFormat("loaded sfx: {0} {1} {2}, offset {3}, size {4}, length {5}, bitrate Kb/s {6}, stream size {7}, original stream pos {8}, stream sample rate {9}, freq {10}", 
-									sfx_file_name, sfx_bank_index, 
-									sfx_audio_index, sfxBankAudioData.offsetInBytes, sfxBankAudioData.sizeInBytes, sfxBankAudioData.lengthSeconds,
-									sfxBankAudioData.bitrateKbs, audioStreamSize, originalStreamPosition, audioStreamSampleRate, frequency);
-							}
-						}
 					}
 				}
-				catch (System.Exception e)
-				{
-					Debug.LogError(e);
-				}
 			}
-
-			if (null == ret)
+			catch (System.Exception e)
 			{
-				Debug.LogErrorFormat("Failed to load sfx: {0} {1} {2}, offset {3}, size {4}, length {5}, bitrate Kb/s {6}, stream size {7}, original stream pos {8}, stream sample rate {9}", 
-					sfx_file_name, sfx_bank_index, 
-					sfx_audio_index, sfxBankAudioData.offsetInBytes, sfxBankAudioData.sizeInBytes, sfxBankAudioData.lengthSeconds,
-					sfxBankAudioData.bitrateKbs, audioStreamSize, originalStreamPosition, audioStreamSampleRate);
+				Debug.LogError(e);
 			}
 
 			return ret;
+		}
+
+		public static AudioClip CreateAudioClipFromSfx (string clipName, GTAAudioStream audio_stream, int offsetInBytes, int sizeInBytes, int frequency)
+		{
+			AudioClip ret = null;
+
+			audio_stream.Position = offsetInBytes;
+
+			byte[] int_pcm = new byte[sizeInBytes];
+
+			if (audio_stream.Read(int_pcm, 0, int_pcm.Length) == int_pcm.Length)
+			{
+				float[] float_pcm = new float[int_pcm.Length / sizeof(short)];
+				for (int i = 0; i < float_pcm.Length; i++)
+				{
+					float_pcm[i] = Mathf.Clamp(((short)(int_pcm[i * sizeof(short)] | (int_pcm[(i * sizeof(short)) + 1] << 8)) / 32767.5f), -1.0f, 1.0f);
+				}
+				ret = AudioClip.Create(clipName, float_pcm.Length, 1, frequency, false);
+				ret.SetData(float_pcm, 0);
+
+				Debug.LogFormat("loaded sfx: name {0}, offset {1}, size {2}, length {3}, bitrate Kb/s {4}, stream size {5}, freq {6}", 
+					clipName, offsetInBytes, sizeInBytes, ret.length,
+					FreqToKbs (frequency), audio_stream.Length, frequency);
+			}
+
+			return ret;
+		}
+
+		static float FreqToKbs(int freq)
+		{
+			return freq * kSfxSampleSize * 8f / 1000f;
+		}
+
+		static float KbsToFreq(float kbs)
+		{
+			return kbs / 8f * 1000f / kSfxSampleSize;
 		}
 
 	}
