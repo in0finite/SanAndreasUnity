@@ -34,13 +34,14 @@ namespace SanAndreasUnity.Behaviours.Audio
 		public struct SfxBankAudioData
 		{
 			public int startTimeMs;
-			public int lengthMs;
-			public float lengthSeconds { get { return this.lengthMs / 1000f; } }
+		//	public int lengthMs;
+		//	public float lengthSeconds { get { return this.lengthMs / 1000f; } }
 			public int bitrateKbs;	// kb/s
 			public int offsetInBytes;
 			public int bitsPerSecond { get { return this.bitrateKbs * 1000; } }
 			public float bytesPerSecond { get { return this.bitsPerSecond / 8f; } }
-			public int sizeInBytes { get { return Mathf.RoundToInt( this.lengthSeconds * this.bytesPerSecond ); } }
+		//	public int sizeInBytes { get { return Mathf.RoundToInt( this.lengthSeconds * this.bytesPerSecond ); } }
+			public int sizeInBytes;
 		}
 
 		static SfxBankAudioData[] s_sfxGENRL137Timings;
@@ -102,25 +103,32 @@ namespace SanAndreasUnity.Behaviours.Audio
 		//	int sampleSize = 2;
 			System.IFormatProvider formatProvider = System.Globalization.CultureInfo.InvariantCulture;
 			var lines = File.ReadAllLines (filePath);
-			SfxBankAudioData[] datas = new SfxBankAudioData[(lines.Length - 1) / 2];	// skip last line
+			SfxBankAudioData[] datas = new SfxBankAudioData[(lines.Length - 1)];	// skip last line
 		//	int currentTime = 0;
 			float currentOffset = 0;
 			for (int i = 0, lineIndex = 0; i < datas.Length; i++)
 			{
+				string[] splits = lines [lineIndex++].Split (' ');
+
 			//	datas [i].startTimeMs = currentTime;
-				datas [i].offsetInBytes = Mathf.RoundToInt (currentOffset);
+			//	datas [i].offsetInBytes = Mathf.RoundToInt (currentOffset);
 
-				int clipLengthMs = int.Parse (lines [lineIndex++], formatProvider);
-				datas [i].lengthMs = clipLengthMs;
+			//	int clipLengthMs = int.Parse (lines [lineIndex++], formatProvider);
+			//	datas [i].lengthMs = clipLengthMs;
 
-				int bitrate = 288;//int.Parse (lines [lineIndex++], formatProvider);
-				lineIndex ++;
-				datas [i].bitrateKbs = bitrate;
+			//	int bitrate = 288;//int.Parse (lines [lineIndex++], formatProvider);
+			//	lineIndex ++;
+			//	datas [i].bitrateKbs = bitrate;
 
 			//	currentTime += clipLengthMs;
-				currentOffset += (clipLengthMs / 1000f) * (bitrate * 1000f / 8f);
+			//	currentOffset += (clipLengthMs / 1000f) * (bitrate * 1000f / 8f);
+
+				datas [i].offsetInBytes = int.Parse (splits [0]);
+				datas [i].sizeInBytes = int.Parse (splits [1]);
+				datas [i].bitrateKbs = Mathf.RoundToInt( FreqToKbs( int.Parse (splits [2]) ) );
+
 			}
-			Debug.LogFormat ("sfx timings loaded - current offset {0}", currentOffset);
+		//	Debug.LogFormat ("sfx timings loaded - current offset {0}", currentOffset);
 			return datas;
 		}
 
