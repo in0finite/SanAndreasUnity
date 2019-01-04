@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 			if (!GameManager.CanPlayerReadInput()) return;
 
             var accel = Input.GetAxis("Vertical");
-            var brake = Input.GetKey(KeyCode.Space) ? 1.0f : 0.0f;
+            var brake = Input.GetButton("Walk") ? 1.0f : 0.0f;
             var speed = Vector3.Dot(_vehicle.Velocity, _vehicle.transform.forward);
 
             if (speed * accel < 0f)
