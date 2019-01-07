@@ -207,7 +207,7 @@ namespace SanAndreasUnity.Behaviours
             {
 				// give input to player
 
-				m_ped.IsJumpOn = Input.GetButtonDown ("Jump");
+				m_ped.IsJumpOn = Input.GetButton ("Jump");
 
 				Vector3 inputMove = Vector3.zero;
 				if (m_smoothMovement)
