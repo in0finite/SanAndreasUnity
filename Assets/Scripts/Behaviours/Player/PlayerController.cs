@@ -276,18 +276,19 @@ namespace SanAndreasUnity.Behaviours
 
 				if (m_doSmooth)
 				{
-					_smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
-					_smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
-                    _smoothMouse.x = Mathf.Lerp(_smoothMouse.x, rightAnalogDelta.x, 1f / smoothing.x);
-                    _smoothMouse.y = Mathf.Lerp(_smoothMouse.y, rightAnalogDelta.y, 1f / smoothing.y);
+					Vector2 totalDelta = mouseDelta + rightAnalogDelta;
+
+					_smoothMouse.x = Mathf.Lerp (_smoothMouse.x, totalDelta.x, 1f / smoothing.x);
+					_smoothMouse.y = Mathf.Lerp (_smoothMouse.y, totalDelta.y, 1f / smoothing.y);
 
 					_mouseAbsolute += _smoothMouse;
 				}
 				else
+				{
 					_mouseAbsolute += mouseDelta;
-                    _mouseAbsolute += rightAnalogDelta;
+					_mouseAbsolute += rightAnalogDelta;
+				}
 
-				// Waiting for an answer: https://stackoverflow.com/questions/50837685/camera-global-rotation-clamping-issue-unity3d
 
 				/*if (clampInDegrees.x > 0)
                     _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x, clampInDegrees.x);*/
