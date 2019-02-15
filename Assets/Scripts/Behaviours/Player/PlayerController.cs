@@ -48,10 +48,6 @@ namespace SanAndreasUnity.Behaviours
 
 		[SerializeField] private bool m_smoothMovement = false;
 
-		[SerializeField] private KeyCode m_walkKey = KeyCode.LeftAlt;
-		[SerializeField] private KeyCode m_sprintKey = KeyCode.Space;
-		[SerializeField] private KeyCode m_jumpKey = KeyCode.LeftShift;
-
 
         public float CurVelocity
         {
@@ -204,14 +200,14 @@ namespace SanAndreasUnity.Behaviours
             }
 
 
-			m_ped.WeaponHolder.IsAimOn = m_ped.WeaponHolder.IsHoldingWeapon && Input.GetMouseButton (1);
-			m_ped.WeaponHolder.IsFireOn = m_ped.WeaponHolder.IsHoldingWeapon && Input.GetMouseButton (0);
+			m_ped.WeaponHolder.IsAimOn = m_ped.WeaponHolder.IsHoldingWeapon && Input.GetButton ("RightClick");
+			m_ped.WeaponHolder.IsFireOn = m_ped.WeaponHolder.IsHoldingWeapon && Input.GetButton ("LeftClick");
 
 			//if (!_player.WeaponHolder.IsAimOn)
             {
 				// give input to player
 
-				m_ped.IsJumpOn = Input.GetKey (m_jumpKey);
+				m_ped.IsJumpOn = Input.GetButton ("Jump");
 
 				Vector3 inputMove = Vector3.zero;
 				if (m_smoothMovement)
@@ -223,9 +219,9 @@ namespace SanAndreasUnity.Behaviours
                 {
                     inputMove.Normalize();
 
-					if (Input.GetKey (m_walkKey))
+					if (Input.GetButton ("Walk"))
 						m_ped.IsWalking = true;
-					else if (Input.GetKey (m_sprintKey))
+					else if (Input.GetButton ("Sprint"))
 						m_ped.IsSprinting = true;
 					else
 						m_ped.IsRunning = true;
@@ -272,19 +268,24 @@ namespace SanAndreasUnity.Behaviours
 				// rotate camera
 
 				var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+                var rightAnalogDelta = new Vector2(Input.GetAxisRaw("Joystick X"), Input.GetAxisRaw("Joystick Y"));
 
 				mouseDelta = Vector2.Scale(mouseDelta, CursorSensitivity);
+                rightAnalogDelta = Vector2.Scale(rightAnalogDelta, CursorSensitivity);
 
 
 				if (m_doSmooth)
 				{
 					_smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
 					_smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
+                    _smoothMouse.x = Mathf.Lerp(_smoothMouse.x, rightAnalogDelta.x, 1f / smoothing.x);
+                    _smoothMouse.y = Mathf.Lerp(_smoothMouse.y, rightAnalogDelta.y, 1f / smoothing.y);
 
 					_mouseAbsolute += _smoothMouse;
 				}
 				else
 					_mouseAbsolute += mouseDelta;
+                    _mouseAbsolute += rightAnalogDelta;
 
 				// Waiting for an answer: https://stackoverflow.com/questions/50837685/camera-global-rotation-clamping-issue-unity3d
 
