@@ -15,9 +15,11 @@
 
 <br>
 
-We're porting [GTA: San Andreas](http://www.rockstargames.com/sanandreas/) to Unity!
+San Andreas Unity is an open source recreation of [GTA San Andreas](http://www.rockstargames.com/sanandreas/) in Unity.
 
-This won't be a complete re-implementation of the game, but we're hoping to build something similar to [Multi Theft Auto](http://www.mtasa.com/) with assets streamed from an existing installation of San Andreas.
+This won't be a complete recreation, but the focus is on gameplay features, mutliplayer, and creating a framework which will allow easy game extending and unlimited modding possibilities.
+
+For more information about the project, read this [wiki page](https://github.com/GTA-ASM/SanAndreasUnity/wiki/About-project).
 
 
 ## Setup Instructions
