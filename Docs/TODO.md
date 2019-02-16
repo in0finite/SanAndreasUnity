@@ -16,7 +16,7 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- What to do before making a release: change starting pos ? ;
+- **Ped state machine**
 
 - don't fade high LOD meshes
 
@@ -34,8 +34,6 @@
 
 - Pin windows - pinned windows are visible even when pause menu is not
 
-- Remove editor scripts for destroying player model
-
 - Remove unneeded assets: files from Resources, 
 
 - Bug when ped gets down to low heights (trying to move him back to starting location, and causing shaking)
@@ -45,13 +43,15 @@
 
 - AI system for peds
 
+- Navigation: build navmesh from static geometry at runtime
+
 - Import: AI paths, ped spawn info, item pickups, 
 
 - Implement other vehicles: airplanes, helicopters, bikes, boats
 
 - In-game input settings
 
-- Load sounds
+- Update audio library ; Don't use separate file for weapon sound timings ;
 
 
 #### Vehicles

@@ -3,6 +3,7 @@ using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -10,6 +11,12 @@ namespace SanAndreasUnity.Behaviours
 	public partial class Ped : MonoBehaviour
 	{
 
+		public static IEnumerable<PedestrianDef> SpawnablePedDefs {
+			get {
+				return Item.GetDefinitions<PedestrianDef> ().Where (def => def.Id != 0 && def.ModelName != "WMYST"
+				           && def.TextureDictionaryName != "generic");
+			}
+		}
 
 
 		public static Ped SpawnPed (PedestrianDef def, Vector3 pos, Quaternion rot)

@@ -64,12 +64,12 @@ namespace SanAndreasUnity.Behaviours
 
 		public static int RandomPedId {
 			get {
-				int count = Importing.Items.Item.GetNumDefinitions<Importing.Items.Definitions.PedestrianDef> ();
+				int count = Ped.SpawnablePedDefs.Count ();
 				if (count < 1)
 					throw new System.Exception ("No ped definitions found");
 
 				int index = Random.Range (0, count);
-				return Importing.Items.Item.GetDefinitions<Importing.Items.Definitions.PedestrianDef> ().ElementAt (index).Id;
+				return Ped.SpawnablePedDefs.ElementAt (index).Id;
 			}
 		}
 
