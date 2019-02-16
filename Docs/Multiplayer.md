@@ -4,6 +4,8 @@
 
 - create windows for: start new game ; join game ;
 
+- all scripts should work when Camera.main is null
+
 
 
 # Potential problems

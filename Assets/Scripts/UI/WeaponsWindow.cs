@@ -29,6 +29,33 @@ namespace SanAndreasUnity.UI {
 		}
 
 
+		protected override void OnWindowGUIBeforeContent ()
+		{
+			base.OnWindowGUIBeforeContent ();
+
+			bool playerExists = Ped.Instance != null;
+
+			if (playerExists)
+			{
+				GUILayout.BeginHorizontal ();
+
+				if (GUILayout.Button ("Remove all weapons", GUILayout.ExpandWidth(false)))
+					Ped.Instance.WeaponHolder.RemoveAllWeapons ();
+
+				GUILayout.Space (5);
+
+				if (GUILayout.Button ("Give ammo", GUILayout.ExpandWidth (false)))
+				{
+					foreach (var weapon in Ped.Instance.WeaponHolder.AllWeapons)
+						WeaponHolder.AddRandomAmmoAmountToWeapon (weapon);
+				}
+
+				GUILayout.EndHorizontal ();
+				GUILayout.Space (15);
+			}
+
+		}
+
 		protected override void OnWindowGUI ()
 		{
 
@@ -39,26 +66,6 @@ namespace SanAndreasUnity.UI {
 
 
 			bool playerExists = Ped.Instance != null;
-
-
-			if (playerExists)
-			{
-				GUILayout.BeginHorizontal ();
-
-				if (GUILayout.Button ("Remove all weapons", GUILayout.ExpandWidth(false)))
-					Ped.Instance.WeaponHolder.RemoveAllWeapons ();
-				
-				GUILayout.Space (5);
-
-				if (GUILayout.Button ("Give ammo", GUILayout.ExpandWidth (false)))
-				{
-					foreach (var weapon in Ped.Instance.WeaponHolder.AllWeapons)
-						WeaponHolder.AddRandomAmmoAmountToWeapon (weapon);
-				}
-				
-				GUILayout.EndHorizontal ();
-				GUILayout.Space (15);
-			}
 
 
 		//	var defs = Item.GetDefinitions<Importing.Items.Definitions.WeaponDef> ();
@@ -74,6 +81,7 @@ namespace SanAndreasUnity.UI {
 						// give weapon to player
 						Ped.Instance.WeaponHolder.SetWeaponAtSlot( data.modelId1, data.weaponslot );
 						Ped.Instance.WeaponHolder.SwitchWeapon (data.weaponslot);
+						WeaponHolder.AddRandomAmmoAmountToWeapon( Ped.Instance.WeaponHolder.GetWeaponAtSlot (data.weaponslot) );
 					}
 				}
 
