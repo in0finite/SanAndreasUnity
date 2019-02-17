@@ -2,17 +2,17 @@
 ## TODO
 
 
-- **Weapons - see [weapons.md](weapons.md)**
+- Weapons - see [weapons.md](weapons.md)
 
-- Rigid body character
+- **Rigid body character**
 
-- Load map in editor
+- Load map in editor ?
 
-- **Async geometry loading - currently, geometry is loaded synchronously, which seems like the main performance bottleneck**
+- **Async geometry loading** - currently, geometry is loaded synchronously, which seems like the main performance bottleneck
 
 - Make everything networked
 
-- **Map - better info area ; input mouse position is not always correct ; see [Map.md](Map.md) ;**
+- Map - better info area ; input mouse position is not always correct ; see [Map.md](Map.md) ;
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
@@ -26,9 +26,7 @@
 
 - Vehicles window: it's too slow - use pages ; display additional info ;
 
-- Implement proper jumping
-
-- Exceptions are thrown for some ped models - model ids: WMYST, 0, special peds at the end, 
+- Non-working ped model ids: WMYST, 0, special peds at the end, 
 
 - Create custom inspector for ped - it will display info from ped definition
 
@@ -38,10 +36,8 @@
 
 - Bug when ped gets down to low heights (trying to move him back to starting location, and causing shaking)
 
-- **Minimap size should depend on screen resolution**
+- Minimap size should depend on screen resolution
 
-
-- AI system for peds
 
 - Navigation: build navmesh from static geometry at runtime
 
