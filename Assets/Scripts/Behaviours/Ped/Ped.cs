@@ -28,6 +28,8 @@ namespace SanAndreasUnity.Behaviours
 
         private int jumpTimer;
 
+		private StateMachine m_stateMachine = new StateMachine ();
+
         #endregion Private Fields
 
         #region Inspector Fields
@@ -55,6 +57,8 @@ namespace SanAndreasUnity.Behaviours
         #endregion Inspector Fields
 
         #region Properties
+
+		public Peds.States.DefaultState[] States { get; private set; }
 
         public Cell Cell { get { return Cell.Instance; } }
 
@@ -131,7 +135,11 @@ namespace SanAndreasUnity.Behaviours
             characterController = GetComponent<CharacterController>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
 
+			this.States = this.GetComponentsInChildren<Peds.States.DefaultState> ();
+
 			this.AwakeForDamage ();
+
+			this.SwitchState<> ();
 
         }
 
@@ -173,6 +181,21 @@ namespace SanAndreasUnity.Behaviours
 			}
 
         }
+
+		public void SwitchState<T>() where T : Peds.States.DefaultState {
+
+			var type = typeof(T);
+
+			var state = this.States.FirstOrDefault (s => s.GetType ().IsSubclassOf (type));
+			if (null == state)
+			{
+				Debug.LogErrorFormat ("Failed to switch state: state of type {0} not found", type);
+				return;
+			}
+
+			m_stateMachine.SwitchState (state);
+
+		}
 
         public void OnSpawn()
         {
@@ -338,7 +361,7 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-		private void ConstrainPosition() {
+		public void ConstrainPosition() {
 
 			// Constrain to stay inside map
 
@@ -369,7 +392,7 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		private void ConstrainRotation ()
+		public void ConstrainRotation ()
 		{
 			if (IsInVehicle)
 				return;
