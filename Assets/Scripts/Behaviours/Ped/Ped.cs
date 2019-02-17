@@ -59,6 +59,7 @@ namespace SanAndreasUnity.Behaviours
         #region Properties
 
 		public Peds.States.DefaultState[] States { get; private set; }
+		public Peds.States.DefaultState CurrentState { get { return m_stateMachine.CurrentState; } }
 
         public Cell Cell { get { return Cell.Instance; } }
 
@@ -139,8 +140,6 @@ namespace SanAndreasUnity.Behaviours
 
 			this.AwakeForDamage ();
 
-			this.SwitchState<> ();
-
         }
 
         void Start()
@@ -148,6 +147,10 @@ namespace SanAndreasUnity.Behaviours
             //MySetupLocalPlayer ();
 
 			this.StartForDamage ();
+
+			if (null == this.CurrentState)
+				this.SwitchState<Peds.States.StandState> ();
+
         }
 
 		void OnEnable ()
@@ -446,6 +449,17 @@ namespace SanAndreasUnity.Behaviours
             if (IsInVehicle) return;
 
 
+			this.UpdateHeading ();
+
+			this.UpdateRotation ();
+
+			this.UpdateMovement ();
+
+        }
+
+		public void UpdateHeading()
+		{
+			
 			if (this.IsAiming && this.CurrentWeapon != null && !this.CurrentWeapon.CanTurnInDirectionOtherThanAiming) {
 				// ped heading can only be the same as ped direction
 				this.Heading = this.WeaponHolder.AimDirection;
@@ -454,36 +468,44 @@ namespace SanAndreasUnity.Behaviours
 			// player can look only along X and Z axis
 			this.Heading = this.Heading.WithXAndZ ().normalized;
 
+		}
+
+		public void UpdateRotation()
+		{
 
 			// rotate player towards his heading
 			Vector3 forward = Vector3.RotateTowards (this.transform.forward, Heading, TurnSpeed * Time.deltaTime, 0.0f);
 			this.transform.rotation = Quaternion.LookRotation(forward);
 
+		}
 
-            if (enableFlying || enableNoclip)
-            {
-                Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
-                Velocity = Movement * Time.fixedDeltaTime;
-                if (enableNoclip)
-                {
-                    transform.position += Velocity;
-                }
-                else
-                {
-                    characterController.Move(Velocity);
-                }
-            }
-            else
-            {
+		public void UpdateMovement()
+		{
+
+			if (enableFlying || enableNoclip)
+			{
+				Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
+				Velocity = Movement * Time.fixedDeltaTime;
+				if (enableNoclip)
+				{
+					transform.position += Velocity;
+				}
+				else
+				{
+					characterController.Move(Velocity);
+				}
+			}
+			else
+			{
 
 				// movement can only be done on X and Z axis
 				this.Movement = this.Movement.WithXAndZ ();
 
 				// change heading to match movement input
-                //if (Movement.sqrMagnitude > float.Epsilon)
-                //{
+				//if (Movement.sqrMagnitude > float.Epsilon)
+				//{
 				//	Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
-                //}
+				//}
 
 				// change velocity based on movement input and current speed extracted from anim
 
@@ -495,28 +517,28 @@ namespace SanAndreasUnity.Behaviours
 				Velocity += vDiff;
 
 				// apply gravity
-                Velocity = new Vector3(Velocity.x, characterController.isGrounded
-                    ? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
+				Velocity = new Vector3(Velocity.x, characterController.isGrounded
+					? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
 
-                // Jump! But only if the jump button has been released and player has been grounded for a given number of frames
+				// Jump! But only if the jump button has been released and player has been grounded for a given number of frames
 				if (!this.IsJumpOn)
-                    jumpTimer++;
+					jumpTimer++;
 				else if (jumpTimer >= antiBunnyHopFactor && this.IsGrounded)
-                {
-                    Velocity += Vector3.up * jumpSpeed;
-                    jumpTimer = 0;
-                }
+				{
+					Velocity += Vector3.up * jumpSpeed;
+					jumpTimer = 0;
+				}
 
 				// finally, move the character
-                characterController.Move(Velocity * Time.fixedDeltaTime);
-            }
+				characterController.Move(Velocity * Time.fixedDeltaTime);
+			}
 
 //			if(!IsLocalPlayer)
 //            {
 //                Velocity = characterController.velocity;
 //            }
 
-        }
+		}
 
 
 		public void ResetInput ()

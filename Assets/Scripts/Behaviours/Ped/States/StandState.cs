@@ -16,7 +16,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		override void OnSubmitPressed() {
 
-			//m_ped.SwitchState<CarEnterState>();
+			m_ped.TryEnterVehicleInRange ();
 
 		}
 

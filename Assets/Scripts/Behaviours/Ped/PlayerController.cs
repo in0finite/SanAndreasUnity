@@ -244,19 +244,7 @@ namespace SanAndreasUnity.Behaviours
 
             if (!Input.GetButtonDown("Use")) return;
 
-            // find any vehicles that have a seat inside the checking radius and sort by closest seat
-            var vehicles = FindObjectsOfType<Vehicle>()
-                .Where(x => Vector3.Distance(transform.position, x.FindClosestSeatTransform(transform.position).position) < EnterVehicleRadius)
-                .OrderBy(x => Vector3.Distance(transform.position, x.FindClosestSeatTransform(transform.position).position)).ToArray();
-
-            foreach (var vehicle in vehicles)
-            {
-                var seat = vehicle.FindClosestSeat(transform.position);
-
-                m_ped.EnterVehicle(vehicle, seat);
-
-                break;
-            }
+			m_ped.TryEnterVehicleInRange ();
 
         }
 

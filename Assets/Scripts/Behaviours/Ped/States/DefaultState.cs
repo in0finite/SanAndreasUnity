@@ -41,17 +41,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void UpdateHeading()
 		{
-
+			m_ped.UpdateHeading ();
 		}
 
 		protected virtual void UpdateRotation()
 		{
-
+			m_ped.UpdateRotation ();
 		}
 
 		protected virtual void UpdateMovement()
 		{
-
+			m_ped.UpdateMovement ();
 		}
 
 

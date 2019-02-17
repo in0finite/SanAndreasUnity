@@ -6,6 +6,7 @@ namespace SanAndreasUnity.Utilities
 	public class StateMachine {
 
 		IState m_currentState;
+		public IState CurrentState { get { return m_currentState; } }
 		bool m_isSwitchingState = false;
 
 
