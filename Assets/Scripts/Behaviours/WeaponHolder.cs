@@ -122,7 +122,7 @@ namespace SanAndreasUnity.Behaviours {
 			}
 		}
 
-		void Update () {
+		void Update_jrhgrh () {
 
 			if (!Loader.HasLoaded)
 				return;
@@ -177,7 +177,7 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
-		void LateUpdate()
+		void LateUpdate_jdghrjgjr()
 		{
 			// all things that manipulate skeleton must be placed in LateUpdate(), because otherwise Animator will
 			// override them

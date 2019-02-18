@@ -148,8 +148,8 @@ namespace SanAndreasUnity.Behaviours
 
 			this.StartForDamage ();
 
-		//	if (null == this.CurrentState)
-		//		this.SwitchState<Peds.States.StandState> ();
+			if (null == this.CurrentState)
+				this.SwitchState<Peds.States.StandState> ();
 
         }
 
@@ -189,7 +189,7 @@ namespace SanAndreasUnity.Behaviours
 
 			var type = typeof(T);
 
-			var state = this.States.FirstOrDefault (s => s.GetType ().IsSubclassOf (type));
+			var state = this.States.FirstOrDefault (s => s.GetType ().Equals (type) || s.GetType ().IsSubclassOf (type));
 			if (null == state)
 			{
 				Debug.LogErrorFormat ("Failed to switch state: state of type {0} not found", type);
@@ -332,6 +332,11 @@ namespace SanAndreasUnity.Behaviours
             if (!Loader.HasLoaded)
                 return;
 
+			if (this.CurrentState != null)
+			{
+				this.CurrentState.UpdateState ();
+			}
+
             // Reset to a valid (and solid!) start position when falling below the world
             if (transform.position.y < -300)
             {
@@ -341,11 +346,11 @@ namespace SanAndreasUnity.Behaviours
                 transform.rotation = spawn.rotation;
             }
 
-			ConstrainPosition ();
+		//	ConstrainPosition ();
 
-			ConstrainRotation ();
+		//	ConstrainRotation ();
 
-			UpdateAnims ();
+		//	UpdateAnims ();
 
             if (IsDrivingVehicle)
                 UpdateWheelTurning();
@@ -439,7 +444,7 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-        private void FixedUpdate()
+        private void FixedUpdate_teghr()
         {
             if (!Loader.HasLoaded)
                 return;
