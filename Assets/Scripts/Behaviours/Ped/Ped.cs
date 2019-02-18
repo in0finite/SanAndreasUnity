@@ -365,8 +365,8 @@ namespace SanAndreasUnity.Behaviours
 
 		//	UpdateAnims ();
 
-            if (IsDrivingVehicle)
-                UpdateWheelTurning();
+            //if (IsDrivingVehicle)
+            //    UpdateWheelTurning();
 			
             //If player falls from the map
             if (IsGrounded && transform.position.y < -50)
@@ -576,6 +576,14 @@ namespace SanAndreasUnity.Behaviours
 			this.IsWalkOn = this.IsRunOn = this.IsSprintOn = false;
 			this.Movement = Vector3.zero;
 			this.IsJumpOn = false;
+		}
+
+		public void OnSubmitPressed ()
+		{
+			if (this.CurrentState != null)
+			{
+				this.CurrentState.OnSubmitPressed ();
+			}
 		}
 
 

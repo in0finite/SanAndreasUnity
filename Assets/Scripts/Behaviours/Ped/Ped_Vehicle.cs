@@ -25,80 +25,15 @@ namespace SanAndreasUnity.Behaviours
 
 		public void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
 		{
-			// TODO: find state script, and call it's method
-
+			// find state script, and call it's method
+			this.GetStateOrLogError<Peds.States.CarEnteringState>().TryEnterVehicle( vehicle, seatAlignment, immediate );
 		}
 
 		public void ExitVehicle(bool immediate = false)
 		{
-			if (!IsInVehicle || !IsInVehicleSeat)
-				return;
-
-			// this should be done only if player was a driver ?
-			CurrentVehicle.StopControlling();
-
-			if (IsLocalPlayer)
-			{
-				/*
-                SendToServer(_lastPassengerState = new PlayerPassengerState {
-                    Vechicle = null
-                }, DeliveryMethod.ReliableOrdered, 1);
-                */
-			}
-			else
-			{
-				//    _snapshots.Reset();
-			}
-
-			StartCoroutine (ExitVehicleAnimation (immediate));
-
+			this.GetStateOrLogError<Peds.States.CarExitingState> ().ExitVehicle (immediate);
 		}
 
-		private IEnumerator ExitVehicleAnimation(bool immediate)
-		{
-			IsInVehicleSeat = false;
-
-			var seat = CurrentVehicleSeat;
-
-			var animIndex = seat.IsLeftHand ? AnimIndex.GetOutLeft : AnimIndex.GetOutRight;
-
-			PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, animIndex).RootStart, new Vector3(-1, -1, -1));
-
-			if (!immediate)
-			{
-				var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
-				animState.wrapMode = WrapMode.Once;
-
-				// wait until anim finishes or stops
-				while (animState.enabled)
-					yield return new WaitForEndOfFrame();
-			}
-
-			// player now completely exited the vehicle
-
-			PlayerModel.IsInVehicle = false;
-
-			CurrentVehicle = null;
-			CurrentVehicleSeat = null;
-			seat.OccupyingPed = null;
-
-			transform.localPosition = PlayerModel.VehicleParentOffset;
-			transform.localRotation = Quaternion.identity;
-
-			transform.SetParent(null);
-
-			characterController.enabled = true;
-
-			PlayerModel.VehicleParentOffset = Vector3.zero;
-
-			// change camera parent
-			if (IsLocalPlayer) {
-				if (Camera != null) {
-					Camera.transform.SetParent (null, true);
-				}
-			}
-
-		}
 
 		public static List<Vehicle.SeatAlignment> GetFreeSeats( Vehicle vehicle )
 		{
@@ -119,15 +54,7 @@ namespace SanAndreasUnity.Behaviours
 
 		private void UpdateWheelTurning()
 		{
-			PlayerModel.VehicleParentOffset = Vector3.zero;
-
-			var driveState = CurrentVehicle.Steering > 0 ? AnimIndex.DriveRight : AnimIndex.DriveLeft;
-
-			var state = PlayerModel.PlayAnim(AnimGroup.Car, driveState, PlayMode.StopAll);
-
-			state.speed = 0.0f;
-			state.wrapMode = WrapMode.ClampForever;
-			state.time = Mathf.Lerp(0.0f, state.length, Mathf.Abs(CurrentVehicle.Steering));
+			
 		}
 
 

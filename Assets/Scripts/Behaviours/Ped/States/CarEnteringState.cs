@@ -14,37 +14,23 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 
 		public override void OnBecameActive() {
-
-			// TODO: get code from Ped_Vehicle class ; someone needs to assign target vehicle and seat - we should 
-			// provide public method in this class
-
-
+			
 		}
 
 		public bool TryEnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
 		{
-			if (m_ped.IsInVehicle)
-				return false;
-
-			if (m_ped.IsAiming || m_ped.WeaponHolder.IsFiring)
-				return false;
-
-			var seat = vehicle.GetSeat (seatAlignment);
-			if (null == seat)
-				return false;
-
-			// check if specified seat is taken
-			if (seat.IsTaken)
+			if (!this.CanEnterVehicle (vehicle, seatAlignment))
 				return false;
 			
-			// everything is ok, we can enter vehicle
+
+			Vehicle.Seat seat = vehicle.GetSeat (seatAlignment);
 
 			// switch state here
 			m_ped.SwitchState<CarEnteringState>();
 
 			this.CurrentVehicle = vehicle;
 			this.CurrentVehicleSeat = seat;
-			seat.OccupyingPed = this;
+			seat.OccupyingPed = m_ped;
 
 			m_ped.characterController.enabled = false;
 
@@ -99,6 +85,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
 				animState.wrapMode = WrapMode.Once;
 
+				// TODO: also check if this state is still active state
 				while (animState.enabled)
 				{
 					yield return new WaitForEndOfFrame();

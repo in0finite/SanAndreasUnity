@@ -34,6 +34,27 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			
 		}
 
+		public bool CanEnterVehicle (Vehicle vehicle, Vehicle.SeatAlignment seatAlignment)
+		{
+			if (m_ped.IsInVehicle)
+				return false;
+
+			if (m_ped.IsAiming || m_ped.WeaponHolder.IsFiring)
+				return false;
+
+			var seat = vehicle.GetSeat (seatAlignment);
+			if (null == seat)
+				return false;
+
+			// check if specified seat is taken
+			if (seat.IsTaken)
+				return false;
+
+			// everything is ok, we can enter vehicle
+
+			return true;
+		}
+
 	}
 
 }

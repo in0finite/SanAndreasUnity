@@ -160,11 +160,9 @@ namespace SanAndreasUnity.Behaviours
 			if (!GameManager.CanPlayerReadInput()) return;
 
 
-            if (Input.GetButtonDown("Use") && m_ped.IsInVehicle)
+            if (Input.GetButtonDown("Use"))
             {
-                m_ped.ExitVehicle();
-
-                return;
+				m_ped.OnSubmitPressed ();
             }
 
             
@@ -245,10 +243,6 @@ namespace SanAndreasUnity.Behaviours
 
             }
 
-
-            if (!Input.GetButtonDown("Use")) return;
-
-			m_ped.TryEnterVehicleInRange ();
 
         }
 
