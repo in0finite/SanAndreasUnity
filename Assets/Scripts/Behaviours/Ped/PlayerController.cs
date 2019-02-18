@@ -75,6 +75,9 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnGUI()
         {
+			if (!Loader.HasLoaded)
+				return;
+
             Event e = Event.current;
 
             
@@ -93,9 +96,10 @@ namespace SanAndreasUnity.Behaviours
                 GUILayout.EndArea();
             }
 
-            if (_showVel && Loader.HasLoaded)
+            if (_showVel)
                 GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(5, 5)), string.Format("{0:0.0} km/h", deltaPos.magnitude * 3.6f / velTimer), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
 
+			GUI.Label (GUIUtils.GetCornerRect(ScreenCorner.BottomLeft, 200, 50), string.Format("Current ped state: {0}", m_ped.CurrentState != null ? m_ped.CurrentState.GetType().ToString() : "none") );
             
         }
 

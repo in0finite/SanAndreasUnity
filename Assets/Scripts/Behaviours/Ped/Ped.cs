@@ -196,6 +196,8 @@ namespace SanAndreasUnity.Behaviours
 				return;
 			}
 
+		//	Debug.LogFormat ("Switching to state: {0}", type);
+
 			m_stateMachine.SwitchState (state);
 
 		}

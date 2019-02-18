@@ -10,7 +10,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override void OnBecameActive() {
 
 			// play anim
-			m_ped.PlayerModel.PlayAnim(Importing.Animation.AnimGroup.WalkCycle, Importing.Animation.AnimIndex.sprint_civi);
+			m_ped.PlayerModel.PlayAnim(Importing.Animation.AnimGroup.MyWalkCycle, Importing.Animation.AnimIndex.sprint_civi);
 
 		}
 
