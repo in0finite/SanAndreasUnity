@@ -4,7 +4,7 @@ using SanAndreasUnity.Utilities;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public class StandState : DefaultState
+	public class StandState : BaseMovementState
 	{
 
 		public override void OnBecameActive() {
@@ -14,23 +14,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
-		override void OnSubmitPressed() {
-
-			m_ped.TryEnterVehicleInRange ();
-
-		}
-
-		override void OnJumpPressed() {
-
-			m_ped.SwitchState<JumpState>();
-
-		}
-
-		override void UpdateState() {
+		public override void UpdateState() {
 
 			base.UpdateState();
 
-			// ...
+			// TODO: check if we should enter walk, run, or sprint state
+
+
 
 		}
 

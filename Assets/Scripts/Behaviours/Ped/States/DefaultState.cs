@@ -4,14 +4,22 @@ using SanAndreasUnity.Utilities;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
+	/// <summary>
+	/// Base class for all MonoBehaviour states.
+	/// </summary>
 	public class DefaultState : MonoBehaviour, IPedState
 	{
 
 		protected Ped m_ped;
-		protected StateMachine m_stateMachine;
-		public new Transform transform { get { return m_ped.transform; } }
+	//	protected StateMachine m_stateMachine;
+		protected new Transform transform { get { return m_ped.transform; } }
 
 
+
+		protected virtual void Awake ()
+		{
+			m_ped = this.GetComponentInParent<Ped> ();
+		}
 
 		public override void UpdateState() {
 

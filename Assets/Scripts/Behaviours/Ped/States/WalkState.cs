@@ -4,7 +4,7 @@ using SanAndreasUnity.Utilities;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public class WalkState : DefaultState
+	public class WalkState : BaseMovementState
 	{
 
 		public override void OnBecameActive() {
@@ -14,23 +14,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
-		override void OnSubmitPressed() {
-
-			m_ped.TryEnterVehicleInRange ();
-
-		}
-
-		override void OnJumpPressed() {
-
-			m_ped.SwitchState<JumpState>();
-
-		}
-
-		override void UpdateState() {
+		public override void UpdateState() {
 
 			base.UpdateState();
 
-			// ...
+			// TODO: check if we should switch to stand state (if walk key is no longer pressed)
 
 		}
 
