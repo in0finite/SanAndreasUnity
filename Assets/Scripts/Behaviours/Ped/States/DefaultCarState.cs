@@ -28,6 +28,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			
 		}
 
+		protected override void ConstrainRotation ()
+		{
+			
+		}
+
 	}
 
 }

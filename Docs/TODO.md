@@ -18,6 +18,8 @@
 
 - **Ped state machine**
 
+- Add option to change gravity
+
 - don't fade high LOD meshes
 
 - Validate path to GTA ?

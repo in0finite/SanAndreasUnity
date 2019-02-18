@@ -148,8 +148,8 @@ namespace SanAndreasUnity.Behaviours
 
 			this.StartForDamage ();
 
-			if (null == this.CurrentState)
-				this.SwitchState<Peds.States.StandState> ();
+		//	if (null == this.CurrentState)
+		//		this.SwitchState<Peds.States.StandState> ();
 
         }
 
@@ -443,9 +443,7 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!Loader.HasLoaded)
                 return;
-
-            //    NetworkingFixedUpdate();
-
+			
             if (IsInVehicle) return;
 
 
