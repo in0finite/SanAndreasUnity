@@ -220,11 +220,11 @@ namespace SanAndreasUnity.Behaviours
                     inputMove.Normalize();
 
 					if (Input.GetButton ("Walk"))
-						m_ped.IsWalking = true;
+						m_ped.IsWalkOn = true;
 					else if (Input.GetButton ("Sprint"))
-						m_ped.IsSprinting = true;
+						m_ped.IsSprintOn = true;
 					else
-						m_ped.IsRunning = true;
+						m_ped.IsRunOn = true;
 
                 }
                	

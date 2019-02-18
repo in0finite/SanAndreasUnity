@@ -310,15 +310,15 @@ namespace SanAndreasUnity.Behaviours
 		{
 			Ped ped = m_ped;
 
-			if (ped.IsRunning) {
+			if (ped.IsRunOn) {
 
 				return this.RunAnim;
 
-			} else if (ped.IsWalking) {
+			} else if (ped.IsWalkOn) {
 
 				return this.WalkAnim;
 
-			} else if (ped.IsSprinting) {
+			} else if (ped.IsSprintOn) {
 
 				if (canSprint) {
 					return new AnimId (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
@@ -566,7 +566,7 @@ namespace SanAndreasUnity.Behaviours
 
 				AnimationState state = null;
 
-				if (player.IsRunning && player.Movement.sqrMagnitude > float.Epsilon) {
+				if (player.IsRunOn && player.Movement.sqrMagnitude > float.Epsilon) {
 					// walk and aim at the same time
 
 					float angle = Vector3.Angle (player.Movement, player.transform.forward);

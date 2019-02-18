@@ -36,7 +36,7 @@ namespace SanAndreasUnity.Behaviours.Weapons
 		{
 			Ped ped = m_ped;
 
-			if (ped.IsSprinting) {
+			if (ped.IsSprintOn) {
 				// because anim reports incorrect velocity (it gives positive velocity, but it should give 0),
 				// we have to make some fixes
 

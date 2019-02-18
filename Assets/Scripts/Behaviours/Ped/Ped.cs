@@ -92,9 +92,9 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-		public bool IsWalking { get; set; }
-		public bool IsRunning { get; set; }
-		public bool IsSprinting { get; set; }
+		public bool IsWalkOn { get; set; }
+		public bool IsRunOn { get; set; }
+		public bool IsSprintOn { get; set; }
 		public bool IsJumpOn { get; set; }
 
         public Vector3 Velocity { get; private set; }
@@ -419,15 +419,15 @@ namespace SanAndreasUnity.Behaviours
 			if (IsInVehicle || m_weaponHolder.IsHoldingWeapon)
 				return;
 
-			if (IsRunning) {
+			if (IsRunOn) {
 				
 				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Run, PlayMode.StopAll);
 
-			} else if (IsWalking) {
+			} else if (IsWalkOn) {
 				
 				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Walk, PlayMode.StopAll);
 
-			} else if (IsSprinting) {
+			} else if (IsSprintOn) {
 
 				PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
 
@@ -549,7 +549,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public void ResetMovementInput ()
 		{
-			this.IsWalking = this.IsRunning = this.IsSprinting = false;
+			this.IsWalkOn = this.IsRunOn = this.IsSprintOn = false;
 			this.Movement = Vector3.zero;
 			this.IsJumpOn = false;
 		}

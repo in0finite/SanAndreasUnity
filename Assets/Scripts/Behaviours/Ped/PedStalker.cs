@@ -74,7 +74,7 @@ namespace SanAndreasUnity.Behaviours
 				{
 					Vector3 diffDir = diff.normalized;
 
-					this.MyPed.IsRunning = true;
+					this.MyPed.IsRunOn = true;
 					this.MyPed.Movement = diffDir;
 					this.MyPed.Heading = diffDir;
 				}
