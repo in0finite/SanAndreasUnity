@@ -8,7 +8,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	{
 
 		Vehicle CurrentVehicle { get; }
-		Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get; }
+		Vehicle.Seat CurrentVehicleSeat { get; }
 
 	}
 

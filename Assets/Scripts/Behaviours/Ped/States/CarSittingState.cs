@@ -1,6 +1,7 @@
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours.Vehicles;
+using SanAndreasUnity.Importing.Animation;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
@@ -11,7 +12,26 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override void OnBecameActive() {
 			
 			// play anim
-			m_ped.PlayerModel.PlayAnim(Importing.Animation.AnimGroup.Car, Importing.Animation.AnimIndex.Sit);
+		//	m_ped.PlayerModel.PlayAnim(Importing.Animation.AnimGroup.Car, Importing.Animation.AnimIndex.Sit);
+
+		}
+
+		public void EnterVehicle(Vehicle vehicle, Vehicle.Seat seat)
+		{
+
+			this.CurrentVehicle = vehicle;
+			this.CurrentVehicleSeat = seat;
+
+			if (seat.IsDriver)
+			{
+				m_ped.PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
+			}
+			else
+			{
+				m_ped.PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
+			}
+
+			m_ped.SwitchState<CarSittingState> ();
 
 		}
 

@@ -9,8 +9,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	{
 		protected Vehicle m_currentVehicle;
 		public Vehicle CurrentVehicle { get { return m_currentVehicle; } }
-		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get; protected set; }
 
+		public Vehicle.Seat CurrentVehicleSeat { get; protected set; }
+		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return this.CurrentVehicleSeat.Alignment; } }
 
 
 		protected override void UpdateHeading()

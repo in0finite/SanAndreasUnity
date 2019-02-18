@@ -185,22 +185,33 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-		public void SwitchState<T>() where T : Peds.States.DefaultState {
 
+		public T GetState<T>() where T : Peds.States.DefaultState
+		{
 			var type = typeof(T);
+			return this.States.FirstOrDefault (s => s.GetType ().Equals (type) || s.GetType ().IsSubclassOf (type));
+		}
 
-			var state = this.States.FirstOrDefault (s => s.GetType ().Equals (type) || s.GetType ().IsSubclassOf (type));
+		public T GetStateOrLogError<T>() where T : Peds.States.DefaultState
+		{
+			var state = this.GetState<T> ();
+			if(null == state)
+				Debug.LogErrorFormat ("Failed to find state: {0}", typeof(T));
+			return state;
+		}
+
+		public void SwitchState<T>() where T : Peds.States.DefaultState {
+			
+			var state = this.GetStateOrLogError<T> ();
 			if (null == state)
-			{
-				Debug.LogErrorFormat ("Failed to switch state: state of type {0} not found", type);
 				return;
-			}
 
 		//	Debug.LogFormat ("Switching to state: {0}", type);
 
 			m_stateMachine.SwitchState (state);
 
 		}
+
 
         public void OnSpawn()
         {

@@ -25,63 +25,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
 		{
-			if (IsInVehicle)
-				return;
-
-			if (this.IsAiming || this.WeaponHolder.IsFiring)
-				return;
-
-			var seat = vehicle.GetSeat (seatAlignment);
-			if (null == seat)
-				return;
-
-			// check if specified seat is taken
-			if (seat.IsTaken)
-				return;
-
-
-			CurrentVehicle = vehicle;
-			CurrentVehicleSeat = seat;
-			seat.OccupyingPed = this;
-
-			characterController.enabled = false;
-
-
-			if (IsLocalPlayer)
-			{
-				if (Camera != null) {
-					Camera.transform.SetParent (seat.Parent, true);
-				}
-
-				/*
-                SendToServer(_lastPassengerState = new PlayerPassengerState {
-                    Vechicle = vehicle,
-                    SeatAlignment = (int) seatAlignment
-                }, DeliveryMethod.ReliableOrdered, 1);
-                */
-			}
-
-			transform.SetParent(seat.Parent);
-			transform.localPosition = Vector3.zero;
-			transform.localRotation = Quaternion.identity;
-
-			if (IsLocalPlayer && seat.IsDriver)
-			{
-				vehicle.StartControlling();
-			}
-
-			PlayerModel.IsInVehicle = true;
-
-
-			if (!vehicle.IsNightToggled && WorldController.IsNight)
-				vehicle.IsNightToggled = true;
-			else if (vehicle.IsNightToggled && !WorldController.IsNight)
-				vehicle.IsNightToggled = false;
-
-			Debug.Log ("IsNightToggled? " + vehicle.IsNightToggled);
-
-
-			StartCoroutine (EnterVehicleAnimation (seat, immediate));
+			// TODO: find state script, and call it's method
 
 		}
 
@@ -107,38 +51,6 @@ namespace SanAndreasUnity.Behaviours
 			}
 
 			StartCoroutine (ExitVehicleAnimation (immediate));
-
-		}
-
-		private IEnumerator EnterVehicleAnimation(Vehicle.Seat seat, bool immediate)
-		{
-			var animIndex = seat.IsLeftHand ? AnimIndex.GetInLeft : AnimIndex.GetInRight;
-
-			PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, animIndex).RootEnd, new Vector3(-1, -1, -1));
-
-			if (!immediate)
-			{
-				var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
-				animState.wrapMode = WrapMode.Once;
-
-				while (animState.enabled)
-				{
-					yield return new WaitForEndOfFrame();
-				}
-			}
-
-			// player now completely entered the vehicle
-
-			IsInVehicleSeat = true;
-
-			if (seat.IsDriver)
-			{
-				PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
-			}
-			else
-			{
-				PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
-			}
 
 		}
 
