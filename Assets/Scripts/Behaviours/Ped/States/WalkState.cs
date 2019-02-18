@@ -19,7 +19,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.UpdateState();
 
 			// TODO: check if we should switch to stand state (if walk key is no longer pressed)
-
+			if (!m_ped.IsWalkOn)
+				m_ped.SwitchState<StandState> ();
+			
 		}
 
 	}

@@ -8,8 +8,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	public class DefaultCarState : DefaultState, ICarState
 	{
 		protected Vehicle m_currentVehicle;
-		public override Vehicle CurrentVehicle { get { return m_currentVehicle; } }
-		public override Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get; private set; }
+		public Vehicle CurrentVehicle { get { return m_currentVehicle; } }
+		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get; protected set; }
 
 
 

@@ -21,7 +21,22 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_ped = this.GetComponentInParent<Ped> ();
 		}
 
-		public override void UpdateState() {
+		public virtual void OnBecameActive ()
+		{
+			
+		}
+
+		public virtual void OnBecameInactive ()
+		{
+			
+		}
+
+		public virtual bool RepresentsState (System.Type type)
+		{
+			return type.Equals (this.GetType ()) || type.IsSubclassOf (this.GetType ());
+		}
+
+		public virtual void UpdateState() {
 
 			// read input
 
@@ -68,6 +83,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 		public virtual void OnJumpPressed() {
+
+		}
+
+		public virtual void OnDamaged(DamageInfo info)
+		{
 
 		}
 

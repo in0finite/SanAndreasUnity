@@ -20,7 +20,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// TODO: check if we should enter walk, run, or sprint state
 
-
+			if (m_ped.IsWalkOn)
+			{
+				m_ped.SwitchState<WalkState> ();
+			}
+			else if (m_ped.IsRunOn)
+			{
+				m_ped.SwitchState<RunState> ();
+			}
+			else if (m_ped.IsSprintOn)
+			{
+				m_ped.SwitchState<SprintState> ();
+			}
 
 		}
 

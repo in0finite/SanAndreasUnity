@@ -19,7 +19,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.UpdateState();
 
 			// TODO: check if we should switch to stand state (if run key is no longer pressed)
-
+			if (!m_ped.IsRunOn)
+				m_ped.SwitchState<StandState> ();
+			
 		}
 
 	}

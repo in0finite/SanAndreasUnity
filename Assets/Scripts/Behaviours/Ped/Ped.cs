@@ -59,7 +59,7 @@ namespace SanAndreasUnity.Behaviours
         #region Properties
 
 		public Peds.States.DefaultState[] States { get; private set; }
-		public Peds.States.DefaultState CurrentState { get { return m_stateMachine.CurrentState; } }
+		public Peds.States.DefaultState CurrentState { get { return (Peds.States.DefaultState) m_stateMachine.CurrentState; } }
 
         public Cell Cell { get { return Cell.Instance; } }
 

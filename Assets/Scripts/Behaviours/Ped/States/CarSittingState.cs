@@ -15,7 +15,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
-		protected override void OnSubmitPressed() {
+		public override void OnSubmitPressed() {
 
 			// TODO: exit the vehicle
 		//	m_ped.ExitVehicle();
