@@ -46,6 +46,16 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			this.ConstrainPosition();
 			this.ConstrainRotation();
 
+		}
+
+		public virtual void LateUpdateState()
+		{
+			
+		}
+
+		public virtual void FixedUpdateState()
+		{
+
 			this.UpdateHeading();
 			this.UpdateRotation();
 			this.UpdateMovement();

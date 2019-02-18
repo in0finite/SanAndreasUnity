@@ -446,11 +446,19 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-        private void FixedUpdate_teghr()
+        private void FixedUpdate()
         {
             if (!Loader.HasLoaded)
                 return;
-			
+
+			if (this.CurrentState != null)
+			{
+				this.CurrentState.FixedUpdateState ();
+			}
+
+			return;
+
+
             if (IsInVehicle) return;
 
 

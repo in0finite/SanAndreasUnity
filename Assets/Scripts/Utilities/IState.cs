@@ -9,6 +9,8 @@ namespace SanAndreasUnity.Utilities
 		void OnBecameInactive();
 		bool RepresentsState(System.Type type);
 		void UpdateState();
+		void LateUpdateState();
+		void FixedUpdateState();
 
 	}
 
