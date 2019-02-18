@@ -189,7 +189,7 @@ namespace SanAndreasUnity.Behaviours
 		public T GetState<T>() where T : Peds.States.DefaultState
 		{
 			var type = typeof(T);
-			return this.States.FirstOrDefault (s => s.GetType ().Equals (type) || s.GetType ().IsSubclassOf (type));
+			return (T) this.States.FirstOrDefault (s => s.GetType ().Equals (type) || s.GetType ().IsSubclassOf (type));
 		}
 
 		public T GetStateOrLogError<T>() where T : Peds.States.DefaultState

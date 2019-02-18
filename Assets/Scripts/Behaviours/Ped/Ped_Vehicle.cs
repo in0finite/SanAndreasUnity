@@ -5,6 +5,7 @@ using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Animation;
 using System.Linq;
+using SanAndreasUnity.Behaviours.Peds.States;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -14,11 +15,32 @@ namespace SanAndreasUnity.Behaviours
 		[SerializeField] private float m_enterVehicleRadius = 2.0f;
 		public float EnterVehicleRadius { get { return m_enterVehicleRadius; } set { m_enterVehicleRadius = value; } }
 
-		public Vehicle CurrentVehicle { get; private set; }
+		public Vehicle CurrentVehicle {
+			get {
+				if (this.CurrentState != null && this.CurrentState is ICarState)
+				{
+					return ((ICarState)this.CurrentState).CurrentVehicle;
+				}
+				return null;
+			}
+		}
+
+		public Vehicle.Seat CurrentVehicleSeat {
+			get {
+				if (this.CurrentState != null && this.CurrentState is ICarState)
+				{
+					return ((ICarState)this.CurrentState).CurrentVehicleSeat;
+				}
+				return null;
+			}
+		}
+
 		public bool IsInVehicle { get { return CurrentVehicle != null; } }
-		public bool IsInVehicleSeat { get; private set; }
+
+		public bool IsInVehicleSeat { get { return this.CurrentState != null && this.CurrentState.RepresentsState (typeof(CarSittingState)); } }
+
 		public bool IsDrivingVehicle { get { return this.IsInVehicleSeat && this.CurrentVehicleSeat.IsDriver && this.IsInVehicle; } }
-		public Vehicle.Seat CurrentVehicleSeat { get; private set; }
+
 		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return CurrentVehicleSeat.Alignment; } }
 
 
@@ -26,12 +48,12 @@ namespace SanAndreasUnity.Behaviours
 		public void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
 		{
 			// find state script, and call it's method
-			this.GetStateOrLogError<Peds.States.CarEnteringState>().TryEnterVehicle( vehicle, seatAlignment, immediate );
+			this.GetStateOrLogError<CarEnteringState>().TryEnterVehicle( vehicle, seatAlignment, immediate );
 		}
 
 		public void ExitVehicle(bool immediate = false)
 		{
-			this.GetStateOrLogError<Peds.States.CarExitingState> ().ExitVehicle (immediate);
+			this.GetStateOrLogError<CarExitingState> ().ExitVehicle (immediate);
 		}
 
 

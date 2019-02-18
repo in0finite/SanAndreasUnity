@@ -72,6 +72,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			StartCoroutine (EnterVehicleAnimation (seat, immediate));
 
 
+			return true;
 		}
 
 		private System.Collections.IEnumerator EnterVehicleAnimation(Vehicle.Seat seat, bool immediate)

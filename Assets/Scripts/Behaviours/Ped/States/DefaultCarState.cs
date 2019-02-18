@@ -7,8 +7,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class DefaultCarState : DefaultState, ICarState
 	{
-		protected Vehicle m_currentVehicle;
-		public Vehicle CurrentVehicle { get { return m_currentVehicle; } }
+		private Vehicle m_currentVehicle;
+		public Vehicle CurrentVehicle { get { return m_currentVehicle; } protected set { m_currentVehicle = value; } }
 
 		public Vehicle.Seat CurrentVehicleSeat { get; protected set; }
 		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return this.CurrentVehicleSeat.Alignment; } }
