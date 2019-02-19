@@ -25,15 +25,15 @@ namespace SanAndreasUnity.Behaviours {
 		public	bool	IsAimOn { get; set; }
 		private	bool	m_isAiming = false;
 		public	bool	IsAiming {
-			get { return m_isAiming; }
+			get { return m_ped.CurrentState != null && m_ped.CurrentState is Peds.States.BaseAimState; }
 			private set {
-				if (value == m_isAiming)
-					return;
-				if (value) {
-					m_timeWhenStartedAiming = Time.time;
-					m_frameWhenStartedAiming = Time.frameCount;
-				}
-				m_isAiming = value;
+//				if (value == m_isAiming)
+//					return;
+//				if (value) {
+//					m_timeWhenStartedAiming = Time.time;
+//					m_frameWhenStartedAiming = Time.frameCount;
+//				}
+//				m_isAiming = value;
 			}
 		}
 		private	float	m_timeWhenStartedAiming = 0f;

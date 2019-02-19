@@ -19,6 +19,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// - if we should switch to any of aim states
 			// - if we should enter falling state
 
+			if (m_ped.WeaponHolder.IsAimOn)
+			{
+				BaseAimState.SwitchToAimMovementStateBasedOnInput (m_ped);
+			}
+
 		}
 
 		public static void SwitchToMovementStateBasedOnInput (Ped ped)
