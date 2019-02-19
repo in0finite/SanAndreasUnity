@@ -138,38 +138,11 @@ namespace SanAndreasUnity.Behaviours {
 				return;
 
 
-			// switch weapons
-			// TODO: this should be done from controller script
-			if (GameManager.CanPlayerReadInput()) {
-
-				if (Input.GetKeyDown (KeyCode.Q))
-					this.SwitchWeapon (false);
-				else if (Input.GetKeyDown (KeyCode.E))
-					this.SwitchWeapon (true);
-				
-			}
-
 			//this.UpdateWeaponTransform ();
 
 			if (CurrentWeapon != null) {
 				CurrentWeapon.EnableOrDisableGunFlash ();
 				CurrentWeapon.UpdateGunFlashRotation ();
-			}
-
-			// update aiming state
-
-			if (this.IsAiming) {
-				// check if we should exit aiming state
-				if (!this.IsHoldingWeapon || m_ped.IsInVehicle || !this.IsAimOn) {
-					if (!this.IsFiring) {
-						this.IsAiming = false;
-					}
-				}
-			} else {
-				// check if we should enter aiming state
-				if (this.IsHoldingWeapon && this.IsAimOn && !m_ped.IsInVehicle) {
-					this.IsAiming = true;
-				}
 			}
 
 			// update firing state
@@ -270,47 +243,9 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
-		private void RotateSpine ()
-		{
-			if (!this.IsAiming)
-				return;
-
-			if (this.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
-				return;
-			
-			PlayerModel.Spine.LookAt(Camera.transform.position + Camera.transform.forward * 500);
-
-			Vector3 eulers = this.SpineOffset;
-			if (this.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
-				eulers.y = 0;
-			PlayerModel.Spine.Rotate (eulers);
-		//	PlayerModel.ChangeSpineRotation (this.CurrentWeaponTransform.forward, Camera.transform.position + Camera.transform.forward * Camera.farClipPlane - this.CurrentWeaponTransform.position, SpineRotationSpeed, ref tempSpineLocalEulerAngles, ref targetRot, ref spineRotationLastFrame);
-
-		}
-
 		public void RotatePlayerInDirectionOfAiming ()
 		{
-
-			if (!this.rotatePlayerInDirectionOfAiming)
-				return;
-
-			if (!this.IsAiming)
-				return;
-
-			if (this.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
-				return;
-
-//			Vector3 lookAtPos = Camera.transform.position + Camera.transform.forward * 500;
-//			lookAtPos.y = m_player.transform.position.y;
-//
-//			m_player.transform.LookAt (lookAtPos, Vector3.up);
-
-			Vector3 forward = Camera.transform.forward;
-			forward.y = 0;
-			forward.Normalize ();
-		//	m_player.transform.forward = forward;
-			m_ped.Heading = forward;
-
+			Peds.States.BaseAimState.RotatePlayerInDirectionOfAiming (m_ped);
 		}
 
 

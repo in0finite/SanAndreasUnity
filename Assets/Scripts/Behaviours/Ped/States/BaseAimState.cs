@@ -1,5 +1,6 @@
 using UnityEngine;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Importing.Weapons;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
@@ -84,6 +85,52 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			{
 				ped.SwitchState<StandAimState> ();
 			}
+
+		}
+
+
+		public static void RotateSpineToMatchAimDirection (Ped ped)
+		{
+			
+			if (ped.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
+				return;
+
+			// TODO: spine's forward vector should be the same as aim direction
+			// this will not work for peds without camera
+			ped.PlayerModel.Spine.LookAt(ped.Camera.transform.position + ped.Camera.transform.forward * 500);
+
+			// now apply offset to spine rotation
+			// this has to be done because spine is not rotated properly - is it intentionally done, or is it error in model importing ?
+
+			Vector3 eulers = ped.WeaponHolder.SpineOffset;
+			if (ped.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
+				eulers.y = 0;
+			ped.PlayerModel.Spine.Rotate (eulers);
+		//	PlayerModel.ChangeSpineRotation (this.CurrentWeaponTransform.forward, Camera.transform.position + Camera.transform.forward * Camera.farClipPlane - this.CurrentWeaponTransform.position, SpineRotationSpeed, ref tempSpineLocalEulerAngles, ref targetRot, ref spineRotationLastFrame);
+
+		}
+
+		public static void RotatePlayerInDirectionOfAiming(Ped ped)
+		{
+			if (!ped.WeaponHolder.rotatePlayerInDirectionOfAiming)
+				return;
+
+			if (ped.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
+				return;
+
+//			Vector3 lookAtPos = Camera.transform.position + Camera.transform.forward * 500;
+//			lookAtPos.y = m_player.transform.position.y;
+//
+//			m_player.transform.LookAt (lookAtPos, Vector3.up);
+
+			// TODO: this will not work if ped doesn't have camera
+
+			Vector3 forward = ped.Camera.transform.forward;
+			forward.y = 0;
+			forward.Normalize ();
+		//	m_player.transform.forward = forward;
+			ped.Heading = forward;
+
 
 		}
 

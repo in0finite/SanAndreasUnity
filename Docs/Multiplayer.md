@@ -6,6 +6,8 @@
 
 - all scripts should work when Camera.main is null
 
+- killing local ped
+
 
 
 # Potential problems

@@ -28,7 +28,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (!this.IsActiveState)
 				return;
 
-			if (m_ped.WeaponHolder.IsAimOn)
+			if (m_ped.IsAimOn && m_ped.IsHoldingWeapon)
 			{
 				BaseAimState.SwitchToAimMovementStateBasedOnInput (m_ped);
 			}

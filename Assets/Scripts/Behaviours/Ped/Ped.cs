@@ -109,6 +109,7 @@ namespace SanAndreasUnity.Behaviours
 		public Vector3 AimDirection { get { return m_weaponHolder.AimDirection; } }
 		public bool IsAimOn { get { return m_weaponHolder.IsAimOn; } set { m_weaponHolder.IsAimOn = value; } }
 		public bool IsFireOn { get { return m_weaponHolder.IsFireOn; } set { m_weaponHolder.IsFireOn = value; } }
+		public bool IsHoldingWeapon { get { return m_weaponHolder.IsHoldingWeapon; } }
 
         private static bool makeGPUAdjustments;
 

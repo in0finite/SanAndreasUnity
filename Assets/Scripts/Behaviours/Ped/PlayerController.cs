@@ -160,6 +160,14 @@ namespace SanAndreasUnity.Behaviours
 			if (!GameManager.CanPlayerReadInput()) return;
 
 
+			// switch weapons
+
+			if (Input.GetKeyDown (KeyCode.Q))
+				m_ped.WeaponHolder.SwitchWeapon (false);
+			else if (Input.GetKeyDown (KeyCode.E))
+				m_ped.WeaponHolder.SwitchWeapon (true);
+			
+
             if (Input.GetButtonDown("Use"))
             {
 				m_ped.OnSubmitPressed ();

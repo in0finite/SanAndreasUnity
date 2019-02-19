@@ -51,7 +51,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void LateUpdateState()
 		{
-			
+
+			if (m_ped.shouldPlayAnims)
+				this.UpdateAnims ();
+
+			this.RotateSpine ();
+
 		}
 
 		public virtual void FixedUpdateState()
@@ -86,6 +91,16 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected virtual void UpdateMovement()
 		{
 			m_ped.UpdateMovement ();
+		}
+
+		protected virtual void UpdateAnims()
+		{
+			
+		}
+
+		protected virtual void RotateSpine()
+		{
+
 		}
 
 
