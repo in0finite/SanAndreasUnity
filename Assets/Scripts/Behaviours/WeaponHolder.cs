@@ -28,7 +28,7 @@ namespace SanAndreasUnity.Behaviours {
 		public	bool	IsAimOn { get; set; }
 		private	bool	m_isAiming = false;
 		public	bool	IsAiming {
-			get { return m_ped.CurrentState != null && m_ped.CurrentState.RepresentsState<Peds.States.BaseAimState>(); }
+			get { return m_ped.CurrentState != null && m_ped.CurrentState is Peds.States.IAimState; }
 			private set {
 //				if (value == m_isAiming)
 //					return;

@@ -8,7 +8,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	/// <summary>
 	/// Base class for all movement-aim states.
 	/// </summary>
-	public class BaseAimState : DefaultState
+	public class BaseAimState : DefaultState, IAimState
 	{
 
 
