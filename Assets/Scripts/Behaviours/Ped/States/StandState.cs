@@ -18,10 +18,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			base.UpdateState();
 
-			// check if we should enter walk, run, or sprint state
-
-			BaseMovementState.SwitchToMovementStateBasedOnInput (m_ped);
-
+			if (!this.IsActiveState)
+				return;
+			
 		}
 
 	}

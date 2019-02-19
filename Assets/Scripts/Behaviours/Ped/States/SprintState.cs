@@ -18,9 +18,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			base.UpdateState();
 
-			// TODO: check if we should switch to stand state (if sprint key is no longer pressed)
-			if (!m_ped.IsSprintOn)
-				m_ped.SwitchState<StandState> ();
+			if (!this.IsActiveState)
+				return;
 			
 		}
 

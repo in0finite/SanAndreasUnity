@@ -16,6 +16,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			base.UpdateState ();
 
+			if (!this.IsActiveState)
+				return;
+
 			// TODO: check:
 			// - if we should switch to any of non-aim movement states
 			// - if we should enter any of firing states
@@ -38,6 +41,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// check if we should exit aiming state
 			if (!m_ped.WeaponHolder.IsHoldingWeapon || !m_ped.WeaponHolder.IsAimOn)
 			{
+				Debug.LogFormat ("Exiting aim state, IsHoldingWeapon {0}, IsAimOn {1}", m_ped.WeaponHolder.IsHoldingWeapon, m_ped.WeaponHolder.IsAimOn);
 				BaseMovementState.SwitchToMovementStateBasedOnInput (m_ped);
 				return true;
 			}

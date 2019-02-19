@@ -205,11 +205,14 @@ namespace SanAndreasUnity.Behaviours
 			var state = this.GetStateOrLogError<T> ();
 			if (null == state)
 				return;
-
-		//	Debug.LogFormat ("Switching to state: {0}", type);
+			
+			IState oldState = this.CurrentState;
 
 			m_stateMachine.SwitchState (state);
 
+			if(oldState != state)
+				Debug.LogFormat ("Switched to state: {0}", state.GetType().Name);
+			
 		}
 
 

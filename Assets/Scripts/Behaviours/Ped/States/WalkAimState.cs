@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override void OnBecameActive ()
 		{
 			base.OnBecameActive ();
-			m_ped.PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.WALK_armed);
+			m_ped.PlayerModel.PlayAnim (AnimGroup.Gun, AnimIndex.WALK_armed);
 		}
 
 	}
