@@ -22,10 +22,13 @@ namespace SanAndreasUnity.Behaviours {
 
 		public	bool	autoAddWeapon = false;
 
+
+		#region Aiming
+
 		public	bool	IsAimOn { get; set; }
 		private	bool	m_isAiming = false;
 		public	bool	IsAiming {
-			get { return m_ped.CurrentState != null && m_ped.CurrentState is Peds.States.BaseAimState; }
+			get { return m_ped.CurrentState != null && m_ped.CurrentState.RepresentsState<Peds.States.BaseAimState>(); }
 			private set {
 //				if (value == m_isAiming)
 //					return;
@@ -50,6 +53,20 @@ namespace SanAndreasUnity.Behaviours {
 			}
 		}
 
+		//[SerializeField]	[Range(0,1)]	private	float	m_aimWithRifleMinAnimTime = 0.0f;
+		//public	float	AimWithRifleMinAnimTime { get { return m_aimWithRifleMinAnimTime; } set { m_aimWithRifleMinAnimTime = value; } }
+
+		[SerializeField]	[Range(0,4)]	private	float	m_aimWithRifleMaxAnimTime = 0.7f;
+		public	float	AimWithRifleMaxAnimTime { get { return m_aimWithRifleMaxAnimTime; } set { m_aimWithRifleMaxAnimTime = value; } }
+
+		//	[SerializeField]	[Range(0,1)]	private	float	m_aimWithArmMaxAnimTime = 1.0f;
+
+		public	Vector3	cameraAimOffset = new Vector3 (0.7f, 0.2f, -1);
+
+		#endregion
+
+		#region Firing
+
 		private	bool	m_isFiring = false;
 		public	bool	IsFiring {
 			get { return m_isFiring; }
@@ -64,6 +81,9 @@ namespace SanAndreasUnity.Behaviours {
 		public	bool	IsFireOn { get; set; }
 		public	float	TimeWhenStartedFiring { get; private set; }
 		public	float	TimeSinceStartedFiring { get { return Time.time - this.TimeWhenStartedFiring; } }
+
+		#endregion
+
 
 		public	Weapon	CurrentWeapon { get ; private set ; }
 		private	Transform	CurrentWeaponTransform { get { return CurrentWeapon != null ? CurrentWeapon.transform : null; } }
@@ -83,16 +103,6 @@ namespace SanAndreasUnity.Behaviours {
 
 		public	WeaponAttachType	weaponAttachType = WeaponAttachType.RightHand;
 
-
-		//[SerializeField]	[Range(0,1)]	private	float	m_aimWithRifleMinAnimTime = 0.0f;
-		//public	float	AimWithRifleMinAnimTime { get { return m_aimWithRifleMinAnimTime; } set { m_aimWithRifleMinAnimTime = value; } }
-
-		[SerializeField]	[Range(0,4)]	private	float	m_aimWithRifleMaxAnimTime = 0.7f;
-		public	float	AimWithRifleMaxAnimTime { get { return m_aimWithRifleMaxAnimTime; } set { m_aimWithRifleMaxAnimTime = value; } }
-		
-	//	[SerializeField]	[Range(0,1)]	private	float	m_aimWithArmMaxAnimTime = 1.0f;
-
-		public	Vector3	cameraAimOffset = new Vector3 (0.7f, 0.2f, -1);
 
 		public	bool	rotatePlayerInDirectionOfAiming = true;
 

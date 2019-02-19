@@ -8,6 +8,8 @@ namespace SanAndreasUnity.Utilities
 		IState m_currentState;
 		public IState CurrentState { get { return m_currentState; } }
 		bool m_isSwitchingState = false;
+		public float TimeWhenSwitchedState { get; private set; }
+		public long FrameWhenSwitchedState { get; private set; }
 
 
 		public void SwitchState(IState newState) {
@@ -29,6 +31,9 @@ namespace SanAndreasUnity.Utilities
 				oldState.OnBecameInactive();
 
 			m_isSwitchingState = false;
+
+			this.TimeWhenSwitchedState = Time.time;
+			this.FrameWhenSwitchedState = Time.frameCount;
 
 			if(m_currentState != null)
 				m_currentState.OnBecameActive();
