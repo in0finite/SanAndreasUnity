@@ -34,7 +34,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual bool RepresentsState (System.Type type)
 		{
-			return type.Equals (this.GetType ()) || type.IsSubclassOf (this.GetType ());
+			var myType = this.GetType ();
+			return myType.Equals (type) || myType.IsSubclassOf (type);
 		}
 
 		public bool RepresentsState<T> () where T : IState
