@@ -21,6 +21,28 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+		public static void SwitchToMovementStateBasedOnInput (Ped ped)
+		{
+			
+			if (ped.IsWalkOn)
+			{
+				ped.SwitchState<WalkState> ();
+			}
+			else if (ped.IsRunOn)
+			{
+				ped.SwitchState<RunState> ();
+			}
+			else if (ped.IsSprintOn)
+			{
+				ped.SwitchState<SprintState> ();
+			}
+			else
+			{
+				ped.SwitchState<StandState> ();
+			}
+
+		}
+
 		public override void OnSubmitPressed() {
 
 			// try to enter vehicle

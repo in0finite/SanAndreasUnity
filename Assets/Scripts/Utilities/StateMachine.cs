@@ -15,6 +15,9 @@ namespace SanAndreasUnity.Utilities
 			if(m_isSwitchingState)
 				throw new System.Exception("Already switching state");
 
+			if (newState == m_currentState)
+				return;
+
 			m_isSwitchingState = true;
 
 			IState oldState = m_currentState;

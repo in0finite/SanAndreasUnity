@@ -129,6 +129,7 @@ namespace SanAndreasUnity.Behaviours {
 
 
 			// switch weapons
+			// TODO: this should be done from controller script
 			if (GameManager.CanPlayerReadInput()) {
 
 				if (Input.GetKeyDown (KeyCode.Q))
