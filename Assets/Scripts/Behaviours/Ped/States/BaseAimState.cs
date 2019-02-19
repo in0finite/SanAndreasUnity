@@ -37,6 +37,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+		public override void LateUpdateState ()
+		{
+			base.LateUpdateState ();
+
+			if (!this.IsActiveState)
+				return;
+
+			m_ped.WeaponHolder.UpdateWeaponTransform ();
+
+		}
+
+
 		protected virtual bool SwitchToNonAimMovementState ()
 		{
 			// check if we should exit aiming state
@@ -89,6 +101,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
+		protected override void RotateSpine()
+		{
+			RotateSpineToMatchAimDirection (m_ped);
+		}
+
 		public static void RotateSpineToMatchAimDirection (Ped ped)
 		{
 			
@@ -110,7 +127,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
-		public static void RotatePlayerInDirectionOfAiming(Ped ped)
+		public static void RotatePedInDirectionOfAiming(Ped ped)
 		{
 			if (!ped.WeaponHolder.rotatePlayerInDirectionOfAiming)
 				return;

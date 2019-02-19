@@ -206,7 +206,12 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
-		private void UpdateWeaponTransform ()
+		private void RotateSpine ()
+		{
+
+		}
+
+		public void UpdateWeaponTransform ()
 		{
 
 			// update transform of weapon
@@ -245,7 +250,10 @@ namespace SanAndreasUnity.Behaviours {
 
 		public void RotatePlayerInDirectionOfAiming ()
 		{
-			Peds.States.BaseAimState.RotatePlayerInDirectionOfAiming (m_ped);
+			if (!this.IsAiming)
+				return;
+			
+			Peds.States.BaseAimState.RotatePedInDirectionOfAiming (m_ped);
 		}
 
 

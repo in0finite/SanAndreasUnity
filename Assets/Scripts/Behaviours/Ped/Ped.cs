@@ -388,6 +388,16 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
+		void LateUpdate ()
+		{
+
+			if (this.CurrentState != null)
+			{
+				this.CurrentState.LateUpdateState ();
+			}
+
+		}
+
 		public void ConstrainPosition() {
 
 			// Constrain to stay inside map

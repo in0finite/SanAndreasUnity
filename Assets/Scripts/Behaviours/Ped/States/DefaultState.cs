@@ -37,6 +37,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			return type.Equals (this.GetType ()) || type.IsSubclassOf (this.GetType ());
 		}
 
+		public bool RepresentsState<T> () where T : IState
+		{
+			return this.RepresentsState (typeof(T));
+		}
+
 		public virtual void UpdateState() {
 
 			// read input
@@ -54,6 +59,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			if (m_ped.shouldPlayAnims)
 				this.UpdateAnims ();
+
+			if (!this.IsActiveState)
+				return;
 
 			this.RotateSpine ();
 
