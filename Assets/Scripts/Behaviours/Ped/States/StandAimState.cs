@@ -7,11 +7,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	
 	public class StandAimState : BaseAimState
 	{
+		public override AnimId aimWithArm_LowerAnim { get { return m_ped.CurrentWeapon.IdleAnim; } }
+
 
 		public override void OnBecameActive ()
 		{
 			base.OnBecameActive ();
-			m_ped.PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND);
+		//	m_ped.PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND);
 		}
 
 	}

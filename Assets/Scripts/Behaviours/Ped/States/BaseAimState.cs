@@ -1,6 +1,7 @@
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Importing.Weapons;
+using SanAndreasUnity.Importing.Animation;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
@@ -10,6 +11,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	/// </summary>
 	public class BaseAimState : DefaultState, IAimState
 	{
+
+		public virtual AnimId aimWithArm_LowerAnim { get { return new AnimId(AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND); } }
+
 
 
 		public override void UpdateState()
@@ -152,16 +156,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
+		public virtual void StartFiring()
+		{
+			BaseFireMovementState.SwitchToFireMovementStateBasedOnInput(m_ped);
+		}
+
+
 		protected override void UpdateAnims ()
 		{
-			base.UpdateAnims ();
-
-			if (!this.IsActiveState)
-				return;
-
 			if (m_ped.CurrentWeapon != null)
 			{
-				m_ped.CurrentWeapon.UpdateAnimWhileAiming ();
+				m_ped.CurrentWeapon.UpdateAnimWhileAiming (this.aimWithArm_LowerAnim);
 			}
 		}
 

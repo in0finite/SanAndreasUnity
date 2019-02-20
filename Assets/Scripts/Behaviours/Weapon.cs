@@ -636,7 +636,7 @@ namespace SanAndreasUnity.Behaviours
 						ped.AnimComponent.Sample ();
 
 						// no longer firing
-						ped.WeaponHolder.IsFiring = false;
+						ped.StopFiring();
 					}
 				} else {
 					// check if we should start firing
@@ -728,8 +728,11 @@ namespace SanAndreasUnity.Behaviours
 			if (this.AmmoInClip < 1)
 				return false;
 
-			ped.IsFiring = true;
+			ped.StartFiring ();
 
+			if (!ped.IsFiring)	// failed to start firing
+				return false;
+			
 			// reduce ammo
 			this.AmmoInClip --;
 

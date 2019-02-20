@@ -14,6 +14,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public override void UpdateState()
 		{
+			
+			base.UpdateState ();
+
+			if (!this.IsActiveState)
+				return;
 
 			if (!m_ped.IsFireOn)
 			{
@@ -22,12 +27,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				// when anim gets finished, we'll stop firing
 
 			}
-
-			base.UpdateState ();
-
-			if (!this.IsActiveState)
-				return;
-
 
 		}
 
@@ -73,6 +72,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				ped.SwitchState<StandFireState> ();
 			}
 
+		}
+
+
+		public override void StartFiring ()
+		{
+			// ignore
+
+		}
+
+		public virtual void StopFiring ()
+		{
+			BaseAimState.SwitchToAimMovementStateBasedOnInput (m_ped);
 		}
 
 

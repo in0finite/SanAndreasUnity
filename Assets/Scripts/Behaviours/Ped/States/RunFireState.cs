@@ -6,6 +6,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class RunFireState : BaseFireMovementState
 	{
+		public override AnimId aimWithArm_LowerAnim { get { return m_ped.CurrentWeapon.RunAnim; } }
+
 
 		public override void OnBecameActive ()
 		{

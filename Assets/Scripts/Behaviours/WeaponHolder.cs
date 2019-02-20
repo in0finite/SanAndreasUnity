@@ -67,20 +67,12 @@ namespace SanAndreasUnity.Behaviours {
 
 		#region Firing
 
-		private	bool	m_isFiring = false;
 		public	bool	IsFiring {
-			get { return m_isFiring; }
-			set {
-				if (value == m_isFiring)
-					return;
-				if (value)
-					this.TimeWhenStartedFiring = Time.time;
-				m_isFiring = value;
-			}
+			get { return m_ped.CurrentState != null && m_ped.CurrentState is Peds.States.IFireState; }
 		}
 		public	bool	IsFireOn { get; set; }
-		public	float	TimeWhenStartedFiring { get; private set; }
-		public	float	TimeSinceStartedFiring { get { return Time.time - this.TimeWhenStartedFiring; } }
+	//	public	float	TimeWhenStartedFiring { get; private set; }
+	//	public	float	TimeSinceStartedFiring { get { return Time.time - this.TimeWhenStartedFiring; } }
 
 		#endregion
 
@@ -145,11 +137,6 @@ namespace SanAndreasUnity.Behaviours {
 				CurrentWeapon.UpdateGunFlashRotation ();
 			}
 
-			// update firing state
-
-			if (!this.IsAiming)
-				this.IsFiring = false;
-
 			// reload weapon ammo clip
 			if (CurrentWeapon != null) {
 				if (CurrentWeapon.AmmoClipSize > 0 && CurrentWeapon.AmmoInClip <= 0) {
@@ -194,7 +181,7 @@ namespace SanAndreasUnity.Behaviours {
 			if (this.IsAiming) {
 				// player is aiming
 				// play appropriate anim
-				CurrentWeapon.UpdateAnimWhileAiming ();
+				CurrentWeapon.UpdateAnimWhileAiming (this.CurrentWeapon.GetAnimBasedOnMovement(false));
 			}
 
 			if (!m_ped.IsInVehicle && !this.IsAiming && this.IsHoldingWeapon) {
@@ -310,7 +297,7 @@ namespace SanAndreasUnity.Behaviours {
 
 			m_frameWhenSwitchedWeapon = Time.frameCount;
 
-			this.IsFiring = false;
+			m_ped.StopFiring ();
 
 			this.UpdateWeaponTransform ();
 

@@ -105,7 +105,7 @@ namespace SanAndreasUnity.Behaviours
         
 		public bool IsAiming { get { return m_weaponHolder.IsAiming; } }
 		public Weapon CurrentWeapon { get { return m_weaponHolder.CurrentWeapon; } }
-		public bool IsFiring { get { return m_weaponHolder.IsFiring; } set { m_weaponHolder.IsFiring = value; } }
+		public bool IsFiring { get { return m_weaponHolder.IsFiring; } }
 		public Vector3 AimDirection { get { return m_weaponHolder.AimDirection; } }
 		public bool IsAimOn { get { return m_weaponHolder.IsAimOn; } set { m_weaponHolder.IsAimOn = value; } }
 		public bool IsFireOn { get { return m_weaponHolder.IsFireOn; } set { m_weaponHolder.IsFireOn = value; } }
@@ -578,6 +578,23 @@ namespace SanAndreasUnity.Behaviours
 //                Velocity = characterController.velocity;
 //            }
 
+		}
+
+
+		public void StartFiring ()
+		{
+			if (!this.IsAiming)
+				return;
+
+			((Peds.States.IAimState)this.CurrentState).StartFiring();
+		}
+
+		public void StopFiring ()
+		{
+			if (!this.IsFiring)
+				return;
+
+			((Peds.States.IFireState)this.CurrentState).StopFiring();
 		}
 
 
