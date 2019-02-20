@@ -29,6 +29,9 @@ GameObject:
   - component: {fileID: 114485782082765270}
   - component: {fileID: 114857049298782194}
   - component: {fileID: 114564354208745784}
+  - component: {fileID: 114607436013890848}
+  - component: {fileID: 114051921114482032}
+  - component: {fileID: 114805415584932730}
   m_Layer: 11
   m_Name: States
   m_TagString: Untagged
@@ -139,6 +142,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01e72808e9f8b455f94e3549c8f134c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114051921114482032
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad7b39219621a45dea5eddf1c67486c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114099438993920694
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -241,6 +255,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56bc009b7edfa4901ae6929c4a201732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114607436013890848
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9781f849e2154fafb2fea73ccdb831c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114656303205122358
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -286,6 +311,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 055ab10393eb2465f90002aaceff36a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114805415584932730
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a05f5f56342e540b7a0328605b41e046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114812630007084968
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -320,10 +356,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoAddWeapon: 1
-  SpineOffset: {x: 0, y: 45, z: 90}
-  weaponAttachType: 1
   m_aimWithRifleMaxAnimTime: 0.7
   cameraAimOffset: {x: 0.7, y: 0.2, z: -1}
+  SpineOffset: {x: 0, y: 45, z: 90}
+  weaponAttachType: 1
   rotatePlayerInDirectionOfAiming: 1
 --- !u!114 &114976811281896722
 MonoBehaviour:
