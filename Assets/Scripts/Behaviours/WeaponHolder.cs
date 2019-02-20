@@ -26,10 +26,10 @@ namespace SanAndreasUnity.Behaviours {
 		#region Aiming
 
 		public	bool	IsAimOn { get; set; }
-		private	bool	m_isAiming = false;
+	//	private	bool	m_isAiming = false;
 		public	bool	IsAiming {
 			get { return m_ped.CurrentState != null && m_ped.CurrentState is Peds.States.IAimState; }
-			private set {
+//			private set {
 //				if (value == m_isAiming)
 //					return;
 //				if (value) {
@@ -37,12 +37,12 @@ namespace SanAndreasUnity.Behaviours {
 //					m_frameWhenStartedAiming = Time.frameCount;
 //				}
 //				m_isAiming = value;
-			}
+//			}
 		}
-		private	float	m_timeWhenStartedAiming = 0f;
-		public	float	TimeSinceStartedAiming { get { return Time.time - m_timeWhenStartedAiming; } }
-		private	int		m_frameWhenStartedAiming = 0;
-		public	int		NumFramesSinceStartedAiming { get { return Time.frameCount - m_frameWhenStartedAiming; } }
+	//	private	float	m_timeWhenStartedAiming = 0f;
+	//	public	float	TimeSinceStartedAiming { get { return Time.time - m_timeWhenStartedAiming; } }
+	//	private	int		m_frameWhenStartedAiming = 0;
+	//	public	int		NumFramesSinceStartedAiming { get { return Time.frameCount - m_frameWhenStartedAiming; } }
 
 		public	Vector3	AimDirection {
 			get {
