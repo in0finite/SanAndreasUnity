@@ -124,7 +124,7 @@ namespace SanAndreasUnity.Behaviours {
 			}
 		}
 
-		void Update_jrhgrh () {
+		void Update () {
 
 			if (!Loader.HasLoaded)
 				return;
