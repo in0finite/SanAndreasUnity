@@ -3,7 +3,7 @@ using UnityEngine;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public interface IAimState : IPedState
+	public interface IFireState : IPedState
 	{
 		
 	}

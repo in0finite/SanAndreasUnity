@@ -4,7 +4,7 @@ using SanAndreasUnity.Behaviours.Vehicles;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public interface ICarState : Utilities.IState
+	public interface ICarState : IPedState
 	{
 
 		Vehicle CurrentVehicle { get; }

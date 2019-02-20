@@ -383,7 +383,7 @@ namespace SanAndreasUnity.Behaviours
 			return oppositeSideAngle > WeaponsSettings.AIMWITHARM_maxAimAngle;
 		}
 
-		public virtual void UpdateAnimWhileAiming ()
+		public virtual void UpdateAnimWhileAiming (AnimId aimWithArm_LowerAnim)
 		{
 			Ped player = m_ped;
 			var CurrentWeapon = this;
@@ -398,7 +398,7 @@ namespace SanAndreasUnity.Behaviours
 				// aim with arm
 				// eg: pistol, tec9, sawnoff
 
-				model.Play2Anims (new AnimId (AnimGroup.Colt45, AnimIndex.colt45_fire), this.GetAnimBasedOnMovement (false));
+				model.Play2Anims (new AnimId (AnimGroup.Colt45, AnimIndex.colt45_fire), aimWithArm_LowerAnim);
 
 				AimAnimState = model.LastAnimState;
 				model.LastAnimState.wrapMode = WrapMode.ClampForever;

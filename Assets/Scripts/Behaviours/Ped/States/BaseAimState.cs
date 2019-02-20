@@ -152,6 +152,20 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
+		protected override void UpdateAnims ()
+		{
+			base.UpdateAnims ();
+
+			if (!this.IsActiveState)
+				return;
+
+			if (m_ped.CurrentWeapon != null)
+			{
+				m_ped.CurrentWeapon.UpdateAnimWhileAiming ();
+			}
+		}
+
+
 		public override void OnSubmitPressed()
 		{
 
