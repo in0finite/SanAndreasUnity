@@ -112,6 +112,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public static void RotateSpineToMatchAimDirection (Ped ped)
 		{
+			if (null == ped.CurrentWeapon)
+				return;
 			
 			if (ped.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
 				return;
