@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace SanAndreasUnity.Behaviours
 {
+	[DefaultExecutionOrder(-100)]
     [RequireComponent(typeof(CharacterController))]
 #if CLIENT
 	public partial class Ped : Networking.Networkable

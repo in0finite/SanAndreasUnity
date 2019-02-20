@@ -635,8 +635,11 @@ namespace SanAndreasUnity.Behaviours
 						state.time = this.AimAnimMaxTime;
 						ped.AnimComponent.Sample ();
 
-						// no longer firing
-						ped.StopFiring();
+					//	if (!ped.IsFireOn || !ped.IsAimOn)
+						{
+							// no longer firing
+							ped.StopFiring ();
+						}
 					}
 				} else {
 					// check if we should start firing
