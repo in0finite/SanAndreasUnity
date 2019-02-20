@@ -61,8 +61,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (m_ped.shouldPlayAnims)
 				this.UpdateAnims ();
 
-			if (!this.IsActiveState)
-				return;
+		//	if (!this.IsActiveState)
+		//		return;
 
 			this.RotateSpine ();
 
