@@ -52,7 +52,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			}
 			else if (ped.IsSprintOn)
 			{
-				ped.SwitchState<SprintState> ();
+				if (ped.CurrentWeapon != null && !ped.CurrentWeapon.CanSprintWithIt)
+					ped.SwitchState<StandState> ();
+				else
+					ped.SwitchState<SprintState> ();
 			}
 			else
 			{
