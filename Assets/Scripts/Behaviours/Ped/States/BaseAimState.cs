@@ -105,9 +105,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
-		protected override void RotateSpine()
+		protected virtual void RotateSpine()
 		{
-			RotateSpineToMatchAimDirection (m_ped);
+			BaseAimState.RotateSpineToMatchAimDirection (m_ped);
 		}
 
 		public static void RotateSpineToMatchAimDirection (Ped ped)
@@ -169,6 +169,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (m_ped.CurrentWeapon != null)
 			{
 				m_ped.CurrentWeapon.UpdateAnimWhileAiming (this.aimWithArm_LowerAnim);
+
+				// spine should be rotated no matter if state was changed or not during anim updating
+				// this should be done AFTER updating anims
+				this.RotateSpine ();
 			}
 		}
 

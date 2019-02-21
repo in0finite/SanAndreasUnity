@@ -60,12 +60,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			if (m_ped.shouldPlayAnims)
 				this.UpdateAnims ();
-
-		//	if (!this.IsActiveState)
-		//		return;
-
-			this.RotateSpine ();
-
+			
 		}
 
 		public virtual void FixedUpdateState()
@@ -105,11 +100,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected virtual void UpdateAnims()
 		{
 			
-		}
-
-		protected virtual void RotateSpine()
-		{
-
 		}
 
 
