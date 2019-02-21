@@ -8,7 +8,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	/// <summary>
 	/// Base class for all movement-fire states.
 	/// </summary>
-	public class BaseFireMovementState : BaseAimMovementState, IFireState
+	public abstract class BaseFireMovementState : BaseAimMovementState, IFireState
 	{
 
 
