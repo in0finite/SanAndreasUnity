@@ -1,27 +1,15 @@
 using UnityEngine;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Importing.Animation;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
 	public class SprintState : BaseMovementState
 	{
+		public override AnimId movementAnim { get { return new AnimId (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi); } }
+		public override AnimId movementWeaponAnim { get { return new AnimId (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi); } }
 
-		public override void OnBecameActive() {
-
-			// play anim
-			m_ped.PlayerModel.PlayAnim(Importing.Animation.AnimGroup.MyWalkCycle, Importing.Animation.AnimIndex.sprint_civi);
-
-		}
-
-		public override void UpdateState() {
-
-			base.UpdateState();
-
-			if (!this.IsActiveState)
-				return;
-			
-		}
 
 	}
 

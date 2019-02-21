@@ -1,5 +1,6 @@
 using UnityEngine;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Importing.Animation;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
@@ -7,9 +8,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	/// <summary>
 	/// Base class for all movement states.
 	/// </summary>
-	public class BaseMovementState : DefaultState
+	public abstract class BaseMovementState : DefaultState
 	{
-		
+		public abstract AnimId movementAnim { get; }
+		public abstract AnimId movementWeaponAnim { get; }
+
+
 
 		public override void UpdateState() {
 
@@ -55,6 +59,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				ped.SwitchState<StandState> ();
 			}
 
+		}
+
+		protected override void UpdateAnims ()
+		{
+			if (m_ped.CurrentWeapon != null)
+			{
+				m_ped.PlayerModel.PlayAnim (this.movementWeaponAnim);
+			}
+			else
+			{
+				m_ped.PlayerModel.PlayAnim (this.movementAnim);
+			}
 		}
 
 		public override void OnSubmitPressed() {
