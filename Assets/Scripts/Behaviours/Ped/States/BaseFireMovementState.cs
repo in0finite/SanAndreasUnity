@@ -31,6 +31,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
+		protected override bool SwitchToNonAimMovementState ()
+		{
+			// we should not switch to non-aim state, but instead, when fire anim finishes, we will switch back to
+			// aim state
+
+			return false;
+		}
+
 		protected override bool SwitchToFiringState ()
 		{
 			SwitchToFireMovementStateBasedOnInput (m_ped);
