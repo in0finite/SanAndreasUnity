@@ -8,7 +8,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	/// <summary>
 	/// Base class for all movement states.
 	/// </summary>
-	public abstract class BaseMovementState : DefaultState
+	public abstract class BaseMovementState : BaseScriptState
 	{
 		public abstract AnimId movementAnim { get; }
 		public abstract AnimId movementWeaponAnim { get; }

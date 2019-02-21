@@ -5,9 +5,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
 	/// <summary>
-	/// Base class for all MonoBehaviour states.
+	/// Base class for all states that are scripts.
 	/// </summary>
-	public class DefaultState : MonoBehaviour, IPedState
+	public class BaseScriptState : MonoBehaviour, IPedState
 	{
 
 		protected Ped m_ped;

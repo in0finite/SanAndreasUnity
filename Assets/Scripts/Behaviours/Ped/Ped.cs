@@ -59,8 +59,8 @@ namespace SanAndreasUnity.Behaviours
 
         #region Properties
 
-		public Peds.States.DefaultState[] States { get; private set; }
-		public Peds.States.DefaultState CurrentState { get { return (Peds.States.DefaultState) m_stateMachine.CurrentState; } }
+		public Peds.States.BaseScriptState[] States { get; private set; }
+		public Peds.States.BaseScriptState CurrentState { get { return (Peds.States.BaseScriptState) m_stateMachine.CurrentState; } }
 
         public Cell Cell { get { return Cell.Instance; } }
 
@@ -140,7 +140,7 @@ namespace SanAndreasUnity.Behaviours
             characterController = GetComponent<CharacterController>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
 
-			this.States = this.GetComponentsInChildren<Peds.States.DefaultState> ();
+			this.States = this.GetComponentsInChildren<Peds.States.BaseScriptState> ();
 
 			this.AwakeForDamage ();
 
@@ -190,13 +190,13 @@ namespace SanAndreasUnity.Behaviours
         }
 
 
-		public T GetState<T>() where T : Peds.States.DefaultState
+		public T GetState<T>() where T : Peds.States.BaseScriptState
 		{
 			var type = typeof(T);
 			return (T) this.States.FirstOrDefault (s => s.GetType ().Equals (type) || s.GetType ().IsSubclassOf (type));
 		}
 
-		public T GetStateOrLogError<T>() where T : Peds.States.DefaultState
+		public T GetStateOrLogError<T>() where T : Peds.States.BaseScriptState
 		{
 			var state = this.GetState<T> ();
 			if(null == state)
@@ -204,7 +204,7 @@ namespace SanAndreasUnity.Behaviours
 			return state;
 		}
 
-		public void SwitchState<T>() where T : Peds.States.DefaultState {
+		public void SwitchState<T>() where T : Peds.States.BaseScriptState {
 			
 			var state = this.GetStateOrLogError<T> ();
 			if (null == state)

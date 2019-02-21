@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	/// <summary>
 	/// Base class for all movement-aim states.
 	/// </summary>
-	public class BaseAimState : DefaultState, IAimState
+	public class BaseAimState : BaseScriptState, IAimState
 	{
 
 		public virtual AnimId aimWithArm_LowerAnim { get { return new AnimId(AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND); } }
