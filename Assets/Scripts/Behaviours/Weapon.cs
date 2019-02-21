@@ -416,6 +416,7 @@ namespace SanAndreasUnity.Behaviours
 					model.AnimComponent.Sample ();
 				}
 
+				// TODO: does this have to be here ? can it be placed at the end ?
 				this.UpdateFireAnim (model.LastAnimState);
 
 
@@ -601,14 +602,7 @@ namespace SanAndreasUnity.Behaviours
 				} else {
 					// just aim
 
-					//state = PlayerModel.PlayAnim (this.AimAnim, true, false);
-					PlayerModel.Play2Anims( this.AimAnim, this.AimAnimLowerPart );
-
-					// some anims don't set root frame velocity, so we have to set it
-					PlayerModel.RootFrame.LocalVelocity = Vector3.zero;
-
-					state = PlayerModel.LastAnimState;
-					state.wrapMode = WrapMode.ClampForever;
+					state = Peds.States.StandAimState.UpdateAnimsNonAWA (m_ped);
 				}
 
 				AimAnimState = state;
@@ -619,7 +613,7 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		protected virtual void UpdateFireAnim (AnimationState state)
+		public virtual void UpdateFireAnim (AnimationState state)
 		{
 			Ped ped = m_ped;
 

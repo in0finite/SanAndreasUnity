@@ -11,6 +11,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	/// </summary>
 	public abstract class BaseAimMovementState : BaseScriptState, IAimState
 	{
+		protected Weapon m_weapon { get { return m_ped.CurrentWeapon; } }
 
 		public abstract AnimId aimWithArm_LowerAnim { get; }
 
@@ -166,12 +167,53 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			if (m_ped.CurrentWeapon != null)
 			{
-				m_ped.CurrentWeapon.UpdateAnimWhileAiming (this.aimWithArm_LowerAnim);
+				AnimationState state;
+
+				if (m_ped.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
+					state = this.UpdateAnimsAWA ();
+				else
+					state = this.UpdateAnimsNonAWA ();
+
+//				if (m_ped.CurrentWeapon && state)
+//				{
+//					m_ped.CurrentWeapon.AimAnimState = state;
+//					this.UpdateAimAnim (state);
+//				}
 
 				// spine should be rotated no matter if state was changed or not during anim updating
 				// this should be done AFTER updating anims
 				this.RotateSpine ();
 			}
+		}
+
+		/// <summary>
+		/// Update anims for non AWA (AIMWITHARM) weapons.
+		/// </summary>
+		protected virtual AnimationState UpdateAnimsNonAWA()
+		{
+			m_weapon.UpdateAnimWhileAiming (this.aimWithArm_LowerAnim);
+			return m_weapon.AimAnimState;
+		}
+
+		/// <summary>
+		/// Update anims for AWA (AIMWITHARM) weapons.
+		/// </summary>
+		protected virtual AnimationState UpdateAnimsAWA()
+		{
+			m_weapon.UpdateAnimWhileAiming (this.aimWithArm_LowerAnim);
+			return m_weapon.AimAnimState;
+		}
+
+		protected virtual void UpdateAimAnim(AnimationState state)
+		{
+		//	BaseAimMovementState.UpdateAimAnim (m_ped, state);
+		}
+
+		public static void UpdateAimAnim(Ped ped, AnimationState state)
+		{
+
+		//	ped.CurrentWeapon.UpdateFireAnim (state);
+
 		}
 
 
