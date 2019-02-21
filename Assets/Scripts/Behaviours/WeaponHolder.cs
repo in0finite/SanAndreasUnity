@@ -241,7 +241,7 @@ namespace SanAndreasUnity.Behaviours {
 			if (!this.IsAiming)
 				return;
 			
-			Peds.States.BaseAimState.RotatePedInDirectionOfAiming (m_ped);
+			Peds.States.BaseAimMovementState.RotatePedInDirectionOfAiming (m_ped);
 		}
 
 

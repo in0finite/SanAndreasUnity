@@ -5,7 +5,7 @@ using SanAndreasUnity.Importing.Animation;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 	
-	public class StandAimState : BaseAimState
+	public class StandAimState : BaseAimMovementState
 	{
 		public override AnimId aimWithArm_LowerAnim { get { return m_ped.CurrentWeapon.IdleAnim; } }
 

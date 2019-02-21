@@ -8,7 +8,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	/// <summary>
 	/// Base class for all movement-fire states.
 	/// </summary>
-	public class BaseFireMovementState : BaseAimState, IFireState
+	public class BaseFireMovementState : BaseAimMovementState, IFireState
 	{
 
 
@@ -90,7 +90,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void StopFiring ()
 		{
-			BaseAimState.SwitchToAimMovementStateBasedOnInput (m_ped);
+			BaseAimMovementState.SwitchToAimMovementStateBasedOnInput (m_ped);
 		}
 
 

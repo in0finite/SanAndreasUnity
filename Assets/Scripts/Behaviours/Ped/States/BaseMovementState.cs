@@ -30,7 +30,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			if (m_ped.IsAimOn && m_ped.IsHoldingWeapon)
 			{
-				BaseAimState.SwitchToAimMovementStateBasedOnInput (m_ped);
+				BaseAimMovementState.SwitchToAimMovementStateBasedOnInput (m_ped);
 			}
 
 		}

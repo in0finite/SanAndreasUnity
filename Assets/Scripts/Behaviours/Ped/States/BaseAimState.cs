@@ -7,9 +7,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
 	/// <summary>
-	/// Base class for all movement-aim states.
+	/// Base class for all aim-movement states.
 	/// </summary>
-	public class BaseAimState : BaseScriptState, IAimState
+	public class BaseAimMovementState : BaseScriptState, IAimState
 	{
 
 		public virtual AnimId aimWithArm_LowerAnim { get { return new AnimId(AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND); } }
@@ -67,7 +67,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual bool SwitchToOtherAimMovementState ()
 		{
-			BaseAimState.SwitchToAimMovementStateBasedOnInput (m_ped);
+			BaseAimMovementState.SwitchToAimMovementStateBasedOnInput (m_ped);
 			return ! this.IsActiveState;
 		}
 
@@ -102,7 +102,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void RotateSpine()
 		{
-			BaseAimState.RotateSpineToMatchAimDirection (m_ped);
+			BaseAimMovementState.RotateSpineToMatchAimDirection (m_ped);
 		}
 
 		public static void RotateSpineToMatchAimDirection (Ped ped)
