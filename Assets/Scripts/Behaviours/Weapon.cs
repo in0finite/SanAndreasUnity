@@ -659,6 +659,7 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
+		// TODO: this function should be removed, and new one should be created: OnAnimsUpdated
 		public virtual void UpdateAnimWhileHolding ()
 		{
 			Ped ped = m_ped;

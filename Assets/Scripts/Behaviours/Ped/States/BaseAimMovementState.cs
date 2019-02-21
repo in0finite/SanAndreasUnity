@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	public abstract class BaseAimMovementState : BaseScriptState, IAimState
 	{
 
-		public virtual AnimId aimWithArm_LowerAnim { get { return new AnimId(AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND); } }
+		public abstract AnimId aimWithArm_LowerAnim { get; }
 
 
 
@@ -51,9 +51,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected virtual bool SwitchToNonAimMovementState ()
 		{
 			// check if we should exit aiming state
-			if (!m_ped.WeaponHolder.IsHoldingWeapon || !m_ped.WeaponHolder.IsAimOn)
+			if (!m_ped.IsHoldingWeapon || !m_ped.IsAimOn)
 			{
-				Debug.LogFormat ("Exiting aim state, IsHoldingWeapon {0}, IsAimOn {1}", m_ped.WeaponHolder.IsHoldingWeapon, m_ped.WeaponHolder.IsAimOn);
+			//	Debug.LogFormat ("Exiting aim state, IsHoldingWeapon {0}, IsAimOn {1}", m_ped.IsHoldingWeapon, m_ped.IsAimOn);
 				BaseMovementState.SwitchToMovementStateBasedOnInput (m_ped);
 				return true;
 			}

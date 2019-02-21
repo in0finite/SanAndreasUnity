@@ -175,23 +175,7 @@ namespace SanAndreasUnity.Behaviours {
 
 		private void UpdateAnims ()
 		{
-
-			if (!m_ped.shouldPlayAnims)
-				return;
-
-			if (this.IsAiming) {
-				// player is aiming
-				// play appropriate anim
-				CurrentWeapon.UpdateAnimWhileAiming (this.CurrentWeapon.GetAnimBasedOnMovement(false));
-			}
-
-			if (!m_ped.IsInVehicle && !this.IsAiming && this.IsHoldingWeapon) {
-				// player is not aiming, but is holding a weapon
-				// update current anim
-
-				CurrentWeapon.UpdateAnimWhileHolding ();
-			}
-
+			
 		}
 
 		private void RotateSpine ()
