@@ -24,11 +24,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (!this.IsActiveState)
 				return;
 
-			// TODO: check:
-			// - if we should switch to any of non-aim movement states
-			// - if we should enter any of firing states
-			// - if we should enter any of other aim movement states
-			// - if we should enter falling state
 
 			if (this.SwitchToNonAimMovementState ())
 				return;

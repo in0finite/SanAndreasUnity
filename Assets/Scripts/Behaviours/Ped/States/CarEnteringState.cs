@@ -93,6 +93,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				}
 			}
 
+			// TODO: check if this state is still active, and if vehicle is alive
+
+
 			// player now completely entered the vehicle
 
 			// call method from CarSittingState - he will switch state

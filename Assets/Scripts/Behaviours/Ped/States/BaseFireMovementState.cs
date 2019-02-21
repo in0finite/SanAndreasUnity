@@ -49,9 +49,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			if (!m_ped.IsFireOn)
 			{
-				// TODO: fire anim may still be running
+				// don't switch to aim states, because fire anim may still be running
 
-			//	BaseAimState.SwitchToAimMovementStateBasedOnInput (m_ped);
 			}
 			return ! this.IsActiveState;
 		}

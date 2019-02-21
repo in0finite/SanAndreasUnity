@@ -22,10 +22,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (!this.IsActiveState)
 				return;
 
-			// TODO: check:
-			// - if we should switch to any of aim states
-			// - if we should enter falling state
-
 
 			BaseMovementState.SwitchToMovementStateBasedOnInput (m_ped);
 
