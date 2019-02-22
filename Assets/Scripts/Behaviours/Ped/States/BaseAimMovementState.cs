@@ -242,10 +242,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void UpdateAimAnim(AnimationState state)
 		{
-			BaseAimMovementState.UpdateAimAnim (m_ped, state);
+			BaseAimMovementState.UpdateAimAnim (m_ped, state, () => this.TryFire());
 		}
 
-		public static void UpdateAimAnim(Ped ped, AnimationState state)
+		public static void UpdateAimAnim(Ped ped, AnimationState state, System.Func<bool> tryFireFunc)
 		{
 			var weapon = ped.CurrentWeapon;
 
@@ -270,7 +270,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				} else {
 					// check if we should start firing
 
-					if (ped.WeaponHolder.IsFireOn && weapon.TryFire ()) {
+					if (ped.WeaponHolder.IsFireOn && tryFireFunc()) {
 						// we started firing
 
 					} else {
@@ -399,6 +399,44 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			model.RightHand.Rotate (WeaponsManager.Instance.AIMWITHARM_handRotationOffset);
 
 
+		}
+
+
+		protected virtual bool TryFire ()
+		{
+			Ped ped = m_ped;
+			var weapon = ped.CurrentWeapon;
+
+
+			if (ped.IsFiring)
+				return false;
+
+			// check if there is ammo in clip
+			if (weapon.AmmoInClip < 1)
+				return false;
+
+			ped.StartFiring ();
+
+			if (!ped.IsFiring)	// failed to start firing
+				return false;
+
+			// reduce ammo
+			weapon.AmmoInClip --;
+
+			// update gun flash
+		//	this.EnableOrDisableGunFlash (ped);
+			if (weapon.GunFlash != null)
+				weapon.GunFlash.gameObject.SetActive (true);
+			weapon.UpdateGunFlashRotation ();
+
+			// fire projectile
+			F.RunExceptionSafe( () => weapon.FireProjectile () );
+
+			// play firing sound
+			F.RunExceptionSafe (() => weapon.PlayFireSound() );
+
+
+			return true;
 		}
 
 

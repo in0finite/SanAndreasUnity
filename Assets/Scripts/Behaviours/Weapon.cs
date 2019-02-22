@@ -445,40 +445,13 @@ namespace SanAndreasUnity.Behaviours
 
 		public float Damage { get { return this.Data.gunData.damage; } }
 
-		public virtual bool TryFire ()
+		public virtual void PlayFireSound ()
 		{
-			Ped ped = m_ped;
 
-			if (ped.IsFiring)
-				return false;
-
-			// check if there is ammo in clip
-			if (this.AmmoInClip < 1)
-				return false;
-
-			ped.StartFiring ();
-
-			if (!ped.IsFiring)	// failed to start firing
-				return false;
-			
-			// reduce ammo
-			this.AmmoInClip --;
-
-			// update gun flash
-		//	this.EnableOrDisableGunFlash (ped);
-			if (this.GunFlash != null)
-				this.GunFlash.gameObject.SetActive (true);
-			this.UpdateGunFlashRotation ();
-
-			// fire projectile
-			F.RunExceptionSafe( () => this.FireProjectile () );
-
-			// play firing sound
-			F.RunExceptionSafe (() => {
-				if (m_audioSource && m_audioSource.clip)
+			if (m_audioSource && m_audioSource.clip)
+			{
+				if(!m_audioSource.isPlaying)
 				{
-					if(!m_audioSource.isPlaying)
-					{
 //						int bankIndex = weaponSoundIndexes [this.Definition.Id];
 
 //						Audio.AudioManager.SfxGENRL137Timings [bankIndex];
@@ -496,20 +469,17 @@ namespace SanAndreasUnity.Behaviours
 //						m_audioSource.Play();
 //						m_audioSource.SetScheduledEndTime( AudioSettings.dspTime + (endTime - startTime) );
 
-					//	Debug.LogFormat("playing weapon sound");
-						m_audioSource.Stop();
-						m_audioSource.time = 0f;
-						m_audioSource.Play();
+				//	Debug.LogFormat("playing weapon sound");
+					m_audioSource.Stop();
+					m_audioSource.time = 0f;
+					m_audioSource.Play();
 
-					}
 				}
-			});
+			}
 
-
-			return true;
 		}
 
-		protected virtual void FireProjectile ()
+		public virtual void FireProjectile ()
 		{
 			// obtain fire position and direction
 
