@@ -123,6 +123,7 @@ namespace SanAndreasUnity.Behaviours
 
 			// reset player input
 			m_ped.ResetMovementInput ();
+			m_ped.MouseDeltaInput = Vector2.zero;
 			
 
 			this.UpdateCamera ();
@@ -236,6 +237,8 @@ namespace SanAndreasUnity.Behaviours
 				Vector2 totalMouseDelta = mouseDelta + rightAnalogDelta;
 
 				totalMouseDelta = Vector2.Scale (totalMouseDelta, this.CursorSensitivity);
+
+				m_ped.MouseDeltaInput = totalMouseDelta;
 
 
 				if (m_doSmooth)

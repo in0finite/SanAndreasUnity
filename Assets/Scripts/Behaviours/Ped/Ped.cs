@@ -90,6 +90,8 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
+		public Vector2 MouseDeltaInput { get; set; }
+
 		public bool IsWalkOn { get; set; }
 		public bool IsRunOn { get; set; }
 		public bool IsSprintOn { get; set; }
@@ -384,6 +386,9 @@ namespace SanAndreasUnity.Behaviours
 
 		//	IsWalking = IsRunning = false;
 
+			if (this.CurrentState != null)
+				this.CurrentState.PostUpdateState();
+
         }
 
 		void LateUpdate ()
@@ -572,6 +577,7 @@ namespace SanAndreasUnity.Behaviours
 		public void ResetInput ()
 		{
 			this.ResetMovementInput ();
+			this.MouseDeltaInput = Vector2.zero;
 			this.IsAimOn = this.IsFireOn = false;
 		}
 

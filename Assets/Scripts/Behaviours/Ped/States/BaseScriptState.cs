@@ -56,6 +56,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+		public virtual void PostUpdateState()
+		{
+			this.UpdateCamera ();
+		}
+
 		public virtual void LateUpdateState()
 		{
 
@@ -96,6 +101,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected virtual void UpdateMovement()
 		{
 			m_ped.UpdateMovement ();
+		}
+
+		public virtual void UpdateCamera()
+		{
+
 		}
 
 		protected virtual void UpdateAnims()
