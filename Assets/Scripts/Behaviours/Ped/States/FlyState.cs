@@ -7,6 +7,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class FlyState : BaseScriptState
 	{
+		public float moveMultiplier = 10f;
+		public float moveFastMultiplier = 100f;
 
 
 
@@ -48,6 +50,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			// toggle collision detection
 			m_ped.characterController.detectCollisions = ! m_ped.characterController.detectCollisions;
+		}
+
+		protected override void UpdateHeading ()
+		{
+			m_ped.Heading = Vector3.Scale(m_ped.Movement, new Vector3(1f, 0f, 1f)).normalized;
+		}
+
+		protected override void UpdateMovement ()
+		{
+			Vector3 delta = m_ped.Movement * Time.fixedDeltaTime;
+			delta *= m_ped.IsSprintOn ? this.moveFastMultiplier : this.moveMultiplier;
+			m_ped.characterController.Move (delta);
 		}
 
 	}

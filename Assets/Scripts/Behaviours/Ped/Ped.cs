@@ -484,18 +484,6 @@ namespace SanAndreasUnity.Behaviours
 				this.CurrentState.FixedUpdateState ();
 			}
 
-			return;
-
-
-            if (IsInVehicle) return;
-
-
-			this.UpdateHeading ();
-
-			this.UpdateRotation ();
-
-			this.UpdateMovement ();
-
         }
 
 		public void UpdateHeading()
@@ -522,57 +510,42 @@ namespace SanAndreasUnity.Behaviours
 
 		public void UpdateMovement()
 		{
+			
 
-			if (enableFlying || enableNoclip)
+			// movement can only be done on X and Z axis
+			this.Movement = this.Movement.WithXAndZ ();
+
+			// change heading to match movement input
+			//if (Movement.sqrMagnitude > float.Epsilon)
+			//{
+			//	Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
+			//}
+
+			// change velocity based on movement input and current speed extracted from anim
+
+			float modelVel = Mathf.Abs( PlayerModel.Velocity [PlayerModel.VelocityAxis] );
+			//Vector3 localMovement = this.transform.InverseTransformDirection (this.Movement);
+			//Vector3 globalMovement = this.transform.TransformDirection( Vector3.Scale( localMovement, modelVel ) );
+
+			Vector3 vDiff = this.Movement * modelVel - new Vector3(Velocity.x, 0f, Velocity.z);
+			Velocity += vDiff;
+
+			// apply gravity
+			Velocity = new Vector3(Velocity.x, characterController.isGrounded
+				? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
+
+			// Jump! But only if the jump button has been released and player has been grounded for a given number of frames
+			if (!this.IsJumpOn)
+				jumpTimer++;
+			else if (jumpTimer >= antiBunnyHopFactor && this.IsGrounded)
 			{
-				Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
-				Velocity = Movement * Time.fixedDeltaTime;
-				if (enableNoclip)
-				{
-					transform.position += Velocity;
-				}
-				else
-				{
-					characterController.Move(Velocity);
-				}
+				Velocity += Vector3.up * jumpSpeed;
+				jumpTimer = 0;
 			}
-			else
-			{
 
-				// movement can only be done on X and Z axis
-				this.Movement = this.Movement.WithXAndZ ();
-
-				// change heading to match movement input
-				//if (Movement.sqrMagnitude > float.Epsilon)
-				//{
-				//	Heading = Vector3.Scale(Movement, new Vector3(1f, 0f, 1f)).normalized;
-				//}
-
-				// change velocity based on movement input and current speed extracted from anim
-
-				float modelVel = Mathf.Abs( PlayerModel.Velocity [PlayerModel.VelocityAxis] );
-				//Vector3 localMovement = this.transform.InverseTransformDirection (this.Movement);
-				//Vector3 globalMovement = this.transform.TransformDirection( Vector3.Scale( localMovement, modelVel ) );
-
-				Vector3 vDiff = this.Movement * modelVel - new Vector3(Velocity.x, 0f, Velocity.z);
-				Velocity += vDiff;
-
-				// apply gravity
-				Velocity = new Vector3(Velocity.x, characterController.isGrounded
-					? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
-
-				// Jump! But only if the jump button has been released and player has been grounded for a given number of frames
-				if (!this.IsJumpOn)
-					jumpTimer++;
-				else if (jumpTimer >= antiBunnyHopFactor && this.IsGrounded)
-				{
-					Velocity += Vector3.up * jumpSpeed;
-					jumpTimer = 0;
-				}
-
-				// finally, move the character
-				characterController.Move(Velocity * Time.fixedDeltaTime);
-			}
+			// finally, move the character
+			characterController.Move(Velocity * Time.fixedDeltaTime);
+		
 
 //			if(!IsLocalPlayer)
 //            {
