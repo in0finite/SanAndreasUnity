@@ -15,6 +15,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		//	m_ped.PlayerModel.Play2Anims (m_ped.CurrentWeapon.AimAnim, new AnimId(AnimGroup.Gun, ));
 		}
 
+		protected override AnimationState UpdateAnimsNonAWA ()
+		{
+			return WalkAimState.UpdateAnimsNonAWA (m_ped);
+		}
+
 	}
 
 }

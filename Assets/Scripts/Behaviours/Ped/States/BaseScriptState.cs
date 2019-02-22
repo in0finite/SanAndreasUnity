@@ -11,6 +11,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	{
 
 		protected Ped m_ped;
+		protected PedModel m_model { get { return m_ped.PlayerModel; } }
 	//	protected StateMachine m_stateMachine;
 		protected new Transform transform { get { return m_ped.transform; } }
 		public bool IsActiveState { get { return m_ped.CurrentState == this; } }

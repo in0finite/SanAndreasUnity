@@ -16,10 +16,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		//	m_ped.PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND);
 		}
 
-//		protected override AnimationState UpdateAnimsNonAWA ()
-//		{
-//			return StandAimState.UpdateAnimsNonAWA (m_ped);
-//		}
+		protected override AnimationState UpdateAnimsNonAWA ()
+		{
+			return StandAimState.UpdateAnimsNonAWA (m_ped);
+		}
 
 		public static AnimationState UpdateAnimsNonAWA(Ped ped)
 		{
@@ -32,7 +32,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			var state = ped.PlayerModel.LastAnimState;
 			state.wrapMode = WrapMode.ClampForever;
 
-		//	ped.CurrentWeapon.UpdateFireAnim (state);
 
 			return state;
 		}
