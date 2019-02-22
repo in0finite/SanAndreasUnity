@@ -112,6 +112,16 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+		public virtual void OnFlyButtonPressed()
+		{
+
+		}
+
+		public virtual void OnFlyThroughButtonPressed()
+		{
+
+		}
+
 		public virtual void OnDamaged(DamageInfo info)
 		{
 

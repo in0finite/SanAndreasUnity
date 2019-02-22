@@ -8,6 +8,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		//void OnCollision(Collision info);
 		void OnDamaged(DamageInfo info);
 
+		void OnSubmitPressed ();
+		void OnJumpPressed ();
+		void OnFlyButtonPressed();
+		void OnFlyThroughButtonPressed();
+
 	}
 
 }
