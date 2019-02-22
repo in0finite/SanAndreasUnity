@@ -87,12 +87,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public override void OnFlyButtonPressed ()
 		{
-			m_ped.GetStateOrLogError<FlyState> ().EnterState (true);
+			m_ped.GetStateOrLogError<FlyState> ().EnterState (false);
 		}
 
 		public override void OnFlyThroughButtonPressed ()
 		{
-			m_ped.GetStateOrLogError<FlyState> ().EnterState (false);
+			m_ped.GetStateOrLogError<FlyState> ().EnterState (true);
 		}
 
 	}

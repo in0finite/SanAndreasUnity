@@ -9,6 +9,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	{
 		public float moveMultiplier = 10f;
 		public float moveFastMultiplier = 100f;
+		private bool m_flyThrough = false;
 
 
 
@@ -25,10 +26,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameInactive ();
 		}
 
-		public void EnterState (bool enableCollision)
+		public void EnterState (bool flyThrough)
 		{
 			m_ped.SwitchState<FlyState> ();
-			m_ped.characterController.detectCollisions = enableCollision;
+			m_flyThrough = flyThrough;
+			m_ped.characterController.detectCollisions = !flyThrough;
 		}
 
 		public override void OnSubmitPressed ()
@@ -49,7 +51,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override void OnFlyThroughButtonPressed ()
 		{
 			// toggle collision detection
-			m_ped.characterController.detectCollisions = ! m_ped.characterController.detectCollisions;
+			m_flyThrough = !m_flyThrough;
+			m_ped.characterController.detectCollisions = !m_flyThrough;
 		}
 
 		protected override void UpdateHeading ()
@@ -61,7 +64,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			Vector3 delta = m_ped.Movement * Time.fixedDeltaTime;
 			delta *= m_ped.IsSprintOn ? this.moveFastMultiplier : this.moveMultiplier;
-			m_ped.characterController.Move (delta);
+			if (m_flyThrough)
+				m_ped.transform.position += delta;
+			else
+				m_ped.characterController.Move (delta);
 		}
 
 	}
