@@ -132,29 +132,6 @@ namespace SanAndreasUnity.Behaviours
 			m_ped.ResetMovementInput ();
 			
 
-            if (!m_ped.enableFlying && !m_ped.IsInVehicle && Input.GetKeyDown(KeyCode.T))
-            {
-                m_ped.enableFlying = true;
-                m_ped.Movement = new Vector3(0f, 0f, 0f); // disable current movement
-                PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
-            }
-            else if (m_ped.enableFlying && Input.GetKeyDown(KeyCode.T))
-            {
-                m_ped.enableFlying = false;
-            }
-
-            if (!m_ped.IsInVehicle && Input.GetKeyDown(KeyCode.R))
-            {
-                m_ped.enableNoclip = !m_ped.enableNoclip;
-                m_ped.characterController.detectCollisions = !m_ped.enableNoclip;
-                if (m_ped.enableNoclip && !m_ped.enableFlying)
-                {
-                    m_ped.Movement = new Vector3(0f, 0f, 0f); // disable current movement
-                    PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.RoadCross, PlayMode.StopAll); // play 'flying' animation
-                }
-            }
-
-
 			this.UpdateCamera ();
 
 
@@ -174,22 +151,19 @@ namespace SanAndreasUnity.Behaviours
 				m_ped.OnSubmitPressed ();
             }
 
+			if (Input.GetKeyDown (KeyCode.T))
+				m_ped.OnFlyButtonPressed();
+			if (Input.GetKeyDown (KeyCode.R))
+				m_ped.OnFlyThroughButtonPressed();
+			
             
 			if (m_ped.IsInVehicle) return;
 
 
+			/*
             if (m_ped.enableFlying || m_ped.enableNoclip)
             {
                 var up_down = 0.0f;
-
-                if (Input.GetKey(KeyCode.Backspace))
-                {
-                    up_down = 1.0f;
-                }
-                else if (Input.GetKey(KeyCode.Delete))
-                {
-                    up_down = -1.0f;
-                }
 
                 var inputMove = new Vector3(Input.GetAxis("Horizontal"), up_down, Input.GetAxis("Vertical"));
 
@@ -209,6 +183,7 @@ namespace SanAndreasUnity.Behaviours
 
                 return;
             }
+            */
 
 
 			m_ped.IsAimOn = Input.GetButton ("RightClick");

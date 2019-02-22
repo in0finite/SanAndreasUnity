@@ -620,6 +620,18 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
+		public void OnFlyButtonPressed ()
+		{
+			if (this.CurrentState != null)
+				this.CurrentState.OnFlyButtonPressed ();
+		}
+
+		public void OnFlyThroughButtonPressed ()
+		{
+			if (this.CurrentState != null)
+				this.CurrentState.OnFlyThroughButtonPressed ();
+		}
+
 
 		void OnGUI ()
 		{
