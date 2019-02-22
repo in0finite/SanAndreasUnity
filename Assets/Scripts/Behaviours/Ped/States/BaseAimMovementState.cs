@@ -270,7 +270,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				} else {
 					// check if we should start firing
 
-					if (ped.WeaponHolder.IsFireOn && tryFireFunc()) {
+					if (ped.IsFireOn && tryFireFunc()) {
 						// we started firing
 
 					} else {

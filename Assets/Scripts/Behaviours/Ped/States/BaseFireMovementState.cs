@@ -36,6 +36,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// we should not switch to non-aim state, but instead, when fire anim finishes, we will switch back to
 			// aim state
 
+			// TODO: but, watch out, weapon may become null - if someone else destroys a weapon or changes current weapon
+			// to Hand, then weapon will be null - we may never exit fire state, because aim anim will not be updated
+
+			// simply checking if weapon is null and exiting the state should solve the problem
+
 			return false;
 		}
 
@@ -47,11 +52,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override bool SwitchToOtherAimMovementState ()
 		{
-			if (!m_ped.IsFireOn)
-			{
-				// don't switch to aim states, because fire anim may still be running
+			// don't switch to aim states, because fire anim may still be running
 
-			}
 			return ! this.IsActiveState;
 		}
 

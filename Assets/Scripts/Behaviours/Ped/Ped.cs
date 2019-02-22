@@ -108,8 +108,8 @@ namespace SanAndreasUnity.Behaviours
 		public Weapon CurrentWeapon { get { return m_weaponHolder.CurrentWeapon; } }
 		public bool IsFiring { get { return m_weaponHolder.IsFiring; } }
 		public Vector3 AimDirection { get { return m_weaponHolder.AimDirection; } }
-		public bool IsAimOn { get { return m_weaponHolder.IsAimOn; } set { m_weaponHolder.IsAimOn = value; } }
-		public bool IsFireOn { get { return m_weaponHolder.IsFireOn; } set { m_weaponHolder.IsFireOn = value; } }
+		public bool IsAimOn { get ; set ; }
+		public bool IsFireOn { get ; set ; }
 		public bool IsHoldingWeapon { get { return m_weaponHolder.IsHoldingWeapon; } }
 
         private static bool makeGPUAdjustments;
@@ -602,7 +602,7 @@ namespace SanAndreasUnity.Behaviours
 		public void ResetInput ()
 		{
 			this.ResetMovementInput ();
-			this.WeaponHolder.IsAimOn = false;
+			this.IsAimOn = this.IsFireOn = false;
 		}
 
 		public void ResetMovementInput ()

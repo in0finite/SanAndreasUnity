@@ -211,8 +211,8 @@ namespace SanAndreasUnity.Behaviours
             }
 
 
-			m_ped.WeaponHolder.IsAimOn = m_ped.WeaponHolder.IsHoldingWeapon && Input.GetButton ("RightClick");
-			m_ped.WeaponHolder.IsFireOn = m_ped.WeaponHolder.IsHoldingWeapon && Input.GetButton ("LeftClick");
+			m_ped.IsAimOn = Input.GetButton ("RightClick");
+			m_ped.IsFireOn = Input.GetButton ("LeftClick");
 
 			//if (!_player.WeaponHolder.IsAimOn)
             {

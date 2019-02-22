@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Behaviours {
 
 		#region Aiming
 
-		public	bool	IsAimOn { get; set; }
+	//	public	bool	IsAimOn { get; set; }
 	//	private	bool	m_isAiming = false;
 		public	bool	IsAiming {
 			get { return m_ped.CurrentState != null && m_ped.CurrentState is Peds.States.IAimState; }
@@ -71,7 +71,7 @@ namespace SanAndreasUnity.Behaviours {
 		public	bool	IsFiring {
 			get { return m_ped.CurrentState != null && m_ped.CurrentState is Peds.States.IFireState; }
 		}
-		public	bool	IsFireOn { get; set; }
+	//	public	bool	IsFireOn { get; set; }
 	//	public	float	TimeWhenStartedFiring { get; private set; }
 	//	public	float	TimeSinceStartedFiring { get { return Time.time - this.TimeWhenStartedFiring; } }
 
