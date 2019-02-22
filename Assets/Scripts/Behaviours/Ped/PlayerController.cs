@@ -215,7 +215,7 @@ namespace SanAndreasUnity.Behaviours
                 }
                	
                 m_ped.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
-                    new Vector3(1f, 0f, 1f)).normalized;
+                    new Vector3(1f, 1f, 1f)).normalized;
 
 				// player heading should be assigned here, not in Player class
 			//	if (!_player.IsAiming)
