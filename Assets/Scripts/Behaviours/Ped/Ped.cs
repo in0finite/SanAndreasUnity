@@ -52,6 +52,15 @@ namespace SanAndreasUnity.Behaviours
         // Player must be grounded for at least this many physics frames before being able to jump again; set to 0 to allow bunny hopping
         public int antiBunnyHopFactor = 1;
 
+		private float m_cameraDistance = 3f;
+		public float CameraDistance { get { return m_cameraDistance; } set { m_cameraDistance = value; } }
+
+		private float m_cameraDistanceVehicle = 6f;
+		public float CameraDistanceVehicle { get { return m_cameraDistanceVehicle; } set { m_cameraDistanceVehicle = value; } }
+
+		private Vector2 m_cameraClampValue = new Vector2(90, 60);
+		public Vector2 CameraClampValue { get { return m_cameraClampValue; } set { m_cameraClampValue = value; } }
+
         #endregion Inspector Fields
 
         #region Properties
@@ -90,7 +99,8 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-		public Vector2 MouseDeltaInput { get; set; }
+		public Vector2 MouseMoveInput { get; set; }
+		public Vector2 MouseScrollInput { get; set; }
 
 		public bool IsWalkOn { get; set; }
 		public bool IsRunOn { get; set; }
@@ -577,7 +587,8 @@ namespace SanAndreasUnity.Behaviours
 		public void ResetInput ()
 		{
 			this.ResetMovementInput ();
-			this.MouseDeltaInput = Vector2.zero;
+			this.MouseMoveInput = Vector2.zero;
+			this.MouseScrollInput = Vector2.zero;
 			this.IsAimOn = this.IsFireOn = false;
 		}
 

@@ -58,7 +58,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void PostUpdateState()
 		{
-			this.UpdateCamera ();
+			if (m_ped.Camera)
+				this.UpdateCamera ();
 		}
 
 		public virtual void LateUpdateState()
@@ -105,6 +106,95 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void UpdateCamera()
 		{
+			this.RotateCamera();
+			this.UpdateCameraZoom();
+			this.CheckCameraCollision ();
+		}
+
+		public virtual void RotateCamera()
+		{
+			BaseScriptState.RotateCamera(m_ped, m_ped.MouseMoveInput, m_ped.CameraClampValue.y);
+		}
+
+		public static void RotateCamera(Ped ped, Vector2 mouseDelta, float xAxisClampValue)
+		{
+			Camera cam = ped.Camera;
+
+			if (mouseDelta.sqrMagnitude < float.Epsilon)
+				return;
+
+		//	cam.transform.Rotate( new Vector3(-mouseDelta.y, mouseDelta.x, 0f), Space.World );
+			var eulers = cam.transform.eulerAngles;
+		//	eulers.z = 0f;
+			eulers.x += - mouseDelta.y;
+			eulers.y += mouseDelta.x;
+			// adjust x
+			if (eulers.x > 180f)
+				eulers.x -= 360f;
+			// clamp
+			if (xAxisClampValue > 0)
+				eulers.x = Mathf.Clamp(eulers.x, -xAxisClampValue, xAxisClampValue);
+
+			cam.transform.rotation = Quaternion.AngleAxis(eulers.y, Vector3.up)
+				* Quaternion.AngleAxis(eulers.x, Vector3.right);
+			
+		}
+
+		public Vector3 GetCameraFocusPos()
+		{
+			return m_ped.transform.position + Vector3.up * 0.5f;
+		}
+
+		public float GetCameraDistance()
+		{
+			return m_ped.CameraDistance;
+		}
+
+		public virtual void UpdateCameraZoom()
+		{
+			m_ped.CameraDistance = Mathf.Clamp(m_ped.CameraDistance - m_ped.MouseScrollInput.y, 2.0f, 32.0f);
+		}
+
+		public virtual void CheckCameraCollision()
+		{
+			BaseScriptState.CheckCameraCollision (m_ped, this.GetCameraFocusPos (), -m_ped.Camera.transform.forward, 
+				this.GetCameraDistance ());
+		}
+
+		public static void CheckCameraCollision(Ped ped, Vector3 castFrom, Vector3 castDir, float cameraDistance)
+		{
+			
+			// cast a ray from ped to camera to see if it hits anything
+			// if so, then move the camera to hit point
+
+			Camera cam = ped.Camera;
+
+			float distance = cameraDistance;
+
+
+//			if (m_ped.IsInVehicle)
+//			{
+//				CarCameraDistance = Mathf.Clamp (CarCameraDistance - scrollValue, 2.0f, 32.0f);
+//				distance = CarCameraDistance;
+//				castFrom = this.CameraFocusPosVehicle;
+//				// cast towards current camera position
+//				//	castDir = (Camera.transform.position - castFrom).normalized;
+//			}
+//			
+
+
+			var castRay = new Ray(castFrom, castDir);
+
+			RaycastHit hitInfo;
+
+			if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance,
+				-1 ^ (1 << MapObject.BreakableLayer) ^ (1 << Vehicles.Vehicle.Layer)))
+			{
+				distance = hitInfo.distance;
+			}
+
+			cam.transform.position = castRay.GetPoint(distance);
+
 
 		}
 

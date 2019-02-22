@@ -440,6 +440,46 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
+		public override void RotateCamera ()
+		{
+			base.RotateCamera ();
+
+			// this must be called from here (right after the camera transform is changed), otherwise camera will shake
+			BaseAimMovementState.RotatePedInDirectionOfAiming (m_ped);
+		}
+
+		public override void UpdateCameraZoom()
+		{
+			// ignore
+		}
+
+		public override void CheckCameraCollision ()
+		{
+			Vector3 cameraFocusPos = base.GetCameraFocusPos ();
+			Vector3 castFrom = cameraFocusPos;
+			float distance;
+			Vector3 castDir = -m_ped.Camera.transform.forward;
+
+			// use distance from gun aiming offset ?
+			if (m_ped.CurrentWeapon.GunAimingOffset != null)
+			{
+			//	Vector3 desiredCameraPos = this.transform.TransformPoint (- _player.CurrentWeapon.GunAimingOffset.Aim) + Vector3.up * .5f;
+			//	Vector3 desiredCameraPos = this.transform.TransformPoint( new Vector3(0.8f, 1.0f, -1) );
+				Vector3 desiredCameraPos = cameraFocusPos + m_ped.Camera.transform.TransformVector (m_ped.WeaponHolder.cameraAimOffset);
+				Vector3 diff = desiredCameraPos - castFrom;
+				distance = diff.magnitude;
+				castDir = diff.normalized;
+			}
+			else
+			{
+				distance = m_ped.CameraDistance;
+			}
+
+			BaseScriptState.CheckCameraCollision(m_ped, castFrom, castDir, distance);
+
+		}
+
+
 		public override void OnSubmitPressed()
 		{
 

@@ -123,10 +123,11 @@ namespace SanAndreasUnity.Behaviours
 
 			// reset player input
 			m_ped.ResetMovementInput ();
-			m_ped.MouseDeltaInput = Vector2.zero;
+			m_ped.MouseMoveInput = Vector2.zero;
+			m_ped.MouseScrollInput = Vector2.zero;
 			
 
-			this.UpdateCamera ();
+			this.ReadCameraInput ();
 
 
 			if (!GameManager.CanPlayerReadInput()) return;
@@ -149,7 +150,9 @@ namespace SanAndreasUnity.Behaviours
 				m_ped.OnFlyButtonPressed();
 			if (Input.GetKeyDown (KeyCode.R))
 				m_ped.OnFlyThroughButtonPressed();
-			
+
+			m_ped.MouseScrollInput = Input.mouseScrollDelta;
+
             
 			if (m_ped.IsInVehicle) return;
 
@@ -224,7 +227,7 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-		private void UpdateCamera ()
+		private void ReadCameraInput ()
 		{
 
 			if (GameManager.CanPlayerReadInput())
@@ -238,7 +241,7 @@ namespace SanAndreasUnity.Behaviours
 
 				totalMouseDelta = Vector2.Scale (totalMouseDelta, this.CursorSensitivity);
 
-				m_ped.MouseDeltaInput = totalMouseDelta;
+				m_ped.MouseMoveInput = totalMouseDelta;
 
 
 				if (m_doSmooth)
@@ -277,69 +280,8 @@ namespace SanAndreasUnity.Behaviours
 //				// apply new rotation
 //				Camera.transform.eulerAngles = eulers;
 
+
 			}
-
-			Camera.transform.rotation = Quaternion.AngleAxis(_mouseAbsolute.x, Vector3.up)
-				* Quaternion.AngleAxis(-_mouseAbsolute.y, Vector3.right);
-
-
-			// this must be called from here (right after the camera transform is changed), otherwise camera will shake
-			m_ped.WeaponHolder.RotatePlayerInDirectionOfAiming ();
-
-
-			// cast a ray from player to camera to see if it hits anything
-			// if so, then move the camera to hit point
-
-			float distance;
-			Vector3 castFrom;
-			Vector3 castDir = -Camera.transform.forward;
-
-			float scrollValue = Input.mouseScrollDelta.y;
-			if (!GameManager.CanPlayerReadInput ())
-				scrollValue = 0;
-
-			if (m_ped.IsInVehicle)
-			{
-				CarCameraDistance = Mathf.Clamp (CarCameraDistance - scrollValue, 2.0f, 32.0f);
-				distance = CarCameraDistance;
-				castFrom = this.CameraFocusPosVehicle;
-				// cast towards current camera position
-			//	castDir = (Camera.transform.position - castFrom).normalized;
-			}
-			else if (m_ped.IsAiming)
-			{
-				castFrom = this.CameraFocusPos;
-
-				// use distance from gun aiming offset ?
-				if (m_ped.CurrentWeapon.GunAimingOffset != null) {
-				//	Vector3 desiredCameraPos = this.transform.TransformPoint (- _player.CurrentWeapon.GunAimingOffset.Aim) + Vector3.up * .5f;
-				//	Vector3 desiredCameraPos = this.transform.TransformPoint( new Vector3(0.8f, 1.0f, -1) );
-					Vector3 desiredCameraPos = this.CameraFocusPos + Camera.transform.TransformVector( m_ped.WeaponHolder.cameraAimOffset );
-					Vector3 diff = desiredCameraPos - castFrom;
-					distance = diff.magnitude;
-					castDir = diff.normalized;
-				}
-				else
-					distance = PlayerCameraDistance;
-			}
-			else
-			{
-				PlayerCameraDistance = Mathf.Clamp(PlayerCameraDistance - scrollValue, 2.0f, 32.0f);
-				distance = PlayerCameraDistance;
-				castFrom = this.CameraFocusPos;
-			}
-
-			var castRay = new Ray(castFrom, castDir);
-
-			RaycastHit hitInfo;
-
-			if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance,
-				-1 ^ (1 << MapObject.BreakableLayer) ^ (1 << Vehicle.Layer)))
-			{
-				distance = hitInfo.distance;
-			}
-
-			Camera.transform.position = castRay.GetPoint(distance);
 
 
 		}
