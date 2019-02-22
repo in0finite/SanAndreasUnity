@@ -78,29 +78,22 @@ namespace SanAndreasUnity.Behaviours
         {
 			if (!Loader.HasLoaded)
 				return;
-
-            Event e = Event.current;
-
+			
             
-            // Shohw flying / noclip states
-            if (m_ped.enableFlying || m_ped.enableNoclip)
+            // show that we are in flying state
+			if (m_ped.CurrentState is Peds.States.FlyState)
             {
-                int height = (m_ped.enableFlying && m_ped.enableNoclip) ? 50 : 25;
+                int height = 25;
                 GUILayout.BeginArea(new Rect(Screen.width - 140, Screen.height - height, 140, height));
-
-                if (m_ped.enableFlying)
-                    GUILayout.Label("Flying-mode enabled!");
-
-                if (m_ped.enableNoclip)
-                    GUILayout.Label("Noclip-mode enabled!");
-
-                GUILayout.EndArea();
+				GUILayout.Label("Flying-mode enabled!");
+				GUILayout.EndArea();
             }
 
             if (_showVel)
                 GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(5, 5)), string.Format("{0:0.0} km/h", deltaPos.magnitude * 3.6f / velTimer), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
 
-			GUI.Label (GUIUtils.GetCornerRect(ScreenCorner.BottomLeft, 200, 50), string.Format("Current ped state: {0}", m_ped.CurrentState != null ? m_ped.CurrentState.GetType().Name : "none") );
+			// show current ped state
+			GUI.Label (GUIUtils.GetCornerRect(ScreenCorner.BottomLeft, 250, 50), string.Format("Current ped state: {0}", m_ped.CurrentState != null ? m_ped.CurrentState.GetType().Name : "none") );
             
         }
 

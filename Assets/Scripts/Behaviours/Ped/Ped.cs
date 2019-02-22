@@ -42,9 +42,6 @@ namespace SanAndreasUnity.Behaviours
 
         public float TurnSpeed = 10f;
 
-        public bool enableFlying = false;
-        public bool enableNoclip = false;
-
         public CharacterController characterController;
 
         public float jumpSpeed = 8.0f;
