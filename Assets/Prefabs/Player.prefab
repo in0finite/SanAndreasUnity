@@ -32,6 +32,7 @@ GameObject:
   - component: {fileID: 114607436013890848}
   - component: {fileID: 114051921114482032}
   - component: {fileID: 114805415584932730}
+  - component: {fileID: 114860926047028576}
   m_Layer: 11
   m_Name: States
   m_TagString: Untagged
@@ -168,8 +169,6 @@ MonoBehaviour:
   PlayerModel: {fileID: 114671475596742702}
   shouldPlayAnims: 1
   TurnSpeed: 10
-  enableFlying: 0
-  enableNoclip: 0
   characterController: {fileID: 0}
   jumpSpeed: 8
   antiBumpFactor: 0.75
@@ -344,6 +343,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85425b3e6cf1749d08bc08ac3a55fad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114860926047028576
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 209709c163d044d2fbc29d291fdbc821, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveMultiplier: 10
+  moveFastMultiplier: 100
 --- !u!114 &114879899237604226
 MonoBehaviour:
   m_ObjectHideFlags: 1
