@@ -233,23 +233,22 @@ namespace SanAndreasUnity.Behaviours
 				var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
                 var rightAnalogDelta = new Vector2(Input.GetAxisRaw("Joystick X"), Input.GetAxisRaw("Joystick Y"));
 
-				mouseDelta = Vector2.Scale(mouseDelta, CursorSensitivity);
-                rightAnalogDelta = Vector2.Scale(rightAnalogDelta, CursorSensitivity);
+				Vector2 totalMouseDelta = mouseDelta + rightAnalogDelta;
+
+				totalMouseDelta = Vector2.Scale (totalMouseDelta, this.CursorSensitivity);
 
 
 				if (m_doSmooth)
 				{
-					Vector2 totalDelta = mouseDelta + rightAnalogDelta;
-
-					_smoothMouse.x = Mathf.Lerp (_smoothMouse.x, totalDelta.x, 1f / smoothing.x);
-					_smoothMouse.y = Mathf.Lerp (_smoothMouse.y, totalDelta.y, 1f / smoothing.y);
+					
+					_smoothMouse.x = Mathf.Lerp (_smoothMouse.x, totalMouseDelta.x, 1f / smoothing.x);
+					_smoothMouse.y = Mathf.Lerp (_smoothMouse.y, totalMouseDelta.y, 1f / smoothing.y);
 
 					_mouseAbsolute += _smoothMouse;
 				}
 				else
 				{
-					_mouseAbsolute += mouseDelta;
-					_mouseAbsolute += rightAnalogDelta;
+					_mouseAbsolute += totalMouseDelta;
 				}
 
 
