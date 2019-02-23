@@ -39,16 +39,13 @@ namespace SanAndreasUnity.UI {
 			"V - Spawn vehicle\n\n" +
 			"P - Change pedestrian model\n\n" +
 			"W/A/S/D - Move player\n\n" +
-			"Left Shift - Jump / Fly fast\n\n" +
+			"Left Shift - Jump\n\n" +
 			"Space - Sprint\n\n" +
 			"Mouse Scroll - Zoom in / out player camera\n\n" +
 			"E/Q - Next/previous weapon\n\n" +
 			"Esc - Toggle pause menu\n\n" +
-			"T - Enable debug flying mode\n\n" +
-			"R - Enable debug noclip mode\n\n" +
-			"Backspace - Fly up\n\n" +
-			"Delete - Fly down\n\n" +
-			"Z - Fly very fast\n\n" +
+			"T - Fly mode\n\n" +
+			"R - Fly through mode\n\n" +
 			"Enter - Enter/exit vehicles\n\n" +
 			"L - Turn off / on car lights\n\n" +
 			"F10 - Toggle FPS\n\n" +
