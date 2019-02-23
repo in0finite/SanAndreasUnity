@@ -173,6 +173,9 @@ MonoBehaviour:
   jumpSpeed: 8
   antiBumpFactor: 0.75
   antiBunnyHopFactor: 1
+  m_cameraDistance: 3
+  m_cameraDistanceVehicle: 6
+  m_cameraClampValue: {x: 60, y: 60}
   m_maxHealth: 100
   m_enterVehicleRadius: 2
 --- !u!114 &114173420020992462
@@ -187,8 +190,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CursorSensitivity: {x: 7, y: 7}
-  CarCameraDistance: 6
-  PlayerCameraDistance: 3
   clampInDegrees: {x: 60, y: 60}
   smoothing: {x: 10, y: 10}
   m_doSmooth: 0
