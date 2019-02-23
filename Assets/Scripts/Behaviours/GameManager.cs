@@ -17,8 +17,6 @@ namespace SanAndreasUnity.Behaviours {
 
 		public Texture2D logoTexture = null;
 
-		public GameObject pedPrefab;
-
 		public GameObject barPrefab;
 
 

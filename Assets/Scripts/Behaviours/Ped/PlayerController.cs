@@ -51,9 +51,6 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        public Camera Camera { get { return m_ped.Camera; } }
-        public PedModel PlayerModel { get { return m_ped.PlayerModel; } }
-
 
 
         private void Awake()
@@ -66,6 +63,9 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnGUI()
         {
+			if (!m_ped.IsLocalPlayer)
+				return;
+
 			if (!Loader.HasLoaded)
 				return;
 			
@@ -103,7 +103,9 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
-            
+			if (!m_ped.IsLocalPlayer)
+				return;
+
             if (Input.GetKeyDown(KeyCode.F9))
                 _showVel = !_showVel;
 
@@ -161,7 +163,10 @@ namespace SanAndreasUnity.Behaviours
 
 			}
 
-			m_ped.Movement = this.Camera.transform.TransformVector(inputMove).normalized;
+			if (m_ped.Camera != null)
+				m_ped.Movement = m_ped.Camera.transform.TransformVector (inputMove).normalized;
+			else
+				m_ped.Movement = inputMove.normalized;
 
 			if (m_ped.Movement.sqrMagnitude > float.Epsilon) {
 				// only assign heading if there is any movement - we don't want the heading to be zero vector

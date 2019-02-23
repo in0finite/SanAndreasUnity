@@ -23,12 +23,16 @@ namespace SanAndreasUnity.Behaviours
 		{
 			CheckPedPrefab ();
 
-			var go = Instantiate (GameManager.Instance.pedPrefab, pos, rot);
+			var go = Instantiate (PedManager.Instance.pedPrefab, pos, rot);
+			go.name = "Ped " + def.ModelName + " " + def.Id;
 
 			var ped = go.GetComponentOrThrow<Ped> ();
 			ped.PlayerModel.StartingPedId = def.Id;
+			ped.EnterVehicleRadius = PedManager.Instance.AIVehicleEnterDistance;
 
-			go.name = "Ped " + def.ModelName + " " + def.Id;
+			var destroyer = ped.gameObject.GetOrAddComponent<OutOfRangeDestroyer> ();
+			destroyer.timeUntilDestroyed = PedManager.Instance.AIOutOfRangeTimeout;
+			destroyer.range = PedManager.Instance.AIOutOfRangeDistance;
 
 			return ped;
 		}
@@ -53,7 +57,11 @@ namespace SanAndreasUnity.Behaviours
 		public static PedStalker SpawnPedStalker (int pedId, Vector3 pos, Quaternion rot)
 		{
 			var ped = SpawnPed (pedId, pos, rot);
-			return ped.gameObject.GetOrAddComponent<PedStalker> ();
+
+			var stalker = ped.gameObject.GetOrAddComponent<PedStalker> ();
+			stalker.stoppingDistance = PedManager.Instance.AIStoppingDistance;
+
+			return stalker;
 		}
 
 		public static PedStalker SpawnPedStalker (int pedId)
@@ -88,10 +96,8 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void CheckPedPrefab ()
 		{
-			if (null == GameManager.Instance)
-				throw new System.Exception ("Can't find ped prefab: game manager instance not found");
-
-			if(null == GameManager.Instance.pedPrefab)
+			
+			if(null == PedManager.Instance.pedPrefab)
 				throw new System.Exception ("Ped prefab is null");
 
 		}
