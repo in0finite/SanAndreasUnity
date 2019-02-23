@@ -599,6 +599,18 @@ namespace SanAndreasUnity.Behaviours
 			this.IsJumpOn = false;
 		}
 
+		public void OnFireButtonPressed ()
+		{
+			if (this.CurrentState != null)
+				this.CurrentState.OnFireButtonPressed ();
+		}
+
+		public void OnAimButtonPressed ()
+		{
+			if (this.CurrentState != null)
+				this.CurrentState.OnAimButtonPressed ();
+		}
+
 		public void OnSubmitPressed ()
 		{
 			if (this.CurrentState != null)

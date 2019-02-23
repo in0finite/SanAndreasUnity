@@ -173,6 +173,12 @@ namespace SanAndreasUnity.Behaviours
 		void ReadEvents()
 		{
 
+			if (Input.GetButtonDown ("LeftClick"))
+				m_ped.OnFireButtonPressed ();
+
+			if (Input.GetButtonDown ("RightClick"))
+				m_ped.OnAimButtonPressed ();
+
 			if (Input.GetKeyDown (KeyCode.Q))
 				m_ped.OnPreviousWeaponButtonPressed();
 			else if (Input.GetKeyDown (KeyCode.E))

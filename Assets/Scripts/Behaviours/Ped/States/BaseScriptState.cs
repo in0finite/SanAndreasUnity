@@ -189,11 +189,23 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
-		public virtual void OnSubmitPressed() {
+		public virtual void OnFireButtonPressed()
+		{
 
 		}
 
-		public virtual void OnJumpPressed() {
+		public virtual void OnAimButtonPressed()
+		{
+
+		}
+
+		public virtual void OnSubmitPressed()
+		{
+
+		}
+
+		public virtual void OnJumpPressed()
+		{
 
 		}
 
