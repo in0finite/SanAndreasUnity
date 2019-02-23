@@ -220,29 +220,9 @@ namespace SanAndreasUnity.Behaviours
 				}
 
 
-				/*if (clampInDegrees.x > 0)
-                    _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x, clampInDegrees.x);*/
-
 				if (clampInDegrees.y > 0)
 					_mouseAbsolute.y = Mathf.Clamp(_mouseAbsolute.y, -clampInDegrees.y, clampInDegrees.y);
-
-
-//				Vector3 eulers = Camera.transform.eulerAngles;
-//				eulers.x += - mouseDelta.y;
-//				eulers.y += mouseDelta.x;
-//
-//				// no rotation around z axis
-//				eulers.z = 0;
-//
-//				// clamp rotation
-//				if(eulers.x > 180)
-//					eulers.x -= 360;
-//				eulers.x = Mathf.Clamp (eulers.x, -clampInDegrees.x, clampInDegrees.x);
-//
-//				// apply new rotation
-//				Camera.transform.eulerAngles = eulers;
-
-
+				
 			}
 
 
@@ -291,31 +271,5 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        /*public static float ClampAngle(float currentValue, float minAngle, float maxAngle, float clampAroundAngle = 0)
-        {
-            float angle = currentValue - (clampAroundAngle + 180);
-
-            while (angle < 0)
-            {
-                angle += 360;
-            }
-
-            angle = Mathf.Repeat(angle, 360);
-
-            return Mathf.Clamp(
-                angle - 180,
-                minAngle,
-                maxAngle
-            ) + 360 + clampAroundAngle;
-        }*/
-
-        public static float ClampAngle(float angle, float min, float max)
-        {
-            if (angle < -360F)
-                angle += 360F;
-            if (angle > 360F)
-                angle -= 360F;
-            return Mathf.Clamp(angle, min, max);
-        }
     }
 }
