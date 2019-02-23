@@ -16,9 +16,6 @@ namespace SanAndreasUnity.Behaviours
 
 		private Ped m_ped;
 
-        private float _pitch;
-        private float _yaw;
-
 		public static bool _showVel = true;
 
         // Alpha speedometer
@@ -31,13 +28,9 @@ namespace SanAndreasUnity.Behaviours
 
         private Vector2 _mouseAbsolute;
         private Vector2 _smoothMouse = Vector2.zero;
-        private Vector3 targetDirection = Vector3.forward;
-
+        
         
         public Vector2 CursorSensitivity = new Vector2(2f, 2f);
-
-        public float CarCameraDistance = 6.0f;
-        public float PlayerCameraDistance = 3.0f;
 
         //public Vector2 PitchClamp = new Vector2(-89f, 89f);
         public Vector2 clampInDegrees = new Vector2(90, 60);
@@ -57,9 +50,6 @@ namespace SanAndreasUnity.Behaviours
                 return deltaPos.magnitude * 3.6f / velTimer;
             }
         }
-
-		public Vector3 CameraFocusPos { get { return m_ped.transform.position + Vector3.up * 0.5f; } }
-		public Vector3 CameraFocusPosVehicle { get { return m_ped.CurrentVehicle.transform.position; } }
 
         public Camera Camera { get { return m_ped.Camera; } }
         public PedModel PlayerModel { get { return m_ped.PlayerModel; } }

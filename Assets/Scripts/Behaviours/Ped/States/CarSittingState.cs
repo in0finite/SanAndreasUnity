@@ -68,6 +68,23 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+
+		public override void UpdateCameraZoom()
+		{
+			m_ped.CameraDistanceVehicle = Mathf.Clamp(m_ped.CameraDistanceVehicle - m_ped.MouseScrollInput.y, 2.0f, 32.0f);
+		}
+
+		public override void CheckCameraCollision ()
+		{
+			BaseScriptState.CheckCameraCollision(m_ped, this.GetCameraFocusPos(), -m_ped.Camera.transform.forward, 
+				m_ped.CameraDistanceVehicle);
+		}
+
+		public new Vector3 GetCameraFocusPos()
+		{
+			return m_ped.CurrentVehicle.transform.position;
+		}
+
 	}
 
 }

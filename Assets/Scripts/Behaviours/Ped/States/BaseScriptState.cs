@@ -170,21 +170,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			Camera cam = ped.Camera;
 
 			float distance = cameraDistance;
-
-
-//			if (m_ped.IsInVehicle)
-//			{
-//				CarCameraDistance = Mathf.Clamp (CarCameraDistance - scrollValue, 2.0f, 32.0f);
-//				distance = CarCameraDistance;
-//				castFrom = this.CameraFocusPosVehicle;
-//				// cast towards current camera position
-//				//	castDir = (Camera.transform.position - castFrom).normalized;
-//			}
-//			
-
-
 			var castRay = new Ray(castFrom, castDir);
-
 			RaycastHit hitInfo;
 
 			if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance,
@@ -194,7 +180,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			}
 
 			cam.transform.position = castRay.GetPoint(distance);
-
 
 		}
 
