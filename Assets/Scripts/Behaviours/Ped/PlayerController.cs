@@ -168,15 +168,11 @@ namespace SanAndreasUnity.Behaviours
 
             }
            	
-            m_ped.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
-                new Vector3(1f, 1f, 1f)).normalized;
+            m_ped.Movement = this.Camera.transform.TransformVector(inputMove).normalized;
 
-			// player heading should be assigned here, not in Player class
-		//	if (!_player.IsAiming)
-			{
-				if (m_ped.Movement.sqrMagnitude > float.Epsilon) {
-					m_ped.Heading = m_ped.Movement;
-				}
+			if (m_ped.Movement.sqrMagnitude > float.Epsilon) {
+				// only assign heading if there is any movement - we don't want the heading to be zero vector
+				m_ped.Heading = m_ped.Movement;
 			}
 
 
