@@ -5,7 +5,7 @@ using SanAndreasUnity.Behaviours.Vehicles;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public class DefaultCarState : BaseScriptState, ICarState
+	public class BaseVehicleState : BaseScriptState, IVehicleState
 	{
 		private Vehicle m_currentVehicle;
 		public Vehicle CurrentVehicle { get { return m_currentVehicle; } protected set { m_currentVehicle = value; } }

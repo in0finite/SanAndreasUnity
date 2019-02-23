@@ -6,7 +6,7 @@ using SanAndreasUnity.Importing.Animation;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public class CarExitingState : DefaultCarState
+	public class VehicleExitingState : BaseVehicleState
 	{
 		PedModel PlayerModel { get { return m_ped.PlayerModel; } }
 
@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			this.CurrentVehicleSeat = m_ped.CurrentVehicleSeat;
 
 			// after obtaining parameters, switch to this state
-			m_ped.SwitchState<CarExitingState> ();
+			m_ped.SwitchState<VehicleExitingState> ();
 
 			// this should be done only if player was a driver ?
 			this.CurrentVehicle.StopControlling();

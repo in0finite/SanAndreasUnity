@@ -6,7 +6,7 @@ using SanAndreasUnity.Importing.Animation;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public class CarSittingState : DefaultCarState
+	public class VehicleSittingState : BaseVehicleState
 	{
 		PedModel PlayerModel { get { return m_ped.PlayerModel; } }
 
@@ -23,7 +23,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			this.CurrentVehicle = vehicle;
 			this.CurrentVehicleSeat = seat;
 
-			m_ped.SwitchState<CarSittingState> ();
+			m_ped.SwitchState<VehicleSittingState> ();
 
 			if (seat.IsDriver)
 			{

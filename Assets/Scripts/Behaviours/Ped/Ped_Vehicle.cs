@@ -17,9 +17,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public Vehicle CurrentVehicle {
 			get {
-				if (this.CurrentState != null && this.CurrentState is ICarState)
+				if (this.CurrentState != null && this.CurrentState is IVehicleState)
 				{
-					return ((ICarState)this.CurrentState).CurrentVehicle;
+					return ((IVehicleState)this.CurrentState).CurrentVehicle;
 				}
 				return null;
 			}
@@ -27,9 +27,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public Vehicle.Seat CurrentVehicleSeat {
 			get {
-				if (this.CurrentState != null && this.CurrentState is ICarState)
+				if (this.CurrentState != null && this.CurrentState is IVehicleState)
 				{
-					return ((ICarState)this.CurrentState).CurrentVehicleSeat;
+					return ((IVehicleState)this.CurrentState).CurrentVehicleSeat;
 				}
 				return null;
 			}
@@ -37,7 +37,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public bool IsInVehicle { get { return CurrentVehicle != null; } }
 
-		public bool IsInVehicleSeat { get { return this.CurrentState != null && this.CurrentState.RepresentsState (typeof(CarSittingState)); } }
+		public bool IsInVehicleSeat { get { return this.CurrentState != null && this.CurrentState.RepresentsState (typeof(VehicleSittingState)); } }
 
 		public bool IsDrivingVehicle { get { return this.IsInVehicleSeat && this.CurrentVehicleSeat.IsDriver && this.IsInVehicle; } }
 
@@ -48,12 +48,12 @@ namespace SanAndreasUnity.Behaviours
 		public void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
 		{
 			// find state script, and call it's method
-			this.GetStateOrLogError<CarEnteringState>().TryEnterVehicle( vehicle, seatAlignment, immediate );
+			this.GetStateOrLogError<VehicleEnteringState>().TryEnterVehicle( vehicle, seatAlignment, immediate );
 		}
 
 		public void ExitVehicle(bool immediate = false)
 		{
-			this.GetStateOrLogError<CarExitingState> ().ExitVehicle (immediate);
+			this.GetStateOrLogError<VehicleExitingState> ().ExitVehicle (immediate);
 		}
 
 

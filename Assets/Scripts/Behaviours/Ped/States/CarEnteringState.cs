@@ -7,7 +7,7 @@ using SanAndreasUnity.Importing.Animation;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public class CarEnteringState : DefaultCarState
+	public class VehicleEnteringState : BaseVehicleState
 	{
 		PedModel PlayerModel { get { return m_ped.PlayerModel; } }
 
@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			Vehicle.Seat seat = vehicle.GetSeat (seatAlignment);
 
 			// switch state here
-			m_ped.SwitchState<CarEnteringState>();
+			m_ped.SwitchState<VehicleEnteringState>();
 
 			this.CurrentVehicle = vehicle;
 			this.CurrentVehicleSeat = seat;
@@ -99,7 +99,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// player now completely entered the vehicle
 
 			// call method from CarSittingState - he will switch state
-			m_ped.GetStateOrLogError<CarSittingState> ().EnterVehicle(this.CurrentVehicle, seat);
+			m_ped.GetStateOrLogError<VehicleSittingState> ().EnterVehicle(this.CurrentVehicle, seat);
 
 			// this variable is not needed - it can be obtained based on current state
 		//	IsInVehicleSeat = true;
