@@ -143,72 +143,41 @@ namespace SanAndreasUnity.Behaviours
 			if (m_ped.IsInVehicle) return;
 
 
-			/*
-            if (m_ped.enableFlying || m_ped.enableNoclip)
-            {
-                var up_down = 0.0f;
-
-                var inputMove = new Vector3(Input.GetAxis("Horizontal"), up_down, Input.GetAxis("Vertical"));
-
-                m_ped.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
-                    new Vector3(1f, 1f, 1f)).normalized;
-
-                m_ped.Movement *= 10.0f;
-
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    m_ped.Movement *= 10.0f;
-                }
-                else if (Input.GetKey(KeyCode.Z))
-                {
-                    m_ped.Movement *= 100.0f;
-                }
-
-                return;
-            }
-            */
-
-
 			m_ped.IsAimOn = Input.GetButton ("RightClick");
 			m_ped.IsFireOn = Input.GetButton ("LeftClick");
 
-			//if (!_player.WeaponHolder.IsAimOn)
+            
+			m_ped.IsJumpOn = Input.GetButton ("Jump");
+
+			Vector3 inputMove = Vector3.zero;
+			if (m_smoothMovement)
+				inputMove = new Vector3 (Input.GetAxis ("Horizontal"), 0f, Input.GetAxis ("Vertical"));
+			else
+				inputMove = new Vector3 (Input.GetAxisRaw ("Horizontal"), 0f, Input.GetAxisRaw ("Vertical"));
+
+            if (inputMove.sqrMagnitude > 0f)
             {
-				// give input to player
+                inputMove.Normalize();
 
-				m_ped.IsJumpOn = Input.GetButton ("Jump");
-
-				Vector3 inputMove = Vector3.zero;
-				if (m_smoothMovement)
-					inputMove = new Vector3 (Input.GetAxis ("Horizontal"), 0f, Input.GetAxis ("Vertical"));
+				if (Input.GetButton ("Walk"))
+					m_ped.IsWalkOn = true;
+				else if (Input.GetButton ("Sprint"))
+					m_ped.IsSprintOn = true;
 				else
-					inputMove = new Vector3 (Input.GetAxisRaw ("Horizontal"), 0f, Input.GetAxisRaw ("Vertical"));
-
-                if (inputMove.sqrMagnitude > 0f)
-                {
-                    inputMove.Normalize();
-
-					if (Input.GetButton ("Walk"))
-						m_ped.IsWalkOn = true;
-					else if (Input.GetButton ("Sprint"))
-						m_ped.IsSprintOn = true;
-					else
-						m_ped.IsRunOn = true;
-
-                }
-               	
-                m_ped.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
-                    new Vector3(1f, 1f, 1f)).normalized;
-
-				// player heading should be assigned here, not in Player class
-			//	if (!_player.IsAiming)
-				{
-					if (m_ped.Movement.sqrMagnitude > float.Epsilon) {
-						m_ped.Heading = m_ped.Movement;
-					}
-				}
+					m_ped.IsRunOn = true;
 
             }
+           	
+            m_ped.Movement = Vector3.Scale(Camera.transform.TransformVector(inputMove),
+                new Vector3(1f, 1f, 1f)).normalized;
+
+			// player heading should be assigned here, not in Player class
+		//	if (!_player.IsAiming)
+			{
+				if (m_ped.Movement.sqrMagnitude > float.Epsilon) {
+					m_ped.Heading = m_ped.Movement;
+				}
+			}
 
 
         }
