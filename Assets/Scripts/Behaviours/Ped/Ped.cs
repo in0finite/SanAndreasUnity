@@ -52,13 +52,13 @@ namespace SanAndreasUnity.Behaviours
         // Player must be grounded for at least this many physics frames before being able to jump again; set to 0 to allow bunny hopping
         public int antiBunnyHopFactor = 1;
 
-		private float m_cameraDistance = 3f;
+		[SerializeField] private float m_cameraDistance = 3f;
 		public float CameraDistance { get { return m_cameraDistance; } set { m_cameraDistance = value; } }
 
-		private float m_cameraDistanceVehicle = 6f;
+		[SerializeField] private float m_cameraDistanceVehicle = 6f;
 		public float CameraDistanceVehicle { get { return m_cameraDistanceVehicle; } set { m_cameraDistanceVehicle = value; } }
 
-		private Vector2 m_cameraClampValue = new Vector2(90, 60);
+		[SerializeField] private Vector2 m_cameraClampValue = new Vector2(60, 60);
 		public Vector2 CameraClampValue { get { return m_cameraClampValue; } set { m_cameraClampValue = value; } }
 
         #endregion Inspector Fields
