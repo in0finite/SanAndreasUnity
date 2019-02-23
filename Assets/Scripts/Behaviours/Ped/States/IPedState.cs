@@ -13,6 +13,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		void OnSubmitPressed ();
 		void OnJumpPressed ();
+		void OnNextWeaponButtonPressed();
+		void OnPreviousWeaponButtonPressed();
 		void OnFlyButtonPressed();
 		void OnFlyThroughButtonPressed();
 

@@ -197,6 +197,16 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+		public virtual void OnNextWeaponButtonPressed()
+		{
+			m_ped.WeaponHolder.SwitchWeapon (true);
+		}
+
+		public virtual void OnPreviousWeaponButtonPressed()
+		{
+			m_ped.WeaponHolder.SwitchWeapon (false);
+		}
+
 		public virtual void OnFlyButtonPressed()
 		{
 

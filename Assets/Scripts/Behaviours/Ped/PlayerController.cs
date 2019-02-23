@@ -123,21 +123,17 @@ namespace SanAndreasUnity.Behaviours
 			if (!GameManager.CanPlayerReadInput()) return;
 
 
-			// switch weapons
-
 			if (Input.GetKeyDown (KeyCode.Q))
-				m_ped.WeaponHolder.SwitchWeapon (false);
+				m_ped.OnPreviousWeaponButtonPressed();
 			else if (Input.GetKeyDown (KeyCode.E))
-				m_ped.WeaponHolder.SwitchWeapon (true);
+				m_ped.OnNextWeaponButtonPressed();
 			
-
             if (Input.GetButtonDown("Use"))
-            {
-				m_ped.OnSubmitPressed ();
-            }
-
+            	m_ped.OnSubmitPressed ();
+            
 			if (Input.GetKeyDown (KeyCode.T))
 				m_ped.OnFlyButtonPressed();
+			
 			if (Input.GetKeyDown (KeyCode.R))
 				m_ped.OnFlyThroughButtonPressed();
 

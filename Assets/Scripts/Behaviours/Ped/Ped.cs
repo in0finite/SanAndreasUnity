@@ -607,6 +607,18 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
+		public void OnNextWeaponButtonPressed ()
+		{
+			if (this.CurrentState != null)
+				this.CurrentState.OnNextWeaponButtonPressed ();
+		}
+
+		public void OnPreviousWeaponButtonPressed ()
+		{
+			if (this.CurrentState != null)
+				this.CurrentState.OnPreviousWeaponButtonPressed ();
+		}
+
 		public void OnFlyButtonPressed ()
 		{
 			if (this.CurrentState != null)
