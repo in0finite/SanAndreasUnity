@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Behaviours
     public class PlayerController : MonoBehaviour
     {
         
-		public	static	PlayerController	Instance { get ; private set ; }
+		public static PlayerController Instance { get { return Ped.Instance != null ? Ped.Instance.GetComponent<PlayerController>() : null; } }
 
 		private Ped m_ped;
 
@@ -21,10 +21,10 @@ namespace SanAndreasUnity.Behaviours
         // Alpha speedometer
         private const float velTimer = 1 / 4f;
 
-        private static float velCounter = velTimer;
+		private float m_velCounter = velTimer;
 
-        private static Vector3 lastPos = Vector3.zero,
-                               deltaPos = Vector3.zero;
+		private Vector3 m_lastPos = Vector3.zero,
+			m_deltaPos = Vector3.zero;
 
         private Vector2 _mouseAbsolute;
         private Vector2 _smoothMouse = Vector2.zero;
@@ -32,30 +32,21 @@ namespace SanAndreasUnity.Behaviours
         
         public Vector2 CursorSensitivity = new Vector2(2f, 2f);
 
-        //public Vector2 PitchClamp = new Vector2(-89f, 89f);
         public Vector2 clampInDegrees = new Vector2(90, 60);
 
 		public float EnterVehicleRadius { get { return m_ped.EnterVehicleRadius; } }
 
         public Vector2 smoothing = new Vector2(10, 10);
-        public bool m_doSmooth = true;
+		[SerializeField] private bool m_doSmooth = true;
 
 		[SerializeField] private bool m_smoothMovement = false;
 
-
-        public float CurVelocity
-        {
-            get
-            {
-                return deltaPos.magnitude * 3.6f / velTimer;
-            }
-        }
+        public float CurVelocity { get { return m_deltaPos.magnitude * 3.6f / velTimer; } }
 
 
 
         private void Awake()
         {
-            Instance = this;
             m_ped = GetComponent<Ped>();
 
         }
@@ -80,7 +71,7 @@ namespace SanAndreasUnity.Behaviours
             }
 
             if (_showVel)
-                GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(5, 5)), string.Format("{0:0.0} km/h", deltaPos.magnitude * 3.6f / velTimer), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
+                GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(5, 5)), string.Format("{0:0.0} km/h", m_deltaPos.magnitude * 3.6f / velTimer), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
 
 			// show current ped state
 			GUI.Label (GUIUtils.GetCornerRect(ScreenCorner.BottomLeft, 250, 50), string.Format("Current ped state: {0}", m_ped.CurrentState != null ? m_ped.CurrentState.GetType().Name : "none") );
@@ -89,15 +80,15 @@ namespace SanAndreasUnity.Behaviours
 
         private void FixedUpdate()
         {
-            velCounter -= Time.deltaTime;
-            if (velCounter <= 0)
+            m_velCounter -= Time.deltaTime;
+            if (m_velCounter <= 0)
             {
                 Vector3 t = new Vector3(transform.position.x, 0, transform.position.z);
 
-                deltaPos = t - lastPos;
-                lastPos = t;
+                m_deltaPos = t - m_lastPos;
+                m_lastPos = t;
 
-                velCounter = velTimer;
+                m_velCounter = velTimer;
             }
         }
 
