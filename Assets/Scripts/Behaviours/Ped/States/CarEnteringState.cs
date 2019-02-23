@@ -38,7 +38,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (m_ped.IsLocalPlayer)
 			{
 				if (m_ped.Camera != null) {
-					m_ped.Camera.transform.SetParent (seat.Parent, true);
+				//	m_ped.Camera.transform.SetParent (seat.Parent, true);
 				}
 
 				/*
