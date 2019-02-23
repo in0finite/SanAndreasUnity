@@ -6,12 +6,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public class VehicleController : MonoBehaviour
     {
         private Vehicle _vehicle;
-        private PlayerController _playerController;
+        
 
         private void Awake()
         {
             _vehicle = GetComponent<Vehicle>();
-            _playerController = GameObject.Find("Player").GetComponent<PlayerController>();
         }
 
         private void Update()

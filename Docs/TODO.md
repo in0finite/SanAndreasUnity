@@ -16,7 +16,7 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- **Ped state machine**: update controls window ; delete unused prefab ;
+- **Ped state machine**: update controls window ; test in main scene ;
 
 - Add option to change gravity
 
