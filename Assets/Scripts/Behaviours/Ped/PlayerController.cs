@@ -111,43 +111,36 @@ namespace SanAndreasUnity.Behaviours
                 return;
 
 
-			// reset player input
+			// reset ped input
 			m_ped.ResetMovementInput ();
 			m_ped.MouseMoveInput = Vector2.zero;
 			m_ped.MouseScrollInput = Vector2.zero;
 			
 
-			this.ReadCameraInput ();
-
-
 			if (!GameManager.CanPlayerReadInput()) return;
 
 
-			if (Input.GetKeyDown (KeyCode.Q))
-				m_ped.OnPreviousWeaponButtonPressed();
-			else if (Input.GetKeyDown (KeyCode.E))
-				m_ped.OnNextWeaponButtonPressed();
-			
-            if (Input.GetButtonDown("Use"))
-            	m_ped.OnSubmitPressed ();
-            
-			if (Input.GetKeyDown (KeyCode.T))
-				m_ped.OnFlyButtonPressed();
-			
-			if (Input.GetKeyDown (KeyCode.R))
-				m_ped.OnFlyThroughButtonPressed();
+			// states must be read before events, otherwise callback functions for events will not have access
+			// to states (they will always be unpressed/reset, because we did a reset above)
+			this.ReadStates ();
+			this.ReadEvents ();
+
+
+        }
+
+		void ReadStates()
+		{
+
+			this.ReadCameraInput ();
 
 			m_ped.MouseScrollInput = Input.mouseScrollDelta;
-
-            
-			if (m_ped.IsInVehicle) return;
 
 
 			m_ped.IsAimOn = Input.GetButton ("RightClick");
 			m_ped.IsFireOn = Input.GetButton ("LeftClick");
 
-            
 			m_ped.IsJumpOn = Input.GetButton ("Jump");
+
 
 			Vector3 inputMove = Vector3.zero;
 			if (m_smoothMovement)
@@ -155,9 +148,9 @@ namespace SanAndreasUnity.Behaviours
 			else
 				inputMove = new Vector3 (Input.GetAxisRaw ("Horizontal"), 0f, Input.GetAxisRaw ("Vertical"));
 
-            if (inputMove.sqrMagnitude > 0f)
-            {
-                inputMove.Normalize();
+			if (inputMove.sqrMagnitude > 0f)
+			{
+				inputMove.Normalize();
 
 				if (Input.GetButton ("Walk"))
 					m_ped.IsWalkOn = true;
@@ -166,17 +159,35 @@ namespace SanAndreasUnity.Behaviours
 				else
 					m_ped.IsRunOn = true;
 
-            }
-           	
-            m_ped.Movement = this.Camera.transform.TransformVector(inputMove).normalized;
+			}
+
+			m_ped.Movement = this.Camera.transform.TransformVector(inputMove).normalized;
 
 			if (m_ped.Movement.sqrMagnitude > float.Epsilon) {
 				// only assign heading if there is any movement - we don't want the heading to be zero vector
 				m_ped.Heading = m_ped.Movement;
 			}
 
+		}
 
-        }
+		void ReadEvents()
+		{
+
+			if (Input.GetKeyDown (KeyCode.Q))
+				m_ped.OnPreviousWeaponButtonPressed();
+			else if (Input.GetKeyDown (KeyCode.E))
+				m_ped.OnNextWeaponButtonPressed();
+
+			if (Input.GetButtonDown("Use"))
+				m_ped.OnSubmitPressed ();
+
+			if (Input.GetKeyDown (KeyCode.T))
+				m_ped.OnFlyButtonPressed();
+
+			if (Input.GetKeyDown (KeyCode.R))
+				m_ped.OnFlyThroughButtonPressed();
+
+		}
 
 		private void ReadCameraInput ()
 		{
