@@ -59,7 +59,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   logoTexture: {fileID: 2800000, guid: 7ba03d38f2c9d483eb98097a1990d3ec, type: 3}
-  pedPrefab: {fileID: 1246736317761792, guid: bb8a7229f5c124b06be709ab5a7ff007, type: 2}
   barPrefab: {fileID: 1593438409806284, guid: 92671d073b68a421fa8cf12bd74315cb, type: 2}
 --- !u!114 &114366052828304570
 MonoBehaviour:
@@ -109,11 +108,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d4bc8271f92a431080da3f76af5f901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pedPrefab: {fileID: 1273918895060814, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 2}
   displayHealthBarAbovePeds: 1
   healthBarWorldWidth: 0.65
   healthBarWorldHeight: 0.08
   healthBarMaxScreenHeight: 8
   healthBarVerticalOffset: 0.3
+  AIStoppingDistance: 3
+  AIVehicleEnterDistance: 1.25
+  AIOutOfRangeTimeout: 5
+  AIOutOfRangeDistance: 250
 --- !u!114 &114560248511158306
 MonoBehaviour:
   m_ObjectHideFlags: 1
