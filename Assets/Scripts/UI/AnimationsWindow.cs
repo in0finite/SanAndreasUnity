@@ -10,11 +10,12 @@ namespace SanAndreasUnity.UI {
 	public class AnimationsWindow : PauseMenuWindow {
 
 		private	Vector2	m_scrollViewPos = Vector2.zero;
-		private	float m_lastContentHeight = 0;
+		private bool m_displayPackages = true;
 		private bool m_displayWalkcycleAnims = false;
 		private bool m_displayAnimStats = false;
-		private Vector2 m_headerScrollViewPos = Vector2.zero;
-
+		private float m_minScrollViewHeight = 200;
+		private float m_maxScrollViewHeight = 600;
+		private int m_selectedPackageIndex = 0;
 
 
 		AnimationsWindow() {
@@ -31,29 +32,25 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = Utilities.GUIUtils.GetCenteredRect( new Vector2( 500, 400 ) );
+			this.windowRect = Utilities.GUIUtils.GetCenteredRect( new Vector2( 500, Screen.height * 0.85f ) );
 		}
 
 
 		protected override void OnWindowGUI ()
 		{
-
-//			if (null == Player.Instance) {
-//				GUILayout.Label ("Player object not found");
-//				return;
-//			}
-
-
+			
 			bool playerExists = Ped.Instance != null;
 
 
-			float headerHeight = m_displayAnimStats ? 200 : 60;
+		//	float headerHeight = m_displayAnimStats ? 300 : 100;
 
-			m_headerScrollViewPos = GUILayout.BeginScrollView (m_headerScrollViewPos, GUILayout.Height(headerHeight));
+		//	m_headerScrollViewPos = GUILayout.BeginScrollView (m_headerScrollViewPos, GUILayout.Height(headerHeight));
 
 			if (playerExists)
 				Ped.Instance.shouldPlayAnims = !GUILayout.Toggle( !Ped.Instance.shouldPlayAnims, "Override player anims" );
 
+			m_displayPackages = GUILayout.Toggle(m_displayPackages, "Display packages");
+			
 			m_displayWalkcycleAnims = GUILayout.Toggle( m_displayWalkcycleAnims, "Display walkcycle anims");
 
 			m_displayAnimStats = GUILayout.Toggle( m_displayAnimStats, "Display anim stats");
@@ -63,62 +60,22 @@ namespace SanAndreasUnity.UI {
 				DisplayAnimStats ();
 			}
 
-			GUILayout.EndScrollView ();
+		//	GUILayout.EndScrollView ();
+
+			GUILayout.Space (10);
 
 
-			// display anim groups and their anims
-
-			Rect scrollViewRect = this.windowRect;
-			m_scrollViewPos = GUI.BeginScrollView (new Rect (new Vector2(0, headerHeight), scrollViewRect.size), m_scrollViewPos, 
-				new Rect (Vector2.zero, new Vector2(scrollViewRect.width, m_lastContentHeight) ));
-
-			float labelWidth = 150;
-			float labelHeight = 20;
-			Rect rect = new Rect (new Vector2(0, headerHeight), new Vector2(labelWidth, labelHeight));
-		//	m_lastContentHeight = 0;
-
-
-			foreach (var pair in Importing.Animation.AnimationGroup.AllLoadedGroups) {
-				
-			//	rect.xMin = 0;
-			//	rect.yMin += labelHeight;
-				rect.position = new Vector2( 0, rect.position.y + labelHeight );
-				GUI.Label (rect, "Name: " + pair.Key);
-
-				foreach (var pair2 in pair.Value) {
-
-					if (!m_displayWalkcycleAnims && pair2.Key == AnimGroup.WalkCycle)
-						continue;
-
-				//	rect.xMin = labelWidth;
-				//	rect.yMin += labelHeight;
-					rect.position = new Vector2 (labelWidth, rect.position.y + labelHeight);
-					GUI.Label (rect, "Type: " + pair2.Key);
-
-					var animGroup = pair2.Value;
-
-					rect.position = new Vector2 (labelWidth * 2, rect.position.y);
-					for (int i=0; i < animGroup.Animations.Length; i++) {
-						string animName = animGroup.Animations[i];
-
-						rect.position = new Vector2 (rect.position.x, rect.position.y + labelHeight);
-
-						if (playerExists) {
-							// display button which will play the anim
-							if (GUI.Button (rect, animName)) {
-								Ped.Instance.PlayerModel.ResetModelState ();
-								Ped.Instance.PlayerModel.PlayAnim( animGroup.Type, AnimIndexUtil.Get(i) );
-							}
-						} else {
-							GUI.Label (rect, animName);
-						}
-					}
-				}
+			if (m_displayPackages)
+			{
+				// display loaded ifp packages and their anims
+				this.DisplayPackages (playerExists);
+			}
+			else
+			{
+				// display anim groups and their anims
+				this.DisplayAnimGroups (playerExists);
 			}
 
-			GUI.EndScrollView ();
-
-			m_lastContentHeight = rect.yMax;
 
 		}
 
@@ -174,6 +131,90 @@ namespace SanAndreasUnity.UI {
 			));
 
 		//	GUILayout.EndHorizontal ();
+		}
+
+		private void DisplayAnimGroups(bool playerExists)
+		{
+
+			m_scrollViewPos = GUILayout.BeginScrollView (m_scrollViewPos, GUILayout.MinHeight(m_minScrollViewHeight), GUILayout.MaxHeight(m_maxScrollViewHeight));
+
+			float elementHeight = 25;
+
+			foreach (var pair in Importing.Animation.AnimationGroup.AllLoadedGroups) {
+				
+				GUILayout.Space (5);
+				GUILayout.Label ("Name: " + pair.Key);
+
+				foreach (var pair2 in pair.Value) {
+
+					if (!m_displayWalkcycleAnims && pair2.Key == AnimGroup.WalkCycle)
+						continue;
+					
+					GUILayout.Label ("Type: " + pair2.Key);
+
+					var animGroup = pair2.Value;
+
+					for (int i=0; i < animGroup.Animations.Length; i++) {
+						string animName = animGroup.Animations[i];
+
+						if (playerExists) {
+							// display button which will play the anim
+							if (GUILayout.Button (animName, GUILayout.Height(elementHeight))) {
+								Ped.Instance.PlayerModel.ResetModelState ();
+								Ped.Instance.PlayerModel.PlayAnim( animGroup.Type, AnimIndexUtil.Get(i) );
+							}
+						} else {
+							GUILayout.Label (animName, GUILayout.Height(elementHeight));
+						}
+					}
+				}
+			}
+
+			GUILayout.EndScrollView();
+
+		}
+
+		void DisplayPackages(bool playerExists)
+		{
+			var packages = Importing.Conversion.Animation.Loaded.ToArray ();
+			if (packages.Length < 1)
+			{
+				GUILayout.Label ("There are no loaded ifp packages");
+				return;
+			}
+
+			float animHeight = 25;
+
+			GUILayout.Label ("Ifp name:");
+			m_selectedPackageIndex = GUILayout.Toolbar(m_selectedPackageIndex, packages.Select(p => p.Key).ToArray());
+
+			var package = packages [m_selectedPackageIndex].Value.AnimPackage;
+			var clips = package.Clips;
+
+			GUILayout.Space (10);
+
+			m_scrollViewPos = GUILayout.BeginScrollView (m_scrollViewPos, GUILayout.MinHeight(m_minScrollViewHeight), GUILayout.MaxHeight(m_maxScrollViewHeight));
+
+			for (int i = 0; i < clips.Length; i++)
+			{
+				var clip = clips [i];
+				if (playerExists)
+				{
+					if (GUILayout.Button (clip.Name, GUILayout.Height(animHeight)))
+					{
+						// play this anim
+						Ped.Instance.PlayerModel.ResetModelState ();
+						Ped.Instance.PlayerModel.PlayAnim (new AnimId (package.FileName, clip.Name));
+					}
+				}
+				else
+				{
+					GUILayout.Label (clip.Name, GUILayout.Height(animHeight));
+				}
+			}
+
+			GUILayout.EndScrollView ();
+
 		}
 
 	}
