@@ -39,8 +39,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public static void SwitchToMovementStateBasedOnInput (Ped ped)
 		{
-			
-			if (ped.IsWalkOn)
+
+			if (ped.IsJumpOn && ped.GetStateOrLogError<JumpState>().CanJump())
+			{
+				ped.GetState<JumpState>().Jump();
+			}
+			else if (ped.IsWalkOn)
 			{
 				ped.SwitchState<WalkState> ();
 			}
@@ -54,10 +58,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 					ped.SwitchState<StandState> ();
 				else
 					ped.SwitchState<SprintState> ();
-			}
-			else if (ped.IsJumpOn && ped.GetStateOrLogError<JumpState>().CanJump())
-			{
-				ped.GetState<JumpState>().Jump();
 			}
 			else
 			{
