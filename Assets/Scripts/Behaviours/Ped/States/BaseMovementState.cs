@@ -23,16 +23,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				return;
 
 
-			BaseMovementState.SwitchToMovementStateBasedOnInput (m_ped);
+			this.SwitchToMovementState ();
 
 			if (!this.IsActiveState)
 				return;
 
-			if (m_ped.IsAimOn && m_ped.IsHoldingWeapon)
-			{
-				BaseAimMovementState.SwitchToAimMovementStateBasedOnInput (m_ped);
-			}
+			this.SwitchToAimState ();
 
+		}
+
+		protected virtual void SwitchToMovementState()
+		{
+			BaseMovementState.SwitchToMovementStateBasedOnInput (m_ped);
 		}
 
 		public static void SwitchToMovementStateBasedOnInput (Ped ped)
@@ -53,11 +55,23 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				else
 					ped.SwitchState<SprintState> ();
 			}
+			else if (ped.IsJumpOn && ped.GetStateOrLogError<JumpState>().CanJump())
+			{
+				ped.GetState<JumpState>().Jump();
+			}
 			else
 			{
 				ped.SwitchState<StandState> ();
 			}
 
+		}
+
+		protected virtual void SwitchToAimState()
+		{
+			if (m_ped.IsAimOn && m_ped.IsHoldingWeapon)
+			{
+				BaseAimMovementState.SwitchToAimMovementStateBasedOnInput (m_ped);
+			}
 		}
 
 		protected override void UpdateAnims ()

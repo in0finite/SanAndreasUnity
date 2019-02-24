@@ -268,6 +268,8 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
+		public bool IsHeavy { get { return this.HasFlag (GunFlag.HEAVY); } }
+
 		public virtual bool CanTurnInDirectionOtherThanAiming {
 			get {
 				if (this.HasFlag (GunFlag.AIMWITHARM))

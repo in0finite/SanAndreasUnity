@@ -23,6 +23,21 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_ped = this.GetComponentInParent<Ped> ();
 		}
 
+		protected virtual void OnEnable ()
+		{
+			
+		}
+
+		protected virtual void OnDisable ()
+		{
+			
+		}
+
+		protected virtual void Start ()
+		{
+
+		}
+
 		public virtual void OnBecameActive ()
 		{
 			

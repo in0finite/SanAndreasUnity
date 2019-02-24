@@ -388,6 +388,11 @@ namespace SanAndreasUnity.Behaviours
 			return PlayAnim (new AnimId (animGroup, animIndex), playMode);
 		}
 
+		public AnimationState PlayAnim (string fileName, string animName, PlayMode playMode = PlayMode.StopAll)
+		{
+			return PlayAnim (new AnimId (fileName, animName), playMode);
+		}
+
 		public bool Play2Anims (AnimId animIdA, AnimId animIdB)
 		{
 
