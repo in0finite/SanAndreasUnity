@@ -13,7 +13,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		private Coroutine m_coroutine;
 		private int m_currentAnimIndex = 0;
-		private Vector3 m_lastModelVelocity = Vector3.zero;
+	//	private Vector3 m_lastModelVelocity = Vector3.zero;
 
 		[Range(0, 10)] public float launchVelocityMultiplier = 1f;
 		[Range(0, 10)] public float glideVelocity = 2f;
@@ -26,7 +26,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameActive ();
 
 			m_currentAnimIndex = 0;
-			m_lastModelVelocity = Vector3.zero;
 			m_coroutine = this.StartCoroutine (this.Coroutine());
 		}
 
@@ -45,13 +44,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// play 3 anims one after another
 
 			m_currentAnimIndex = 0;
-			m_lastModelVelocity = Vector3.zero;
 
 			var state = m_model.PlayAnim ("ped", "JUMP_launch");
 			state.wrapMode = WrapMode.Once;
 			while( state.enabled )
 			{
-				m_lastModelVelocity = m_model.Velocity;
 				yield return null;
 			}
 
@@ -105,7 +102,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// if character is grounded, then we are no longer in jump state
 			if (m_currentAnimIndex == 1 && m_ped.IsGrounded)
 			{
-				Debug.LogFormat ("Character is grounded, exiting jump state");
+			//	Debug.LogFormat ("Character is grounded, exiting jump state");
 				m_ped.SwitchState<StandState> ();
 			}
 			
