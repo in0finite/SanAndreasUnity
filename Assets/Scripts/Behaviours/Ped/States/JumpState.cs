@@ -14,7 +14,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		private Coroutine m_coroutine;
 		private int m_currentAnimIndex = 0;
 		private Vector3 m_lastModelVelocity = Vector3.zero;
-		public float glideVelocity = 3f;
+
+		[Range(0, 10)] public float launchVelocityMultiplier = 1f;
+		[Range(0, 10)] public float glideVelocity = 2f;
+		[Range(0, 10)] public float landVelocityMultiplier = 1f;
 
 
 
@@ -158,10 +161,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected override void UpdateMovement ()
 		{
 			Vector3 modelVelocity = m_model.Velocity;
-			if( m_currentAnimIndex == 1 )
+			if( m_currentAnimIndex == 0 )
+				modelVelocity.z *= this.launchVelocityMultiplier;
+			else if( m_currentAnimIndex == 1 )
 				modelVelocity.z = this.glideVelocity;
 			else if( m_currentAnimIndex == 2 )
+			{
 				modelVelocity.y = Mathf.Min(modelVelocity.y, 0f);	// don't allow to move upwards
+				modelVelocity.z *= this.landVelocityMultiplier;
+			}
 
 			Vector3 velocity = m_ped.transform.forward.WithXAndZ().normalized * modelVelocity.z + Vector3.up * modelVelocity.y;
 			// we won't apply gravity
