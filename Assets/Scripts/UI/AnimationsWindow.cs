@@ -160,8 +160,7 @@ namespace SanAndreasUnity.UI {
 						if (playerExists) {
 							// display button which will play the anim
 							if (GUILayout.Button (animName, GUILayout.Height(elementHeight))) {
-								Ped.Instance.PlayerModel.ResetModelState ();
-								Ped.Instance.PlayerModel.PlayAnim( animGroup.Type, AnimIndexUtil.Get(i) );
+								this.PlayAnim(new AnimId(animGroup.Type, AnimIndexUtil.Get(i)));
 							}
 						} else {
 							GUILayout.Label (animName, GUILayout.Height(elementHeight));
@@ -203,8 +202,7 @@ namespace SanAndreasUnity.UI {
 					if (GUILayout.Button (clip.Name, GUILayout.Height(animHeight)))
 					{
 						// play this anim
-						Ped.Instance.PlayerModel.ResetModelState ();
-						Ped.Instance.PlayerModel.PlayAnim (new AnimId (package.FileName, clip.Name));
+						this.PlayAnim(new AnimId (package.FileName, clip.Name));
 					}
 				}
 				else
@@ -215,6 +213,13 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.EndScrollView ();
 
+		}
+
+		void PlayAnim(AnimId animId)
+		{
+			Ped.Instance.PlayerModel.ResetModelState ();
+			var state = Ped.Instance.PlayerModel.PlayAnim (animId);
+			state.wrapMode = WrapMode.Loop;
 		}
 
 	}
