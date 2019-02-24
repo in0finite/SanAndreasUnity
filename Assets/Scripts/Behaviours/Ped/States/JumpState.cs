@@ -14,6 +14,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		private Coroutine m_coroutine;
 		private int m_currentAnimIndex = 0;
 		private Vector3 m_lastModelVelocity = Vector3.zero;
+		public float glideVelocity = 3f;
 
 
 
@@ -67,7 +68,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// all anims finished
 			// switch to other state
-			Debug.LogFormat("All 3 anims finished, switching state");
+		//	Debug.LogFormat("All 3 anims finished, switching state");
 			m_ped.SwitchState<StandState>();
 
 		}
@@ -158,7 +159,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			Vector3 modelVelocity = m_model.Velocity;
 			if( m_currentAnimIndex == 1 )
-				modelVelocity.z = m_lastModelVelocity.z;
+				modelVelocity.z = this.glideVelocity;
+			else if( m_currentAnimIndex == 2 )
+				modelVelocity.y = Mathf.Min(modelVelocity.y, 0f);	// don't allow to move upwards
 
 			Vector3 velocity = m_ped.transform.forward.WithXAndZ().normalized * modelVelocity.z + Vector3.up * modelVelocity.y;
 			// we won't apply gravity
