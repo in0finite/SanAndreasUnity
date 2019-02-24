@@ -219,12 +219,14 @@ namespace SanAndreasUnity.Behaviours
 			if (null == state)
 				return;
 			
-			IState oldState = this.CurrentState;
+		//	IState oldState = this.CurrentState;
 
 			m_stateMachine.SwitchState (state);
 
-			if(oldState != state)
-				Debug.LogFormat ("Switched to state: {0}", state.GetType().Name);
+//			if (oldState != state)
+//			{
+//				Debug.LogFormat ("Switched to state: {0}", state.GetType ().Name);
+//			}
 			
 		}
 
