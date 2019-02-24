@@ -33,6 +33,7 @@ GameObject:
   - component: {fileID: 114051921114482032}
   - component: {fileID: 114805415584932730}
   - component: {fileID: 114860926047028576}
+  - component: {fileID: 114541342841796004}
   m_Layer: 11
   m_Name: States
   m_TagString: Untagged
@@ -244,6 +245,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7969460c603724e2a9bcaee09e341625, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114541342841796004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f43370ea311141ba88d19a40632349a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  launchVelocityMultiplier: 1
+  glideVelocity: 1.75
+  landVelocityMultiplier: 0.5
 --- !u!114 &114564354208745784
 MonoBehaviour:
   m_ObjectHideFlags: 1
