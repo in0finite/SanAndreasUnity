@@ -13,6 +13,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		private Coroutine m_coroutine;
 		private int m_currentAnimIndex = 0;
+		private Vector3 m_lastModelVelocity = Vector3.zero;
 
 
 
@@ -21,6 +22,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameActive ();
 
 			m_currentAnimIndex = 0;
+			m_lastModelVelocity = Vector3.zero;
 			m_coroutine = this.StartCoroutine (this.Coroutine());
 		}
 
@@ -39,11 +41,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// play 3 anims one after another
 
 			m_currentAnimIndex = 0;
+			m_lastModelVelocity = Vector3.zero;
 
 			var state = m_model.PlayAnim ("ped", "JUMP_launch");
 			state.wrapMode = WrapMode.Once;
-			while (state.enabled)
+			while( state.enabled )
+			{
+				m_lastModelVelocity = m_model.Velocity;
 				yield return null;
+			}
 
 			m_currentAnimIndex++;
 
@@ -150,8 +156,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override void UpdateMovement ()
 		{
-			
-			Vector3 velocity = m_ped.transform.forward.WithXAndZ().normalized * m_model.Velocity.z + Vector3.up * m_model.Velocity.y;
+			Vector3 modelVelocity = m_model.Velocity;
+			if( m_currentAnimIndex == 1 )
+				modelVelocity.z = m_lastModelVelocity.z;
+
+			Vector3 velocity = m_ped.transform.forward.WithXAndZ().normalized * modelVelocity.z + Vector3.up * modelVelocity.y;
 			// we won't apply gravity
 
 			m_ped.characterController.Move (velocity * Time.deltaTime);
