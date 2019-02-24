@@ -93,10 +93,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
-		public override void OnJumpPressed() {
-
-			// try to jump
-
+		public override void OnCrouchButtonPressed ()
+		{
+			m_ped.SwitchState<CrouchState>();
 		}
 
 		public override void OnFlyButtonPressed ()

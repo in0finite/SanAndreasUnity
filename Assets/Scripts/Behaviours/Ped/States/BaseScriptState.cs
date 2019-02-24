@@ -224,6 +224,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+		public virtual void OnCrouchButtonPressed()
+		{
+
+		}
+
 		public virtual void OnNextWeaponButtonPressed()
 		{
 			m_ped.WeaponHolder.SwitchWeapon (true);

@@ -183,6 +183,12 @@ namespace SanAndreasUnity.Behaviours
 			if (Input.GetButtonDown("Use"))
 				m_ped.OnSubmitPressed ();
 
+			if (Input.GetButtonDown("Jump"))
+				m_ped.OnJumpButtonPressed ();
+
+			if (Input.GetKeyDown(KeyCode.C))
+				m_ped.OnCrouchButtonPressed ();
+
 			if (Input.GetKeyDown (KeyCode.T))
 				m_ped.OnFlyButtonPressed();
 

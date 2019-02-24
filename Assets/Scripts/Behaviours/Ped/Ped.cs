@@ -27,8 +27,6 @@ namespace SanAndreasUnity.Behaviours
 		private WeaponHolder m_weaponHolder;
 		public WeaponHolder WeaponHolder { get { return m_weaponHolder; } }
 
-        private int jumpTimer;
-
 		private StateMachine m_stateMachine = new StateMachine ();
 
         #endregion Private Fields
@@ -45,12 +43,6 @@ namespace SanAndreasUnity.Behaviours
         public CharacterController characterController;
 
         public float jumpSpeed = 8.0f;
-
-        // Small amounts of this results in bumping when walking down slopes, but large amounts results in falling too fast
-        public float antiBumpFactor = .75f;
-
-        // Player must be grounded for at least this many physics frames before being able to jump again; set to 0 to allow bunny hopping
-        public int antiBunnyHopFactor = 1;
 
 		[SerializeField] private float m_cameraDistance = 3f;
 		public float CameraDistance { get { return m_cameraDistance; } set { m_cameraDistance = value; } }
@@ -234,8 +226,6 @@ namespace SanAndreasUnity.Behaviours
         public void OnSpawn()
         {
             // Note: Spawn is performed here.
-
-            jumpTimer = antiBunnyHopFactor;
 
 			if (!IsGrounded) {
 				// Find the ground (instead of falling)
@@ -611,6 +601,18 @@ namespace SanAndreasUnity.Behaviours
 			{
 				this.CurrentState.OnSubmitPressed ();
 			}
+		}
+
+		public void OnJumpButtonPressed ()
+		{
+			if (this.CurrentState != null)
+				this.CurrentState.OnJumpPressed ();
+		}
+
+		public void OnCrouchButtonPressed ()
+		{
+			if (this.CurrentState != null)
+				this.CurrentState.OnCrouchButtonPressed ();
 		}
 
 		public void OnNextWeaponButtonPressed ()

@@ -13,7 +13,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		private Coroutine m_coroutine;
 		private int m_currentAnimIndex = 0;
-	//	private Vector3 m_lastModelVelocity = Vector3.zero;
 
 		[Range(0, 10)] public float launchVelocityMultiplier = 1f;
 		[Range(0, 10)] public float glideVelocity = 2f;
@@ -129,6 +128,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 		public override void OnJumpPressed ()
+		{
+			// ignore
+		}
+
+		public override void OnCrouchButtonPressed ()
 		{
 			// ignore
 		}
