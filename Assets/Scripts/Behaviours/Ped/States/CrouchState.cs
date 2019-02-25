@@ -12,12 +12,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 
 
-		// Description:
-		// - can't switch to jump, sprint, run, walk
-		// - can switch to Stand when Crouch or Jump is pressed, or to CrouchMove when run is on
-		// - when aim is pressed, switch to CrouchAim
-
-
 		protected override void SwitchToMovementState ()
 		{
 			// can only switch to CrouchMove state
@@ -39,14 +33,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			{
 				ped.SwitchState<CrouchAimState>();
 			}
-		}
-
-		protected override void UpdateAnims ()
-		{
-			base.UpdateAnims();
-			// anim does not set correct velocity
-			// set it to zero to make the ped stand in place
-			m_model.RootFrame.LocalVelocity = Vector3.zero;
 		}
 
 		public override void OnJumpPressed ()
