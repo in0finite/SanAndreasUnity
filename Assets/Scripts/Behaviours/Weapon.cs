@@ -139,16 +139,6 @@ namespace SanAndreasUnity.Behaviours
 
 
 
-		protected Weapon()
-		{
-			// set default weapon anims and other params
-
-			this.CrouchAimAnim = new AnimId("COLT45", "colt45_crouchfire");
-			this.CrouchAimAnimMaxTime = WeaponsManager.ConvertAnimTime (this.data.gunData.animLoop2Start);
-			this.CrouchAimAnimFireMaxTime = WeaponsManager.ConvertAnimTime (this.data.gunData.animLoop2End);
-
-		}
-
 		static Weapon ()
 		{
 			// obtain all weapon types
@@ -213,6 +203,8 @@ namespace SanAndreasUnity.Behaviours
 				}
 			});
 
+			weapon.InitWeapon();
+
 			return weapon;
 		}
 
@@ -245,6 +237,20 @@ namespace SanAndreasUnity.Behaviours
 		protected virtual void Awake ()
 		{
 			this.GunFlash = this.transform.FindChildRecursive("gunflash");
+		}
+
+		/// <summary>
+		/// Called after creating a weapon and assigning it's parameters, such are WeaponData and HUD texture.
+		/// Use this method to assign aim animations and timings, or initialize anything else related to weapon.
+		/// </summary>
+		protected virtual void InitWeapon()
+		{
+			// set default weapon anims and other params
+
+			this.CrouchAimAnim = new AnimId("COLT45", "colt45_crouchfire");
+			this.CrouchAimAnimMaxTime = WeaponsManager.ConvertAnimTime (this.data.gunData.animLoop2Start);
+			this.CrouchAimAnimFireMaxTime = WeaponsManager.ConvertAnimTime (this.data.gunData.animLoop2End);
+
 		}
 
 		protected virtual void Start ()
