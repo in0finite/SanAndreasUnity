@@ -139,6 +139,16 @@ namespace SanAndreasUnity.Behaviours
 
 
 
+		protected Weapon()
+		{
+			// set default weapon anims and other params
+
+			this.CrouchAimAnim = new AnimId("COLT45", "colt45_crouchfire");
+			this.CrouchAimAnimMaxTime = WeaponsManager.ConvertAnimTime (this.data.gunData.animLoop2Start);
+			this.CrouchAimAnimFireMaxTime = WeaponsManager.ConvertAnimTime (this.data.gunData.animLoop2End);
+
+		}
+
 		static Weapon ()
 		{
 			// obtain all weapon types
@@ -350,6 +360,8 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
+		public AnimId CrouchAimAnim { get; set; }
+
 		public virtual float AimAnimMaxTime {
 			get {
 				return Weapons.WeaponsManager.ConvertAnimTime (this.data.gunData.animLoopStart);
@@ -361,6 +373,10 @@ namespace SanAndreasUnity.Behaviours
 				return Weapons.WeaponsManager.ConvertAnimTime (this.data.gunData.animLoopEnd);
 			}
 		}
+
+		public float CrouchAimAnimMaxTime { get; set; }
+
+		public float CrouchAimAnimFireMaxTime { get; set; }
 
 		public virtual float GunFlashDuration {
 			get {

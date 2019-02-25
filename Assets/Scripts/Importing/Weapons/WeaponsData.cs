@@ -39,7 +39,7 @@ namespace SanAndreasUnity.Importing.Weapons
 			public readonly float moveSpeed;// (0.5 - 1.5)
 
 			public readonly int animLoopStart, animLoopEnd, animLoopFire;
-			public readonly int animLoop2Start, animLoop2End, animLoop2Fire;
+			public readonly int animLoop2Start, animLoop2End, animLoop2Fire;	// for crouching
 
 			public readonly int breakoutTime;
 
