@@ -7,19 +7,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class CrouchMoveState : BaseMovementState
 	{
-		public override AnimId movementAnim {
-			get
-			{
-				float angle = Vector3.Angle (m_ped.Movement, m_ped.transform.forward);
-				if( angle > 110 )
-				{
-					// move backward
-					return new AnimId ("ped", "GunCrouchBwd");
-				}
-				// move forward
-				return new AnimId ("ped", "GunCrouchFwd");
-			}
-		}
+		public override AnimId movementAnim { get { return new AnimId ("ped", "GunCrouchFwd"); } }
 		public override AnimId movementWeaponAnim { get { return this.movementAnim; } }
 
 
