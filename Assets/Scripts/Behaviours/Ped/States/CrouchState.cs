@@ -41,6 +41,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			}
 		}
 
+		protected override void UpdateAnims ()
+		{
+			base.UpdateAnims();
+			// anim does not set correct velocity
+			// set it to zero to make the ped stand in place
+			m_model.RootFrame.LocalVelocity = Vector3.zero;
+		}
+
 		public override void OnJumpPressed ()
 		{
 			// switch to stand state

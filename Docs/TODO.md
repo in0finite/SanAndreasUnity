@@ -18,6 +18,8 @@
 
 - **Ped state machine**: implement: jump, crouch, roll, die ;
 
+- Crouching: ped can move while in Crouch state - set frame velocity to zero ; ped does not rotate in direction of aiming when holding AWA weapon ; ped changes rotation while aiming ;
+
 - Add option to change gravity
 
 - don't fade high LOD meshes
