@@ -71,6 +71,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// ignore
 		}
 
+		protected override void RotatePedInDirectionOfAiming ()
+		{
+			BaseAimMovementState.RotatePedInDirectionOfAiming( m_ped );
+		}
+
 		// TODO: check camera collision - change camera offset
 
 

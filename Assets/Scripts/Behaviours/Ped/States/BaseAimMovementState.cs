@@ -136,14 +136,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+		protected virtual void RotatePedInDirectionOfAiming()
+		{
+			if (m_ped.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
+				return;
+
+			BaseAimMovementState.RotatePedInDirectionOfAiming( m_ped );
+		}
+
 		public static void RotatePedInDirectionOfAiming(Ped ped)
 		{
-			if (!ped.WeaponHolder.rotatePlayerInDirectionOfAiming)
-				return;
-
-			if (ped.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
-				return;
-
+			
 //			Vector3 lookAtPos = Camera.transform.position + Camera.transform.forward * 500;
 //			lookAtPos.y = m_player.transform.position.y;
 //
@@ -448,7 +451,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.RotateCamera ();
 
 			// this must be called from here (right after the camera transform is changed), otherwise camera will shake
-			BaseAimMovementState.RotatePedInDirectionOfAiming (m_ped);
+			this.RotatePedInDirectionOfAiming ();
 		}
 
 		public override void UpdateCameraZoom()
