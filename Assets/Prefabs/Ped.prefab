@@ -34,6 +34,8 @@ GameObject:
   - component: {fileID: 114805415584932730}
   - component: {fileID: 114860926047028576}
   - component: {fileID: 114541342841796004}
+  - component: {fileID: 114663503631305326}
+  - component: {fileID: 114059006300769246}
   m_Layer: 11
   m_Name: States
   m_TagString: Untagged
@@ -155,6 +157,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad7b39219621a45dea5eddf1c67486c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114059006300769246
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a658f459c4f543c5abdd7d9570a9b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114099438993920694
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -172,8 +185,6 @@ MonoBehaviour:
   TurnSpeed: 10
   characterController: {fileID: 0}
   jumpSpeed: 8
-  antiBumpFactor: 0.75
-  antiBunnyHopFactor: 1
   m_cameraDistance: 3
   m_cameraDistanceVehicle: 6
   m_cameraClampValue: {x: 60, y: 60}
@@ -290,6 +301,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84062dfd700b5436292c51d37eba57f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114663503631305326
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72812118050114157b2f9d5368c7e7c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114671475596742702
