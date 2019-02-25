@@ -7,20 +7,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class CrouchState : BaseMovementState
 	{
-		public override AnimId movementAnim { get { return new AnimId (AnimGroup.WalkCycle, AnimIndex.Idle); } }
+		public override AnimId movementAnim { get { return new AnimId ("ped", "WEAPON_crouch"); } }
 		public override AnimId movementWeaponAnim { get { return this.movementAnim; } }
 
 
-		public override void UpdateState() {
 
-			base.UpdateState();
-
-			if (!this.IsActiveState)
-				return;
-
-		}
-
-		// TODO:
+		// Description:
 		// - can't switch to jump, sprint, run, walk
 		// - can switch to Stand when Crouch or Jump is pressed, or to CrouchMove when run is on
 		// - when aim is pressed, switch to CrouchAim
@@ -28,8 +20,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override void SwitchToMovementState ()
 		{
-			// TODO: can only switch to CrouchMove state
-
+			// can only switch to CrouchMove state
+			if( m_ped.Movement.sqrMagnitude > float.Epsilon )
+			{
+				m_ped.SwitchState<CrouchMoveState>();
+			}
 		}
 
 		protected override void SwitchToAimState ()
@@ -44,7 +39,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// it's better to do this event-based, because after switching to stand state, we may enter
 			// jump state right after it
 
-			m_ped.SwitchState<StandState>();
+			// we can't switch to stand state, because that will cause ped to jump (jump button will be on)
+
+		//	m_ped.SwitchState<StandState>();
 		}
 
 		public override void OnCrouchButtonPressed ()
