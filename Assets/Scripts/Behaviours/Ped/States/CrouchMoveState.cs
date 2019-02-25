@@ -35,8 +35,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override void SwitchToAimState ()
 		{
-			// TODO: can only switch to CrouchAim state
-
+			// can only switch to CrouchAim state
+			CrouchState.SwitchToAimState(m_ped);
 		}
 
 		public override void OnJumpPressed ()

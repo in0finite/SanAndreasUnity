@@ -16,6 +16,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public abstract AnimId aimWithArm_LowerAnim { get; }
 
+		public virtual float AimAnimMaxTime { get { return m_weapon.AimAnimMaxTime; } }
+		public virtual float AimAnimFireMaxTime { get { return m_weapon.AimAnimFireMaxTime; } }
+
 
 
 		public override void UpdateState()
@@ -242,23 +245,23 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void UpdateAimAnim(AnimationState state)
 		{
-			BaseAimMovementState.UpdateAimAnim (m_ped, state, () => this.TryFire());
+			BaseAimMovementState.UpdateAimAnim (m_ped, state, this.AimAnimMaxTime, this.AimAnimFireMaxTime, () => this.TryFire());
 		}
 
-		public static void UpdateAimAnim(Ped ped, AnimationState state, System.Func<bool> tryFireFunc)
+		public static void UpdateAimAnim(Ped ped, AnimationState state, float aimAnimMaxTime, float aimAnimFireMaxTime, 
+			System.Func<bool> tryFireFunc)
 		{
-			var weapon = ped.CurrentWeapon;
-
-			if (state.time > weapon.AimAnimMaxTime) {
+			
+			if (state.time > aimAnimMaxTime) {
 
 				if (ped.IsFiring) {
 					state.enabled = true;
 
 					// check if anim reached end
-					if(state.time >= weapon.AimAnimFireMaxTime) {
+					if(state.time >= aimAnimFireMaxTime) {
 						// anim reached end, revert it to start
 
-						state.time = weapon.AimAnimMaxTime;
+						state.time = aimAnimMaxTime;
 						ped.AnimComponent.Sample ();
 
 					//	if (!ped.IsFireOn || !ped.IsAimOn)
@@ -275,7 +278,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 					} else {
 						// we should remain in aim state
-						state.time = weapon.AimAnimMaxTime;
+						state.time = aimAnimMaxTime;
 						ped.AnimComponent.Sample ();
 						state.enabled = false;
 					}

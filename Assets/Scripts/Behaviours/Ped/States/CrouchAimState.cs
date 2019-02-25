@@ -8,7 +8,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	public class CrouchAimState : BaseAimMovementState
 	{
 		// not used
-		public override AnimId aimWithArm_LowerAnim { get { return m_ped.CurrentWeapon.IdleAnim; } }
+		public override AnimId aimWithArm_LowerAnim { get { throw new System.InvalidOperationException(); } }
+
+		// override aim anim timings
+		public override float AimAnimMaxTime { get { return m_weapon.CrouchAimAnimMaxTime; } }
+		public override float AimAnimFireMaxTime { get { return m_weapon.CrouchAimAnimFireMaxTime; } }
 
 
 
