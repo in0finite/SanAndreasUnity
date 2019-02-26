@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Behaviours.Weapons
 		protected override void InitWeapon ()
 		{
 			base.InitWeapon();
-			this.CrouchAimAnim = new AnimId("PYTHON", "python_crouchfire");
+		//	this.CrouchAimAnim = new AnimId("PYTHON", "python_crouchfire");
 		}
 
 		public override AnimId IdleAnim {

@@ -18,7 +18,7 @@
 
 - **Ped state machine**: implement: jump, crouch, roll, die ;
 
-- Crouching: set coresponding anim for every weapon ; rotate neck in direction of aiming ;
+- Crouching: set coresponding anim for weapons: country rifle, sawnoff,  ; rotate neck in direction of aiming ; adjust camera aim offset ;
 
 - Add option to change gravity
 

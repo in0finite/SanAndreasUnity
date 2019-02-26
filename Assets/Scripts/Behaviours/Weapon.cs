@@ -233,6 +233,16 @@ namespace SanAndreasUnity.Behaviours
 			return false;
 		}
 
+		public static string ExtractAnimGroupName(string assocGroupId)
+		{
+			if( assocGroupId.EndsWith( "bad" ) )
+				return assocGroupId.Substring( 0, assocGroupId.Length - 3 );
+			if( assocGroupId.EndsWith( "pro" ) )
+				return assocGroupId.Substring( 0, assocGroupId.Length - 3 );
+
+			return assocGroupId;
+		}
+
 
 		protected virtual void Awake ()
 		{
@@ -247,9 +257,17 @@ namespace SanAndreasUnity.Behaviours
 		{
 			// set default weapon anims and other params
 
-			this.CrouchAimAnim = new AnimId(this.Data.gunData.AssocGroupId, this.Data.gunData.AssocGroupId + "_crouchfire");
-			this.CrouchAimAnimMaxTime = WeaponsManager.ConvertAnimTime (this.data.gunData.animLoop2Start);
-			this.CrouchAimAnimFireMaxTime = WeaponsManager.ConvertAnimTime (this.data.gunData.animLoop2End);
+			string animGroup = ExtractAnimGroupName( this.Data.gunData.AssocGroupId );
+
+			this.CanCrouchAim = this.HasFlag( GunFlag.CROUCHFIRE );
+
+			if( this.HasFlag( GunFlag.CROUCHFIRE ) )
+				this.CrouchAimAnim = new AnimId( animGroup, animGroup + "_crouchfire" );
+			else
+				this.CrouchAimAnim = new AnimId( "RIFLE", "RIFLE_crouchfire" );
+			
+			this.CrouchAimAnimMaxTime = WeaponsManager.ConvertAnimTime (this.Data.gunData.animLoop2Start);
+			this.CrouchAimAnimFireMaxTime = WeaponsManager.ConvertAnimTime (this.Data.gunData.animLoop2End);
 
 		}
 
@@ -285,6 +303,8 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 		public bool IsHeavy { get { return this.HasFlag (GunFlag.HEAVY); } }
+
+		public bool CanCrouchAim { get; set; }
 
 		public virtual bool CanTurnInDirectionOtherThanAiming {
 			get {
