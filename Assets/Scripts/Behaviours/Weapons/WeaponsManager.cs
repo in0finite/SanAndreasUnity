@@ -39,8 +39,8 @@ namespace SanAndreasUnity.Behaviours.Weapons
 
 		[Space(15)]
 
-		public Vector3 neckRotationOffset;
-		public Vector3 neckRotationOffset2;
+		public Vector3 crouchSpineRotationOffset;
+		public Vector3 crouchSpineRotationOffset2;
 
 		[Space(15)]
 

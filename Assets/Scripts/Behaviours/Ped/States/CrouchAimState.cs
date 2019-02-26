@@ -42,20 +42,19 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override void RotateSpine ()
 		{
-			// we'll use this method to rotate neck instead of spine
-
-			if( null == m_model.Neck || null == m_weapon )
+			
+			if( null == m_model.Spine || null == m_weapon )
 				return;
 
 			Vector3 forward = m_ped.transform.forward;
 			forward.y = m_ped.AimDirection.y;
 			forward.Normalize();
 
-			m_model.Neck.forward = forward;
+			m_model.Spine.forward = forward;
 
 			// apply rotation offset
 
-			m_model.Neck.Rotate( m_weapon.NeckRotationOffset );
+			m_model.Spine.Rotate( m_weapon.NeckRotationOffset );
 
 		}
 

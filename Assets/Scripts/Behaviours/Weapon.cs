@@ -269,7 +269,7 @@ namespace SanAndreasUnity.Behaviours
 			this.CrouchAimAnimMaxTime = WeaponsManager.ConvertAnimTime (this.Data.gunData.animLoop2Start);
 			this.CrouchAimAnimFireMaxTime = WeaponsManager.ConvertAnimTime (this.Data.gunData.animLoop2End);
 
-			this.NeckRotationOffset = WeaponsSettings.neckRotationOffset;
+			this.NeckRotationOffset = WeaponsSettings.crouchSpineRotationOffset;
 
 		}
 
@@ -280,7 +280,7 @@ namespace SanAndreasUnity.Behaviours
 
 		protected virtual void Update ()
 		{
-
+			
 			if (WeaponsSettings.drawLineFromGun)
 			{
 				Vector3 start, end;
