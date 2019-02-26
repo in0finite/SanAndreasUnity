@@ -22,6 +22,8 @@
 
 - Add option to change gravity
 
+- Disable collision between peds and vehicles
+
 - don't fade high LOD meshes
 
 - Validate path to GTA ?
