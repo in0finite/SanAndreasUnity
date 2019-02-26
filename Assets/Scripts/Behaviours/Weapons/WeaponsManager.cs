@@ -39,6 +39,11 @@ namespace SanAndreasUnity.Behaviours.Weapons
 
 		[Space(15)]
 
+		public Vector3 neckRotationOffset;
+		public Vector3 neckRotationOffset2;
+
+		[Space(15)]
+
 		public LayerMask projectileRaycastMask = Physics.DefaultRaycastLayers;
 
 		public bool drawLineFromGun = false;

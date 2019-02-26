@@ -269,6 +269,8 @@ namespace SanAndreasUnity.Behaviours
 			this.CrouchAimAnimMaxTime = WeaponsManager.ConvertAnimTime (this.Data.gunData.animLoop2Start);
 			this.CrouchAimAnimFireMaxTime = WeaponsManager.ConvertAnimTime (this.Data.gunData.animLoop2End);
 
+			this.NeckRotationOffset = WeaponsSettings.neckRotationOffset;
+
 		}
 
 		protected virtual void Start ()
@@ -409,6 +411,9 @@ namespace SanAndreasUnity.Behaviours
 				return Weapons.WeaponsManager.Instance.GunFlashDuration;
 			}
 		}
+
+		public Vector3 NeckRotationOffset { get; set; }
+
 
 		public bool IsAimingBack () {
 
