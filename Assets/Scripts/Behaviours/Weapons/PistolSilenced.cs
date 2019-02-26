@@ -37,13 +37,6 @@ namespace SanAndreasUnity.Behaviours.Weapons
 			}
 		}
 
-//		public override void UpdateAnimWhileAiming (Player player)
-//		{
-//			var state = player.PlayerModel.PlayAnim (this.AimAnim);
-//
-//		}
-
-
 	}
 
 }

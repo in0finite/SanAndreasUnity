@@ -6,13 +6,7 @@ namespace SanAndreasUnity.Behaviours.Weapons
 
 	public class DesertEagle : Weapon
 	{
-
-
-		protected override void InitWeapon ()
-		{
-			base.InitWeapon();
-		//	this.CrouchAimAnim = new AnimId("PYTHON", "python_crouchfire");
-		}
+		
 
 		public override AnimId IdleAnim {
 			get {
@@ -40,12 +34,6 @@ namespace SanAndreasUnity.Behaviours.Weapons
 					return new AnimId (AnimGroup.Python, AnimIndex.python_fire);
 			}
 		}
-
-//		public override void UpdateAnimWhileAiming (Player player)
-//		{
-//			var state = player.PlayerModel.PlayAnim (this.AimAnim);
-//
-//		}
 
 
 	}
