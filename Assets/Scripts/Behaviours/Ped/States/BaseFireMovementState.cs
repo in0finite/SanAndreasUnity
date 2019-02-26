@@ -46,6 +46,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override bool SwitchToFiringState ()
 		{
+			// switch to other fire movement state
 			SwitchToFireMovementStateBasedOnInput (m_ped);
 			return ! this.IsActiveState;
 		}

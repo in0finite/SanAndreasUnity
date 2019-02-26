@@ -5,7 +5,7 @@ using SanAndreasUnity.Importing.Animation;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public class CrouchAimState : BaseAimMovementState
+	public class CrouchFireState : CrouchAimState, IFireState
 	{
 		// not used
 		public override AnimId aimWithArm_LowerAnim { get { throw new System.InvalidOperationException(); } }
@@ -16,39 +16,34 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 
 
-		protected override bool SwitchToNonAimMovementState ()
-		{
-			// can only switch to Crouch state
-			if( !m_ped.IsAimOn || !m_ped.IsHoldingWeapon )
-			{
-				m_ped.SwitchState<CrouchState>();
-				return true;
-			}
-			return false;
-		}
-
 		protected override bool SwitchToFiringState ()
 		{
+			// there are no other fire movement states to switch to
 			return false;
 		}
 
 		protected override bool SwitchToOtherAimMovementState ()
 		{
-			// there are no other states to switch to
+			// we'll switch to aim state when fire anim finishes
 			return false;
 		}
 
 		protected override void RotateSpine ()
 		{
-			// ignore
+			// TODO:
 		}
 
 		public override void StartFiring ()
 		{
-			// switch to CrouchFire state
-			m_ped.SwitchState<CrouchFireState>();
+			// ignore
 		}
 
+		public virtual void StopFiring ()
+		{
+			// switch to crouch-aim state
+			m_ped.SwitchState<CrouchAimState>();
+		}
+		/*
 		protected override void UpdateAnims ()
 		{
 			base.UpdateAnims();
@@ -95,12 +90,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			m_ped.Heading = m_ped.AimDirection.WithXAndZ ().normalized;
 		}
+		*/
 
 		// TODO: check camera collision - change camera offset
 
 
 
 
+
+		public override void OnSubmitPressed ()
+		{
+			// ignore
+		}
 
 		public override void OnJumpPressed ()
 		{
