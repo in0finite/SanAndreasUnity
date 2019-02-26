@@ -155,12 +155,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			
 		}
 
-		public Vector3 GetCameraFocusPos()
+		public virtual Vector3 GetCameraFocusPos()
 		{
 			return m_ped.transform.position + Vector3.up * 0.5f;
 		}
 
-		public float GetCameraDistance()
+		public virtual float GetCameraDistance()
 		{
 			return m_ped.CameraDistance;
 		}

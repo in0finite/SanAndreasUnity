@@ -14,6 +14,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override float AimAnimMaxTime { get { return m_weapon.CrouchAimAnimMaxTime; } }
 		public override float AimAnimFireMaxTime { get { return m_weapon.CrouchAimAnimFireMaxTime; } }
 
+		public float cameraFocusPosOffsetY = 0.25f;
+
 
 
 		protected override bool SwitchToNonAimMovementState ()
@@ -97,8 +99,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_ped.Heading = m_ped.AimDirection.WithXAndZ ().normalized;
 		}
 
-		// TODO: check camera collision - change camera offset
-
+		// TODO: check camera collision - change camera focus position
+		public override Vector3 GetCameraFocusPos ()
+		{
+			return m_ped.transform.position + Vector3.up * this.cameraFocusPosOffsetY;
+		}
 
 
 

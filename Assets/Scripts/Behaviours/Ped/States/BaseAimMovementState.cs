@@ -461,7 +461,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public override void CheckCameraCollision ()
 		{
-			Vector3 cameraFocusPos = base.GetCameraFocusPos ();
+			Vector3 cameraFocusPos = this.GetCameraFocusPos ();
 			Vector3 castFrom = cameraFocusPos;
 			float distance;
 			Vector3 castDir = -m_ped.Camera.transform.forward;
