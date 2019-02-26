@@ -247,7 +247,7 @@ namespace SanAndreasUnity.Behaviours
 		{
 			// set default weapon anims and other params
 
-			this.CrouchAimAnim = new AnimId("COLT45", "colt45_crouchfire");
+			this.CrouchAimAnim = new AnimId(this.Data.gunData.AssocGroupId, this.Data.gunData.AssocGroupId + "_crouchfire");
 			this.CrouchAimAnimMaxTime = WeaponsManager.ConvertAnimTime (this.data.gunData.animLoop2Start);
 			this.CrouchAimAnimFireMaxTime = WeaponsManager.ConvertAnimTime (this.data.gunData.animLoop2End);
 

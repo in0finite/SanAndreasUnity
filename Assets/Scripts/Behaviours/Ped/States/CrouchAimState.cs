@@ -99,7 +99,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_ped.Heading = m_ped.AimDirection.WithXAndZ ().normalized;
 		}
 
-		// TODO: check camera collision - change camera focus position
 		public override Vector3 GetCameraFocusPos ()
 		{
 			return m_ped.transform.position + Vector3.up * this.cameraFocusPosOffsetY;

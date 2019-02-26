@@ -7,6 +7,11 @@ namespace SanAndreasUnity.Behaviours.Weapons
 	public class PistolSilenced : Weapon
 	{
 
+		protected override void InitWeapon ()
+		{
+			base.InitWeapon();
+			this.CrouchAimAnim = new AnimId("SILENCED", "SilenceCrouchfire");
+		}
 
 		public override AnimId IdleAnim {
 			get {

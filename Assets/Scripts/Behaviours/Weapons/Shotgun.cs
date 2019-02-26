@@ -7,6 +7,11 @@ namespace SanAndreasUnity.Behaviours.Weapons
 	public class Shotgun : Weapon
 	{
 
+		protected override void InitWeapon ()
+		{
+			base.InitWeapon();
+			this.CrouchAimAnim = new AnimId("SHOTGUN", "shotgun_crouchfire");
+		}
 
 		public override AnimId AimAnim {
 			get {
