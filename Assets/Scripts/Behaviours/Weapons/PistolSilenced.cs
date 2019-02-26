@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Behaviours.Weapons
 		{
 			base.InitWeapon();
 			this.CrouchAimAnim = new AnimId("SILENCED", "SilenceCrouchfire");
-			this.NeckRotationOffset = WeaponsManager.Instance.crouchSpineRotationOffset2;
+			this.CrouchSpineRotationOffset = WeaponsManager.Instance.crouchSpineRotationOffset2;
 		}
 
 		public override AnimId IdleAnim {

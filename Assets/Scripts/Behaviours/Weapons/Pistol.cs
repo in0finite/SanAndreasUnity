@@ -10,7 +10,7 @@ namespace SanAndreasUnity.Behaviours.Weapons
 		protected override void InitWeapon ()
 		{
 			base.InitWeapon();
-			this.NeckRotationOffset = WeaponsManager.Instance.crouchSpineRotationOffset2;
+			this.CrouchSpineRotationOffset = WeaponsManager.Instance.crouchSpineRotationOffset2;
 		}
 
 	}

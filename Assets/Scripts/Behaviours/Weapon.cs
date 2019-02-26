@@ -269,7 +269,7 @@ namespace SanAndreasUnity.Behaviours
 			this.CrouchAimAnimMaxTime = WeaponsManager.ConvertAnimTime (this.Data.gunData.animLoop2Start);
 			this.CrouchAimAnimFireMaxTime = WeaponsManager.ConvertAnimTime (this.Data.gunData.animLoop2End);
 
-			this.NeckRotationOffset = WeaponsSettings.crouchSpineRotationOffset;
+			this.CrouchSpineRotationOffset = WeaponsSettings.crouchSpineRotationOffset;
 
 		}
 
@@ -412,7 +412,7 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		public Vector3 NeckRotationOffset { get; set; }
+		public Vector3 CrouchSpineRotationOffset { get; set; }
 
 
 		public bool IsAimingBack () {

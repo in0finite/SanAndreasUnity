@@ -54,7 +54,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// apply rotation offset
 
-			m_model.Spine.Rotate( m_weapon.NeckRotationOffset );
+			m_model.Spine.Rotate( m_weapon.CrouchSpineRotationOffset );
 
 		}
 
