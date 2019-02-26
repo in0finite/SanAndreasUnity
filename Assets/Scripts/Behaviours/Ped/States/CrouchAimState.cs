@@ -46,7 +46,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if( null == m_model.Spine || null == m_weapon )
 				return;
 
-			Vector3 forward = m_ped.transform.forward;
+			Vector3 forward = m_ped.transform.forward.WithXAndZ();
+			float xzLength = m_ped.AimDirection.WithXAndZ().magnitude;
+			forward = forward.normalized * xzLength;
 			forward.y = m_ped.AimDirection.y;
 			forward.Normalize();
 
