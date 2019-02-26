@@ -38,6 +38,7 @@ namespace SanAndreasUnity.Behaviours
         public FrameContainer Frames { get { return _frames; } }
         private Frame _root;
 		public Frame RootFrame { get { return _root; } }
+		public Frame UnnamedFrame { get; private set; }
 
         private readonly Dictionary<string, Anim> _loadedAnims
             = new Dictionary<string, Anim>();
@@ -273,6 +274,7 @@ namespace SanAndreasUnity.Behaviours
 
 
             _root = _frames.GetByName("Root");
+			UnnamedFrame = _frames.GetByName("unnamed");
 
 			System.Func<string, Transform> getFrame = (string frameName) => {
 				Frame frame = _frames.GetByName (frameName, true);

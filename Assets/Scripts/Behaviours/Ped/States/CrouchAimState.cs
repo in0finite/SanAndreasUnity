@@ -62,6 +62,19 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// set it to zero to make the ped stand in place
 			// this should be done even if parent method changed active state
 			m_model.RootFrame.LocalVelocity = Vector3.zero;
+
+		//	if( !this.IsActiveState )
+		//		return;
+
+			// we need to adjust local position of some bones - root frame needs to be 0.5 units below the ped
+
+			// for some reason, y position always remains 0.25
+		//	m_model.UnnamedFrame.transform.localPosition = m_model.UnnamedFrame.transform.localPosition.WithXAndZ();
+
+			Vector3 pos = m_model.RootFrame.transform.localPosition;
+			pos.y = -0.5f - m_model.UnnamedFrame.transform.localPosition.y;
+			m_model.RootFrame.transform.localPosition = pos;
+
 		}
 
 		protected override AnimationState UpdateAnimsNonAWA ()
