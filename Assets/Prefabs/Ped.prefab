@@ -36,6 +36,8 @@ GameObject:
   - component: {fileID: 114541342841796004}
   - component: {fileID: 114663503631305326}
   - component: {fileID: 114059006300769246}
+  - component: {fileID: 114803762585694722}
+  - component: {fileID: 114244562150032294}
   m_Layer: 11
   m_Name: States
   m_TagString: Untagged
@@ -234,6 +236,18 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114244562150032294
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7968f7ed64924436af362bf4c5d54f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraFocusPosOffsetY: 0.25
 --- !u!114 &114351941950376482
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -348,6 +362,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 055ab10393eb2465f90002aaceff36a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114803762585694722
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 262dd793913e349f7ac18af5bcadf7cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraFocusPosOffsetY: 0.25
 --- !u!114 &114805415584932730
 MonoBehaviour:
   m_ObjectHideFlags: 1
