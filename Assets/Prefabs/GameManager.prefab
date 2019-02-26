@@ -167,6 +167,8 @@ MonoBehaviour:
   AIMWITHARM_upperArmEndRotationEulers: {x: 170, y: -90, z: -2.412}
   AIMWITHARM_maxAimAngle: 95
   AIMWITHARM_maxHeadRotationAngle: 50
+  crouchSpineRotationOffset: {x: 0, y: 35, z: 90}
+  crouchSpineRotationOffset2: {x: 0, y: 15, z: 90}
   projectileRaycastMask:
     serializedVersion: 2
     m_Bits: 4294967291

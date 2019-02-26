@@ -16,9 +16,9 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- **Ped state machine**: implement: jump, crouch, roll, die ;
+- **Ped state machine**: implement: roll, die ;
 
-- Crouching: rotate neck in direction of aiming ; adjust camera aim offset ;
+- Crouching: adjust camera aim offset ? ;
 
 - Add option to change gravity
 
