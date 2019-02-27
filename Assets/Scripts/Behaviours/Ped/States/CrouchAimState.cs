@@ -20,12 +20,26 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override bool SwitchToNonAimMovementState ()
 		{
-			// can only switch to Crouch state
+			// switch to Crouch state
 			if( !m_ped.IsAimOn || !m_ped.IsHoldingWeapon )
 			{
 				m_ped.SwitchState<CrouchState>();
 				return true;
 			}
+
+			// switch to Roll state
+			if(m_ped.Movement.sqrMagnitude > float.Epsilon && m_ped.GetStateOrLogError<RollState>().CanRoll())
+			{
+				float angle = Vector3.Angle(m_ped.Movement, m_ped.transform.forward);
+				if( angle > 50 && angle < 130 )
+				{
+					float rightAngle = Vector3.Angle( m_ped.Movement, m_ped.transform.right );
+					bool left = rightAngle > 90;
+					m_ped.GetState<RollState>().Roll( left );
+					return true;
+				}
+			}
+
 			return false;
 		}
 
