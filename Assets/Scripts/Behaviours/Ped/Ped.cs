@@ -536,7 +536,7 @@ namespace SanAndreasUnity.Behaviours
 
 			// apply gravity
 			Velocity = new Vector3(Velocity.x, characterController.isGrounded
-				? 0f : Velocity.y - 9.81f * 2f * Time.fixedDeltaTime, Velocity.z);
+				? 0f : Velocity.y - (-Physics.gravity.y) * 2f * Time.fixedDeltaTime, Velocity.z);
 
 
 			// finally, move the character

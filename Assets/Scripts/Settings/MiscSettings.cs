@@ -14,6 +14,11 @@ namespace SanAndreasUnity.Settings {
 			getValue = () => Time.timeScale,
 			setValue = (value) => { Time.timeScale = value; }
 		};
+		OptionsWindow.FloatInput m_gravityInput = new OptionsWindow.FloatInput( "Gravity", -10f, 50f ) {
+			getValue = () => -Physics.gravity.y,
+			setValue = (value) => { Physics.gravity = new Vector3(Physics.gravity.x, -value, Physics.gravity.z); },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
 		OptionsWindow.BoolInput m_displayHealthBarsInput = new OptionsWindow.BoolInput ("Display health bar above peds") {
 			isAvailable = () => PedManager.Instance != null,
 			getValue = () => PedManager.Instance.displayHealthBarAbovePeds,
@@ -42,7 +47,7 @@ namespace SanAndreasUnity.Settings {
 
 		void Awake ()
 		{
-			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_displayHealthBarsInput, m_displayMinimapInput,
+			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
 				m_runInBackgroundInput, m_drawLineFromGunInput
 			};
 
