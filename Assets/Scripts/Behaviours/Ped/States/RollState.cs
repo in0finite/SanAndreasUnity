@@ -53,6 +53,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
+		protected override void UpdateHeading ()
+		{
+			m_ped.Heading = m_ped.transform.forward;
+		}
+
 		protected override void UpdateRotation ()
 		{
 			// don't change rotation
@@ -66,7 +71,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override void UpdateAnims ()
 		{
-			// nothing to update
+			// correct local x position of root frame
+			Vector3 pos = m_model.RootFrame.transform.localPosition;
+			pos.x = 0f;
+			m_model.RootFrame.transform.localPosition = pos;
 		}
 
 		public override void LateUpdateState ()
