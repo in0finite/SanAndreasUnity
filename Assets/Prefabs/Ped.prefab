@@ -38,6 +38,7 @@ GameObject:
   - component: {fileID: 114059006300769246}
   - component: {fileID: 114803762585694722}
   - component: {fileID: 114244562150032294}
+  - component: {fileID: 114293662543306134}
   m_Layer: 11
   m_Name: States
   m_TagString: Untagged
@@ -248,6 +249,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraFocusPosOffsetY: 0.25
+--- !u!114 &114293662543306134
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e111211033b048ca9ca00766168ed4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114351941950376482
 MonoBehaviour:
   m_ObjectHideFlags: 1
