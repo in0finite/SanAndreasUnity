@@ -16,13 +16,7 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
-- **Ped state machine**: implement: die ;
-
 - Crouching: adjust camera aim offset ? ;
-
-- Add option to change gravity
-
-- Disable collision between peds and vehicles
 
 - don't fade high LOD meshes
 
