@@ -8,6 +8,12 @@
 
 - killing local ped
 
+- message boxes ; windows should be destroyable
+
+- improve console
+
+- update Unity to 2018.3
+
 
 
 # Potential problems

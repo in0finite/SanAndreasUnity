@@ -15,7 +15,7 @@
 
 <br>
 
-San Andreas Unity is an open source recreation of [GTA San Andreas](http://www.rockstargames.com/sanandreas/) in Unity.
+San Andreas Unity is an open source recreation of GTA San Andreas in Unity.
 
 This won't be a complete recreation, but the focus is on gameplay features, mutliplayer, and creating a framework which will allow easy game extending and unlimited modding possibilities.
 
@@ -28,14 +28,14 @@ For more information about the project, read this [wiki page](https://github.com
 - open startup scene located at Assets/Scenes/Startup.unity
 - press Play button
 
-When running for the first time, the game will ask you for path to GTA installation, and will store that path in config.user.json. If you ever need to change the path, you can just edit this file.
+When running for the first time, the game will ask you for path to GTA installation. You need to own GTA in order to play it.
 
 
 ## Download
 
 Download it from [here](https://github.com/GTA-ASM/SanAndreasUnity/releases/download/2.0/SanAndreasUnity-2.0.zip) (for windows).
 
-The game is tested on linux, windows, mac, android and ps vita. It supports both Mono and IL2CPP scripting backends, so it can be built for any platform that Unity supports, provided that you can copy PC version of GTASA to target device.
+The game is tested on [Linux](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Running-on-Linux), Windows, Mac, Android and [PS Vita](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Building-for-PS-Vita). It supports both Mono and IL2CPP scripting backends, so it can be built for any platform that Unity supports, provided that you can copy PC version of GTASA to target device.
 
 
 ## In-game controls
