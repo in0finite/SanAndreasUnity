@@ -283,6 +283,12 @@ namespace SanAndreasUnity.UI {
 				zoomLevel /= 1.1f;
 			}
 
+			// mouse scroll
+			if (Input.mouseScrollDelta.y > 0)
+				zoomLevel *= 1.1f;
+			else if(Input.mouseScrollDelta.y < 0)
+				zoomLevel /= 1.1f;
+
 			zoomLevel = Mathf.Clamp (zoomLevel, 0.05f, 10f);
 
 			if (oldZoomLevel != this.zoomLevel) {
