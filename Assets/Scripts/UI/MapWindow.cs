@@ -289,7 +289,7 @@ namespace SanAndreasUnity.UI {
 			else if(Input.mouseScrollDelta.y < 0)
 				zoomLevel /= 1.1f;
 
-			zoomLevel = Mathf.Clamp (zoomLevel, 0.05f, 10f);
+			zoomLevel = Mathf.Clamp (zoomLevel, 0.25f, 10f);
 
 			if (oldZoomLevel != this.zoomLevel) {
 			//	this.AdjustVisibleMapRectAfterZooming ();
@@ -553,7 +553,7 @@ namespace SanAndreasUnity.UI {
 			GUILayout.EndHorizontal ();
 
 			GUILayout.Space (5);
-			GUILayout.Label ("Controls: arrows/WASD - move, +/- - zoom, right click - place waypoint");
+			GUILayout.Label ("Controls: arrows/WASD - move, +/-/scroll - zoom, right click - place waypoint");
 
 			GUILayout.EndScrollView ();
 
