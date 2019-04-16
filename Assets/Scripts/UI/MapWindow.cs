@@ -588,8 +588,17 @@ namespace SanAndreasUnity.UI {
 
 					Rect renderRect;
 					if (this.GetMapItemRenderRect (rect, out renderRect)) {
-						GUI.Box (renderRect, "");
-						GUIUtils.CenteredLabel (renderRect.center, zone.name);
+						if (renderRect.height > 2 && renderRect.width > 2)
+						{
+							// add some space between zones
+							renderRect.xMin ++;
+							renderRect.xMax --;
+							renderRect.yMin ++;
+							renderRect.yMax --;
+
+							GUI.Box (renderRect, "");
+							GUIUtils.CenteredLabel (renderRect.center, zone.name);
+						}
 					}
 
 				}
