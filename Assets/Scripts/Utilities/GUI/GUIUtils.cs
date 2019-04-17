@@ -171,6 +171,15 @@ namespace SanAndreasUnity.Utilities
 			GUI.Label (new Rect (pos - size * 0.5f, size), text);
 		}
 
+		public static void DrawHorizontalLine(float height, float spaceBetween, Color color)
+		{
+			GUILayout.Space(spaceBetween);
+			float width = GUILayoutUtility.GetLastRect().width;
+			Rect rect = GUILayoutUtility.GetRect(width, height);
+			GUIUtils.DrawRect(rect, color);
+			GUILayout.Space(spaceBetween);
+		}
+
 		/// <summary> Draws the texture flipped around Y axis. </summary>
 		public	static	void	DrawTextureWithYFlipped(Rect rect, Texture2D tex) {
 
