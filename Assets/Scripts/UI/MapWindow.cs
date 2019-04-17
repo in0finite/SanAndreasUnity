@@ -522,7 +522,7 @@ namespace SanAndreasUnity.UI {
 				this.TeleportToWaypoint ();
 			}
 			GUILayout.Space (5);
-			GUILayout.Label ("Player size: " + (int) m_playerPointerSize);
+			GUILayout.Label ("Player size: " + (int) m_playerPointerSize, GUILayout.ExpandWidth(false));
 			m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
 			m_drawZones = GUILayout.Toggle (m_drawZones, "Draw zones");
 
