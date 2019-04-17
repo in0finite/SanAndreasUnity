@@ -41,6 +41,12 @@ namespace SanAndreasUnity.UI
 
 		bool isCollapsed;
 		public bool IsCollapsed { get { return this.isCollapsed; } set { this.isCollapsed = value; } }
+
+		bool ShowDetails { get; set; }
+		Vector2 m_detailsAreaScrollViewPos = Vector2.zero;
+
+		int m_selectedLogIndex = -1;
+
 		readonly List<Log> logs = new List<Log>();
 		readonly Utilities.ConcurrentQueue<Log> queuedLogs = new Utilities.ConcurrentQueue<Log>();
 
@@ -82,7 +88,7 @@ namespace SanAndreasUnity.UI
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = Utilities.GUIUtils.GetCenteredRect( new Vector2(550, 400) );
+			this.windowRect = Utilities.GUIUtils.GetCenteredRectPerc( new Vector2(0.9f, 0.8f) );
 		}
 
 		void Update()
@@ -98,36 +104,64 @@ namespace SanAndreasUnity.UI
 			GUI.contentColor = Color.white;
 		}
 
-		void DrawCollapsedLog(Log log)
+		void DrawCollapsedLog(Log log, int index)
 		{
+			bool isSelected = index == m_selectedLogIndex;
+
+			if (isSelected)
+				GUI.contentColor = Color.green;
+
 			GUILayout.BeginHorizontal();
 
-			GUILayout.Label(log.GetTruncatedMessage());
+			if (GUILayout.Button(log.GetTruncatedMessage(), GUI.skin.label))
+			{
+				if(isSelected)
+					m_selectedLogIndex = -1;
+				else
+					m_selectedLogIndex = index;
+			}
 			GUILayout.FlexibleSpace();
 			GUILayout.Label(log.count.ToString(), GUI.skin.box);
 
 			GUILayout.EndHorizontal();
+
+			if (isSelected)
+				RestoreContentColor();
 		}
 
-		void DrawExpandedLog(Log log)
+		void DrawExpandedLog(Log log, int index)
 		{
+			bool isSelected = index == m_selectedLogIndex;
+
+			if (isSelected)
+				GUI.contentColor = Color.green;
+
 			for (var i = 0; i < log.count; i += 1)
 			{
-				GUILayout.Label(log.GetTruncatedMessage());
+				if (GUILayout.Button(log.GetTruncatedMessage(), GUI.skin.label))
+				{
+					if(isSelected)
+						m_selectedLogIndex = -1;
+					else
+						m_selectedLogIndex = index;
+				}
 			}
+
+			if (isSelected)
+				RestoreContentColor();
 		}
 
-		void DrawLog(Log log)
+		void DrawLog(Log log, int index)
 		{
 			GUI.contentColor = logTypeColors[log.type];
 
 			if (isCollapsed)
 			{
-				DrawCollapsedLog(log);
+				DrawCollapsedLog(log, index);
 			}
 			else
 			{
-				DrawExpandedLog(log);
+				DrawExpandedLog(log, index);
 			}
 		}
 
@@ -141,10 +175,12 @@ namespace SanAndreasUnity.UI
 			foreach (LogType logType in s_allLogTypes)
 				m_numMessagesPerType [logType] = 0;
 
-			foreach (Log log in logs)
+			for (int i=0; i < logs.Count; i++)
 			{
+				Log log = logs[i];
+
 				if (IsLogVisible (log))
-					DrawLog (log);
+					DrawLog (log, i);
 
 				m_numMessagesPerType [log.type] += (isCollapsed ? 1 : log.count);
 			}
@@ -162,6 +198,24 @@ namespace SanAndreasUnity.UI
 
 			// Ensure GUI colour is reset before drawing other components.
 			GUI.contentColor = Color.white;
+		}
+
+		void DrawDetails()
+		{
+
+			float height = Mathf.Max( this.windowRect.height / 4, 100 );
+			m_detailsAreaScrollViewPos = GUILayout.BeginScrollView(m_detailsAreaScrollViewPos, GUILayout.Height(height));
+
+			if (m_selectedLogIndex >= 0 && m_selectedLogIndex < this.logs.Count)
+			{
+				Log log = this.logs[m_selectedLogIndex];
+				GUILayout.Label(log.message);
+				GUILayout.Space(5);
+				GUILayout.Label(log.stackTrace);
+			}
+
+			GUILayout.EndScrollView();
+
 		}
 
 		void DrawToolbar()
@@ -188,11 +242,14 @@ namespace SanAndreasUnity.UI
 			if (GUILayout.Button (clearLabel, GUILayout.ExpandWidth(false)))
 			{
 				logs.Clear();
+				m_selectedLogIndex = -1;
 			}
 
 			GUILayout.Space (10);
 
 			isCollapsed = GUILayout.Toggle (isCollapsed, collapseLabel, GUILayout.ExpandWidth(false));
+
+			ShowDetails = GUILayout.Toggle (ShowDetails, "Show details", GUILayout.ExpandWidth(false));
 
 			GUILayout.EndHorizontal ();
 		}
@@ -200,7 +257,12 @@ namespace SanAndreasUnity.UI
 		void DrawWindow()
 		{
 			DrawLogList();
-			GUILayout.Space (5);
+			if (this.ShowDetails)
+			{
+				Utilities.GUIUtils.DrawHorizontalLine(2f, 3f, Color.black);
+				this.DrawDetails();
+			}
+			Utilities.GUIUtils.DrawHorizontalLine(2f, 3f, Color.black);
 			DrawToolbar();
 		}
 
