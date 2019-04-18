@@ -18,6 +18,7 @@ namespace SanAndreasUnity.UI {
 
 			this.windowName = "";
 			this.useScrollView = true;
+			this.DestroyOnClose = true;
 			// adjust rect
 			this.windowRect = GUIUtils.GetCenteredRect( new Vector2(400, 300) );
 
@@ -37,6 +38,18 @@ namespace SanAndreasUnity.UI {
 			else
 				GUILayout.Label(this.Text);
 
+		}
+
+		public static MessageBox Show(string title, string text, bool useTextField = false)
+		{
+			var msgBox = PauseMenuWindow.Create<MessageBox>();
+			msgBox.Title = title;
+			msgBox.Text = text;
+			msgBox.UseTextField = useTextField;
+
+			msgBox.IsOpened = true;
+			
+			return msgBox;
 		}
 
 	}
