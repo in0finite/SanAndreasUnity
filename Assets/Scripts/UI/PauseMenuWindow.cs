@@ -16,13 +16,24 @@ namespace SanAndreasUnity.UI {
 			set { 
 				if (m_isOpened == value)
 					return;
+				
 				m_isOpened = value;
+
 				if (m_isOpened)
+				{
 					this.OnWindowOpened ();
+				}
 				else
+				{
+					if (this.DestroyOnClose)
+						Destroy(this);
 					this.OnWindowClosed ();
+				}
 			}
 		}
+
+		[SerializeField] private bool m_destroyOnClose = false;
+		public bool DestroyOnClose { get { return m_destroyOnClose; } set { m_destroyOnClose = value; } }
 
 		private	static	int	lastWindowId = 1352345;
 		private	int	windowId = lastWindowId++;
@@ -58,7 +69,22 @@ namespace SanAndreasUnity.UI {
 		[SerializeField]	private	bool	m_registerInMainMenuOnStart = false;
 		public	bool	IsRegisteredInMainMenu { get; private set; }
 
+		private static GameObject s_windowsContainer;
 
+
+
+		public static T Create<T>() where T : PauseMenuWindow
+		{
+			if (null == s_windowsContainer)
+			{
+				s_windowsContainer = new GameObject("Windows");
+				DontDestroyOnLoad( s_windowsContainer );
+			}
+
+			T window = s_windowsContainer.AddComponent<T>();
+			
+			return window;
+		}
 
 		void WindowStart() {
 
