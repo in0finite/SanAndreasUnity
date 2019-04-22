@@ -1,0 +1,3 @@
+[submodule "Assets/MirrorLite"]
+	path = Assets/MirrorLite
+	url = https://github.com/GTA-ASM/MirrorLite
