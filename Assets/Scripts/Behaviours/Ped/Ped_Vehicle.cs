@@ -10,7 +10,7 @@ using SanAndreasUnity.Behaviours.Peds.States;
 namespace SanAndreasUnity.Behaviours
 {
 	
-	public partial class Ped : MonoBehaviour {
+	public partial class Ped {
 
 		[SerializeField] private float m_enterVehicleRadius = 2.0f;
 		public float EnterVehicleRadius { get { return m_enterVehicleRadius; } set { m_enterVehicleRadius = value; } }
