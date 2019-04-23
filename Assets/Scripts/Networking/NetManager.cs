@@ -86,14 +86,14 @@ namespace SanAndreasUnity.Net
 
 		public	static	void	CheckIfServerIsStarted() {
 
-			if (NetworkStatus.IsServerStarted ())
+			if (NetStatus.IsServerStarted ())
 				throw new System.Exception ("Server already started");
 			
 		}
 
 		public	static	void	CheckIfClientIsStarted() {
 
-			if (!NetworkStatus.IsClientDisconnected ())
+			if (!NetStatus.IsClientDisconnected ())
 				throw new System.Exception ("Client already started");
 
 		}
