@@ -9,7 +9,9 @@ namespace SanAndreasUnity.Net
 
 		public	static	int	defaultListenPortNumber { get { return 7777; } }
 
-		public	static	int	listenPortNumber { get { return NetworkServer.listenPort; } }
+		public	static	int	listenPortNumber { get { return telepathyTransport.port; } }
+
+        public static TelepathyTransport telepathyTransport { get { return ((TelepathyTransport)Transport.activeTransport); } }
 
 		public	static	string	onlineScene {
 			get {
@@ -121,8 +123,9 @@ namespace SanAndreasUnity.Net
 
 		private	static	void	CheckIfOnlineSceneIsAssigned() {
 
-			if (string.IsNullOrEmpty (NetManager.onlineScene))
-				throw new System.Exception ("Online scene is not assigned");
+            // we won't use scene management from NetworkManager
+		//	if (string.IsNullOrEmpty (NetManager.onlineScene))
+		//		throw new System.Exception ("Online scene is not assigned");
 
 		}
 
@@ -130,17 +133,9 @@ namespace SanAndreasUnity.Net
 		private	static	void	SetupNetworkManger( string ip, int port ) {
 
 			NetworkManager.singleton.networkAddress = ip;
-			NetworkManager.singleton.networkPort = port;
+			telepathyTransport.port = (ushort) port;
 
 		}
-
-
-		public	static	NetworkClient	GetClient() {
-
-			return NetworkManager.singleton.client;
-
-		}
-
 
 	}
 
