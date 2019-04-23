@@ -33,10 +33,10 @@ namespace SanAndreasUnity.UI
 		{
 			
 			GUILayout.Label ("IP:");
-			m_ip = GUILayout.TextField(m_ip);
+			m_ip = GUILayout.TextField(m_ip, GUILayout.Width(150));
 
             GUILayout.Label ("Port:");
-			m_port = GUILayout.TextField(m_port);
+			m_port = GUILayout.TextField(m_port, GUILayout.Width(100));
             
             GUILayout.Space(40);
 
