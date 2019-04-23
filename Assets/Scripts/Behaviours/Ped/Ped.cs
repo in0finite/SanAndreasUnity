@@ -13,11 +13,7 @@ namespace SanAndreasUnity.Behaviours
 {
 	[DefaultExecutionOrder(-100)]
     [RequireComponent(typeof(CharacterController))]
-#if CLIENT
-	public partial class Ped : Networking.Networkable
-#else
     public partial class Ped : MonoBehaviour
-#endif
     {
         #region Private Fields
 

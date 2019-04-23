@@ -5,7 +5,7 @@ using SanAndreasUnity.Utilities;
 namespace SanAndreasUnity.Behaviours
 {
 	
-	public partial class Ped : MonoBehaviour {
+	public partial class Ped {
 
 		public Damageable Damageable { get; private set; }
 

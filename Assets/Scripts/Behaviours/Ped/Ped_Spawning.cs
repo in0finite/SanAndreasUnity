@@ -8,7 +8,7 @@ using System.Linq;
 namespace SanAndreasUnity.Behaviours
 {
 	
-	public partial class Ped : MonoBehaviour
+	public partial class Ped
 	{
 
 		public static IEnumerable<PedestrianDef> SpawnablePedDefs {
