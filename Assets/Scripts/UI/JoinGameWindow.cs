@@ -40,14 +40,21 @@ namespace SanAndreasUnity.UI
             
             GUILayout.Space(40);
 
-            if (GUILayout.Button("Connect", GUILayout.MinWidth(80), GUILayout.MinHeight(30)))
+            if (GUILayout.Button("Connect", GUILayout.Width(80), GUILayout.Height(30)))
 				Connect();
 
 		}
 
 		void Connect()
 		{
-			
+			try
+			{
+				NetManager.StartClient(m_ip, int.Parse(m_port));
+			}
+			catch (System.Exception ex)
+			{
+				MessageBox.Show("Error", ex.ToString());
+			}
 		}
 
 	}
