@@ -33,15 +33,45 @@ namespace SanAndreasUnity.UI
 		{
 			
 			GUILayout.Label ("IP:");
-			m_ip = GUILayout.TextField(m_ip, GUILayout.Width(150));
+			m_ip = GUILayout.TextField(m_ip, GUILayout.Width(200));
 
             GUILayout.Label ("Port:");
 			m_port = GUILayout.TextField(m_port, GUILayout.Width(100));
             
             GUILayout.Space(40);
 
-            if (GUILayout.Button("Connect", GUILayout.Width(80), GUILayout.Height(30)))
-				Connect();
+			// label with status
+			string strStatus = "Disconnected";
+			if (NetStatus.IsClientConnecting())
+			{
+				strStatus = "Connecting.";
+				for (int i = 0; i < ((int)Time.realtimeSinceStartup) % 3; i++)
+					strStatus += ".";
+			}
+			else if (NetStatus.IsClientConnected())
+			{
+				strStatus = "Connected";
+			}
+			GUILayout.Label("Status: " + strStatus);
+
+			// button for connecting/disconnecting
+
+			string buttonText = "Connect";
+			System.Action buttonAction = this.Connect;
+			if (NetStatus.IsClientConnecting())
+			{
+				buttonText = "Disconnect";
+				buttonAction = this.Disconnect;
+			}
+			else if (NetStatus.IsClientConnected())
+			{
+				GUI.enabled = false;
+				buttonText = "Connected";
+				buttonAction = () => {};
+			}
+
+            if (GUILayout.Button(buttonText, GUILayout.MinWidth(80), GUILayout.Height(30), GUILayout.ExpandWidth(false)))
+				buttonAction();
 
 		}
 
@@ -55,6 +85,11 @@ namespace SanAndreasUnity.UI
 			{
 				MessageBox.Show("Error", ex.ToString());
 			}
+		}
+
+		void Disconnect()
+		{
+			NetManager.StopNetwork();
 		}
 
 	}
