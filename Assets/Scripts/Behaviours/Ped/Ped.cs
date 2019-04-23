@@ -13,7 +13,12 @@ namespace SanAndreasUnity.Behaviours
 {
 	[DefaultExecutionOrder(-100)]
     [RequireComponent(typeof(CharacterController))]
-    public partial class Ped : MonoBehaviour
+    public partial class Ped : 
+		#if MIRROR
+		Mirror.NetworkBehaviour
+		#else
+		MonoBehaviour
+		#endif
     {
         #region Private Fields
 
