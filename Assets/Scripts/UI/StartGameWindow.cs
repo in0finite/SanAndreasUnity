@@ -36,11 +36,11 @@ namespace SanAndreasUnity.UI
 		{
 			
             GUILayout.Label ("Port:");
-			m_port = GUILayout.TextField(m_port);
+			m_port = GUILayout.TextField(m_port, GUILayout.Width(100));
 
-			m_dontListen = GUILayout.Toggle(m_dontListen, "Don't listen:");
+			m_dontListen = GUILayout.Toggle(m_dontListen, "Don't listen");
             
-			m_dedicatedServer = GUILayout.Toggle(m_dedicatedServer, "Dedicated server:");
+			m_dedicatedServer = GUILayout.Toggle(m_dedicatedServer, "Dedicated server");
             
 			GUILayout.Label("Map:");
 			m_selectedSceneIndex = GUILayout.SelectionGrid(m_selectedSceneIndex, m_availableScenes, 4);
@@ -61,6 +61,7 @@ namespace SanAndreasUnity.UI
 
 				// first start a server, and then change scene
 
+				NetManager.dontListen = m_dontListen;
 				if (m_dedicatedServer)
 					NetManager.StartServer(port);
 				else
