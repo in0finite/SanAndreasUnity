@@ -21,6 +21,9 @@ namespace SanAndreasUnity.Behaviours
 
         void UpdateSpawnPositions()
         {
+            if (!Loader.HasLoaded)
+                return;
+            
             if (NetStatus.IsServer && Ped.Instance)
             {
                 if (null == m_container)
@@ -55,6 +58,9 @@ namespace SanAndreasUnity.Behaviours
             if (!NetStatus.IsServer)
                 return;
 
+            if (!Loader.HasLoaded)
+                return;
+
             var list = NetManager.SpawnPositions.ToList();
             list.RemoveDeadObjects();
 
@@ -65,10 +71,14 @@ namespace SanAndreasUnity.Behaviours
             {
                 // if player is not spawned, spawn him
 
-                
+                if (player.OwnedGameObject != null)
+                    continue;
 
                 var spawn = list.RandomElement();
+                var ped = Ped.SpawnPed(Ped.RandomPedId, spawn.position, spawn.rotation);
+                player.OwnedGameObject = ped.gameObject;
 
+                Debug.LogFormat("Spawned ped for player {0}, net id {1}", player.connectionToClient.address, ped.netId);
             }
 
         }

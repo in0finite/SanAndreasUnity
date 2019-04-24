@@ -11,6 +11,9 @@ namespace SanAndreasUnity.Net
         static List<Player> s_allPlayers = new List<Player>();
         public static Player[] AllPlayers { get { return s_allPlayers.ToArray(); } }
 
+        [SyncVar] GameObject m_ownedGameObject;
+        public GameObject OwnedGameObject { get { return m_ownedGameObject; } internal set { m_ownedGameObject = value; } }
+
 
         void OnEnable()
         {
