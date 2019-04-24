@@ -67,7 +67,7 @@ namespace SanAndreasUnity.UI
 				else
 					NetManager.StartHost(port);
 
-				UnityEngine.SceneManagement.SceneManager.LoadScene(scene);
+				NetManager.ChangeScene(scene);
 			}
 			catch (System.Exception ex)
 			{

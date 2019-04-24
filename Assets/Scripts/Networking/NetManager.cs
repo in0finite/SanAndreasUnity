@@ -152,6 +152,11 @@ namespace SanAndreasUnity.Net
 			NetworkServer.Spawn(go);
 		}
 
+		public static void ChangeScene(string newScene)
+		{
+			NetworkManager.singleton.ServerChangeScene(newScene);
+		}
+
 	}
 
 }
