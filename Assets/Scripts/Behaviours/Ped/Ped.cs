@@ -387,6 +387,8 @@ namespace SanAndreasUnity.Behaviours
 
 			this.UpdateDamageStuff ();
 
+			this.Update_Net();
+
 		//	IsWalking = IsRunning = false;
 
 			if (this.CurrentState != null)

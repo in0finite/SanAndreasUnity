@@ -22,6 +22,16 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+
+            if (this.isServer)
+                return;
+
+            this.PlayerModel.Load(m_net_pedId);
+        }
+
         void Update_Net()
         {
             m_net_pedId = this.PedDef.Id;
