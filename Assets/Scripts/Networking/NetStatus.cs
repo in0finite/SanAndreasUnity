@@ -50,23 +50,19 @@ namespace SanAndreasUnity.Net
 			}
 		}
 
-		public	static	bool	IsServerStarted() {
-			return serverStatus == NetworkServerStatus.Started;
-		}
-
+		public static bool IsServerStarted => NetStatus.serverStatus == NetworkServerStatus.Started;
+		
 		/// <summary>
 		/// Is server active ?
 		/// </summary>
-		public	static	bool	IsServer() {
-			return NetStatus.IsServerStarted ();
-		}
+		public static bool IsServer => NetStatus.IsServerStarted;
 
 		/// <summary>
 		/// Is host active ?
 		/// </summary>
 		public	static	bool	IsHost() {
 
-			if (!NetStatus.IsServer ())
+			if (!NetStatus.IsServer)
 				return false;
 
 			return NetworkServer.localClientActive;
@@ -99,6 +95,15 @@ namespace SanAndreasUnity.Net
 			return ! NetStatus.IsClientDisconnected ();
 		}
 
+
+		/// <summary>
+		/// Throws exception if server is not active.
+		/// </summary>
+		public static void ThrowIfNotOnServer()
+		{
+			if (!NetStatus.IsServer)
+				throw new System.Exception("Not on a server");
+		}
 
 	}
 

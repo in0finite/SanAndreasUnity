@@ -88,7 +88,7 @@ namespace SanAndreasUnity.Net
 
 		public	static	void	CheckIfServerIsStarted() {
 
-			if (NetStatus.IsServerStarted ())
+			if (NetStatus.IsServerStarted)
 				throw new System.Exception ("Server already started");
 			
 		}
@@ -137,6 +137,17 @@ namespace SanAndreasUnity.Net
 			NetworkManager.singleton.networkAddress = ip;
 			telepathyTransport.port = (ushort) port;
 
+		}
+
+
+		public static void AddSpawnPosition(Transform tr)
+		{
+			NetworkManager.startPositions.Add(tr);
+		}
+
+		public static void Spawn(GameObject go)
+		{
+			NetworkServer.Spawn(go);
 		}
 
 	}

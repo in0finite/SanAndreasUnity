@@ -21,6 +21,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public static Ped SpawnPed (PedestrianDef def, Vector3 pos, Quaternion rot)
 		{
+			Net.NetStatus.ThrowIfNotOnServer();
+
 			CheckPedPrefab ();
 
 			var go = Instantiate (PedManager.Instance.pedPrefab, pos, rot);
@@ -34,7 +36,7 @@ namespace SanAndreasUnity.Behaviours
 			destroyer.timeUntilDestroyed = PedManager.Instance.AIOutOfRangeTimeout;
 			destroyer.range = PedManager.Instance.AIOutOfRangeDistance;
 
-			Mirror.NetworkServer.Spawn(go);
+			Net.NetManager.Spawn(go);
 
 			return ped;
 		}
