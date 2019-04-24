@@ -21,6 +21,18 @@ namespace SanAndreasUnity.Behaviours
             Player.onStart += OnPlayerConnected;
         }
 
+        void OnLoaderFinished()
+        {
+            if (!NetStatus.IsServer)
+                return;
+            
+            // spawn players that were connected during loading process - this will always be the case for
+            // local player
+            UpdateSpawnPositions();
+            SpawnPlayers();
+
+        }
+
         Transform GetSpawnFocusPos()
         {
             if (Ped.Instance)
@@ -108,10 +120,16 @@ namespace SanAndreasUnity.Behaviours
 
         void OnPlayerConnected(Player player)
         {
+            if (!NetStatus.IsServer)
+                return;
+            if (!Loader.HasLoaded)  // these players will be spawned when loading process finishes
+                return;
             if (!this.spawnPlayerWhenConnected)
                 return;
 
+            m_spawnPositions.RemoveDeadObjects();
             SpawnPlayer(player, m_spawnPositions);
+
         }
 
     }
