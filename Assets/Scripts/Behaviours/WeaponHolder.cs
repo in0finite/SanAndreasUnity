@@ -110,17 +110,13 @@ namespace SanAndreasUnity.Behaviours {
 		void Start ()
 		{
 			PlayerModel.onLateUpdate += this.UpdateWeaponTransform;
-		}
 
-		void OnLoaderFinished ()
-		{
-			if (this.autoAddWeapon)
+			if (m_ped.isServer)
 			{
-				this.AddRandomWeapons ();
-
-				if (!this.IsHoldingWeapon)
+				if (this.autoAddWeapon)
 				{
-					this.SwitchWeapon (WeaponSlot.Pistol);
+					this.AddRandomWeapons();
+					this.SwitchWeapon(WeaponSlot.Pistol);
 				}
 			}
 		}

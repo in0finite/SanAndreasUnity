@@ -12,10 +12,6 @@
 
 - add OK button to message boxes
 
-- player's ped must be created by server (when host starts) - it should be removed from scenes
-
-- PedsWindow throws NRE when Ped.Instance is null
-
 - don't show StartGame/JoinGame window in pause menu
 
 - spawn ped right after player connects
