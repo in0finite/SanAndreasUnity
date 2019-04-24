@@ -1,47 +1,76 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using SanAndreasUnity.Net;
+using SanAndreasUnity.Utilities;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours
 {
 
     public class SpawnManager : MonoBehaviour
     {
-        Transform[] m_spawnPositions = null;
+        List<Transform> m_spawnPositions = new List<Transform>();
         GameObject m_container;
 
 
         void Start()
         {
             this.InvokeRepeating(nameof(UpdateSpawnPositions), 1f, 1f);
+            this.InvokeRepeating(nameof(SpawnPlayers), 1f, 3f);
         }
 
         void UpdateSpawnPositions()
         {
-            if (Net.NetStatus.IsServer && Ped.Instance)
+            if (NetStatus.IsServer && Ped.Instance)
             {
-                if (null == m_spawnPositions)
+                if (null == m_container)
                 {
                     // create parent game object for spawn positions
-                    if (null == m_container)
-                        m_container = new GameObject("Spawn positions");
+                    m_container = new GameObject("Spawn positions");
 
                     // create spawn positions
-                    m_spawnPositions = new Transform[5];
-                    for (int i = 0; i < m_spawnPositions.Length; i++)
+                    m_spawnPositions.Clear();
+                    for (int i = 0; i < 5; i++)
                     {
-                        m_spawnPositions[i] = new GameObject("Spawn position " + i).transform;
-                        m_spawnPositions[i].SetParent(m_container.transform);
-                        Net.NetManager.AddSpawnPosition(m_spawnPositions[i]);
+                        Transform spawnPos = new GameObject("Spawn position " + i).transform;
+                        spawnPos.SetParent(m_container.transform);
+
+                        m_spawnPositions.Add(spawnPos);
+                        NetManager.AddSpawnPosition(spawnPos);
                     }
                 }
 
                 // update spawn positions
-                for (int i = 0; i < m_spawnPositions.Length; i++)
+                m_spawnPositions.RemoveDeadObjects();
+                foreach (Transform spawnPos in m_spawnPositions)
                 {
-                    m_spawnPositions[i].position = Ped.Instance.transform.position + Random.insideUnitCircle.ToVector3XZ() * 15f;
+                    spawnPos.position = Ped.Instance.transform.position + Random.insideUnitCircle.ToVector3XZ() * 15f;
                 }
 
             }
+        }
+
+        void SpawnPlayers()
+        {
+            if (!NetStatus.IsServer)
+                return;
+
+            var list = NetManager.SpawnPositions.ToList();
+            list.RemoveDeadObjects();
+
+            if (list.Count < 1)
+                return;
+            
+            foreach (var player in Player.AllPlayers)
+            {
+                // if player is not spawned, spawn him
+
+                
+
+                var spawn = list.RandomElement();
+
+            }
+
         }
 
     }
