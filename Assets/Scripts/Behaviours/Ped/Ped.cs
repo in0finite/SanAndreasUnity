@@ -20,8 +20,7 @@ namespace SanAndreasUnity.Behaviours
 		MonoBehaviour
 		#endif
     {
-        #region Private Fields
-
+        
 		private static List<Ped> s_allPeds = new List<Ped> ();
 		public static Ped[] AllPeds { get { return s_allPeds.ToArray (); } }
 
@@ -29,10 +28,6 @@ namespace SanAndreasUnity.Behaviours
 		public WeaponHolder WeaponHolder { get { return m_weaponHolder; } }
 
 		private StateMachine m_stateMachine = new StateMachine ();
-
-        #endregion Private Fields
-
-        #region Inspector Fields
 
         public Camera Camera { get { return this == Ped.Instance ? Camera.main : null; } }
         public PedModel PlayerModel;
@@ -54,10 +49,7 @@ namespace SanAndreasUnity.Behaviours
 		[SerializeField] private Vector2 m_cameraClampValue = new Vector2(60, 60);
 		public Vector2 CameraClampValue { get { return m_cameraClampValue; } set { m_cameraClampValue = value; } }
 
-        #endregion Inspector Fields
-
-        #region Properties
-
+        
 		public Peds.States.BaseScriptState[] States { get; private set; }
 		public Peds.States.BaseScriptState CurrentState { get { return (Peds.States.BaseScriptState) m_stateMachine.CurrentState; } }
 
@@ -78,13 +70,7 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-        public bool IsGrounded
-        {
-            get
-            {
-                return characterController.isGrounded;
-            }
-        }
+        public bool IsGrounded { get { return characterController.isGrounded; } }
 
 		public Vector2 MouseMoveInput { get; set; }
 		public Vector2 MouseScrollInput { get; set; }
@@ -112,14 +98,12 @@ namespace SanAndreasUnity.Behaviours
 
 		private Coroutine m_findGroundCoroutine;
 
-        #endregion Properties
-
 
 		/// <summary>Ped who is controlled by local player.</summary>
 		public static Ped Instance { get { return Net.Player.Local != null ? Net.Player.Local.OwnedPed : null; } }
 
-		/// <summary>Position of player instance.</summary>
-		public	static	Vector3	InstancePos { get { return Instance.transform.position; } }
+		/// <summary>Position of ped instance.</summary>
+		public static Vector3 InstancePos { get { return Instance.transform.position; } }
 
 		/// <summary>Is this ped controlled by local player ?</summary>
 		public bool IsLocalPlayer { get { return this == Ped.Instance; } }
