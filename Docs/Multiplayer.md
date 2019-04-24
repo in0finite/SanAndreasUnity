@@ -10,10 +10,6 @@
 
 - scene changing: When network (server/client) is stopped, offline scene should be loaded. But, when switching back to online scene, Loader should not load everything again. Instead, only Cell loading should be done, if the new scene is main scene. But, are old meshes/textures destroyed ? Do we leave memory behind, every time when network is stopped ? Or... just exit the game when network is stopped (display message box first ?).
 
-- add OK button to message boxes
-
-- don't show StartGame/JoinGame window in pause menu
-
 - spawn ped right after player connects
 
 

@@ -40,6 +40,22 @@ namespace SanAndreasUnity.UI {
 
 		}
 
+		protected override void OnWindowGUIAfterContent()
+		{
+			// display OK button
+
+			GUILayout.Space(4);
+			GUILayout.BeginHorizontal();
+			GUILayout.FlexibleSpace();
+			if (GUILayout.Button("OK", GUILayout.MinWidth(45), GUILayout.MinHeight(25)))
+			{
+				this.IsOpened = false;
+			}
+			GUILayout.FlexibleSpace();
+			GUILayout.EndHorizontal();
+			GUILayout.Space(4);
+		}
+
 		public static MessageBox Show(string title, string text, bool useTextField = false)
 		{
 			var msgBox = PauseMenuWindow.Create<MessageBox>();
