@@ -2,6 +2,7 @@
 using UnityEngine;
 using Mirror;
 using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Net
 {
@@ -14,6 +15,8 @@ namespace SanAndreasUnity.Net
 
         /// <summary>Local player.</summary>
         public static Player Local { get; private set; }
+
+        public static event System.Action<Player> onStart = delegate {};
 
         [SyncVar(hook=nameof(OnOwnedGameObjectChanged))] GameObject m_ownedGameObject;
         Ped m_ownedPed;
@@ -49,7 +52,7 @@ namespace SanAndreasUnity.Net
 
         void Start()
         {
-            
+            F.InvokeEventExceptionSafe(onStart, this);
         }
 
         void OnOwnedGameObjectChanged(GameObject newGo)
