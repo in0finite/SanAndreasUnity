@@ -361,6 +361,27 @@ namespace SanAndreasUnity.Utilities
 
 		}
 
+        /// <summary>
+		/// Invokes all subscribed delegates, and makes sure any exception is caught and logged, so that all
+		/// subscribers will get notified.
+		/// </summary>
+		public static void InvokeEventExceptionSafe( MulticastDelegate eventDelegate, params object[] parameters )
+        {
+            RunExceptionSafe( () => {
+                var delegates = eventDelegate.GetInvocationList ();
+
+                foreach (var del in delegates) {
+                    if (del.Method != null) {
+                        try {
+                            del.Method.Invoke (del.Target, parameters);
+                        } catch(System.Exception ex) {
+                            UnityEngine.Debug.LogException (ex);
+                        }
+                    }
+                }
+            });
+        }
+
 		public static void SendMessageToObjectsOfType<T> (string msg, params object[] args) where T : UnityEngine.Object
 		{
 			var objects = UnityEngine.Object.FindObjectsOfType<T> ();
