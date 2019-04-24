@@ -137,6 +137,14 @@ namespace SanAndreasUnity.Behaviours
 		// used to play weapon sound
 		AudioSource m_audioSource;
 
+		/*
+		#region SyncVars
+		[SyncVar] int m_net_id = 0;
+		[SyncVar] int m_net_ammoInClip = 0;
+		[SyncVar] int m_net_ammoOutsideOfClip = 0;
+		#endregion
+		*/
+
 
 
 		static Weapon ()
