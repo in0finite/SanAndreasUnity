@@ -31,6 +31,12 @@ namespace SanAndreasUnity.UI
 			this.windowRect = GUIUtils.GetCenteredRect(new Vector2(550, 300));
 		}
 
+		void Update()
+		{
+			if (PauseMenu.IsOpened)
+				this.IsOpened = false;
+		}
+
 
 		protected override void OnWindowGUI ()
 		{
