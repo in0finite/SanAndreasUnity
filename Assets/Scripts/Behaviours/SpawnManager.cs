@@ -11,12 +11,14 @@ namespace SanAndreasUnity.Behaviours
     {
         List<Transform> m_spawnPositions = new List<Transform>();
         GameObject m_container;
+        public bool spawnPlayerWhenConnected = true;
 
 
         void Start()
         {
             this.InvokeRepeating(nameof(UpdateSpawnPositions), 1f, 1f);
             this.InvokeRepeating(nameof(SpawnPlayers), 1f, 3f);
+            Player.onStart += OnPlayerConnected;
         }
 
         Transform GetSpawnFocusPos()
@@ -85,18 +87,31 @@ namespace SanAndreasUnity.Behaviours
             
             foreach (var player in Player.AllPlayers)
             {
-                // if player is not spawned, spawn him
-
-                if (player.OwnedPed != null)
-                    continue;
-
-                var spawn = list.RandomElement();
-                var ped = Ped.SpawnPed(Ped.RandomPedId, spawn.position, spawn.rotation);
-                player.OwnedPed = ped;
-
-                Debug.LogFormat("Spawned ped for player {0}, net id {1}", player.connectionToClient.address, ped.netId);
+                SpawnPlayer(player, list);
             }
 
+        }
+
+        public static Ped SpawnPlayer (Player player, List<Transform> spawns)
+        {
+            if (player.OwnedPed != null)
+                return null;
+
+            var spawn = spawns.RandomElement();
+            var ped = Ped.SpawnPed(Ped.RandomPedId, spawn.position, spawn.rotation);
+            player.OwnedPed = ped;
+
+            Debug.LogFormat("Spawned ped for player {0}, net id {1}", player.connectionToClient.address, ped.netId);
+
+            return ped;
+        }
+
+        void OnPlayerConnected(Player player)
+        {
+            if (!this.spawnPlayerWhenConnected)
+                return;
+
+            SpawnPlayer(player, m_spawnPositions);
         }
 
     }
