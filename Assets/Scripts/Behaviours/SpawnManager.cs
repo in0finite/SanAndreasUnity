@@ -19,38 +19,53 @@ namespace SanAndreasUnity.Behaviours
             this.InvokeRepeating(nameof(SpawnPlayers), 1f, 3f);
         }
 
+        Transform GetSpawnFocusPos()
+        {
+            if (Ped.Instance)
+                return Ped.Instance.transform;
+
+            if (Camera.main)
+                return Camera.main.transform;
+
+            return null;
+        }
+
         void UpdateSpawnPositions()
         {
             if (!Loader.HasLoaded)
                 return;
             
-            if (NetStatus.IsServer && Ped.Instance)
+            if (!NetStatus.IsServer)
+                return;
+
+            Transform focusPos = GetSpawnFocusPos();
+            if (null == focusPos)
+                return;
+            
+            if (null == m_container)
             {
-                if (null == m_container)
+                // create parent game object for spawn positions
+                m_container = new GameObject("Spawn positions");
+
+                // create spawn positions
+                m_spawnPositions.Clear();
+                for (int i = 0; i < 5; i++)
                 {
-                    // create parent game object for spawn positions
-                    m_container = new GameObject("Spawn positions");
+                    Transform spawnPos = new GameObject("Spawn position " + i).transform;
+                    spawnPos.SetParent(m_container.transform);
 
-                    // create spawn positions
-                    m_spawnPositions.Clear();
-                    for (int i = 0; i < 5; i++)
-                    {
-                        Transform spawnPos = new GameObject("Spawn position " + i).transform;
-                        spawnPos.SetParent(m_container.transform);
-
-                        m_spawnPositions.Add(spawnPos);
-                        NetManager.AddSpawnPosition(spawnPos);
-                    }
+                    m_spawnPositions.Add(spawnPos);
+                    //NetManager.AddSpawnPosition(spawnPos);
                 }
-
-                // update spawn positions
-                m_spawnPositions.RemoveDeadObjects();
-                foreach (Transform spawnPos in m_spawnPositions)
-                {
-                    spawnPos.position = Ped.Instance.transform.position + Random.insideUnitCircle.ToVector3XZ() * 15f;
-                }
-
             }
+
+            // update spawn positions
+            m_spawnPositions.RemoveDeadObjects();
+            foreach (Transform spawnPos in m_spawnPositions)
+            {
+                spawnPos.position = focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f;
+            }
+            
         }
 
         void SpawnPlayers()
@@ -61,7 +76,8 @@ namespace SanAndreasUnity.Behaviours
             if (!Loader.HasLoaded)
                 return;
 
-            var list = NetManager.SpawnPositions.ToList();
+            //var list = NetManager.SpawnPositions.ToList();
+            var list = m_spawnPositions;
             list.RemoveDeadObjects();
 
             if (list.Count < 1)
