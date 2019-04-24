@@ -145,6 +145,8 @@ namespace SanAndreasUnity.Net
 			NetworkManager.startPositions.Add(tr);
 		}
 
+		public static Transform[] SpawnPositions { get { return NetworkManager.startPositions.ToArray(); } }
+
 		public static void Spawn(GameObject go)
 		{
 			NetworkServer.Spawn(go);

@@ -440,6 +440,18 @@ namespace SanAndreasUnity.Utilities
 			return false;
 		}
 
+        public static T RandomElement<T> (this IList<T> list)
+        {
+            if (list.Count < 1)
+                throw new System.InvalidOperationException("List has no elements");
+            return list [UnityEngine.Random.Range(0, list.Count)];
+        }
+
+        public static int RemoveDeadObjects<T> (this List<T> list) where T : UnityEngine.Object
+        {
+            return list.RemoveAll(item => null == item);
+        }
+
 
         private static Dictionary<string, Texture2D> Texturemap = new Dictionary<string, Texture2D>();
         private static Texture2D Font;
