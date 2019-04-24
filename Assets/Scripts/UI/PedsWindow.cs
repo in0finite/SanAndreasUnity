@@ -54,7 +54,7 @@ namespace SanAndreasUnity.UI {
 
 
 			// info about current ped
-			if (playerExists) {
+			if (playerExists && Ped.Instance.PedDef != null) {
 				GUILayout.Label ("Current ped:");
 				this.DisplayPed( GetLayoutRect( rowHeight ), Ped.Instance.PedDef, false, true, widthPercsLabels, 
 					widthPercsButtons, buttonSpacing );
