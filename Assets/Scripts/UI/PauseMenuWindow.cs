@@ -86,6 +86,11 @@ namespace SanAndreasUnity.UI {
 			return window;
 		}
 
+		public void DestroyWindow()
+		{
+			Destroy(this);
+		}
+
 		void WindowStart() {
 
 			if (m_registerInMainMenuOnStart)
