@@ -18,6 +18,10 @@
 
 - don't show StartGame/JoinGame window in pause menu
 
+- spawn ped right after player connects
+
+- add weapons to player's ped
+
 
 
 # Potential problems
