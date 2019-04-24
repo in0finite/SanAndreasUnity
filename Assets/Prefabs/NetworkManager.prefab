@@ -54,10 +54,12 @@ MonoBehaviour:
   transport: {fileID: 4862460140142645991}
   networkAddress: localhost
   maxConnections: 20
-  playerPrefab: {fileID: 0}
+  playerPrefab: {fileID: 1273918895060814, guid: 9d45d42a7408c1e4ab325d6840364b84,
+    type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 1273918895060814, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 3}
 --- !u!114 &4862460140142645991
 MonoBehaviour:
   m_ObjectHideFlags: 0
