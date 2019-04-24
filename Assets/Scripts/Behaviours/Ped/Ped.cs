@@ -115,12 +115,14 @@ namespace SanAndreasUnity.Behaviours
         #endregion Properties
 
 
-		public	static	Ped	Instance { get ; private set ; }
+		/// <summary>Ped who is controlled by local player.</summary>
+		public static Ped Instance { get { return Net.Player.Local != null ? Net.Player.Local.OwnedPed : null; } }
 
 		/// <summary>Position of player instance.</summary>
 		public	static	Vector3	InstancePos { get { return Instance.transform.position; } }
 
-		public bool IsLocalPlayer { get; private set; }
+		/// <summary>Is this ped controlled by local player ?</summary>
+		public bool IsLocalPlayer { get { return this == Ped.Instance; } }
 
 
 
@@ -128,11 +130,6 @@ namespace SanAndreasUnity.Behaviours
         void Awake()
         {
             
-			if (null == Instance) {
-				Instance = this;
-				IsLocalPlayer = true;
-			}
-
             characterController = GetComponent<CharacterController>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
 

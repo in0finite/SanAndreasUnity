@@ -87,12 +87,12 @@ namespace SanAndreasUnity.Behaviours
             {
                 // if player is not spawned, spawn him
 
-                if (player.OwnedGameObject != null)
+                if (player.OwnedPed != null)
                     continue;
 
                 var spawn = list.RandomElement();
                 var ped = Ped.SpawnPed(Ped.RandomPedId, spawn.position, spawn.rotation);
-                player.OwnedGameObject = ped.gameObject;
+                player.OwnedPed = ped;
 
                 Debug.LogFormat("Spawned ped for player {0}, net id {1}", player.connectionToClient.address, ped.netId);
             }
