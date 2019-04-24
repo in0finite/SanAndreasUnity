@@ -78,12 +78,6 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-        public Vector3 Position
-        {
-            get { return transform.localPosition; }
-            set { transform.localPosition = value; }
-        }
-
         public bool IsGrounded
         {
             get
