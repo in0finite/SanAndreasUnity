@@ -39,6 +39,11 @@ namespace SanAndreasUnity.UI {
 			{
 				GUILayout.BeginHorizontal ();
 
+				if (GUILayout.Button ("Add random weapons", GUILayout.ExpandWidth(false)))
+					Ped.Instance.WeaponHolder.AddRandomWeapons ();
+
+				GUILayout.Space (5);
+
 				if (GUILayout.Button ("Remove all weapons", GUILayout.ExpandWidth(false)))
 					Ped.Instance.WeaponHolder.RemoveAllWeapons ();
 
