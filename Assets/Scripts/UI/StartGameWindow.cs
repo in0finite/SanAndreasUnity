@@ -61,13 +61,14 @@ namespace SanAndreasUnity.UI
 
 				// first start a server, and then change scene
 
+				NetManager.onlineScene = scene;
 				NetManager.dontListen = m_dontListen;
 				if (m_dedicatedServer)
 					NetManager.StartServer(port);
 				else
 					NetManager.StartHost(port);
 
-				NetManager.ChangeScene(scene);
+				//NetManager.ChangeScene(scene);
 			}
 			catch (System.Exception ex)
 			{
