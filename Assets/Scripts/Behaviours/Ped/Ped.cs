@@ -34,7 +34,7 @@ namespace SanAndreasUnity.Behaviours
 
         #region Inspector Fields
 
-        public Camera Camera;
+        public Camera Camera { get { return this == Ped.Instance ? Camera.main : null; } }
         public PedModel PlayerModel;
 
 		public bool shouldPlayAnims = true;
