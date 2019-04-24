@@ -29,12 +29,16 @@ namespace SanAndreasUnity.Behaviours
             if (this.isServer)
                 return;
 
-            this.PlayerModel.Load(m_net_pedId);
+            //this.PlayerModel.Load(m_net_pedId);
         }
 
         void Update_Net()
         {
-            m_net_pedId = this.PedDef.Id;
+            if (!this.isServer)
+                return;
+
+            if (this.PedDef != null)
+                m_net_pedId = this.PedDef.Id;
             m_net_state = this.CurrentState != null ? this.CurrentState.GetType().Name : "";
             //m_net_weapon = this.CurrentWeapon;
         }
@@ -43,6 +47,8 @@ namespace SanAndreasUnity.Behaviours
         {
             if (this.isServer)
                 return;
+            
+            Debug.LogFormat("ped id changed to {0}", newId);
             
             this.PlayerModel.Load(newId);
         }

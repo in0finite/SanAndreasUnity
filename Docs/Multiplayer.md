@@ -12,6 +12,8 @@
 
 - add OK button to message boxes
 
+- player's ped must be created by server (when host starts) - it should be removed from scenes
+
 
 
 # Potential problems
