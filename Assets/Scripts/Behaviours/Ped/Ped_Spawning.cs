@@ -34,6 +34,8 @@ namespace SanAndreasUnity.Behaviours
 			destroyer.timeUntilDestroyed = PedManager.Instance.AIOutOfRangeTimeout;
 			destroyer.range = PedManager.Instance.AIOutOfRangeDistance;
 
+			Mirror.NetworkServer.Spawn(go);
+
 			return ped;
 		}
 
