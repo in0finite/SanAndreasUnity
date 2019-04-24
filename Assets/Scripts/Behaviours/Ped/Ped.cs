@@ -30,13 +30,13 @@ namespace SanAndreasUnity.Behaviours
 		private StateMachine m_stateMachine = new StateMachine ();
 
         public Camera Camera { get { return this == Ped.Instance ? Camera.main : null; } }
-        public PedModel PlayerModel;
+        public PedModel PlayerModel { get; private set; }
 
 		public bool shouldPlayAnims = true;
 
         public float TurnSpeed = 10f;
 
-        public CharacterController characterController;
+        public CharacterController characterController { get; private set; }
 
         public float jumpSpeed = 8.0f;
 
@@ -114,7 +114,8 @@ namespace SanAndreasUnity.Behaviours
         void Awake()
         {
             
-            characterController = GetComponent<CharacterController>();
+			this.PlayerModel = this.GetComponentInChildren<PedModel>();
+            this.characterController = this.GetComponent<CharacterController>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
 
 			this.States = this.GetComponentsInChildren<Peds.States.BaseScriptState> ();

@@ -16,6 +16,8 @@
 
 - PedsWindow throws NRE when Ped.Instance is null
 
+- don't show StartGame/JoinGame window in pause menu
+
 
 
 # Potential problems
