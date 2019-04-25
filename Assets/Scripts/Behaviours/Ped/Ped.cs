@@ -190,6 +190,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public void Teleport(Vector3 position, Quaternion rotation) {
 
+			if (!NetStatus.IsServer)
+				return;
+
 			if (this.IsInVehicle)
 				return;
 
