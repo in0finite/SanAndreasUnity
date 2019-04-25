@@ -47,18 +47,20 @@ namespace SanAndreasUnity.Behaviours
 
         void Net_OnIdChanged(int newId)
         {
+            Debug.LogFormat("ped (net id {0}) changed model id to {1}", this.netId, newId);
+            
             if (this.isServer)
                 return;
             
             m_net_pedId = newId;
 
-            Debug.LogFormat("ped id changed to {0}", newId);
-            
             F.RunExceptionSafe( () => this.PlayerModel.Load(newId) );
         }
 
         void Net_OnStateChanged(string newStateName)
         {
+            Debug.LogFormat("ped (net id {0}) changed state to {1}", this.netId, newStateName);
+
             if (this.isServer)
                 return;
             
