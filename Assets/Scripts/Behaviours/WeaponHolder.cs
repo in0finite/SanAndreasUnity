@@ -4,6 +4,7 @@ using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Importing.Weapons;
 using System.Linq;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours {
 
@@ -110,14 +111,16 @@ namespace SanAndreasUnity.Behaviours {
 		void OnDisable()
 		{
 			// destroy all weapons
-
-			// we won't call RemoveAllWeapons() because it causes complications - it calls SwitchWeapon(), which
-			// then calls StopFiring(), which then switches ped state, etc
-
-			// no special reason for using AllWeapons
-			foreach(var w in this.AllWeapons)
+			if (NetStatus.IsServer)
 			{
-				DestroyWeapon(w);
+				// we won't call RemoveAllWeapons() because it causes complications - it calls SwitchWeapon(), which
+				// then calls StopFiring(), which then switches ped state, etc
+
+				// no special reason for using AllWeapons
+				foreach(var w in this.AllWeapons)
+				{
+					DestroyWeapon(w);
+				}
 			}
 		}
 
