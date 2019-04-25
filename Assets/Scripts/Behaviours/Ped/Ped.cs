@@ -289,21 +289,6 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-#if CLIENT
-
-        private void SetupLocalPlayer()
-        {
-            Camera.gameObject.SetActive(true);
-            Camera.transform.SetParent(null, true);
-
-            Cell.Focus = transform;
-            Cell.PreviewCamera.gameObject.SetActive(false);
-
-            gameObject.AddComponent<PlayerController>();
-        }
-
-#endif
-
         
         private void Update()
         {
