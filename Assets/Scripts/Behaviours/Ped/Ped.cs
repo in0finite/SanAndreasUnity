@@ -300,14 +300,7 @@ namespace SanAndreasUnity.Behaviours
 				this.CurrentState.UpdateState ();
 			}
 
-            // Reset to a valid (and solid!) start position when falling below the world
-            if (transform.position.y < -300)
-            {
-                Velocity = new Vector3(0, 0, 0);
-                Transform spawn = GameObject.Find("Player Spawns").GetComponentsInChildren<Transform>()[1];
-                transform.position = spawn.position;
-                transform.rotation = spawn.rotation;
-            }
+            this.ResetIfFallingBelowTheWorld();
 
 		//	ConstrainPosition ();
 
@@ -392,6 +385,20 @@ namespace SanAndreasUnity.Behaviours
 				this.transform.eulerAngles = eulers;
 			}
 
+		}
+
+		void ResetIfFallingBelowTheWorld()
+		{
+			// TODO: this code needs fixing
+			
+			// Reset to a valid (and solid!) start position when falling below the world
+            if (transform.position.y < -300)
+            {
+                Velocity = new Vector3(0, 0, 0);
+                Transform spawn = GameObject.Find("Player Spawns").GetComponentsInChildren<Transform>()[1];
+                transform.position = spawn.position;
+                transform.rotation = spawn.rotation;
+            }
 		}
 
 		private void UpdateAnims() {
