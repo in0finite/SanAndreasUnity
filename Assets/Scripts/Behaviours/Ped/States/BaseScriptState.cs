@@ -105,7 +105,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void UpdateHeading()
 		{
-			m_ped.UpdateHeading ();
+			if (m_isServer)
+				m_ped.UpdateHeading ();
 		}
 
 		protected virtual void UpdateRotation()
