@@ -57,6 +57,8 @@ namespace SanAndreasUnity.Net
 
         void OnOwnedGameObjectChanged(GameObject newGo)
         {
+            Debug.LogFormat("Owned game object changed for player (net id {0})", this.netId);
+
             if (this.isServer)
                 return;
 
