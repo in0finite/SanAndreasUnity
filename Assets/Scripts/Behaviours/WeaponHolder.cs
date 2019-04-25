@@ -382,6 +382,8 @@ namespace SanAndreasUnity.Behaviours {
 
 		public void AddRandomWeapons ()
 		{
+			if (!NetStatus.IsServer)
+				return;
 
 			int[] slots = new int[] { WeaponSlot.Pistol, WeaponSlot.Shotgun, WeaponSlot.Submachine,
 				WeaponSlot.Machine, WeaponSlot.Rifle, WeaponSlot.Heavy
