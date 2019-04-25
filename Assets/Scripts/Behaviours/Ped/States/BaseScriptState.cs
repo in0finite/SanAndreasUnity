@@ -62,12 +62,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void UpdateState() {
 
-			if (m_isServer)
-			{
-				this.ConstrainPosition();
-				this.ConstrainRotation();
-			}
-
+			this.ConstrainPosition();
+			this.ConstrainRotation();
+			
 		}
 
 		public virtual void PostUpdateState()
@@ -95,12 +92,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void ConstrainPosition()
 		{
-			m_ped.ConstrainPosition();
+			if (m_isServer)
+				m_ped.ConstrainPosition();
 		}
 
 		protected virtual void ConstrainRotation ()
 		{
-			m_ped.ConstrainRotation();
+			if (m_isServer)
+				m_ped.ConstrainRotation();
 		}
 
 		protected virtual void UpdateHeading()
