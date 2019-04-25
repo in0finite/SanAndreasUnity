@@ -8,6 +8,7 @@ using Debug = UnityEngine.Debug;
 using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -176,12 +177,12 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-        public void OnSpawn()
+        internal void OnSpawn()
         {
-            // Note: Spawn is performed here.
+            if (!NetStatus.IsServer)
+				return;
 
 			if (!IsGrounded) {
-				// Find the ground (instead of falling)
 				FindGround ();
 			}
 
