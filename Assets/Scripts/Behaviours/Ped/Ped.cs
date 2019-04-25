@@ -327,8 +327,6 @@ namespace SanAndreasUnity.Behaviours
 
 			this.Update_Net();
 
-		//	IsWalking = IsRunning = false;
-
 			if (this.CurrentState != null)
 				this.CurrentState.PostUpdateState();
 
