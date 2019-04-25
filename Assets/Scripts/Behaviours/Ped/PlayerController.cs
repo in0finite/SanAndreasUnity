@@ -75,7 +75,7 @@ namespace SanAndreasUnity.Behaviours
                 GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(5, 5)), string.Format("{0:0.0} km/h", m_deltaPos.magnitude * 3.6f / velTimer), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
 
 			// show current ped state
-		//	GUI.Label (GUIUtils.GetCornerRect(ScreenCorner.BottomLeft, 250, 50), string.Format("Current ped state: {0}", m_ped.CurrentState != null ? m_ped.CurrentState.GetType().Name : "none") );
+			GUI.Label (GUIUtils.GetCornerRect(ScreenCorner.BottomLeft, 250, 50), string.Format("Current ped state: {0}", m_ped.CurrentState != null ? m_ped.CurrentState.GetType().Name : "none") );
             
         }
 
