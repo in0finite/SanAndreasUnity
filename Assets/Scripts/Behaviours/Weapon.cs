@@ -601,7 +601,7 @@ namespace SanAndreasUnity.Behaviours
 				if (this.IsAimingBack ())
 					return m_ped.transform.up;
 
-				if (m_ped.IsLocalPlayer && m_ped.Camera != null)
+				if (m_ped.IsControlledByLocalPlayer && m_ped.Camera != null)
 				{
 					// find ray going into the world
 					Ray ray = m_ped.Camera.GetRayFromCenter ();

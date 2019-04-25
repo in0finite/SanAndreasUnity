@@ -54,7 +54,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnGUI()
         {
-			if (!m_ped.IsLocalPlayer)
+			if (!m_ped.IsControlledByLocalPlayer)
 				return;
 
 			if (!Loader.HasLoaded)
@@ -94,7 +94,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
-			if (!m_ped.IsLocalPlayer)
+			if (!m_ped.IsControlledByLocalPlayer)
 				return;
 
             if (Input.GetKeyDown(KeyCode.F9))

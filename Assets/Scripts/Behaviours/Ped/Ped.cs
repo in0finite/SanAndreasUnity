@@ -105,7 +105,7 @@ namespace SanAndreasUnity.Behaviours
 		public static Vector3 InstancePos { get { return Instance.transform.position; } }
 
 		/// <summary>Is this ped controlled by local player ?</summary>
-		public bool IsLocalPlayer { get { return this == Ped.Instance; } }
+		public bool IsControlledByLocalPlayer { get { return this == Ped.Instance; } }
 
 
 
