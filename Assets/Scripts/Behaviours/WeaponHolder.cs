@@ -152,11 +152,14 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 			// reload weapon ammo clip
-			if (CurrentWeapon != null) {
-				if (CurrentWeapon.AmmoClipSize > 0 && CurrentWeapon.AmmoInClip <= 0) {
-					int amountToRefill = Mathf.Min (CurrentWeapon.AmmoClipSize, CurrentWeapon.AmmoOutsideOfClip);
-					CurrentWeapon.AmmoInClip = amountToRefill;
-					CurrentWeapon.AmmoOutsideOfClip -= amountToRefill;
+			if (NetStatus.IsServer)
+			{
+				if (CurrentWeapon != null) {
+					if (CurrentWeapon.AmmoClipSize > 0 && CurrentWeapon.AmmoInClip <= 0) {
+						int amountToRefill = Mathf.Min (CurrentWeapon.AmmoClipSize, CurrentWeapon.AmmoOutsideOfClip);
+						CurrentWeapon.AmmoInClip = amountToRefill;
+						CurrentWeapon.AmmoOutsideOfClip -= amountToRefill;
+					}
 				}
 			}
 
