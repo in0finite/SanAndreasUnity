@@ -23,12 +23,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				return;
 
 
-			this.SwitchToMovementState ();
+			if (m_isServer)
+				this.SwitchToMovementState ();
 
 			if (!this.IsActiveState)
 				return;
 
-			this.SwitchToAimState ();
+			if (m_isServer)
+				this.SwitchToAimState ();
 
 		}
 
