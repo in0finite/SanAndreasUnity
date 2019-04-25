@@ -116,7 +116,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void UpdateMovement()
 		{
-			m_ped.UpdateMovement ();
+			if (m_isServer)
+				m_ped.UpdateMovement ();
 		}
 
 		public virtual void UpdateCamera()
