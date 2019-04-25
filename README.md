@@ -24,7 +24,8 @@ For more information about the project, read this [wiki page](https://github.com
 
 ## Setup Instructions
 
-- open the project
+- clone the project, including submodules: `git clone --depth 1 --recurse-submodules https://github.com/GTA-ASM/SanAndreasUnity`
+- open the project with Unity 2018.3
 - open startup scene located at Assets/Scenes/Startup.unity
 - press Play button
 

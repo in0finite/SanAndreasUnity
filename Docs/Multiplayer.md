@@ -6,8 +6,6 @@
 
 - order of buttons in main menu
 
-- don't add weapons for NPC peds
-
 
 
 # Potential problems
