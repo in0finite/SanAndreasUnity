@@ -158,6 +158,7 @@ namespace SanAndreasUnity.Behaviours
 
             if (Loader.HasLoaded)
             {
+				// FIXME: should not be done like this
                 if (!loadedModelOnStartup)
                 {
 					loadedModelOnStartup = true;
