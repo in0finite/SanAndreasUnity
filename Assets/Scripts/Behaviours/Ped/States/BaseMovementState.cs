@@ -97,17 +97,20 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public override void OnCrouchButtonPressed ()
 		{
-			m_ped.SwitchState<CrouchState>();
+			if (m_isServer)
+				m_ped.SwitchState<CrouchState>();
 		}
 
 		public override void OnFlyButtonPressed ()
 		{
-			m_ped.GetStateOrLogError<FlyState> ().EnterState (false);
+			if (m_isServer)
+				m_ped.GetStateOrLogError<FlyState> ().EnterState (false);
 		}
 
 		public override void OnFlyThroughButtonPressed ()
 		{
-			m_ped.GetStateOrLogError<FlyState> ().EnterState (true);
+			if (m_isServer)
+				m_ped.GetStateOrLogError<FlyState> ().EnterState (true);
 		}
 
 	}
