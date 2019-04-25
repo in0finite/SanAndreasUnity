@@ -112,6 +112,7 @@ namespace SanAndreasUnity.Behaviours
             var spawn = spawns.RandomElement();
             var ped = Ped.SpawnPed(Ped.RandomPedId, spawn.position, spawn.rotation);
             player.OwnedPed = ped;
+            ped.WeaponHolder.autoAddWeapon = true;
 
             Debug.LogFormat("Spawned ped for player {0}, net id {1}", player.connectionToClient.address, ped.netId);
 
