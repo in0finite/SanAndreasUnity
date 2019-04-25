@@ -367,11 +367,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncInterval: 0.1
-  Camera: {fileID: 0}
-  PlayerModel: {fileID: 114671475596742702}
   shouldPlayAnims: 1
   TurnSpeed: 10
-  characterController: {fileID: 0}
   jumpSpeed: 8
   m_cameraDistance: 3
   m_cameraDistanceVehicle: 6
@@ -407,7 +404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 104b2f17607c64562aea9bbcedc03368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoAddWeapon: 1
+  autoAddWeapon: 0
   m_aimWithRifleMaxAnimTime: 0.7
   cameraAimOffset: {x: 0.7, y: 0.2, z: -1}
   SpineOffset: {x: 0, y: 45, z: 90}
