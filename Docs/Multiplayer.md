@@ -8,8 +8,6 @@
 
 - don't add weapons for NPC peds
 
-- when ped is killed, his weapons are not destroyed
-
 
 
 # Potential problems
