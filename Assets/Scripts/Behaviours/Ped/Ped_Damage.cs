@@ -47,7 +47,7 @@ namespace SanAndreasUnity.Behaviours
 
 		void UpdateHealthBar ()
 		{
-			bool shouldBeVisible = PedManager.Instance.displayHealthBarAbovePeds && !this.IsLocalPlayer;
+			bool shouldBeVisible = PedManager.Instance.displayHealthBarAbovePeds && !this.IsControlledByLocalPlayer;
 			this.HealthBar.gameObject.SetActive (shouldBeVisible);
 
 			if (shouldBeVisible)

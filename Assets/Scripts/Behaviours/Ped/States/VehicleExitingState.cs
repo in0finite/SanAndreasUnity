@@ -31,7 +31,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// this should be done only if player was a driver ?
 			this.CurrentVehicle.StopControlling();
 
-			if (m_ped.IsLocalPlayer)
+			if (m_ped.IsControlledByLocalPlayer)
 			{
 				/*
                 SendToServer(_lastPassengerState = new PlayerPassengerState {
@@ -87,7 +87,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			PlayerModel.VehicleParentOffset = Vector3.zero;
 
 			// change camera parent
-			if (m_ped.IsLocalPlayer) {
+			if (m_ped.IsControlledByLocalPlayer) {
 				if (m_ped.Camera != null) {
 					m_ped.Camera.transform.SetParent (null, true);
 				}
