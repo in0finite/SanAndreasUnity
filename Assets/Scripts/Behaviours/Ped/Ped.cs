@@ -312,13 +312,16 @@ namespace SanAndreasUnity.Behaviours
             //if (IsDrivingVehicle)
             //    UpdateWheelTurning();
 			
-            //If player falls from the map - wait, didn't we just do this above ?
-            if (IsGrounded && transform.position.y < -50)
-            {
-                Vector3 t = transform.position;
-                transform.position = new Vector3(t.x, 150, t.z);
-                FindGround();
-            }
+            // If ped falls from the map, reset him - wait, didn't we just do this above ?
+			if (NetStatus.IsServer)
+			{
+				if (IsGrounded && transform.position.y < -50)
+				{
+					Vector3 t = transform.position;
+					transform.position = new Vector3(t.x, 150, t.z);
+					FindGround();
+				}
+			}
 
 			this.UpdateDamageStuff ();
 
