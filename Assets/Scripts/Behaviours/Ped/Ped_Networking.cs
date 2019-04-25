@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using System.Linq;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -48,16 +50,33 @@ namespace SanAndreasUnity.Behaviours
             if (this.isServer)
                 return;
             
+            m_net_pedId = newId;
+
             Debug.LogFormat("ped id changed to {0}", newId);
             
-            this.PlayerModel.Load(newId);
+            F.RunExceptionSafe( () => this.PlayerModel.Load(newId) );
         }
 
-        void Net_OnStateChanged(string newState)
+        void Net_OnStateChanged(string newStateName)
         {
             if (this.isServer)
                 return;
             
+            m_net_state = newStateName;
+
+            // forcefully change the state
+
+            F.RunExceptionSafe( () => {
+                var newState = this.States.FirstOrDefault(state => state.GetType().Name == newStateName);
+                if (null == newState)
+                {
+                    Debug.LogErrorFormat("New ped state '{0}' could not be found", newStateName);
+                }
+                else
+                {
+                    this.SwitchState(newState.GetType());
+                }
+            });
 
         }
 

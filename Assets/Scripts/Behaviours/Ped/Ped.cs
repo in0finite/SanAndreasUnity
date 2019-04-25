@@ -145,23 +145,33 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
+		public Peds.States.BaseScriptState GetState(System.Type type)
+		{
+			return this.States.FirstOrDefault (s => s.GetType ().Equals (type));
+		}
+
 		public T GetState<T>() where T : Peds.States.BaseScriptState
 		{
-			var type = typeof(T);
-			return (T) this.States.FirstOrDefault (s => s.GetType ().Equals (type));
+			return (T) this.GetState(typeof(T));
+		}
+
+		public Peds.States.BaseScriptState GetStateOrLogError(System.Type type)
+		{
+			var state = this.GetState (type);
+			if(null == state)
+				Debug.LogErrorFormat ("Failed to find state: {0}", type);
+			return state;
 		}
 
 		public T GetStateOrLogError<T>() where T : Peds.States.BaseScriptState
 		{
-			var state = this.GetState<T> ();
-			if(null == state)
-				Debug.LogErrorFormat ("Failed to find state: {0}", typeof(T));
-			return state;
+			return (T) this.GetStateOrLogError(typeof(T));
 		}
 
-		public void SwitchState<T>() where T : Peds.States.BaseScriptState {
+		public void SwitchState(System.Type type)
+		{
 			
-			var state = this.GetStateOrLogError<T> ();
+			var state = this.GetStateOrLogError (type);
 			if (null == state)
 				return;
 			
@@ -174,6 +184,11 @@ namespace SanAndreasUnity.Behaviours
 //				Debug.LogFormat ("Switched to state: {0}", state.GetType ().Name);
 //			}
 			
+		}
+
+		public void SwitchState<T>() where T : Peds.States.BaseScriptState
+		{
+			this.SwitchState(typeof(T));
 		}
 
 
