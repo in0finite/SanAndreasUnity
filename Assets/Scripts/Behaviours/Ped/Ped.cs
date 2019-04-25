@@ -403,34 +403,6 @@ namespace SanAndreasUnity.Behaviours
             }
 		}
 
-		private void UpdateAnims() {
-
-			if (!this.shouldPlayAnims)
-				return;
-
-			if (IsInVehicle || m_weaponHolder.IsHoldingWeapon)
-				return;
-
-			if (IsRunOn) {
-				
-				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Run, PlayMode.StopAll);
-
-			} else if (IsWalkOn) {
-				
-				PlayerModel.PlayAnim (AnimGroup.WalkCycle, AnimIndex.Walk, PlayMode.StopAll);
-
-			} else if (IsSprintOn) {
-
-				PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
-
-			} else {
-				// player is standing
-				PlayerModel.PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle, PlayMode.StopAll);
-
-			}
-
-		}
-
         private void FixedUpdate()
         {
             if (!Loader.HasLoaded)
