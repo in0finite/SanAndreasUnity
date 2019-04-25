@@ -277,6 +277,10 @@ namespace SanAndreasUnity.Behaviours {
 
 		public void SwitchWeapon (int slotIndex)
 		{
+			// TODO: clients should send request to server to switch weapon
+			if (!NetStatus.IsServer)
+				return;
+			
 			if (slotIndex == currentWeaponSlot)
 				return;
 
