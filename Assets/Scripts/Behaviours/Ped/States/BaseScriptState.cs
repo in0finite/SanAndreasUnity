@@ -15,6 +15,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	//	protected StateMachine m_stateMachine;
 		protected new Transform transform { get { return m_ped.transform; } }
 		public bool IsActiveState { get { return m_ped.CurrentState == this; } }
+		protected bool m_isServer { get { return Net.NetStatus.IsServer; } }
 
 
 
@@ -61,13 +62,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void UpdateState() {
 
-			// read input
-
-			// call appropriate function for every input action
-
-
-			this.ConstrainPosition();
-			this.ConstrainRotation();
+			if (m_isServer)
+			{
+				this.ConstrainPosition();
+				this.ConstrainRotation();
+			}
 
 		}
 
