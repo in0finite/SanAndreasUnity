@@ -110,7 +110,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void UpdateRotation()
 		{
-			m_ped.UpdateRotation ();
+			if (m_isServer)
+				m_ped.UpdateRotation ();
 		}
 
 		protected virtual void UpdateMovement()
