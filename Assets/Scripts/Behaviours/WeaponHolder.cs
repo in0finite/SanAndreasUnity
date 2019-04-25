@@ -328,7 +328,9 @@ namespace SanAndreasUnity.Behaviours {
 
 		public void SetWeaponAtSlot (int weaponId, int slotIndex)
 		{
-			
+			if (!NetStatus.IsServer)
+				return;
+
 			// destroy current weapon at this slot
 			if (weapons [slotIndex] != null) {
 				DestroyWeapon (weapons [slotIndex]);
