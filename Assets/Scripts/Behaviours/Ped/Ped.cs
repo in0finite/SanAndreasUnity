@@ -94,8 +94,6 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsFireOn { get ; set ; }
 		public bool IsHoldingWeapon { get { return m_weaponHolder.IsHoldingWeapon; } }
 
-        private static bool makeGPUAdjustments;
-
 		private Coroutine m_findGroundCoroutine;
 
 
@@ -144,28 +142,6 @@ namespace SanAndreasUnity.Behaviours
 		{
 			s_allPeds.Remove (this);
 		}
-
-        private IEnumerator GPUAdjust()
-        {
-            // Wait to everything to load
-            yield return new WaitForSeconds(1);
-
-			if (SystemInfo.graphicsShaderLevel <= 40) {
-				try {
-					Debug.Log("Adjusting settings for older GPUs");
-
-					Camera.main.allowMSAA = false;
-					Camera.main.allowHDR = false;
-
-					foreach (var mat in transform.root.GetComponentsInChildren<Material>()) {
-						mat.EnableKeyword ("_SPECULARHIGHLIGHTS_OFF");
-						mat.SetFloat ("_SpecularHighlights", 0f);
-					}
-				} catch {
-				}
-			}
-
-        }
 
 
 		public T GetState<T>() where T : Peds.States.BaseScriptState
