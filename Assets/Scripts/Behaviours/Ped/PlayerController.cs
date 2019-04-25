@@ -4,6 +4,7 @@ using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -95,6 +96,8 @@ namespace SanAndreasUnity.Behaviours
         private void Update()
         {
 			if (!m_ped.IsControlledByLocalPlayer)
+				return;
+			if (!NetStatus.IsServer)	// TODO: send input to server
 				return;
 
             if (Input.GetKeyDown(KeyCode.F9))
