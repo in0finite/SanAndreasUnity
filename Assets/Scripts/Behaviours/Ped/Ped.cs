@@ -300,7 +300,8 @@ namespace SanAndreasUnity.Behaviours
 				this.CurrentState.UpdateState ();
 			}
 
-            this.ResetIfFallingBelowTheWorld();
+			if (NetStatus.IsServer)
+            	this.ResetIfFallingBelowTheWorld();
 
 		//	ConstrainPosition ();
 
@@ -311,7 +312,7 @@ namespace SanAndreasUnity.Behaviours
             //if (IsDrivingVehicle)
             //    UpdateWheelTurning();
 			
-            //If player falls from the map
+            //If player falls from the map - wait, didn't we just do this above ?
             if (IsGrounded && transform.position.y < -50)
             {
                 Vector3 t = transform.position;
@@ -390,7 +391,7 @@ namespace SanAndreasUnity.Behaviours
 		void ResetIfFallingBelowTheWorld()
 		{
 			// TODO: this code needs fixing
-			
+
 			// Reset to a valid (and solid!) start position when falling below the world
             if (transform.position.y < -300)
             {
