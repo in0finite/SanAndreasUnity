@@ -565,14 +565,6 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-		void OnGUI ()
-		{
-			if (!Loader.HasLoaded)
-				return;
-
-
-		}
-
 		void OnDrawGizmosSelected ()
 		{
 
