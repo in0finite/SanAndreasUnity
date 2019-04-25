@@ -6,6 +6,7 @@ using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Animation;
 using System.Linq;
 using SanAndreasUnity.Behaviours.Peds.States;
+using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -47,12 +48,14 @@ namespace SanAndreasUnity.Behaviours
 
 		public void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
 		{
+			NetStatus.ThrowIfNotOnServer();
 			// find state script, and call it's method
 			this.GetStateOrLogError<VehicleEnteringState>().TryEnterVehicle( vehicle, seatAlignment, immediate );
 		}
 
 		public void ExitVehicle(bool immediate = false)
 		{
+			NetStatus.ThrowIfNotOnServer();
 			this.GetStateOrLogError<VehicleExitingState> ().ExitVehicle (immediate);
 		}
 
