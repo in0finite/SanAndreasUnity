@@ -360,6 +360,9 @@ namespace SanAndreasUnity.Behaviours {
 
 		public void RemoveAllWeapons() {
 
+			if (!NetStatus.IsServer)
+				return;
+
 			this.SwitchWeapon (-1);
 
 			for (int i = 0; i < this.weapons.Length; i++) {
