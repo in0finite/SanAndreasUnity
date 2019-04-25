@@ -128,7 +128,7 @@ namespace SanAndreasUnity.Behaviours {
 		{
 			PlayerModel.onLateUpdate += this.UpdateWeaponTransform;
 
-			if (m_ped.isServer)
+			if (NetStatus.IsServer)
 			{
 				if (this.autoAddWeapon)
 				{
