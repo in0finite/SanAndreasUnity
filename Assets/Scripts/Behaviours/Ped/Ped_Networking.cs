@@ -58,7 +58,8 @@ namespace SanAndreasUnity.Behaviours
             
             //m_net_pedId = newId;
 
-            F.RunExceptionSafe( () => this.PlayerModel.Load(newId) );
+            if (newId > 0)
+                F.RunExceptionSafe( () => this.PlayerModel.Load(newId) );
         }
 
         void Net_OnStateChanged(string newStateName)
