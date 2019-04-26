@@ -56,7 +56,7 @@ namespace SanAndreasUnity.Behaviours
             if (this.isServer)
                 return;
             
-            m_net_pedId = newId;
+            //m_net_pedId = newId;
 
             F.RunExceptionSafe( () => this.PlayerModel.Load(newId) );
         }
@@ -68,7 +68,7 @@ namespace SanAndreasUnity.Behaviours
             if (this.isServer)
                 return;
             
-            m_net_state = newStateName;
+            //m_net_state = newStateName;
 
             // forcefully change the state
 

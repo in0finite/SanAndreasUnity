@@ -6,6 +6,10 @@
 
 - order of buttons in main menu
 
+- send input to server
+
+- make console available in main menu
+
 
 
 # Potential problems
