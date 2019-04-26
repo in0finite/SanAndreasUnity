@@ -39,9 +39,13 @@ namespace SanAndreasUnity.Behaviours
             if (!this.isServer)
                 return;
 
-            if (this.PedDef != null)
+            if (this.PedDef != null && this.PedDef.Id != m_net_pedId)
                 m_net_pedId = this.PedDef.Id;
-            m_net_state = this.CurrentState != null ? this.CurrentState.GetType().Name : "";
+
+            string newStateName = this.CurrentState != null ? this.CurrentState.GetType().Name : "";
+            if (newStateName != m_net_state)
+                m_net_state = newStateName;
+            
             //m_net_weapon = this.CurrentWeapon;
         }
 
