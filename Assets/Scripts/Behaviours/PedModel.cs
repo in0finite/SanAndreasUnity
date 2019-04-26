@@ -166,11 +166,15 @@ namespace SanAndreasUnity.Behaviours
                     m_ped.OnSpawn();
 
                     // load model on startup
-                    //Debug.Log("Loading pedestrian model after startup.");
-					Load (m_startingPedId);
+                    
+					// only load it if it wasn't loaded so far
+					if (null == this.Definition)
+					{
+						Load (m_startingPedId);
 
-                    // and play animation
-					PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle);
+						// and play animation
+						PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle);
+					}
 
                 }
             }
