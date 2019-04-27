@@ -428,6 +428,8 @@ namespace SanAndreasUnity.Behaviours
 				this.CurrentState.FixedUpdateState ();
 			}
 
+			this.FixedUpdate_Net();
+
         }
 
 		public void UpdateHeading()

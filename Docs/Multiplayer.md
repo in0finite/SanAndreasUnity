@@ -8,8 +8,6 @@
 
 - send input to server
 
-- remove spamming log
-
 - display a message to user when network is stopped
 
 
