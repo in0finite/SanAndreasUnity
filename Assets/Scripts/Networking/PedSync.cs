@@ -11,11 +11,18 @@ namespace SanAndreasUnity.Net
     {        
         Player m_player;
         Ped m_ped { get { return m_player.OwnedPed; } }
+        public static PedSync Local { get; private set; }
 
 
         void Awake()
         {
             m_player = this.GetComponentOrThrow<Player>();
+        }
+
+        public override void OnStartLocalPlayer()
+        {
+            base.OnStartLocalPlayer();
+            Local = this;
         }
 
         void Start()
