@@ -49,6 +49,12 @@ namespace SanAndreasUnity.Behaviours
             //m_net_weapon = this.CurrentWeapon;
         }
 
+        void FixedUpdate_Net()
+        {
+            // send input to server
+            
+        }
+
         void Net_OnIdChanged(int newId)
         {
             Debug.LogFormat("ped (net id {0}) changed model id to {1}", this.netId, newId);
