@@ -3,6 +3,7 @@ using UnityEngine;
 using Mirror;
 using System.Linq;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -52,7 +53,8 @@ namespace SanAndreasUnity.Behaviours
         void FixedUpdate_Net()
         {
             // send input to server
-            
+            if (!NetStatus.IsServer && this.IsControlledByLocalPlayer && PedSync.Local != null)
+                PedSync.Local.SendInput(this.IsWalkOn, this.IsRunOn, this.IsSprintOn, this.Movement, this.IsJumpOn);
         }
 
         void Net_OnIdChanged(int newId)
