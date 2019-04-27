@@ -8,8 +8,6 @@
 
 - send input to server
 
-- make console available in main menu
-
 - client must not be marked as ready, until Loader finishes
 
 
