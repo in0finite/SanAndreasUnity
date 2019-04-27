@@ -35,6 +35,12 @@ namespace SanAndreasUnity.Net
             this.CmdSendingInput(isWalkOn, isRunOn, isSprintOn, movementInput, isJumpOn);
         }
 
+        public void SendInput()
+        {
+            Ped ped = m_ped;
+            this.SendInput(ped.IsWalkOn, ped.IsRunOn, ped.IsSprintOn, ped.Movement, ped.IsJumpOn);
+        }
+
         [Command]
         void CmdSendingInput(bool isWalkOn, bool isRunOn, bool isSprintOn, Vector3 movementInput, bool isJumpOn)
         {
