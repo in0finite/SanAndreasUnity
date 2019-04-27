@@ -71,6 +71,12 @@ namespace SanAndreasUnity.Behaviours
             
             //m_net_state = newStateName;
 
+            if (string.IsNullOrEmpty(newStateName))
+            {
+                // don't do anything, this only happens when creating the ped
+                return;
+            }
+
             // forcefully change the state
 
             F.RunExceptionSafe( () => {
