@@ -8,7 +8,9 @@
 
 - send input to server
 
-- client must not be marked as ready, until Loader finishes
+- remove spamming log
+
+- don't log 'state not found' errors
 
 
 

@@ -64,7 +64,7 @@ namespace SanAndreasUnity.Behaviours
 
         void Net_OnStateChanged(string newStateName)
         {
-            Debug.LogFormat("ped (net id {0}) changed state to {1}", this.netId, newStateName);
+            //Debug.LogFormat("ped (net id {0}) changed state to {1}", this.netId, newStateName);
 
             if (this.isServer)
                 return;
