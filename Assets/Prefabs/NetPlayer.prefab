@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 421341713980676747}
   - component: {fileID: 2196287466020372083}
   - component: {fileID: 2203233818454028071}
+  - component: {fileID: 2657593453642018504}
   m_Layer: 0
   m_Name: NetPlayer
   m_TagString: Untagged
@@ -46,8 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverOnly: 0
   localPlayerAuthority: 1
-  m_AssetId: 
-  m_SceneId: 3168858631
+  m_AssetId: 750f4b120647dadf39075cba7361800a
+  m_SceneId: 0
 --- !u!114 &2203233818454028071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,6 +59,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44df51f4023494b6daf499c76c834403, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncInterval: 0.1
+--- !u!114 &2657593453642018504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3871880573184668455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d4923a179fc52c499e4faa2519b80f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncInterval: 0.1
