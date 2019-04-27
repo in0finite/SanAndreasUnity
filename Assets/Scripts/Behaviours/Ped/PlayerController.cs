@@ -100,6 +100,7 @@ namespace SanAndreasUnity.Behaviours
 			if (!NetStatus.IsServer)	// TODO: send input to server
 				return;
 
+			// FIXME: this should not be here
             if (Input.GetKeyDown(KeyCode.F9))
                 _showVel = !_showVel;
 
