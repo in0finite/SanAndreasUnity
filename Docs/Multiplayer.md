@@ -10,7 +10,7 @@
 
 - remove spamming log
 
-- don't log 'state not found' errors
+- display a message to user when network is stopped
 
 
 
