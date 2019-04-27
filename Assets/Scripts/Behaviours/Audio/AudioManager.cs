@@ -242,9 +242,9 @@ namespace SanAndreasUnity.Behaviours.Audio
 				ret = AudioClip.Create(clipName, float_pcm.Length, 1, frequency, false);
 				ret.SetData(float_pcm, 0);
 
-				Debug.LogFormat("loaded sfx: name {0}, offset {1}, size {2}, length {3}, bitrate Kb/s {4}, stream size {5}, freq {6}", 
-					clipName, offsetInBytes, sizeInBytes, ret.length,
-					FreqToKbs (frequency), audio_stream.Length, frequency);
+				// Debug.LogFormat("loaded sfx: name {0}, offset {1}, size {2}, length {3}, bitrate Kb/s {4}, stream size {5}, freq {6}", 
+				// 	clipName, offsetInBytes, sizeInBytes, ret.length,
+				// 	FreqToKbs (frequency), audio_stream.Length, frequency);
 			}
 
 			return ret;

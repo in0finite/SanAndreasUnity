@@ -203,7 +203,7 @@ namespace SanAndreasUnity.Behaviours
 				{
 					var audioSource = go.GetOrAddComponent<AudioSource> ();
 					audioSource.playOnAwake = false;
-					Debug.LogFormat("loading weapon sound, bank index {0}", weaponSoundIndexes [modelId] );
+				//	Debug.LogFormat("loading weapon sound, bank index {0}", weaponSoundIndexes [modelId] );
 					var audioClip = Audio.AudioManager.CreateAudioClipFromSfx ("GENRL", 136, 0, 
 						Audio.AudioManager.SfxGENRL137Timings[ weaponSoundIndexes [modelId] ] );
 					audioSource.clip = audioClip;
