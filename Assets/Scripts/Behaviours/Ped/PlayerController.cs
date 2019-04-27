@@ -208,6 +208,8 @@ namespace SanAndreasUnity.Behaviours
 			{
 				// rotate camera
 
+				// FIXME: Camera rotation should be done by ped's current state. We should only assign mouse move input.
+
 				var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
                 var rightAnalogDelta = new Vector2(Input.GetAxisRaw("Joystick X"), Input.GetAxisRaw("Joystick Y"));
 
