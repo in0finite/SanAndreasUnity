@@ -154,6 +154,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected override void UpdateHeading ()
 		{
 			// not required, since we don't use heading
+			// do it both on server and client
 			m_ped.Heading = m_ped.transform.forward;
 		}
 
@@ -165,6 +166,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override void UpdateMovement ()
 		{
+			// do it both on server and client
+
 			Vector3 modelVelocity = m_model.Velocity;
 			if( m_currentAnimIndex == 0 )
 				modelVelocity.z *= this.launchVelocityMultiplier;
