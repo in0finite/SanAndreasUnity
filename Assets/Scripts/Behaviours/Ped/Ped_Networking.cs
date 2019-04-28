@@ -9,6 +9,9 @@ namespace SanAndreasUnity.Behaviours
 {
     public partial class Ped
     {
+        [Range(1f / 60f, 0.5f)] [SerializeField] float m_inputSendInterval = 1f / 30f;
+        float m_timeSinceSentInput = 0f;
+
         [SyncVar(hook=nameof(Net_OnIdChanged))] int m_net_pedId = 0;
         [SyncVar(hook=nameof(Net_OnStateChanged))] string m_net_state = "";
         //[SyncVar] Weapon m_net_weapon = null;
@@ -37,24 +40,34 @@ namespace SanAndreasUnity.Behaviours
 
         void Update_Net()
         {
-            if (!this.isServer)
-                return;
-
-            if (this.PedDef != null && this.PedDef.Id != m_net_pedId)
-                m_net_pedId = this.PedDef.Id;
-
-            string newStateName = this.CurrentState != null ? this.CurrentState.GetType().Name : "";
-            if (newStateName != m_net_state)
-                m_net_state = newStateName;
             
-            //m_net_weapon = this.CurrentWeapon;
+            // update syncvars
+            if (NetStatus.IsServer)
+            {
+                if (this.PedDef != null && this.PedDef.Id != m_net_pedId)
+                    m_net_pedId = this.PedDef.Id;
+
+                string newStateName = this.CurrentState != null ? this.CurrentState.GetType().Name : "";
+                if (newStateName != m_net_state)
+                    m_net_state = newStateName;
+            }
+            
+            // send input to server
+            if (!NetStatus.IsServer && this.IsControlledByLocalPlayer && PedSync.Local != null)
+            {
+                m_timeSinceSentInput += Time.unscaledDeltaTime;
+                if (m_timeSinceSentInput >= m_inputSendInterval)
+                {
+                    m_timeSinceSentInput = 0f;
+                    PedSync.Local.SendInput();
+                }
+            }
+            
         }
 
         void FixedUpdate_Net()
         {
-            // send input to server
-            if (!NetStatus.IsServer && this.IsControlledByLocalPlayer && PedSync.Local != null)
-                PedSync.Local.SendInput();
+            
         }
 
         void Net_OnIdChanged(int newId)
