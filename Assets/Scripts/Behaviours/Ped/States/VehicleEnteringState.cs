@@ -40,13 +40,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				if (m_ped.Camera != null) {
 				//	m_ped.Camera.transform.SetParent (seat.Parent, true);
 				}
-
-				/*
-                SendToServer(_lastPassengerState = new PlayerPassengerState {
-                    Vechicle = vehicle,
-                    SeatAlignment = (int) seatAlignment
-                }, DeliveryMethod.ReliableOrdered, 1);
-                */
 			}
 
 			m_ped.transform.SetParent(seat.Parent);
