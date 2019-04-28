@@ -9,9 +9,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class VehicleEnteringState : BaseVehicleState
 	{
-		PedModel PlayerModel { get { return m_ped.PlayerModel; } }
-
-
+		
 
 		public override void OnBecameActive() {
 			
@@ -54,7 +52,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				vehicle.StartControlling();
 			}
 
-			m_ped.PlayerModel.IsInVehicle = true;
+			m_model.IsInVehicle = true;
 
 
 			if (!vehicle.IsNightToggled && WorldController.IsNight)
@@ -75,11 +73,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			var animIndex = seat.IsLeftHand ? AnimIndex.GetInLeft : AnimIndex.GetInRight;
 
-			PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, animIndex).RootEnd, new Vector3(-1, -1, -1));
+			m_model.VehicleParentOffset = Vector3.Scale(m_model.GetAnim(AnimGroup.Car, animIndex).RootEnd, new Vector3(-1, -1, -1));
 
 			if (!immediate)
 			{
-				var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
+				var animState = m_model.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
 				animState.wrapMode = WrapMode.Once;
 
 				// TODO: also check if this state is still active state
@@ -92,9 +90,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// TODO: check if this state is still active, and if vehicle is alive
 
 
-			// player now completely entered the vehicle
+			// ped now completely entered the vehicle
 
-			// call method from CarSittingState - he will switch state
+			// call method from VehicleSittingState - he will switch state
 			m_ped.GetStateOrLogError<VehicleSittingState> ().EnterVehicle(this.CurrentVehicle, seat);
 
 			// this variable is not needed - it can be obtained based on current state
