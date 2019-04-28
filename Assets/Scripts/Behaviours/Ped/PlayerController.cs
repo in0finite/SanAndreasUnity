@@ -121,14 +121,6 @@ namespace SanAndreasUnity.Behaviours
 			this.ReadEvents ();
 
 
-			if (!NetStatus.IsServer)
-			{
-				// send input to server, and then reset it
-				// this is done so that we can test if anything influences the ped if input is set on client
-				PedSync.Local.SendInput();
-				m_ped.ResetInput();
-			}
-
         }
 
 		void ReadStates()

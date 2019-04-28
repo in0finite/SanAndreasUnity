@@ -53,8 +53,8 @@ namespace SanAndreasUnity.Behaviours
         void FixedUpdate_Net()
         {
             // send input to server
-            //if (!NetStatus.IsServer && this.IsControlledByLocalPlayer && PedSync.Local != null)
-            //    PedSync.Local.SendInput(this.IsWalkOn, this.IsRunOn, this.IsSprintOn, this.Movement, this.IsJumpOn);
+            if (!NetStatus.IsServer && this.IsControlledByLocalPlayer && PedSync.Local != null)
+                PedSync.Local.SendInput();
         }
 
         void Net_OnIdChanged(int newId)
