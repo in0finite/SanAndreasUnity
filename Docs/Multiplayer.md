@@ -8,8 +8,6 @@
 
 - send input to server
 
-- input should be sent from Update(), with a specified max rate (30 fps ?)
-
 - kill player's ped after he disconnects
 
 - stats window
