@@ -8,8 +8,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class VehicleSittingState : BaseVehicleState
 	{
-		PedModel PlayerModel { get { return m_ped.PlayerModel; } }
-
 
 
 		public override void OnBecameActive() {
@@ -27,11 +25,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			if (seat.IsDriver)
 			{
-				m_ped.PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
+				m_model.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
 			}
 			else
 			{
-				m_ped.PlayerModel.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
+				m_model.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
 			}
 
 		}
@@ -56,15 +54,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected virtual void UpdateWheelTurning()
 		{
 			
-			PlayerModel.VehicleParentOffset = Vector3.zero;
+			m_model.VehicleParentOffset = Vector3.zero;
 
-			var driveState = CurrentVehicle.Steering > 0 ? AnimIndex.DriveRight : AnimIndex.DriveLeft;
+			var driveState = this.CurrentVehicle.Steering > 0 ? AnimIndex.DriveRight : AnimIndex.DriveLeft;
 
-			var state = PlayerModel.PlayAnim(AnimGroup.Car, driveState, PlayMode.StopAll);
+			var state = m_model.PlayAnim(AnimGroup.Car, driveState, PlayMode.StopAll);
 
 			state.speed = 0.0f;
 			state.wrapMode = WrapMode.ClampForever;
-			state.time = Mathf.Lerp(0.0f, state.length, Mathf.Abs(CurrentVehicle.Steering));
+			state.time = Mathf.Lerp(0.0f, state.length, Mathf.Abs(this.CurrentVehicle.Steering));
 
 		}
 
