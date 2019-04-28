@@ -99,11 +99,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (!this.IsActiveState)
 				return;
 
-			// if character is grounded, then we are no longer in jump state
-			if (m_currentAnimIndex == 1 && m_ped.IsGrounded)
+			if (Net.NetStatus.IsServer)
 			{
-			//	Debug.LogFormat ("Character is grounded, exiting jump state");
-				m_ped.SwitchState<StandState> ();
+				// if character is grounded, then we are no longer in jump state
+				if (m_currentAnimIndex == 1 && m_ped.IsGrounded)
+				{
+				//	Debug.LogFormat ("Character is grounded, exiting jump state");
+					m_ped.SwitchState<StandState> ();
+				}
 			}
 			
 		}
