@@ -67,7 +67,7 @@ namespace SanAndreasUnity.Net
                 m_ped.OnCrouchButtonPressed();
         }
 
-        public void PedStartedEnteringVehicle()
+        public void PedStartedEnteringVehicle(Ped ped)
         {
             NetStatus.ThrowIfNotOnServer();
 
@@ -76,7 +76,7 @@ namespace SanAndreasUnity.Net
 
         }
 
-        public void PedEnteredVehicle()
+        public void PedEnteredVehicle(Ped ped)
         {
             NetStatus.ThrowIfNotOnServer();
 
@@ -85,7 +85,7 @@ namespace SanAndreasUnity.Net
             
         }
 
-        public void PedStartedExitingVehicle()
+        public void PedStartedExitingVehicle(Ped ped)
         {
             NetStatus.ThrowIfNotOnServer();
 
