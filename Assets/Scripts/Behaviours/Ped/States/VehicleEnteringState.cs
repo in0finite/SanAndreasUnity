@@ -33,13 +33,19 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public bool TryEnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
 		{
-			// this code heavily modifies game state, so it can run only on server
 			Net.NetStatus.ThrowIfNotOnServer();
 
 			if (!this.CanEnterVehicle (vehicle, seatAlignment))
 				return false;
-			
 
+			this.EnterVehicle(vehicle, seatAlignment, immediate);
+			
+			return true;
+		}
+
+		void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
+		{
+			
 			Vehicle.Seat seat = vehicle.GetSeat (seatAlignment);
 
 			// switch state here
@@ -85,8 +91,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			m_coroutine = StartCoroutine (EnterVehicleAnimation (seat, immediate));
 
-
-			return true;
 		}
 
 		private System.Collections.IEnumerator EnterVehicleAnimation(Vehicle.Seat seat, bool immediate)
