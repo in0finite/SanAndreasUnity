@@ -32,6 +32,13 @@ namespace SanAndreasUnity.Net
         void OnDisable()
         {
             s_allPlayers.Remove(this);
+
+            // kill player's ped
+            if (NetStatus.IsServer)
+            {
+                if (this.OwnedPed)
+                    Destroy(this.OwnedPed.gameObject);
+            }
         }
 
         public override void OnStartClient()
