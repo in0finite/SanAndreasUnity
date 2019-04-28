@@ -40,9 +40,6 @@ namespace SanAndreasUnity.Net
                     Destroy(this.OwnedPed.gameObject);
             }
 
-            // log some info about this
-            if (NetStatus.IsServer && !this.isLocalPlayer)
-                Debug.LogFormat("Player (netId={0}, addr={1}) disconnected", this.netId, this.connectionToClient.address);
         }
 
         public override void OnStartClient()
@@ -68,6 +65,15 @@ namespace SanAndreasUnity.Net
                 Debug.LogFormat("Player (netId={0}, addr={1}) connected", this.netId, this.connectionToClient.address);
 
             F.InvokeEventExceptionSafe(onStart, this);
+        }
+
+        public override void OnNetworkDestroy()
+        {
+            base.OnNetworkDestroy();
+            
+            // log some info about this
+            if (NetStatus.IsServer && !this.isLocalPlayer)
+                Debug.LogFormat("Player (netId={0}, addr={1}) disconnected", this.netId, this.connectionToClient.address);
         }
 
         void OnOwnedGameObjectChanged(GameObject newGo)
