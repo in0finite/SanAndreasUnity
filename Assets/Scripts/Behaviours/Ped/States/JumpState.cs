@@ -67,6 +67,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// all anims finished
 			// switch to other state
+			// let it be done both on server and client
 		//	Debug.LogFormat("All 3 anims finished, switching state");
 			m_ped.SwitchState<StandState>();
 
