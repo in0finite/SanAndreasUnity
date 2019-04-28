@@ -4,6 +4,8 @@ using Mirror;
 using System.Linq;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Behaviours.Vehicles;
+using SanAndreasUnity.Behaviours.Peds.States;
 
 namespace SanAndreasUnity.Net
 {
@@ -71,9 +73,23 @@ namespace SanAndreasUnity.Net
         {
             NetStatus.ThrowIfNotOnServer();
 
-            // send rpc to clients
-            // include params: vehicle, seat
+            if (this.isLocalPlayer)
+                return;
 
+            // send message to client
+            this.TargetPedStartedEnteringVehicle(this.connectionToClient, ped.gameObject, ped.CurrentVehicle.gameObject,
+                ped.CurrentVehicleSeatAlignment);
+        }
+
+        [TargetRpc]
+        void TargetPedStartedEnteringVehicle(NetworkConnection conn, GameObject pedGo, 
+            GameObject vehicleGo, Vehicle.SeatAlignment seatAlignment)
+        {
+            if (null == pedGo || null == vehicleGo)
+                return;
+
+            pedGo.GetComponent<Ped>().GetStateOrLogError<VehicleEnteringState>()
+                .EnterVehicle(vehicleGo.GetComponent<Vehicle>(), seatAlignment, false);
         }
 
         public void PedEnteredVehicle(Ped ped)
