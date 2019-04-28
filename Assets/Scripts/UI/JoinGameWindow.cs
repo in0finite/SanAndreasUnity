@@ -8,7 +8,7 @@ namespace SanAndreasUnity.UI
 
 	public class JoinGameWindow : PauseMenuWindow
     {
-		string m_ip = "";
+		string m_ip = "127.0.0.1";
 		string m_port = NetManager.defaultListenPortNumber.ToString();
 
 
