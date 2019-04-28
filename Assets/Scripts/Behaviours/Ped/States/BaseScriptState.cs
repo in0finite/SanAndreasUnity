@@ -69,13 +69,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void PostUpdateState()
 		{
-			if (m_ped.Camera)
-				this.UpdateCamera ();
+			
 		}
 
 		public virtual void LateUpdateState()
 		{
 
+			if (m_ped.Camera)
+				this.UpdateCamera ();
+			
 			if (m_ped.shouldPlayAnims)
 				this.UpdateAnims ();
 			
