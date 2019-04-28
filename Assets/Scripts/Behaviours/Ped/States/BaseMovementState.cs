@@ -99,6 +99,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			if (m_isServer)
 				m_ped.SwitchState<CrouchState>();
+			else
+				base.OnCrouchButtonPressed();
 		}
 
 		public override void OnFlyButtonPressed ()
