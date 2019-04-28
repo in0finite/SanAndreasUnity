@@ -8,7 +8,7 @@
 
 - adapt states: 
 
-- send button input events to server: crouch, 
+- send button input events to server: 
 
 - stats window
 
