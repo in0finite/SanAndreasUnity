@@ -9,7 +9,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class VehicleEnteringState : BaseVehicleState
 	{
-		
+		Coroutine m_coroutine;
+
 
 		public override void OnBecameInactive()
 		{
@@ -23,6 +24,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				m_model.IsInVehicle = false;
 			}
 
+			if (m_coroutine != null)
+				StopCoroutine(m_coroutine);
+			m_coroutine = null;
+
+			base.OnBecameInactive();
 		}
 
 		public bool TryEnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
@@ -77,7 +83,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				Net.PedSync.Local.PedStartedEnteringVehicle();
 
 
-			StartCoroutine (EnterVehicleAnimation (seat, immediate));
+			m_coroutine = StartCoroutine (EnterVehicleAnimation (seat, immediate));
 
 
 			return true;
