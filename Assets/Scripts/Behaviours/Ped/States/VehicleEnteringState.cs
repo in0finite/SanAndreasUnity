@@ -26,6 +26,22 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameInactive();
 		}
 
+		public static void PreparePedForEnteringVehicle(Ped ped, Vehicle vehicle, Vehicle.Seat seat)
+		{
+
+			seat.OccupyingPed = ped;
+
+			ped.characterController.enabled = false;
+
+
+			ped.transform.SetParent(seat.Parent);
+			ped.transform.localPosition = Vector3.zero;
+			ped.transform.localRotation = Quaternion.identity;
+
+			ped.PlayerModel.IsInVehicle = true;
+
+		}
+
 		public bool TryEnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
 		{
 			Net.NetStatus.ThrowIfNotOnServer();
@@ -48,23 +64,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			this.CurrentVehicle = vehicle;
 			this.CurrentVehicleSeat = seat;
-			seat.OccupyingPed = m_ped;
-
-			m_ped.characterController.enabled = false;
-
-
-			m_ped.transform.SetParent(seat.Parent);
-			m_ped.transform.localPosition = Vector3.zero;
-			m_ped.transform.localRotation = Quaternion.identity;
+			
+			PreparePedForEnteringVehicle(m_ped, vehicle, seat);
 
 			if (seat.IsDriver)
 			{
 				// TODO: this should be done when ped enters the car
 				vehicle.StartControlling();
 			}
-
-			m_model.IsInVehicle = true;
-
 
 			if (!vehicle.IsNightToggled && WorldController.IsNight)
 				vehicle.IsNightToggled = true;
