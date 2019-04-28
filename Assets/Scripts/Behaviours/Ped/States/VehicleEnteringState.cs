@@ -19,6 +19,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public bool TryEnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
 		{
+			// this code heavily modifies game state, so it can run only on server
+			Net.NetStatus.ThrowIfNotOnServer();
+
 			if (!this.CanEnterVehicle (vehicle, seatAlignment))
 				return false;
 			
