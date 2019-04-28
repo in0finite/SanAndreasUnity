@@ -3,6 +3,7 @@ using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Animation;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
@@ -43,7 +44,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			return true;
 		}
 
-		void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
+		void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate)
 		{
 			
 			Vehicle.Seat seat = vehicle.GetSeat (seatAlignment);
@@ -78,8 +79,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 
 			// send message to clients
-			if (!immediate)
-				Net.PedSync.Local.PedStartedEnteringVehicle();
+			if (m_isServer)
+			{
+				if (!immediate)
+				{
+					foreach(var pedSync in Net.Player.AllPlayers.Select(p => p.GetComponent<Net.PedSync>()))
+						pedSync.PedStartedEnteringVehicle(m_ped);
+				}
+			}
 
 
 			m_coroutine = StartCoroutine (EnterVehicleAnimation (seat, immediate));
@@ -110,11 +117,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// ped now completely entered the vehicle
 
 			// call method from VehicleSittingState - he will switch state
-			m_ped.GetStateOrLogError<VehicleSittingState> ().EnterVehicle(this.CurrentVehicle, seat);
-
-			// this variable is not needed - it can be obtained based on current state
-		//	IsInVehicleSeat = true;
-
+			if (m_isServer)
+				m_ped.GetStateOrLogError<VehicleSittingState> ().EnterVehicle(this.CurrentVehicle, seat);
 
 		}
 
