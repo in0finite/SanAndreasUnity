@@ -30,20 +30,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			if (this.CurrentVehicleSeat.IsDriver)
 				this.CurrentVehicle.StopControlling();
-
-			if (m_ped.IsControlledByLocalPlayer)
-			{
-				/*
-                SendToServer(_lastPassengerState = new PlayerPassengerState {
-                    Vechicle = null
-                }, DeliveryMethod.ReliableOrdered, 1);
-                */
-			}
-			else
-			{
-				//    _snapshots.Reset();
-			}
-
+			
 			StartCoroutine (ExitVehicleAnimation (immediate));
 
 		}
