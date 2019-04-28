@@ -28,8 +28,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// after obtaining parameters, switch to this state
 			m_ped.SwitchState<VehicleExitingState> ();
 
-			// this should be done only if player was a driver ?
-			this.CurrentVehicle.StopControlling();
+			if (this.CurrentVehicleSeat.IsDriver)
+				this.CurrentVehicle.StopControlling();
 
 			if (m_ped.IsControlledByLocalPlayer)
 			{
