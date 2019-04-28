@@ -8,7 +8,7 @@
 
 - adapt states: 
 
-- send button input events to server: 
+- send button input events to server: submit, 
 
 - When ped enters vehicle, he changes parent. Is this allowed in Mirror ? Possible solution would be to only change parent of ped model.
 

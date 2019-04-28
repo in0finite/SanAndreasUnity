@@ -96,9 +96,22 @@ namespace SanAndreasUnity.Net
         {
             NetStatus.ThrowIfNotOnServer();
 
-            // send rpc to clients
-            // include params: vehicle, seat
-            
+            if (this.isLocalPlayer)
+                return;
+
+            this.TargetPedEnteredVehicle(this.connectionToClient, ped.gameObject, ped.CurrentVehicle.gameObject,
+                ped.CurrentVehicleSeatAlignment);
+        }
+
+        [TargetRpc]
+        void TargetPedEnteredVehicle(NetworkConnection conn, GameObject pedGo, 
+            GameObject vehicleGo, Vehicle.SeatAlignment seatAlignment)
+        {
+            if (null == pedGo || null == vehicleGo)
+                return;
+
+            pedGo.GetComponent<Ped>().GetStateOrLogError<VehicleSittingState>()
+                .EnterVehicle(vehicleGo.GetComponent<Vehicle>(), seatAlignment);
         }
 
         public void PedStartedExitingVehicle(Ped ped)

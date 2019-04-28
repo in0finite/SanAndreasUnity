@@ -2,6 +2,7 @@ using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Animation;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
@@ -17,6 +18,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameInactive();
 		}
 
+		public void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment)
+		{
+			this.EnterVehicle(vehicle, vehicle.GetSeat(seatAlignment));
+		}
+
 		public void EnterVehicle(Vehicle vehicle, Vehicle.Seat seat)
 		{
 
@@ -25,6 +31,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			m_ped.SwitchState<VehicleSittingState> ();
 
+			VehicleEnteringState.PreparePedForEnteringVehicle(m_ped, vehicle, seat);
+
 			if (seat.IsDriver)
 			{
 				m_model.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
@@ -32,6 +40,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			else
 			{
 				m_model.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
+			}
+
+			// send message to clients
+			if (m_isServer)
+			{
+				foreach(var pedSync in Net.Player.AllPlayers.Select(p => p.GetComponent<Net.PedSync>()))
+					pedSync.PedEnteredVehicle(m_ped);
 			}
 
 		}
