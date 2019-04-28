@@ -451,7 +451,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.RotateCamera ();
 
 			// this must be called from here (right after the camera transform is changed), otherwise camera will shake
-			this.RotatePedInDirectionOfAiming ();
+			// must check if weapon is null here, because camera is now updated in LateUpdate(), and weapon can become null between Update() and LateUpdate()
+			if (m_weapon)
+				this.RotatePedInDirectionOfAiming ();
 		}
 
 		public override void UpdateCameraZoom()
