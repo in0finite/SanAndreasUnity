@@ -44,7 +44,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			return true;
 		}
 
-		void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate)
+		internal void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate)
 		{
 			
 			Vehicle.Seat seat = vehicle.GetSeat (seatAlignment);
@@ -119,13 +119,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// call method from VehicleSittingState - he will switch state
 			if (m_isServer)
 				m_ped.GetStateOrLogError<VehicleSittingState> ().EnterVehicle(this.CurrentVehicle, seat);
-
-		}
-
-		internal void PedStartedEnteringVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment)
-		{
-			// sent from server
-
 
 		}
 
