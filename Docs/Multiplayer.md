@@ -6,9 +6,9 @@
 
 - order of buttons in main menu
 
-- send input to server
+- adapt states: 
 
-- adapt states: jump, crouch, roll, 
+- send button input events to server: crouch, 
 
 - stats window
 
