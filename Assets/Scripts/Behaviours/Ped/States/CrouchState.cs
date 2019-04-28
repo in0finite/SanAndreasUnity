@@ -50,7 +50,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			// switch to stand state
 
-			m_ped.SwitchState<StandState>();
+			if (m_isServer)
+				m_ped.SwitchState<StandState>();
 		}
 
 	}
