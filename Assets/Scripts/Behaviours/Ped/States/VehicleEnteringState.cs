@@ -71,8 +71,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			else if (vehicle.IsNightToggled && !WorldController.IsNight)
 				vehicle.IsNightToggled = false;
 
-			Debug.Log ("IsNightToggled? " + vehicle.IsNightToggled);
-
 
 			// send message to clients
 			if (!immediate)
@@ -121,7 +119,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			// sent from server
 
-			
+
 		}
 
 	}
