@@ -67,5 +67,14 @@ namespace SanAndreasUnity.Net
                 m_ped.OnCrouchButtonPressed();
         }
 
+        public void PedStartedEnteringVehicle()
+        {
+            NetStatus.ThrowIfNotOnServer();
+
+            // send rpc to clients
+            // include params: vehicle, seat
+            
+        }
+
     }
 }
