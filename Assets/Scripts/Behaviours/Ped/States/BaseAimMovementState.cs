@@ -467,7 +467,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			Vector3 castDir = -m_ped.Camera.transform.forward;
 
 			// use distance from gun aiming offset ?
-			if (m_ped.CurrentWeapon.GunAimingOffset != null)
+			if (m_ped.CurrentWeapon != null && m_ped.CurrentWeapon.GunAimingOffset != null)
 			{
 			//	Vector3 desiredCameraPos = this.transform.TransformPoint (- _player.CurrentWeapon.GunAimingOffset.Aim) + Vector3.up * .5f;
 			//	Vector3 desiredCameraPos = this.transform.TransformPoint( new Vector3(0.8f, 1.0f, -1) );
