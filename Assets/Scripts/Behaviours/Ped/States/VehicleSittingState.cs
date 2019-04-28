@@ -10,9 +10,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	{
 
 
-		public override void OnBecameActive() {
+		public override void OnBecameInactive()
+		{
 			
 
+			base.OnBecameInactive();
 		}
 
 		public void EnterVehicle(Vehicle vehicle, Vehicle.Seat seat)
@@ -35,16 +37,22 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
-		public override void OnSubmitPressed() {
-
+		public override void OnSubmitPressed()
+		{
 			// exit the vehicle
-			m_ped.ExitVehicle();
+
+			if (m_isServer)
+				m_ped.ExitVehicle();
+			else
+				base.OnSubmitPressed();
 
 		}
 
 		public override void UpdateState() {
 
 			base.UpdateState();
+
+			// check if this is still active state ?
 
 			if (m_ped.IsDrivingVehicle)
 				this.UpdateWheelTurning ();
