@@ -14,6 +14,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return this.CurrentVehicleSeat.Alignment; } }
 
 
+		protected void Cleanup()
+		{
+			if (!m_ped.IsInVehicle)
+			{
+				m_ped.characterController.enabled = true;
+				// restore seat's occupying ped ? - no
+				m_ped.transform.SetParent(null, true);
+				m_model.IsInVehicle = false;
+			}
+		}
+
 		protected override void UpdateHeading()
 		{
 			

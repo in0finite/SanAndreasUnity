@@ -17,13 +17,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			// restore everything
 
-			if (!m_ped.IsInVehicle)
-			{
-				m_ped.characterController.enabled = true;
-				// restore seat's occupying ped ? - no
-				m_ped.transform.SetParent(null, true);
-				m_model.IsInVehicle = false;
-			}
+			this.Cleanup();
 
 			if (m_coroutine != null)
 				StopCoroutine(m_coroutine);
