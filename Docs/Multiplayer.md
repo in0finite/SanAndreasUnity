@@ -8,8 +8,6 @@
 
 - send input to server
 
-- set default IP in JoinGame window to 127.0.0.1
-
 - display a message to user when network is stopped
 
 
