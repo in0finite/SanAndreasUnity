@@ -73,6 +73,23 @@ namespace SanAndreasUnity.Net
 
             // send rpc to clients
             // include params: vehicle, seat
+
+        }
+
+        public void PedEnteredVehicle()
+        {
+            NetStatus.ThrowIfNotOnServer();
+
+            // send rpc to clients
+            // include params: vehicle, seat
+            
+        }
+
+        public void PedStartedExitingVehicle()
+        {
+            NetStatus.ThrowIfNotOnServer();
+
+            // send rpc to clients
             
         }
 

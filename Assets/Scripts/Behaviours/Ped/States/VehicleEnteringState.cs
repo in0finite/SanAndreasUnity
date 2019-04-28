@@ -15,10 +15,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			// restore everything
 
-			m_ped.characterController.enabled = true;
-			// restore seat's occupying ped ? - no
-			m_ped.transform.SetParent(null, true);
-			m_model.IsInVehicle = false;
+			if (!m_ped.IsInVehicle)
+			{
+				m_ped.characterController.enabled = true;
+				// restore seat's occupying ped ? - no
+				m_ped.transform.SetParent(null, true);
+				m_model.IsInVehicle = false;
+			}
 
 		}
 
@@ -71,6 +74,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			Debug.Log ("IsNightToggled? " + vehicle.IsNightToggled);
 
 
+			// send message to clients
+			if (!immediate)
+				Net.PedSync.Local.PedStartedEnteringVehicle();
+
+
 			StartCoroutine (EnterVehicleAnimation (seat, immediate));
 
 
@@ -107,6 +115,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		//	IsInVehicleSeat = true;
 
 
+		}
+
+		internal void PedStartedEnteringVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment)
+		{
+			// sent from server
+
+			
 		}
 
 	}
