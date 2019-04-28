@@ -8,7 +8,7 @@
 
 - send input to server
 
-- kill player's ped after he disconnects
+- adapt states: jump, crouch, roll, 
 
 - stats window
 
