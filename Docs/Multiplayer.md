@@ -10,6 +10,8 @@
 
 - send button input events to server: 
 
+- When ped enters vehicle, he changes parent. Is this allowed in Mirror ? Possible solution would be to only change parent of ped model.
+
 - stats window
 
 - display a message to user when network is stopped

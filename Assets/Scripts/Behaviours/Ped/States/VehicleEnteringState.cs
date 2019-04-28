@@ -11,8 +11,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	{
 		
 
-		public override void OnBecameActive() {
-			
+		public override void OnBecameInactive()
+		{
+			// restore everything
+
+			m_ped.characterController.enabled = true;
+			// restore seat's occupying ped ? - no
+			m_ped.transform.SetParent(null, true);
+			m_model.IsInVehicle = false;
+
 		}
 
 		public bool TryEnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
@@ -47,8 +54,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_ped.transform.localPosition = Vector3.zero;
 			m_ped.transform.localRotation = Quaternion.identity;
 
-			if (m_ped.IsControlledByLocalPlayer && seat.IsDriver)
+			if (seat.IsDriver)
 			{
+				// TODO: this should be done when ped enters the car
 				vehicle.StartControlling();
 			}
 
