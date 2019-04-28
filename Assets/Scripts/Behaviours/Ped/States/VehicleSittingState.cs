@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public override void OnBecameInactive()
 		{
-			
+			this.Cleanup();
 
 			base.OnBecameInactive();
 		}
