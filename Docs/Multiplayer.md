@@ -8,9 +8,11 @@
 
 - send input to server
 
-- don't reset ped input on clients
-
 - input should be sent from Update(), with a specified max rate (30 fps ?)
+
+- kill player's ped after he disconnects
+
+- stats window
 
 - display a message to user when network is stopped
 
