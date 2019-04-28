@@ -39,6 +39,10 @@ namespace SanAndreasUnity.Net
                 if (this.OwnedPed)
                     Destroy(this.OwnedPed.gameObject);
             }
+
+            // log some info about this
+            if (!this.isLocalPlayer)
+                Debug.LogFormat("Player (netId={0}, addr={1}) disconnected", this.netId, this.connectionToServer.address);
         }
 
         public override void OnStartClient()
