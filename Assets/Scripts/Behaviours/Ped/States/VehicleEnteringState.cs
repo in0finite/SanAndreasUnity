@@ -58,13 +58,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_ped.characterController.enabled = false;
 
 
-			if (m_ped.IsControlledByLocalPlayer)
-			{
-				if (m_ped.Camera != null) {
-				//	m_ped.Camera.transform.SetParent (seat.Parent, true);
-				}
-			}
-
 			m_ped.transform.SetParent(seat.Parent);
 			m_ped.transform.localPosition = Vector3.zero;
 			m_ped.transform.localRotation = Quaternion.identity;
