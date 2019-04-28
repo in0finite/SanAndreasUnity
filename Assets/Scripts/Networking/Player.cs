@@ -41,8 +41,8 @@ namespace SanAndreasUnity.Net
             }
 
             // log some info about this
-            if (!this.isLocalPlayer)
-                Debug.LogFormat("Player (netId={0}, addr={1}) disconnected", this.netId, this.connectionToServer.address);
+            if (NetStatus.IsServer && !this.isLocalPlayer)
+                Debug.LogFormat("Player (netId={0}, addr={1}) disconnected", this.netId, this.connectionToClient.address);
         }
 
         public override void OnStartClient()
@@ -63,6 +63,10 @@ namespace SanAndreasUnity.Net
 
         void Start()
         {
+            // log some info
+            if (NetStatus.IsServer && !this.isLocalPlayer)
+                Debug.LogFormat("Player (netId={0}, addr={1}) connected", this.netId, this.connectionToClient.address);
+
             F.InvokeEventExceptionSafe(onStart, this);
         }
 
