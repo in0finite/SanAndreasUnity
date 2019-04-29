@@ -118,8 +118,19 @@ namespace SanAndreasUnity.Net
         {
             NetStatus.ThrowIfNotOnServer();
 
-            // send rpc to clients
+            if (this.isLocalPlayer)
+                return;
             
+
+        }
+
+        [TargetRpc]
+        void TargetPedStartedExitingVehicle(NetworkConnection conn, GameObject pedGo, 
+            GameObject vehicleGo, Vehicle.SeatAlignment seatAlignment)
+        {
+            if (null == pedGo || null == vehicleGo)
+                return;
+
         }
 
     }
