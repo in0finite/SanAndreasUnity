@@ -70,13 +70,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			m_model.VehicleParentOffset = Vector3.zero;
 
-			// change camera parent
-			if (m_ped.IsControlledByLocalPlayer) {
-				if (m_ped.Camera != null) {
-					m_ped.Camera.transform.SetParent (null, true);
-				}
-			}
-
 			// switch to stand state
 			m_ped.SwitchState<StandState> ();
 
