@@ -60,6 +60,21 @@ namespace SanAndreasUnity.Net
 
         }
 
+        public void SendVehicleInput(float acceleration, float steering, float braking) => 
+            this.CmdSendingVehicleInput(acceleration, steering, braking);
+
+        [Command]
+        void CmdSendingVehicleInput(float acceleration, float steering, float braking)
+        {
+            if (null == m_ped || null == m_ped.CurrentVehicle)
+                return;
+
+            var v = m_ped.CurrentVehicle;
+            v.Accelerator = acceleration;
+            v.Steering = steering;
+            v.Braking = braking;
+        }
+
         public void OnCrouchButtonPressed() => this.CmdOnCrouchButtonPressed();
         
         [Command]
