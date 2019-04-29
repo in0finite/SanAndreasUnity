@@ -142,6 +142,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static Vehicle Create(int carId, int[] colors, Vector3 position, Quaternion rotation)
         {
+            // TODO: use a prefab here, and after creating vehicle, assign net id
             return Create(new GameObject(), carId, colors, position, rotation);
         }
 
