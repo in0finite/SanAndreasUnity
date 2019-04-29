@@ -19,10 +19,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (!m_ped.IsInVehicle)
 			{
 				m_ped.characterController.enabled = true;
-				// restore seat's occupying ped ? - no
 				m_ped.transform.SetParent(null, true);
 				m_model.IsInVehicle = false;
 			}
+
+			if (this.CurrentVehicleSeat != null)
+				this.CurrentVehicleSeat.OccupyingPed = null;
+
+			this.CurrentVehicle = null;
+			this.CurrentVehicleSeat = null;
 		}
 
 		protected override void UpdateHeading()
