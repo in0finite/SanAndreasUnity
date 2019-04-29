@@ -114,24 +114,5 @@ namespace SanAndreasUnity.Net
                 .EnterVehicle(vehicleGo.GetComponent<Vehicle>(), seatAlignment);
         }
 
-        public void PedStartedExitingVehicle(Ped ped)
-        {
-            NetStatus.ThrowIfNotOnServer();
-
-            if (this.isLocalPlayer)
-                return;
-            
-
-        }
-
-        [TargetRpc]
-        void TargetPedStartedExitingVehicle(NetworkConnection conn, GameObject pedGo, 
-            GameObject vehicleGo, Vehicle.SeatAlignment seatAlignment)
-        {
-            if (null == pedGo || null == vehicleGo)
-                return;
-
-        }
-
     }
 }
