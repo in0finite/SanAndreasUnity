@@ -49,10 +49,23 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             
             // local ped is occupying driver seat
 
-            this.ResetInput();
+			if (!GameManager.CanPlayerReadInput())
+                this.ResetInput();
+            else
+                this.ReadInput();
 
-			if (!GameManager.CanPlayerReadInput()) return;
+            PedSync.Local.SendVehicleInput(m_vehicle.Accelerator, m_vehicle.Steering, m_vehicle.Braking);
+        }
 
+        void ResetInput()
+        {
+            m_vehicle.Accelerator = 0;
+            m_vehicle.Steering = 0;
+            m_vehicle.Braking = 0;
+        }
+
+        void ReadInput()
+        {
             var accel = Input.GetAxis("Vertical");
             var brake = Input.GetButton("Brake") ? 1.0f : 0.0f;
             var speed = Vector3.Dot(m_vehicle.Velocity, m_vehicle.transform.forward);
@@ -68,11 +81,5 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             m_vehicle.Braking = brake;
         }
 
-        void ResetInput()
-        {
-            m_vehicle.Accelerator = 0;
-            m_vehicle.Steering = 0;
-            m_vehicle.Braking = 0;
-        }
     }
 }
