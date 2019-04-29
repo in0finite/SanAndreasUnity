@@ -34,7 +34,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// obtain current vehicle from Ped
 			this.CurrentVehicle = m_ped.CurrentVehicle;
 			this.CurrentVehicleSeat = m_ped.CurrentVehicleSeat;
-			
+
 			m_isExitingImmediately = immediate;
 
 			// after obtaining parameters, switch to this state
@@ -89,23 +89,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// ped now completely exited the vehicle
 
-			m_model.IsInVehicle = false;
-
-			this.CurrentVehicle = null;
-			this.CurrentVehicleSeat = null;
-			seat.OccupyingPed = null;
 
 			m_ped.transform.localPosition = m_model.VehicleParentOffset;
 			m_ped.transform.localRotation = Quaternion.identity;
 
-			m_ped.transform.SetParent(null);
-
-			m_ped.characterController.enabled = true;
-
 			m_model.VehicleParentOffset = Vector3.zero;
-
-			// switch to stand state
-			m_ped.SwitchState<StandState> ();
+			
+			// now switch to other state
+			// when our state gets deactivated, it will cleanup everything
+			
+			if (m_isServer)
+				m_ped.SwitchState<StandState> ();
 
 		}
 
