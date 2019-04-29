@@ -332,6 +332,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return _seats.FirstOrDefault(x => x.Alignment == alignment);
         }
 
+        public Seat DriverSeat => _seats.FirstOrDefault(s => s.IsDriver);
+
         public Transform GetSeatTransform(SeatAlignment alignment)
         {
             return GetSeat(alignment).Parent;
