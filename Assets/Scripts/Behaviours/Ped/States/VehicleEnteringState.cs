@@ -106,14 +106,23 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				var animState = m_model.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
 				animState.wrapMode = WrapMode.Once;
 
-				// TODO: also check if this state is still active state, and if vehicle is alive
-				while (animState.enabled)
+				// wait until anim is finished or vehicle is destroyed
+				while (animState.enabled && this.CurrentVehicle != null)
 				{
 					yield return new WaitForEndOfFrame();
 				}
 			}
 
-			// TODO: check if this state is still active, and if vehicle is alive
+			// check if vehicle is alive
+			if (null == this.CurrentVehicle)
+			{
+				// vehicle destroyed in the meantime ? hmm... ped is a child of vehicle, so it should be
+				// destroyed as well ?
+				// anyway, switch to stand state
+				if (m_isServer)
+					m_ped.SwitchState<StandState>();
+				yield break;
+			}
 
 
 			// ped now completely entered the vehicle
