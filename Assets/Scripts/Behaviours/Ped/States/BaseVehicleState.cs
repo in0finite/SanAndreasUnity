@@ -23,7 +23,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				m_model.IsInVehicle = false;
 			}
 
-			if (this.CurrentVehicleSeat != null)
+			if (this.CurrentVehicleSeat != null && this.CurrentVehicleSeat.OccupyingPed == m_ped)
 				this.CurrentVehicleSeat.OccupyingPed = null;
 
 			this.CurrentVehicle = null;
