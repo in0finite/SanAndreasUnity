@@ -8,7 +8,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class VehicleExitingState : BaseVehicleState
 	{
-		PedModel PlayerModel { get { return m_ped.PlayerModel; } }
 
 
 		public override void OnBecameActive() {
@@ -38,17 +37,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		private System.Collections.IEnumerator ExitVehicleAnimation(bool immediate)
 		{
 
-		//	IsInVehicleSeat = false;
-
 			var seat = this.CurrentVehicleSeat;
 
 			var animIndex = seat.IsLeftHand ? AnimIndex.GetOutLeft : AnimIndex.GetOutRight;
 
-			PlayerModel.VehicleParentOffset = Vector3.Scale(PlayerModel.GetAnim(AnimGroup.Car, animIndex).RootStart, new Vector3(-1, -1, -1));
+			m_model.VehicleParentOffset = Vector3.Scale(m_model.GetAnim(AnimGroup.Car, animIndex).RootStart, new Vector3(-1, -1, -1));
 
 			if (!immediate)
 			{
-				var animState = PlayerModel.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
+				var animState = m_model.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
 				animState.wrapMode = WrapMode.Once;
 
 				// wait until anim finishes or stops
@@ -56,22 +53,22 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 					yield return new WaitForEndOfFrame();
 			}
 
-			// player now completely exited the vehicle
+			// ped now completely exited the vehicle
 
-			PlayerModel.IsInVehicle = false;
+			m_model.IsInVehicle = false;
 
 			this.CurrentVehicle = null;
 			this.CurrentVehicleSeat = null;
 			seat.OccupyingPed = null;
 
-			m_ped.transform.localPosition = PlayerModel.VehicleParentOffset;
+			m_ped.transform.localPosition = m_model.VehicleParentOffset;
 			m_ped.transform.localRotation = Quaternion.identity;
 
 			m_ped.transform.SetParent(null);
 
 			m_ped.characterController.enabled = true;
 
-			PlayerModel.VehicleParentOffset = Vector3.zero;
+			m_model.VehicleParentOffset = Vector3.zero;
 
 			// change camera parent
 			if (m_ped.IsControlledByLocalPlayer) {
