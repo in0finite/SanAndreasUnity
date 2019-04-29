@@ -10,8 +10,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         private Vehicle m_vehicle;
 
-        [SyncVar] int m_net_id = 0;
+        [SyncVar] int m_net_id;
+        [SyncVar] float m_net_acceleration;
+        [SyncVar] float m_net_steering;
+        [SyncVar] float m_net_braking;
         
+        // is it better to place syncvars in Vehicle class ? - that way, there is no need for hooks
+        // - or we could assign/read syncvars in Update()
+
 
 
         private void Awake()
