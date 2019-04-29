@@ -283,7 +283,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public VehicleController StartControlling()
         {
             //SetAllCarLights();
-            return _controller ?? (_controller = gameObject.AddComponent<VehicleController>());
+            return _controller ?? (_controller = gameObject.GetOrAddComponent<VehicleController>());
         }
 
         public void SetAllCarLights()
@@ -341,8 +341,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public void StopControlling()
         {
-            Destroy(_controller);
-            _controller = null;
+            //Destroy(_controller);
+            //_controller = null;
         }
 
         private void UpdateColors()
