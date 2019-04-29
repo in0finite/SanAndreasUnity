@@ -25,6 +25,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             //m_vehicle = GetComponent<Vehicle>();
         }
 
+        internal void OnAfterCreateVehicle()
+        {
+            m_vehicle = this.GetComponent<Vehicle>();
+            m_net_id = m_vehicle.Definition.Id;
+        }
+
         public override void OnStartClient()
         {
             base.OnStartClient();
@@ -41,6 +47,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void Update()
         {
             
+            this.ProcessSyncvars();
+
+
             var driverSeat = m_vehicle.DriverSeat;
 
             if (null == driverSeat || null == driverSeat.OccupyingPed)
@@ -61,6 +70,22 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 this.ReadInput();
 
             PedSync.Local.SendVehicleInput(m_vehicle.Accelerator, m_vehicle.Steering, m_vehicle.Braking);
+        }
+
+        void ProcessSyncvars()
+        {
+            if (NetStatus.IsServer)
+            {
+                m_net_acceleration = m_vehicle.Accelerator;
+                m_net_steering = m_vehicle.Steering;
+                m_net_braking = m_vehicle.Braking;
+            }
+            else
+            {
+                m_vehicle.Accelerator = m_net_acceleration;
+                m_vehicle.Steering = m_net_steering;
+                m_vehicle.Braking = m_net_braking;
+            }
         }
 
         void ResetInput()
