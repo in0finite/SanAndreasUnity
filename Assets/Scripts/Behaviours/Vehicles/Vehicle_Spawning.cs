@@ -142,8 +142,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static Vehicle Create(int carId, int[] colors, Vector3 position, Quaternion rotation)
         {
+            return Create(new GameObject(), carId, colors, position, rotation);
+        }
+
+        public static Vehicle Create(GameObject vehicleGameObject, int carId, int[] colors, 
+            Vector3 position, Quaternion rotation)
+        {
             
-            var inst = new GameObject().AddComponent<Vehicle>();
+            var inst = vehicleGameObject.AddComponent<Vehicle>();
 
             VehicleDef def;
             if (carId == -1)
