@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using SanAndreasUnity.Net;
 using Mirror;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -15,7 +16,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Awake()
         {
-            m_vehicle = GetComponent<Vehicle>();
+            //m_vehicle = GetComponent<Vehicle>();
         }
 
         public override void OnStartClient()
@@ -25,7 +26,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (!NetStatus.IsServer)
             {
                 // load vehicle on clients
-                
+                F.RunExceptionSafe( () => {
+                    m_vehicle = Vehicle.Create(this.gameObject, m_net_id, null, this.transform.position, this.transform.rotation);
+                });
             }
         }
 
