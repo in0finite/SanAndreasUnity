@@ -276,7 +276,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Transform DriverTransform { get; private set; }
 
-        public bool HasDriver { get { return DriverTransform != null && DriverTransform.childCount > 0; } }
+        public bool HasDriverSeat { get { return DriverTransform != null && DriverTransform.childCount > 0; } }
 
         public bool IsControlling { get { return _controller != null; } }
 
@@ -368,7 +368,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             float horAxis = Input.GetAxis("Horizontal");
 
             // Set car lights
-            if (HasDriver)
+            if (HasDriverSeat)
             {
                 if (horAxis != 0)
                     blinkerMode = horAxis < 0 ? VehicleBlinkerMode.Left : VehicleBlinkerMode.Right;
@@ -404,7 +404,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Child.localRotation = Quaternion.AngleAxis(wheel.Collider.steerAngle, Vector3.up) * wheel.Roll;
             }
 
-            if (HasDriver)
+            if (HasDriverSeat)
             {
                 if(Input.GetKeyDown(KeyCode.F))
                 {
