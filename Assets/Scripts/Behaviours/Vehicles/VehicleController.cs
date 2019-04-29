@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -15,6 +16,23 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Update()
         {
+            
+            var driverSeat = _vehicle.DriverSeat;
+
+            if (null == driverSeat || null == driverSeat.OccupyingPed)
+            {
+                if (NetStatus.IsServer)
+                    this.ResetInput();
+                return;
+            }
+            
+            if (driverSeat.OccupyingPed != Ped.Instance)
+                return;
+            
+            // local ped is occupying driver seat
+
+            this.ResetInput();
+
 			if (!GameManager.CanPlayerReadInput()) return;
 
             var accel = Input.GetAxis("Vertical");
@@ -30,6 +48,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             _vehicle.Accelerator = accel;
             _vehicle.Steering = Input.GetAxis("Horizontal");
             _vehicle.Braking = brake;
+        }
+
+        void ResetInput()
+        {
+            _vehicle.Accelerator = 0;
+            _vehicle.Steering = 0;
+            _vehicle.Braking = 0;
         }
     }
 }
