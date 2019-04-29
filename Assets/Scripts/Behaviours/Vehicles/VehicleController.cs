@@ -1,17 +1,32 @@
 ﻿using UnityEngine;
 using SanAndreasUnity.Net;
+using Mirror;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
-    [RequireComponent(typeof(Vehicle))]
-    public class VehicleController : MonoBehaviour
+    
+    public class VehicleController : NetworkBehaviour
     {
         private Vehicle m_vehicle;
+
+        [SyncVar] int m_net_id = 0;
         
+
 
         private void Awake()
         {
             m_vehicle = GetComponent<Vehicle>();
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+
+            if (!NetStatus.IsServer)
+            {
+                // load vehicle on clients
+                
+            }
         }
 
         private void Update()
