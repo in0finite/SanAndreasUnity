@@ -13,6 +13,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		bool m_isExitingImmediately = false;
 
 
+		public override void OnBecameActive()
+		{
+			base.OnBecameActive();
+			this.ExitVehicleInternal();
+		}
+
 		public override void OnBecameInactive()
 		{
 			this.Cleanup();
