@@ -69,7 +69,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			if (seat.IsDriver)
 			{
-				// TODO: this should be done when ped enters the car
+				// TODO: this should be done when ped enters the car - or, it should be removed, because
+				// vehicle should know if it has a driver
 				vehicle.StartControlling();
 			}
 
@@ -105,7 +106,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				var animState = m_model.PlayAnim(AnimGroup.Car, animIndex, PlayMode.StopAll);
 				animState.wrapMode = WrapMode.Once;
 
-				// TODO: also check if this state is still active state
+				// TODO: also check if this state is still active state, and if vehicle is alive
 				while (animState.enabled)
 				{
 					yield return new WaitForEndOfFrame();
