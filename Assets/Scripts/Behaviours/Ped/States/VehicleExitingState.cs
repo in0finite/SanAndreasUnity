@@ -27,6 +27,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// after obtaining parameters, switch to this state
 			m_ped.SwitchState<VehicleExitingState> ();
 
+			VehicleEnteringState.PreparePedForVehicle(m_ped, this.CurrentVehicle, this.CurrentVehicleSeat);
+
 			if (this.CurrentVehicleSeat.IsDriver)
 				this.CurrentVehicle.StopControlling();
 			

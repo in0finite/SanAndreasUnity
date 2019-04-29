@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameInactive();
 		}
 
-		public static void PreparePedForEnteringVehicle(Ped ped, Vehicle vehicle, Vehicle.Seat seat)
+		public static void PreparePedForVehicle(Ped ped, Vehicle vehicle, Vehicle.Seat seat)
 		{
 
 			seat.OccupyingPed = ped;
@@ -65,7 +65,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			this.CurrentVehicle = vehicle;
 			this.CurrentVehicleSeat = seat;
 			
-			PreparePedForEnteringVehicle(m_ped, vehicle, seat);
+			PreparePedForVehicle(m_ped, vehicle, seat);
 
 			if (seat.IsDriver)
 			{
