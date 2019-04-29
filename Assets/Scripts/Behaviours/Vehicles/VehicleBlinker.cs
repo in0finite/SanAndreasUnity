@@ -101,7 +101,7 @@ public class VehicleBlinker : MonoBehaviour
     private void Update()
     {
         // Must review
-        if (vehicle.HasDriver && !ShouldBePowered && blinkerSwitch)
+        if (vehicle.HasDriverSeat && !ShouldBePowered && blinkerSwitch)
         {
             //Debug.Log("Turning off blinkers!");
             blinkerSwitch = false;
@@ -110,7 +110,7 @@ public class VehicleBlinker : MonoBehaviour
 
     private void Cycle()
     {
-        if (!(vehicle.HasDriver && ShouldBePowered))
+        if (!(vehicle.HasDriverSeat && ShouldBePowered))
             return;
 
         blinkerSwitch = !blinkerSwitch;
