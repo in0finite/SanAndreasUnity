@@ -69,6 +69,15 @@ namespace SanAndreasUnity.Net
                 m_ped.OnCrouchButtonPressed();
         }
 
+        public void OnSubmitButtonPressed() => this.CmdOnSubmitButtonPressed();
+        
+        [Command]
+        void CmdOnSubmitButtonPressed()
+        {
+            if (m_ped)
+                m_ped.OnSubmitPressed();
+        }
+
         public void PedStartedEnteringVehicle(Ped ped)
         {
             NetStatus.ThrowIfNotOnServer();

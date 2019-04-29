@@ -221,7 +221,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void OnSubmitPressed()
 		{
-
+			if (m_shouldSendButtonEvents)
+				PedSync.Local.OnSubmitButtonPressed();
 		}
 
 		public virtual void OnJumpPressed()
