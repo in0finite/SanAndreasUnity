@@ -31,7 +31,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			m_ped.SwitchState<VehicleSittingState> ();
 
-			VehicleEnteringState.PreparePedForEnteringVehicle(m_ped, vehicle, seat);
+			VehicleEnteringState.PreparePedForVehicle(m_ped, vehicle, seat);
 
 			if (seat.IsDriver)
 			{
