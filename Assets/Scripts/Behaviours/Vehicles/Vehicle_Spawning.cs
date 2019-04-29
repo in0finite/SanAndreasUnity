@@ -142,8 +142,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static Vehicle Create(int carId, int[] colors, Vector3 position, Quaternion rotation)
         {
-            // TODO: use a prefab here, and after creating vehicle, assign net id
-            return Create(new GameObject(), carId, colors, position, rotation);
+            // this probably should not be done like this
+            var go = Instantiate(VehicleManager.Instance.vehiclePrefab);
+            var v = Create(go, carId, colors, position, rotation);
+            if (Net.NetStatus.IsServer)
+            {
+                v.GetComponent<VehicleController>().OnAfterCreateVehicle();
+                Net.NetManager.Spawn(go);
+            }
+            return v;
         }
 
         public static Vehicle Create(GameObject vehicleGameObject, int carId, int[] colors, 
