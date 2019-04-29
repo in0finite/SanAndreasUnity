@@ -121,7 +121,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static Vehicle Create(VehicleSpawner spawner)
         {
-            //Debug.Log("-111");
             return Create(spawner.Info.CarId, spawner.Info.Colors, spawner.transform.position,
                 spawner.transform.rotation);
         }
@@ -143,7 +142,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static Vehicle Create(int carId, int[] colors, Vector3 position, Quaternion rotation)
         {
-            //Debug.Log("-000");
+            
             var inst = new GameObject().AddComponent<Vehicle>();
 
             VehicleDef def;
@@ -160,13 +159,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             inst.transform.position = position - Vector3.up * inst.AverageWheelHeight;
             inst.transform.localRotation = rotation;
-
-#if CLIENT
-            if (Networking.Server.Instance != null)
-            {
-                Networking.Server.Instance.GlobalGroup.Add(inst);
-            }
-#endif
 
             OutOfRangeDestroyer destroyer = inst.gameObject.AddComponent<OutOfRangeDestroyer>();
             destroyer.timeUntilDestroyed = 5;
@@ -490,10 +482,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
 
             // Add vehicle damage
-
-            //GameObject carObject = GameObject.Find(Definition.GameName.ToLower());
-
-            //Debug.Log(gameObject.name);
 
             var dam = gameObject.AddComponent<VehicleDamage>();
             dam.damageParts = new Transform[] { transform.GetChild(0).Find("engine") };
