@@ -8,11 +8,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class VehicleExitingState : BaseVehicleState
 	{
+		Coroutine m_coroutine;
+		
 
+		public override void OnBecameInactive()
+		{
+			this.Cleanup();
 
-		public override void OnBecameActive() {
+			if (m_coroutine != null)
+				StopCoroutine(m_coroutine);
+			m_coroutine = null;
 
-
+			base.OnBecameInactive();
 		}
 
 		public void ExitVehicle(bool immediate = false)
