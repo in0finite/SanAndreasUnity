@@ -108,7 +108,7 @@ namespace SanAndreasUnity.Behaviours
                 }
                 else
                 {
-                    this.SwitchState(newState.GetType());
+                    newState.OnSwitchedStateByServer();
                 }
             });
 

@@ -32,6 +32,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameInactive();
 		}
 
+		public override void OnSwitchedStateByServer()
+		{
+			// obtain current vehicle and seat from Ped
+			this.CurrentVehicle = m_ped.CurrentVehicle;
+			this.CurrentVehicleSeat = m_ped.CurrentVehicleSeat;
+
+			m_isExitingImmediately = false;
+
+			// switch state
+			m_ped.SwitchState(this.GetType());
+		}
+
 		public void ExitVehicle(bool immediate = false)
 		{
 			if (!m_ped.IsInVehicle || !m_ped.IsInVehicleSeat)
