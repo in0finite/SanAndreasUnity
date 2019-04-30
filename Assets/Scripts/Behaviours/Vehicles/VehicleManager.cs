@@ -8,6 +8,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public GameObject vehiclePrefab;
 
+        public bool syncLinearVelocity = true;
+        public bool syncAngularVelocity = true;
+
 
         void Awake()
         {

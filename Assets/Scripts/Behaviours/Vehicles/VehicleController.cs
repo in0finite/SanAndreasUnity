@@ -14,6 +14,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [SyncVar] float m_net_acceleration;
         [SyncVar] float m_net_steering;
         [SyncVar] float m_net_braking;
+        [SyncVar] Vector3 m_net_linearVelocity;
+        [SyncVar] Vector3 m_net_angularVelocity;
         
         // is it better to place syncvars in Vehicle class ? - that way, there is no need for hooks
         // - or we could assign/read syncvars in Update()
@@ -79,12 +81,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_acceleration = m_vehicle.Accelerator;
                 m_net_steering = m_vehicle.Steering;
                 m_net_braking = m_vehicle.Braking;
+                m_net_linearVelocity = m_vehicle.RigidBody.velocity;
+                m_net_angularVelocity = m_vehicle.RigidBody.angularVelocity;
             }
             else
             {
                 m_vehicle.Accelerator = m_net_acceleration;
                 m_vehicle.Steering = m_net_steering;
                 m_vehicle.Braking = m_net_braking;
+                if (VehicleManager.Instance.syncLinearVelocity)
+                    m_vehicle.RigidBody.velocity = m_net_linearVelocity;
+                if (VehicleManager.Instance.syncAngularVelocity)
+                    m_vehicle.RigidBody.angularVelocity = m_net_angularVelocity;
             }
         }
 
