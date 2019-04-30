@@ -10,6 +10,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public partial class Vehicle
     {
         private Rigidbody _rigidBody;
+        public Rigidbody RigidBody => _rigidBody;
 
         [Range(-1, 1)]
         public float Accelerator;
