@@ -8,9 +8,13 @@
 
 - adapt states: 
 
-- send button input events to server: 
+- send button input events to server: submit, 
 
-- When ped enters vehicle, he changes parent. Is this allowed in Mirror ? Possible solution would be to only change parent of ped model.
+- When ped enters vehicle, he changes parent. Is this allowed in Mirror ? Possible solution would be to only change parent of ped model. Also, while ped is in vehicle, network transform should not sync.
+
+- disable vehicle's rigid body on clients ; apply linear and angular velocity manually ? ;
+
+- sync car color
 
 - stats window
 
