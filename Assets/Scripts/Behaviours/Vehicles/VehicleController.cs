@@ -42,6 +42,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 // load vehicle on clients
                 F.RunExceptionSafe( () => {
                     m_vehicle = Vehicle.Create(this.gameObject, m_net_id, null, this.transform.position, this.transform.rotation);
+                    // disable rigid body
+                    if (VehicleManager.Instance.disableRigidBodyOnClients)
+                    {
+                        m_vehicle.RigidBody.isKinematic = true;
+                        m_vehicle.RigidBody.detectCollisions = false;
+                    }
                 });
             }
         }

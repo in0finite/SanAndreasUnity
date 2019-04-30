@@ -11,6 +11,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public bool syncLinearVelocity = true;
         public bool syncAngularVelocity = true;
 
+        public bool disableRigidBodyOnClients = true;
+
 
         void Awake()
         {
