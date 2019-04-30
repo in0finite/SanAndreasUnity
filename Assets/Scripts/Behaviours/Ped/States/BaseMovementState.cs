@@ -91,7 +91,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override void OnSubmitPressed() {
 
 			// try to enter vehicle
-			m_ped.TryEnterVehicleInRange ();
+			if (m_isServer)
+				m_ped.TryEnterVehicleInRange ();
+			else
+				base.OnSubmitPressed();
 
 		}
 
