@@ -261,6 +261,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+
+		public virtual void OnSwitchedStateByServer()
+		{
+			m_ped.SwitchState(this.GetType());
+		}
+
 	}
 
 }

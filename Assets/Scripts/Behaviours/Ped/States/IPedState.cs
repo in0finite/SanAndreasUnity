@@ -21,6 +21,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		void OnFlyButtonPressed();
 		void OnFlyThroughButtonPressed();
 
+		/// <summary> Called when server sends a message that ped state has changed. </summary>
+		void OnSwitchedStateByServer();
+
 	}
 
 }
