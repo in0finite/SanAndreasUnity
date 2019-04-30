@@ -10,6 +10,8 @@
 
 - send button input events to server: 
 
+- syncvar for current vehicle and seat
+
 - When ped enters vehicle, he changes parent. Is this allowed in Mirror ? Possible solution would be to only change parent of ped model. Also, while ped is in vehicle, network transform should not sync.
 
 - disable vehicle's rigid body on clients ; apply linear and angular velocity manually ? ;

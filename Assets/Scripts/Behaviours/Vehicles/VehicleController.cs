@@ -2,6 +2,7 @@
 using SanAndreasUnity.Net;
 using Mirror;
 using SanAndreasUnity.Utilities;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -11,6 +12,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private Vehicle m_vehicle;
 
         [SyncVar] int m_net_id;
+        [SyncVar] string m_net_carColors;
         [SyncVar] float m_net_acceleration;
         [SyncVar] float m_net_steering;
         [SyncVar] float m_net_braking;
@@ -31,6 +33,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             m_vehicle = this.GetComponent<Vehicle>();
             m_net_id = m_vehicle.Definition.Id;
+            if (m_vehicle.Colors != null)
+                m_net_carColors = string.Join(";", m_vehicle.Colors);
         }
 
         public override void OnStartClient()
@@ -41,7 +45,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 // load vehicle on clients
                 F.RunExceptionSafe( () => {
-                    m_vehicle = Vehicle.Create(this.gameObject, m_net_id, null, this.transform.position, this.transform.rotation);
+                    int[] colors = string.IsNullOrEmpty(m_net_carColors) ? null : m_net_carColors.Split(';').Select(s => int.Parse(s)).ToArray();
+                    m_vehicle = Vehicle.Create(this.gameObject, m_net_id, colors, this.transform.position, this.transform.rotation);
                     // disable rigid body
                     if (VehicleManager.Instance.disableRigidBodyOnClients)
                     {
