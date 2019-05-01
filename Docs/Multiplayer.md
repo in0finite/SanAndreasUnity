@@ -10,13 +10,17 @@
 
 - send button input events to server: 
 
-- syncvar for current vehicle and seat
+- syncvar for current vehicle and seat - required for newly connected players, who will not get rpc - or... provide additional data when changing state syncvar
 
-- When ped enters vehicle, he changes parent. Is this allowed in Mirror ? Possible solution would be to only change parent of ped model. Also, while ped is in vehicle, network transform should not sync.
+- When ped enters vehicle, he changes parent. Is this allowed in Mirror ? Possible solution would be to only change parent of ped model.
 
-- disable vehicle's rigid body on clients ; apply linear and angular velocity manually ? ;
+- while ped is in vehicle, network transform should not sync
 
-- sync car color
+- apply vehicle's linear and angular velocity manually ?
+
+- vehicle is bumping on clients - disable (or destroy) wheel colliders, and sync them
+
+- when exit vehicle anim is finished on client, it is repeated - change wrap mode
 
 - stats window
 
