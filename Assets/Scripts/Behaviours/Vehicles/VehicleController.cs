@@ -43,18 +43,27 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (!NetStatus.IsServer)
             {
-                // load vehicle on clients
                 F.RunExceptionSafe( () => {
+                    // load vehicle on clients
                     int[] colors = string.IsNullOrEmpty(m_net_carColors) ? null : m_net_carColors.Split(';').Select(s => int.Parse(s)).ToArray();
                     m_vehicle = Vehicle.Create(this.gameObject, m_net_id, colors, this.transform.position, this.transform.rotation);
-                    // disable rigid body
-                    if (VehicleManager.Instance.disableRigidBodyOnClients)
-                    {
-                        m_vehicle.RigidBody.isKinematic = true;
-                        m_vehicle.RigidBody.detectCollisions = false;
-                    }
+                    
+                    // update rigid body status
+                    this.EnableOrDisableRigidBody();
                 });
             }
+        }
+
+        public override void OnStartAuthority()
+        {
+            base.OnStartAuthority();
+            this.EnableOrDisableRigidBody();
+        }
+
+        public override void OnStopAuthority()
+        {
+            base.OnStopAuthority();
+            this.EnableOrDisableRigidBody();
         }
 
         private void Update()
@@ -129,6 +138,25 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             m_vehicle.Accelerator = accel;
             m_vehicle.Steering = Input.GetAxis("Horizontal");
             m_vehicle.Braking = brake;
+        }
+
+        void EnableOrDisableRigidBody()
+        {
+            if (NetStatus.IsServer || this.hasAuthority)
+            {
+                // enable rigid body
+                m_vehicle.RigidBody.isKinematic = false;
+                m_vehicle.RigidBody.detectCollisions = true;
+            }
+            else
+            {
+                // disable rigid body
+                if (VehicleManager.Instance.disableRigidBodyOnClients)
+                {
+                    m_vehicle.RigidBody.isKinematic = true;
+                    m_vehicle.RigidBody.detectCollisions = false;
+                }
+            }
         }
 
     }
