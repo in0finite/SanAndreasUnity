@@ -171,6 +171,17 @@ namespace SanAndreasUnity.Net
 
 		}
 
+		public static void RemoveAuthority(GameObject go)
+		{
+			NetStatus.ThrowIfNotOnServer();
+
+			var netIdentity = go.GetComponentOrThrow<NetworkIdentity>();
+
+			if (netIdentity.clientAuthorityOwner != null)
+				netIdentity.RemoveClientAuthority(netIdentity.clientAuthorityOwner);
+			
+		}
+
 		public static void ChangeScene(string newScene)
 		{
 			NetworkManager.singleton.ServerChangeScene(newScene);
