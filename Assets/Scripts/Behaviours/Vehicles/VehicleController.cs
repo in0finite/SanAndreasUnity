@@ -91,7 +91,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             else
                 this.ReadInput();
 
+            // why do we send input ?
+            // - so that everyone knows if the gas/brake is pressed, and can simulate wheel effects
+            // - so that server can predict position and velocity of rigid body
             PedSync.Local.SendVehicleInput(m_vehicle.Accelerator, m_vehicle.Steering, m_vehicle.Braking);
+
+            // TODO: also send velocity of rigid body
+
         }
 
         void ProcessSyncvars()
