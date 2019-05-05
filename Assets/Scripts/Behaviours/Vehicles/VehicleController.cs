@@ -81,7 +81,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 return;
             }
             
-            if (driverSeat.OccupyingPed != Ped.Instance)
+            if (!this.hasAuthority || null == Ped.Instance || driverSeat.OccupyingPed != Ped.Instance)
                 return;
             
             // local ped is occupying driver seat
