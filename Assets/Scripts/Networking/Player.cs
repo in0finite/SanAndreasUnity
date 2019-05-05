@@ -3,6 +3,7 @@ using UnityEngine;
 using Mirror;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
+using System.Linq;
 
 namespace SanAndreasUnity.Net
 {
@@ -12,6 +13,7 @@ namespace SanAndreasUnity.Net
 
         static List<Player> s_allPlayers = new List<Player>();
         public static Player[] AllPlayers { get { return s_allPlayers.ToArray(); } }
+        public static IEnumerable<Player> AllPlayersEnumerable { get { return s_allPlayers; } }
 
         /// <summary>Local player.</summary>
         public static Player Local { get; private set; }
@@ -23,6 +25,14 @@ namespace SanAndreasUnity.Net
         //public GameObject OwnedGameObject { get { return m_ownedGameObject; } internal set { m_ownedGameObject = value; } }
         public Ped OwnedPed { get { return m_ownedPed; } internal set { m_ownedPed = value; m_ownedGameObject = value != null ? value.gameObject : null; } }
 
+
+
+        public static Player GetOwningPlayer(Ped ped)
+        {
+            if (null == ped)
+                return null;
+            return AllPlayersEnumerable.FirstOrDefault(p => p.OwnedPed == ped);
+        }
 
         void OnEnable()
         {
