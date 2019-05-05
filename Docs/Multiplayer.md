@@ -16,11 +16,11 @@
 
 - while ped is in vehicle, network transform should not sync
 
-- apply vehicle's linear and angular velocity manually ?
-
-- vehicle is bumping on clients - disable (or destroy) wheel colliders, and sync them
+- vehicle is bumping on clients - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
 
 - when exit vehicle anim is finished on client, it is repeated - change wrap mode
+
+- **vehicle syncing is too laggy** - local player must control the rigid body ; server will validate position/rotation/velocity changes, and correct them if needed ; when server detects collision, or applies force to rigid body, he will override state of rigid body ;
 
 - stats window
 
