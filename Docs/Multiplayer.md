@@ -14,9 +14,9 @@
 
 - When ped enters vehicle, he changes parent. Is this allowed in Mirror ? Possible solution would be to only change parent of ped model.
 
-- while ped is in vehicle, network transform should not sync
+- **while ped is in vehicle, network transform should not sync**
 
-- vehicle is bumping on clients - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
+- **vehicle is bumping on clients** - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
 
 - when exit vehicle anim is finished on client, it is repeated - change wrap mode
 
