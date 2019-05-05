@@ -104,7 +104,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_linearVelocity = m_vehicle.RigidBody.velocity;
                 m_net_angularVelocity = m_vehicle.RigidBody.angularVelocity;
             }
-            else
+            else if (!this.hasAuthority)    // don't do it on client who controls vehicle
             {
                 m_vehicle.Accelerator = m_net_acceleration;
                 m_vehicle.Steering = m_net_steering;
