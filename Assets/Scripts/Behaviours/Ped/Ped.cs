@@ -121,6 +121,8 @@ namespace SanAndreasUnity.Behaviours
 
 			this.AwakeForDamage ();
 
+			this.Awake_Net();
+
         }
 
         void Start()

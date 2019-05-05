@@ -13,6 +13,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public bool disableRigidBodyOnClients = true;
 
+        public bool syncPedTransformWhileInVehicle = false;
+
 
         void Awake()
         {
