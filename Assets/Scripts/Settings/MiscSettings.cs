@@ -5,6 +5,7 @@ using SanAndreasUnity.UI;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Weapons;
+using SanAndreasUnity.Behaviours.Vehicles;
 
 namespace SanAndreasUnity.Settings {
 
@@ -43,12 +44,32 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 
+		OptionsWindow.BoolInput m_syncVehiclesLinearVelocity = new OptionsWindow.BoolInput ("Sync vehicle's linear velocity") {
+			isAvailable = () => VehicleManager.Instance != null,
+			getValue = () => VehicleManager.Instance.syncLinearVelocity,
+			setValue = (value) => { VehicleManager.Instance.syncLinearVelocity = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
+		OptionsWindow.BoolInput m_syncVehiclesAngularVelocity = new OptionsWindow.BoolInput ("Sync vehicle's angular velocity") {
+			isAvailable = () => VehicleManager.Instance != null,
+			getValue = () => VehicleManager.Instance.syncAngularVelocity,
+			setValue = (value) => { VehicleManager.Instance.syncAngularVelocity = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
+		OptionsWindow.BoolInput m_disableVehiclesRigidBodyOnClients = new OptionsWindow.BoolInput ("Disable vehicle's rigid body on clients") {
+			isAvailable = () => VehicleManager.Instance != null,
+			getValue = () => VehicleManager.Instance.disableRigidBodyOnClients,
+			setValue = (value) => { VehicleManager.Instance.disableRigidBodyOnClients = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
+
 
 
 		void Awake ()
 		{
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
-				m_runInBackgroundInput, m_drawLineFromGunInput
+				m_runInBackgroundInput, m_drawLineFromGunInput,
+				m_syncVehiclesLinearVelocity, m_syncVehiclesAngularVelocity, m_disableVehiclesRigidBodyOnClients,
 			};
 
 			foreach (var input in inputs)
