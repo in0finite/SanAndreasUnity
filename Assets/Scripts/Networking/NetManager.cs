@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Mirror;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Net
 {
@@ -150,6 +151,24 @@ namespace SanAndreasUnity.Net
 		public static void Spawn(GameObject go)
 		{
 			NetworkServer.Spawn(go);
+		}
+
+		public static void AssignAuthority(GameObject go, Player player)
+		{
+			NetStatus.ThrowIfNotOnServer();
+
+			var netIdentity = go.GetComponentOrThrow<NetworkIdentity>();
+
+			if (netIdentity.clientAuthorityOwner == player.connectionToClient)	// already has authority
+				return;
+
+			// first remove existing authority client
+			if (netIdentity.clientAuthorityOwner != null)
+				netIdentity.RemoveClientAuthority(netIdentity.clientAuthorityOwner);
+
+			// assign new authority client
+			netIdentity.AssignClientAuthority(player.connectionToClient);
+
 		}
 
 		public static void ChangeScene(string newScene)
