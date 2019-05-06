@@ -40,6 +40,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			ped.PlayerModel.IsInVehicle = true;
 
+			if (!VehicleManager.Instance.syncPedTransformWhileInVehicle) {
+				if (ped.NetTransform != null)
+					ped.NetTransform.syncInterval = 0;
+			}
+
 		}
 
 		public bool TryEnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
