@@ -88,4 +88,5 @@ MonoBehaviour:
     type: 3}
   syncLinearVelocity: 0
   syncAngularVelocity: 0
-  disableRigidBodyOnClients: 1
+  disableRigidBodyOnClients: 0
+  syncPedTransformWhileInVehicle: 0
