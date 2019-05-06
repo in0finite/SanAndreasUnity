@@ -62,6 +62,12 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { VehicleManager.Instance.disableRigidBodyOnClients = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
+		OptionsWindow.BoolInput m_syncPedTransformWhileInVehicle = new OptionsWindow.BoolInput ("Sync ped transform while in vehicle") {
+			isAvailable = () => VehicleManager.Instance != null,
+			getValue = () => VehicleManager.Instance.syncPedTransformWhileInVehicle,
+			setValue = (value) => { VehicleManager.Instance.syncPedTransformWhileInVehicle = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
 
 
 
@@ -70,6 +76,7 @@ namespace SanAndreasUnity.Settings {
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
 				m_runInBackgroundInput, m_drawLineFromGunInput,
 				m_syncVehiclesLinearVelocity, m_syncVehiclesAngularVelocity, m_disableVehiclesRigidBodyOnClients,
+				m_syncPedTransformWhileInVehicle,
 			};
 
 			foreach (var input in inputs)
