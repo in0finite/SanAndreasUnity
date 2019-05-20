@@ -8,28 +8,26 @@ public class OutOfRangeDestroyer : MonoBehaviour
 
     private float timeSinceOutOfRange = 0;
 
-    // Use this for initialization
     private void Start()
     {
-        if (null == targetObject)
+        if (targetObject == null)
         {
-            if (Camera.current != null)
-                targetObject = Camera.current.transform;
+            if (Camera.main != null)
+                targetObject = Camera.main.transform;
         }
     }
 
-    // Update is called once per frame
     private void Update()
     {
         timeSinceOutOfRange += Time.deltaTime;
 
-        if (null == targetObject)
+        if (targetObject == null)
         {
-            if (Camera.current != null)
-                targetObject = Camera.current.transform;
+            if (Camera.main != null)
+                targetObject = Camera.main.transform;
         }
 
-        if (null != targetObject)
+        if (targetObject != null)
         {
             float distanceSq = (transform.position - targetObject.position).sqrMagnitude;
             if (distanceSq <= range * range)
