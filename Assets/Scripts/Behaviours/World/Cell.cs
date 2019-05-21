@@ -161,6 +161,14 @@ namespace SanAndreasUnity.Behaviours.World
             numLeavesLoadedThisFrame = 0;
             numObjectsLoadedThisFrame = 0;
 
+            this.UpdateDivisionsLoading();
+
+            measuredTimes[2] = (float)_timer.Elapsed.TotalMilliseconds;
+
+        }
+
+        void UpdateDivisionsLoading()
+        {
             foreach (var div in _leaves)
             {
                 if (float.IsPositiveInfinity(div.LoadOrder))
@@ -177,9 +185,6 @@ namespace SanAndreasUnity.Behaviours.World
                     numLeavesLoadedThisFrame++;
                 }
             }
-
-            measuredTimes[2] = (float)_timer.Elapsed.TotalMilliseconds;
-
         }
 
 		System.Collections.IEnumerator UpdateDivisionsCoroutine ()
