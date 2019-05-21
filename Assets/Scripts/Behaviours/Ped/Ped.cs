@@ -134,6 +134,25 @@ namespace SanAndreasUnity.Behaviours
 			if (null == this.CurrentState)
 				this.SwitchState<Peds.States.StandState> ();
 
+			// register Cell focus point
+			if (this.Cell != null)
+			{
+				if (NetStatus.IsServer)
+				{
+					// only register if this ped is owned by some player
+					if (Player.GetOwningPlayer(this) != null)
+						this.Cell.focusPoints.AddIfNotPresent(this.transform);
+				}
+				else if (NetStatus.IsClientActive())
+				{
+					// only register if this ped is owned by local player
+					// TODO: IsControlledByLocalPlayer may not return true, because syncvar in Player script may
+					// not be updated yet
+					if (this.IsControlledByLocalPlayer)
+						this.Cell.focusPoints.AddIfNotPresent(this.transform);
+				}
+			}
+
         }
 
 		void OnEnable ()
