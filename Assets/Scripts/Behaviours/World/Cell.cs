@@ -161,7 +161,13 @@ namespace SanAndreasUnity.Behaviours.World
             numLeavesLoadedThisFrame = 0;
             numObjectsLoadedThisFrame = 0;
 
-            this.UpdateDivisionsLoading();
+            this.focusPoints.RemoveDeadObjects();
+            if (this.focusPoints.Count > 0)
+            {
+                // only update divisions loading if there are focus points - because otherwise, 
+                // load order of divisions is not updated
+                this.UpdateDivisionsLoading();
+            }
 
             measuredTimes[2] = (float)_timer.Elapsed.TotalMilliseconds;
 
