@@ -179,14 +179,24 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (wheel.Complement != null) wheel.UpdateTravel();
             }
 
+            this.AddAntiRollForceToRigidBody();
+
+        }
+
+        /// <summary>
+		/// Adds upward force to rigid body based on difference of travel between complemented wheels.
+		/// </summary>
+        void AddAntiRollForceToRigidBody()
+        {
             foreach (var wheel in _wheels.Where(x => x.Complement != null))
             {
                 if (wheel.Travel == wheel.Complement.Travel) continue;
                 if (!wheel.Collider.isGrounded) continue;
 
-                var force = (wheel.Complement.Travel - wheel.Travel) * vals.AntiRollScale;
+                var force = (wheel.Complement.Travel - wheel.Travel) * VConsts.Instance.AntiRollScale;
                 _rigidBody.AddForceAtPosition(wheel.Parent.transform.up * force, wheel.Parent.position);
             }
         }
+
     }
 }
