@@ -19,6 +19,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [SyncVar] float m_net_braking;
         [SyncVar] Vector3 m_net_linearVelocity;
         [SyncVar] Vector3 m_net_angularVelocity;
+
+        struct WheelSyncData
+        {
+            public float brakeTorque;
+            public float motorTorque;
+            public float steerAngle;
+            //public float travel;
+        }
+
+        class WheelSyncList : SyncList<WheelSyncData> { }
+
+        WheelSyncList m_net_wheelsData;
         
         // is it better to place syncvars in Vehicle class ? - that way, there is no need for hooks
         // - or we could assign/read syncvars in Update()
@@ -110,14 +122,36 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_braking = m_vehicle.Braking;
                 m_net_linearVelocity = m_vehicle.RigidBody.velocity;
                 m_net_angularVelocity = m_vehicle.RigidBody.angularVelocity;
+
+                // wheels
+                m_net_wheelsData.Clear();
+                foreach (var wheel in m_vehicle.Wheels) {
+                    m_net_wheelsData.Add(new WheelSyncData() {
+                        brakeTorque = wheel.Collider.brakeTorque,
+                        motorTorque = wheel.Collider.motorTorque,
+                        steerAngle = wheel.Collider.steerAngle,
+                        //travel = wheel.Travel,
+                    });
+                }
             }
             else
             {
-                if (!this.IsControlledByLocalPlayer)    // only assign input on other clients
+                if (!this.IsControlledByLocalPlayer)
                 {
+                    // only assign input on other clients
                     m_vehicle.Accelerator = m_net_acceleration;
                     m_vehicle.Steering = m_net_steering;
                     m_vehicle.Braking = m_net_braking;
+
+                    // only update wheels on other clients
+                    for (int i=0; i < m_vehicle.Wheels.Count && i < m_net_wheelsData.Count; i++) {
+                        var w = m_vehicle.Wheels[i];
+                        var data = m_net_wheelsData[i];
+                        w.Collider.brakeTorque = data.brakeTorque;
+                        w.Collider.motorTorque = data.motorTorque;
+                        w.Collider.steerAngle = data.steerAngle;
+                        //w.Travel = data.travel;
+                    }
                 }
 
                 // apply velocity on all clients
