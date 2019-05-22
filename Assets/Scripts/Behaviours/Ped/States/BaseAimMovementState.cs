@@ -318,7 +318,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			model.ResetFrameState (model.RightForeArm);
 			model.ResetFrameState (model.RightHand);
 
-			Vector3 aimDir = player.Camera.transform.forward;
+			Vector3 aimDir = player.AimDirection;
 			Vector3 aimDirLocal = player.transform.InverseTransformDirection (aimDir);
 
 			bool isAimingOnOppositeSide = aimDirLocal.x < 0f;
