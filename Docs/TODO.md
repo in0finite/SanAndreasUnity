@@ -18,6 +18,8 @@
 
 - Crouching: adjust camera aim offset ? ;
 
+- Add option to disable camera
+
 - don't fade high LOD meshes
 
 - Validate path to GTA ?
