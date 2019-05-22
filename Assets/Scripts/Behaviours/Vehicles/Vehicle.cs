@@ -159,22 +159,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         bool m_isServer => Net.NetStatus.IsServer;
         public bool IsControlledByLocalPlayer => Ped.Instance != null && Ped.Instance.CurrentVehicle == this && Ped.Instance.CurrentVehicleSeat.IsDriver;
 
-#if CLIENT
-        protected override void OnAwake()
-        {
-            _props = new MaterialPropertyBlock();
 
-            base.OnAwake();
-        }
-#else
 
-        // Must review
         private void Awake()
         {
             _props = new MaterialPropertyBlock();
         }
-
-#endif
 
         public void SetColors(params int[] clrIndices)
         {
