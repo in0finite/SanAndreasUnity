@@ -111,11 +111,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_linearVelocity = m_vehicle.RigidBody.velocity;
                 m_net_angularVelocity = m_vehicle.RigidBody.angularVelocity;
             }
-            else if (!this.IsControlledByLocalPlayer)    // don't do it on client who controls vehicle
+            else
             {
-                m_vehicle.Accelerator = m_net_acceleration;
-                m_vehicle.Steering = m_net_steering;
-                m_vehicle.Braking = m_net_braking;
+                if (!this.IsControlledByLocalPlayer)    // only assign input on other clients
+                {
+                    m_vehicle.Accelerator = m_net_acceleration;
+                    m_vehicle.Steering = m_net_steering;
+                    m_vehicle.Braking = m_net_braking;
+                }
+
+                // apply velocity on all clients
                 if (VehicleManager.Instance.syncLinearVelocity)
                     m_vehicle.RigidBody.velocity = m_net_linearVelocity;
                 if (VehicleManager.Instance.syncAngularVelocity)
