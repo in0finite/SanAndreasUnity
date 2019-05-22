@@ -121,12 +121,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (ped.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
 				return;
 
-			// TODO: spine's forward vector should be the same as aim direction
-			// this will not work for peds without camera
-			ped.PlayerModel.Spine.LookAt(ped.Camera.transform.position + ped.Camera.transform.forward * 500);
+			ped.PlayerModel.Spine.forward = ped.AimDirection;
 
 			// now apply offset to spine rotation
 			// this has to be done because spine is not rotated properly - is it intentionally done, or is it error in model importing ?
+
+			// TODO: actually, spine direction should be the same as ped's direction, not aim direction
 
 			Vector3 eulers = ped.WeaponHolder.SpineOffset;
 			if (ped.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
