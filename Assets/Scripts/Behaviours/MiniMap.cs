@@ -552,7 +552,7 @@ namespace SanAndreasUnity.Behaviours
                     lerpedZoomCounter = 0;
             }
 
-            float relAngle = Camera.main.transform.eulerAngles.y;
+            float relAngle = Camera.main != null ? Camera.main.transform.eulerAngles.y : 0f;
 
             if (maskTransform != null)
                 maskTransform.localRotation = Quaternion.Euler(0, 0, relAngle);

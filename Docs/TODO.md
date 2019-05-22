@@ -10,7 +10,7 @@
 
 - **Async geometry loading** - currently, geometry is loaded synchronously, which seems like the main performance bottleneck
 
-- Make everything networked
+- Multiplayer - see [Multiplayer.md](Multiplayer.md)
 
 - Map - better info area ; input mouse position is not always correct ; see [Map.md](Map.md) ;
 
@@ -18,11 +18,11 @@
 
 - Crouching: adjust camera aim offset ? ;
 
-- Add option to disable camera
-
 - don't fade high LOD meshes
 
 - Validate path to GTA ?
+
+- Split code into separate assemblies (using asmdef files)
 
 - Anims must be played by their name
 
