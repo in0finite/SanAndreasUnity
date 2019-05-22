@@ -10,7 +10,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public class VehicleController : NetworkBehaviour
     {
         private Vehicle m_vehicle;
-        bool IsControlledByLocalPlayer => Ped.Instance != null && Ped.Instance.CurrentVehicle == m_vehicle && Ped.Instance.CurrentVehicleSeat.IsDriver;
+        bool IsControlledByLocalPlayer => m_vehicle.IsControlledByLocalPlayer;
 
         [SyncVar] int m_net_id;
         [SyncVar] string m_net_carColors;
