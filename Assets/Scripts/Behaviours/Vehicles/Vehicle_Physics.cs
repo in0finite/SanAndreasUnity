@@ -135,9 +135,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void PhysicsFixedUpdate()
         {
-            //Debug.LogFormat("{0}?: {1}", _rigidBody == null, gameObject.GetGameObjectPath());
-            //Debug.Break();
-
+            
             var groundRay = new Ray(transform.position + Vector3.up, -Vector3.up);
             //if (_rigidBody != null) // Must review: Why this is now null?
             try
@@ -160,11 +158,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 if (ShouldSteer(wheel))
                 {
-                    /*if (Steering != 0)
-                    {
-                        Debug.Log(HandlingData.SteeringLock);
-                        Debug.Break();
-                    }*/
                     wheel.Collider.steerAngle = HandlingData.SteeringLock * Steering;
                 }
 
