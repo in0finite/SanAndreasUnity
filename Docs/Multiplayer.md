@@ -22,6 +22,8 @@
 
 - **vehicle syncing is too laggy** - local player must control the rigid body ; server will validate position/rotation/velocity changes, and correct them if needed ; when server detects collision, or applies force to rigid body, he will override state of rigid body ;
 
+- add ability to change vehicle and ped sync rate
+
 - stats window
 
 - display a message to user when network is stopped
