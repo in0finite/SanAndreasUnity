@@ -407,15 +407,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (HasDriverSeat)
             {
-                if(Input.GetKeyDown(KeyCode.F))
-                {
-                    if(Vector3.Dot(transform.up, Vector3.down) > 0)
-                    {
-                        transform.position += Vector3.up * 1.5f;
-                        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 0);
-                    }
-                }
-
                 if (Input.GetKeyDown(KeyCode.L))
                 {
                     m_frontLeftLightPowered = !m_frontLeftLight;
