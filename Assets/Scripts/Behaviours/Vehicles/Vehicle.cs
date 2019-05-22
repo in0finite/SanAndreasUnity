@@ -407,15 +407,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (HasDriverSeat)
             {
-                if (Input.GetKeyDown(KeyCode.L))
-                {
-                    m_frontLeftLightPowered = !m_frontLeftLight;
-                    m_frontRightLightPowered = !m_frontRightLightPowered;
-
-                    SetLight(VehicleLight.FrontLeft, m_frontLeftLightPowered ? VehicleAPI.frontLightIntensity : 0);
-                    SetLight(VehicleLight.FrontRight, m_frontRightLightPowered ? VehicleAPI.frontLightIntensity : 0);
-                }
-
                 if (Braking > 0.125f)
                     SetLight(VehicleLight.Rear, 1f);
                 else
