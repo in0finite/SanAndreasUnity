@@ -69,12 +69,18 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 
+		OptionsWindow.BoolInput m_enableCamera = new OptionsWindow.BoolInput ("Enable camera") {
+			getValue = () => Camera.main != null && Camera.main.enabled,
+			setValue = (value) => { Camera cam = F.FindMainCameraEvenIfDisabled(); if (cam != null) cam.enabled = value; },
+			persistType = OptionsWindow.InputPersistType.None,
+		};
+
 
 
 		void Awake ()
 		{
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
-				m_runInBackgroundInput, m_drawLineFromGunInput,
+				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera,
 				m_syncVehiclesLinearVelocity, m_syncVehiclesAngularVelocity, m_disableVehiclesRigidBodyOnClients,
 				m_syncPedTransformWhileInVehicle,
 			};

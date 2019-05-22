@@ -723,6 +723,14 @@ namespace SanAndreasUnity.Utilities
 			return cam.ViewportPointToRay (viewportPos);
 		}
 
+        public static Camera FindMainCameraEvenIfDisabled()
+        {
+            GameObject camObj = GameObject.FindGameObjectWithTag("MainCamera");
+            if (camObj != null)
+                return camObj.GetComponentInChildren<Camera>(true);
+            return null;
+        }
+
 
 		public static void GizmosDrawLineFromCamera ()
 		{
