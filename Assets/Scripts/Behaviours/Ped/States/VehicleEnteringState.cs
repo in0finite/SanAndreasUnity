@@ -78,11 +78,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				// vehicle should know if it has a driver
 				vehicle.StartControlling();
 
-				if (m_isServer) {
-					var p = Net.Player.GetOwningPlayer(m_ped);
-					if (p != null)
-						Net.NetManager.AssignAuthority(vehicle.gameObject, p);
-				}
+				// if (m_isServer) {
+				// 	var p = Net.Player.GetOwningPlayer(m_ped);
+				// 	if (p != null)
+				// 		Net.NetManager.AssignAuthority(vehicle.gameObject, p);
+				// }
 			}
 
 			if (!vehicle.IsNightToggled && WorldController.IsNight)
