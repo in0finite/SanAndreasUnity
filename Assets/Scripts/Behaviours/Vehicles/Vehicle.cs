@@ -156,6 +156,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private VehicleController _controller;
 
+        bool m_isServer => Net.NetStatus.IsServer;
+        public bool IsControlledByLocalPlayer => Ped.Instance != null && Ped.Instance.CurrentVehicle == this && Ped.Instance.CurrentVehicleSeat.IsDriver;
+
 #if CLIENT
         protected override void OnAwake()
         {
