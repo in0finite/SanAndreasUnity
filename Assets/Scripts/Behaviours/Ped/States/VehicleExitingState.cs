@@ -74,7 +74,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (m_isServer && this.CurrentVehicleSeat.IsDriver)
 			{
 				// remove authority
-				Net.NetManager.RemoveAuthority(this.CurrentVehicle.gameObject);
+			//	Net.NetManager.RemoveAuthority(this.CurrentVehicle.gameObject);
 			}
 
 			// send message to clients

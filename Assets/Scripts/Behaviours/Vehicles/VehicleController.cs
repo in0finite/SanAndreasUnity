@@ -10,6 +10,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public class VehicleController : NetworkBehaviour
     {
         private Vehicle m_vehicle;
+        bool IsControlledByLocalPlayer => Ped.Instance != null && Ped.Instance.CurrentVehicle == m_vehicle && Ped.Instance.CurrentVehicleSeat.IsDriver;
 
         [SyncVar] int m_net_id;
         [SyncVar] string m_net_carColors;
@@ -81,7 +82,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 return;
             }
             
-            if (!this.hasAuthority || null == Ped.Instance || driverSeat.OccupyingPed != Ped.Instance)
+            if (null == Ped.Instance || driverSeat.OccupyingPed != Ped.Instance)
                 return;
             
             // local ped is occupying driver seat
@@ -110,7 +111,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_linearVelocity = m_vehicle.RigidBody.velocity;
                 m_net_angularVelocity = m_vehicle.RigidBody.angularVelocity;
             }
-            else if (!this.hasAuthority)    // don't do it on client who controls vehicle
+            else if (!this.IsControlledByLocalPlayer)    // don't do it on client who controls vehicle
             {
                 m_vehicle.Accelerator = m_net_acceleration;
                 m_vehicle.Steering = m_net_steering;
@@ -148,7 +149,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void EnableOrDisableRigidBody()
         {
-            if (NetStatus.IsServer || this.hasAuthority)
+            if (NetStatus.IsServer || this.IsControlledByLocalPlayer)
             {
                 // enable rigid body
                 m_vehicle.RigidBody.isKinematic = false;
