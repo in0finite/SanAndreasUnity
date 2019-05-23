@@ -217,8 +217,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (NetStatus.IsServer)
                 return;
 
-            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars)
-                m_vehicle.RigidBody.MovePosition(pos);
+            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars) {
+                if (m_vehicle != null && m_vehicle.RigidBody != null)
+                    m_vehicle.RigidBody.MovePosition(pos);
+            }
         }
 
         void OnNetRotationChanged(Quaternion rot)
@@ -226,8 +228,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (NetStatus.IsServer)
                 return;
 
-            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars)
-                m_vehicle.RigidBody.MoveRotation(rot);
+            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars) {
+                if (m_vehicle != null && m_vehicle.RigidBody != null)
+                    m_vehicle.RigidBody.MoveRotation(rot);
+            }
         }
 
     }
