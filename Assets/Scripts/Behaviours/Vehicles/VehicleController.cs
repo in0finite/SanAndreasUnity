@@ -17,6 +17,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [SyncVar] float m_net_acceleration;
         [SyncVar] float m_net_steering;
         [SyncVar] float m_net_braking;
+        [SyncVar(hook=nameof(OnNetPositionChanged))] Vector3 m_net_position;
+        [SyncVar(hook=nameof(OnNetRotationChanged))] Quaternion m_net_rotation;
         [SyncVar] Vector3 m_net_linearVelocity;
         [SyncVar] Vector3 m_net_angularVelocity;
 
@@ -120,6 +122,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_acceleration = m_vehicle.Accelerator;
                 m_net_steering = m_vehicle.Steering;
                 m_net_braking = m_vehicle.Braking;
+                m_net_position = m_vehicle.transform.position;
+                m_net_rotation = m_vehicle.transform.rotation;
                 m_net_linearVelocity = m_vehicle.RigidBody.velocity;
                 m_net_angularVelocity = m_vehicle.RigidBody.angularVelocity;
 
@@ -153,6 +157,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         //w.Travel = data.travel;
                     }
                 }
+
+                // position and rotation will be applied in syncvar hooks
 
                 // apply velocity on all clients
                 if (VehicleManager.Instance.syncLinearVelocity)
@@ -203,6 +209,22 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     m_vehicle.RigidBody.detectCollisions = false;
                 }
             }
+        }
+
+        void OnNetPositionChanged(Vector3 pos)
+        {
+            if (NetStatus.IsServer)
+                return;
+
+            m_vehicle.RigidBody.MovePosition(pos);
+        }
+
+        void OnNetRotationChanged(Quaternion rot)
+        {
+            if (NetStatus.IsServer)
+                return;
+
+            m_vehicle.RigidBody.MoveRotation(rot);
         }
 
     }
