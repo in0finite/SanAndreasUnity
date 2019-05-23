@@ -44,6 +44,12 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 
+		OptionsWindow.BoolInput m_syncVehicleTransformUsingSyncVars = new OptionsWindow.BoolInput ("Sync vehicle transform using syncvars") {
+			isAvailable = () => VehicleManager.Instance != null,
+			getValue = () => VehicleManager.Instance.syncVehicleTransformUsingSyncVars,
+			setValue = (value) => { VehicleManager.Instance.syncVehicleTransformUsingSyncVars = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
 		OptionsWindow.BoolInput m_syncVehiclesLinearVelocity = new OptionsWindow.BoolInput ("Sync vehicle's linear velocity") {
 			isAvailable = () => VehicleManager.Instance != null,
 			getValue = () => VehicleManager.Instance.syncLinearVelocity,
@@ -81,7 +87,7 @@ namespace SanAndreasUnity.Settings {
 		{
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
 				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera,
-				m_syncVehiclesLinearVelocity, m_syncVehiclesAngularVelocity, m_disableVehiclesRigidBodyOnClients,
+				m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, m_syncVehiclesAngularVelocity, m_disableVehiclesRigidBodyOnClients,
 				m_syncPedTransformWhileInVehicle,
 			};
 
