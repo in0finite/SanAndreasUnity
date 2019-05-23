@@ -148,19 +148,23 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             foreach (var wheel in _wheels)
             {
+                // apply steering
                 if (ShouldSteer(wheel))
                 {
                     wheel.Collider.steerAngle = HandlingData.SteeringLock * Steering;
                 }
 
+                // apply motor torque
                 wheel.Collider.motorTorque =
                     Accelerator * HandlingData.TransmissionEngineAccel
                     * vals.AccelerationScale * DriveBias(wheel);
 
+                // apply brake torque
                 wheel.Collider.brakeTorque =
                     Braking * HandlingData.BrakeDecel
                     * vals.BreakingScale * BrakeBias(wheel);
 
+                // update travel
                 if (wheel.Complement != null) wheel.UpdateTravel();
             }
         }
