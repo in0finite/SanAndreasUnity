@@ -163,10 +163,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         bool m_isServer => Net.NetStatus.IsServer;
         public bool IsControlledByLocalPlayer => Ped.Instance != null && Ped.Instance.CurrentVehicle == this && Ped.Instance.CurrentVehicleSeat.IsDriver;
 
+        public Mirror.NetworkTransform NetTransform { get; private set; }
+
 
 
         private void Awake()
         {
+            this.NetTransform = this.GetComponent<Mirror.NetworkTransform>();
             _props = new MaterialPropertyBlock();
         }
 
