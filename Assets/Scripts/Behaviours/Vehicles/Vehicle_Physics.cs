@@ -135,10 +135,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void PhysicsFixedUpdate()
         {
-            
-            this.UpdateWheelsPhysics();
-            
-            this.AddAntiRollForceToRigidBody();
+            if (m_isServer || this.IsControlledByLocalPlayer)
+            {
+                this.UpdateWheelsPhysics();
+                this.AddAntiRollForceToRigidBody();
+            }
 
         }
 
