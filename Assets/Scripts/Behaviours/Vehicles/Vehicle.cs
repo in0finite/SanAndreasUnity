@@ -2,6 +2,7 @@
 using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VehicleDef = SanAndreasUnity.Importing.Items.Definitions.VehicleDef;
@@ -34,6 +35,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public partial class Vehicle : MonoBehaviour
 #endif
     {
+        static List<Vehicle> s_vehicles = new List<Vehicle>();
+        public static IEnumerable<Vehicle> AllVehicles => s_vehicles;
+
         private static int _sLayer = -1;
 
         [HideInInspector]
@@ -164,6 +168,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void Awake()
         {
             _props = new MaterialPropertyBlock();
+        }
+
+        void OnEnable()
+        {
+            s_vehicles.Add(this);
+        }
+
+        void OnDisable()
+        {
+            s_vehicles.Remove(this);
         }
 
         public void SetColors(params int[] clrIndices)
