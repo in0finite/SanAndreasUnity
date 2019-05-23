@@ -152,6 +152,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 }
             } catch { }
 
+            this.UpdateWheelsPhysics();
+            
+            this.AddAntiRollForceToRigidBody();
+
+        }
+
+        void UpdateWheelsPhysics()
+        {
             var vals = VConsts.Instance;
 
             foreach (var wheel in _wheels)
@@ -171,9 +179,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 if (wheel.Complement != null) wheel.UpdateTravel();
             }
-
-            this.AddAntiRollForceToRigidBody();
-
         }
 
         /// <summary>
