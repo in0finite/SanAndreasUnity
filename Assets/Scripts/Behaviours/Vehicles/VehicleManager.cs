@@ -15,6 +15,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public bool syncPedTransformWhileInVehicle = false;
 
+        public bool syncVehicleTransformUsingSyncVars = false;
+
 
         void Awake()
         {

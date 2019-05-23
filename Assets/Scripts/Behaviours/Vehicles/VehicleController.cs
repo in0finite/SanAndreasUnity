@@ -42,6 +42,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void Awake()
         {
             //m_vehicle = GetComponent<Vehicle>();
+            this.GetComponent<NetworkTransform>().enabled = ! VehicleManager.Instance.syncVehicleTransformUsingSyncVars;
         }
 
         internal void OnAfterCreateVehicle()
@@ -216,7 +217,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (NetStatus.IsServer)
                 return;
 
-            m_vehicle.RigidBody.MovePosition(pos);
+            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars)
+                m_vehicle.RigidBody.MovePosition(pos);
         }
 
         void OnNetRotationChanged(Quaternion rot)
@@ -224,7 +226,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (NetStatus.IsServer)
                 return;
 
-            m_vehicle.RigidBody.MoveRotation(rot);
+            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars)
+                m_vehicle.RigidBody.MoveRotation(rot);
         }
 
     }
