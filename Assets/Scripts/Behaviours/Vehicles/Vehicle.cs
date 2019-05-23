@@ -286,8 +286,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public bool HasDriverSeat { get { return DriverTransform != null && DriverTransform.childCount > 0; } }
 
-        public bool IsControlling { get { return _controller != null; } }
-
         public VehicleController StartControlling()
         {
             //SetAllCarLights();
@@ -373,16 +371,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Update()
         {
-            float horAxis = Input.GetAxis("Horizontal");
-
-            // Set car lights
-            if (HasDriverSeat)
-            {
-                if (horAxis != 0)
-                    blinkerMode = horAxis < 0 ? VehicleBlinkerMode.Left : VehicleBlinkerMode.Right;
-                else if (horAxis == 0 && Steering == 0 && blinkerMode != VehicleBlinkerMode.None)
-                    StartCoroutine(DelayedBlinkersTurnOff());
-            }
 
             foreach (var wheel in _wheels)
             {
@@ -412,24 +400,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 wheel.Child.localRotation = Quaternion.AngleAxis(wheel.Collider.steerAngle, Vector3.up) * wheel.Roll;
             }
 
-            if (HasDriverSeat)
-            {
-                if (Braking > 0.125f)
-                    SetLight(VehicleLight.Rear, 1f);
-                else
-                    SetLight(VehicleLight.Rear, 0f);
-            }
-            else
-            {
-                if (IsAnyLightPowered())
-                    SetLight(VehicleLight.All, 0f);
-                Braking = 1f;
-            }
-
             if (_colorsChanged)
             {
                 UpdateColors();
             }
+            
         }
 
         private void FixedUpdate()
