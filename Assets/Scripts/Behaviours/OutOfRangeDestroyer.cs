@@ -19,8 +19,7 @@ public class OutOfRangeDestroyer : MonoBehaviour
 
     private void Update()
     {
-        timeSinceOutOfRange += Time.deltaTime;
-
+        
         if (targetObject == null)
         {
             if (Camera.main != null)
@@ -29,6 +28,9 @@ public class OutOfRangeDestroyer : MonoBehaviour
 
         if (targetObject != null)
         {
+            // only increase time if target object exists
+            timeSinceOutOfRange += Time.deltaTime;
+
             float distanceSq = (transform.position - targetObject.position).sqrMagnitude;
             if (distanceSq <= range * range)
             {
