@@ -44,6 +44,13 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 
+		OptionsWindow.FloatInput m_pedSyncRate = new OptionsWindow.FloatInput ("Ped sync rate", 1, 60) {
+			isAvailable = () => PedManager.Instance != null,
+			getValue = () => PedManager.Instance.pedSyncRate,
+			setValue = (value) => { ApplyPedSyncRate(value); },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
+
 		OptionsWindow.FloatInput m_vehicleSyncRate = new OptionsWindow.FloatInput ("Vehicle sync rate", 1, 60) {
 			isAvailable = () => VehicleManager.Instance != null,
 			getValue = () => VehicleManager.Instance.vehicleSyncRate,
@@ -105,6 +112,7 @@ namespace SanAndreasUnity.Settings {
 		{
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
 				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera,
+				m_pedSyncRate,
 				m_vehicleSyncRate, m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, 
 				m_syncVehiclesAngularVelocity, m_controlWheelsOnLocalPlayer, m_controlVehicleInputOnLocalPlayer, 
 				m_disableVehiclesRigidBodyOnClients, m_syncPedTransformWhileInVehicle,
@@ -116,6 +124,13 @@ namespace SanAndreasUnity.Settings {
 				OptionsWindow.RegisterInput (input);
 			}
 
+		}
+
+		static void ApplyPedSyncRate(float syncRate)
+		{
+			PedManager.Instance.pedSyncRate = syncRate;
+			foreach (var ped in Ped.AllPedsEnumerable)
+				ped.ApplySyncRate(syncRate);
 		}
 
 		static void ApplyVehicleSyncRate(float syncRate)
