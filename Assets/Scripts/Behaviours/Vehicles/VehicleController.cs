@@ -42,7 +42,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void Awake()
         {
             //m_vehicle = GetComponent<Vehicle>();
-            this.GetComponent<NetworkTransform>().enabled = ! VehicleManager.Instance.syncVehicleTransformUsingSyncVars;
         }
 
         internal void OnAfterCreateVehicle()
@@ -85,6 +84,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void Update()
         {
             
+            // if syncvars are used for updating transform, then disable NetworkTransform, and vice versa
+            m_vehicle.NetTransform.enabled = ! VehicleManager.Instance.syncVehicleTransformUsingSyncVars;
+
             this.ProcessSyncvars();
 
 
