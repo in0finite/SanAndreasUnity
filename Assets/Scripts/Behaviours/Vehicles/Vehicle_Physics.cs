@@ -138,6 +138,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (m_isServer || this.IsControlledByLocalPlayer)
             {
                 this.UpdateWheelsPhysics();
+            }
+
+            if (m_isServer)
+            {
                 this.AddAntiRollForceToRigidBody();
             }
 
