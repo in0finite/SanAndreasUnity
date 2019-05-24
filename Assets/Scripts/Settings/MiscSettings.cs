@@ -44,6 +44,12 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 
+		OptionsWindow.FloatInput m_vehicleSyncRate = new OptionsWindow.FloatInput ("Vehicle sync rate", 1, 60) {
+			isAvailable = () => VehicleManager.Instance != null,
+			getValue = () => VehicleManager.Instance.vehicleSyncRate,
+			setValue = (value) => { ApplyVehicleSyncRate(value); },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
 		OptionsWindow.BoolInput m_syncVehicleTransformUsingSyncVars = new OptionsWindow.BoolInput ("Sync vehicle transform using syncvars") {
 			isAvailable = () => VehicleManager.Instance != null,
 			getValue = () => VehicleManager.Instance.syncVehicleTransformUsingSyncVars,
@@ -87,8 +93,8 @@ namespace SanAndreasUnity.Settings {
 		{
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
 				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera,
-				m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, m_syncVehiclesAngularVelocity, m_disableVehiclesRigidBodyOnClients,
-				m_syncPedTransformWhileInVehicle,
+				m_vehicleSyncRate, m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, 
+				m_syncVehiclesAngularVelocity, m_disableVehiclesRigidBodyOnClients, m_syncPedTransformWhileInVehicle,
 			};
 
 			foreach (var input in inputs)
@@ -97,6 +103,16 @@ namespace SanAndreasUnity.Settings {
 				OptionsWindow.RegisterInput (input);
 			}
 
+		}
+
+		static void ApplyVehicleSyncRate(float syncRate)
+		{
+			VehicleManager.Instance.vehicleSyncRate = syncRate;
+			foreach (var v in Vehicle.AllVehicles)
+			{
+				foreach (var comp in v.GetComponents<Mirror.NetworkBehaviour>())
+					comp.syncInterval = 1.0f / syncRate;
+			}
 		}
 
 

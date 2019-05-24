@@ -17,6 +17,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public bool syncVehicleTransformUsingSyncVars = false;
 
+        public float vehicleSyncRate = 20;
+
 
         void Awake()
         {
