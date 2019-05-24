@@ -110,8 +110,7 @@ namespace SanAndreasUnity.Settings {
 			VehicleManager.Instance.vehicleSyncRate = syncRate;
 			foreach (var v in Vehicle.AllVehicles)
 			{
-				foreach (var comp in v.GetComponents<Mirror.NetworkBehaviour>())
-					comp.syncInterval = 1.0f / syncRate;
+				v.ApplySyncRate(syncRate);
 			}
 		}
 
