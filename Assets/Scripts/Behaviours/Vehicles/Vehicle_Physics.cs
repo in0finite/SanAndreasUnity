@@ -135,7 +135,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void PhysicsFixedUpdate()
         {
-            if (m_isServer || this.IsControlledByLocalPlayer)
+            if (m_isServer || (this.IsControlledByLocalPlayer && VehicleManager.Instance.controlWheelsOnLocalPlayer))
             {
                 this.UpdateWheelsPhysics();
             }

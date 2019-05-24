@@ -24,9 +24,7 @@
 
 - try to sync rigid body forces, or just clear them on clients
 
-- while camera is disabled, players are constantly respawned
-
-- add ability to change vehicle and ped sync rate
+- add ability to change ped sync rate
 
 - OutOfRangeDestroyer script should be destroyed on clients
 
