@@ -183,6 +183,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             s_vehicles.Remove(this);
         }
 
+        void Start()
+        {
+            this.ApplySyncRate(VehicleManager.Instance.vehicleSyncRate);
+        }
+
         public void SetColors(params int[] clrIndices)
         {
             for (var i = 0; i < 4 && i < clrIndices.Length; ++i)
@@ -423,5 +428,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (blinkerMode != VehicleBlinkerMode.None)
                 blinkerMode = VehicleBlinkerMode.None;
         }
+
+        public void ApplySyncRate(float syncRate)
+        {
+            foreach (var comp in this.GetComponents<Mirror.NetworkBehaviour>())
+			    comp.syncInterval = 1.0f / syncRate;
+            
+            // also assign it to NetworkTransform, because it may be disabled
+            if (this.NetTransform != null)
+                this.NetTransform.syncInterval = 1.0f / syncRate;
+        }
+
     }
 }
