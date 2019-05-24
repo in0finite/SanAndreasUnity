@@ -22,9 +22,13 @@
 
 - **vehicle syncing is too laggy** - local player must control the rigid body ; server will validate position/rotation/velocity changes, and correct them if needed ; when server detects collision, or applies force to rigid body, he will override state of rigid body ;
 
+- try to sync rigid body forces, or just clear them on clients
+
 - while camera is disabled, players are constantly respawned
 
 - add ability to change vehicle and ped sync rate
+
+- OutOfRangeDestroyer script should be destroyed on clients
 
 - stats window
 
