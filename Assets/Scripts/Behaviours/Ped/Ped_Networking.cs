@@ -37,6 +37,17 @@ namespace SanAndreasUnity.Behaviours
             //this.PlayerModel.Load(m_net_pedId);
         }
 
+        void Start_Net()
+        {
+            this.ApplySyncRate(PedManager.Instance.pedSyncRate);
+        }
+
+        public void ApplySyncRate(float newSyncRate)
+        {
+            foreach (var comp in this.GetComponents<NetworkBehaviour>())
+                comp.syncInterval = 1.0f / newSyncRate;
+        }
+
         void Update_Net()
         {
             

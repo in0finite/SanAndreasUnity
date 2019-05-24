@@ -25,6 +25,10 @@ namespace SanAndreasUnity.Behaviours
 		public float AIOutOfRangeTimeout = 5f;
 		public float AIOutOfRangeDistance = 250f;
 
+		[Header("Net")]
+
+		public float pedSyncRate = 10;
+
 
 		void Awake ()
 		{

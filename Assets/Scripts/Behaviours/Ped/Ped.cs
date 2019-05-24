@@ -129,6 +129,8 @@ namespace SanAndreasUnity.Behaviours
         {
             //MySetupLocalPlayer ();
 
+			this.Start_Net();
+
 			this.StartForDamage ();
 
 			if (null == this.CurrentState)
