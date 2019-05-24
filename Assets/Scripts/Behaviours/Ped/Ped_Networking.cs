@@ -42,8 +42,14 @@ namespace SanAndreasUnity.Behaviours
 
         public void ApplySyncRate(float newSyncRate)
         {
+            float newSyncInterval = 1.0f / newSyncRate;
+
             foreach (var comp in this.GetComponents<NetworkBehaviour>())
-                comp.syncInterval = 1.0f / newSyncRate;
+                comp.syncInterval = newSyncInterval;
+
+            // also change it for NetworkTransform, because it can be disabled
+            if (this.NetTransform != null)
+                this.NetTransform.syncInterval = newSyncInterval;
         }
 
         void Update_Net()
