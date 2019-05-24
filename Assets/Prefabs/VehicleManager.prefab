@@ -90,4 +90,7 @@ MonoBehaviour:
   syncAngularVelocity: 1
   disableRigidBodyOnClients: 0
   syncPedTransformWhileInVehicle: 0
-  syncVehicleTransformUsingSyncVars: 0
+  syncVehicleTransformUsingSyncVars: 1
+  controlInputOnLocalPlayer: 1
+  controlWheelsOnLocalPlayer: 1
+  vehicleSyncRate: 20
