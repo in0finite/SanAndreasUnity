@@ -68,6 +68,12 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { VehicleManager.Instance.syncAngularVelocity = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
+		OptionsWindow.BoolInput m_controlWheelsOnLocalPlayer = new OptionsWindow.BoolInput ("Control wheels on local player") {
+			isAvailable = () => VehicleManager.Instance != null,
+			getValue = () => VehicleManager.Instance.controlWheelsOnLocalPlayer,
+			setValue = (value) => { VehicleManager.Instance.controlWheelsOnLocalPlayer = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
 		OptionsWindow.BoolInput m_disableVehiclesRigidBodyOnClients = new OptionsWindow.BoolInput ("Disable vehicle's rigid body on clients") {
 			isAvailable = () => VehicleManager.Instance != null,
 			getValue = () => VehicleManager.Instance.disableRigidBodyOnClients,
@@ -94,7 +100,8 @@ namespace SanAndreasUnity.Settings {
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
 				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera,
 				m_vehicleSyncRate, m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, 
-				m_syncVehiclesAngularVelocity, m_disableVehiclesRigidBodyOnClients, m_syncPedTransformWhileInVehicle,
+				m_syncVehiclesAngularVelocity, m_controlWheelsOnLocalPlayer, m_disableVehiclesRigidBodyOnClients, 
+				m_syncPedTransformWhileInVehicle,
 			};
 
 			foreach (var input in inputs)
