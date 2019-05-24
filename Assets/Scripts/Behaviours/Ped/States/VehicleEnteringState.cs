@@ -42,7 +42,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			if (!VehicleManager.Instance.syncPedTransformWhileInVehicle) {
 				if (ped.NetTransform != null)
-					ped.NetTransform.syncInterval = 0;
+					ped.NetTransform.enabled = false;
 			}
 
 		}
