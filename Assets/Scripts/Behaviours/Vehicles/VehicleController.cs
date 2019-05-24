@@ -104,6 +104,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             
             // local ped is occupying driver seat
 
+            float oldAcc = m_vehicle.Accelerator;
+            float oldBrake = m_vehicle.Braking;
+            float oldSteer = m_vehicle.Steering;
+
 			if (!GameManager.CanPlayerReadInput())
                 this.ResetInput();
             else
@@ -115,6 +119,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             PedSync.Local.SendVehicleInput(m_vehicle.Accelerator, m_vehicle.Steering, m_vehicle.Braking);
 
             // TODO: also send velocity of rigid body
+
+            if (!NetStatus.IsServer && !VehicleManager.Instance.controlInputOnLocalPlayer)
+            {
+                // local player should not control input, so restore old input
+                m_vehicle.Accelerator = oldAcc;
+                m_vehicle.Braking = oldBrake;
+                m_vehicle.Steering = oldSteer;
+            }
 
         }
 
@@ -143,9 +155,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
             else
             {
-                if (!this.IsControlledByLocalPlayer)
+                // apply input
+                if (!this.IsControlledByLocalPlayer || (this.IsControlledByLocalPlayer && !VehicleManager.Instance.controlInputOnLocalPlayer))
                 {
-                    // only assign input on other clients
                     m_vehicle.Accelerator = m_net_acceleration;
                     m_vehicle.Steering = m_net_steering;
                     m_vehicle.Braking = m_net_braking;

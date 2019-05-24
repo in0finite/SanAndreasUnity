@@ -13,6 +13,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public bool disableRigidBodyOnClients = true;
         public bool syncPedTransformWhileInVehicle = false;
         public bool syncVehicleTransformUsingSyncVars = false;
+        public bool controlInputOnLocalPlayer = true;
         public bool controlWheelsOnLocalPlayer = true;
 
         public float vehicleSyncRate = 20;
