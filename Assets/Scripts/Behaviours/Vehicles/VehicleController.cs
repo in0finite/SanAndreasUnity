@@ -149,8 +149,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     m_vehicle.Accelerator = m_net_acceleration;
                     m_vehicle.Steering = m_net_steering;
                     m_vehicle.Braking = m_net_braking;
+                }
 
-                    // only update wheels on other clients
+                // update wheels
+                if (!this.IsControlledByLocalPlayer || (this.IsControlledByLocalPlayer && !VehicleManager.Instance.controlWheelsOnLocalPlayer))
+                {
                     for (int i=0; i < m_vehicle.Wheels.Count && i < m_net_wheelsData.Count; i++) {
                         var w = m_vehicle.Wheels[i];
                         var data = m_net_wheelsData[i];
