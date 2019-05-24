@@ -23,7 +23,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				m_model.IsInVehicle = false;
 				// restore sync interval for network transform
 				if (m_ped.NetTransform != null)
-					m_ped.NetTransform.syncInterval = m_ped.DefaultTransformSyncInterval;
+					m_ped.NetTransform.syncInterval = 1.0f / PedManager.Instance.pedSyncRate;
 			}
 
 			if (this.CurrentVehicleSeat != null && this.CurrentVehicleSeat.OccupyingPed == m_ped)
