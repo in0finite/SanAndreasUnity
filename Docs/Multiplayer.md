@@ -12,10 +12,6 @@
 
 - syncvar for current vehicle and seat - required for newly connected players, who will not get rpc - or... provide additional data when changing state syncvar
 
-- When ped enters vehicle, he changes parent. Is this allowed in Mirror ? Possible solution would be to only change parent of ped model.
-
-- **while ped is in vehicle, network transform should not sync**
-
 - **vehicle is bumping on clients** - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
 
 - when exit vehicle anim is finished on client, it is repeated - change wrap mode
@@ -24,9 +20,9 @@
 
 - try to sync rigid body forces, or just clear them on clients
 
-- add ability to change ped sync rate
+- all settings should take effect immediately, not after spawning a vehicle
 
-- OutOfRangeDestroyer script should be destroyed on clients
+- OutOfRangeDestroyer script should be destroyed on clients ; also, it should not be attached to peds owned by players ;
 
 - stats window
 

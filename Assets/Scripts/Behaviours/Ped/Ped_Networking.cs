@@ -15,7 +15,15 @@ namespace SanAndreasUnity.Behaviours
         float m_timeSinceSentInput = 0f;
 
         [SyncVar(hook=nameof(Net_OnIdChanged))] int m_net_pedId = 0;
-        [SyncVar(hook=nameof(Net_OnStateChanged))] string m_net_state = "";
+
+        struct StateSyncData
+        {
+            public string state;
+            public string additionalData;
+        }
+        [SyncVar(hook=nameof(Net_OnStateChanged))] StateSyncData m_net_stateData;
+        //[SyncVar] string m_net_additionalStateData = "";
+        //[SyncVar(hook=nameof(Net_OnStateChanged))] string m_net_state = "";
         //[SyncVar] Weapon m_net_weapon = null;
         
 
@@ -62,8 +70,17 @@ namespace SanAndreasUnity.Behaviours
                     m_net_pedId = this.PedDef.Id;
 
                 string newStateName = this.CurrentState != null ? this.CurrentState.GetType().Name : "";
-                if (newStateName != m_net_state)
-                    m_net_state = newStateName;
+                if (newStateName != m_net_stateData.state)
+                {
+                    // state changed
+
+                    // obtain additional data from state
+                    byte[] data = this.CurrentState != null ? this.CurrentState.GetAdditionalNetworkData() : null;
+                    // assign additional data
+                    m_net_stateData.additionalData = data != null ? System.Text.Encoding.UTF8.GetString(data) : "";
+                    // assign new state
+                    m_net_stateData.state = newStateName;
+                }
             }
             
             // send input to server
@@ -97,7 +114,7 @@ namespace SanAndreasUnity.Behaviours
                 F.RunExceptionSafe( () => this.PlayerModel.Load(newId) );
         }
 
-        void Net_OnStateChanged(string newStateName)
+        void Net_OnStateChanged(StateSyncData newStateData)
         {
             //Debug.LogFormat("ped (net id {0}) changed state to {1}", this.netId, newStateName);
 
@@ -106,7 +123,7 @@ namespace SanAndreasUnity.Behaviours
             
             //m_net_state = newStateName;
 
-            if (string.IsNullOrEmpty(newStateName))
+            if (string.IsNullOrEmpty(newStateData.state))
             {
                 // don't do anything, this only happens when creating the ped
                 return;
@@ -115,14 +132,15 @@ namespace SanAndreasUnity.Behaviours
             // forcefully change the state
 
             F.RunExceptionSafe( () => {
-                var newState = this.States.FirstOrDefault(state => state.GetType().Name == newStateName);
+                var newState = this.States.FirstOrDefault(state => state.GetType().Name == newStateData.state);
                 if (null == newState)
                 {
-                    Debug.LogErrorFormat("New ped state '{0}' could not be found", newStateName);
+                    Debug.LogErrorFormat("New ped state '{0}' could not be found", newStateData.state);
                 }
                 else
                 {
-                    newState.OnSwitchedStateByServer();
+                    byte[] data = string.IsNullOrEmpty(newStateData.additionalData) ? null : System.Text.Encoding.UTF8.GetBytes(newStateData.additionalData);
+                    newState.OnSwitchedStateByServer(data);
                 }
             });
 

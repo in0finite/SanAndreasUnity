@@ -18,6 +18,10 @@
 
 - Don't block camera with peds
 
+- Add more obstacles in demo scene
+
+- Add option to change fixed delta time
+
 - Crouching: adjust camera aim offset ? ;
 
 - don't fade high LOD meshes
