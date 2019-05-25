@@ -37,7 +37,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public override void OnSwitchedStateByServer(byte[] data)
 		{
-			// just in case, reset this variable
 			m_immediate = false;
 
 			base.OnSwitchedStateByServer(data);
@@ -83,7 +82,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			this.CurrentVehicleSeat = vehicle.GetSeat (seatAlignment);
 			m_immediate = immediate;
 
-			// switch state here
+			// switch state
 			m_ped.SwitchState<VehicleEnteringState>();
 		}
 
@@ -114,17 +113,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				vehicle.IsNightToggled = true;
 			else if (vehicle.IsNightToggled && !WorldController.IsNight)
 				vehicle.IsNightToggled = false;
-
-
-			// send message to clients
-			if (m_isServer)
-			{
-				if (!immediate)
-				{
-					foreach(var pedSync in Net.Player.AllPlayers.Select(p => p.GetComponent<Net.PedSync>()))
-						pedSync.PedStartedEnteringVehicle(m_ped);
-				}
-			}
 
 
 			m_coroutine = StartCoroutine (EnterVehicleAnimation (seat, immediate));

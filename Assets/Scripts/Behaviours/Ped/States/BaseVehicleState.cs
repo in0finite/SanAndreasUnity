@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// extract vehicle and seat from data
 			var reader = new Mirror.NetworkReader(data);
 			GameObject vehicleGo = reader.ReadGameObject();
-			Vehicle.SeatAlignment seatAlignment = (Vehicle.SeatAlignment) reader.ReadByte();
+			Vehicle.SeatAlignment seatAlignment = (Vehicle.SeatAlignment) reader.ReadSByte();
 
 			// assign params
 			this.CurrentVehicle = vehicleGo != null ? vehicleGo.GetComponent<Vehicle>() : null;
@@ -27,6 +27,20 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// switch state
 			m_ped.SwitchState(this.GetType());
+		}
+
+		public override byte[] GetAdditionalNetworkData()
+		{
+			var writer = new Mirror.NetworkWriter();
+			if (this.CurrentVehicle != null) {
+				writer.Write(this.CurrentVehicle.gameObject);
+				writer.Write((sbyte)this.CurrentVehicleSeatAlignment);
+			} else {
+				writer.Write((GameObject)null);
+				writer.Write((sbyte)Vehicle.SeatAlignment.None);
+			}
+			
+			return writer.ToArray();
 		}
 
 		protected void Cleanup()
