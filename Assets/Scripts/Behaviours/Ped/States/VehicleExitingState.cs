@@ -72,17 +72,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			//	Net.NetManager.RemoveAuthority(this.CurrentVehicle.gameObject);
 			}
 
-			// send message to clients
-			if (m_isServer)
-			{
-				if (!m_isExitingImmediately)
-				{
-					// We don't need to send this message. If ped exits immediately, he will switch to stand state.
-					// If he starts exiting, he will change state to this one. Either way, switching state on client
-					// will be performed ok.
-				}
-			}
-
 			m_coroutine = StartCoroutine (ExitVehicleAnimation (m_isExitingImmediately));
 
 		}
