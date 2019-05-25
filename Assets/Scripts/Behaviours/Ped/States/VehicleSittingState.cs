@@ -11,6 +11,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	{
 
 
+		public override void OnBecameActive()
+		{
+			base.OnBecameActive();
+			this.EnterVehicleInternal();
+		}
+
 		public override void OnBecameInactive()
 		{
 			this.Cleanup();
@@ -25,11 +31,16 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public void EnterVehicle(Vehicle vehicle, Vehicle.Seat seat)
 		{
-
 			this.CurrentVehicle = vehicle;
 			this.CurrentVehicleSeat = seat;
 
 			m_ped.SwitchState<VehicleSittingState> ();
+		}
+
+		void EnterVehicleInternal()
+		{
+			Vehicle vehicle = this.CurrentVehicle;
+			Vehicle.Seat seat = this.CurrentVehicleSeat;
 
 			VehicleEnteringState.PreparePedForVehicle(m_ped, vehicle, seat);
 
@@ -40,13 +51,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			else
 			{
 				m_model.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
-			}
-
-			// send message to clients
-			if (m_isServer)
-			{
-				foreach(var pedSync in Net.Player.AllPlayers.Select(p => p.GetComponent<Net.PedSync>()))
-					pedSync.PedEnteredVehicle(m_ped);
 			}
 
 		}
