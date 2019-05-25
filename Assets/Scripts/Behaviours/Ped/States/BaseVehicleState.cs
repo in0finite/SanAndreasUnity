@@ -14,6 +14,21 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return this.CurrentVehicleSeat.Alignment; } }
 
 
+		public override void OnSwitchedStateByServer(byte[] data)
+		{
+			// extract vehicle and seat from data
+			var reader = new Mirror.NetworkReader(data);
+			GameObject vehicleGo = reader.ReadGameObject();
+			Vehicle.SeatAlignment seatAlignment = (Vehicle.SeatAlignment) reader.ReadByte();
+
+			// assign params
+			this.CurrentVehicle = vehicleGo != null ? vehicleGo.GetComponent<Vehicle>() : null;
+			this.CurrentVehicleSeat = this.CurrentVehicle != null ? this.CurrentVehicle.GetSeat(seatAlignment) : null;
+
+			// switch state
+			m_ped.SwitchState(this.GetType());
+		}
+
 		protected void Cleanup()
 		{
 			if (!m_ped.IsInVehicle)

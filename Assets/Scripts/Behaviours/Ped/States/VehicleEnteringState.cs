@@ -11,11 +11,20 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	public class VehicleEnteringState : BaseVehicleState
 	{
 		Coroutine m_coroutine;
+		bool m_immediate = false;
 
+
+		public override void OnBecameActive()
+		{
+			base.OnBecameActive();
+			this.EnterVehicleInternal();
+		}
 
 		public override void OnBecameInactive()
 		{
 			// restore everything
+
+			m_immediate = false;
 
 			this.Cleanup();
 
@@ -24,6 +33,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_coroutine = null;
 
 			base.OnBecameInactive();
+		}
+
+		public override void OnSwitchedStateByServer(byte[] data)
+		{
+			// just in case, reset this variable
+			m_immediate = false;
+
+			base.OnSwitchedStateByServer(data);
 		}
 
 		public static void PreparePedForVehicle(Ped ped, Vehicle vehicle, Vehicle.Seat seat)
@@ -61,15 +78,23 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		internal void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate)
 		{
-			
-			Vehicle.Seat seat = vehicle.GetSeat (seatAlignment);
+			// first assign params
+			this.CurrentVehicle = vehicle;
+			this.CurrentVehicleSeat = vehicle.GetSeat (seatAlignment);
+			m_immediate = immediate;
 
 			// switch state here
 			m_ped.SwitchState<VehicleEnteringState>();
+		}
 
-			this.CurrentVehicle = vehicle;
-			this.CurrentVehicleSeat = seat;
+		void EnterVehicleInternal()
+		{
 			
+			Vehicle vehicle = this.CurrentVehicle;
+			Vehicle.Seat seat = this.CurrentVehicleSeat;
+			bool immediate = m_immediate;
+			
+
 			PreparePedForVehicle(m_ped, vehicle, seat);
 
 			if (seat.IsDriver)
