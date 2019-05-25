@@ -32,7 +32,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameInactive();
 		}
 
-		public override void OnSwitchedStateByServer()
+		public override void OnSwitchedStateByServer(byte[] data)
 		{
 			// obtain current vehicle and seat from Ped
 			this.CurrentVehicle = m_ped.CurrentVehicle;
