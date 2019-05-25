@@ -12,6 +12,8 @@
 
 - syncvar for current vehicle and seat - required for newly connected players, who will not get rpc - or... provide additional data when changing state syncvar
 
+- disable vehicle damage on both server and client
+
 - **vehicle is bumping on clients** - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
 
 - when exit vehicle anim is finished on client, it is repeated - change wrap mode
