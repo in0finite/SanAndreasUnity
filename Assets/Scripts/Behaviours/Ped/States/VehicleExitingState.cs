@@ -34,14 +34,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public override void OnSwitchedStateByServer(byte[] data)
 		{
-			// obtain current vehicle and seat from Ped
-			this.CurrentVehicle = m_ped.CurrentVehicle;
-			this.CurrentVehicleSeat = m_ped.CurrentVehicleSeat;
-
 			m_isExitingImmediately = false;
 
-			// switch state
-			m_ped.SwitchState(this.GetType());
+			base.OnSwitchedStateByServer(data);
 		}
 
 		public void ExitVehicle(bool immediate = false)
