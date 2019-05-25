@@ -26,6 +26,8 @@ namespace SanAndreasUnity.Behaviours
         //[SyncVar(hook=nameof(Net_OnStateChanged))] string m_net_state = "";
         //[SyncVar] Weapon m_net_weapon = null;
         
+        public static int NumStateChangesReceived { get; private set; }
+
 
 
         void Awake_Net()
@@ -128,6 +130,8 @@ namespace SanAndreasUnity.Behaviours
                 // don't do anything, this only happens when creating the ped
                 return;
             }
+
+            NumStateChangesReceived ++;
 
             // forcefully change the state
 
