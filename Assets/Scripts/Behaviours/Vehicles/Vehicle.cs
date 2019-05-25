@@ -37,6 +37,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         static List<Vehicle> s_vehicles = new List<Vehicle>();
         public static IEnumerable<Vehicle> AllVehicles => s_vehicles;
+        public static int NumVehicles => s_vehicles.Count;
 
         private static int _sLayer = -1;
 

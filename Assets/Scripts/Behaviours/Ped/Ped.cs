@@ -25,6 +25,7 @@ namespace SanAndreasUnity.Behaviours
 		private static List<Ped> s_allPeds = new List<Ped> ();
 		public static Ped[] AllPeds { get { return s_allPeds.ToArray (); } }
 		public static IEnumerable<Ped> AllPedsEnumerable => s_allPeds;
+		public static int NumPeds => s_allPeds.Count;
 
 		private WeaponHolder m_weaponHolder;
 		public WeaponHolder WeaponHolder { get { return m_weaponHolder; } }
