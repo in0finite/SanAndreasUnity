@@ -1091,6 +1091,7 @@ GameObject:
   - component: {fileID: 114940213983707650}
   - component: {fileID: 9169507653760086162}
   - component: {fileID: 8325585519739458796}
+  - component: {fileID: 7093715299490892338}
   m_Layer: 0
   m_Name: Windows
   m_TagString: Untagged
@@ -1222,3 +1223,29 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 1
+--- !u!114 &7093715299490892338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901320160272788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7709e8544ae081652bcd6ab571cec504, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: Stats
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
+  m_destroyOnClose: 0
+  windowRect:
+    serializedVersion: 2
+    x: 57.5
+    y: 78.75
+    width: 115
+    height: 157.5
+  useScrollView: 1
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
