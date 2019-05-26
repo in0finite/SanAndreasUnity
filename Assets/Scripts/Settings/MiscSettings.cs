@@ -90,7 +90,7 @@ namespace SanAndreasUnity.Settings {
 		OptionsWindow.BoolInput m_disableVehiclesRigidBodyOnClients = new OptionsWindow.BoolInput ("Disable vehicle's rigid body on clients") {
 			isAvailable = () => VehicleManager.Instance != null,
 			getValue = () => VehicleManager.Instance.disableRigidBodyOnClients,
-			setValue = (value) => { VehicleManager.Instance.disableRigidBodyOnClients = value; },
+			setValue = (value) => { ApplyRigidBodyState(value); },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 		OptionsWindow.BoolInput m_syncPedTransformWhileInVehicle = new OptionsWindow.BoolInput ("Sync ped transform while in vehicle") {
@@ -140,6 +140,13 @@ namespace SanAndreasUnity.Settings {
 			{
 				v.ApplySyncRate(syncRate);
 			}
+		}
+
+		static void ApplyRigidBodyState(bool bDisabled)
+		{
+			VehicleManager.Instance.disableRigidBodyOnClients = bDisabled;
+			foreach (var v in Vehicle.AllVehicles)
+				v.GetComponent<VehicleController>().EnableOrDisableRigidBody();
 		}
 
 

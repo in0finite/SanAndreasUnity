@@ -273,6 +273,19 @@ namespace SanAndreasUnity.Utilities
 		}
 
 
+        public static void EnableRigidBody(Rigidbody rb)
+        {
+            rb.isKinematic = false;
+            rb.detectCollisions = true;
+        }
+
+        public static void DisableRigidBody(Rigidbody rb)
+        {
+            rb.isKinematic = true;
+            rb.detectCollisions = false;
+        }
+
+
         public static object FromHex(this string hexString, Type type, CultureInfo info)
         {
             var argTypes = new[] { typeof(string), typeof(NumberStyles), typeof(IFormatProvider) };

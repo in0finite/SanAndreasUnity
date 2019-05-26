@@ -210,21 +210,19 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             m_vehicle.Braking = brake;
         }
 
-        void EnableOrDisableRigidBody()
+        public void EnableOrDisableRigidBody()
         {
             if (NetStatus.IsServer || this.IsControlledByLocalPlayer)
             {
                 // enable rigid body
-                m_vehicle.RigidBody.isKinematic = false;
-                m_vehicle.RigidBody.detectCollisions = true;
+                F.EnableRigidBody(m_vehicle.RigidBody);
             }
             else
             {
                 // disable rigid body
                 if (VehicleManager.Instance.disableRigidBodyOnClients)
                 {
-                    m_vehicle.RigidBody.isKinematic = true;
-                    m_vehicle.RigidBody.detectCollisions = false;
+                    F.DisableRigidBody(m_vehicle.RigidBody);
                 }
             }
         }
