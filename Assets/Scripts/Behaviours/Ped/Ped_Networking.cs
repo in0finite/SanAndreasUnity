@@ -76,6 +76,8 @@ namespace SanAndreasUnity.Behaviours
                 {
                     // state changed
 
+                    m_net_stateData = new StateSyncData();
+
                     // obtain additional data from state
                     byte[] data = this.CurrentState != null ? this.CurrentState.GetAdditionalNetworkData() : null;
                     // assign additional data
