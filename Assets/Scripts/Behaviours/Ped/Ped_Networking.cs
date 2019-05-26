@@ -21,7 +21,7 @@ namespace SanAndreasUnity.Behaviours
             public string state;
             public string additionalData;
         }
-        [SyncVar(hook=nameof(Net_OnStateChanged))] StateSyncData m_net_stateData;
+        [SyncVar(hook=nameof(Net_OnStateChanged))] StateSyncData m_net_stateData = new StateSyncData();
         //[SyncVar] string m_net_additionalStateData = "";
         //[SyncVar(hook=nameof(Net_OnStateChanged))] string m_net_state = "";
         //[SyncVar] Weapon m_net_weapon = null;
