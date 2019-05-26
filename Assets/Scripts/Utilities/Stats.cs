@@ -16,6 +16,8 @@ namespace SanAndreasUnity.Utilities
         public static IEnumerable<KeyValuePair<string, List<Entry>>> Entries => s_entries;
         public static IEnumerable<string> Categories => s_entries.Select(pair => pair.Key);
 
+        public static UnityEngine.Rect DisplayRect { get; set; }
+
 
         public static void RegisterStat(Entry entry)
         {

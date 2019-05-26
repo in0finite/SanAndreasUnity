@@ -31,11 +31,12 @@ namespace SanAndreasUnity.UI
 
 		protected override void OnWindowGUI ()
 		{
-            var categories = Stats.Categories.ToArray();
+            Utilities.Stats.DisplayRect = this.windowRect;
+            var categories = Utilities.Stats.Categories.ToArray();
             m_tabIndex = GUIUtils.TabsControl(m_tabIndex, categories);
             if (m_tabIndex >= 0)
             {
-                var stats = Stats.Entries.ElementAt(m_tabIndex).Value;
+                var stats = Utilities.Stats.Entries.ElementAt(m_tabIndex).Value;
                 foreach (var stat in stats)
                 {
                     if (!string.IsNullOrEmpty(stat.text))
