@@ -21,9 +21,9 @@ namespace SanAndreasUnity.Behaviours
             public string state;
             public string additionalData;
         }
-        [SyncVar(hook=nameof(Net_OnStateChanged))] StateSyncData m_net_stateData = new StateSyncData();
-        //[SyncVar] string m_net_additionalStateData = "";
-        //[SyncVar(hook=nameof(Net_OnStateChanged))] string m_net_state = "";
+        //[SyncVar(hook=nameof(Net_OnStateChanged))] StateSyncData m_net_stateData;
+        [SyncVar] string m_net_additionalStateData = "";
+        [SyncVar(hook=nameof(Net_OnStateChanged))] string m_net_state = "";
         //[SyncVar] Weapon m_net_weapon = null;
         
         public static int NumStateChangesReceived { get; private set; }
@@ -43,6 +43,8 @@ namespace SanAndreasUnity.Behaviours
                 return;
 
             //this.PlayerModel.Load(m_net_pedId);
+
+            this.ChangeStateBasedOnSyncData(new StateSyncData(){state = m_net_state, additionalData = m_net_additionalStateData});
         }
 
         void Start_Net()
@@ -72,18 +74,20 @@ namespace SanAndreasUnity.Behaviours
                     m_net_pedId = this.PedDef.Id;
 
                 string newStateName = this.CurrentState != null ? this.CurrentState.GetType().Name : "";
-                if (newStateName != m_net_stateData.state)
+                if (newStateName != m_net_state)
                 {
                     // state changed
 
-                    m_net_stateData = new StateSyncData();
+                    Debug.LogFormat("Updating state syncvar - ped {0}, new state {1}, old state {2}", this.netId, newStateName, m_net_state);
+
+                    //m_net_stateData = new StateSyncData();
 
                     // obtain additional data from state
                     byte[] data = this.CurrentState != null ? this.CurrentState.GetAdditionalNetworkData() : null;
                     // assign additional data
-                    m_net_stateData.additionalData = data != null ? System.Text.Encoding.UTF8.GetString(data) : "";
+                    m_net_additionalStateData = data != null ? System.Text.Encoding.UTF8.GetString(data) : "";
                     // assign new state
-                    m_net_stateData.state = newStateName;
+                    m_net_state = newStateName;
                 }
             }
             
@@ -118,13 +122,15 @@ namespace SanAndreasUnity.Behaviours
                 F.RunExceptionSafe( () => this.PlayerModel.Load(newId) );
         }
 
-        void Net_OnStateChanged(StateSyncData newStateData)
+        void Net_OnStateChanged(string newStateName)
         {
-            //Debug.LogFormat("ped (net id {0}) changed state to {1}", this.netId, newStateName);
-
             if (this.isServer)
                 return;
-            
+
+            StateSyncData newStateData = new StateSyncData(){state = newStateName, additionalData = m_net_additionalStateData};
+
+            Debug.LogFormat("Net_OnStateChanged(): ped {0} changed state to {1}", this.netId, newStateData.state);
+
             //m_net_state = newStateName;
 
             if (string.IsNullOrEmpty(newStateData.state))
@@ -135,6 +141,12 @@ namespace SanAndreasUnity.Behaviours
 
             NumStateChangesReceived ++;
 
+            this.ChangeStateBasedOnSyncData(newStateData);
+
+        }
+
+        void ChangeStateBasedOnSyncData(StateSyncData newStateData)
+        {
             // forcefully change the state
 
             F.RunExceptionSafe( () => {
@@ -145,11 +157,11 @@ namespace SanAndreasUnity.Behaviours
                 }
                 else
                 {
+                    Debug.LogFormat("Switching state based on sync data - ped: {0}, state: {1}", this.netId, newState.GetType().Name);
                     byte[] data = string.IsNullOrEmpty(newStateData.additionalData) ? null : System.Text.Encoding.UTF8.GetBytes(newStateData.additionalData);
                     newState.OnSwitchedStateByServer(data);
                 }
             });
-
         }
 
     }

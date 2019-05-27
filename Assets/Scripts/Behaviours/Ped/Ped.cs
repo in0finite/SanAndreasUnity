@@ -135,8 +135,11 @@ namespace SanAndreasUnity.Behaviours
 
 			this.StartForDamage ();
 
-			if (null == this.CurrentState)
-				this.SwitchState<Peds.States.StandState> ();
+			if (NetStatus.IsServer)
+			{
+				if (null == this.CurrentState)
+					this.SwitchState<Peds.States.StandState> ();
+			}
 
 			// register Cell focus point
 			if (this.Cell != null)
