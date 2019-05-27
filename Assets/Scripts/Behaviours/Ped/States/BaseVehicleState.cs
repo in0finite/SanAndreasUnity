@@ -54,16 +54,20 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			yield return new WaitForEndOfFrame();
 
-			if (oldState != m_ped.CurrentState)	// state changed in the meantime
+			if (oldState != m_ped.CurrentState)
 			{
-				Debug.LogFormat("state changed in the meantime, old: {0}, new: {1}", oldState != null ? oldState.GetType().Name : "",
-					m_ped.CurrentState != null ? m_ped.CurrentState.GetType().Name : "");
+				// state changed in the meantime
+				// did server change it ? or syncvar hooks invoked twice ? either way, we should stop here
+
+				// Debug.LogFormat("state changed in the meantime, old: {0}, new: {1}", oldState != null ? oldState.GetType().Name : "",
+				// 	m_ped.CurrentState != null ? m_ped.CurrentState.GetType().Name : "");
 				yield break;
 			}
 
+			// read current vehicle here - it should've been spawned by now
 			this.ReadNetworkData(data);
 
-			Debug.LogFormat("Switching to state {0}, vehicle: {1}, seat: {2}", this.GetType().Name, this.CurrentVehicle, this.CurrentVehicleSeat);
+		//	Debug.LogFormat("Switching to state {0}, vehicle: {1}, seat: {2}", this.GetType().Name, this.CurrentVehicle, this.CurrentVehicleSeat);
 
 			// now we can enter this state
 			m_ped.SwitchState(this.GetType());
@@ -113,6 +117,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (m_ped.IsInVehicle)
 				return false;
 
+			// this should be removed
 			if (m_ped.IsAiming || m_ped.WeaponHolder.IsFiring)
 				return false;
 

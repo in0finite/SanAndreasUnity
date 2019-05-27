@@ -20,13 +20,17 @@
 
 - **vehicle syncing is too laggy** - local player must control the rigid body ; server will validate position/rotation/velocity changes, and correct them if needed ; when server detects collision, or applies force to rigid body, he will override state of rigid body ;
 
-- try to sync rigid body forces, or just clear them on clients
+- try to sync rigid body forces, or just clear them on clients ? - will this help ? are forces cleared at the end of frame by physics engine ?
 
-- all settings should take effect immediately, not after spawning a vehicle
+- add option to disable rigid body on local player ? - applying position/rotation from syncvar hooks needs to be changed ?
+
+- add option to disable wheel colliders
+
+- add current ped state to player stats
+
+- change default ped sync rate to 20
 
 - OutOfRangeDestroyer script should be destroyed on clients ; also, it should not be attached to peds owned by players ;
-
-- stats window
 
 - display a message to user when network is stopped
 
