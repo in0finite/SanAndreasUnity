@@ -195,6 +195,13 @@ namespace SanAndreasUnity.Utilities
 			return comp.gameObject.GetComponentOrLogError<T> ();
 		}
 
+        public static void DestroyComponent<T> (this GameObject go) where T : Component
+		{
+			T comp = go.GetComponent<T> ();
+			if (comp != null)
+                UnityEngine.Object.Destroy(comp);
+		}
+
         public static void MakeChild(this Transform parent, GameObject[] children)
         {
             MakeChild(parent, children, null);
