@@ -16,6 +16,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public override void OnSwitchedStateByServer(byte[] data)
 		{
+			// we need to wait for end of frame, because vehicle may not be spawned yet (which can happen if client
+			// just connected to server)
+			this.StartCoroutine(this.SwitchStateAtEndOfFrame(data));
+		}
+
+		protected void ReadNetworkData(byte[] data)
+		{
 			// extract vehicle and seat from data
 			var reader = new Mirror.NetworkReader(data);
 			GameObject vehicleGo = reader.ReadGameObject();
@@ -25,8 +32,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			this.CurrentVehicle = vehicleGo != null ? vehicleGo.GetComponent<Vehicle>() : null;
 			this.CurrentVehicleSeat = this.CurrentVehicle != null ? this.CurrentVehicle.GetSeat(seatAlignment) : null;
 
-			// switch state
-			m_ped.SwitchState(this.GetType());
 		}
 
 		public override byte[] GetAdditionalNetworkData()
@@ -41,6 +46,27 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			}
 			
 			return writer.ToArray();
+		}
+
+		System.Collections.IEnumerator SwitchStateAtEndOfFrame(byte[] data)
+		{
+			var oldState = m_ped.CurrentState;
+
+			yield return new WaitForEndOfFrame();
+
+			if (oldState != m_ped.CurrentState)	// state changed in the meantime
+			{
+				Debug.LogFormat("state changed in the meantime, old: {0}, new: {1}", oldState != null ? oldState.GetType().Name : "",
+					m_ped.CurrentState != null ? m_ped.CurrentState.GetType().Name : "");
+				yield break;
+			}
+
+			this.ReadNetworkData(data);
+
+			Debug.LogFormat("Switching to state {0}, vehicle: {1}, seat: {2}", this.GetType().Name, this.CurrentVehicle, this.CurrentVehicleSeat);
+
+			// now we can enter this state
+			m_ped.SwitchState(this.GetType());
 		}
 
 		protected void Cleanup()
