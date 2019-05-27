@@ -160,6 +160,12 @@ namespace SanAndreasUnity.Behaviours
 				}
 			}
 
+			if (!NetStatus.IsServer)
+			{
+				// destroy OutOfRangeDestroyer on clients - server should handle destroying peds which are not in range
+				this.gameObject.DestroyComponent<OutOfRangeDestroyer>();
+			}
+
         }
 
 		void OnEnable ()
