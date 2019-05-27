@@ -497,6 +497,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             // Add vehicle damage
 
+            /*
             var dam = gameObject.AddComponent<VehicleDamage>();
             dam.damageParts = new Transform[] { transform.GetChild(0).Find("engine") };
             dam.deformMeshes = gameObject.GetComponentsInChildren<MeshFilter>();
@@ -508,8 +509,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             //OptimizeVehicle();
 
             dam.deformColliders = gameObject.GetComponentsInChildren<MeshCollider>();
+            */
+            
 
             gameObject.SetLayerRecursive(Layer);
+
         }
     }
 }
