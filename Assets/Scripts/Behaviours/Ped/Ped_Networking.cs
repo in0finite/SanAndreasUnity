@@ -78,7 +78,7 @@ namespace SanAndreasUnity.Behaviours
                 {
                     // state changed
 
-                    Debug.LogFormat("Updating state syncvar - ped {0}, new state {1}, old state {2}", this.netId, newStateName, m_net_state);
+                    //Debug.LogFormat("Updating state syncvar - ped {0}, new state {1}, old state {2}", this.netId, newStateName, m_net_state);
 
                     //m_net_stateData = new StateSyncData();
 
@@ -129,15 +129,7 @@ namespace SanAndreasUnity.Behaviours
 
             StateSyncData newStateData = new StateSyncData(){state = newStateName, additionalData = m_net_additionalStateData};
 
-            Debug.LogFormat("Net_OnStateChanged(): ped {0} changed state to {1}", this.netId, newStateData.state);
-
-            //m_net_state = newStateName;
-
-            if (string.IsNullOrEmpty(newStateData.state))
-            {
-                // don't do anything, this only happens when creating the ped
-                return;
-            }
+            //Debug.LogFormat("Net_OnStateChanged(): ped {0} changed state to {1}", this.netId, newStateData.state);
 
             NumStateChangesReceived ++;
 
@@ -147,6 +139,13 @@ namespace SanAndreasUnity.Behaviours
 
         void ChangeStateBasedOnSyncData(StateSyncData newStateData)
         {
+
+            if (string.IsNullOrEmpty(newStateData.state))
+            {
+                // don't do anything, this only happens when creating the ped
+                return;
+            }
+
             // forcefully change the state
 
             F.RunExceptionSafe( () => {
@@ -157,11 +156,12 @@ namespace SanAndreasUnity.Behaviours
                 }
                 else
                 {
-                    Debug.LogFormat("Switching state based on sync data - ped: {0}, state: {1}", this.netId, newState.GetType().Name);
+                    //Debug.LogFormat("Switching state based on sync data - ped: {0}, state: {1}", this.netId, newState.GetType().Name);
                     byte[] data = string.IsNullOrEmpty(newStateData.additionalData) ? null : System.Text.Encoding.UTF8.GetBytes(newStateData.additionalData);
                     newState.OnSwitchedStateByServer(data);
                 }
             });
+            
         }
 
     }
