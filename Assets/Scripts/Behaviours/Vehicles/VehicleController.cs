@@ -87,6 +87,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             // if syncvars are used for updating transform, then disable NetworkTransform, and vice versa
             m_vehicle.NetTransform.enabled = ! VehicleManager.Instance.syncVehicleTransformUsingSyncVars;
 
+            // update status of rigid body
+            this.EnableOrDisableRigidBody();
+
+
             this.ProcessSyncvars();
 
 
