@@ -8,8 +8,8 @@ namespace SanAndreasUnity.Stats
 {
     public class PlayerStats : MonoBehaviour
     {
-        float[] m_widths = new float[]{80, 15, 15, 20, 60, 15, 15};
-        string[] m_columnNames = new string[]{"Address", "Net id", "Ped net id", "Ped model", "Ped state", "Health", "Ping"};
+        float[] m_widths = new float[]{80, 15, 15, 20, 60, 15};
+        string[] m_columnNames = new string[]{"Address", "Net id", "Ped net id", "Ped model", "Ped state", "Health"};
 
 
         void Start()
@@ -38,7 +38,6 @@ namespace SanAndreasUnity.Stats
                 GUILayout.Label(p.OwnedPed != null && p.OwnedPed.PedDef != null ? p.OwnedPed.PedDef.ModelName : "", GUILayout.Width(GetWidth(3)));
                 GUILayout.Label(p.OwnedPed != null && p.OwnedPed.CurrentState != null ? p.OwnedPed.CurrentState.GetType().Name : "", GUILayout.Width(GetWidth(4)));
                 GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.Health.ToString() : "", GUILayout.Width(GetWidth(5)));
-                GUILayout.Label("", GUILayout.Width(GetWidth(6)));
 
                 GUILayout.EndHorizontal();
             }
