@@ -9,6 +9,7 @@ namespace SanAndreasUnity.UI
 	public class StatsWindow : PauseMenuWindow
     {
 		int m_tabIndex = 0;
+        Vector2 m_scrollViewPos = Vector2.zero;
 
 
 		StatsWindow()
@@ -16,7 +17,7 @@ namespace SanAndreasUnity.UI
 			// set default parameters
 
 			this.windowName = "Stats";
-			this.useScrollView = true;
+			this.useScrollView = false;
 
 		}
 
@@ -36,6 +37,7 @@ namespace SanAndreasUnity.UI
             m_tabIndex = GUIUtils.TabsControl(m_tabIndex, categories);
             if (m_tabIndex >= 0)
             {
+                m_scrollViewPos = GUILayout.BeginScrollView(m_scrollViewPos);
                 var stats = Utilities.Stats.Entries.ElementAt(m_tabIndex).Value;
                 foreach (var stat in stats)
                 {
@@ -44,6 +46,7 @@ namespace SanAndreasUnity.UI
                     if (stat.onGUI != null)
                         stat.onGUI();
                 }
+                GUILayout.EndScrollView();
             }
 		}
 
