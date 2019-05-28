@@ -212,19 +212,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public void EnableOrDisableRigidBody()
         {
-            if (NetStatus.IsServer || this.IsControlledByLocalPlayer)
+            if (NetStatus.IsServer)
             {
-                // enable rigid body
                 F.EnableRigidBody(m_vehicle.RigidBody);
+                return;
             }
+            
+            if (VehicleManager.Instance.whenToDisableRigidBody.Matches(this.IsControlledByLocalPlayer, !NetStatus.IsServer))
+                F.DisableRigidBody(m_vehicle.RigidBody);
             else
-            {
-                // disable rigid body
-                if (VehicleManager.Instance.disableRigidBodyOnClients)
-                {
-                    F.DisableRigidBody(m_vehicle.RigidBody);
-                }
-            }
+                F.EnableRigidBody(m_vehicle.RigidBody);
+            
         }
 
         void OnNetPositionChanged(Vector3 pos)

@@ -87,9 +87,10 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { VehicleManager.Instance.controlInputOnLocalPlayer = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
-		OptionsWindow.BoolInput m_disableVehiclesRigidBodyOnClients = new OptionsWindow.BoolInput ("Disable vehicle's rigid body on clients") {
+		OptionsWindow.EnumInput<WhenOnClient> m_whenToDisableVehiclesRigidBody = new OptionsWindow.EnumInput<WhenOnClient> () {
+			description = "When to disable vehicle rigid body on clients",
 			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.disableRigidBodyOnClients,
+			getValue = () => VehicleManager.Instance.whenToDisableRigidBody,
 			setValue = (value) => { ApplyRigidBodyState(value); },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
@@ -115,7 +116,7 @@ namespace SanAndreasUnity.Settings {
 				m_pedSyncRate,
 				m_vehicleSyncRate, m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, 
 				m_syncVehiclesAngularVelocity, m_controlWheelsOnLocalPlayer, m_controlVehicleInputOnLocalPlayer, 
-				m_disableVehiclesRigidBodyOnClients, m_syncPedTransformWhileInVehicle,
+				m_whenToDisableVehiclesRigidBody, m_syncPedTransformWhileInVehicle,
 			};
 
 			foreach (var input in inputs)
@@ -142,9 +143,9 @@ namespace SanAndreasUnity.Settings {
 			}
 		}
 
-		static void ApplyRigidBodyState(bool bDisabled)
+		static void ApplyRigidBodyState(WhenOnClient when)
 		{
-			VehicleManager.Instance.disableRigidBodyOnClients = bDisabled;
+			VehicleManager.Instance.whenToDisableRigidBody = when;
 			foreach (var v in Vehicle.AllVehicles)
 				v.GetComponent<VehicleController>().EnableOrDisableRigidBody();
 		}
