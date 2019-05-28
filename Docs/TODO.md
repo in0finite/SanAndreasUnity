@@ -32,8 +32,6 @@
 
 - Split code into separate assemblies (using asmdef files)
 
-- Anims must be played by their name
-
 - Vehicles window: it's too slow - use pages ; display additional info ;
 
 - Non-working ped model ids: WMYST, 0, special peds at the end, 

@@ -1196,7 +1196,7 @@ MonoBehaviour:
   m_registerInMainMenuOnStart: 1
   m_availableScenes:
   - Main
-  - ModelViewer
+  - Demo
 --- !u!114 &8325585519739458796
 MonoBehaviour:
   m_ObjectHideFlags: 0
