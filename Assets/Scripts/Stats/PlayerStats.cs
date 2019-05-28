@@ -10,6 +10,7 @@ namespace SanAndreasUnity.Stats
     {
         float[] m_widths = new float[]{80, 15, 15, 20, 60, 15};
         string[] m_columnNames = new string[]{"Address", "Net id", "Ped net id", "Ped model", "Ped state", "Health"};
+        int m_currentIndex = 0;
 
 
         void Start()
@@ -24,27 +25,29 @@ namespace SanAndreasUnity.Stats
 
             // columns
             GUILayout.BeginHorizontal();
+            m_currentIndex = 0;
             for (int i=0; i < m_columnNames.Length; i++)
-                GUILayout.Button(m_columnNames[i], GUILayout.Width(GetWidth(i)));
+                GUILayout.Button(m_columnNames[i], GUILayout.Width(GetWidth()));
             GUILayout.EndHorizontal();
 
             foreach (var p in Player.AllPlayersEnumerable)
             {
                 GUILayout.BeginHorizontal();
 
-                GUILayout.Label(isServer ? p.connectionToClient.address : "", GUILayout.Width(GetWidth(0)));
-                GUILayout.Label(p.netId.ToString(), GUILayout.Width(GetWidth(1)));
-                GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.netId.ToString() : "", GUILayout.Width(GetWidth(2)));
-                GUILayout.Label(p.OwnedPed != null && p.OwnedPed.PedDef != null ? p.OwnedPed.PedDef.ModelName : "", GUILayout.Width(GetWidth(3)));
-                GUILayout.Label(p.OwnedPed != null && p.OwnedPed.CurrentState != null ? p.OwnedPed.CurrentState.GetType().Name : "", GUILayout.Width(GetWidth(4)));
-                GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.Health.ToString() : "", GUILayout.Width(GetWidth(5)));
+                m_currentIndex = 0;
+                GUILayout.Label(isServer ? p.connectionToClient.address : "", GUILayout.Width(GetWidth()));
+                GUILayout.Label(p.netId.ToString(), GUILayout.Width(GetWidth()));
+                GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.netId.ToString() : "", GUILayout.Width(GetWidth()));
+                GUILayout.Label(p.OwnedPed != null && p.OwnedPed.PedDef != null ? p.OwnedPed.PedDef.ModelName : "", GUILayout.Width(GetWidth()));
+                GUILayout.Label(p.OwnedPed != null && p.OwnedPed.CurrentState != null ? p.OwnedPed.CurrentState.GetType().Name : "", GUILayout.Width(GetWidth()));
+                GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.Health.ToString() : "", GUILayout.Width(GetWidth()));
 
                 GUILayout.EndHorizontal();
             }
 
         }
 
-        float GetWidth(int index) => m_widths[index];
+        float GetWidth() => m_widths[m_currentIndex++];
 
     }
 }
