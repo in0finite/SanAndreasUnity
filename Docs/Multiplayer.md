@@ -16,7 +16,7 @@
 
 - **vehicle syncing is too laggy** - local player must control the rigid body ; server will validate position/rotation/velocity changes, and correct them if needed ; when server detects collision, or applies force to rigid body, he will override state of rigid body ;
 
-- try to sync rigid body forces, or just clear them on clients ? - will this help ? are forces cleared at the end of frame by physics engine ?
+- try to sync rigid body forces, or just clear them on clients ? - will this help ? are forces cleared at the end of frame by physics engine ? - forces can not be accessed
 
 - add option to disable rigid body on local player ? - applying position/rotation from syncvar hooks needs to be changed ?
 
