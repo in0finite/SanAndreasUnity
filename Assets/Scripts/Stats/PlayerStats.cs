@@ -8,8 +8,8 @@ namespace SanAndreasUnity.Stats
 {
     public class PlayerStats : MonoBehaviour
     {
-        float[] m_widths = new float[]{80, 15, 15, 20, 60, 15};
-        string[] m_columnNames = new string[]{"Address", "Net id", "Ped net id", "Ped model", "Ped state", "Health"};
+        [SerializeField] float[] m_widths = new float[]{110, 50, 70, 80, 150, 50};
+        [SerializeField] string[] m_columnNames = new string[]{"Address", "Net id", "Ped net id", "Ped model", "Ped state", "Health"};
         int m_currentIndex = 0;
 
 

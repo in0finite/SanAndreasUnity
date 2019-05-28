@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 966695643973660040}
   - component: {fileID: 80120176804327549}
   - component: {fileID: 6937918360976309701}
+  - component: {fileID: 5212539624475708371}
   m_Layer: 0
   m_Name: Stats
   m_TagString: Untagged
@@ -67,5 +68,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 367d406ec345854c39b68c83107c4dfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_widths:
+  - 110
+  - 50
+  - 80
+  - 80
+  - 150
+  - 50
+  m_columnNames:
+  - Address
+  - Net id
+  - Ped net id
+  - Ped model
+  - Ped state
+  - Health
+--- !u!114 &5212539624475708371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 775271551106813553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 409653cfe36614ceab3cbfbf9ed04fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
