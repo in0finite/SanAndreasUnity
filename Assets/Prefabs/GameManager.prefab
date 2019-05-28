@@ -135,6 +135,7 @@ MonoBehaviour:
   AIVehicleEnterDistance: 1.25
   AIOutOfRangeTimeout: 5
   AIOutOfRangeDistance: 250
+  pedSyncRate: 20
 --- !u!114 &114560248511158306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,3 +186,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20df1bf3631feafd8984718a6894cbb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPlayerWhenConnected: 1

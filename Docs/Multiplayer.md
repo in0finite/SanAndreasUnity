@@ -20,8 +20,6 @@
 
 - add option to disable wheel colliders
 
-- change default ped sync rate to 20
-
 - OutOfRangeDestroyer script should be destroyed on clients (for vehicles) ; when player controls a vehicle, it should not be destroyed ; or simply make the script destroy objects only on server (if they are network objects) ;
 
 - display a message to user when network is stopped
