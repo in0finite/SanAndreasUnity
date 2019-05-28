@@ -18,11 +18,7 @@
 
 - try to sync rigid body forces, or just clear them on clients ? - will this help ? are forces cleared at the end of frame by physics engine ? - forces can not be accessed
 
-- add option to disable rigid body on local player ? - applying position/rotation from syncvar hooks needs to be changed ?
-
 - add option to disable wheel colliders
-
-- add current ped state to player stats
 
 - change default ped sync rate to 20
 

@@ -1245,7 +1245,7 @@ MonoBehaviour:
     y: 78.75
     width: 115
     height: 157.5
-  useScrollView: 1
+  useScrollView: 0
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 0
