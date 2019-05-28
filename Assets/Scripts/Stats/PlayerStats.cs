@@ -8,8 +8,8 @@ namespace SanAndreasUnity.Stats
 {
     public class PlayerStats : MonoBehaviour
     {
-        float[] m_widths = new float[]{0.25f, 0.1f, 0.1f, 0.25f, 0.15f, 0.1f};
-        string[] m_columnNames = new string[]{"Address", "Net id", "Ped net id", "Ped model", "Health", "Ping"};
+        float[] m_widths = new float[]{80, 15, 15, 20, 60, 15, 15};
+        string[] m_columnNames = new string[]{"Address", "Net id", "Ped net id", "Ped model", "Ped state", "Health", "Ping"};
 
 
         void Start()
@@ -36,15 +36,16 @@ namespace SanAndreasUnity.Stats
                 GUILayout.Label(p.netId.ToString(), GUILayout.Width(GetWidth(1)));
                 GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.netId.ToString() : "", GUILayout.Width(GetWidth(2)));
                 GUILayout.Label(p.OwnedPed != null && p.OwnedPed.PedDef != null ? p.OwnedPed.PedDef.ModelName : "", GUILayout.Width(GetWidth(3)));
-                GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.Health.ToString() : "", GUILayout.Width(GetWidth(4)));
-                GUILayout.Label("", GUILayout.Width(GetWidth(5)));
+                GUILayout.Label(p.OwnedPed != null && p.OwnedPed.CurrentState != null ? p.OwnedPed.CurrentState.GetType().Name : "", GUILayout.Width(GetWidth(4)));
+                GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.Health.ToString() : "", GUILayout.Width(GetWidth(5)));
+                GUILayout.Label("", GUILayout.Width(GetWidth(6)));
 
                 GUILayout.EndHorizontal();
             }
 
         }
 
-        float GetWidth(int index) => m_widths[index] * Utilities.Stats.DisplayRect.width;
+        float GetWidth(int index) => m_widths[index];
 
     }
 }
