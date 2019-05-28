@@ -2,6 +2,7 @@
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
+    
     public class VehicleManager : MonoBehaviour
     {
         public static VehicleManager Instance { get; private set; }
@@ -10,7 +11,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public bool syncLinearVelocity = true;
         public bool syncAngularVelocity = true;
-        public bool disableRigidBodyOnClients = true;
+        public Utilities.WhenOnClient whenToDisableRigidBody = Utilities.WhenOnClient.OnlyOnOtherClients;
         public bool syncPedTransformWhileInVehicle = false;
         public bool syncVehicleTransformUsingSyncVars = false;
         public bool controlInputOnLocalPlayer = true;
