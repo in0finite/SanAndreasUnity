@@ -10,6 +10,16 @@
 
 - send button input events to server: 
 
+- Cell focus is not always assigned on client - it happens when a syncvar for current ped in Player script arrives after Ped.Start()
+
+- OutOfRangeDestroyer script should be destroyed on clients (for vehicles) ; when player controls a vehicle, it should not be destroyed ; or simply make the script destroy objects only on server (if they are network objects) ;
+
+- "Kill all peds" button should also kill local ped ; "Destroy all vehicles" button should also destroy controlled vehicle ;
+
+- max num players should be configurable
+
+- add current vehicle info to "misc" stats - it will display: name, velocity, num wheels, num doors, num peds inside, input, mass, drag, rigid body state, sync interval, 
+
 - **vehicle is bumping on clients** - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
 
 - when exit vehicle anim is finished on client, it is repeated - change wrap mode
@@ -19,8 +29,6 @@
 - try to sync rigid body forces, or just clear them on clients ? - will this help ? are forces cleared at the end of frame by physics engine ? - forces can not be accessed
 
 - add option to disable wheel colliders
-
-- OutOfRangeDestroyer script should be destroyed on clients (for vehicles) ; when player controls a vehicle, it should not be destroyed ; or simply make the script destroy objects only on server (if they are network objects) ;
 
 - display a message to user when network is stopped
 

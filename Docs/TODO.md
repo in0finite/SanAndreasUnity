@@ -16,6 +16,10 @@
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
 
+- Gravity setting failed to load on windows - instead of 9.81, it's loaded as 981
+
+- Max fps should be set to 60 by default
+
 - Don't block camera with peds
 
 - Add more obstacles in demo scene
