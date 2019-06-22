@@ -10,6 +10,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public GameObject pedPrefab;
 
+		public float pedTurnSpeed = 10f;
+
 		[Header("Health bar")]
 
 		public bool displayHealthBarAbovePeds = false;
