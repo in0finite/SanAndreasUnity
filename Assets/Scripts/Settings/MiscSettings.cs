@@ -35,7 +35,7 @@ namespace SanAndreasUnity.Settings {
 		OptionsWindow.BoolInput m_runInBackgroundInput = new OptionsWindow.BoolInput ("Run in background") {
 			getValue = () => Application.runInBackground,
 			setValue = (value) => { Application.runInBackground = value; },
-			persistType = OptionsWindow.InputPersistType.AfterLoaderFinishes
+			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 		OptionsWindow.BoolInput m_drawLineFromGunInput = new OptionsWindow.BoolInput ("Draw line from gun") {
 			isAvailable = () => WeaponsManager.Instance != null,
