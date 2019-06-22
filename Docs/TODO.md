@@ -18,10 +18,6 @@
 
 - Gravity setting failed to load on windows - instead of 9.81, it's loaded as 981
 
-- Fix NRE when falling below the world: Ped.ResetIfFallingBelowTheWorld () (at Assets/Scripts/Behaviours/Ped/Ped.cs:449)
-
-- Don't block camera with peds
-
 - Remove world stats window
 
 - Add option to change fixed delta time
