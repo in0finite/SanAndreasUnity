@@ -11,6 +11,7 @@ namespace SanAndreasUnity.Behaviours
 		public GameObject pedPrefab;
 
 		public float pedTurnSpeed = 10f;
+		public float enterVehicleRadius = 2.0f;
 
 		[Header("Health bar")]
 
