@@ -17,8 +17,6 @@ namespace SanAndreasUnity.Behaviours
 
 		private Ped m_ped;
 
-		public static bool _showVel = true;
-
         // Alpha speedometer
         private const float velTimer = 1 / 4f;
 
@@ -71,7 +69,7 @@ namespace SanAndreasUnity.Behaviours
 				GUILayout.EndArea();
             }
 
-            if (_showVel)
+            if (PedManager.Instance.showPedSpeedometer)
                 GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(5, 5)), string.Format("{0:0.0} km/h", m_deltaPos.magnitude * 3.6f / velTimer), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
 
 			// show current ped state
@@ -97,10 +95,6 @@ namespace SanAndreasUnity.Behaviours
         {
 			if (!m_ped.IsControlledByLocalPlayer)
 				return;
-			
-			// FIXME: this should not be here
-            if (Input.GetKeyDown(KeyCode.F9))
-                _showVel = !_showVel;
 
             if (!Loader.HasLoaded)
                 return;
