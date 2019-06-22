@@ -20,6 +20,8 @@
 
 - add current vehicle info to "misc" stats - it will display: name, velocity, num wheels, num doors, num peds inside, input, mass, drag, rigid body state, sync interval, 
 
+- display players on minimap
+
 - **vehicle is bumping on clients** - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
 
 - when exit vehicle anim is finished on client, it is repeated - change wrap mode
