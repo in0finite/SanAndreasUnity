@@ -24,8 +24,6 @@
 
 - Don't block camera with peds
 
-- Add more obstacles in demo scene
-
 - Remove world stats window
 
 - Add option to change fixed delta time
