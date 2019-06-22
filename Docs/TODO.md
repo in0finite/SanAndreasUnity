@@ -20,6 +20,8 @@
 
 - Max fps should be set to 60 by default
 
+- Fix NRE when falling below the world: Ped.ResetIfFallingBelowTheWorld () (at Assets/Scripts/Behaviours/Ped/Ped.cs:449)
+
 - Don't block camera with peds
 
 - Add more obstacles in demo scene
