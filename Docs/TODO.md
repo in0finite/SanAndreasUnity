@@ -22,7 +22,7 @@
 
 - Make all settings persistent
 
-- Add option to change fixed delta time
+- Add option to change fixed delta time ?
 
 - Crouching: adjust camera aim offset ? ;
 

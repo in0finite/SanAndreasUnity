@@ -7,14 +7,6 @@ namespace SanAndreasUnity.Settings {
 	
 	public class PlayerSettings : MonoBehaviour {
 
-		OptionsWindow.FloatInput m_jumpSpeedInput = new OptionsWindow.FloatInput() {
-			description = "Jump speed",
-			minValue = 3,
-			maxValue = 30,
-			isAvailable = () => Ped.Instance != null,
-			getValue = () => Ped.Instance.jumpSpeed,
-			setValue = (value) => { Ped.Instance.jumpSpeed = value; },
-		};
 		OptionsWindow.FloatInput m_turnSpeedInput = new OptionsWindow.FloatInput() {
 			description = "Turn speed",
 			minValue = 3,
@@ -59,7 +51,7 @@ namespace SanAndreasUnity.Settings {
 
 		void Awake ()
 		{
-			OptionsWindow.RegisterInputs ("PLAYER", m_jumpSpeedInput, m_turnSpeedInput, m_enterVehicleRadiusInput, 
+			OptionsWindow.RegisterInputs ("PLAYER", m_turnSpeedInput, m_enterVehicleRadiusInput, 
 				m_showSpeedometerInput, m_mouseSensitivityXInput, m_mouseSensitivityYInput);
 		}
 
