@@ -479,7 +479,7 @@ namespace SanAndreasUnity.Behaviours
 		{
 
 			// rotate player towards his heading
-			Vector3 forward = Vector3.RotateTowards (this.transform.forward, Heading, TurnSpeed * Time.deltaTime, 0.0f);
+			Vector3 forward = Vector3.RotateTowards (this.transform.forward, Heading, PedManager.Instance.pedTurnSpeed * Time.deltaTime, 0.0f);
 			this.transform.rotation = Quaternion.LookRotation(forward);
 
 		}

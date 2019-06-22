@@ -11,9 +11,9 @@ namespace SanAndreasUnity.Settings {
 			description = "Turn speed",
 			minValue = 3,
 			maxValue = 30,
-			isAvailable = () => Ped.Instance != null,
-			getValue = () => Ped.Instance.TurnSpeed,
-			setValue = (value) => { Ped.Instance.TurnSpeed = value; },
+			isAvailable = () => PedManager.Instance != null,
+			getValue = () => PedManager.Instance.pedTurnSpeed,
+			setValue = (value) => { PedManager.Instance.pedTurnSpeed = value; },
 		};
 		OptionsWindow.FloatInput m_enterVehicleRadiusInput = new OptionsWindow.FloatInput() {
 			description = "Enter vehicle radius",
