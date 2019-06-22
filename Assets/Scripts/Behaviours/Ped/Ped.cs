@@ -41,8 +41,6 @@ namespace SanAndreasUnity.Behaviours
 
         public CharacterController characterController { get; private set; }
 
-        public float jumpSpeed = 8.0f;
-
 		[SerializeField] private float m_cameraDistance = 3f;
 		public float CameraDistance { get { return m_cameraDistance; } set { m_cameraDistance = value; } }
 
