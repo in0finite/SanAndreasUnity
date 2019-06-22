@@ -13,7 +13,8 @@ namespace SanAndreasUnity.Settings {
 		
 		OptionsWindow.FloatInput m_timeScaleInput = new OptionsWindow.FloatInput( "Time scale", 0f, 4f ) {
 			getValue = () => Time.timeScale,
-			setValue = (value) => { Time.timeScale = value; }
+			setValue = (value) => { Time.timeScale = value; },
+			persistType = OptionsWindow.InputPersistType.None
 		};
 		OptionsWindow.FloatInput m_gravityInput = new OptionsWindow.FloatInput( "Gravity", -10f, 50f ) {
 			getValue = () => -Physics.gravity.y,
