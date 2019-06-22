@@ -19,9 +19,9 @@ namespace SanAndreasUnity.Settings {
 			description = "Enter vehicle radius",
 			minValue = 1,
 			maxValue = 15,
-			isAvailable = () => Ped.Instance != null,
-			getValue = () => Ped.Instance.EnterVehicleRadius,
-			setValue = (value) => { Ped.Instance.EnterVehicleRadius = value; },
+			isAvailable = () => PedManager.Instance != null,
+			getValue = () => PedManager.Instance.enterVehicleRadius,
+			setValue = (value) => { PedManager.Instance.enterVehicleRadius = value; },
 		};
 
 		OptionsWindow.BoolInput m_showSpeedometerInput = new OptionsWindow.BoolInput() {
