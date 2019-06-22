@@ -360,17 +360,6 @@ namespace SanAndreasUnity.Behaviours
 
             //if (IsDrivingVehicle)
             //    UpdateWheelTurning();
-			
-            // If ped falls from the map, reset him - wait, didn't we just do this above ?
-			if (NetStatus.IsServer)
-			{
-				if (IsGrounded && transform.position.y < -50)
-				{
-					Vector3 t = transform.position;
-					transform.position = new Vector3(t.x, 150, t.z);
-					FindGround();
-				}
-			}
 
 			this.UpdateDamageStuff ();
 
@@ -440,16 +429,23 @@ namespace SanAndreasUnity.Behaviours
 
 		void ResetIfFallingBelowTheWorld()
 		{
-			// TODO: this code needs fixing
 
-			// Reset to a valid (and solid!) start position when falling below the world
-            if (transform.position.y < -300)
+			if (this.IsInVehicle)
+				return;
+
+            if (!this.IsGrounded && this.transform.position.y < -300 && this.Velocity.y < -20)
             {
-                Velocity = new Vector3(0, 0, 0);
-                Transform spawn = GameObject.Find("Player Spawns").GetComponentsInChildren<Transform>()[1];
-                transform.position = spawn.position;
-                transform.rotation = spawn.rotation;
+				// set velocity to 0
+                this.Velocity = Vector3.zero;
+
+				// restore ped to higher position, and try to find ground
+				Vector3 t = this.transform.position;
+				t.y = 150;
+				this.transform.position = t;
+				this.FindGround();
+				
             }
+
 		}
 
         private void FixedUpdate()
