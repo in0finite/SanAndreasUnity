@@ -51,6 +51,8 @@
 - Limit number of messages in console to 200
 
 
+- Import Vice City
+
 - Navigation: build navmesh from static geometry at runtime
 
 - Import: AI paths, ped spawn info, item pickups, 
