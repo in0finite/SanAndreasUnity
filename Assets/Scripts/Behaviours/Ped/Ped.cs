@@ -73,6 +73,8 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
+		public static int LayerMask { get { return UnityEngine.LayerMask.GetMask ("Player"); } }
+
         public bool IsGrounded { get { return characterController.isGrounded; } }
 
 		public Vector2 MouseMoveInput { get; set; }
@@ -302,7 +304,7 @@ namespace SanAndreasUnity.Behaviours
 				RaycastHit hit;
 				float raycastDistance = 1000f;
 				// raycast against all layers, except player
-				int raycastLayerMask = ~ LayerMask.GetMask ("Player");
+				int raycastLayerMask = ~ Ped.LayerMask;
 
 				Vector3[] raycastPositions = new Vector3[]{ this.transform.position, this.transform.position + Vector3.up * raycastDistance };	//transform.position - Vector3.up * characterController.height;
 				Vector3[] raycastDirections = new Vector3[]{ Vector3.down, Vector3.down };
