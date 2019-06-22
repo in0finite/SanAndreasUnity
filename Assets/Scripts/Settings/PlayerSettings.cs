@@ -26,9 +26,9 @@ namespace SanAndreasUnity.Settings {
 
 		OptionsWindow.BoolInput m_showSpeedometerInput = new OptionsWindow.BoolInput() {
 			description = "Show speedometer",
-			isAvailable = () => PlayerController.Instance != null,
-			getValue = () => PlayerController._showVel,
-			setValue = (value) => { PlayerController._showVel = value; },
+			isAvailable = () => PedManager.Instance != null,
+			getValue = () => PedManager.Instance.showPedSpeedometer,
+			setValue = (value) => { PedManager.Instance.showPedSpeedometer = value; },
 		};
 		OptionsWindow.FloatInput m_mouseSensitivityXInput = new OptionsWindow.FloatInput() {
 			description = "Mouse sensitivity x",

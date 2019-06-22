@@ -12,6 +12,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public float pedTurnSpeed = 10f;
 		public float enterVehicleRadius = 2.0f;
+		public bool showPedSpeedometer = true;
 
 		[Header("Health bar")]
 
