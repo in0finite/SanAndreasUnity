@@ -19,6 +19,8 @@ namespace SanAndreasUnity.Behaviours {
 
 		public GameObject barPrefab;
 
+		[SerializeField] [Range(10, 100)] private int m_defaultMaxFps = 60;
+
 
 		/// <summary> Are we in a startup scene ? </summary>
 		public static bool IsInStartupScene { get { return UnityEngine.SceneManagement.SceneManager.GetActiveScene ().buildIndex == 0; } }
@@ -29,6 +31,8 @@ namespace SanAndreasUnity.Behaviours {
 
 			if (null == Instance)
 				Instance = this;
+
+			SetMaxFps(m_defaultMaxFps);
 
 		}
 
