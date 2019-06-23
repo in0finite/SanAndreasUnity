@@ -18,9 +18,7 @@
 
 - Gravity setting failed to load on windows - instead of 9.81, it's loaded as 981 - maybe it happens when float.ToString() gives e
 
-- Camera can go through map objects
-
-- When ped gets out of world boundaries while in vehicle, his body stays at the edge of world - don't constrain ped position at all
+- Minimap does not follow ped
 
 - Update controls window
 

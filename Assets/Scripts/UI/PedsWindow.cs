@@ -153,8 +153,6 @@ namespace SanAndreasUnity.UI {
 		{
 
 			foreach (var p in Ped.AllPeds) {
-				if (p == Ped.Instance)
-					continue;
 				Destroy (p.gameObject);
 			}
 

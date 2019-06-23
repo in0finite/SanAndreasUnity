@@ -65,11 +65,9 @@ namespace SanAndreasUnity.UI {
 			if (GUILayout.Button("Destroy all vehicles"))
 			{
 				var vehicles = FindObjectsOfType<Behaviours.Vehicles.Vehicle> ();
-				var vehicleToIgnore = Ped.Instance != null ? Ped.Instance.CurrentVehicle : null;
-
+				
 				foreach (var v in vehicles) {
-					if (v != vehicleToIgnore)
-						Destroy (v.gameObject);
+					Destroy (v.gameObject);
 				}
 			}
 
