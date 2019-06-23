@@ -14,6 +14,7 @@ namespace SanAndreasUnity.Settings {
 			maxValue = 5000,
 			getValue = () => Camera.main != null ? Camera.main.farClipPlane : s_farClipPlane,
 			setValue = (value) => { s_farClipPlane = value; if (Camera.main != null) Camera.main.farClipPlane = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 		OptionsWindow.FloatInput m_fieldOfViewInput = new OptionsWindow.FloatInput() {
 			description = "Field of view",
@@ -21,6 +22,7 @@ namespace SanAndreasUnity.Settings {
 			maxValue = 120,
 			getValue = () => Camera.main != null ? Camera.main.fieldOfView : s_fieldOfView,
 			setValue = (value) => { s_fieldOfView = value; if (Camera.main != null) Camera.main.fieldOfView = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 
 

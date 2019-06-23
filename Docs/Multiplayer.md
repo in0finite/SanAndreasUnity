@@ -22,6 +22,8 @@
 
 - display players on minimap
 
+- port the whole UI to multiplayer
+
 - **vehicle is bumping on clients** - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
 
 - when exit vehicle anim is finished on client, it is repeated - change wrap mode

@@ -18,7 +18,7 @@
 
 - Gravity setting failed to load on windows - instead of 9.81, it's loaded as 981
 
-- Make all settings persistent
+- Camera can go through map objects
 
 - Update controls window
 
