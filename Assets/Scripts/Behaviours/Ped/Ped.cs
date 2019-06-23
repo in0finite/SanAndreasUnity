@@ -382,6 +382,7 @@ namespace SanAndreasUnity.Behaviours
 
 			// Constrain to stay inside map
 
+			/*
 			if (transform.position.x < -3000)
 			{
 				var t = transform.position;
@@ -406,6 +407,7 @@ namespace SanAndreasUnity.Behaviours
 				t.z = 3000;
 				transform.position = t;
 			}
+			*/
 
 		}
 

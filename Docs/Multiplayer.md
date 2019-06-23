@@ -18,8 +18,6 @@
 
 - max num players should be configurable
 
-- add current vehicle info to "misc" stats - it will display: name, velocity, num wheels, num doors, num peds inside, input, mass, drag, rigid body state, sync interval, 
-
 - display players on minimap
 
 - port the whole UI to multiplayer
