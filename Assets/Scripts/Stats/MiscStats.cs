@@ -28,7 +28,7 @@ namespace SanAndreasUnity.Stats
             var ped = Ped.Instance;
             if (ped != null)
             {
-                sb.AppendFormat("Local ped:\n");
+                sb.AppendFormat("\nLocal ped:\n");
                 sb.AppendFormat("position: {0}\n", ped.transform.position);
                 sb.AppendFormat("net id: {0}\n", ped.netId);
                 sb.AppendFormat("sync interval: {0}\n", ped.NetTransform.syncInterval);
@@ -109,11 +109,13 @@ namespace SanAndreasUnity.Stats
                     {
                         sb.AppendFormat("{0}: {1}\n", texts[i], objects[i]);
                     }
+                    sb.AppendFormat("\n");
 
                 }
 
             }
 
+            GUILayout.Label(sb.ToString());
 
         }
 
