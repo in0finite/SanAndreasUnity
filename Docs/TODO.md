@@ -24,8 +24,6 @@
 
 - Update controls window
 
-- Display position and velocity in misc stats
-
 - Add option to change fixed delta time ?
 
 - Crouching: adjust camera aim offset ? ;
