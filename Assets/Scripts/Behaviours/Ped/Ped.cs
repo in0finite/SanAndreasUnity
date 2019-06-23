@@ -37,8 +37,6 @@ namespace SanAndreasUnity.Behaviours
 
 		public bool shouldPlayAnims = true;
 
-        public float TurnSpeed = 10f;
-
         public CharacterController characterController { get; private set; }
 
 		[SerializeField] private float m_cameraDistance = 3f;

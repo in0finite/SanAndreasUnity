@@ -28,8 +28,6 @@ namespace SanAndreasUnity.Behaviours
         private Vector2 _mouseAbsolute;
         private Vector2 _smoothMouse = Vector2.zero;
         
-        
-        public Vector2 CursorSensitivity = new Vector2(2f, 2f);
 
         public Vector2 clampInDegrees = new Vector2(90, 60);
 
