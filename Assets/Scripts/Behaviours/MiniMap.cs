@@ -203,9 +203,9 @@ namespace SanAndreasUnity.Behaviours
         #region Private fields
 
         // Texture & control flags
-		private Ped m_ped;
+		private Ped m_ped => Ped.Instance;
 
-        private PlayerController playerController;
+        private PlayerController playerController => PlayerController.Instance;
 
         private TextureDictionary huds;
 
@@ -260,13 +260,6 @@ namespace SanAndreasUnity.Behaviours
         private void Setup()
         {
             loadTextures();
-
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null)
-            {
-                m_ped = playerObj.GetComponent<Ped>();
-                playerController = playerObj.GetComponent<PlayerController>();
-            }
 
             if (canvas != null && canvas.enabled)
                 canvas.enabled = false;
