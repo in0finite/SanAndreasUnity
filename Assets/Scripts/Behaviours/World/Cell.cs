@@ -287,6 +287,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void showWindow(int windowID)
         {
+            GUILayout.Label("draw distance " + this.maxDrawDistance);
             GUILayout.Label("total num divisions " + (null == _leaves ? 0 : _leaves.Count));
             GUILayout.Label("total num objects " + totalNumObjects);
             GUILayout.Label("geometry parts loaded " + SanAndreasUnity.Importing.Conversion.Geometry.NumGeometryPartsLoaded);
