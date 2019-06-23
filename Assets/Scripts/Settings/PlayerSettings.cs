@@ -14,6 +14,7 @@ namespace SanAndreasUnity.Settings {
 			isAvailable = () => PedManager.Instance != null,
 			getValue = () => PedManager.Instance.pedTurnSpeed,
 			setValue = (value) => { PedManager.Instance.pedTurnSpeed = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 		OptionsWindow.FloatInput m_enterVehicleRadiusInput = new OptionsWindow.FloatInput() {
 			description = "Enter vehicle radius",
@@ -22,6 +23,7 @@ namespace SanAndreasUnity.Settings {
 			isAvailable = () => PedManager.Instance != null,
 			getValue = () => PedManager.Instance.enterVehicleRadius,
 			setValue = (value) => { PedManager.Instance.enterVehicleRadius = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 
 		OptionsWindow.BoolInput m_showSpeedometerInput = new OptionsWindow.BoolInput() {
@@ -29,6 +31,7 @@ namespace SanAndreasUnity.Settings {
 			isAvailable = () => PedManager.Instance != null,
 			getValue = () => PedManager.Instance.showPedSpeedometer,
 			setValue = (value) => { PedManager.Instance.showPedSpeedometer = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 		OptionsWindow.FloatInput m_mouseSensitivityXInput = new OptionsWindow.FloatInput() {
 			description = "Mouse sensitivity x",
