@@ -18,8 +18,6 @@
 
 - Gravity setting failed to load on windows - instead of 9.81, it's loaded as 981
 
-- Remove world stats window
-
 - Make all settings persistent
 
 - Update controls window
