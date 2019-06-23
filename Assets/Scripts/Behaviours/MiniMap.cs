@@ -71,8 +71,11 @@ namespace SanAndreasUnity.Behaviours
         {
             get
             {
-                if (m_ped == null) return Vector3.zero;
-                return m_ped.transform.position;
+                if (m_ped != null)
+                    return m_ped.transform.position;
+                if (Camera.main != null)
+                    return Camera.main.transform.position;
+                return Vector3.zero;
             }
         }
 
