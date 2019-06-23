@@ -106,7 +106,6 @@ GameObject:
   - component: {fileID: 4615557407145958}
   - component: {fileID: 114435663141359712}
   - component: {fileID: 114592069113923140}
-  - component: {fileID: 114924086961640034}
   - component: {fileID: 114611395026534988}
   - component: {fileID: 114636911127793484}
   - component: {fileID: 114911863237150764}
@@ -180,32 +179,6 @@ MonoBehaviour:
   m_registerInMainMenuOnStart: 1
   restrictLogCount: 1
   maxLogCount: 1000
---- !u!114 &114924086961640034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1693201817607148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a86af676e111c4861b8e0f454c7cb025, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  windowName: World stats
-  m_isOpenedByDefaultInMainMenu: 0
-  m_isOpenedByDefaultInPauseMenu: 0
-  m_destroyOnClose: 0
-  windowRect:
-    serializedVersion: 2
-    x: 10
-    y: 10
-    width: 250
-    height: 330
-  useScrollView: 0
-  m_spaceBeforeContent: 0
-  m_spaceAfterContent: 0
-  m_registerInMainMenuOnStart: 0
 --- !u!114 &114611395026534988
 MonoBehaviour:
   m_ObjectHideFlags: 0
