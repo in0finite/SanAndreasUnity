@@ -18,8 +18,6 @@
 
 - Gravity setting failed to load on windows - instead of 9.81, it's loaded as 981 - maybe it happens when float.ToString() gives e
 
-- Minimap does not follow ped
-
 - Update controls window
 
 - Add option to change fixed delta time ?

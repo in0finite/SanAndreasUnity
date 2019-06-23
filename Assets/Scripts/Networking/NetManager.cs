@@ -5,7 +5,7 @@ using SanAndreasUnity.Utilities;
 namespace SanAndreasUnity.Net
 {
 	
-	public class NetManager
+	public class NetManager : MonoBehaviour
 	{
 
 		public	static	int	defaultListenPortNumber { get { return 7777; } }
@@ -25,6 +25,13 @@ namespace SanAndreasUnity.Net
 			}
 		}
 
+
+
+		void Awake ()
+		{
+			// assign implementation in NetUtils
+			NetUtils.IsServerImpl = () => NetStatus.IsServer;
+		}
 
 
 		public	static	void	StartServer( int portNumber ) {
