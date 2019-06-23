@@ -47,7 +47,7 @@ namespace SanAndreasUnity.Settings {
 
 		void Awake ()
 		{
-			OptionsWindow.RegisterInputs ("PLAYER", m_turnSpeedInput, m_enterVehicleRadiusInput, 
+			OptionsWindow.RegisterInputs ("PLAYER", m_turnSpeedInput, 
 				m_showSpeedometerInput, m_mouseSensitivityXInput, m_mouseSensitivityYInput);
 		}
 
