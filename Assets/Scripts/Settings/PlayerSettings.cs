@@ -37,17 +37,19 @@ namespace SanAndreasUnity.Settings {
 			description = "Mouse sensitivity x",
 			minValue = 0.2f,
 			maxValue = 10f,
-			isAvailable = () => PlayerController.Instance != null,
-			getValue = () => PlayerController.Instance.CursorSensitivity.x,
-			setValue = (value) => { PlayerController.Instance.CursorSensitivity.x = value; },
+			isAvailable = () => GameManager.Instance != null,
+			getValue = () => GameManager.Instance.cursorSensitivity.x,
+			setValue = (value) => { GameManager.Instance.cursorSensitivity.x = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 		OptionsWindow.FloatInput m_mouseSensitivityYInput = new OptionsWindow.FloatInput() {
 			description = "Mouse sensitivity y",
 			minValue = 0.2f,
 			maxValue = 10f,
-			isAvailable = () => PlayerController.Instance != null,
-			getValue = () => PlayerController.Instance.CursorSensitivity.y,
-			setValue = (value) => { PlayerController.Instance.CursorSensitivity.y = value; },
+			isAvailable = () => GameManager.Instance != null,
+			getValue = () => GameManager.Instance.cursorSensitivity.y,
+			setValue = (value) => { GameManager.Instance.cursorSensitivity.y = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 
 
