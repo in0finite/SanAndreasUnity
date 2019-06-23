@@ -20,7 +20,11 @@
 
 - Camera can go through map objects
 
+- When ped gets out of world boundaries while in vehicle, his body stays at the edge of world - don't constrain ped position at all
+
 - Update controls window
+
+- Display position and velocity in misc stats
 
 - Add option to change fixed delta time ?
 
