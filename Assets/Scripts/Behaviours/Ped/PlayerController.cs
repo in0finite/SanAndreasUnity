@@ -207,7 +207,7 @@ namespace SanAndreasUnity.Behaviours
 
 				Vector2 totalMouseDelta = mouseDelta + rightAnalogDelta;
 
-				totalMouseDelta = Vector2.Scale (totalMouseDelta, this.CursorSensitivity);
+				totalMouseDelta = Vector2.Scale (totalMouseDelta, GameManager.Instance.cursorSensitivity);
 
 				m_ped.MouseMoveInput = totalMouseDelta;
 

@@ -21,6 +21,8 @@ namespace SanAndreasUnity.Behaviours {
 
 		[SerializeField] [Range(10, 100)] private int m_defaultMaxFps = 60;
 
+		public Vector2 cursorSensitivity = new Vector2(2f, 2f);
+
 
 		/// <summary> Are we in a startup scene ? </summary>
 		public static bool IsInStartupScene { get { return UnityEngine.SceneManagement.SceneManager.GetActiveScene ().buildIndex == 0; } }
