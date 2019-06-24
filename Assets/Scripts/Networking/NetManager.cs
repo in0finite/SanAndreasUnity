@@ -27,9 +27,10 @@ namespace SanAndreasUnity.Net
 
 
 
-		void Awake ()
+		NetManager ()
 		{
 			// assign implementation in NetUtils
+			// do this in ctor, because it may be too late in Awake() - server can theoretically start before our Awake() is called
 			NetUtils.IsServerImpl = () => NetStatus.IsServer;
 		}
 
