@@ -13,11 +13,7 @@ namespace SanAndreasUnity
 
         private void Start()
         {
-            if (targetObject == null)
-            {
-                if (Camera.main != null)
-                    targetObject = Camera.main.transform;
-            }
+            
         }
 
         private void Update()
