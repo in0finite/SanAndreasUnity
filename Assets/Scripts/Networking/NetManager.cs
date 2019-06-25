@@ -14,6 +14,8 @@ namespace SanAndreasUnity.Net
 
 		public static bool dontListen { get { return NetworkServer.dontListen; } set { NetworkServer.dontListen = value; } }
 
+		public static int maxNumPlayers => NetworkManager.singleton.maxConnections;
+
         public static TelepathyTransport telepathyTransport { get { return ((TelepathyTransport)Transport.activeTransport); } }
 
 		public	static	string	onlineScene {

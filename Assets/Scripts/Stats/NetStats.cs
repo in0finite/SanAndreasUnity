@@ -23,6 +23,7 @@ namespace SanAndreasUnity.Stats
             {
                 Utilities.GUIUtils.DrawHorizontalLine(1, 1, Color.black);
                 GUILayout.Label("Num connections: " + NetworkServer.connections.Count);
+                GUILayout.Label("Max num players: " + NetManager.maxNumPlayers);
             }
 
             if (NetStatus.IsClientActive())
