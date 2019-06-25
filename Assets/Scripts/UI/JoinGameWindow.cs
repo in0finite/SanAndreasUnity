@@ -8,8 +8,8 @@ namespace SanAndreasUnity.UI
 
 	public class JoinGameWindow : PauseMenuWindow
     {
-		string m_ip = "127.0.0.1";
-		string m_port = NetManager.defaultListenPortNumber.ToString();
+		string m_ipStr = "127.0.0.1";
+		string m_portStr = NetManager.defaultListenPortNumber.ToString();
 
 
 		JoinGameWindow()
@@ -39,10 +39,10 @@ namespace SanAndreasUnity.UI
 		{
 			
 			GUILayout.Label ("IP:");
-			m_ip = GUILayout.TextField(m_ip, GUILayout.Width(200));
+			m_ipStr = GUILayout.TextField(m_ipStr, GUILayout.Width(200));
 
             GUILayout.Label ("Port:");
-			m_port = GUILayout.TextField(m_port, GUILayout.Width(100));
+			m_portStr = GUILayout.TextField(m_portStr, GUILayout.Width(100));
             
             GUILayout.Space(40);
 
@@ -85,7 +85,7 @@ namespace SanAndreasUnity.UI
 		{
 			try
 			{
-				NetManager.StartClient(m_ip, int.Parse(m_port));
+				NetManager.StartClient(m_ipStr, int.Parse(m_portStr));
 			}
 			catch (System.Exception ex)
 			{
