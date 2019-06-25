@@ -30,21 +30,15 @@ namespace SanAndreasUnity.Behaviours
                 if (Camera.main != null)
                     focusPoints = focusPoints.Append(Camera.main.transform);
                 
-                if (!focusPoints.Any()) {
-                    // no focus points
-                    // don't do anything
-
+                // check if we are in range of any focus point
+                Vector3 thisPosition = this.transform.position;
+                bool isInRange = focusPoints.Any(point => point.Distance(thisPosition) < this.range);
+                if (isInRange) {
+                    this.timeSinceOutOfRange = 0;
                 } else {
-                    // check if we are in range of any focus point
-                    Vector3 thisPosition = this.transform.position;
-                    bool isInRange = focusPoints.Any(point => point.Distance(thisPosition) < this.range);
-                    if (isInRange) {
-                        this.timeSinceOutOfRange = 0;
-                    } else {
-                        this.timeSinceOutOfRange += 1.0f;
-                    }
+                    this.timeSinceOutOfRange += 1.0f;
                 }
-
+                
                 if (this.timeSinceOutOfRange >= this.timeUntilDestroyed) {
                     // timeout expired
                     Destroy(this.gameObject);
