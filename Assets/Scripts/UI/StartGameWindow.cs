@@ -8,7 +8,7 @@ namespace SanAndreasUnity.UI
 
 	public class StartGameWindow : PauseMenuWindow
     {
-		string m_port = NetManager.defaultListenPortNumber.ToString();
+		string m_portStr = NetManager.defaultListenPortNumber.ToString();
 		bool m_dontListen = false;
 		bool m_dedicatedServer = false;
 		string m_maxNumPlayersStr = "40";
@@ -43,7 +43,7 @@ namespace SanAndreasUnity.UI
 		{
 			
             GUILayout.Label ("Port:");
-			m_port = GUILayout.TextField(m_port, GUILayout.Width(100));
+			m_portStr = GUILayout.TextField(m_portStr, GUILayout.Width(100));
 
 			m_dontListen = GUILayout.Toggle(m_dontListen, "Don't listen");
             
@@ -66,7 +66,7 @@ namespace SanAndreasUnity.UI
 		{
 			try
 			{
-				int port = int.Parse(m_port);
+				int port = int.Parse(m_portStr);
 				string scene = m_availableScenes[m_selectedSceneIndex];
 				ushort maxNumPlayers = ushort.Parse(m_maxNumPlayersStr);
 
