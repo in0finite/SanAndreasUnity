@@ -174,7 +174,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             inst.transform.position = position - Vector3.up * inst.AverageWheelHeight;
             inst.transform.localRotation = rotation;
 
-            OutOfRangeDestroyer destroyer = inst.gameObject.AddComponent<OutOfRangeDestroyer>();
+            OutOfRangeDestroyer destroyer = Utilities.F.GetOrAddComponent<OutOfRangeDestroyer>(inst.gameObject);
             destroyer.timeUntilDestroyed = 5;
             destroyer.range = 300;
 
