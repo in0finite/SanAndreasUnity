@@ -85,7 +85,7 @@ namespace SanAndreasUnity.UI
 		{
 			try
 			{
-				NetManager.StartClient(m_ipStr, int.Parse(m_portStr));
+				NetManager.StartClient(m_ipStr, ushort.Parse(m_portStr));
 			}
 			catch (System.Exception ex)
 			{
