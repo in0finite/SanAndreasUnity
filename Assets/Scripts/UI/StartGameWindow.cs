@@ -84,6 +84,7 @@ namespace SanAndreasUnity.UI
 			}
 			catch (System.Exception ex)
 			{
+				Debug.LogException(ex);
 				MessageBox.Show("Error", ex.ToString());
 			}
 		}
