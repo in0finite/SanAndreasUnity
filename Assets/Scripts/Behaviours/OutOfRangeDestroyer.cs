@@ -30,7 +30,7 @@ namespace SanAndreasUnity.Behaviours
                 if (Camera.main != null)
                     focusPoints = focusPoints.Append(Camera.main.transform);
                 
-                if (focusPoints.Count() < 1) {
+                if (!focusPoints.Any()) {
                     // no focus points
                     // don't do anything
 

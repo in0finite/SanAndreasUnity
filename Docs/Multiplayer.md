@@ -14,8 +14,6 @@
 
 - Cell focus is not always assigned on client - it happens when a syncvar for current ped in Player script arrives after Ped.Start()
 
-- add NetManager to prefab
-
 - max num players should be configurable
 
 - display players on minimap
