@@ -11,6 +11,7 @@ namespace SanAndreasUnity.UI
 		string m_port = NetManager.defaultListenPortNumber.ToString();
 		bool m_dontListen = false;
 		bool m_dedicatedServer = false;
+		string m_maxNumPlayersStr = "40";
 		[SerializeField] string[] m_availableScenes = new string[]{"Main", "ModelViewer"};
 		int m_selectedSceneIndex = 0;
 
@@ -48,6 +49,9 @@ namespace SanAndreasUnity.UI
             
 			m_dedicatedServer = GUILayout.Toggle(m_dedicatedServer, "Dedicated server");
             
+			GUILayout.Label("Max num players:");
+			m_maxNumPlayersStr = GUILayout.TextField(m_maxNumPlayersStr, GUILayout.Width(100));
+
 			GUILayout.Label("Map:");
 			m_selectedSceneIndex = GUILayout.SelectionGrid(m_selectedSceneIndex, m_availableScenes, 4);
 
@@ -64,11 +68,13 @@ namespace SanAndreasUnity.UI
 			{
 				int port = int.Parse(m_port);
 				string scene = m_availableScenes[m_selectedSceneIndex];
+				ushort maxNumPlayers = ushort.Parse(m_maxNumPlayersStr);
 
 				// first start a server, and then change scene
 
 				NetManager.onlineScene = scene;
 				NetManager.dontListen = m_dontListen;
+				NetManager.maxNumPlayers = maxNumPlayers;
 				if (m_dedicatedServer)
 					NetManager.StartServer(port);
 				else
