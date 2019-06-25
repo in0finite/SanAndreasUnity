@@ -9,15 +9,26 @@ namespace SanAndreasUnity.Behaviours
 
     public class SpawnManager : MonoBehaviour
     {
+        public static SpawnManager Instance { get; private set; }
+
         List<Transform> m_spawnPositions = new List<Transform>();
         GameObject m_container;
-        public bool spawnPlayerWhenConnected = true;
 
+        public bool spawnPlayerWhenConnected = true;
+        public bool IsSpawningPaused { get; set; } = false;
+        public float spawnInterval = 4f;
+        float m_lastSpawnTime = 0f;
+
+
+
+        void Awake()
+        {
+            Instance = this;
+        }
 
         void Start()
         {
-            this.InvokeRepeating(nameof(UpdateSpawnPositions), 1f, 1f);
-            this.InvokeRepeating(nameof(SpawnPlayers), 1f, 3f);
+            this.InvokeRepeating(nameof(RepeatedMethod), 1f, 1f);
             Player.onStart += OnPlayerConnected;
         }
 
@@ -42,6 +53,25 @@ namespace SanAndreasUnity.Behaviours
                 return Camera.main.transform;
 
             return null;
+        }
+
+        void RepeatedMethod()
+        {
+            if (!NetStatus.IsServer)
+                return;
+            
+            this.UpdateSpawnPositions();
+
+            if (this.IsSpawningPaused)
+                return;
+
+            if (Time.time - m_lastSpawnTime >= this.spawnInterval)
+            {
+                // enough time passed
+                m_lastSpawnTime = Time.time;
+                this.SpawnPlayers();
+            }
+
         }
 
         void UpdateSpawnPositions()
