@@ -12,7 +12,7 @@ namespace SanAndreasUnity.UI
 		bool m_dontListen = false;
 		bool m_dedicatedServer = false;
 		string m_maxNumPlayersStr = "40";
-		[SerializeField] string[] m_availableScenes = new string[]{"Main", "ModelViewer"};
+		[SerializeField] string[] m_availableScenes = new string[0];
 		int m_selectedSceneIndex = 0;
 
 
