@@ -29,7 +29,7 @@ namespace SanAndreasUnity.UI
 		void Start ()
         {
 			// adjust rect
-			this.windowRect = GUIUtils.GetCenteredRect(new Vector2(550, 300));
+			this.windowRect = GUIUtils.GetCenteredRect(new Vector2(550, 320));
 		}
 
 		void Update()
