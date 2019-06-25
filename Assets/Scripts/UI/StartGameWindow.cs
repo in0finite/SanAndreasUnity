@@ -66,7 +66,7 @@ namespace SanAndreasUnity.UI
 		{
 			try
 			{
-				int port = int.Parse(m_portStr);
+				ushort port = ushort.Parse(m_portStr);
 				string scene = m_availableScenes[m_selectedSceneIndex];
 				ushort maxNumPlayers = ushort.Parse(m_maxNumPlayersStr);
 
