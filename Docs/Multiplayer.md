@@ -4,6 +4,8 @@
 
 - scene changing: When network (server/client) is stopped, offline scene should be loaded. But, when switching back to online scene, Loader should not load everything again. Instead, only Cell loading should be done, if the new scene is main scene. But, are old meshes/textures destroyed ? Do we leave memory behind, every time when network is stopped ? Or... just exit the game when network is stopped (display message box first ?).
 
+- display a message to user when network is stopped
+
 - order of buttons in main menu
 
 - adapt states: 
@@ -12,7 +14,7 @@
 
 - Cell focus is not always assigned on client - it happens when a syncvar for current ped in Player script arrives after Ped.Start()
 
-- OutOfRangeDestroyer script should be destroyed on clients (for vehicles) ; when player controls a vehicle, it should not be destroyed ; or simply make the script destroy objects only on server (if they are network objects) ;
+- add NetManager to prefab
 
 - max num players should be configurable
 
@@ -30,8 +32,6 @@
 - try to sync rigid body forces, or just clear them on clients ? - will this help ? are forces cleared at the end of frame by physics engine ? - forces can not be accessed
 
 - add option to disable wheel colliders
-
-- display a message to user when network is stopped
 
 
 
