@@ -108,12 +108,20 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.None,
 		};
 
+		OptionsWindow.BoolInput m_pauseSpawning = new OptionsWindow.BoolInput ("Pause spawning") {
+			isAvailable = () => SpawnManager.Instance != null,
+			getValue = () => SpawnManager.Instance.IsSpawningPaused,
+			setValue = (value) => { SpawnManager.Instance.IsSpawningPaused = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
+
 
 
 		void Awake ()
 		{
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
 				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera,
+				m_pauseSpawning,
 				m_pedSyncRate,
 				m_vehicleSyncRate, m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, 
 				m_syncVehiclesAngularVelocity, m_controlWheelsOnLocalPlayer, m_controlVehicleInputOnLocalPlayer, 
