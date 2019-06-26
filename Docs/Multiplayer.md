@@ -14,8 +14,6 @@
 
 - Cell focus is not always assigned on client - it happens when a syncvar for current ped in Player script arrives after Ped.Start()
 
-- add option to pause spawning, and to set spawn interval
-
 - display players on minimap
 
 - port the whole UI to multiplayer
