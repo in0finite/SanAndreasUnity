@@ -7,6 +7,8 @@ namespace SanAndreasUnity.UI {
 
 	public class MapWindow : PauseMenuWindow {
 
+		public static MapWindow Instance { get; private set; }
+
 		//private	Rect	visibleMapRect = new Rect ();
 		private	Vector2	m_focusPos = Vector2.one * MiniMap.mapSize / 2.0f;
 		private	float	zoomLevel = 1;
@@ -16,6 +18,7 @@ namespace SanAndreasUnity.UI {
 		private	Texture2D	m_infoAreaTexture;
 
 		private	float	m_playerPointerSize = 10;
+		public float PlayerPointerSize { get => m_playerPointerSize; set { m_playerPointerSize = value; } }
 		private	bool	m_drawZones = false;
 
 		private	bool	m_isWaypointPlaced = false;
@@ -24,6 +27,8 @@ namespace SanAndreasUnity.UI {
 		private	Vector2	m_lastMousePosition = Vector2.zero;
 
 		private	Vector2	m_infoAreaScrollViewPos = Vector2.zero;
+
+		public event System.Action onDrawMapItems = delegate {};
 
 
 
@@ -42,6 +47,9 @@ namespace SanAndreasUnity.UI {
 
 		void Awake () {
 			
+			if (null == Instance)
+				Instance = this;
+
 			m_infoAreaTexture = F.CreateTexture (1, 1, Color.grey);
 
 		}
@@ -571,6 +579,9 @@ namespace SanAndreasUnity.UI {
 				GUI.BeginGroup (mapDisplayRect);	// ensure that all map items are drawn inside this rect - doesn't work when items are rotated
 			}
 
+
+			// draw registered items
+			onDrawMapItems();
 
 			// draw player pointer
 			this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Ped.Instance.transform.position, Ped.Instance.transform.forward, (int) m_playerPointerSize );
