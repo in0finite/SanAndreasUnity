@@ -108,10 +108,16 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.None,
 		};
 
-		OptionsWindow.BoolInput m_pauseSpawning = new OptionsWindow.BoolInput ("Pause spawning") {
+		OptionsWindow.BoolInput m_pausePlayerSpawning = new OptionsWindow.BoolInput ("Pause player spawning") {
 			isAvailable = () => SpawnManager.Instance != null,
 			getValue = () => SpawnManager.Instance.IsSpawningPaused,
 			setValue = (value) => { SpawnManager.Instance.IsSpawningPaused = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
+		OptionsWindow.FloatInput m_playerSpawnInterval = new OptionsWindow.FloatInput ("Player spawn interval", 0, 30) {
+			isAvailable = () => SpawnManager.Instance != null,
+			getValue = () => SpawnManager.Instance.spawnInterval,
+			setValue = (value) => { SpawnManager.Instance.spawnInterval = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 
@@ -121,7 +127,7 @@ namespace SanAndreasUnity.Settings {
 		{
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
 				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera,
-				m_pauseSpawning,
+				m_pausePlayerSpawning, m_playerSpawnInterval,
 				m_pedSyncRate,
 				m_vehicleSyncRate, m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, 
 				m_syncVehiclesAngularVelocity, m_controlWheelsOnLocalPlayer, m_controlVehicleInputOnLocalPlayer, 
