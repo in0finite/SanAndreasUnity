@@ -14,8 +14,6 @@
 
 - Cell focus is not always assigned on client - it happens when a syncvar for current ped in Player script arrives after Ped.Start()
 
-- display players on minimap
-
 - port the whole UI to multiplayer
 
 
