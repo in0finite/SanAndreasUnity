@@ -35,6 +35,14 @@ namespace SanAndreasUnity.UI {
 				GUILayout.Label ("Pos: " + Ped.InstancePos);
 			}
 
+			if (Utilities.NetUtils.IsServer)
+				DisplayServerGui();
+
+		}
+
+		void DisplayServerGui()
+		{
+
 			if (GUILayout.Button ("Spawn random vehicle")) {
 				var spawner = FindObjectOfType<UIVehicleSpawner> ();
 				if (spawner)
