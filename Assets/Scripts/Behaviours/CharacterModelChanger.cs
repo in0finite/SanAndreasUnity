@@ -15,7 +15,10 @@ public class CharacterModelChanger : MonoBehaviour
     {
         if (Input.GetKeyDown(actionKey))
         {
-            ChangePedestrianModel();
+            if (Utilities.NetUtils.IsServer)
+                ChangePedestrianModel();
+            else if (Net.PlayerRequests.Local != null)
+                Net.PlayerRequests.Local.RequestPedModelChange();
         }
     }
 
