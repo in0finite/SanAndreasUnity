@@ -43,12 +43,9 @@ namespace SanAndreasUnity.UI {
 
 		public static Transform[] FindSpawnPlaces ()
 		{
-			if (Utilities.NetUtils.IsServer)
-			{
-				var obj = GameObject.Find("Player Spawns");
-				if (obj)
-					return obj.GetComponentsInChildren<Transform> ();
-			}
+			var obj = GameObject.Find("Player Spawns");
+			if (obj)
+				return obj.GetComponentsInChildren<Transform> ();
 			return new Transform[0];
 		}
 
@@ -63,11 +60,8 @@ namespace SanAndreasUnity.UI {
 		protected override void OnWindowGUI ()
 		{
 
-			if (!Utilities.NetUtils.IsServer)
-				return;
-
 			if (null == Ped.Instance) {
-				GUILayout.Label ("Player object not found");
+				GUILayout.Label ("No local ped");
 				return;
 			}
 
@@ -80,7 +74,10 @@ namespace SanAndreasUnity.UI {
 
 				if (GUILayout.Button (spawnLocation.name))
 				{
-					Ped.Instance.Teleport (spawnLocation.position, spawnLocation.rotation);
+					if (Utilities.NetUtils.IsServer)
+						Ped.Instance.Teleport (spawnLocation.position, spawnLocation.rotation);
+					else if (Net.PlayerRequests.Local != null)
+						Net.PlayerRequests.Local.RequestTeleport(spawnLocation.position, spawnLocation.rotation);
 				}
 			}
 
