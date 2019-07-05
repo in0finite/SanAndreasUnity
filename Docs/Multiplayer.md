@@ -14,6 +14,10 @@
 
 - Cell focus is not always assigned on client - it happens when a syncvar for current ped in Player script arrives after Ped.Start()
 
+- headless server: start scene specified at cmd line ; use port from cmd line ;
+
+- add ability for client to request: spawn vehicle ; change ped model ; commit suicide ; destroy my vehicle ; spawn stalker ped ;
+
 - port the whole UI to multiplayer
 
 
