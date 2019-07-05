@@ -37,6 +37,8 @@ namespace SanAndreasUnity.UI {
 
 			if (Utilities.NetUtils.IsServer)
 				DisplayServerGui();
+			else if (Net.PlayerRequests.Local != null)
+				DisplayClientOnlyGui();
 
 		}
 
@@ -77,6 +79,33 @@ namespace SanAndreasUnity.UI {
 				foreach (var v in vehicles) {
 					Destroy (v.gameObject);
 				}
+			}
+
+		}
+
+		void DisplayClientOnlyGui()
+		{
+
+			var pr = Net.PlayerRequests.Local;
+
+			if (GUILayout.Button("Request to spawn vehicle"))
+			{
+				pr.RequestVehicleSpawn();
+			}
+
+			if (GUILayout.Button("Request to change ped model"))
+			{
+				pr.RequestPedModelChange();
+			}
+
+			if (GUILayout.Button("Request suicide"))
+			{
+				pr.RequestSuicide();
+			}
+
+			if (GUILayout.Button("Request to destroy all vehicles"))
+			{
+				pr.RequestToDestroyAllVehicles();
 			}
 
 		}
