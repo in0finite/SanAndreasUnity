@@ -244,7 +244,15 @@ namespace SanAndreasUnity.UI {
 			if (!m_isWaypointPlaced)
 				return;
 
-			Ped.Instance.Teleport (MiniMap.MapPosToWorldPos (m_waypointMapPos));
+			if (null == Ped.Instance)
+				return;
+
+			Vector3 worldPos = MiniMap.MapPosToWorldPos (m_waypointMapPos);
+
+			if (Utilities.NetUtils.IsServer)
+				Ped.Instance.Teleport (worldPos);
+			else if (Net.PlayerRequests.Local != null)
+				Net.PlayerRequests.Local.RequestTeleport(worldPos, Ped.Instance.transform.rotation);
 
 		}
 
