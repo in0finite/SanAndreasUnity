@@ -12,7 +12,6 @@ public class UIVehicleSpawner : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     private void Update()
     {
         if (Input.GetKeyDown(spawnKey))
@@ -24,19 +23,31 @@ public class UIVehicleSpawner : MonoBehaviour
 
     public void SpawnVehicle()
     {
-		var cont = PlayerController.Instance;
+		var ped = Ped.Instance;
 
-		if (null == cont)
+		if (null == ped)
 			return;
         
-        
-        Vector3 pos = cont.transform.position + cont.transform.forward * spawnOffset.z + cont.transform.up * spawnOffset.y
-            + cont.transform.right * spawnOffset.x;
-        Quaternion rotation = Quaternion.LookRotation(-cont.transform.right, Vector3.up);
-
-        //	SanAndreasUnity.Behaviours.Vehicles.VehicleSpawner.Create ();
-		var v = SanAndreasUnity.Behaviours.Vehicles.Vehicle.Create(-1, null, pos, rotation);
-        Debug.Log("Spawned vehicle with id " + v.Definition.Id);
+        SpawnVehicle(ped);
         
     }
+
+    public void SpawnVehicle(Ped ped)
+    {
+        
+        Vector3 pos = ped.transform.position + ped.transform.forward * spawnOffset.z + ped.transform.up * spawnOffset.y
+            + ped.transform.right * spawnOffset.x;
+        Quaternion rotation = Quaternion.LookRotation(-ped.transform.right, Vector3.up);
+
+        SpawnVehicle(pos, rotation);
+
+    }
+
+    public void SpawnVehicle(Vector3 pos, Quaternion rotation)
+    {
+        //  SanAndreasUnity.Behaviours.Vehicles.VehicleSpawner.Create ();
+        var v = SanAndreasUnity.Behaviours.Vehicles.Vehicle.Create(-1, null, pos, rotation);
+        Debug.Log("Spawned vehicle with id " + v.Definition.Id);
+    }
+
 }
