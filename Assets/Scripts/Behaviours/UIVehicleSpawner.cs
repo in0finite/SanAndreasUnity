@@ -16,7 +16,10 @@ public class UIVehicleSpawner : MonoBehaviour
     {
         if (Input.GetKeyDown(spawnKey))
         {
-            SpawnVehicle();
+            if (Utilities.NetUtils.IsServer)
+                SpawnVehicle();
+            else if (Net.PlayerRequests.Local != null)
+                Net.PlayerRequests.Local.RequestVehicleSpawn();
         }
     }
 
