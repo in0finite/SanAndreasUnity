@@ -43,9 +43,12 @@ namespace SanAndreasUnity.UI {
 
 		public static Transform[] FindSpawnPlaces ()
 		{
-			var obj = GameObject.Find("Player Spawns");
-			if (obj)
-				return obj.GetComponentsInChildren<Transform> ();
+			if (Utilities.NetUtils.IsServer)
+			{
+				var obj = GameObject.Find("Player Spawns");
+				if (obj)
+					return obj.GetComponentsInChildren<Transform> ();
+			}
 			return new Transform[0];
 		}
 
@@ -59,6 +62,9 @@ namespace SanAndreasUnity.UI {
 
 		protected override void OnWindowGUI ()
 		{
+
+			if (!Utilities.NetUtils.IsServer)
+				return;
 
 			if (null == Ped.Instance) {
 				GUILayout.Label ("Player object not found");
