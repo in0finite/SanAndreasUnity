@@ -51,7 +51,7 @@ namespace SanAndreasUnity.Behaviours
             if (m_net_playerOwnerGameObject != null)
                 m_net_playerOwnerGameObject.GetComponent<Player>().OwnedPed = this;
 
-            //this.PlayerModel.Load(m_net_pedId);
+            this.TryToLoadNewModel(m_net_pedId);
 
             this.ChangeStateBasedOnSyncData(new StateSyncData(){state = m_net_state, additionalData = m_net_additionalStateData});
         }
@@ -118,6 +118,17 @@ namespace SanAndreasUnity.Behaviours
             
         }
 
+        void TryToLoadNewModel(int newId)
+        {
+
+            if (this.PedDef != null && this.PedDef.Id == newId) // same id
+                return;
+
+            if (newId > 0)
+                F.RunExceptionSafe( () => this.PlayerModel.Load(newId) );
+            
+        }
+
         void Net_OnIdChanged(int newId)
         {
             Debug.LogFormat("ped (net id {0}) changed model id to {1}", this.netId, newId);
@@ -125,10 +136,7 @@ namespace SanAndreasUnity.Behaviours
             if (this.isServer)
                 return;
             
-            //m_net_pedId = newId;
-
-            if (newId > 0)
-                F.RunExceptionSafe( () => this.PlayerModel.Load(newId) );
+            this.TryToLoadNewModel(newId);
         }
 
         void Net_OnStateChanged(string newStateName)
