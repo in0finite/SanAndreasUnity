@@ -37,6 +37,22 @@ namespace SanAndreasUnity.Net
 		}
 
 
+		public static void StartServer(ushort portNumber, string scene, ushort maxNumPlayers, bool bIsDedicated, bool bDontListen)
+		{
+			// first start a server, and then change scene
+
+			NetManager.onlineScene = scene;
+			NetManager.dontListen = bDontListen;
+			NetManager.maxNumPlayers = maxNumPlayers;
+			if (bIsDedicated)
+				NetManager.StartServer(portNumber);
+			else
+				NetManager.StartHost(portNumber);
+
+			//NetManager.ChangeScene(scene);
+
+		}
+
 		public	static	void	StartServer( int portNumber ) {
 
 			CheckIfNetworkIsStarted ();
