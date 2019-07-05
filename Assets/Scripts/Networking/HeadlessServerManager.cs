@@ -24,7 +24,7 @@ namespace SanAndreasUnity.Net
             string sceneName = "Main";
             CmdLineUtils.GetArgument("scene", ref sceneName);
 
-            ushort maxNumPlayers = NetManager.maxNumPlayers;
+            ushort maxNumPlayers = (ushort) NetManager.maxNumPlayers;
             CmdLineUtils.GetUshortArgument("maxNumPlayers", ref maxNumPlayers);
 
             string serverIp = "127.0.0.1";

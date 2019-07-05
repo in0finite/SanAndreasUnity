@@ -13,7 +13,7 @@ namespace SanAndreasUnity.Utilities
                 if (commandLineArgs != null)
                     return commandLineArgs;
             }
-            catch (System.Exception ex) {}
+            catch (System.Exception) {}
             
             return new string[0];
         }
