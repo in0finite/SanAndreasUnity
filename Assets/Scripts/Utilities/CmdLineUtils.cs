@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-
+﻿
 namespace SanAndreasUnity.Utilities
 {
 
@@ -37,6 +36,34 @@ namespace SanAndreasUnity.Utilities
 
             argValue = foundArg.Substring(search.Length);
             return true;
+        }
+
+        public static bool GetIntArgument(string argName, ref int argValue)
+        {
+            string str = null;
+            if (GetArgument(argName, ref str))
+            {
+                if (int.TryParse(str, out argValue))
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool GetUshortArgument(string argName, ref ushort argValue)
+        {
+            string str = null;
+            if (GetArgument(argName, ref str))
+            {
+                if (ushort.TryParse(str, out argValue))
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool HasArgument(string argName)
+        {
+            string str = null;
+            return GetArgument(argName, ref str);
         }
 
     }

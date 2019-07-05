@@ -70,17 +70,8 @@ namespace SanAndreasUnity.UI
 				string scene = m_availableScenes[m_selectedSceneIndex];
 				ushort maxNumPlayers = ushort.Parse(m_maxNumPlayersStr);
 
-				// first start a server, and then change scene
+				NetManager.StartServer(port, scene, maxNumPlayers, m_dedicatedServer, m_dontListen);
 
-				NetManager.onlineScene = scene;
-				NetManager.dontListen = m_dontListen;
-				NetManager.maxNumPlayers = maxNumPlayers;
-				if (m_dedicatedServer)
-					NetManager.StartServer(port);
-				else
-					NetManager.StartHost(port);
-
-				//NetManager.ChangeScene(scene);
 			}
 			catch (System.Exception ex)
 			{
