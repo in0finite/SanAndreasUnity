@@ -4,7 +4,7 @@ using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Net
 {
-    public class HeadlessServerManager : MonoBehaviour
+    public class NetCmdLineHandler : MonoBehaviour
     {
 
         public int numFramesToWait = 5;
