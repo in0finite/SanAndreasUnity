@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Mirror;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours;
@@ -120,7 +119,7 @@ namespace SanAndreasUnity.Net
         {
             if (m_player.OwnedPed != null)
             {
-                m_player.OwnedPed.Teleport(pos, rot);
+                F.RunExceptionSafe( () => m_player.OwnedPed.Teleport(pos, rot) );
             }
         }
 
