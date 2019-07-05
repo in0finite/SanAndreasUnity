@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-		public static Ped SpawnPed (PedestrianDef def, Vector3 pos, Quaternion rot)
+		public static Ped SpawnPed (PedestrianDef def, Vector3 pos, Quaternion rot, bool spawnOnNetwork)
 		{
 			Net.NetStatus.ThrowIfNotOnServer();
 
@@ -36,17 +36,18 @@ namespace SanAndreasUnity.Behaviours
 			destroyer.timeUntilDestroyed = PedManager.Instance.AIOutOfRangeTimeout;
 			destroyer.range = PedManager.Instance.AIOutOfRangeDistance;
 
-			Net.NetManager.Spawn(go);
+			if (spawnOnNetwork)
+				Net.NetManager.Spawn(go);
 
 			return ped;
 		}
 
-		public static Ped SpawnPed (int pedId, Vector3 pos, Quaternion rot)
+		public static Ped SpawnPed (int pedId, Vector3 pos, Quaternion rot, bool spawnOnNetwork)
 		{
 			var def = Item.GetDefinition<PedestrianDef> (pedId);
 			if (null == def)
 				throw new System.ArgumentException ("Failed to spawn ped: definition not found by id: " + pedId);
-			return SpawnPed (def, pos, rot);
+			return SpawnPed (def, pos, rot, spawnOnNetwork);
 		}
 
 		public static Ped SpawnPed (int pedId)
@@ -54,13 +55,13 @@ namespace SanAndreasUnity.Behaviours
 			Vector3 pos;
 			Quaternion rot;
 			if (GetPositionForPedSpawn (out pos, out rot))
-				return SpawnPed (pedId, pos, rot);
+				return SpawnPed (pedId, pos, rot, true);
 			return null;
 		}
 
 		public static PedStalker SpawnPedStalker (int pedId, Vector3 pos, Quaternion rot)
 		{
-			var ped = SpawnPed (pedId, pos, rot);
+			var ped = SpawnPed (pedId, pos, rot, true);
 
 			var stalker = ped.gameObject.GetOrAddComponent<PedStalker> ();
 			stalker.stoppingDistance = PedManager.Instance.AIStoppingDistance;

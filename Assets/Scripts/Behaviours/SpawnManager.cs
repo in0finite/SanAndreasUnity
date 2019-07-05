@@ -140,11 +140,15 @@ namespace SanAndreasUnity.Behaviours
                 return null;
 
             var spawn = spawns.RandomElement();
-            var ped = Ped.SpawnPed(Ped.RandomPedId, spawn.position, spawn.rotation);
-            player.OwnedPed = ped;
+            var ped = Ped.SpawnPed(Ped.RandomPedId, spawn.position, spawn.rotation, false);
+            ped.NetPlayerOwnerGameObject = player.gameObject;
             ped.WeaponHolder.autoAddWeapon = true;
             // this ped should not be destroyed when he gets out of range
             ped.gameObject.DestroyComponent<OutOfRangeDestroyer>();
+
+            NetManager.Spawn(ped.gameObject);
+
+            player.OwnedPed = ped;
 
             Debug.LogFormat("Spawned ped for player {0}, net id {1}", player.connectionToClient.address, ped.netId);
 
