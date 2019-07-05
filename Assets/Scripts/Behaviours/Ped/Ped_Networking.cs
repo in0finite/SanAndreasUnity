@@ -14,6 +14,9 @@ namespace SanAndreasUnity.Behaviours
         [Range(1f / 60f, 0.5f)] [SerializeField] float m_inputSendInterval = 1f / 30f;
         float m_timeSinceSentInput = 0f;
 
+        [SyncVar] GameObject m_net_playerOwnerGameObject;
+        internal GameObject NetPlayerOwnerGameObject { set { m_net_playerOwnerGameObject = value; } }
+
         [SyncVar(hook=nameof(Net_OnIdChanged))] int m_net_pedId = 0;
 
         struct StateSyncData
@@ -41,6 +44,12 @@ namespace SanAndreasUnity.Behaviours
 
             if (this.isServer)
                 return;
+
+            // owner player sync var should point to created game object, because player's game object is always created before
+            // ped's game object
+            // assign var in Player script
+            if (m_net_playerOwnerGameObject != null)
+                m_net_playerOwnerGameObject.GetComponent<Player>().OwnedPed = this;
 
             //this.PlayerModel.Load(m_net_pedId);
 
