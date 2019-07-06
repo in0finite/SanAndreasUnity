@@ -139,6 +139,7 @@ namespace SanAndreasUnity.Behaviours
 		AudioSource m_audioSource;
 
 		NetworkedWeapon m_netWeapon;
+		public NetworkedWeapon NetWeapon => m_netWeapon;
 
 
 
