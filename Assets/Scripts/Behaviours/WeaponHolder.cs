@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Behaviours {
 		private	Weapon[]	weapons = new Weapon[(int)WeaponSlot.Count];
 		public	Weapon[]	AllWeapons { get { return this.weapons.Where (w => w != null).ToArray (); } }
 
-		private	int		currentWeaponSlot = -1;
+		private	int		currentWeaponSlot = 0;
 		public	int		CurrentWeaponSlot { get { return this.currentWeaponSlot; } }
 		public	bool	IsHoldingWeapon { get { return this.currentWeaponSlot > 0; } }
 
