@@ -272,9 +272,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			return null;
 		}
 
-		public virtual void OnChangedWeaponByServer(Weapon weapon)
+		public virtual void OnChangedWeaponByServer(int newSlot)
 		{
-
+			m_ped.WeaponHolder.SwitchWeapon(newSlot);
 		}
 
 	}
