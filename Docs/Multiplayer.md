@@ -19,6 +19,8 @@
 
 - sync aim direction
 
+- when (un)hiding weapons, you can't disable their game object
+
 
 - **vehicle is bumping on clients** - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
 
