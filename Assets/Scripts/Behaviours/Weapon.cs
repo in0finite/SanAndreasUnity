@@ -155,7 +155,7 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-		public static Weapon Create (int modelId)
+		public static Weapon Create (int modelId, Ped initialPedOwner)
 		{
 			NetStatus.ThrowIfNotOnServer();
 
@@ -165,15 +165,20 @@ namespace SanAndreasUnity.Behaviours
 			if (null == go)
 				return null;
 
-			// assign model id before spawning it
-			go.GetComponentOrThrow<NetworkedWeapon>().ModelId = modelId;
-
-			// assign owner ped
+			// asign syncvars before spawning it
+			var networkedWeapon = go.GetComponentOrThrow<NetworkedWeapon>();
+			networkedWeapon.ModelId = modelId;
+			networkedWeapon.PedOwner = initialPedOwner;
 
 			// spawn game object here
 			NetManager.Spawn(go);
 
-			return CreatePart2(go, def, weaponData);
+			Weapon weapon = CreatePart2(go, def, weaponData);
+
+			if (initialPedOwner != null)
+				initialPedOwner.WeaponHolder.AddWeapon(weapon);
+
+			return weapon;
 		}
 
 		static GameObject CreatePart1(int modelId, out WeaponDef def, out WeaponData weaponData)
