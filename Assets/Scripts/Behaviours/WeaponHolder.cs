@@ -79,8 +79,7 @@ namespace SanAndreasUnity.Behaviours {
 		#endregion
 
 
-		private Weapon m_currentWeapon;
-		public	Weapon	CurrentWeapon { get => m_currentWeapon; private set { m_currentWeapon = value; if (NetStatus.IsServer) m_ped.m_net_weaponGameObject = value != null ? value.gameObject : null; } }
+		public	Weapon	CurrentWeapon { get => this.weapons[this.currentWeaponSlot]; }
 		private	Transform	CurrentWeaponTransform { get { return CurrentWeapon != null ? CurrentWeapon.transform : null; } }
         
 		private	int		m_frameWhenSwitchedWeapon = 0;
@@ -292,14 +291,15 @@ namespace SanAndreasUnity.Behaviours {
 
 			if (slotIndex >= 0) {
 				
-				CurrentWeapon = weapons [slotIndex];
+				//CurrentWeapon = weapons [slotIndex];
+				var w = weapons [slotIndex];
 
 				// show the weapon
-				if (CurrentWeapon != null)
-					UnHideWeapon (CurrentWeapon);
+				if (w != null)
+					UnHideWeapon (w);
 
 			} else {
-				CurrentWeapon = null;
+				//CurrentWeapon = null;
 			}
 
 			currentWeaponSlot = slotIndex;
@@ -343,7 +343,7 @@ namespace SanAndreasUnity.Behaviours {
 
 			if (slotIndex == currentWeaponSlot) {
 				// update current weapon variable
-				CurrentWeapon = weapons [slotIndex];
+				//CurrentWeapon = weapons [slotIndex];
 
 				// update it's transform
 				this.UpdateWeaponTransform ();
