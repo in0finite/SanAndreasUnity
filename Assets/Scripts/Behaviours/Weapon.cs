@@ -245,12 +245,12 @@ namespace SanAndreasUnity.Behaviours
 			return weapon;
 		}
 
-		internal static void OnWeaponCreatedByServer(int modelId)
+		internal static void OnWeaponCreatedByServer(NetworkedWeapon networkedWeapon)
 		{
 
 			WeaponDef def;
 			WeaponData weaponData;
-			GameObject go = CreatePart1(modelId, out def, out weaponData);
+			GameObject go = CreatePart1(networkedWeapon.ModelId, out def, out weaponData);
 			if (null == go)
 				return;
 
