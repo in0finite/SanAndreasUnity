@@ -79,7 +79,8 @@ namespace SanAndreasUnity.Behaviours {
 		#endregion
 
 
-		public	Weapon	CurrentWeapon { get ; private set ; }
+		private Weapon m_currentWeapon;
+		public	Weapon	CurrentWeapon { get => m_currentWeapon; private set { m_currentWeapon = value; if (NetStatus.IsServer) m_ped.m_net_weaponGameObject = value != null ? value.gameObject : null; } }
 		private	Transform	CurrentWeaponTransform { get { return CurrentWeapon != null ? CurrentWeapon.transform : null; } }
         
 		private	int		m_frameWhenSwitchedWeapon = 0;
