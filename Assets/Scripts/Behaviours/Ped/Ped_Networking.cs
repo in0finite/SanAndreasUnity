@@ -31,7 +31,8 @@ namespace SanAndreasUnity.Behaviours
         
         public static int NumStateChangesReceived { get; private set; }
 
-        [SyncVar(hook=nameof(Net_OnWeaponChanged))] internal GameObject m_net_weaponGameObject;
+        //[SyncVar(hook=nameof(Net_OnWeaponChanged))] GameObject m_net_weaponGameObject;
+        [SyncVar(hook=nameof(Net_OnWeaponChanged))] int m_net_currentWeaponSlot;
 
 
 
@@ -53,11 +54,10 @@ namespace SanAndreasUnity.Behaviours
             if (m_net_playerOwnerGameObject != null)
                 m_net_playerOwnerGameObject.GetComponent<Player>().OwnedPed = this;
 
-            // assign ped owner in current weapon
-            if (m_net_weaponGameObject != null)
-                m_net_weaponGameObject.GetComponent<Weapons.NetworkedWeapon>().PedOwner = this;
-
             this.TryToLoadNewModel(m_net_pedId);
+
+            // switch weapon
+            F.RunExceptionSafe( () => this.WeaponHolder.SwitchWeapon(m_net_currentWeaponSlot) );
 
             this.ChangeStateBasedOnSyncData(new StateSyncData(){state = m_net_state, additionalData = m_net_additionalStateData});
         }
@@ -104,6 +104,12 @@ namespace SanAndreasUnity.Behaviours
                     // assign new state
                     m_net_state = newStateName;
                 }
+
+                if (this.WeaponHolder.CurrentWeaponSlot != m_net_currentWeaponSlot)
+                {
+                    m_net_currentWeaponSlot = this.WeaponHolder.CurrentWeaponSlot;
+                }
+
             }
             
             // send input to server
@@ -187,7 +193,7 @@ namespace SanAndreasUnity.Behaviours
             
         }
 
-        void Net_OnWeaponChanged(GameObject newWeaponGameObject)
+        void Net_OnWeaponChanged(int newSlot)
         {
 
             if (NetStatus.IsServer)
@@ -195,10 +201,13 @@ namespace SanAndreasUnity.Behaviours
 
             F.RunExceptionSafe( () => {
 
-                Debug.LogFormat("weapon changed for ped {0} to {1}", this.DescriptionForLogging, newWeaponGameObject);
+                Debug.LogFormat("weapon slot changed for ped {0} to {1}", this.DescriptionForLogging, newSlot);
 
                 if (this.CurrentState != null)
-                    this.CurrentState.OnChangedWeaponByServer(newWeaponGameObject != null ? newWeaponGameObject.GetComponent<Weapon>() : null);
+                {
+                    //this.CurrentState.OnChangedWeaponByServer(newWeaponGameObject != null ? newWeaponGameObject.GetComponent<Weapon>() : null);
+                    this.CurrentState.OnChangedWeaponByServer(newSlot);
+                }
 
             });
             

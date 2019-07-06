@@ -27,7 +27,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		/// when the state gets activated. </summary>
 		byte[] GetAdditionalNetworkData();
 
-		void OnChangedWeaponByServer(Weapon weapon);
+		void OnChangedWeaponByServer(int newSlot);
 
 	}
 
