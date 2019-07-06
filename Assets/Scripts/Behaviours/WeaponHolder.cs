@@ -363,7 +363,7 @@ namespace SanAndreasUnity.Behaviours {
 		{
 			NetStatus.ThrowIfNotOnServer();
 
-			this.AddWeapon(Weapon.Create (weaponId));
+			Weapon.Create (weaponId, m_ped);
 		}
 
 		public Weapon GetWeaponAtSlot (int slotIndex)
