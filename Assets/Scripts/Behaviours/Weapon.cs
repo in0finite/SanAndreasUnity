@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections.Generic;
 using SanAndreasUnity.Importing.Animation;
 using System.Reflection;
+using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -145,6 +146,8 @@ namespace SanAndreasUnity.Behaviours
 		#endregion
 		*/
 
+		NetworkedWeapon m_netWeapon;
+
 
 
 		static Weapon ()
@@ -161,11 +164,36 @@ namespace SanAndreasUnity.Behaviours
 
 		public static Weapon Load (int modelId)
 		{
-			WeaponDef def = Item.GetDefinition<WeaponDef> (modelId);
+			NetStatus.ThrowIfNotOnServer();
+
+			WeaponDef def;
+			WeaponData weaponData;
+			GameObject go = CreatePart1(modelId, out def, out weaponData);
+			if (null == go)
+				return null;
+
+			// assign model id before spawning it
+			go.GetComponentOrThrow<NetworkedWeapon>().ModelId = modelId;
+
+			// assign owner ped
+
+			// spawn game object here
+			NetManager.Spawn(go);
+
+			return CreatePart2(go, def, weaponData);
+		}
+
+		static GameObject CreatePart1(int modelId, out WeaponDef def, out WeaponData weaponData)
+		{
+			def = null;
+			weaponData = null;
+
+			def = Item.GetDefinition<WeaponDef> (modelId);
 			if (null == def)
 				return null;
 
-			WeaponData weaponData = WeaponData.LoadedWeaponsData.FirstOrDefault (wd => wd.modelId1 == def.Id);
+			var defCopyRef = def;
+			weaponData = WeaponData.LoadedWeaponsData.FirstOrDefault (wd => wd.modelId1 == defCopyRef.Id);
 			if (null == weaponData)
 				return null;
 
@@ -182,6 +210,14 @@ namespace SanAndreasUnity.Behaviours
 			go.transform.SetParent (s_weaponsContainer.transform);
 
 			geoms.AttachFrames (go.transform, MaterialFlags.Default);
+
+			return go;
+		}
+
+		static Weapon CreatePart2(GameObject go, WeaponDef def, WeaponData weaponData)
+		{
+
+			int modelId = def.Id;
 
 			Weapon weapon = AddWeaponComponent (go, weaponData);
 			weapon.definition = def;
@@ -214,6 +250,19 @@ namespace SanAndreasUnity.Behaviours
 			weapon.InitWeapon();
 
 			return weapon;
+		}
+
+		internal static void OnCreatedByServer(int modelId)
+		{
+
+			WeaponDef def;
+			WeaponData weaponData;
+			GameObject go = CreatePart1(modelId, out def, out weaponData);
+			if (null == go)
+				return;
+
+			CreatePart2(go, def, weaponData);
+
 		}
 
 		private static Weapon AddWeaponComponent (GameObject go, WeaponData data)
@@ -254,6 +303,7 @@ namespace SanAndreasUnity.Behaviours
 
 		protected virtual void Awake ()
 		{
+			m_netWeapon = this.GetComponentOrThrow<NetworkedWeapon>();
 			this.GunFlash = this.transform.FindChildRecursive("gunflash");
 		}
 
