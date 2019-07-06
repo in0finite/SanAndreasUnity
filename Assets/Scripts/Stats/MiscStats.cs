@@ -139,6 +139,14 @@ namespace SanAndreasUnity.Stats
                     sb.AppendLine();
                 }
 
+                // info about all weapons
+                sb.AppendFormat("All weapons:\n");
+                foreach (var w in ped.WeaponHolder.AllWeapons)
+                {
+                    sb.AppendFormat("\tslot: {0} name: {1}\n", w.SlotIndex, w.Definition.ModelName);
+                }
+                sb.AppendLine();
+
             }
 
             GUILayout.Label(sb.ToString());
