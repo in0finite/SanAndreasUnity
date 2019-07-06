@@ -155,7 +155,7 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-		public static Weapon Load (int modelId)
+		public static Weapon Create (int modelId)
 		{
 			NetStatus.ThrowIfNotOnServer();
 
