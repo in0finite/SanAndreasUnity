@@ -31,6 +31,8 @@ namespace SanAndreasUnity.Behaviours
         
         public static int NumStateChangesReceived { get; private set; }
 
+        [SyncVar] internal GameObject m_net_weaponGameObject;
+
 
 
         void Awake_Net()
@@ -50,6 +52,10 @@ namespace SanAndreasUnity.Behaviours
             // assign var in Player script
             if (m_net_playerOwnerGameObject != null)
                 m_net_playerOwnerGameObject.GetComponent<Player>().OwnedPed = this;
+
+            // assign ped owner in current weapon
+            if (m_net_weaponGameObject != null)
+                m_net_weaponGameObject.GetComponent<Weapons.NetworkedWeapon>().PedOwner = this;
 
             this.TryToLoadNewModel(m_net_pedId);
 
