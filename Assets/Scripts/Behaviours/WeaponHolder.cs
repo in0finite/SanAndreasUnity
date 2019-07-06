@@ -279,18 +279,18 @@ namespace SanAndreasUnity.Behaviours {
 			if (!NetStatus.IsServer)
 				return;
 			
-			if (slotIndex == currentWeaponSlot)
+			if (slotIndex == this.currentWeaponSlot)
 				return;
 
-			if (CurrentWeapon != null) {
+			if (this.CurrentWeapon != null) {
 				// hide the weapon
-				HideWeapon( CurrentWeapon );
+				HideWeapon( this.CurrentWeapon );
 			}
 
 			if (slotIndex >= 0) {
 				
 				//CurrentWeapon = weapons [slotIndex];
-				var w = weapons [slotIndex];
+				var w = this.weapons [slotIndex];
 
 				// show the weapon
 				if (w != null)
@@ -300,7 +300,7 @@ namespace SanAndreasUnity.Behaviours {
 				//CurrentWeapon = null;
 			}
 
-			currentWeaponSlot = slotIndex;
+			this.currentWeaponSlot = slotIndex;
 
 			m_frameWhenSwitchedWeapon = Time.frameCount;
 
