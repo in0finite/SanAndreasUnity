@@ -253,7 +253,9 @@ namespace SanAndreasUnity.Behaviours
 			if (null == go)
 				return;
 
-			CreatePart2(go, def, weaponData);
+			Weapon weapon = CreatePart2(go, def, weaponData);
+
+			weapon.AssignGunFlashTransform();
 
 		}
 
@@ -296,7 +298,7 @@ namespace SanAndreasUnity.Behaviours
 		protected virtual void Awake ()
 		{
 			m_netWeapon = this.GetComponentOrThrow<NetworkedWeapon>();
-			this.GunFlash = this.transform.FindChildRecursive("gunflash");
+			this.AssignGunFlashTransform();
 		}
 
 		/// <summary>
@@ -487,6 +489,11 @@ namespace SanAndreasUnity.Behaviours
 		{
 			Ped ped = m_ped;
 			ped.PlayerModel.PlayAnim (this.GetAnimBasedOnMovement (this.CanSprintWithIt));
+		}
+
+		void AssignGunFlashTransform()
+		{
+			this.GunFlash = this.transform.FindChildRecursive("gunflash");
 		}
 
 		public virtual void EnableOrDisableGunFlash ()
