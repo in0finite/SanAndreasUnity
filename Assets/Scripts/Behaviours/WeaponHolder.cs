@@ -275,10 +275,10 @@ namespace SanAndreasUnity.Behaviours {
 
 		public void SwitchWeapon (int slotIndex)
 		{
-			// TODO: clients should send request to server to switch weapon
-			if (!NetStatus.IsServer)
-				return;
 			
+			if (slotIndex < 0)
+				slotIndex = 0;
+
 			if (slotIndex == this.currentWeaponSlot)
 				return;
 
@@ -304,7 +304,8 @@ namespace SanAndreasUnity.Behaviours {
 
 			m_frameWhenSwitchedWeapon = Time.frameCount;
 
-			m_ped.StopFiring ();
+			if (NetStatus.IsServer)
+				m_ped.StopFiring ();
 
 			this.UpdateWeaponTransform ();
 
