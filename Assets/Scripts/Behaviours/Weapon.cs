@@ -258,6 +258,9 @@ namespace SanAndreasUnity.Behaviours
 
 			weapon.AssignGunFlashTransform();
 
+			if (weapon.PedOwner != null)
+				weapon.PedOwner.WeaponHolder.AddWeapon(weapon);
+
 		}
 
 		private static Weapon AddWeaponComponent (GameObject go, WeaponData data)
