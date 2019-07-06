@@ -321,6 +321,39 @@ namespace SanAndreasUnity.Behaviours {
 			weapon.gameObject.SetActive (true);
 		}
 
+		public void AddWeapon(Weapon weapon)
+		{
+
+			int slotIndex = weapon.SlotIndex;
+
+			if (this.weapons[slotIndex] == weapon)	// trying to add the weapon that already exists
+				return;
+
+			// destroy current weapon at this slot
+			if (NetStatus.IsServer)
+			{
+				if (this.weapons [slotIndex] != null) {
+					DestroyWeapon (this.weapons [slotIndex]);
+				}
+			}
+			
+			this.weapons [slotIndex] = weapon;
+
+			weapon.PedOwner = m_ped;
+
+			if (slotIndex == this.currentWeaponSlot) {
+				// update current weapon variable
+				//CurrentWeapon = weapons [slotIndex];
+
+				// update it's transform
+				this.UpdateWeaponTransform ();
+			} else {
+				// hide the newly added weapon
+				HideWeapon (weapon);
+			}
+
+		}
+
 		public void SetWeaponAtSlot (Importing.Items.Definitions.WeaponDef weaponDef, int slot)
 		{
 			this.SetWeaponAtSlot (weaponDef.Id, slot);
@@ -328,29 +361,9 @@ namespace SanAndreasUnity.Behaviours {
 
 		public void SetWeaponAtSlot (int weaponId, int slotIndex)
 		{
-			if (!NetStatus.IsServer)
-				return;
+			NetStatus.ThrowIfNotOnServer();
 
-			// destroy current weapon at this slot
-			if (weapons [slotIndex] != null) {
-				DestroyWeapon (weapons [slotIndex]);
-			}
-
-			weapons [slotIndex] = Weapon.Load (weaponId);
-
-			weapons [slotIndex].PedOwner = m_ped;
-
-			if (slotIndex == currentWeaponSlot) {
-				// update current weapon variable
-				//CurrentWeapon = weapons [slotIndex];
-
-				// update it's transform
-				this.UpdateWeaponTransform ();
-			} else {
-				// hide the newly created weapon
-				HideWeapon (weapons[slotIndex]);
-			}
-
+			this.AddWeapon(Weapon.Load (weaponId));
 		}
 
 		public Weapon GetWeaponAtSlot (int slotIndex)
