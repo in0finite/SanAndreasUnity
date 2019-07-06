@@ -8,8 +8,8 @@ namespace SanAndreasUnity.Stats
 {
     public class PlayerStats : MonoBehaviour
     {
-        [SerializeField] float[] m_widths = new float[]{110, 50, 70, 80, 150, 50};
-        [SerializeField] string[] m_columnNames = new string[]{"Address", "Net id", "Ped net id", "Ped model", "Ped state", "Health"};
+        [SerializeField] float[] m_widths = new float[]{110, 50, 70, 80, 150, 50, 80};
+        [SerializeField] string[] m_columnNames = new string[]{"Address", "Net id", "Ped net id", "Ped model", "Ped state", "Health", "Weapon"};
         int m_currentIndex = 0;
 
 
@@ -41,6 +41,7 @@ namespace SanAndreasUnity.Stats
                 GUILayout.Label(p.OwnedPed != null && p.OwnedPed.PedDef != null ? p.OwnedPed.PedDef.ModelName : "", GUILayout.Width(GetWidth()));
                 GUILayout.Label(p.OwnedPed != null && p.OwnedPed.CurrentState != null ? p.OwnedPed.CurrentState.GetType().Name : "", GUILayout.Width(GetWidth()));
                 GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.Health.ToString() : "", GUILayout.Width(GetWidth()));
+                GUILayout.Label(p.OwnedPed != null && p.OwnedPed.CurrentWeapon != null && p.OwnedPed.CurrentWeapon.Definition != null ? p.OwnedPed.CurrentWeapon.Definition.ModelName : "", GUILayout.Width(GetWidth()));
 
                 GUILayout.EndHorizontal();
             }
