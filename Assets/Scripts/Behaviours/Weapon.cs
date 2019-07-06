@@ -95,8 +95,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public Texture2D HudTexture { get; private set; }
 
-		protected Ped m_ped { get; private set; }
-		public Ped PedOwner { get { return m_ped; } internal set { m_ped = value; } }
+		protected Ped m_ped => this.PedOwner;
+		public Ped PedOwner { get { return m_netWeapon.PedOwner; } internal set { m_netWeapon.PedOwner = value; } }
 
 
 		private static List<System.Type> s_weaponTypes = new List<System.Type> ();
