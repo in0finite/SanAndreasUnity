@@ -244,7 +244,7 @@ namespace SanAndreasUnity.Behaviours
 			return weapon;
 		}
 
-		internal static void OnCreatedByServer(int modelId)
+		internal static void OnWeaponCreatedByServer(int modelId)
 		{
 
 			WeaponDef def;
