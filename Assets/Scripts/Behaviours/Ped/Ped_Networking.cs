@@ -31,7 +31,7 @@ namespace SanAndreasUnity.Behaviours
         
         public static int NumStateChangesReceived { get; private set; }
 
-        [SyncVar] internal GameObject m_net_weaponGameObject;
+        [SyncVar(hook=nameof(Net_OnWeaponChanged))] internal GameObject m_net_weaponGameObject;
 
 
 
@@ -183,6 +183,23 @@ namespace SanAndreasUnity.Behaviours
                     byte[] data = string.IsNullOrEmpty(newStateData.additionalData) ? null : System.Text.Encoding.UTF8.GetBytes(newStateData.additionalData);
                     newState.OnSwitchedStateByServer(data);
                 }
+            });
+            
+        }
+
+        void Net_OnWeaponChanged(GameObject newWeaponGameObject)
+        {
+
+            if (NetStatus.IsServer)
+                return;
+
+            F.RunExceptionSafe( () => {
+
+                Debug.LogFormat("weapon changed for ped {0} to {1}", this.DescriptionForLogging, newWeaponGameObject);
+
+                if (this.CurrentState != null)
+                    this.CurrentState.OnChangedWeaponByServer(newWeaponGameObject != null ? newWeaponGameObject.GetComponent<Weapon>() : null);
+
             });
             
         }
