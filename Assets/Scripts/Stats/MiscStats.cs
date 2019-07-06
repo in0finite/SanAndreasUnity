@@ -17,11 +17,13 @@ namespace SanAndreasUnity.Stats
         void OnStatGUI()
         {
 
-            GUILayout.Label("Num peds: " + Ped.NumPeds);
-            GUILayout.Label("Num vehicles: " + Vehicle.NumVehicles);
-            GUILayout.Label("Num ped state changes received: " + Ped.NumStateChangesReceived);
-
             var sb = new System.Text.StringBuilder();
+
+            sb.AppendFormat("num peds: {0}\n", Ped.NumPeds);
+            sb.AppendFormat("num vehicles: {0}\n", Vehicle.NumVehicles);
+            sb.AppendFormat("num ped state changes received: {0}\n", Ped.NumStateChangesReceived);
+
+            sb.AppendLine();
 
             // info about local ped
 
