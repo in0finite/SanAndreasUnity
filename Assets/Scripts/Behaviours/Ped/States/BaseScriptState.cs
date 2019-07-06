@@ -272,6 +272,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			return null;
 		}
 
+		public virtual void OnChangedWeaponByServer(Weapon weapon)
+		{
+
+		}
+
 	}
 
 }

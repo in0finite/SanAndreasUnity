@@ -107,6 +107,8 @@ namespace SanAndreasUnity.Behaviours
 		/// <summary>Is this ped controlled by local player ?</summary>
 		public bool IsControlledByLocalPlayer { get { return this == Ped.Instance; } }
 
+		public string DescriptionForLogging => "(netId = " + this.netId + ")";
+
 
 
         
