@@ -10,9 +10,11 @@ namespace SanAndreasUnity.Behaviours.Weapons
 
         [SyncVar] int m_net_modelId;
         [SyncVar] int m_net_ammoInClip;
-        [SyncVar] int m_net_amooOutsideOfClip;
+        [SyncVar] int m_net_ammoOutsideOfClip;
 
         public int ModelId { get { return m_net_modelId; } set { m_net_modelId = value; } }
+        public int AmmoInClip { get { return m_net_ammoInClip; } set { m_net_ammoInClip = value; } }
+        public int AmmoOutsideOfClip { get { return m_net_ammoOutsideOfClip; } set { m_net_ammoOutsideOfClip = value; } }
 
 
 

@@ -89,8 +89,8 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsGun { get { return this.data.gunData != null; } }
 
 		public int AmmoClipSize { get { return this.data.gunData != null ? this.data.gunData.ammoClip : 0 ; } }
-		public int AmmoInClip { get; set; }
-		public int AmmoOutsideOfClip { get; set; }
+		public int AmmoInClip { get => m_netWeapon.AmmoInClip; set => m_netWeapon.AmmoInClip = value; }
+		public int AmmoOutsideOfClip { get => m_netWeapon.AmmoOutsideOfClip; set => m_netWeapon.AmmoOutsideOfClip = value; }
 		public int TotalAmmo { get { return this.AmmoInClip + this.AmmoOutsideOfClip; } }
 
 		public Texture2D HudTexture { get; private set; }
