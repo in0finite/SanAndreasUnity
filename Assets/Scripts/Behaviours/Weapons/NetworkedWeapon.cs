@@ -28,7 +28,7 @@ namespace SanAndreasUnity.Behaviours.Weapons
                 return;
 
             // create weapon
-            F.RunExceptionSafe( () => Weapon.OnWeaponCreatedByServer(m_net_modelId) );
+            F.RunExceptionSafe( () => Weapon.OnWeaponCreatedByServer(this) );
         }
 
         void Start()
