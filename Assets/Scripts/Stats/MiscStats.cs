@@ -30,7 +30,7 @@ namespace SanAndreasUnity.Stats
             var ped = Ped.Instance;
             if (ped != null)
             {
-                sb.AppendFormat("\nLocal ped:\n");
+                sb.AppendFormat("Local ped:\n");
                 sb.AppendFormat("position: {0}\n", ped.transform.position);
                 sb.AppendFormat("net id: {0}\n", ped.netId);
                 sb.AppendFormat("sync interval: {0}\n", ped.NetTransform.syncInterval);
@@ -113,6 +113,30 @@ namespace SanAndreasUnity.Stats
                     }
                     sb.AppendFormat("\n");
 
+                }
+
+                // info about current weapon
+                var weapon = ped.CurrentWeapon;
+                if (weapon != null)
+                {
+                    sb.AppendFormat("Current weapon:\n");
+
+                    sb.AppendFormat("net id: {0}\n", weapon.NetWeapon.netId);
+
+                    var def = weapon.Definition;
+                    if (def != null)
+                    {
+                        sb.AppendFormat("model id: {0}\n", def.Id);
+                        sb.AppendFormat("name: {0}\n", def.ModelName);
+                    }
+                    
+                    sb.AppendFormat("max range: {0}\n", weapon.MaxRange);
+                    sb.AppendFormat("damage: {0}\n", weapon.Damage);
+                    sb.AppendFormat("ammo clip size: {0}\n", weapon.AmmoClipSize);
+                    sb.AppendFormat("ammo: {0} / {1}\n", weapon.AmmoInClip, weapon.AmmoOutsideOfClip);
+                    sb.AppendFormat("slot: {0}\n", weapon.SlotIndex);
+                    
+                    sb.AppendLine();
                 }
 
             }
