@@ -155,9 +155,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 //
 //			m_player.transform.LookAt (lookAtPos, Vector3.up);
 
-			// TODO: this will not work if ped doesn't have camera
-
-			Vector3 forward = ped.Camera.transform.forward;
+			Vector3 forward = ped.AimDirection;
 			forward.y = 0;
 			forward.Normalize ();
 		//	m_player.transform.forward = forward;
