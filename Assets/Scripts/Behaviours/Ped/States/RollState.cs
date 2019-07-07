@@ -89,20 +89,24 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if( !this.IsActiveState )
 				return;
 
-			// check if anim is finished
-
-			if( null == m_animState || !m_animState.enabled )
+			if (m_isServer)
 			{
-				// anim finished
-				// switch to other state
+				// check if anim is finished
 
-				// try to switch to crouch aim state
-				CrouchState.SwitchToAimState(m_ped);
-				if( !this.IsActiveState )
-					return;
+				if( null == m_animState || !m_animState.enabled )
+				{
+					// anim finished
+					// switch to other state
 
-				// switch to crouch state
-				m_ped.SwitchState<CrouchState>();
+					// try to switch to crouch aim state
+					CrouchState.SwitchToAimState(m_ped);
+					if( !this.IsActiveState )
+						return;
+
+					// switch to crouch state
+					m_ped.SwitchState<CrouchState>();
+				}
+
 			}
 
 		}
