@@ -138,7 +138,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// we need to override default behaviour, because otherwise ped will be turning around while aiming
 			// with AWA weapons
 
-			m_ped.Heading = m_ped.AimDirection.WithXAndZ ().normalized;
+			if (m_isServer || m_ped.IsControlledByLocalPlayer)
+				m_ped.Heading = m_ped.AimDirection.WithXAndZ ().normalized;
 		}
 
 		public override Vector3 GetCameraFocusPos ()
