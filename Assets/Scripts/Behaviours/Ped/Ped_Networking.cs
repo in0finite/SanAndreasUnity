@@ -31,6 +31,9 @@ namespace SanAndreasUnity.Behaviours
         
         public static int NumStateChangesReceived { get; private set; }
 
+        [SyncVar] Vector3 m_net_movementInput;
+        [SyncVar] Vector3 m_net_heading;
+
         //[SyncVar(hook=nameof(Net_OnWeaponChanged))] GameObject m_net_weaponGameObject;
         [SyncVar(hook=nameof(Net_OnWeaponChanged))] int m_net_currentWeaponSlot;
 
@@ -84,9 +87,10 @@ namespace SanAndreasUnity.Behaviours
         void Update_Net()
         {
             
-            // update syncvars
             if (NetStatus.IsServer)
             {
+                // update syncvars
+
                 if (this.PedDef != null && this.PedDef.Id != m_net_pedId)
                     m_net_pedId = this.PedDef.Id;
 
@@ -107,9 +111,26 @@ namespace SanAndreasUnity.Behaviours
                     m_net_state = newStateName;
                 }
 
+                if (m_net_movementInput != this.Movement)
+                    m_net_movementInput = this.Movement;
+
+                if (m_net_heading != this.Heading)
+                    m_net_heading = this.Heading;
+
                 if (this.WeaponHolder.CurrentWeaponSlot != m_net_currentWeaponSlot)
                 {
                     m_net_currentWeaponSlot = this.WeaponHolder.CurrentWeaponSlot;
+                }
+
+            }
+            else
+            {
+                // apply syncvars
+
+                if (!this.IsControlledByLocalPlayer)
+                {
+                    this.Movement = m_net_movementInput;
+                    this.Heading = m_net_heading;
                 }
 
             }
