@@ -21,6 +21,8 @@
 
 - send aim/fire input to server
 
+- weapon sound should be 3d
+
 
 - **vehicle is bumping on clients** - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
 

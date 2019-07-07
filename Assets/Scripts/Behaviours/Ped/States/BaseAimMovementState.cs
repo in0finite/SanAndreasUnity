@@ -418,6 +418,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			var weapon = ped.CurrentWeapon;
 
 
+			if (!m_isServer)
+				return false;
+
 			if (ped.IsFiring)
 				return false;
 
