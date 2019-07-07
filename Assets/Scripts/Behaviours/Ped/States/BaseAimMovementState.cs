@@ -30,14 +30,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				return;
 
 
-			if (this.SwitchToNonAimMovementState ())
-				return;
-			if (this.SwitchToFiringState ())
-				return;
-			if (this.SwitchToOtherAimMovementState ())
-				return;
-			if (this.SwitchToFallingState ())
-				return;
+			if (m_isServer)
+			{
+				if (this.SwitchToNonAimMovementState ())
+					return;
+				if (this.SwitchToFiringState ())
+					return;
+				if (this.SwitchToOtherAimMovementState ())
+					return;
+				if (this.SwitchToFallingState ())
+					return;
+			}
 
 		}
 
