@@ -32,19 +32,21 @@ namespace SanAndreasUnity.Net
 
         }
 
-        public void SendInput(bool isWalkOn, bool isRunOn, bool isSprintOn, Vector3 movementInput, bool isJumpOn, Vector3 heading)
+        public void SendInput(bool isWalkOn, bool isRunOn, bool isSprintOn, Vector3 movementInput, 
+            bool isJumpOn, Vector3 heading, Vector3 aimDir)
         {
-            this.CmdSendingInput(isWalkOn, isRunOn, isSprintOn, movementInput, isJumpOn, heading);
+            this.CmdSendingInput(isWalkOn, isRunOn, isSprintOn, movementInput, isJumpOn, heading, aimDir);
         }
 
         public void SendInput()
         {
             Ped ped = m_ped;
-            this.SendInput(ped.IsWalkOn, ped.IsRunOn, ped.IsSprintOn, ped.Movement, ped.IsJumpOn, ped.Heading);
+            this.SendInput(ped.IsWalkOn, ped.IsRunOn, ped.IsSprintOn, ped.Movement, ped.IsJumpOn, ped.Heading, ped.AimDirection);
         }
 
         [Command]
-        void CmdSendingInput(bool isWalkOn, bool isRunOn, bool isSprintOn, Vector3 movementInput, bool isJumpOn, Vector3 heading)
+        void CmdSendingInput(bool isWalkOn, bool isRunOn, bool isSprintOn, Vector3 movementInput, 
+            bool isJumpOn, Vector3 heading, Vector3 aimDir)
         {
             if (null == m_ped)
                 return;
@@ -57,6 +59,7 @@ namespace SanAndreasUnity.Net
             ped.Movement = movementInput;
             ped.IsJumpOn = isJumpOn;
             ped.Heading = heading;
+            ped.AimDirection = aimDir;
 
         }
 

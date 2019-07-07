@@ -90,7 +90,7 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsAiming { get { return m_weaponHolder.IsAiming; } }
 		public Weapon CurrentWeapon { get { return m_weaponHolder.CurrentWeapon; } }
 		public bool IsFiring { get { return m_weaponHolder.IsFiring; } }
-		public Vector3 AimDirection { get { return m_weaponHolder.AimDirection; } }
+		public Vector3 AimDirection { get { return m_weaponHolder.AimDirection; } set => m_weaponHolder.AimDirection = value; }
 		public bool IsAimOn { get ; set ; }
 		public bool IsFireOn { get ; set ; }
 		public bool IsHoldingWeapon { get { return m_weaponHolder.IsHoldingWeapon; } }
