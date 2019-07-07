@@ -17,9 +17,9 @@
 - port the whole UI to multiplayer
 
 
-- when (un)hiding weapons, you can't disable their game object
-
 - add option to remove current weapon - for testing
+
+- send aim/fire input to server
 
 
 - **vehicle is bumping on clients** - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
