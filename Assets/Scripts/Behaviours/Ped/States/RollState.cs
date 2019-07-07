@@ -55,7 +55,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override void UpdateHeading ()
 		{
-			m_ped.Heading = m_ped.transform.forward;
+			if (m_isServer || m_ped.IsControlledByLocalPlayer)
+				m_ped.Heading = m_ped.transform.forward;
 		}
 
 		protected override void UpdateRotation ()
