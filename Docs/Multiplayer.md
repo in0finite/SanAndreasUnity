@@ -21,6 +21,10 @@
 
 - send aim/fire input to server
 
+- sync fire event
+
+- gun flash doesn't work on client ?
+
 - weapon sound should be 3d
 
 
