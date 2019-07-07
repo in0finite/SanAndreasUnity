@@ -271,7 +271,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 					//	if (!ped.IsFireOn || !ped.IsAimOn)
 						{
 							// no longer firing
-							ped.StopFiring ();
+							if (Net.NetStatus.IsServer)
+							{
+								ped.StopFiring ();
+							}
 						}
 					}
 				} else {
