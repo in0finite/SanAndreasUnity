@@ -315,12 +315,20 @@ namespace SanAndreasUnity.Behaviours {
 
 		private static void HideWeapon (Weapon weapon)
 		{
-			weapon.gameObject.SetActive (false);
+			//weapon.gameObject.SetActive (false);
+
+			foreach (var r in weapon.GetComponentsInChildren<Renderer>()) {
+				r.enabled = false;
+			}
 		}
 
 		private static void UnHideWeapon (Weapon weapon)
 		{
-			weapon.gameObject.SetActive (true);
+			//weapon.gameObject.SetActive (true);
+
+			foreach (var r in weapon.GetComponentsInChildren<Renderer>()) {
+				r.enabled = true;
+			}
 		}
 
 		public void AddWeapon(Weapon weapon)
