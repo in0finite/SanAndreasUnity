@@ -48,10 +48,20 @@ namespace SanAndreasUnity.Behaviours {
 
 		public	Vector3	AimDirection {
 			get {
-				if (this.IsAiming && this.Camera != null)
-					return this.Camera.transform.forward;
+				if (m_ped.IsControlledByLocalPlayer)
+				{
+					if (this.IsAiming && this.Camera != null)
+						return this.Camera.transform.forward;
+					else
+						return this.transform.forward;
+				}
 				else
-					return this.transform.forward;
+				{
+					return m_ped.m_net_aimDir;
+				}
+			}
+			set {
+				m_ped.m_net_aimDir = value;
 			}
 		}
 

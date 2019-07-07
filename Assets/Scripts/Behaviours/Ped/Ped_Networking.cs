@@ -34,6 +34,8 @@ namespace SanAndreasUnity.Behaviours
         //[SyncVar(hook=nameof(Net_OnWeaponChanged))] GameObject m_net_weaponGameObject;
         [SyncVar(hook=nameof(Net_OnWeaponChanged))] int m_net_currentWeaponSlot;
 
+        [SyncVar] internal Vector3 m_net_aimDir;
+
 
 
         void Awake_Net()
