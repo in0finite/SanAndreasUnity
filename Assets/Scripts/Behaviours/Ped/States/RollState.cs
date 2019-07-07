@@ -66,7 +66,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override void UpdateMovement ()
 		{
-			m_ped.Movement = m_rollLeft ? -m_ped.transform.right : m_ped.transform.right;
+			// adjust movement input before updating movement
+			// because only server knows direction of rolling, we'll do this only on server
+			if (m_isServer)
+				m_ped.Movement = m_rollLeft ? -m_ped.transform.right : m_ped.transform.right;
+			
 			base.UpdateMovement();
 		}
 
