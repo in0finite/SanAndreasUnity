@@ -17,8 +17,6 @@
 - port the whole UI to multiplayer
 
 
-- sync aim direction
-
 - when (un)hiding weapons, you can't disable their game object
 
 - add option to remove current weapon - for testing

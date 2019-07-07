@@ -246,14 +246,6 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
-		public void RotatePlayerInDirectionOfAiming ()
-		{
-			if (!this.IsAiming)
-				return;
-			
-			Peds.States.BaseAimMovementState.RotatePedInDirectionOfAiming (m_ped);
-		}
-
 
 		public void SwitchWeapon( bool next )
 		{
