@@ -85,6 +85,17 @@ namespace SanAndreasUnity.Net
             F.RunExceptionSafe( () => m_player.OwnedPed.PlayerModel.Load(Ped.RandomPedId) );
         }
 
+        public void SpawnPedStalker() => this.CmdSpawnPedStalker();
+
+        [Command]
+        void CmdSpawnPedStalker()
+        {
+            if (!this.CanMakePedRequest())
+                return;
+
+            F.RunExceptionSafe( () => Ped.SpawnPedStalker(Ped.RandomPedId, m_ped.transform) );
+        }
+
         public void RequestSuicide()
         {
             this.CmdRequestSuicide();
