@@ -34,6 +34,8 @@ namespace SanAndreasUnity.Behaviours
         [SyncVar] Vector3 m_net_movementInput;
         [SyncVar] Vector3 m_net_heading;
 
+        [SyncVar] float m_net_health;
+
         //[SyncVar(hook=nameof(Net_OnWeaponChanged))] GameObject m_net_weaponGameObject;
         [SyncVar(hook=nameof(Net_OnWeaponChanged))] int m_net_currentWeaponSlot;
 
@@ -117,6 +119,9 @@ namespace SanAndreasUnity.Behaviours
                 if (m_net_heading != this.Heading)
                     m_net_heading = this.Heading;
 
+                if (m_net_health != this.Health)
+                    m_net_health = this.Health;
+
                 if (this.WeaponHolder.CurrentWeaponSlot != m_net_currentWeaponSlot)
                 {
                     m_net_currentWeaponSlot = this.WeaponHolder.CurrentWeaponSlot;
@@ -132,6 +137,8 @@ namespace SanAndreasUnity.Behaviours
                     this.Movement = m_net_movementInput;
                     this.Heading = m_net_heading;
                 }
+
+                this.Health = m_net_health;
 
             }
             
