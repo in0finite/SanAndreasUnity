@@ -60,11 +60,14 @@ namespace SanAndreasUnity.UI {
 					widthPercsButtons, buttonSpacing );
 			}
 
-			// button to kill all peds
-			if (GUILayout.Button ("Kill all peds", GUILayout.Width (100))) {
-				KillAllPeds ();
+			if (NetUtils.IsServer)
+			{
+				// button to kill all peds
+				if (GUILayout.Button ("Kill all peds", GUILayout.Width (100))) {
+					KillAllPeds ();
+				}
+				GUILayout.Space (5);
 			}
-			GUILayout.Space (5);
 
 
 			// page view numbers
