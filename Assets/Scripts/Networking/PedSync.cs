@@ -137,5 +137,29 @@ namespace SanAndreasUnity.Net
         }
 
 
+        public static void OnWeaponFired(Ped ped, Weapon weapon, Vector3 firePos)
+        {
+            foreach (var p in Player.AllPlayersEnumerable)
+                p.GetComponent<PedSync>().TargetOnWeaponFired(p.connectionToClient, ped.gameObject, weapon.gameObject, firePos);
+        }
+
+        [TargetRpc]
+        void TargetOnWeaponFired(NetworkConnection conn, GameObject pedGo, GameObject weaponGo, Vector3 firePos)
+        {
+            if (NetStatus.IsServer)
+                return;
+            if (null == weaponGo || null == pedGo)
+                return;
+            
+            F.RunExceptionSafe( () => {
+                var ped = pedGo.GetComponent<Ped>();
+                var weapon = weaponGo.GetComponent<Weapon>();
+
+                if (ped.CurrentState != null)
+                    ped.CurrentState.OnWeaponFiredFromServer(weapon, firePos);
+            });
+            
+        }
+
     }
 }

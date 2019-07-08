@@ -29,6 +29,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		void OnChangedWeaponByServer(int newSlot);
 
+		void OnWeaponFiredFromServer(Weapon weapon, Vector3 firePos);
+
 	}
 
 }

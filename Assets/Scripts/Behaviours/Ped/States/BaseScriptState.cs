@@ -285,6 +285,16 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_ped.WeaponHolder.SwitchWeapon(newSlot);
 		}
 
+		public virtual void OnWeaponFiredFromServer(Weapon weapon, Vector3 firePos)
+		{
+			// update gun flash
+			if (weapon.GunFlash != null)
+				weapon.GunFlash.gameObject.SetActive (true);
+			weapon.UpdateGunFlashRotation ();
+
+            weapon.PlayFireSound();
+		}
+
 	}
 
 }
