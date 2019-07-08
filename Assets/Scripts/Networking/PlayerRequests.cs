@@ -56,19 +56,17 @@ namespace SanAndreasUnity.Net
             return bCan;
         }
 
-        public void RequestVehicleSpawn()
-        {
-            this.CmdRequestVehicleSpawn();
-        }
+        public void RequestVehicleSpawn(int vehicleId) => this.CmdRequestVehicleSpawn(vehicleId);
 
         [Command]
-        void CmdRequestVehicleSpawn()
+        void CmdRequestVehicleSpawn(int vehicleId)
         {
             if (!this.CanPlayerSpawnVehicle())
                 return;
 
             m_timeWhenSpawnedVehicle = Time.time;
-            F.RunExceptionSafe( () => FindObjectOfType<UIVehicleSpawner> ().SpawnVehicle(m_player.OwnedPed) );
+            
+            F.RunExceptionSafe( () => Vehicle.CreateInFrontOf(vehicleId, m_ped.transform) );
         }
 
         public void RequestPedModelChange()

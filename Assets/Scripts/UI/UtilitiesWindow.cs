@@ -47,9 +47,8 @@ namespace SanAndreasUnity.UI {
 			Transform nearbyTransform = Ped.Instance != null ? Ped.Instance.transform : null;
 
 			if (GUILayout.Button ("Spawn random vehicle")) {
-				var spawner = FindObjectOfType<UIVehicleSpawner> ();
-				if (spawner)
-					spawner.SpawnVehicle ();
+				if (Ped.Instance != null)
+					Behaviours.Vehicles.Vehicle.CreateRandomInFrontOf(Ped.Instance.transform);
 			}
 
 			if (GUILayout.Button("Change player model"))
@@ -91,7 +90,7 @@ namespace SanAndreasUnity.UI {
 
 			if (GUILayout.Button("Request vehicle"))
 			{
-				pr.RequestVehicleSpawn();
+				pr.RequestVehicleSpawn(-1);
 			}
 
 			if (GUILayout.Button("Request ped model change"))

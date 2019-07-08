@@ -98,24 +98,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         }
 
 
-		/// <summary>
-		/// Gets the position for spawning based on current position of player.
-		/// </summary>
-		public static void GetPositionForSpawning(out Vector3 pos, out Quaternion rot) {
+		public static void GetPositionForSpawning(Transform inFrontOfTransform, out Vector3 pos, out Quaternion rot) {
 
 			pos = Vector3.zero;
 			rot = Quaternion.identity;
 
-			//if (null == PlayerController.Instance)
-			//	return;
-
-			var cont = PlayerController.Instance;
-
 			Vector3 spawnOffset = new Vector3 (0, 2, 5);
 
-			pos = cont.transform.position + cont.transform.forward * spawnOffset.z + cont.transform.up * spawnOffset.y
-				+ cont.transform.right * spawnOffset.x;
-			rot = Quaternion.LookRotation(-cont.transform.right, Vector3.up);
+			pos = inFrontOfTransform.position + inFrontOfTransform.forward * spawnOffset.z + inFrontOfTransform.up * spawnOffset.y
+				+ inFrontOfTransform.right * spawnOffset.x;
+			rot = Quaternion.LookRotation(-inFrontOfTransform.right, Vector3.up);
 
 		}
 
@@ -130,15 +122,20 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 			return Create (carId, null, position, rotation);
 		}
 
-		public static Vehicle CreateInFrontOfPlayer(int carId) {
+		public static Vehicle CreateInFrontOf(int carId, Transform inFrontOfTransform) {
 
 			Vector3 pos;
 			Quaternion rot;
 
-			GetPositionForSpawning (out pos, out rot);
+			GetPositionForSpawning (inFrontOfTransform, out pos, out rot);
 
 			return Create (carId, pos, rot);
 		}
+
+        public static Vehicle CreateRandomInFrontOf(Transform inFrontOfTransform)
+        {
+            return CreateInFrontOf(-1, inFrontOfTransform);
+        }
 
         public static Vehicle Create(int carId, int[] colors, Vector3 position, Quaternion rotation)
         {

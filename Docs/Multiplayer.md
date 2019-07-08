@@ -12,11 +12,13 @@
 
 - send button input events to server: 
 
-- add ability for client to request: destroy my vehicles ; spawn stalker ped ;
+- add ability for client to request: destroy my vehicles ;
 
 - port the whole UI to multiplayer
 
 - fix connection timeout bug
+
+- add current date to logs
 
 
 - create weapon prefab ; add it to spawnable prefabs list ;

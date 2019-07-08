@@ -86,7 +86,7 @@ namespace SanAndreasUnity.UI {
 					//GUILayout.BeginHorizontal ();
 
 					if (GUILayout.Button (v.GameName, GUILayout.Width(this.columnWidths[0]))) {
-						Behaviours.Vehicles.Vehicle.CreateInFrontOfPlayer (v.Id);
+						Behaviours.Vehicles.Vehicle.CreateInFrontOf (v.Id, Behaviours.Ped.Instance.transform);
 					}
 					//GUILayout.Label (v.ClassName, GUILayout.Width (this.columnWidths [1]));
 					//GUILayout.Label (v.Id.ToString(), GUILayout.Width (this.columnWidths [2]));
