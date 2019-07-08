@@ -137,50 +137,5 @@ namespace SanAndreasUnity.Net
         }
 
 
-        public void PedStartedEnteringVehicle(Ped ped)
-        {
-            NetStatus.ThrowIfNotOnServer();
-
-            if (this.isLocalPlayer)
-                return;
-
-            // send message to client
-            this.TargetPedStartedEnteringVehicle(this.connectionToClient, ped.gameObject, ped.CurrentVehicle.gameObject,
-                ped.CurrentVehicleSeatAlignment);
-        }
-
-        [TargetRpc]
-        void TargetPedStartedEnteringVehicle(NetworkConnection conn, GameObject pedGo, 
-            GameObject vehicleGo, Vehicle.SeatAlignment seatAlignment)
-        {
-            if (null == pedGo || null == vehicleGo)
-                return;
-
-            pedGo.GetComponent<Ped>().GetStateOrLogError<VehicleEnteringState>()
-                .EnterVehicle(vehicleGo.GetComponent<Vehicle>(), seatAlignment, false);
-        }
-
-        public void PedEnteredVehicle(Ped ped)
-        {
-            NetStatus.ThrowIfNotOnServer();
-
-            if (this.isLocalPlayer)
-                return;
-
-            this.TargetPedEnteredVehicle(this.connectionToClient, ped.gameObject, ped.CurrentVehicle.gameObject,
-                ped.CurrentVehicleSeatAlignment);
-        }
-
-        [TargetRpc]
-        void TargetPedEnteredVehicle(NetworkConnection conn, GameObject pedGo, 
-            GameObject vehicleGo, Vehicle.SeatAlignment seatAlignment)
-        {
-            if (null == pedGo || null == vehicleGo)
-                return;
-
-            pedGo.GetComponent<Ped>().GetStateOrLogError<VehicleSittingState>()
-                .EnterVehicle(vehicleGo.GetComponent<Vehicle>(), seatAlignment);
-        }
-
     }
 }
