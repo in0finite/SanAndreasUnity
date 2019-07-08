@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Linq;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
+using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Behaviours.Vehicles;
 
 namespace SanAndreasUnity.UI {
 
@@ -86,7 +88,7 @@ namespace SanAndreasUnity.UI {
 					//GUILayout.BeginHorizontal ();
 
 					if (GUILayout.Button (v.GameName, GUILayout.Width(this.columnWidths[0]))) {
-						Behaviours.Vehicles.Vehicle.CreateInFrontOf (v.Id, Behaviours.Ped.Instance.transform);
+						Vehicle.CreateInFrontOf (v.Id, Ped.Instance.transform);
 					}
 					//GUILayout.Label (v.ClassName, GUILayout.Width (this.columnWidths [1]));
 					//GUILayout.Label (v.Id.ToString(), GUILayout.Width (this.columnWidths [2]));
