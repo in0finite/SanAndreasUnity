@@ -19,9 +19,9 @@
 
 - add option to remove current weapon - for testing
 
-- send aim/fire input to server
-
 - sync fire event
+
+- sync health
 
 - gun flash doesn't work on client ?
 
