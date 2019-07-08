@@ -108,9 +108,9 @@ namespace SanAndreasUnity.UI {
 				pr.SpawnPedStalker();
 			}
 
-			if (GUILayout.Button("Request to destroy all vehicles"))
+			if (GUILayout.Button("Request to destroy my vehicles"))
 			{
-				pr.RequestToDestroyAllVehicles();
+				pr.RequestToDestroyMyVehicles();
 			}
 
 		}
