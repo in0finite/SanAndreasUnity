@@ -211,12 +211,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void OnFireButtonPressed()
 		{
-
+			if (m_shouldSendButtonEvents)
+				PedSync.Local.OnFireButtonPressed();
 		}
 
 		public virtual void OnAimButtonPressed()
 		{
-
+			if (m_shouldSendButtonEvents)
+				PedSync.Local.OnAimButtonPressed();
 		}
 
 		public virtual void OnSubmitPressed()
