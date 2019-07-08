@@ -89,12 +89,12 @@ namespace SanAndreasUnity.UI {
 
 			var pr = Net.PlayerRequests.Local;
 
-			if (GUILayout.Button("Request to spawn vehicle"))
+			if (GUILayout.Button("Request vehicle"))
 			{
 				pr.RequestVehicleSpawn();
 			}
 
-			if (GUILayout.Button("Request to change ped model"))
+			if (GUILayout.Button("Request ped model change"))
 			{
 				pr.RequestPedModelChange();
 			}
@@ -104,7 +104,7 @@ namespace SanAndreasUnity.UI {
 				pr.RequestSuicide();
 			}
 
-			if (GUILayout.Button("Request to spawn ped stalker"))
+			if (GUILayout.Button("Request ped stalker"))
 			{
 				pr.SpawnPedStalker();
 			}
