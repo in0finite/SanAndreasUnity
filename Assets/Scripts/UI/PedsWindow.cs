@@ -125,20 +125,25 @@ namespace SanAndreasUnity.UI {
 					// display additional options
 
 					if (playerExists) {
-						itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
-						if (GUI.Button (itemRect, "Switch")) {
-							Ped.Instance.PlayerModel.Load (def.Id);
+
+						if (NetUtils.IsServer)
+						{
+							itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
+							if (GUI.Button (itemRect, "Switch")) {
+								Ped.Instance.PlayerModel.Load (def.Id);
+							}
+
+							itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
+							if (GUI.Button (itemRect, "Spawn")) {
+								Ped.SpawnPed (def.Id, Ped.Instance.transform);
+							}
+
+							itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
+							if (GUI.Button (itemRect, "Spawn stalker")) {
+								Ped.SpawnPedStalker (def.Id, Ped.Instance.transform, Ped.Instance);
+							}
 						}
-					}
 
-					itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
-					if (GUI.Button (itemRect, "Spawn")) {
-						Ped.SpawnPed (def.Id);
-					}
-
-					itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
-					if (GUI.Button (itemRect, "Spawn stalker")) {
-						Ped.SpawnPedStalker (def.Id);
 					}
 
 				}
