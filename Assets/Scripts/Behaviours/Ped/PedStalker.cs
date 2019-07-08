@@ -13,6 +13,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public float stoppingDistance = 3;
 
+		public Ped TargetPed { get; set; }
+
 
 
 		void Awake ()
@@ -26,19 +28,18 @@ namespace SanAndreasUnity.Behaviours
 			// reset input
 			this.MyPed.ResetInput ();
 
-			// follow player instance
+			// follow target ped
 
-			if (Ped.Instance != null) {
+			if (this.TargetPed != null) {
 
-				Vector3 targetPos = Ped.InstancePos;
+				Vector3 targetPos = this.TargetPed.transform.position;
 				float currentStoppingDistance = this.stoppingDistance;
 
-				if (Ped.Instance.IsInVehicleSeat && !this.MyPed.IsInVehicle) {
+				if (this.TargetPed.IsInVehicleSeat && !this.MyPed.IsInVehicle) {
 					// find a free vehicle seat to enter vehicle
 
-					var vehicle = Ped.Instance.CurrentVehicle;
-					//	var seat = Player.Instance.CurrentVehicleSeatAlignment;
-
+					var vehicle = this.TargetPed.CurrentVehicle;
+					
 					var closestfreeSeat = Ped.GetFreeSeats (vehicle).Select (sa => new { sa = sa, tr = vehicle.GetSeatTransform (sa) })
 						.OrderBy (s => s.tr.Distance (this.transform.position))
 						.FirstOrDefault ();
@@ -56,7 +57,7 @@ namespace SanAndreasUnity.Behaviours
 						}
 					}
 
-				} else if (!Ped.Instance.IsInVehicle && this.MyPed.IsInVehicleSeat) {
+				} else if (!this.TargetPed.IsInVehicle && this.MyPed.IsInVehicleSeat) {
 					// target player is not in vehicle, and ours is
 					// exit the vehicle
 
