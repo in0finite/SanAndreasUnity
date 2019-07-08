@@ -118,6 +118,24 @@ namespace SanAndreasUnity.Net
                 m_ped.OnAimButtonPressed();
         }
 
+        public void OnNextWeaponButtonPressed() => this.CmdOnNextWeaponButtonPressed();
+        
+        [Command]
+        void CmdOnNextWeaponButtonPressed()
+        {
+            if (m_ped != null)
+                m_ped.OnNextWeaponButtonPressed();
+        }
+
+        public void OnPreviousWeaponButtonPressed() => this.CmdOnPreviousWeaponButtonPressed();
+        
+        [Command]
+        void CmdOnPreviousWeaponButtonPressed()
+        {
+            if (m_ped != null)
+                m_ped.OnPreviousWeaponButtonPressed();
+        }
+
 
         public void PedStartedEnteringVehicle(Ped ped)
         {
