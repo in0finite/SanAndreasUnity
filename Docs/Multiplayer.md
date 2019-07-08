@@ -19,13 +19,9 @@
 
 - add option to remove current weapon - for testing
 
-- sync health
-
-- gun flash doesn't work on client ?
+- create weapon prefab ; add it to spawnable prefabs list ;
 
 - weapon sound should be 3d
-
-- prevent tick rate override by Mirror
 
 
 - **vehicle is bumping on clients** - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
