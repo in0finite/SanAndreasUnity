@@ -81,6 +81,7 @@ namespace SanAndreasUnity.Net
             v.Braking = braking;
         }
 
+
         public void OnCrouchButtonPressed() => this.CmdOnCrouchButtonPressed();
         
         [Command]
@@ -98,6 +99,25 @@ namespace SanAndreasUnity.Net
             if (m_ped)
                 m_ped.OnSubmitPressed();
         }
+
+        public void OnFireButtonPressed() => this.CmdOnFireButtonPressed();
+        
+        [Command]
+        void CmdOnFireButtonPressed()
+        {
+            if (m_ped != null)
+                m_ped.OnFireButtonPressed();
+        }
+
+        public void OnAimButtonPressed() => this.CmdOnAimButtonPressed();
+        
+        [Command]
+        void CmdOnAimButtonPressed()
+        {
+            if (m_ped != null)
+                m_ped.OnAimButtonPressed();
+        }
+
 
         public void PedStartedEnteringVehicle(Ped ped)
         {
