@@ -4,6 +4,7 @@ using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Behaviours;
 using System.Linq;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.UI {
 
@@ -40,21 +41,18 @@ namespace SanAndreasUnity.UI {
 				GUILayout.BeginHorizontal ();
 
 				if (GUILayout.Button ("Add random weapons", GUILayout.ExpandWidth(false)))
-					Ped.Instance.WeaponHolder.AddRandomWeapons ();
+					PlayerRequests.Local.AddRandomWeapons ();
 
 				GUILayout.Space (5);
 
 				if (GUILayout.Button ("Remove all weapons", GUILayout.ExpandWidth(false)))
-					Ped.Instance.WeaponHolder.RemoveAllWeapons ();
+					PlayerRequests.Local.RemoveAllWeapons ();
 
 				GUILayout.Space (5);
 
 				if (GUILayout.Button ("Give ammo", GUILayout.ExpandWidth (false)))
-				{
-					foreach (var weapon in Ped.Instance.WeaponHolder.AllWeapons)
-						WeaponHolder.AddRandomAmmoAmountToWeapon (weapon);
-				}
-
+					PlayerRequests.Local.GiveAmmo();
+				
 				GUILayout.EndHorizontal ();
 				GUILayout.Space (15);
 			}
@@ -84,9 +82,7 @@ namespace SanAndreasUnity.UI {
 				if (playerExists) {
 					if (GUILayout.Button ("Give", GUILayout.Width(70))) {
 						// give weapon to player
-						Ped.Instance.WeaponHolder.SetWeaponAtSlot( data.modelId1, data.weaponslot );
-						Ped.Instance.WeaponHolder.SwitchWeapon (data.weaponslot);
-						WeaponHolder.AddRandomAmmoAmountToWeapon( Ped.Instance.WeaponHolder.GetWeaponAtSlot (data.weaponslot) );
+						PlayerRequests.Local.GiveWeapon(data.modelId1);
 					}
 				}
 
