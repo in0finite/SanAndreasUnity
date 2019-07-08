@@ -11,10 +11,12 @@ namespace SanAndreasUnity.Net
     public class PlayerRequests : NetworkBehaviour
     {
         Player m_player;
+        Ped m_ped => m_player.OwnedPed;
         public static PlayerRequests Local { get; private set; }
 
         float m_timeWhenSpawnedVehicle = 0f;
         float m_timeWhenChangedPedModel = 0f;
+        float m_timeWhenMadeWeaponRequest = 0f;
 
 
 
@@ -122,6 +124,58 @@ namespace SanAndreasUnity.Net
                 F.RunExceptionSafe( () => m_player.OwnedPed.Teleport(pos, rot) );
             }
         }
+
+
+        #region weapons
+
+        public void AddRandomWeapons() => this.CmdAddRandomWeapons();
+
+        [Command]
+        void CmdAddRandomWeapons()
+        {
+            if (m_ped != null)
+                F.RunExceptionSafe( () => m_ped.WeaponHolder.AddRandomWeapons() );            
+        }
+
+        public void RemoveAllWeapons() => this.CmdRemoveAllWeapons();
+
+        [Command]
+        void CmdRemoveAllWeapons()
+        {
+            if (m_ped != null)
+                F.RunExceptionSafe( () => m_ped.WeaponHolder.RemoveAllWeapons() );            
+        }
+
+        public void GiveAmmo() => this.CmdGiveAmmo();
+
+        [Command]
+        void CmdGiveAmmo()
+        {
+            if (m_ped != null)
+            {
+                F.RunExceptionSafe( () => {
+                    foreach (var w in m_ped.WeaponHolder.AllWeapons)
+                        WeaponHolder.AddRandomAmmoAmountToWeapon(w);
+                } );
+            }
+        }
+
+        public void GiveWeapon(int modelId) => this.CmdGiveWeapon(modelId);
+
+        [Command]
+        void CmdGiveWeapon(int modelId)
+        {
+            if (m_ped != null)
+            {
+                F.RunExceptionSafe( () => {
+                    var w = m_ped.WeaponHolder.SetWeaponAtSlot(modelId, 0);
+                    m_ped.WeaponHolder.SwitchWeapon(w.SlotIndex);
+                    WeaponHolder.AddRandomAmmoAmountToWeapon(w);
+                } );
+            }
+        }
+
+        #endregion
 
     }
 
