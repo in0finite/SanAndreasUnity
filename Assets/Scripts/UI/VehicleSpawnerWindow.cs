@@ -88,7 +88,17 @@ namespace SanAndreasUnity.UI {
 					//GUILayout.BeginHorizontal ();
 
 					if (GUILayout.Button (v.GameName, GUILayout.Width(this.columnWidths[0]))) {
-						Vehicle.CreateInFrontOf (v.Id, Ped.Instance.transform);
+						
+						if (Utilities.NetUtils.IsServer)
+						{
+							if (Ped.Instance != null)
+								Vehicle.CreateInFrontOf (v.Id, Ped.Instance.transform);
+						}
+						else if (Net.PlayerRequests.Local != null)
+						{
+							Net.PlayerRequests.Local.RequestVehicleSpawn(v.Id);
+						}
+						
 					}
 					//GUILayout.Label (v.ClassName, GUILayout.Width (this.columnWidths [1]));
 					//GUILayout.Label (v.Id.ToString(), GUILayout.Width (this.columnWidths [2]));
