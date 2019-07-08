@@ -4,6 +4,7 @@ using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Vehicles;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace SanAndreasUnity.Net
 {
@@ -17,6 +18,8 @@ namespace SanAndreasUnity.Net
         float m_timeWhenSpawnedVehicle = 0f;
         float m_timeWhenMadePedRequest = 0f;
         float m_timeWhenMadeWeaponRequest = 0f;
+
+        List<Vehicle> m_myVehicles = new List<Vehicle>();
 
 
 
@@ -37,10 +40,11 @@ namespace SanAndreasUnity.Net
             if (null == m_player.OwnedPed)
                 return false;
 
-            if (Vehicle.NumVehicles > Ped.NumPeds * 2)
+            if (Time.time - m_timeWhenSpawnedVehicle < 3f)
                 return false;
 
-            if (Time.time - m_timeWhenSpawnedVehicle < 3f)
+            m_myVehicles.RemoveDeadObjects();
+            if (m_myVehicles.Count >= 3)
                 return false;
 
             return true;
@@ -65,8 +69,8 @@ namespace SanAndreasUnity.Net
                 return;
 
             m_timeWhenSpawnedVehicle = Time.time;
-            
-            F.RunExceptionSafe( () => Vehicle.CreateInFrontOf(vehicleId, m_ped.transform) );
+
+            F.RunExceptionSafe( () => m_myVehicles.Add( Vehicle.CreateInFrontOf(vehicleId, m_ped.transform) ) );
         }
 
         public void RequestPedModelChange()
@@ -106,18 +110,18 @@ namespace SanAndreasUnity.Net
                 Destroy(m_player.OwnedPed.gameObject);
         }
 
-        public void RequestToDestroyAllVehicles()
-        {
-            this.CmdRequestToDestroyAllVehicles();
-        }
-
+        public void RequestToDestroyMyVehicles() => this.CmdRequestToDestroyMyVehicles();
+        
         [Command]
-        void CmdRequestToDestroyAllVehicles()
+        void CmdRequestToDestroyMyVehicles()
         {
-            foreach (var v in Vehicle.AllVehicles.ToArray())
-            {
-                Destroy(v.gameObject);
-            }
+            F.RunExceptionSafe( () => {
+                m_myVehicles.RemoveDeadObjects();
+                foreach (var v in m_myVehicles)
+                {
+                    Destroy(v.gameObject);
+                }
+            });
         }
 
         public void RequestTeleport(Vector3 pos, Quaternion rot)
