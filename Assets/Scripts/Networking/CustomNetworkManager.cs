@@ -69,6 +69,13 @@ namespace SanAndreasUnity.Net
             }
         }
 
+        public override void ConfigureServerFrameRate()
+        {
+            // don't set frame rate
+            // it will be done by other scripts
+            
+        }
+
     }
 
 }
