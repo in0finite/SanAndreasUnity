@@ -46,8 +46,11 @@ namespace SanAndreasUnity.UI {
 
 		//	m_headerScrollViewPos = GUILayout.BeginScrollView (m_headerScrollViewPos, GUILayout.Height(headerHeight));
 
-			if (playerExists)
-				Ped.Instance.shouldPlayAnims = !GUILayout.Toggle( !Ped.Instance.shouldPlayAnims, "Override player anims" );
+			if (NetUtils.IsServer)
+			{
+				if (playerExists)
+					Ped.Instance.shouldPlayAnims = !GUILayout.Toggle( !Ped.Instance.shouldPlayAnims, "Override player anims" );
+			}
 
 			m_displayPackages = GUILayout.Toggle(m_displayPackages, "Display packages");
 			
