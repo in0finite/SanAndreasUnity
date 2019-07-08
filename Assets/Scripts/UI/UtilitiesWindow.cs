@@ -69,7 +69,7 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int i = 0; i < 5; i++)
 				{
-					Ped.SpawnPedStalker (Ped.RandomPedId, nearbyTransform);
+					Ped.SpawnPedStalker (Ped.RandomPedId, nearbyTransform, Ped.Instance);
 				}
 			}
 
