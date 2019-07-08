@@ -16,6 +16,8 @@
 
 - port the whole UI to multiplayer
 
+- fix connection timeout bug
+
 
 - create weapon prefab ; add it to spawnable prefabs list ;
 
