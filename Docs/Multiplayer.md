@@ -12,7 +12,7 @@
 
 - send button input events to server: 
 
-- add ability for client to request: destroy my vehicles ;
+- add ability for client to request: ;
 
 - port the whole UI to multiplayer
 
