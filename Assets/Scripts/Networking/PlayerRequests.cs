@@ -128,11 +128,23 @@ namespace SanAndreasUnity.Net
 
         #region weapons
 
+        bool CanMakeWeaponRequest
+        {
+            get
+            {
+                bool bCan = (NetStatus.IsServer && this.isLocalPlayer) || Time.time - m_timeWhenMadeWeaponRequest > 2f;
+                m_timeWhenMadeWeaponRequest = Time.time;
+                return bCan;
+            }
+        }
+
         public void AddRandomWeapons() => this.CmdAddRandomWeapons();
 
         [Command]
         void CmdAddRandomWeapons()
         {
+            if (!this.CanMakeWeaponRequest)
+                return;
             if (m_ped != null)
                 F.RunExceptionSafe( () => m_ped.WeaponHolder.AddRandomWeapons() );            
         }
@@ -142,6 +154,8 @@ namespace SanAndreasUnity.Net
         [Command]
         void CmdRemoveAllWeapons()
         {
+            if (!this.CanMakeWeaponRequest)
+                return;
             if (m_ped != null)
                 F.RunExceptionSafe( () => m_ped.WeaponHolder.RemoveAllWeapons() );            
         }
@@ -151,6 +165,9 @@ namespace SanAndreasUnity.Net
         [Command]
         void CmdGiveAmmo()
         {
+            if (!this.CanMakeWeaponRequest)
+                return;
+            
             if (m_ped != null)
             {
                 F.RunExceptionSafe( () => {
@@ -165,6 +182,9 @@ namespace SanAndreasUnity.Net
         [Command]
         void CmdGiveWeapon(int modelId)
         {
+            if (!this.CanMakeWeaponRequest)
+                return;
+            
             if (m_ped != null)
             {
                 F.RunExceptionSafe( () => {
