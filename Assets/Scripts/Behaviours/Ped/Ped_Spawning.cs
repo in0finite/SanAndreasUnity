@@ -50,11 +50,11 @@ namespace SanAndreasUnity.Behaviours
 			return SpawnPed (def, pos, rot, spawnOnNetwork);
 		}
 
-		public static Ped SpawnPed (int pedId)
+		public static Ped SpawnPed (int pedId, Transform nearbyTransform)
 		{
 			Vector3 pos;
 			Quaternion rot;
-			if (GetPositionForPedSpawn (out pos, out rot))
+			if (GetPositionForPedSpawn (out pos, out rot, nearbyTransform))
 				return SpawnPed (pedId, pos, rot, true);
 			return null;
 		}
@@ -69,28 +69,28 @@ namespace SanAndreasUnity.Behaviours
 			return stalker;
 		}
 
-		public static PedStalker SpawnPedStalker (int pedId)
+		public static PedStalker SpawnPedStalker (int pedId, Transform nearbyTransform)
 		{
 			Vector3 pos;
 			Quaternion rot;
-			if (GetPositionForPedSpawn (out pos, out rot))
+			if (GetPositionForPedSpawn (out pos, out rot, nearbyTransform))
 				return SpawnPedStalker (pedId, pos, rot);
 			return null;
 		}
 
-		public static bool GetPositionForPedSpawn (out Vector3 pos, out Quaternion rot)
+		public static bool GetPositionForPedSpawn (out Vector3 pos, out Quaternion rot, Transform nearbyTransform)
 		{
 			pos = Vector3.zero;
 			rot = Quaternion.identity;
 
-			if (Ped.Instance != null) {
+			if (nearbyTransform != null) {
 
 				Vector3 offset = Random.onUnitSphere;
 				offset.y = 0f;
 				offset.Normalize ();
 				offset *= Random.Range (5f, 15f);
 
-				pos = Ped.Instance.transform.TransformPoint (offset);
+				pos = nearbyTransform.TransformPoint (offset);
 				rot = Random.rotation;
 
 				return true;

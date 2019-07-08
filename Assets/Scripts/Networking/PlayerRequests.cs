@@ -15,7 +15,7 @@ namespace SanAndreasUnity.Net
         public static PlayerRequests Local { get; private set; }
 
         float m_timeWhenSpawnedVehicle = 0f;
-        float m_timeWhenChangedPedModel = 0f;
+        float m_timeWhenMadePedRequest = 0f;
         float m_timeWhenMadeWeaponRequest = 0f;
 
 
@@ -46,13 +46,14 @@ namespace SanAndreasUnity.Net
             return true;
         }
 
-        public bool CanChangePedModel()
+        bool CanMakePedRequest()
         {
-            if (null == m_player.OwnedPed)
-                return false;
-            if (Time.time - m_timeWhenChangedPedModel < 3f)
-                return false;
-            return true;
+            bool bCan = (NetStatus.IsServer && this.isLocalPlayer) || (Time.time - m_timeWhenMadePedRequest > 2f);
+            bCan &= (m_ped != null);
+
+            m_timeWhenMadePedRequest = Time.time;
+            
+            return bCan;
         }
 
         public void RequestVehicleSpawn()
@@ -78,10 +79,9 @@ namespace SanAndreasUnity.Net
         [Command]
         void CmdRequestPedModelChange()
         {
-            if (!this.CanChangePedModel())
+            if (!this.CanMakePedRequest())
                 return;
 
-            m_timeWhenChangedPedModel = Time.time;
             F.RunExceptionSafe( () => m_player.OwnedPed.PlayerModel.Load(Ped.RandomPedId) );
         }
 

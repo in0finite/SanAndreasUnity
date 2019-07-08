@@ -44,6 +44,7 @@ namespace SanAndreasUnity.UI {
 
 		void DisplayServerGui()
 		{
+			Transform nearbyTransform = Ped.Instance != null ? Ped.Instance.transform : null;
 
 			if (GUILayout.Button ("Spawn random vehicle")) {
 				var spawner = FindObjectOfType<UIVehicleSpawner> ();
@@ -60,7 +61,7 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int i = 0; i < 5; i++)
 				{
-					Ped.SpawnPed (Ped.RandomPedId);
+					Ped.SpawnPed (Ped.RandomPedId, nearbyTransform);
 				}
 			}
 
@@ -68,7 +69,7 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int i = 0; i < 5; i++)
 				{
-					Ped.SpawnPedStalker (Ped.RandomPedId);
+					Ped.SpawnPedStalker (Ped.RandomPedId, nearbyTransform);
 				}
 			}
 
