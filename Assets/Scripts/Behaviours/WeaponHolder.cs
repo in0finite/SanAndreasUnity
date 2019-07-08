@@ -369,11 +369,11 @@ namespace SanAndreasUnity.Behaviours {
 			this.SetWeaponAtSlot (weaponDef.Id, slot);
 		}
 
-		public void SetWeaponAtSlot (int weaponId, int slotIndex)
+		public Weapon SetWeaponAtSlot (int weaponId, int slotIndex)
 		{
 			NetStatus.ThrowIfNotOnServer();
 
-			Weapon.Create (weaponId, m_ped);
+			return Weapon.Create (weaponId, m_ped);
 		}
 
 		public Weapon GetWeaponAtSlot (int slotIndex)
