@@ -93,7 +93,7 @@ namespace SanAndreasUnity.Net
             if (!this.CanMakePedRequest())
                 return;
 
-            F.RunExceptionSafe( () => Ped.SpawnPedStalker(Ped.RandomPedId, m_ped.transform) );
+            F.RunExceptionSafe( () => Ped.SpawnPedStalker(Ped.RandomPedId, m_ped.transform, m_ped) );
         }
 
         public void RequestSuicide()
