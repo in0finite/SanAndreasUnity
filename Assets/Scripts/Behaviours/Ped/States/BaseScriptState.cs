@@ -240,12 +240,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void OnNextWeaponButtonPressed()
 		{
-			m_ped.WeaponHolder.SwitchWeapon (true);
+			if (m_isServer)
+				m_ped.WeaponHolder.SwitchWeapon (true);
+			else if (m_shouldSendButtonEvents)
+				PedSync.Local.OnNextWeaponButtonPressed();
 		}
 
 		public virtual void OnPreviousWeaponButtonPressed()
 		{
-			m_ped.WeaponHolder.SwitchWeapon (false);
+			if (m_isServer)
+				m_ped.WeaponHolder.SwitchWeapon (false);
+			else if (m_shouldSendButtonEvents)
+				PedSync.Local.OnPreviousWeaponButtonPressed();
 		}
 
 		public virtual void OnFlyButtonPressed()
