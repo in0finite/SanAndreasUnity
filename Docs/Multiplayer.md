@@ -17,8 +17,6 @@
 - port the whole UI to multiplayer
 
 
-- add option to remove current weapon - for testing ; adapt weapons window ;
-
 - create weapon prefab ; add it to spawnable prefabs list ;
 
 - weapon sound should be 3d
