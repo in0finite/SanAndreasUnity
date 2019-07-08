@@ -50,6 +50,11 @@ namespace SanAndreasUnity.UI {
 
 				GUILayout.Space (5);
 
+				if (GUILayout.Button ("Remove current weapon", GUILayout.ExpandWidth(false)))
+					PlayerRequests.Local.RemoveCurrentWeapon ();
+
+				GUILayout.Space (5);
+
 				if (GUILayout.Button ("Give ammo", GUILayout.ExpandWidth (false)))
 					PlayerRequests.Local.GiveAmmo();
 				

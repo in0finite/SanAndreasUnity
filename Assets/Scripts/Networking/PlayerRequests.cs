@@ -146,7 +146,7 @@ namespace SanAndreasUnity.Net
             if (!this.CanMakeWeaponRequest)
                 return;
             if (m_ped != null)
-                F.RunExceptionSafe( () => m_ped.WeaponHolder.AddRandomWeapons() );            
+                F.RunExceptionSafe( () => m_ped.WeaponHolder.AddRandomWeapons() );
         }
 
         public void RemoveAllWeapons() => this.CmdRemoveAllWeapons();
@@ -157,7 +157,18 @@ namespace SanAndreasUnity.Net
             if (!this.CanMakeWeaponRequest)
                 return;
             if (m_ped != null)
-                F.RunExceptionSafe( () => m_ped.WeaponHolder.RemoveAllWeapons() );            
+                F.RunExceptionSafe( () => m_ped.WeaponHolder.RemoveAllWeapons() );
+        }
+
+        public void RemoveCurrentWeapon() => this.CmdRemoveCurrentWeapon();
+
+        [Command]
+        void CmdRemoveCurrentWeapon()
+        {
+            if (!this.CanMakeWeaponRequest)
+                return;
+            if (m_ped != null && m_ped.CurrentWeapon != null)
+                F.RunExceptionSafe( () => Object.Destroy(m_ped.CurrentWeapon.gameObject) );
         }
 
         public void GiveAmmo() => this.CmdGiveAmmo();
