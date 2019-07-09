@@ -13,7 +13,7 @@
 - add networkeventsmessagebox script to prefab
 
 
-- create weapon from prefab ; add it to spawnable prefabs list ;
+- assign weapon prefab ; add it to spawnable prefabs list ;
 
 - weapon sound should be 3d
 
