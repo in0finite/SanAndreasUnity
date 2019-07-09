@@ -6,6 +6,8 @@ namespace SanAndreasUnity.Behaviours.Weapons
 	
 	public class WeaponsManager : MonoBehaviour {
 
+		public GameObject weaponPrefab;
+
 		[SerializeField] [Range(2.5f, 4.5f)] private float m_animConvertMultiplier = 3.5f;
 		public float AnimConvertMultiplier { get { return m_animConvertMultiplier; } set { m_animConvertMultiplier = value; } }
 
