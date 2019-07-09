@@ -73,7 +73,7 @@ namespace SanAndreasUnity.Net
         void Start()
         {
             // log some info
-            if (NetStatus.IsServer && !this.isLocalPlayer)
+            if (!this.isLocalPlayer)
                 Debug.LogFormat("Player {0} connected, time: {1}", this.DescriptionForLogging, F.CurrentDateForLogging);
 
             F.InvokeEventExceptionSafe(onStart, this);
@@ -84,7 +84,7 @@ namespace SanAndreasUnity.Net
             base.OnNetworkDestroy();
             
             // log some info about this
-            if (NetStatus.IsServer && !this.isLocalPlayer)
+            if (!this.isLocalPlayer)
                 Debug.LogFormat("Player {0} disconnected, time: {1}", this.DescriptionForLogging, F.CurrentDateForLogging);
         }
 
