@@ -767,6 +767,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4450559263798022}
   - component: {fileID: 114473132252556806}
+  - component: {fileID: 821925318372548346}
   m_Layer: 0
   m_Name: UI
   m_TagString: UI
@@ -806,6 +807,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 409653cfe36614ceab3cbfbf9ed04fce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &821925318372548346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611271869868126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc0c52cc14297f5caccf816a24e17ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleToDisplayWhenClientDisconnects: Client disconnected
+  messageToDisplayWhenClientDisconnects: Client disconnected from server. If you want
+    to connect again, you will have to restart the game.
 --- !u!1 &1627404700688260
 GameObject:
   m_ObjectHideFlags: 0
