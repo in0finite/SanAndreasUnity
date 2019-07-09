@@ -109,6 +109,7 @@ namespace SanAndreasUnity.Net
                 if (Time.time - this.connectionToClient.lastMessageTime > 6f)
                 {
                     // disconnect client
+                    Debug.LogFormat("Detected dead connection for player {0}", this.DescriptionForLogging);
                     this.connectionToClient.Disconnect();
                 }
             }
