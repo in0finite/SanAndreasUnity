@@ -29,7 +29,7 @@ namespace SanAndreasUnity.Utilities {
 		void Update () {
 
 			// FPS counting
-			fpsDeltaTime += (Time.deltaTime - fpsDeltaTime) * 0.1f;
+			fpsDeltaTime += (Time.unscaledDeltaTime - fpsDeltaTime) * 0.1f;
 
 			if (Input.GetKeyDown(KeyCode.F10))
 				_showFPS = !_showFPS;
