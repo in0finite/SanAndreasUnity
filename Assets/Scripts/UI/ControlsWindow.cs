@@ -37,24 +37,23 @@ namespace SanAndreasUnity.UI {
 
 			return
 			"V - Spawn vehicle\n\n" +
-			"P - Change pedestrian model\n\n" +
-			"W/A/S/D - Move player\n\n" +
-			"Left Shift - Jump\n\n" +
+			"P - Change ped model\n\n" +
+			"W/A/S/D - Move ped\n\n" +
 			"Space - Sprint\n\n" +
-			"Mouse Scroll - Zoom in / out player camera\n\n" +
+			"Alt - Walk\n\n" +
+			"Left shift - Jump\n\n" +
+			"Mouse scroll - Zoom in / out camera\n\n" +
 			"E/Q - Next/previous weapon\n\n" +
 			"Esc - Toggle pause menu\n\n" +
-			"T - Fly mode\n\n" +
-			"R - Fly through mode\n\n" +
+			(Utilities.NetUtils.IsServer ?
+			("T - Fly mode\n\n" +
+			"R - Fly through mode\n\n") : "") +
 			"Enter - Enter/exit vehicles\n\n" +
-			"L - Turn off / on car lights\n\n" +
-			"F10 - Toggle FPS\n\n" +
-			"F9 - Toggle velocimeter\n\n" +
-			"O - Toggle quality\n\n" +
+			"F10 - Toggle FPS counter\n\n" +
 			"B - Zoom out minimap\n\n" +
 			"N - Zoom in minimap\n\n" +
 			"M - Open the entire map\n\n" +
-			"F8 - Show more info in the minimap";
+			"F8 - Show more info in the minimap\n\n";
 
 		}
 
