@@ -93,7 +93,7 @@ namespace SanAndreasUnity.UI
 
 		}
 
-		public static void RegisterMenuItem (MenuEntry menuEntry)
+		public static void RegisterMenuEntry (MenuEntry menuEntry)
 		{
 			s_rootMenuEntry.AddChild (menuEntry);
 		}

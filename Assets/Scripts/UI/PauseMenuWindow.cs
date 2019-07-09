@@ -262,7 +262,7 @@ namespace SanAndreasUnity.UI {
 
 			MenuEntry menuEntry = new MenuEntry(){name = this.windowName, sortPriority = m_sortPriorityForMainMenu, 
 				drawAction = () => this.OnMainMenuGUI()};
-			MainMenu.RegisterMenuItem (menuEntry);
+			MainMenu.RegisterMenuEntry (menuEntry);
 		}
 
 		private void OnMainMenuGUI ()
