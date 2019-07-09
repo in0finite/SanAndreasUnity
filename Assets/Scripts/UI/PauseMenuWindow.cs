@@ -269,11 +269,16 @@ namespace SanAndreasUnity.UI {
 		{
 			// draw a button in main menu
 
+			var originalColor = GUI.contentColor;
+			if (this.IsOpened)
+				GUI.contentColor = MainMenu.Instance.openedWindowTextColor;
+
 			if (GUILayout.Button (this.windowName, MainMenu.ButtonLayoutOptions))
 			{
 				this.IsOpened = !this.IsOpened;
 			}
 
+			GUI.contentColor = originalColor;
 		}
 
 	}
