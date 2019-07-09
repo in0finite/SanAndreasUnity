@@ -25,6 +25,8 @@ namespace SanAndreasUnity.Net
         //public GameObject OwnedGameObject { get { return m_ownedGameObject; } internal set { m_ownedGameObject = value; } }
         public Ped OwnedPed { get { return m_ownedPed; } internal set { m_ownedPed = value; m_ownedGameObject = value != null ? value.gameObject : null; } }
 
+        public string DescriptionForLogging => "(netId=" + this.netId + ", addr=" + (this.connectionToClient != null ? this.connectionToClient.address : "") + ")";
+
 
 
         public static Player GetOwningPlayer(Ped ped)
@@ -72,7 +74,7 @@ namespace SanAndreasUnity.Net
         {
             // log some info
             if (NetStatus.IsServer && !this.isLocalPlayer)
-                Debug.LogFormat("Player (netId={0}, addr={1}) connected, time: {2}", this.netId, this.connectionToClient.address, F.CurrentDateForLogging);
+                Debug.LogFormat("Player {0} connected, time: {1}", this.DescriptionForLogging, F.CurrentDateForLogging);
 
             F.InvokeEventExceptionSafe(onStart, this);
         }
@@ -83,7 +85,7 @@ namespace SanAndreasUnity.Net
             
             // log some info about this
             if (NetStatus.IsServer && !this.isLocalPlayer)
-                Debug.LogFormat("Player (netId={0}, addr={1}) disconnected, time: {2}", this.netId, this.connectionToClient.address, F.CurrentDateForLogging);
+                Debug.LogFormat("Player {0} disconnected, time: {1}", this.DescriptionForLogging, F.CurrentDateForLogging);
         }
 
         void OnOwnedGameObjectChanged(GameObject newGo)
