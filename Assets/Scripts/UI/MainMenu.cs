@@ -9,10 +9,14 @@ namespace SanAndreasUnity.UI
 	
 	public class MainMenu : MonoBehaviour {
 
+		public static MainMenu Instance { get; private set; }
+
 		public float minButtonHeight = 25f;
 		public float minButtonWidth = 70f;
 		public float spaceAtBottom = 15f;
 		public float spaceBetweenButtons = 5f;
+
+		public Color openedWindowTextColor = Color.green;
 
 		public bool drawBackground = false;
 		public Color backgroundColor = Color.black;
@@ -25,9 +29,10 @@ namespace SanAndreasUnity.UI
 
 
 
-		void Start ()
+		void Awake()
 		{
-			
+			if (null == Instance)
+				Instance = this;
 		}
 
 		void OnGUI ()
