@@ -98,6 +98,21 @@ namespace SanAndreasUnity.Net
             m_ownedPed = m_ownedGameObject != null ? m_ownedGameObject.GetComponent<Ped>() : null;
         }
 
+        void Update()
+        {
+
+            // Telepathy does not detect dead connections, so we'll have to detect them ourselves
+            if (NetStatus.IsServer && !this.isLocalPlayer)
+            {
+                if (Time.time - this.connectionToClient.lastMessageTime > 6f)
+                {
+                    // disconnect client
+                    this.connectionToClient.Disconnect();
+                }
+            }
+
+        }
+
     }
 
 }

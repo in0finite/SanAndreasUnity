@@ -16,8 +16,6 @@
 
 - fix connection timeout bug
 
-- add current date to logs
-
 
 - create weapon prefab ; add it to spawnable prefabs list ;
 
