@@ -8,6 +8,7 @@ namespace SanAndreasUnity.UI
         public string name = "";
         public int sortPriority = 0;
         public List<MenuEntry> children = new List<MenuEntry>();
+        public System.Action drawAction = null;
 
         public void AddChild(MenuEntry entry)
         {

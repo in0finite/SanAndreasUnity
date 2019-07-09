@@ -18,10 +18,10 @@ namespace SanAndreasUnity.UI
 		public Color backgroundColor = Color.black;
 		public bool drawLogo = false;
 
-		private static List<System.Action> s_registeredMenuItems = new List<System.Action>();
-
 		private static GUILayoutOption[] s_buttonOptions = new GUILayoutOption[0];
 		public static GUILayoutOption[] ButtonLayoutOptions { get { return s_buttonOptions; } }
+
+		static MenuEntry s_rootMenuEntry = new MenuEntry();
 
 
 
@@ -69,9 +69,10 @@ namespace SanAndreasUnity.UI
 			GUILayout.FlexibleSpace ();
 
 			// draw registered menu items
-			foreach (var item in s_registeredMenuItems)
+			foreach (var item in s_rootMenuEntry.children)
 			{
-				item ();
+				if (item.drawAction != null)
+					item.drawAction();
 				GUILayout.Space (this.spaceBetweenButtons);
 			}
 
@@ -92,9 +93,9 @@ namespace SanAndreasUnity.UI
 
 		}
 
-		public static void RegisterMenuItem (System.Action action)
+		public static void RegisterMenuItem (MenuEntry menuEntry)
 		{
-			s_registeredMenuItems.AddIfNotPresent (action);
+			s_rootMenuEntry.AddChild (menuEntry);
 		}
 
 	}
