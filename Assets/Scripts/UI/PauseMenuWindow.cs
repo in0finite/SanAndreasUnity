@@ -68,6 +68,7 @@ namespace SanAndreasUnity.UI {
 
 		[SerializeField]	private	bool	m_registerInMainMenuOnStart = false;
 		public	bool	IsRegisteredInMainMenu { get; private set; }
+		[SerializeField] int m_sortPriorityForMainMenu = 0;
 
 		private static GameObject s_windowsContainer;
 
@@ -258,7 +259,10 @@ namespace SanAndreasUnity.UI {
 				return;
 
 			this.IsRegisteredInMainMenu = true;
-			MainMenu.RegisterMenuItem ( () => this.OnMainMenuGUI() );
+
+			MenuEntry menuEntry = new MenuEntry(){name = this.windowName, sortPriority = m_sortPriorityForMainMenu, 
+				drawAction = () => this.OnMainMenuGUI()};
+			MainMenu.RegisterMenuItem (menuEntry);
 		}
 
 		private void OnMainMenuGUI ()
