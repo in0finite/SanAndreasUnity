@@ -111,6 +111,17 @@ public class FileBrowser {
 	}
 	protected GUIStyle m_centredText;
 
+	protected GUIStyle m_buttonStyle;
+	protected GUIStyle ButtonStyle {
+		get {
+			if (null == m_buttonStyle) {
+				m_buttonStyle = new GUIStyle(GUI.skin.button);
+				m_buttonStyle.fixedHeight = 25;
+			}
+			return m_buttonStyle;
+		}
+	}
+
 	protected string m_name;
 	protected Rect m_screenRect;
 
@@ -289,7 +300,7 @@ public class FileBrowser {
 			GUILayout.BeginHorizontal();
 
 			foreach (var drive in m_drives) {
-				if (GUILayout.Button (drive)) {
+				if (GUILayout.Button (drive, this.ButtonStyle)) {
 					SetNewDirectory (drive);
 				}
 			}
@@ -304,7 +315,7 @@ public class FileBrowser {
 		for (int parentIndex = 0; parentIndex < m_currentDirectoryParts.Length; ++parentIndex) {
 			if (parentIndex == m_currentDirectoryParts.Length - 1) {
 				GUILayout.Label(m_currentDirectoryParts[parentIndex], CentredText);
-			} else if (GUILayout.Button(m_currentDirectoryParts[parentIndex])) {
+			} else if (GUILayout.Button(m_currentDirectoryParts[parentIndex], this.ButtonStyle)) {
 				string parentDirectoryName = m_currentDirectory;
 				for (int i = m_currentDirectoryParts.Length - 1; i > parentIndex; --i) {
 					parentDirectoryName = Path.GetDirectoryName(parentDirectoryName);
@@ -327,6 +338,7 @@ public class FileBrowser {
 		m_selectedDirectory = xGUILayout.SelectionList(
 			m_selectedDirectory,
 			m_directoriesWithImages,
+			this.ButtonStyle,
 			DirectoryDoubleClickCallback
 		);
 		if (m_selectedDirectory > -1) {
@@ -335,6 +347,7 @@ public class FileBrowser {
 		m_selectedNonMatchingDirectory = xGUILayout.SelectionList(
 			m_selectedNonMatchingDirectory,
 			m_nonMatchingDirectoriesWithImages,
+			this.ButtonStyle,
 			NonMatchingDirectoryDoubleClickCallback
 		);
 		if (m_selectedNonMatchingDirectory > -1) {
@@ -344,6 +357,7 @@ public class FileBrowser {
 		m_selectedFile = xGUILayout.SelectionList(
 			m_selectedFile,
 			m_filesWithImages,
+			this.ButtonStyle,
 			FileDoubleClickCallback
 		);
 		GUI.enabled = true;
@@ -353,7 +367,8 @@ public class FileBrowser {
 		GUI.enabled = false;
 		xGUILayout.SelectionList(
 			-1,
-			m_nonMatchingFilesWithImages
+			m_nonMatchingFilesWithImages,
+			this.ButtonStyle
 		);
 		GUI.enabled = true;
 		GUILayout.EndScrollView();
