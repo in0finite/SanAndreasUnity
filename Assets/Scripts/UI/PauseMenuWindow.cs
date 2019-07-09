@@ -244,6 +244,10 @@ namespace SanAndreasUnity.UI {
 
 			// display button for opening/closing window
 
+			var originalColor = GUI.contentColor;
+			if (this.IsOpened)
+				GUI.contentColor = PauseMenu.Instance.openedWindowTextColor;
+
 		//	string text = this.IsOpened ? "Hide " + this.windowName : "Show " + this.windowName;
 			string text = this.windowName;
 
@@ -251,6 +255,7 @@ namespace SanAndreasUnity.UI {
 				this.IsOpened = ! this.IsOpened;
 			}
 
+			GUI.contentColor = originalColor;
 		}
 
 		public void RegisterInMainMenu ()
