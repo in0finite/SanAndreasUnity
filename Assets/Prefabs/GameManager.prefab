@@ -53,7 +53,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baae2154fadd37540b96289b2b9e9d39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnOffset: {x: 0, y: 2, z: 5}
   spawnKey: 118
 --- !u!114 &114659537100185892
 MonoBehaviour:
@@ -96,6 +95,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b19ecbdc94cb426782bb12647cbe133, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponPrefab: {fileID: 4054766663391349888, guid: df1f8ef3d99c152cfb414f719d5e2bbf,
+    type: 3}
   m_animConvertMultiplier: 3.25
   m_gunFlashDuration: 0.07
   m_gunFlashRotationSpeed: 3600
