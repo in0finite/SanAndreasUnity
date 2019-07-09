@@ -18,8 +18,6 @@
 
 - Gravity setting failed to load on windows - instead of 9.81, it's loaded as 981 - maybe it happens when float.ToString() gives e
 
-- Update controls window
-
 - Does 'O' button changes quality level ?
 
 - Highlight buttons of opened windows in pause menu
