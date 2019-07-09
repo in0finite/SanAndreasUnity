@@ -161,7 +161,7 @@ namespace SanAndreasUnity.Behaviours
 
 			WeaponDef def;
 			WeaponData weaponData;
-			GameObject go = CreatePart1(modelId, out def, out weaponData);
+			GameObject go = CreatePart1(modelId, null, out def, out weaponData);
 			if (null == go)
 				return null;
 
@@ -181,7 +181,7 @@ namespace SanAndreasUnity.Behaviours
 			return weapon;
 		}
 
-		static GameObject CreatePart1(int modelId, out WeaponDef def, out WeaponData weaponData)
+		static GameObject CreatePart1(int modelId, GameObject go, out WeaponDef def, out WeaponData weaponData)
 		{
 			def = null;
 			weaponData = null;
@@ -204,7 +204,9 @@ namespace SanAndreasUnity.Behaviours
 			//	weaponsContainer.SetActive (false);
 			}
 
-			GameObject go = new GameObject (def.ModelName);
+			if (null == go)
+				go = Object.Instantiate(WeaponsManager.Instance.weaponPrefab);
+			go.name = def.ModelName;
 			go.transform.SetParent (s_weaponsContainer.transform);
 
 			geoms.AttachFrames (go.transform, MaterialFlags.Default);
@@ -255,7 +257,7 @@ namespace SanAndreasUnity.Behaviours
 
 			WeaponDef def;
 			WeaponData weaponData;
-			GameObject go = CreatePart1(networkedWeapon.ModelId, out def, out weaponData);
+			GameObject go = CreatePart1(networkedWeapon.ModelId, networkedWeapon.gameObject, out def, out weaponData);
 			if (null == go)
 				return;
 
