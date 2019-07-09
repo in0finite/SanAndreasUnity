@@ -78,6 +78,7 @@ MonoBehaviour:
   - 80
   - 150
   - 50
+  - 80
   m_columnNames:
   - Address
   - Net id
@@ -85,6 +86,7 @@ MonoBehaviour:
   - Ped model
   - Ped state
   - Health
+  - Weapon
 --- !u!114 &5212539624475708371
 MonoBehaviour:
   m_ObjectHideFlags: 0
