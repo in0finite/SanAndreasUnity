@@ -6,6 +6,10 @@
 
 - add ability for client to request: 
 
+- adjust column widths in player stats
+
+- add num weapons to misc stats ?
+
 
 - weapon sound should be 3d
 

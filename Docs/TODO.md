@@ -20,6 +20,16 @@
 
 - Update controls window
 
+- Increase button height of file browser
+
+- Limit number of messages in console to 200
+
+- Highlight buttons of opened windows in pause menu
+
+- Fps counter should be time-scale independant
+
+- Script execution order: HUD before pause menu and windows ; fps counter after all ;
+
 - Add option to change fixed delta time ?
 
 - Crouching: adjust camera aim offset ? ;
@@ -43,8 +53,6 @@
 - Bug when ped gets down to low heights (trying to move him back to starting location, and causing shaking)
 
 - Minimap size should depend on screen resolution
-
-- Limit number of messages in console to 200
 
 
 - Import Vice City
