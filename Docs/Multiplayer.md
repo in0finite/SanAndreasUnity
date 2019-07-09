@@ -10,8 +10,10 @@
 
 - add ability for client to request: 
 
+- add networkeventsmessagebox script to prefab
 
-- create weapon prefab ; add it to spawnable prefabs list ;
+
+- create weapon from prefab ; add it to spawnable prefabs list ;
 
 - weapon sound should be 3d
 
