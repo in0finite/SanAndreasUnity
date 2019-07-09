@@ -20,8 +20,6 @@
 
 - Update controls window
 
-- Increase button height of file browser
-
 - Highlight buttons of opened windows in pause menu
 
 - Fps counter should be time-scale independant
