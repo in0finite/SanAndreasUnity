@@ -107,6 +107,18 @@ namespace SanAndreasUnity.Utilities
                      new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
         }
 
+        public static string CurrentDateForLogging
+        {
+            get
+            {
+                try {
+                    return System.DateTime.Now.ToString("dd MMM HH:mm:ss");
+                } catch {
+                    return "";
+                }
+            }
+        }
+
         public static string Nl2Br(this string str)
         {
             return str.Replace(Environment.NewLine, "<br>");

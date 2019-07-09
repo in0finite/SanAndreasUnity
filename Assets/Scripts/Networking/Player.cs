@@ -72,7 +72,7 @@ namespace SanAndreasUnity.Net
         {
             // log some info
             if (NetStatus.IsServer && !this.isLocalPlayer)
-                Debug.LogFormat("Player (netId={0}, addr={1}) connected", this.netId, this.connectionToClient.address);
+                Debug.LogFormat("Player (netId={0}, addr={1}) connected, time: {2}", this.netId, this.connectionToClient.address, F.CurrentDateForLogging);
 
             F.InvokeEventExceptionSafe(onStart, this);
         }
@@ -83,7 +83,7 @@ namespace SanAndreasUnity.Net
             
             // log some info about this
             if (NetStatus.IsServer && !this.isLocalPlayer)
-                Debug.LogFormat("Player (netId={0}, addr={1}) disconnected", this.netId, this.connectionToClient.address);
+                Debug.LogFormat("Player (netId={0}, addr={1}) disconnected, time: {2}", this.netId, this.connectionToClient.address, F.CurrentDateForLogging);
         }
 
         void OnOwnedGameObjectChanged(GameObject newGo)

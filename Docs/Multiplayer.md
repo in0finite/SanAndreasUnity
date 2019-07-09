@@ -14,8 +14,6 @@
 
 - add ability for client to request: ;
 
-- port the whole UI to multiplayer
-
 - fix connection timeout bug
 
 - add current date to logs
