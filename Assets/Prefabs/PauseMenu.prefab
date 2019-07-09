@@ -177,6 +177,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 15
   m_spaceAfterContent: 5
   m_registerInMainMenuOnStart: 1
+  m_sortPriorityForMainMenu: 1000
   restrictLogCount: 1
   maxLogCount: 1000
 --- !u!114 &114611395026534988
@@ -205,6 +206,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
 --- !u!114 &114636911127793484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,6 +233,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
 --- !u!114 &114911863237150764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +260,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
 --- !u!114 &114753158958291610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,6 +287,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
 --- !u!114 &114604904801458000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,6 +314,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 15
   m_spaceAfterContent: 10
   m_registerInMainMenuOnStart: 1
+  m_sortPriorityForMainMenu: 500
 --- !u!114 &114769417846371336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,6 +341,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
 --- !u!114 &114366197016130562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,6 +368,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
 --- !u!114 &114396965753478646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,6 +395,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
 --- !u!114 &114184621571316304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -413,6 +422,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
 --- !u!114 &114509004744246330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -439,6 +449,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
   numPedsPerPage: 30
 --- !u!114 &114096753951945486
 MonoBehaviour:

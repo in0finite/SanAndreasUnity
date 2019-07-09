@@ -687,6 +687,7 @@ MonoBehaviour:
   minButtonWidth: 80
   spaceAtBottom: 40
   spaceBetweenButtons: 30
+  openedWindowTextColor: {r: 0, g: 1, b: 0, a: 1}
   drawBackground: 1
   backgroundColor: {r: 0.064887136, g: 0.04111782, b: 0.11320752, a: 1}
   drawLogo: 1
@@ -1139,6 +1140,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 1
+  m_sortPriorityForMainMenu: 800
 --- !u!114 &114940213983707650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1165,6 +1167,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 20
   m_spaceAfterContent: 10
   m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
   toolbarAreaHeight: 40
   timingAreaHeight: 40
   sideBarWidthPerc: 0.25
@@ -1194,6 +1197,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 1
+  m_sortPriorityForMainMenu: -1000
   m_availableScenes:
   - Main
   - Demo
@@ -1223,6 +1227,7 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 1
+  m_sortPriorityForMainMenu: -800
 --- !u!114 &7093715299490892338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1249,3 +1254,4 @@ MonoBehaviour:
   m_spaceBeforeContent: 0
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
