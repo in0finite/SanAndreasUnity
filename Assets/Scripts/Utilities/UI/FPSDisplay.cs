@@ -38,8 +38,8 @@ namespace SanAndreasUnity.Utilities {
 
 		void OnGUI() {
 
-			if (Event.current.type != EventType.Repaint)
-				return;
+			// if (Event.current.type != EventType.Repaint)
+			// 	return;
 
 			if (_showFPS)
 			{

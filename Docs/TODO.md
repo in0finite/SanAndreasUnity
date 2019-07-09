@@ -20,8 +20,6 @@
 
 - Does 'O' button changes quality level ?
 
-- Highlight buttons of opened windows in pause menu
-
 - Script execution order: HUD before pause menu and windows ; fps counter after all ;
 
 - Add option to change fixed delta time ?
