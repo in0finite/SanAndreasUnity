@@ -27,6 +27,8 @@ namespace SanAndreasUnity.Net
 			}
 		}
 
+		public static NetManager Instance { get; private set; }
+
 		NetworkClientStatus m_lastClientStatus = NetworkClientStatus.Disconnected;
 		public event System.Action onClientStatusChanged = delegate {};
 
@@ -40,9 +42,15 @@ namespace SanAndreasUnity.Net
 		}
 
 
+		void Awake()
+		{
+			if (null == Instance)
+				Instance = this;
+		}
+
 		void Update()
 		{
-			
+
 			NetworkClientStatus clientStatusNow = NetStatus.clientStatus;
 
 			if (clientStatusNow != m_lastClientStatus)
