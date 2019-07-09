@@ -22,8 +22,6 @@
 
 - Increase button height of file browser
 
-- Limit number of messages in console to 200
-
 - Highlight buttons of opened windows in pause menu
 
 - Fps counter should be time-scale independant

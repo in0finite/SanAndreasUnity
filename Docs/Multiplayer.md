@@ -6,8 +6,6 @@
 
 - add ability for client to request: 
 
-- adjust column widths in player stats
-
 - add num weapons to misc stats ?
 
 

@@ -179,7 +179,7 @@ MonoBehaviour:
   m_registerInMainMenuOnStart: 1
   m_sortPriorityForMainMenu: 1000
   restrictLogCount: 1
-  maxLogCount: 1000
+  maxLogCount: 200
 --- !u!114 &114611395026534988
 MonoBehaviour:
   m_ObjectHideFlags: 0
