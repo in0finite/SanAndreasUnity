@@ -20,6 +20,8 @@
 
 - Update controls window
 
+- Does 'O' button changes quality level ?
+
 - Highlight buttons of opened windows in pause menu
 
 - Fps counter should be time-scale independant
