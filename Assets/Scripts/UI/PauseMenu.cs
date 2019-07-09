@@ -8,6 +8,8 @@ namespace SanAndreasUnity.UI {
 	
 	public class PauseMenu : MonoBehaviour {
 
+		public static PauseMenu Instance { get; private set; }
+
 		private static bool m_isOpened = false;
 
 		public	static	bool	IsOpened
@@ -26,10 +28,15 @@ namespace SanAndreasUnity.UI {
 	//	private	static	Texture2D	m_windowBackgroundTexture = null;
 	//	private	static	bool	m_changedWindowStyle = false;
 
+		public Color openedWindowTextColor = Color.green;
+
 
 
 		void Awake () {
 			
+			if (null == Instance)
+				Instance = this;
+
 		//	m_windowBackgroundTexture = Utilities.F.CreateTexture (1, 1, this.windowsColor);
 
 		}

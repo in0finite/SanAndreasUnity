@@ -22,8 +22,6 @@
 
 - Highlight buttons of opened windows in pause menu
 
-- Fps counter should be time-scale independant
-
 - Script execution order: HUD before pause menu and windows ; fps counter after all ;
 
 - Add option to change fixed delta time ?
