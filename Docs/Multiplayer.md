@@ -7,8 +7,6 @@
 - add ability for client to request: 
 
 
-- assign weapon prefab ; add it to spawnable prefabs list ;
-
 - weapon sound should be 3d
 
 
