@@ -27,6 +27,9 @@ namespace SanAndreasUnity.Net
 			}
 		}
 
+		NetworkClientStatus m_lastClientStatus = NetworkClientStatus.Disconnected;
+		public event System.Action onClientStatusChanged = delegate {};
+
 
 
 		NetManager ()
@@ -34,6 +37,22 @@ namespace SanAndreasUnity.Net
 			// assign implementation in NetUtils
 			// do this in ctor, because it may be too late in Awake() - server can theoretically start before our Awake() is called
 			NetUtils.IsServerImpl = () => NetStatus.IsServer;
+		}
+
+
+		void Update()
+		{
+			
+			NetworkClientStatus clientStatusNow = NetStatus.clientStatus;
+
+			if (clientStatusNow != m_lastClientStatus)
+			{
+				m_lastClientStatus = clientStatusNow;
+
+				// notify
+				F.InvokeEventExceptionSafe(this.onClientStatusChanged);
+			}
+
 		}
 
 
