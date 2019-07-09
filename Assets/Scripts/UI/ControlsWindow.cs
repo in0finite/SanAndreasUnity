@@ -21,7 +21,7 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = new Rect(Screen.width / 2 - 150, 30, 350, 400);
+			this.windowRect = Utilities.GUIUtils.GetCenteredRect(new Vector2(400, 450));
 		}
 
 
