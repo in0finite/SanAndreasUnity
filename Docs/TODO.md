@@ -20,6 +20,10 @@
 
 - Does 'O' button changes quality level ?
 
+- Optimize Console.Update()
+
+- Check how much RAM textures use
+
 - Script execution order: HUD before pause menu and windows ; fps counter after all ;
 
 - Add option to change fixed delta time ?
