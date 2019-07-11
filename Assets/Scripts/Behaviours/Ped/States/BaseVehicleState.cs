@@ -10,8 +10,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		private Vehicle m_currentVehicle;
 		public Vehicle CurrentVehicle { get { return m_currentVehicle; } protected set { m_currentVehicle = value; } }
 
-		public Vehicle.Seat CurrentVehicleSeat { get; protected set; }
-		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return this.CurrentVehicleSeat.Alignment; } }
+		public Vehicle.Seat CurrentVehicleSeat { get => this.CurrentVehicle != null ? this.CurrentVehicle.GetSeat(this.CurrentVehicleSeatAlignment) : null; }
+		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get; protected set; }
+
+		protected uint m_currentVehicleNetId = 0;
+
 
 
 		public override void OnSwitchedStateByServer(byte[] data)
@@ -24,24 +27,31 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected void ReadNetworkData(byte[] data)
 		{
 			// extract vehicle and seat from data
-			var reader = new Mirror.NetworkReader(data);
-			GameObject vehicleGo = reader.ReadGameObject();
-			Vehicle.SeatAlignment seatAlignment = (Vehicle.SeatAlignment) reader.ReadSByte();
 
-			// assign params
+			var reader = new Mirror.NetworkReader(data);
+
+			int magicNumber = reader.ReadInt32();
+			m_currentVehicleNetId = reader.ReadUInt32();
+			this.CurrentVehicleSeatAlignment = (Vehicle.SeatAlignment) reader.ReadSByte();
+
+			// assign current vehicle
+			GameObject vehicleGo = Net.NetManager.GetNetworkObjectById(m_currentVehicleNetId);
 			this.CurrentVehicle = vehicleGo != null ? vehicleGo.GetComponent<Vehicle>() : null;
-			this.CurrentVehicleSeat = this.CurrentVehicle != null ? this.CurrentVehicle.GetSeat(seatAlignment) : null;
+
+			if (magicNumber != 123456789)
+				Debug.LogErrorFormat("magicNumber {0}, m_currentVehicleNetId {1}, data size {2} - this should not happen", magicNumber, m_currentVehicleNetId, data.Length);
 
 		}
 
 		public override byte[] GetAdditionalNetworkData()
 		{
 			var writer = new Mirror.NetworkWriter();
+			writer.Write((int)123456789);
 			if (this.CurrentVehicle != null) {
-				writer.Write(this.CurrentVehicle.gameObject);
+				writer.Write((uint)this.CurrentVehicle.NetTransform.netId);
 				writer.Write((sbyte)this.CurrentVehicleSeatAlignment);
 			} else {
-				writer.Write((GameObject)null);
+				writer.Write((uint)0);
 				writer.Write((sbyte)Vehicle.SeatAlignment.None);
 			}
 			
@@ -89,7 +99,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				this.CurrentVehicleSeat.OccupyingPed = null;
 
 			this.CurrentVehicle = null;
-			this.CurrentVehicleSeat = null;
+			this.CurrentVehicleSeatAlignment = Vehicle.SeatAlignment.None;
 		}
 
 		protected override void UpdateHeading()

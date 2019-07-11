@@ -20,8 +20,6 @@
 
 - Does 'O' button changes quality level ?
 
-- Optimize Console.Update()
-
 - Check how much RAM textures use
 
 - Map window: draw vehicles ;
@@ -31,6 +29,8 @@
 - Add option to change fixed delta time ?
 
 - Crouching: adjust camera aim offset ? ; adjust height offset of ped ;
+
+- Optimize Console.Update() - don't do trim excess for every log message
 
 - don't fade high LOD meshes
 

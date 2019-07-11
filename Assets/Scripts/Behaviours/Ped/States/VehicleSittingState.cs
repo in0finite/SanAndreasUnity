@@ -32,7 +32,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public void EnterVehicle(Vehicle vehicle, Vehicle.Seat seat)
 		{
 			this.CurrentVehicle = vehicle;
-			this.CurrentVehicleSeat = seat;
+			this.CurrentVehicleSeatAlignment = seat.Alignment;
 
 			m_ped.SwitchState<VehicleSittingState> ();
 		}
