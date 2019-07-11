@@ -279,7 +279,7 @@ namespace SanAndreasUnity.UI
 				return null;
 			}
 
-			return m_logs.Last();
+			return m_logs[m_logs.Count - 1];
 		}
 
 		void UpdateQueuedLogs()
