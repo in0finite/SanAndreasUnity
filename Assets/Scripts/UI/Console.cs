@@ -47,7 +47,7 @@ namespace SanAndreasUnity.UI
 
 		int m_selectedLogIndex = -1;
 
-		readonly List<Log> logs = new List<Log>();
+		readonly List<Log> m_logs = new List<Log>();
 		readonly Utilities.ConcurrentQueue<Log> queuedLogs = new Utilities.ConcurrentQueue<Log>();
 
 		readonly Dictionary<LogType, bool> logTypeFilters = new Dictionary<LogType, bool>
@@ -175,9 +175,9 @@ namespace SanAndreasUnity.UI
 			foreach (LogType logType in s_allLogTypes)
 				m_numMessagesPerType [logType] = 0;
 
-			for (int i=0; i < logs.Count; i++)
+			for (int i=0; i < m_logs.Count; i++)
 			{
-				Log log = logs[i];
+				Log log = m_logs[i];
 
 				if (IsLogVisible (log))
 					DrawLog (log, i);
@@ -206,9 +206,9 @@ namespace SanAndreasUnity.UI
 			float height = Mathf.Max( this.windowRect.height / 4, 100 );
 			m_detailsAreaScrollViewPos = GUILayout.BeginScrollView(m_detailsAreaScrollViewPos, GUILayout.Height(height));
 
-			if (m_selectedLogIndex >= 0 && m_selectedLogIndex < this.logs.Count)
+			if (m_selectedLogIndex >= 0 && m_selectedLogIndex < this.m_logs.Count)
 			{
-				Log log = this.logs[m_selectedLogIndex];
+				Log log = this.m_logs[m_selectedLogIndex];
 				GUILayout.Label(log.message);
 				GUILayout.Space(5);
 				GUILayout.Label(log.stackTrace);
@@ -241,7 +241,7 @@ namespace SanAndreasUnity.UI
 
 			if (GUILayout.Button (clearLabel, GUILayout.ExpandWidth(false)))
 			{
-				logs.Clear();
+				m_logs.Clear();
 				m_selectedLogIndex = -1;
 			}
 
@@ -274,12 +274,12 @@ namespace SanAndreasUnity.UI
 
 		Log? GetLastLog()
 		{
-			if (logs.Count == 0)
+			if (m_logs.Count == 0)
 			{
 				return null;
 			}
 
-			return logs.Last();
+			return m_logs.Last();
 		}
 
 		void UpdateQueuedLogs()
@@ -315,11 +315,11 @@ namespace SanAndreasUnity.UI
 			{
 				// Replace previous log with incremented count instead of adding a new one.
 				log.count = lastLog.Value.count + 1;
-				logs[logs.Count - 1] = log;
+				m_logs[m_logs.Count - 1] = log;
 			}
 			else
 			{
-				logs.Add(log);
+				m_logs.Add(log);
 				TrimExcessLogs();
 			}
 		}
@@ -358,14 +358,14 @@ namespace SanAndreasUnity.UI
 				return;
 			}
 
-			var amountToRemove = logs.Count - maxLogCount;
+			var amountToRemove = m_logs.Count - maxLogCount;
 
 			if (amountToRemove <= 0)
 			{
 				return;
 			}
 
-			logs.RemoveRange(0, amountToRemove);
+			m_logs.RemoveRange(0, amountToRemove);
 		}
 	}
 
