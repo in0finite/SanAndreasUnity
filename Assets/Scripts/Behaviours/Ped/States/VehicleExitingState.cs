@@ -91,7 +91,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				animState.wrapMode = WrapMode.Once;
 
 				// wait until anim finishes or stops
-				while (animState.enabled)
+				while (animState != null && animState.enabled)
 					yield return new WaitForEndOfFrame();
 			}
 

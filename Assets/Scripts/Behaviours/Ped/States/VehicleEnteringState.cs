@@ -131,7 +131,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				animState.wrapMode = WrapMode.Once;
 
 				// wait until anim is finished or vehicle is destroyed
-				while (animState.enabled && this.CurrentVehicle != null)
+				while (animState != null && animState.enabled && this.CurrentVehicle != null)
 				{
 					yield return new WaitForEndOfFrame();
 				}
