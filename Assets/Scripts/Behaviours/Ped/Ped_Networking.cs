@@ -173,7 +173,7 @@ namespace SanAndreasUnity.Behaviours
 
         void Net_OnIdChanged(int newId)
         {
-            Debug.LogFormat("ped (net id {0}) changed model id to {1}", this.netId, newId);
+            //Debug.LogFormat("ped (net id {0}) changed model id to {1}", this.netId, newId);
             
             if (this.isServer)
                 return;
@@ -231,7 +231,7 @@ namespace SanAndreasUnity.Behaviours
 
             F.RunExceptionSafe( () => {
 
-                Debug.LogFormat("weapon slot changed for ped {0} to {1}", this.DescriptionForLogging, newSlot);
+                //Debug.LogFormat("weapon slot changed for ped {0} to {1}", this.DescriptionForLogging, newSlot);
 
                 if (this.CurrentState != null)
                 {
