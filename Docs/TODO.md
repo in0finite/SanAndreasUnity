@@ -30,7 +30,7 @@
 
 - Add option to change fixed delta time ?
 
-- Crouching: adjust camera aim offset ? ;
+- Crouching: adjust camera aim offset ? ; adjust height offset of ped ;
 
 - don't fade high LOD meshes
 
