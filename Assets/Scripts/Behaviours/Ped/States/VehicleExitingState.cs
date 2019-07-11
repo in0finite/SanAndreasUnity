@@ -46,7 +46,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			
 			// obtain current vehicle from Ped
 			this.CurrentVehicle = m_ped.CurrentVehicle;
-			this.CurrentVehicleSeat = m_ped.CurrentVehicleSeat;
+			this.CurrentVehicleSeatAlignment = m_ped.CurrentVehicleSeatAlignment;
 
 			m_isExitingImmediately = immediate;
 

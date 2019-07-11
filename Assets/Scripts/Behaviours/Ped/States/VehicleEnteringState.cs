@@ -79,7 +79,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			// first assign params
 			this.CurrentVehicle = vehicle;
-			this.CurrentVehicleSeat = vehicle.GetSeat (seatAlignment);
+			this.CurrentVehicleSeatAlignment = seatAlignment;
 			m_immediate = immediate;
 
 			// switch state

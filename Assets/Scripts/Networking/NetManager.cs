@@ -240,6 +240,17 @@ namespace SanAndreasUnity.Net
 			NetworkManager.singleton.ServerChangeScene(newScene);
 		}
 
+		public static GameObject GetNetworkObjectById(uint netId)
+		{
+			NetworkIdentity networkIdentity;
+			if (NetworkIdentity.spawned.TryGetValue(netId, out networkIdentity))
+			{
+				if (networkIdentity != null)
+					return networkIdentity.gameObject;
+			}
+			return null;
+		}
+
 	}
 
 }
