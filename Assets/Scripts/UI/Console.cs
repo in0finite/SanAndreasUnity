@@ -353,12 +353,12 @@ namespace SanAndreasUnity.UI
 
 		void TrimExcessLogs()
 		{
-			if (!restrictLogCount)
+			if (!this.restrictLogCount)
 			{
 				return;
 			}
 
-			var amountToRemove = m_logs.Count - maxLogCount;
+			int amountToRemove = m_logs.Count - this.maxLogCount;
 
 			if (amountToRemove <= 0)
 			{
