@@ -71,7 +71,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			base.UpdateState();
 
-			// check if this is still active state ?
+			if (!this.IsActiveState)
+				return;
 
 			var seat = this.CurrentVehicleSeat;
 			if (seat != null && seat.IsDriver)
