@@ -239,7 +239,7 @@ namespace SanAndreasUnity.UI
 
 			GUILayout.BeginHorizontal ();
 
-			if (GUILayout.Button (s_clearLabel, GUILayout.ExpandWidth(false)))
+			if (GUILayout.Button (s_clearLabel, GUILayout.Width(80), GUILayout.Height(25)))
 			{
 				m_logs.Clear();
 				m_selectedLogIndex = -1;
