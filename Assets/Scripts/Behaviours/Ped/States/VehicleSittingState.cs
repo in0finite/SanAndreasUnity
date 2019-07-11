@@ -107,7 +107,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public new Vector3 GetCameraFocusPos()
 		{
-			return m_ped.CurrentVehicle.transform.position;
+			if (m_ped.CurrentVehicle != null)
+				return m_ped.CurrentVehicle.transform.position;
+			else
+				return base.GetCameraFocusPos();
 		}
 
 	}
