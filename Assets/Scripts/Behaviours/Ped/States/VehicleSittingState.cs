@@ -42,7 +42,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			Vehicle vehicle = this.CurrentVehicle;
 			Vehicle.Seat seat = this.CurrentVehicleSeat;
 
-			VehicleEnteringState.PreparePedForVehicle(m_ped, vehicle, seat);
+			BaseVehicleState.PreparePedForVehicle(m_ped, vehicle, seat);
 
 			this.UpdateAnimsWhilePassenger();
 

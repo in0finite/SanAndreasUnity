@@ -106,6 +106,27 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+		public static void PreparePedForVehicle(Ped ped, Vehicle vehicle, Vehicle.Seat seat)
+		{
+
+			seat.OccupyingPed = ped;
+
+			ped.characterController.enabled = false;
+
+
+			ped.transform.SetParent(seat.Parent);
+			ped.transform.localPosition = Vector3.zero;
+			ped.transform.localRotation = Quaternion.identity;
+
+			ped.PlayerModel.IsInVehicle = true;
+
+			if (!VehicleManager.Instance.syncPedTransformWhileInVehicle) {
+				if (ped.NetTransform != null)
+					ped.NetTransform.enabled = false;
+			}
+
+		}
+
 		protected void Cleanup()
 		{
 			if (!m_ped.IsInVehicle)
@@ -124,7 +145,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			this.CurrentVehicle = null;
 			this.CurrentVehicleSeatAlignment = Vehicle.SeatAlignment.None;
 			m_currentVehicleNetId = 0;
-			
+
 		}
 
 

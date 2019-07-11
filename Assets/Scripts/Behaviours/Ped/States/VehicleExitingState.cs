@@ -52,7 +52,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		void ExitVehicleInternal()
 		{
-			VehicleEnteringState.PreparePedForVehicle(m_ped, this.CurrentVehicle, this.CurrentVehicleSeat);
+			BaseVehicleState.PreparePedForVehicle(m_ped, this.CurrentVehicle, this.CurrentVehicleSeat);
 
 			// TODO: no need for this, vehicle should know when there is no driver
 			// TODO: but, right now, this should be included in cleanup
