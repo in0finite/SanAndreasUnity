@@ -19,13 +19,31 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public override void OnSwitchedStateByServer(byte[] data)
 		{
-			// we need to wait for end of frame, because vehicle may not be spawned yet (which can happen if client
-			// just connected to server)
-			this.StartCoroutine(this.SwitchStateAtEndOfFrame(data));
+			// we need to wait for end of frame, because vehicle may not be spawned yet
+			//this.StartCoroutine(this.SwitchStateAtEndOfFrame(data));
+
+
+			// check if this state was already activated
+			// it can happen when, among other things, syncvar hooks get invoked twice when creating the ped
+			if (this.IsActiveState)
+				return;
+			
+			this.ReadNetworkData(data);
+
+			m_ped.SwitchState(this.GetType());
+
+			if (this.CurrentVehicle != null)
+				this.OnVehicleAssigned();
+
 		}
 
 		protected void ReadNetworkData(byte[] data)
 		{
+			// first reset params
+			this.CurrentVehicle = null;
+			this.CurrentVehicleSeatAlignment = Vehicle.SeatAlignment.None;
+			m_currentVehicleNetId = 0;
+
 			// extract vehicle and seat from data
 
 			var reader = new Mirror.NetworkReader(data);
@@ -83,6 +101,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_ped.SwitchState(this.GetType());
 		}
 
+		protected virtual void OnVehicleAssigned()
+		{
+
+		}
+
 		protected void Cleanup()
 		{
 			if (!m_ped.IsInVehicle)
@@ -100,6 +123,33 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			this.CurrentVehicle = null;
 			this.CurrentVehicleSeatAlignment = Vehicle.SeatAlignment.None;
+			m_currentVehicleNetId = 0;
+			
+		}
+
+
+		public override void UpdateState()
+		{
+			base.UpdateState();
+
+			if (!this.IsActiveState)
+				return;
+			
+			if (Net.NetStatus.IsClientOnly)
+			{
+				if (null == this.CurrentVehicle)
+				{
+					// check if vehicle was spawned in the meantime
+					GameObject vehicleGo = Net.NetManager.GetNetworkObjectById(m_currentVehicleNetId);
+					if (vehicleGo != null)
+					{
+						// vehicle is spawned
+						this.CurrentVehicle = vehicleGo.GetComponent<Vehicle>();
+						this.OnVehicleAssigned();
+					}
+				}
+			}
+
 		}
 
 		protected override void UpdateHeading()
