@@ -150,7 +150,8 @@ namespace SanAndreasUnity.Behaviours
 
             player.OwnedPed = ped;
 
-            Debug.LogFormat("Spawned ped for player {0}, net id {1}", player.connectionToClient.address, ped.netId);
+            Debug.LogFormat("Spawned ped {0} for player {1}, time: {2}", ped.DescriptionForLogging, player.DescriptionForLogging, 
+                F.CurrentDateForLogging);
 
             return ped;
         }
