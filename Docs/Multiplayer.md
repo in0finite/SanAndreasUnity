@@ -16,11 +16,17 @@
 
 - add dates to logs
 
+- remove spamming logs: weapon slot changed ; ped changed model ;
+
+- sometimes, current vehicle is null on client
+
 - vehicle states should handle situation when current vehicle is null (on client)
 
 ***
 
 - weapon sound should be 3d
+
+- EnableOrDisableGunFlash() throws NRE when ped dies
 
 ***
 
