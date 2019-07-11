@@ -6,8 +6,6 @@
 
 - add ability for client to request: 
 
-- add num weapons to misc stats ?
-
 - if ped model is changed while sitting in vehicle as a passenger, anim is set to idle
 
 - roll state: client doesn't know the direction of rolling ; when doing more rolls one after another, client doesn't play anim anymore ; sometimes rolling continues even if WASD keys are not pressed ;
@@ -16,17 +14,17 @@
 
 - add dates to logs
 
-- remove spamming logs: weapon slot changed ; ped changed model ;
+- remove spamming logs: 
 
 - sometimes, current vehicle is null on client
 
 - vehicle states should handle situation when current vehicle is null (on client)
 
+- draw map window even when there is no local ped
+
 ***
 
 - weapon sound should be 3d
-
-- EnableOrDisableGunFlash() throws NRE when ped dies
 
 ***
 

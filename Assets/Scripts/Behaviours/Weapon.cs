@@ -509,34 +509,30 @@ namespace SanAndreasUnity.Behaviours
 
 		public virtual void EnableOrDisableGunFlash ()
 		{
-			Ped ped = m_ped;
+			
+			if (null == this.GunFlash)
+				return;
 
 			// enable/disable gun flash
-			if (this.GunFlash != null) {
-				
-				bool shouldBeVisible = false;
+			
+			Ped ped = m_ped;
 
-//				if (this.HasFlag (GunFlag.AIMWITHARM)) {
-//					shouldBeVisible = m_aimAnimTimeForAimWithArmWeapon.BetweenExclusive (this.AimAnimMaxTime, this.AimAnimMaxTime + this.GunFlashDuration);
-//				}
-//				else
-				{
+			bool shouldBeVisible = false;
 
-					if (AimAnimState != null && AimAnimState.enabled) {
-						// aim anim is being played
+			if (ped != null && ped.IsFiring)
+			{
+				if (AimAnimState != null && AimAnimState.enabled) {
+					// aim anim is being played
 
-						if (AimAnimState.time.BetweenExclusive (this.AimAnimMaxTime, this.AimAnimMaxTime + this.GunFlashDuration)) {
-							// muzzle flash should be visible
-							shouldBeVisible = true;
-						}
+					if (AimAnimState.time.BetweenExclusive (this.AimAnimMaxTime, this.AimAnimMaxTime + this.GunFlashDuration)) {
+						// muzzle flash should be visible
+						shouldBeVisible = true;
 					}
 				}
-
-				shouldBeVisible &= ped.IsFiring;
-
-				this.GunFlash.gameObject.SetActive (shouldBeVisible);
 			}
 
+			this.GunFlash.gameObject.SetActive (shouldBeVisible);
+			
 		}
 
 		public virtual void UpdateGunFlashRotation ()
