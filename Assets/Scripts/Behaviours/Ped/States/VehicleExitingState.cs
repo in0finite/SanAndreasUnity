@@ -32,13 +32,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameInactive();
 		}
 
-		public override void OnSwitchedStateByServer(byte[] data)
-		{
-			m_isExitingImmediately = false;
-
-			base.OnSwitchedStateByServer(data);
-		}
-
 		public void ExitVehicle(bool immediate = false)
 		{
 			if (!m_ped.IsInVehicle || !m_ped.IsInVehicleSeat)
