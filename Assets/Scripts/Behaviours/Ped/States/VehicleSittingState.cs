@@ -44,14 +44,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			VehicleEnteringState.PreparePedForVehicle(m_ped, vehicle, seat);
 
-			if (seat.IsDriver)
-			{
-				m_model.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
-			}
-			else
-			{
-				m_model.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
-			}
+			this.UpdateAnimsWhilePassenger();
 
 		}
 
@@ -93,6 +86,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			state.wrapMode = WrapMode.ClampForever;
 			state.time = Mathf.Lerp(0.0f, state.length, Mathf.Abs(this.CurrentVehicle.Steering));
 
+		}
+
+		protected virtual void UpdateAnimsWhilePassenger()
+		{
+			if (this.CurrentVehicleSeat.IsDriver)
+			{
+				m_model.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
+			}
+			else
+			{
+				m_model.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
+			}
 		}
 
 
