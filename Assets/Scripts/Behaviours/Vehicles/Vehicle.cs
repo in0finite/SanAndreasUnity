@@ -188,7 +188,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             this.ApplySyncRate(VehicleManager.Instance.vehicleSyncRate);
             
-            Debug.LogFormat("Created vehicle - id {0}, name {1}", this.Definition.Id, this.Definition.GameName);
+            Debug.LogFormat("Created vehicle - id {0}, name {1}, time: {2}", this.Definition.Id, 
+                this.Definition.GameName, F.CurrentDateForLogging);
         }
 
         public void SetColors(params int[] clrIndices)
