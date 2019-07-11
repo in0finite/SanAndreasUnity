@@ -36,13 +36,13 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		public bool IsInVehicle { get { return CurrentVehicle != null; } }
+		public bool IsInVehicle { get { return this.CurrentVehicle != null; } }
 
 		public bool IsInVehicleSeat { get { return this.CurrentState != null && this.CurrentState.RepresentsState (typeof(VehicleSittingState)); } }
 
-		public bool IsDrivingVehicle { get { return this.IsInVehicleSeat && this.CurrentVehicleSeat.IsDriver && this.IsInVehicle; } }
+		public bool IsDrivingVehicle { get { return this.CurrentVehicleSeat != null && this.CurrentVehicleSeat.IsDriver; } }
 
-		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return CurrentVehicleSeat.Alignment; } }
+		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return this.CurrentVehicleSeat.Alignment; } }
 
 
 
