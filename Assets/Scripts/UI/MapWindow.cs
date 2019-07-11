@@ -347,8 +347,6 @@ namespace SanAndreasUnity.UI {
 
 			if (null == MiniMap.Instance)
 				return;
-			if (null == Ped.Instance)
-				return;
 
 
 			int uiSize = (int) this.windowRect.width;
@@ -547,10 +545,13 @@ namespace SanAndreasUnity.UI {
 			// second row - info
 			GUILayout.BeginHorizontal (GUILayout.MaxWidth (infoAreaRect.width));
 
-			GUILayout.Label ("Player world pos: " + Ped.Instance.transform.position);
-			GUILayout.Space (5);
-			GUILayout.Label ("Player minimap pos: " + MiniMap.WorldPosToMapPos (Ped.Instance.transform.position));
-			GUILayout.Space (5);
+			if (Ped.Instance != null)
+			{
+				GUILayout.Label ("Player world pos: " + Ped.Instance.transform.position);
+				GUILayout.Space (5);
+				GUILayout.Label ("Player minimap pos: " + MiniMap.WorldPosToMapPos (Ped.Instance.transform.position));
+				GUILayout.Space (5);
+			}
 			GUILayout.Label ("Focus pos: " + this.GetFocusPosition ());
 			GUILayout.Space (5);
 			Vector2 cursorMapPos;
@@ -592,9 +593,10 @@ namespace SanAndreasUnity.UI {
 			onDrawMapItems();
 
 			// draw player pointer
-			this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Ped.Instance.transform.position, Ped.Instance.transform.forward, (int) m_playerPointerSize );
-			//	this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Player.Instance.transform.position, Player.Instance.transform.forward, 10 );
-			//	this.DrawItemOnMap( blackPixel, Player.Instance.transform.position, 50 );
+			if (Ped.Instance != null)
+			{
+				this.DrawItemOnMapRotated( MiniMap.Instance.PlayerBlip, Ped.Instance.transform.position, Ped.Instance.transform.forward, (int) m_playerPointerSize );
+			}
 
 			// draw all zones
 			if (m_drawZones) {

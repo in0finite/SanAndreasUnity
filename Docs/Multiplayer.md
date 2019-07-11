@@ -12,8 +12,6 @@
 
 - shooting is inaccurate - clients should send fire event with fire pos and fire dir
 
-- add dates to logs
-
 - remove spamming logs: 
 
 - sometimes, current vehicle is null on client
