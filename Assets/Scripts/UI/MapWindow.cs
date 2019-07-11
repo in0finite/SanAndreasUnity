@@ -529,10 +529,10 @@ namespace SanAndreasUnity.UI {
 			// first row - controls
 			GUILayout.BeginHorizontal (GUILayout.MaxWidth (infoAreaRect.width));
 
-			if (GUILayout.Button ("Focus on player [F]")) {
+			if (GUILayout.Button ("Focus on player [F]", GUILayout.Height(25))) {
 				this.FocusOnPlayer ();
 			}
-			if (GUILayout.Button ("Teleport to waypoint")) {
+			if (GUILayout.Button ("Teleport to waypoint", GUILayout.Height(25))) {
 				this.TeleportToWaypoint ();
 			}
 			GUILayout.Space (5);

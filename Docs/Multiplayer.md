@@ -18,8 +18,6 @@
 
 - vehicle states should handle situation when current vehicle is null (on client)
 
-- draw map window even when there is no local ped
-
 ***
 
 - weapon sound should be 3d
