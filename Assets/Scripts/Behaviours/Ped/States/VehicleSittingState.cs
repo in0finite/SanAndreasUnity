@@ -73,7 +73,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// check if this is still active state ?
 
-			if (m_ped.IsDrivingVehicle)
+			var seat = this.CurrentVehicleSeat;
+			if (seat != null && seat.IsDriver)
 				this.UpdateWheelTurning ();
 			
 		}
