@@ -18,6 +18,8 @@
 
 - vehicle states should handle situation when current vehicle is null (on client)
 
+- play horn sound ?
+
 ***
 
 - weapon sound should be 3d

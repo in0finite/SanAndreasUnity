@@ -24,7 +24,7 @@
 
 - Check how much RAM textures use
 
-- Map window: add shortcut for teleport (key 'T') ; draw vehicles ;
+- Map window: draw vehicles ;
 
 - Script execution order: HUD before pause menu and windows ; fps counter after all ;
 
