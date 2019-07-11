@@ -95,6 +95,8 @@ namespace SanAndreasUnity.Net
 			return ! NetStatus.IsClientDisconnected ();
 		}
 
+		public static bool IsClientOnly => ! NetStatus.IsServer && NetStatus.IsClientActive();
+
 
 		/// <summary>
 		/// Throws exception if server is not active.

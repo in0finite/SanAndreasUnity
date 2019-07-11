@@ -6,8 +6,6 @@
 
 - add ability for client to request: 
 
-- if ped model is changed while sitting in vehicle as a passenger, anim is set to idle
-
 - roll state: client doesn't know the direction of rolling ; when doing more rolls one after another, client doesn't play anim anymore ; sometimes rolling continues even if WASD keys are not pressed ;
 
 - shooting is inaccurate - clients should send fire event with fire pos and fire dir
