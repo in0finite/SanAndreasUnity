@@ -49,6 +49,17 @@ namespace SanAndreasUnity.Utilities
 			}
 		}
 
+		public int Count
+		{
+			get
+			{
+				lock (queueLock)
+				{
+					return queue.Count;
+				}
+			}
+		}
+
 	}
 
 }
