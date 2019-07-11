@@ -284,8 +284,7 @@ namespace SanAndreasUnity.UI
 
 		void UpdateQueuedLogs()
 		{
-			Log log;
-			while (m_queuedLogs.TryDequeue(out log))
+			foreach (Log log in m_queuedLogs.DequeueAll())
 			{
 				ProcessLogItem(log);
 			}

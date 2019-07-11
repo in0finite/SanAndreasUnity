@@ -38,6 +38,17 @@ namespace SanAndreasUnity.Utilities
 				return true;
 			}
 		}
+
+		public T[] DequeueAll()
+		{
+			lock (queueLock)
+			{
+				T[] copy = queue.ToArray();
+				queue.Clear();
+				return copy;
+			}
+		}
+
 	}
 
 }
