@@ -23,14 +23,14 @@ namespace SanAndreasUnity.UI
 
 		#endregion
 
-		static readonly GUIContent clearLabel = new GUIContent("Clear", "Clear the contents of the console.");
-		static readonly GUIContent collapseLabel = new GUIContent("Collapse", "Hide repeated messages.");
+		static readonly GUIContent s_clearLabel = new GUIContent("Clear", "Clear the contents of the console.");
+		static readonly GUIContent s_collapseLabel = new GUIContent("Collapse", "Hide repeated messages.");
 
 		private static readonly LogType[] s_allLogTypes = new LogType[] {
 			LogType.Log, LogType.Warning, LogType.Error, LogType.Exception, LogType.Assert
 		};
 
-		static readonly Dictionary<LogType, Color> logTypeColors = new Dictionary<LogType, Color>
+		static readonly Dictionary<LogType, Color> s_logTypeColors = new Dictionary<LogType, Color>
 		{
 			{ LogType.Assert, Color.red },
 			{ LogType.Error, Color.red },
@@ -39,8 +39,8 @@ namespace SanAndreasUnity.UI
 			{ LogType.Warning, Color.yellow },
 		};
 
-		bool isCollapsed;
-		public bool IsCollapsed { get { return this.isCollapsed; } set { this.isCollapsed = value; } }
+		bool m_isCollapsed;
+		public bool IsCollapsed { get { return this.m_isCollapsed; } set { this.m_isCollapsed = value; } }
 
 		bool ShowDetails { get; set; }
 		Vector2 m_detailsAreaScrollViewPos = Vector2.zero;
@@ -48,9 +48,9 @@ namespace SanAndreasUnity.UI
 		int m_selectedLogIndex = -1;
 
 		readonly List<Log> m_logs = new List<Log>();
-		readonly Utilities.ConcurrentQueue<Log> queuedLogs = new Utilities.ConcurrentQueue<Log>();
+		readonly Utilities.ConcurrentQueue<Log> m_queuedLogs = new Utilities.ConcurrentQueue<Log>();
 
-		readonly Dictionary<LogType, bool> logTypeFilters = new Dictionary<LogType, bool>
+		readonly Dictionary<LogType, bool> m_logTypeFilters = new Dictionary<LogType, bool>
 		{
 			{ LogType.Assert, true },
 			{ LogType.Error, true },
@@ -153,9 +153,9 @@ namespace SanAndreasUnity.UI
 
 		void DrawLog(Log log, int index)
 		{
-			GUI.contentColor = logTypeColors[log.type];
+			GUI.contentColor = s_logTypeColors[log.type];
 
-			if (isCollapsed)
+			if (m_isCollapsed)
 			{
 				DrawCollapsedLog(log, index);
 			}
@@ -182,7 +182,7 @@ namespace SanAndreasUnity.UI
 				if (IsLogVisible (log))
 					DrawLog (log, i);
 
-				m_numMessagesPerType [log.type] += (isCollapsed ? 1 : log.count);
+				m_numMessagesPerType [log.type] += (m_isCollapsed ? 1 : log.count);
 			}
 
 			GUILayout.EndVertical();
@@ -224,12 +224,12 @@ namespace SanAndreasUnity.UI
 
 			foreach (LogType logType in s_allLogTypes)
 			{
-				bool currentState = logTypeFilters[logType];
+				bool currentState = m_logTypeFilters[logType];
 				int count = m_numMessagesPerType [logType];
 				string label = logType.ToString() + ( (count > 0) ? (" [" + count + "]") : "" );
 
-				GUI.contentColor = logTypeColors [logType];
-				logTypeFilters[logType] = GUILayout.Toggle (currentState, label, GUILayout.ExpandWidth(false));
+				GUI.contentColor = s_logTypeColors [logType];
+				m_logTypeFilters[logType] = GUILayout.Toggle (currentState, label, GUILayout.ExpandWidth(false));
 				GUILayout.Space(15);
 			}
 
@@ -239,7 +239,7 @@ namespace SanAndreasUnity.UI
 
 			GUILayout.BeginHorizontal ();
 
-			if (GUILayout.Button (clearLabel, GUILayout.ExpandWidth(false)))
+			if (GUILayout.Button (s_clearLabel, GUILayout.ExpandWidth(false)))
 			{
 				m_logs.Clear();
 				m_selectedLogIndex = -1;
@@ -247,7 +247,7 @@ namespace SanAndreasUnity.UI
 
 			GUILayout.Space (10);
 
-			isCollapsed = GUILayout.Toggle (isCollapsed, collapseLabel, GUILayout.ExpandWidth(false));
+			m_isCollapsed = GUILayout.Toggle (m_isCollapsed, s_collapseLabel, GUILayout.ExpandWidth(false));
 
 			ShowDetails = GUILayout.Toggle (ShowDetails, "Show details", GUILayout.ExpandWidth(false));
 
@@ -285,7 +285,7 @@ namespace SanAndreasUnity.UI
 		void UpdateQueuedLogs()
 		{
 			Log log;
-			while (queuedLogs.TryDequeue(out log))
+			while (m_queuedLogs.TryDequeue(out log))
 			{
 				ProcessLogItem(log);
 			}
@@ -303,7 +303,7 @@ namespace SanAndreasUnity.UI
 
 			// Queue the log into a ConcurrentQueue to be processed later in the Unity main thread,
 			// so that we don't get GUI-related errors for logs coming from other threads
-			queuedLogs.Enqueue(log);
+			m_queuedLogs.Enqueue(log);
 		}
 
 		void ProcessLogItem(Log log)
@@ -326,7 +326,7 @@ namespace SanAndreasUnity.UI
 
 		bool IsLogVisible(Log log)
 		{
-			return logTypeFilters[log.type];
+			return m_logTypeFilters[log.type];
 		}
 
 		bool IsScrolledToBottom(Rect innerScrollRect, Rect outerScrollRect)
