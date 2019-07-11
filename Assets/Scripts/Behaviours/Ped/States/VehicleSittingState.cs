@@ -68,8 +68,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				return;
 
 			var seat = this.CurrentVehicleSeat;
-			if (seat != null && seat.IsDriver)
-				this.UpdateWheelTurning ();
+			if (seat != null)
+			{
+				if (seat.IsDriver)
+					this.UpdateWheelTurning ();
+				else
+					this.UpdateAnimsWhilePassenger();
+			}
 			
 		}
 
@@ -90,11 +95,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void UpdateAnimsWhilePassenger()
 		{
-			if (this.CurrentVehicleSeat.IsDriver)
-			{
-				m_model.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
-			}
-			else
+			// if (this.CurrentVehicleSeat.IsDriver)
+			// {
+			// 	m_model.PlayAnim(AnimGroup.Car, AnimIndex.Sit, PlayMode.StopAll);
+			// }
+			// else
 			{
 				m_model.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
 			}
