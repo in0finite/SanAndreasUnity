@@ -16,7 +16,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override void OnBecameActive()
 		{
 			base.OnBecameActive();
-			this.ExitVehicleInternal();
+			if (m_isServer)	// clients will do this when vehicle gets assigned
+				this.ExitVehicleInternal();
 		}
 
 		public override void OnBecameInactive()
@@ -30,6 +31,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_coroutine = null;
 
 			base.OnBecameInactive();
+		}
+
+		protected override void OnVehicleAssigned()
+		{
+			this.ExitVehicleInternal();
 		}
 
 		public void ExitVehicle(bool immediate = false)

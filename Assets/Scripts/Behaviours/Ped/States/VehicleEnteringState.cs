@@ -17,7 +17,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override void OnBecameActive()
 		{
 			base.OnBecameActive();
-			this.EnterVehicleInternal();
+			if (m_isServer)	// clients will do this when vehicle gets assigned
+				this.EnterVehicleInternal();
 		}
 
 		public override void OnBecameInactive()
@@ -33,6 +34,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_coroutine = null;
 
 			base.OnBecameInactive();
+		}
+
+		protected override void OnVehicleAssigned()
+		{
+			this.EnterVehicleInternal();
 		}
 
 		public bool TryEnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate = false)
