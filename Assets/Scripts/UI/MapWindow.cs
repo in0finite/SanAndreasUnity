@@ -331,9 +331,9 @@ namespace SanAndreasUnity.UI {
 			}
 
 			// teleport to waypoint key shortcut
-//			if (Input.GetKeyDown (KeyCode.T)) {
-//				this.TeleportToWaypoint ();
-//			}
+			if (Input.GetKeyDown (KeyCode.T)) {
+				this.TeleportToWaypoint ();
+			}
 
 			// remember last mouse position
 			m_lastMousePosition = Input.mousePosition;
@@ -532,7 +532,7 @@ namespace SanAndreasUnity.UI {
 			if (GUILayout.Button ("Focus on player [F]", GUILayout.Height(25))) {
 				this.FocusOnPlayer ();
 			}
-			if (GUILayout.Button ("Teleport to waypoint", GUILayout.Height(25))) {
+			if (GUILayout.Button ("Teleport to waypoint [T]", GUILayout.Height(25))) {
 				this.TeleportToWaypoint ();
 			}
 			GUILayout.Space (5);
