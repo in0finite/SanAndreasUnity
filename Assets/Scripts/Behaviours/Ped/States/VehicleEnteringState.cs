@@ -35,13 +35,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameInactive();
 		}
 
-		public override void OnSwitchedStateByServer(byte[] data)
-		{
-			m_immediate = false;
-
-			base.OnSwitchedStateByServer(data);
-		}
-
 		public static void PreparePedForVehicle(Ped ped, Vehicle vehicle, Vehicle.Seat seat)
 		{
 
