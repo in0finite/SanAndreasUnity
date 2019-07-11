@@ -251,6 +251,11 @@ namespace SanAndreasUnity.UI
 
 			ShowDetails = GUILayout.Toggle (ShowDetails, "Show details", GUILayout.ExpandWidth(false));
 
+			GUILayout.Space (10);
+
+			GUILayout.Label("Cap: " + m_logs.Capacity);
+			GUILayout.Label("MT queue count: " + m_queuedLogs.Count);
+
 			GUILayout.EndHorizontal ();
 		}
 
