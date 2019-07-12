@@ -346,9 +346,12 @@ namespace SanAndreasUnity.Behaviours
 			
 			if (WeaponsSettings.drawLineFromGun)
 			{
-				Vector3 start, end;
-				this.GetLineFromGun (out start, out end);
-				GLDebug.DrawLine (start, end, Color.red, 0, true);
+				if (m_ped != null && m_ped.CurrentWeapon == this)
+				{
+					Vector3 start, end;
+					this.GetLineFromGun (out start, out end);
+					GLDebug.DrawLine (start, end, Color.red, 0, true);
+				}
 			}
 
 		}
