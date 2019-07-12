@@ -421,7 +421,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 					if (m_ped.IsControlledByLocalPlayer || null == m_ped.PlayerOwner)
 						return this.TryFire(m_weapon.GetFirePos(), m_weapon.GetFireDir());
 					else	// this ped is owned by remote client
-						return this.TryFire(m_weapon.GetFirePos(), m_ped.NetFireDir);
+						return this.TryFire(m_ped.NetFirePos, m_ped.NetFireDir);
 				}
 			}
 			return false;
