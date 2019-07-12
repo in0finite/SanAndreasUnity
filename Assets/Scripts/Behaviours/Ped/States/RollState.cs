@@ -89,11 +89,19 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected override void UpdateMovement ()
 		{
 			// adjust movement input before updating movement
-			// because only server knows direction of rolling, we'll do this only on server
+			// because only server performs moving, we'll do this only on server
+
+			// also, we should preserve movement input - this is needed because, if we exit roll state,
+			// we could quickly switch back to it, because we overrided client's movement input
+
+			Vector3 originalMovementInput = m_ped.Movement;
+
 			if (m_isServer)
 				m_ped.Movement = m_rollLeft ? -m_ped.transform.right : m_ped.transform.right;
 			
 			base.UpdateMovement();
+
+			m_ped.Movement = originalMovementInput;
 		}
 
 		protected override void UpdateAnims ()
