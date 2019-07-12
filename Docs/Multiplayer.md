@@ -10,6 +10,8 @@
 
 - shooting is inaccurate - clients should send fire event with fire pos and fire dir
 
+- send fireDir with other input to server
+
 - remove spamming logs: 
 
 - sometimes, current vehicle is null on client
@@ -18,7 +20,7 @@
 
 ***
 
-- weapon sound should be 3d
+- is weapon sound 3d ?
 
 ***
 

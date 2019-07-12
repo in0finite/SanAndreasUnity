@@ -8,7 +8,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		void StartFiring ();
 
-		void OnClientTriedToFire(Vector3 firePos, Vector3 fireDir);
 
 	}
 

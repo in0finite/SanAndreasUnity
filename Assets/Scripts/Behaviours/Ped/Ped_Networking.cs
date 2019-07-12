@@ -40,6 +40,7 @@ namespace SanAndreasUnity.Behaviours
         [SyncVar(hook=nameof(Net_OnWeaponChanged))] int m_net_currentWeaponSlot;
 
         [SyncVar] internal Vector3 m_net_aimDir;
+        public Vector3 NetFireDir { get; set; }
 
 
 

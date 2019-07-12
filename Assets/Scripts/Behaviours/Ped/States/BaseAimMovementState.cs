@@ -425,6 +425,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			var weapon = ped.CurrentWeapon;
 
 
+			if (!m_isServer)	// for now, do this only on server
+				return false;
+
 			if (null == weapon)
 				return false;
 
@@ -460,7 +463,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// send fire event to server
 			if (Net.NetStatus.IsClientOnly)
 			{
-				
+
 			}
 
 			// play firing sound
