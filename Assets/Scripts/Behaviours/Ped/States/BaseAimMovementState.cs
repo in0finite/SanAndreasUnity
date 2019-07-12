@@ -415,7 +415,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected virtual bool TryFire ()
 		{
 			if (m_weapon != null)
-				return this.TryFire(m_weapon.GetFirePos(), m_weapon.GetFireDir());
+			{
+				if (m_isServer)
+				{
+					if (m_ped.IsControlledByLocalPlayer || null == m_ped.PlayerOwner)
+						return this.TryFire(m_weapon.GetFirePos(), m_weapon.GetFireDir());
+					else	// this ped is owned by remote client
+						return this.TryFire(m_weapon.GetFirePos(), m_ped.NetFireDir);
+				}
+			}
 			return false;
 		}
 
@@ -426,6 +434,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 
 			if (!m_isServer)	// for now, do this only on server
+				return false;
+
+			if (Net.NetStatus.IsClientOnly && ! ped.IsControlledByLocalPlayer)
 				return false;
 
 			if (null == weapon)
@@ -461,7 +472,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				F.RunExceptionSafe( () => weapon.FireProjectile (firePos, fireDir) );
 
 			// send fire event to server
-			if (Net.NetStatus.IsClientOnly)
+			if (Net.NetStatus.IsClientOnly && ped.IsControlledByLocalPlayer)
 			{
 
 			}
