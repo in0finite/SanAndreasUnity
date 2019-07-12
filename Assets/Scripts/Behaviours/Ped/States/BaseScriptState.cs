@@ -287,6 +287,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void OnWeaponFiredFromServer(Weapon weapon, Vector3 firePos)
 		{
+			if (m_ped.IsControlledByLocalPlayer)
+				return;
+
 			// update gun flash
 			if (weapon.GunFlash != null)
 				weapon.GunFlash.gameObject.SetActive (true);

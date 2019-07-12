@@ -414,24 +414,35 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual bool TryFire ()
 		{
+			if (m_weapon != null)
+				return this.TryFire(m_weapon.GetFirePos(), m_weapon.GetFireDir());
+			return false;
+		}
+
+		protected virtual bool TryFire (Vector3 firePos, Vector3 fireDir)
+		{
 			Ped ped = m_ped;
 			var weapon = ped.CurrentWeapon;
 
 
-			if (!m_isServer)
+			if (null == weapon)
 				return false;
 
-			if (ped.IsFiring)
+			if (ped.IsFiring)	// already firing
 				return false;
 
 			// check if there is ammo in clip
 			if (weapon.AmmoInClip < 1)
 				return false;
 
-			ped.StartFiring ();
+			if (m_isServer)
+			{
+				ped.StartFiring ();
 
-			if (!ped.IsFiring)	// failed to start firing
-				return false;
+				if (!ped.IsFiring)	// failed to start firing
+					return false;
+				
+			}
 
 			// reduce ammo
 			weapon.AmmoInClip --;
@@ -443,16 +454,38 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			weapon.UpdateGunFlashRotation ();
 
 			// fire projectile
-			F.RunExceptionSafe( () => weapon.FireProjectile () );
+			if (m_isServer)
+				F.RunExceptionSafe( () => weapon.FireProjectile (firePos, fireDir) );
+
+			// send fire event to server
+			if (Net.NetStatus.IsClientOnly)
+			{
+				
+			}
 
 			// play firing sound
 			F.RunExceptionSafe (() => weapon.PlayFireSound() );
 
 			// notify clients
-			Net.PedSync.OnWeaponFired(m_ped, weapon, weapon.GetFirePos());
+			if (m_isServer)
+				Net.PedSync.OnWeaponFired(m_ped, weapon, firePos);
 
 
 			return true;
+		}
+
+		public virtual void OnClientTriedToFire(Vector3 firePos, Vector3 fireDir)
+		{
+			if (null == m_weapon)
+				return;
+			
+			if (m_weapon.AmmoInClip < 1)
+				return;
+
+			if (!m_ped.IsFiring)
+				m_ped.StartFiring();
+			
+
 		}
 
 
