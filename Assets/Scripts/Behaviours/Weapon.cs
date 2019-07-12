@@ -615,7 +615,18 @@ namespace SanAndreasUnity.Behaviours
 				{
 					// ray hit something that can be damaged
 					// damage it
-					damageable.Damage( new DamageInfo() { amount = this.Damage } );
+
+					// first check if target object is owner ped
+					if (m_ped != null && m_ped.gameObject == damageable.gameObject)
+					{
+						// ray hit owner ped
+						// don't do anything
+					}
+					else
+					{
+						damageable.Damage( new DamageInfo() { amount = this.Damage } );
+					}
+					
 				}
 			}
 
