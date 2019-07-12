@@ -658,8 +658,10 @@ namespace SanAndreasUnity.Behaviours
 
 			if (this.GunFlash != null)
 				firePos = this.GunFlash.transform.position;
-			else
+			else if (this.Data.gunData != null)
 				firePos = this.transform.TransformPoint (this.Data.gunData.fireOffset);
+			else
+				firePos = this.transform.position;
 
 			return firePos;
 		}
