@@ -44,6 +44,25 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_model.VelocityAxis = 0;	// movement will be done along x axis
 		}
 
+		public override byte[] GetAdditionalNetworkData()
+		{
+			var writer = new Mirror.NetworkWriter();
+			writer.Write("roll");
+			writer.Write(m_rollLeft);
+			return writer.ToArray();
+		}
+
+		public override void OnSwitchedStateByServer(byte[] data)
+		{
+			var reader = new Mirror.NetworkReader(data);
+			string magicWord = reader.ReadString();
+			if (magicWord != "roll")
+				Debug.LogErrorFormat("wrong magic word when switching to roll state: {0}", magicWord);
+			m_rollLeft = reader.ReadBoolean();
+
+			base.OnSwitchedStateByServer(null);
+		}
+
 
 		protected override void SwitchToMovementState ()
 		{
