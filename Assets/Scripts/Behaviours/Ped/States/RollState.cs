@@ -37,7 +37,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			base.OnBecameActive();
 			m_animState = m_model.PlayAnim( this.movementAnim );
-			m_animState.wrapMode = WrapMode.Once;
+			// clients have wrap mode set to 'Loop', because state can be switched very fast between roll and crouchaim, and
+			// server will not update current state syncvar, so client will not start the state again,
+			// and roll state will remain
+			m_animState.wrapMode = m_isServer ? WrapMode.Once : WrapMode.Loop;
 			m_model.VelocityAxis = 0;	// movement will be done along x axis
 		}
 
