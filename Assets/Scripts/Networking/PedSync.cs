@@ -33,21 +33,21 @@ namespace SanAndreasUnity.Net
         }
 
         public void SendInput(bool isWalkOn, bool isRunOn, bool isSprintOn, Vector3 movementInput, 
-            bool isJumpOn, Vector3 heading, Vector3 aimDir, Vector3 fireDir, bool isAimOn, bool isFireOn)
+            bool isJumpOn, Vector3 heading, Vector3 aimDir, Vector3 firePos, Vector3 fireDir, bool isAimOn, bool isFireOn)
         {
-            this.CmdSendingInput(isWalkOn, isRunOn, isSprintOn, movementInput, isJumpOn, heading, aimDir, fireDir, isAimOn, isFireOn);
+            this.CmdSendingInput(isWalkOn, isRunOn, isSprintOn, movementInput, isJumpOn, heading, aimDir, firePos, fireDir, isAimOn, isFireOn);
         }
 
         public void SendInput()
         {
             Ped ped = m_ped;
             this.SendInput(ped.IsWalkOn, ped.IsRunOn, ped.IsSprintOn, ped.Movement, ped.IsJumpOn, ped.Heading, 
-                ped.AimDirection, ped.FireDirection, ped.IsAimOn, ped.IsFireOn);
+                ped.AimDirection, ped.FirePosition, ped.FireDirection, ped.IsAimOn, ped.IsFireOn);
         }
 
         [Command]
         void CmdSendingInput(bool isWalkOn, bool isRunOn, bool isSprintOn, Vector3 movementInput, 
-            bool isJumpOn, Vector3 heading, Vector3 aimDir, Vector3 fireDir, bool isAimOn, bool isFireOn)
+            bool isJumpOn, Vector3 heading, Vector3 aimDir, Vector3 firePos, Vector3 fireDir, bool isAimOn, bool isFireOn)
         {
             if (null == m_ped)
                 return;
@@ -61,6 +61,7 @@ namespace SanAndreasUnity.Net
             ped.IsJumpOn = isJumpOn;
             ped.Heading = heading;
             ped.AimDirection = aimDir;
+            ped.NetFirePos = firePos;
             ped.NetFireDir = fireDir;
             ped.IsAimOn = isAimOn;
             ped.IsFireOn = isFireOn;
