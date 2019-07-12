@@ -6,7 +6,7 @@
 
 - add ability for client to request: 
 
-- roll state: client doesn't know the direction of rolling ; when doing more rolls one after another, client doesn't play anim anymore ; sometimes rolling continues even if WASD keys are not pressed ;
+- roll state: when doing more rolls one after another, client doesn't play anim anymore ; sometimes rolling continues even if WASD keys are not pressed ;
 
 - shooting is inaccurate - clients should send fire event with fire pos and fire dir
 

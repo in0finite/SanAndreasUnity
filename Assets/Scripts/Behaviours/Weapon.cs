@@ -592,13 +592,14 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		public virtual void FireProjectile ()
+		public void FireProjectile ()
 		{
-			// obtain fire position and direction
+			this.FireProjectile(this.GetFirePos(), this.GetFireDir());
+		}
 
-			Vector3 firePos = this.GetFirePos ();
-			Vector3 fireDir = this.GetFireDir ();
-
+		public virtual void FireProjectile (Vector3 firePos, Vector3 fireDir)
+		{
+			
 			// raycast against all (non-breakable ?) objects
 
 			RaycastHit hit;
