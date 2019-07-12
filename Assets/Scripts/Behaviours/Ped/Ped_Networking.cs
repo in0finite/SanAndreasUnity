@@ -16,6 +16,7 @@ namespace SanAndreasUnity.Behaviours
 
         [SyncVar] GameObject m_net_playerOwnerGameObject;
         internal GameObject NetPlayerOwnerGameObject { set { m_net_playerOwnerGameObject = value; } }
+        public Player PlayerOwner => Player.GetOwningPlayer(this);
 
         [SyncVar(hook=nameof(Net_OnIdChanged))] int m_net_pedId = 0;
 
