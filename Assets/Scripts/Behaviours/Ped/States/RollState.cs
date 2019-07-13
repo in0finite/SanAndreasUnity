@@ -60,7 +60,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				Debug.LogErrorFormat("wrong magic word when switching to roll state: {0}", magicWord);
 			m_rollLeft = reader.ReadBoolean();
 
-			base.OnSwitchedStateByServer(null);
+			m_ped.SwitchState(this.GetType());
 		}
 
 
