@@ -33,7 +33,7 @@ namespace SanAndreasUnity.Behaviours
             if (null == m_vehicle)
                 return;
             
-            MapWindow.Instance.DrawItemOnMap( MiniMap.Instance.VehicleTexture, m_vehicle.transform.position, 12 );
+            //MapWindow.Instance.DrawItemOnMap( MiniMap.Instance.VehicleTexture, m_vehicle.transform.position, 12 );
 
         }
 
