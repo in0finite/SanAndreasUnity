@@ -95,14 +95,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		//	if( !this.IsActiveState )
 		//		return;
 
-			// we need to adjust local position of some bones - root frame needs to be 0.5 units below the ped
-
-			// for some reason, y position always remains 0.25
-		//	m_model.UnnamedFrame.transform.localPosition = m_model.UnnamedFrame.transform.localPosition.WithXAndZ();
-
-			Vector3 pos = m_model.RootFrame.transform.localPosition;
-			pos.y = -0.5f - m_model.UnnamedFrame.transform.localPosition.y;
-			m_model.RootFrame.transform.localPosition = pos;
+			CrouchState.AdjustRootFramePosition(m_ped);
 
 		}
 

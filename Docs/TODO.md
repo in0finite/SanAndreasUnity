@@ -20,15 +20,21 @@
 
 - Does 'O' button changes quality level ?
 
-- Check how much RAM textures use
+- **Check how much RAM textures use ; don't load them on headless server ;**
 
-- Map window: draw vehicles ;
+- **When model is changed for a passenger, his position is moved to start of anim** ;
+
+- **Are weapon audio clips unloaded ?**
+
+- Map window: **draw vehicles** ;
+
+- Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
 - Script execution order: HUD before pause menu and windows ; fps counter after all ;
 
 - Add option to change fixed delta time ?
 
-- Crouching: adjust camera aim offset ? ; adjust height offset of ped ;
+- Crouching: adjust camera aim offset ? ; **adjust height offset of ped - only state that needs to do this is CrouchState** ;
 
 - Optimize Console.Update() - don't do trim excess for every log message
 

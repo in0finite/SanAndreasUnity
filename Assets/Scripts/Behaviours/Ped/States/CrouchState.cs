@@ -35,6 +35,21 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			}
 		}
 
+		public static void AdjustRootFramePosition(Ped ped)
+		{
+			// we need to adjust local position of some bones - root frame needs to be 0.5 units below the ped
+
+			var model = ped.PlayerModel;
+
+			// for some reason, y position always remains 0.25
+		//	m_model.UnnamedFrame.transform.localPosition = m_model.UnnamedFrame.transform.localPosition.WithXAndZ();
+
+			Vector3 pos = model.RootFrame.transform.localPosition;
+			pos.y = -0.5f - model.UnnamedFrame.transform.localPosition.y;
+			model.RootFrame.transform.localPosition = pos;
+
+		}
+
 		public override void OnJumpPressed ()
 		{
 			// switch to stand state
