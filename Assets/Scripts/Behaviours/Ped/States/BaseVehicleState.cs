@@ -64,6 +64,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override byte[] GetAdditionalNetworkData()
 		{
 			var writer = new Mirror.NetworkWriter();
+			this.GetAdditionalNetworkData(writer);
+			return writer.ToArray();
+		}
+
+		protected virtual void GetAdditionalNetworkData(Mirror.NetworkWriter writer)
+		{
 			writer.Write((int)123456789);
 			if (this.CurrentVehicle != null) {
 				writer.Write((uint)this.CurrentVehicle.NetTransform.netId);
@@ -72,8 +78,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				writer.Write((uint)0);
 				writer.Write((sbyte)Vehicle.SeatAlignment.None);
 			}
-			
-			return writer.ToArray();
 		}
 
 		System.Collections.IEnumerator SwitchStateAtEndOfFrame(byte[] data)
