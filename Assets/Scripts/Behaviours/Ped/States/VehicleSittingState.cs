@@ -28,6 +28,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameInactive();
 		}
 
+		protected override void GetAdditionalNetworkData(Mirror.NetworkWriter writer)
+		{
+			base.GetAdditionalNetworkData(writer);
+			writer.Write(m_vehicleParentOffset);
+		}
+
+		protected override void ReadNetworkData(Mirror.NetworkReader reader)
+		{
+			base.ReadNetworkData(reader);
+			m_vehicleParentOffset = reader.ReadVector3();
+		}
+
 		protected override void OnVehicleAssigned()
 		{
 			this.EnterVehicleInternal();
@@ -50,7 +62,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			Vehicle vehicle = this.CurrentVehicle;
 			Vehicle.Seat seat = this.CurrentVehicleSeat;
-			m_vehicleParentOffset = m_model.VehicleParentOffset;
+
+			if (m_isServer)
+				m_vehicleParentOffset = m_model.VehicleParentOffset;
 
 			BaseVehicleState.PreparePedForVehicle(m_ped, vehicle, seat);
 

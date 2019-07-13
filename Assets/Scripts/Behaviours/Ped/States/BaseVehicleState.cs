@@ -39,14 +39,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected void ReadNetworkData(byte[] data)
 		{
+			var reader = new Mirror.NetworkReader(data);
+			this.ReadNetworkData(reader);
+		}
+
+		protected virtual void ReadNetworkData(Mirror.NetworkReader reader)
+		{
 			// first reset params
 			this.CurrentVehicle = null;
 			this.CurrentVehicleSeatAlignment = Vehicle.SeatAlignment.None;
 			m_currentVehicleNetId = 0;
 
 			// extract vehicle and seat from data
-
-			var reader = new Mirror.NetworkReader(data);
 
 			int magicNumber = reader.ReadInt32();
 			m_currentVehicleNetId = reader.ReadUInt32();
@@ -57,7 +61,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			this.CurrentVehicle = vehicleGo != null ? vehicleGo.GetComponent<Vehicle>() : null;
 
 			if (magicNumber != 123456789)
-				Debug.LogErrorFormat("magicNumber {0}, m_currentVehicleNetId {1}, data size {2} - this should not happen", magicNumber, m_currentVehicleNetId, data.Length);
+				Debug.LogErrorFormat("magicNumber {0}, m_currentVehicleNetId {1}, data size {2} - this should not happen", magicNumber, m_currentVehicleNetId, reader.Length);
 
 		}
 
