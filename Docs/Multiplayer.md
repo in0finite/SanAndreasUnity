@@ -16,6 +16,8 @@
 
 - sometimes, current vehicle is null on client
 
+- test situation when player connects, and there are peds sitting in vehicles
+
 ***
 
 - is weapon sound 3d ?

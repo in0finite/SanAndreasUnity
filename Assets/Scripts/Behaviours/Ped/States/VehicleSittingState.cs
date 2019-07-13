@@ -9,6 +9,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class VehicleSittingState : BaseVehicleState
 	{
+		Vector3 m_vehicleParentOffset = Vector3.zero;
+
 
 
 		public override void OnBecameActive()
@@ -20,6 +22,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public override void OnBecameInactive()
 		{
+			m_vehicleParentOffset = Vector3.zero;
 			this.Cleanup();
 
 			base.OnBecameInactive();
@@ -47,10 +50,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			Vehicle vehicle = this.CurrentVehicle;
 			Vehicle.Seat seat = this.CurrentVehicleSeat;
+			m_vehicleParentOffset = m_model.VehicleParentOffset;
 
 			BaseVehicleState.PreparePedForVehicle(m_ped, vehicle, seat);
 
-			this.UpdateAnimsWhilePassenger();
+			//this.UpdateAnimsWhilePassenger();
 
 		}
 
