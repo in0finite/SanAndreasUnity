@@ -109,6 +109,8 @@ namespace SanAndreasUnity.Behaviours
 
         public Texture2D WaypointTexture { get { return this.waypointTexture; } }
 
+        public Texture2D VehicleTexture => this.vehicleTexture;
+
         public Texture2D MapTexture { get { return this.mapTexture; } }
 
         public Texture2D BlackPixel { get { return this.blackPixel; } }
@@ -197,6 +199,7 @@ namespace SanAndreasUnity.Behaviours
             northBlip = huds.GetDiffuse("radar_north").Texture;
             playerBlip = huds.GetDiffuse("radar_centre").Texture;
             waypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
+            vehicleTexture = huds.GetDiffuse("radar_impound").Texture;
 
             Debug.Log("Finished loading minimap textures!");
         }
@@ -212,7 +215,7 @@ namespace SanAndreasUnity.Behaviours
 
         private TextureDictionary huds;
 
-        private Texture2D northBlip, playerBlip, waypointTexture, mapTexture;
+        private Texture2D northBlip, playerBlip, waypointTexture, vehicleTexture, mapTexture;
         private Sprite mapSprite, circleMask;
 
         private Transform northPivot;

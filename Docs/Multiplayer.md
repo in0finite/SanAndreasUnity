@@ -6,15 +6,7 @@
 
 - add ability for client to request: 
 
-- roll state: when doing more rolls one after another, client doesn't play anim anymore ; sometimes rolling continues even if WASD keys are not pressed ;
-
-- shooting is inaccurate - clients should send fire event with fire pos and fire dir
-
-- send fireDir with other input to server
-
 - remove spamming logs: 
-
-- sometimes, current vehicle is null on client
 
 - test situation when player connects, and there are peds sitting in vehicles
 
