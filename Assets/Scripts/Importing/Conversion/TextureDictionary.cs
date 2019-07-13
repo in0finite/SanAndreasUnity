@@ -224,7 +224,7 @@ namespace SanAndreasUnity.Importing.Conversion
 		private static readonly Utilities.AsyncLoader<string, TextureDictionary> s_asyncLoader = 
 			new Utilities.AsyncLoader<string, TextureDictionary> (StringComparer.InvariantCultureIgnoreCase);
 
-        private static bool DontLoadTextures => true;
+        public static bool DontLoadTextures { get; set; } = false;
 
         private static Texture2D s_dummyTexture;
         private static Texture2D DummyTexture {
@@ -406,7 +406,7 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             if (DontLoadTextures)
                 return new LoadedTexture(DummyTexture, false);
-            
+
             if (!_alpha.ContainsKey(name))
             {
                 return ParentName != null ? Parent.GetAlpha(name) : null;
