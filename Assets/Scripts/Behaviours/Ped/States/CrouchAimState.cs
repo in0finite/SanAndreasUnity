@@ -90,7 +90,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// anim does not set correct velocity
 			// set it to zero to make the ped stand in place
 			// this should be done even if parent method changed active state
-			m_model.RootFrame.LocalVelocity = Vector3.zero;
+			if (m_model.RootFrame != null)
+				m_model.RootFrame.LocalVelocity = Vector3.zero;
 
 		//	if( !this.IsActiveState )
 		//		return;
