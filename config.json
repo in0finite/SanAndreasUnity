@@ -38,6 +38,8 @@
     "${game_dir}/data/animgrp.dat",
     "${data_dir}/auxanimgrp.dat"
   ],
-  "weapons_path": "${game_dir}/data/weapon.dat"
+  "weapons_path": "${game_dir}/data/weapon.dat",
+
+  "dontLoadTextures": false,
   
 }

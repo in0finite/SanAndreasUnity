@@ -223,6 +223,8 @@ namespace SanAndreasUnity.Behaviours
 		private static void StepLoadConfig ()
 		{
 			Config.Load ();
+
+			TextureDictionary.DontLoadTextures = Config.Get<bool>("dontLoadTextures");
 		}
 
 		private static IEnumerator StepSelectGTAPath ()
