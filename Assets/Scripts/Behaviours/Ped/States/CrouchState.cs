@@ -35,6 +35,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			}
 		}
 
+		protected override void UpdateAnims ()
+		{
+			base.UpdateAnims();
+
+		//	if( !this.IsActiveState )
+		//		return;
+
+			CrouchState.AdjustRootFramePosition(m_ped);
+			
+		}
+
 		public static void AdjustRootFramePosition(Ped ped)
 		{
 			// we need to adjust local position of some bones - root frame needs to be 0.5 units below the ped

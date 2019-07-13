@@ -44,6 +44,8 @@
 
 - Split code into separate assemblies (using asmdef files)
 
+- When raycasting with weapons, don't use ped's character collider, but use his mesh
+
 - Vehicles window: it's too slow - use pages ; display additional info ;
 
 - Non-working ped model ids: WMYST, 0, special peds at the end, 
