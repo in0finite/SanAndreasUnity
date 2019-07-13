@@ -111,6 +111,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// }
 			// else
 			{
+				// we have to assign offset every frame, because it can be changed when ped model changes
+				m_model.VehicleParentOffset = m_vehicleParentOffset;
+
 				m_model.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
 			}
 		}
