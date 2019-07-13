@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6732552431618800415}
   - component: {fileID: 459295042993608392}
   - component: {fileID: 9183683351129218624}
+  - component: {fileID: 575085982327711637}
   m_Layer: 0
   m_Name: Vehicle
   m_TagString: Untagged
@@ -76,3 +77,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncInterval: 0.05
+--- !u!114 &575085982327711637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5841438317718401360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d35d1455c83dba68341b83b1ead322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
