@@ -34,8 +34,6 @@
 
 - Add option to change fixed delta time ?
 
-- Crouching: adjust camera aim offset ? ; **adjust height offset of ped - only state that needs to do this is CrouchState** ;
-
 - Optimize Console.Update() - don't do trim excess for every log message
 
 - don't fade high LOD meshes
