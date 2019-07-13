@@ -224,6 +224,17 @@ namespace SanAndreasUnity.Importing.Conversion
 		private static readonly Utilities.AsyncLoader<string, TextureDictionary> s_asyncLoader = 
 			new Utilities.AsyncLoader<string, TextureDictionary> (StringComparer.InvariantCultureIgnoreCase);
 
+        private static bool DontLoadTextures => true;
+
+        private static Texture2D s_dummyTexture;
+        private static Texture2D DummyTexture {
+            get {
+                if (null == s_dummyTexture)
+                    s_dummyTexture = Utilities.F.CreateTexture(32, 32, Color.gray);
+                return s_dummyTexture;
+            }
+        }
+
 
         public static TextureDictionary Load(string name)
         {
@@ -233,7 +244,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
 			UnityEngine.Profiling.Profiler.BeginSample ("TextureDictionary.Load");
 
-            var txd = new TextureDictionary(ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd"));
+            var txd = new TextureDictionary(DontLoadTextures ? null : ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd"));
 			s_asyncLoader.AddToLoadedObjects(name, txd);
 
 			UnityEngine.Profiling.Profiler.EndSample ();
@@ -252,10 +263,11 @@ namespace SanAndreasUnity.Importing.Conversion
 			// read archive file asyncly
 
 			TextureDictionary loadedTxd = null;
+            bool bDontLoad = DontLoadTextures;
 
 			Behaviours.LoadingThread.RegisterJob (new Behaviours.LoadingThread.Job<RenderWareStream.TextureDictionary> () {
 				action = () => {
-					return ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd");
+					return bDontLoad ? null : ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd");
 				},
 				callbackSuccess = (RenderWareStream.TextureDictionary td) => {
 					UnityEngine.Profiling.Profiler.BeginSample ("TextureDictionary()");
@@ -341,6 +353,9 @@ namespace SanAndreasUnity.Importing.Conversion
             _diffuse = new Dictionary<string, Texture>(StringComparer.InvariantCultureIgnoreCase);
             _alpha = new Dictionary<string, Texture>(StringComparer.InvariantCultureIgnoreCase);
 
+            if (null == txd)
+                return;
+
             foreach (var native in txd.Textures)
             {
                 var tex = new Texture(native);
@@ -376,6 +391,9 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public LoadedTexture GetDiffuse(string name)
         {
+            if (DontLoadTextures)
+                return new LoadedTexture(DummyTexture, false);
+
             if (!_diffuse.ContainsKey(name))
             {
                 return ParentName != null ? Parent.GetDiffuse(name) : null;
@@ -386,6 +404,9 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public LoadedTexture GetAlpha(string name)
         {
+            if (DontLoadTextures)
+                return new LoadedTexture(DummyTexture, false);
+            
             if (!_alpha.ContainsKey(name))
             {
                 return ParentName != null ? Parent.GetAlpha(name) : null;
