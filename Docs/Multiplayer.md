@@ -16,8 +16,6 @@
 
 - sometimes, current vehicle is null on client
 
-- play horn sound ?
-
 ***
 
 - is weapon sound 3d ?
