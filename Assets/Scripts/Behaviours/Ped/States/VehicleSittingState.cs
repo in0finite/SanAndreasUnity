@@ -10,6 +10,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	public class VehicleSittingState : BaseVehicleState
 	{
 		Vector3 m_vehicleParentOffset = Vector3.zero;
+		Vector3 m_rootFramePos = Vector3.zero;
 
 
 
@@ -68,7 +69,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			BaseVehicleState.PreparePedForVehicle(m_ped, vehicle, seat);
 
-			//this.UpdateAnimsWhilePassenger();
+			// save root frame position
+			
+			this.UpdateWheelTurning();	// play driver anim
+			m_model.AnimComponent.Sample();	// sample it
+			if (m_model.RootFrame != null)
+				m_rootFramePos = m_model.RootFrame.transform.localPosition;	// save root frame position
+			this.UpdateAnimsInternal();	// restore the correct anim
+			m_model.AnimComponent.Sample();
 
 		}
 
@@ -91,6 +99,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (!this.IsActiveState)
 				return;
 
+			this.UpdateAnimsInternal();
+			
+		}
+
+		void UpdateAnimsInternal()
+		{
 			var seat = this.CurrentVehicleSeat;
 			if (seat != null)
 			{
@@ -99,7 +113,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				else
 					this.UpdateAnimsWhilePassenger();
 			}
-			
 		}
 
 		protected virtual void UpdateWheelTurning()
@@ -127,6 +140,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			{
 				// we have to assign offset every frame, because it can be changed when ped model changes
 				m_model.VehicleParentOffset = m_vehicleParentOffset;
+				// same goes for root frame position
+				if (m_model.RootFrame != null)
+					m_model.RootFrame.transform.localPosition = m_rootFramePos;
 
 				m_model.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
 			}

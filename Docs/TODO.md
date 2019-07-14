@@ -20,15 +20,11 @@
 
 - Does 'O' button changes quality level ?
 
-- **don't load textures on headless server ;**
-
 - **When model is changed for a passenger, his position is moved to start of anim** ;
 
 - **Are weapon audio clips unloaded ? - no ; memory is increased by 90 KB for 5 weapons (when ped is spawned) ;**
 
-- When ped changes model, animation clips increase memory usage by 0.8 MB
-
-- Map window: **don't draw vehicles** ;
+- **When ped changes model, animation clips increase memory usage by 0.8 MB**
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
