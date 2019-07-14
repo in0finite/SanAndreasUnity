@@ -20,11 +20,11 @@
 
 - Does 'O' button changes quality level ?
 
-- **When model is changed for a passenger, his position is moved to start of anim** ;
+- Client can't enter vehicle state - print additional state data ;
 
-- **Are weapon audio clips unloaded ? - no ; memory is increased by 90 KB for 5 weapons (when ped is spawned) ;**
+- Ped runs through ground when playing run-aim anim with mp5, ak47, etc... when holding gun with 2 hands
 
-- **When ped changes model, animation clips increase memory usage by 0.8 MB**
+- Rolling: when doing more rolls in a sequence, roll direction can change, and client only uses the original direction
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
