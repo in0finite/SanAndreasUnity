@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (!this.IsActiveState)
 				return;
 			
-			if (m_ped.CurrentWeapon != null)
+			if (m_model.LastAnimId.Equals(new AnimId(AnimGroup.Gun, AnimIndex.run_armed)))
 			{
 				// set y position of unnamed and root frame to 0
 
@@ -27,6 +27,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				
 				if (m_model.RootFrame != null)
 					m_model.RootFrame.transform.localPosition = m_model.RootFrame.transform.localPosition.WithXAndZ();
+				
 			}
 
 		}
