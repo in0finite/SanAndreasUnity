@@ -10,7 +10,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	public class VehicleSittingState : BaseVehicleState
 	{
 		Vector3 m_vehicleParentOffset = Vector3.zero;
-		Vector3 m_rootFramePos = Vector3.zero;
+		//Vector3 m_rootFramePos = Vector3.zero;
 
 
 
@@ -66,17 +66,22 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			if (m_isServer)
 				m_vehicleParentOffset = m_model.VehicleParentOffset;
+			else if (m_isClientOnly)
+				m_model.VehicleParentOffset = m_vehicleParentOffset;
 
 			BaseVehicleState.PreparePedForVehicle(m_ped, vehicle, seat);
 
 			// save root frame position
 
-			this.UpdateDriverAnim();	// play driver anim
-			m_model.AnimComponent.Sample();	// sample it
-			if (m_model.RootFrame != null)
-				m_rootFramePos = m_model.RootFrame.transform.localPosition;	// save root frame position
-			this.UpdateAnimsInternal();	// restore the correct anim
-			m_model.AnimComponent.Sample();
+			// this.UpdateDriverAnim();	// play driver anim
+			// m_model.AnimComponent.Sample();	// sample it
+			// if (m_model.RootFrame != null)
+			// 	m_rootFramePos = m_model.RootFrame.transform.localPosition;	// save root frame position
+			// this.UpdateAnimsInternal();	// restore the correct anim
+			// m_model.AnimComponent.Sample();
+
+			// play anims
+			this.UpdateAnimsInternal();
 
 		}
 
@@ -138,11 +143,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// }
 			// else
 			{
+
 				// we have to assign offset every frame, because it can be changed when ped model changes
-				m_model.VehicleParentOffset = m_vehicleParentOffset;
+			//	m_model.VehicleParentOffset = m_vehicleParentOffset;
 				// same goes for root frame position
-				if (m_model.RootFrame != null)
-					m_model.RootFrame.transform.localPosition = m_rootFramePos;
+				if (m_model.RootFrame != null && m_model.UnnamedFrame != null)
+				{
+					//m_model.RootFrame.transform.localPosition = m_rootFramePos;
+					m_model.RootFrame.transform.localPosition = - m_model.UnnamedFrame.transform.localPosition;
+				}
 
 				m_model.PlayAnim(AnimGroup.Car, AnimIndex.SitPassenger, PlayMode.StopAll);
 			}

@@ -17,6 +17,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected new Transform transform { get { return m_ped.transform; } }
 		public bool IsActiveState { get { return m_ped.CurrentState == this; } }
 		protected bool m_isServer { get { return Net.NetStatus.IsServer; } }
+		protected bool m_isClientOnly => Net.NetStatus.IsClientOnly;
 		protected bool m_shouldSendButtonEvents { get { return !m_isServer && m_ped.IsControlledByLocalPlayer; } }
 
 
