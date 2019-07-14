@@ -217,6 +217,9 @@ namespace SanAndreasUnity.Behaviours
 
 			_anim = this.gameObject.GetOrAddComponent<UnityEngine.Animation> ();
 
+			// remove mixing transforms for all anim states
+			this.RemoveAllMixingTransformsForAllAnimStates();
+
 			LoadModel(Definition.ModelName, Definition.TextureDictionaryName);
 
 			// save original model state
@@ -262,7 +265,6 @@ namespace SanAndreasUnity.Behaviours
                 Destroy(_frames.Root.gameObject);
                 Destroy(_frames);
 				_frames = null;
-                _loadedAnims.Clear();
             }
 
             var geoms = Geometry.Load(modelName, txds);
@@ -491,14 +493,26 @@ namespace SanAndreasUnity.Behaviours
 			List<Transform> list;
 			if (m_mixedTransforms.TryGetValue (state, out list)) {
 				int count = list.Count;
-				foreach (var mix in list) {
-					state.RemoveMixingTransform (mix);
+				foreach (Transform mix in list) {
+					if (mix != null)
+						state.RemoveMixingTransform (mix);
 				}
 				list.Clear ();
 				return count;
 			} else {
 				return 0;
 			}
+		}
+
+		public void RemoveAllMixingTransformsForAllAnimStates()
+		{
+			foreach (AnimationState s in this.AnimComponent)
+			{
+				if (s != null)
+					this.RemoveAllMixingTransforms(s);
+			}
+
+			m_mixedTransforms.Clear();
 		}
 
 
