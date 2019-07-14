@@ -70,8 +70,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			BaseVehicleState.PreparePedForVehicle(m_ped, vehicle, seat);
 
 			// save root frame position
-			
-			this.UpdateWheelTurning();	// play driver anim
+
+			this.UpdateDriverAnim();	// play driver anim
 			m_model.AnimComponent.Sample();	// sample it
 			if (m_model.RootFrame != null)
 				m_rootFramePos = m_model.RootFrame.transform.localPosition;	// save root frame position
@@ -109,13 +109,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (seat != null)
 			{
 				if (seat.IsDriver)
-					this.UpdateWheelTurning ();
+					this.UpdateDriverAnim ();
 				else
-					this.UpdateAnimsWhilePassenger();
+					this.UpdatePassengerAnim();
 			}
 		}
 
-		protected virtual void UpdateWheelTurning()
+		protected virtual void UpdateDriverAnim()
 		{
 			
 			m_model.VehicleParentOffset = Vector3.zero;
@@ -130,7 +130,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
-		protected virtual void UpdateAnimsWhilePassenger()
+		protected virtual void UpdatePassengerAnim()
 		{
 			// if (this.CurrentVehicleSeat.IsDriver)
 			// {
