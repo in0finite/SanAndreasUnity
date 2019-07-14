@@ -13,6 +13,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		private bool m_rollLeft = false;
 		private AnimationState m_animState;
 
+		const string kRollDirSyncName = "rollDir";
+
 
 
 		public bool CanRoll()
@@ -33,15 +35,24 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			return true;
 		}
 
+		protected override void Start()
+		{
+			base.Start();
+			
+			// subscribe to dictionary event
+			if (m_isClientOnly)
+				m_ped.syncDictionaryStringUint.Callback += this.OnDictChanged;
+
+		}
+
 		public override void OnBecameActive ()
 		{
 			base.OnBecameActive();
-			m_animState = m_model.PlayAnim( this.movementAnim );
-			// clients have wrap mode set to 'Loop', because state can be switched very fast between roll and crouchaim, and
-			// server will not update current state syncvar, so client will not start the state again,
-			// and roll state will remain
-			m_animState.wrapMode = m_isServer ? WrapMode.Once : WrapMode.Loop;
-			m_model.VelocityAxis = 0;	// movement will be done along x axis
+			
+			this.PlayAnim();
+
+			if (m_isServer)
+				m_ped.syncDictionaryStringUint[kRollDirSyncName] = m_rollLeft ? (uint) 1 : (uint) 0;
 		}
 
 		public override byte[] GetAdditionalNetworkData()
@@ -61,6 +72,35 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_rollLeft = reader.ReadBoolean();
 
 			m_ped.SwitchState(this.GetType());
+		}
+
+		void OnDictChanged(Ped.SyncDictionaryStringUint.Operation op, string key, uint value)
+		{
+			// switch (op)
+			// {
+			// 	case Ped.SyncDictionaryStringUint.Operation.OP_ADD:
+			// 	case Ped.SyncDictionaryStringUint.Operation.OP_DIRTY:
+			// 	case Ped.SyncDictionaryStringUint.Operation.OP_SET:
+			// 		break;
+			// }
+
+			Debug.LogFormat("OnDictChanged() - op: {0}, key: {1}, value: {2}", op, key, value);
+
+			if (key != kRollDirSyncName)
+				return;
+
+			F.RunExceptionSafe( () => {
+				if (m_ped.syncDictionaryStringUint.ContainsKey(key))
+				{
+					// roll direction possibly changed
+					bool oldLeft = m_rollLeft;
+					m_rollLeft = m_ped.syncDictionaryStringUint[key] == 1;
+					Debug.LogFormat("roll dir changed - old left: {0}, new left: {1}", oldLeft, m_rollLeft);
+					if (oldLeft != m_rollLeft)
+						this.PlayAnim();
+				}
+			});
+
 		}
 
 
@@ -102,6 +142,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.UpdateMovement();
 
 			m_ped.Movement = originalMovementInput;
+		}
+
+		void PlayAnim()
+		{
+			m_animState = m_model.PlayAnim( this.movementAnim );
+			// clients have wrap mode set to 'Loop', because state can be switched very fast between roll and crouchaim, and
+			// server will not update current state syncvar, so client will not start the state again,
+			// and roll state will remain
+			m_animState.wrapMode = m_isServer ? WrapMode.Once : WrapMode.Loop;
+			m_model.VelocityAxis = 0;	// movement will be done along x axis
+
 		}
 
 		protected override void UpdateAnims ()
