@@ -112,7 +112,7 @@ namespace SanAndreasUnity.Behaviours
                     // obtain additional data from state
                     byte[] data = this.CurrentState != null ? this.CurrentState.GetAdditionalNetworkData() : null;
                     // assign additional data
-                    m_net_additionalStateData = data != null ? System.Text.Encoding.UTF8.GetString(data) : "";
+                    m_net_additionalStateData = data != null ? System.Convert.ToBase64String(data) : "";
                     // assign new state
                     m_net_state = newStateName;
                 }
@@ -220,7 +220,7 @@ namespace SanAndreasUnity.Behaviours
                 else
                 {
                     //Debug.LogFormat("Switching state based on sync data - ped: {0}, state: {1}", this.netId, newState.GetType().Name);
-                    byte[] data = string.IsNullOrEmpty(newStateData.additionalData) ? null : System.Text.Encoding.UTF8.GetBytes(newStateData.additionalData);
+                    byte[] data = string.IsNullOrEmpty(newStateData.additionalData) ? null : System.Convert.FromBase64String(newStateData.additionalData);
                     newState.OnSwitchedStateByServer(data);
                 }
             });
