@@ -135,6 +135,8 @@ namespace SanAndreasUnity.Behaviours
 		//	{WeaponId.RocketLauncherHS, 68},
 		};
 
+		static Dictionary<int, AudioClip> s_loadedAudioClips = new Dictionary<int, AudioClip>();
+
 		// used to play weapon sound
 		AudioSource m_audioSource;
 
@@ -239,9 +241,19 @@ namespace SanAndreasUnity.Behaviours
 				{
 					var audioSource = go.GetOrAddComponent<AudioSource> ();
 					audioSource.playOnAwake = false;
-				//	Debug.LogFormat("loading weapon sound, bank index {0}", weaponSoundIndexes [modelId] );
-					var audioClip = Audio.AudioManager.CreateAudioClipFromSfx ("GENRL", 136, 0, 
-						Audio.AudioManager.SfxGENRL137Timings[ weaponSoundIndexes [modelId] ] );
+
+					AudioClip audioClip = null;
+					if (s_loadedAudioClips.ContainsKey(modelId))
+					{
+						audioClip = s_loadedAudioClips[modelId];
+					}
+					else
+					{
+						audioClip = Audio.AudioManager.CreateAudioClipFromSfx ("GENRL", 136, 0, 
+							Audio.AudioManager.SfxGENRL137Timings[ weaponSoundIndexes [modelId] ] );
+						s_loadedAudioClips[modelId] = audioClip;
+					}
+					
 					audioSource.clip = audioClip;
 					weapon.m_audioSource = audioSource;
 				}
