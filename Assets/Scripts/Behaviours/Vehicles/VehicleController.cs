@@ -147,6 +147,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_angularVelocity = m_vehicle.RigidBody.angularVelocity;
 
                 // wheels
+                m_net_wheelsData.Flush();   // remove current list of changes - this ensures that only the current wheel state is sent, and prevents memory leak bug in Mirror
                 m_net_wheelsData.Clear();
                 foreach (var wheel in m_vehicle.Wheels) {
                     m_net_wheelsData.Add(new WheelSyncData() {
