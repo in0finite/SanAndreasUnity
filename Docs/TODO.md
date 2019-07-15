@@ -20,11 +20,11 @@
 
 - Does 'O' button changes quality level ?
 
+- Reduce physics time step to 30 - make it configurable in options
+
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
 - Script execution order: HUD before pause menu and windows ; fps counter after all ;
-
-- Add option to change fixed delta time ?
 
 - Optimize Console.Update() - don't do trim excess for every log message
 

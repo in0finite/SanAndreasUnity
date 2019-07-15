@@ -34,6 +34,15 @@ namespace SanAndreasUnity.Net
             Local = this;
         }
 
+        void OnDisable()
+        {
+            // destroy player's vehicles
+            if (NetStatus.IsServer)
+            {
+                this.DestroyPlayersVehicles();
+            }
+        }
+
 
         public bool CanPlayerSpawnVehicle()
         {
@@ -116,12 +125,17 @@ namespace SanAndreasUnity.Net
         void CmdRequestToDestroyMyVehicles()
         {
             F.RunExceptionSafe( () => {
-                m_myVehicles.RemoveDeadObjects();
-                foreach (var v in m_myVehicles)
-                {
-                    Destroy(v.gameObject);
-                }
+                this.DestroyPlayersVehicles();
             });
+        }
+
+        void DestroyPlayersVehicles()
+        {
+            m_myVehicles.RemoveDeadObjects();
+            foreach (var v in m_myVehicles)
+            {
+                Destroy(v.gameObject);
+            }
         }
 
         public void RequestTeleport(Vector3 pos, Quaternion rot)

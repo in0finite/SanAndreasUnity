@@ -8,6 +8,10 @@
 
 - remove spamming logs: 
 
+- wheel sync list: flush it before adding to it
+
+- when player disconnects, destroy his vehicles
+
 - test situation when player connects, and there are peds sitting in vehicles
 
 ***
