@@ -20,12 +20,6 @@
 
 - Does 'O' button changes quality level ?
 
-- Client can't enter vehicle state - print additional state data ;
-
-- Ped runs through ground when playing run-aim anim with mp5, ak47, etc... when holding gun with 2 hands
-
-- Rolling: when doing more rolls in a sequence, roll direction can change, and client only uses the original direction
-
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
 - Script execution order: HUD before pause menu and windows ; fps counter after all ;
