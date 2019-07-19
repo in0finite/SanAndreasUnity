@@ -2,14 +2,10 @@
 
 All geometry and some other assets should be loaded async-ly.
 
-We need a background thread which loads assets from disk. It will have a queue, where any script can register it's file for loading.
-
-We need a way to wait until specific asset is loaded.
+We already have a background thread in which some assets are loaded from disk. But, assets should also be converted to usable data in this thread.
 
 
 ***
-
-First identify what is taking time using Profiler. Maybe not all time goes on loading from disk. Some of it may be spent on converting the mesh.
 
 Identified what is taking time:
 
@@ -34,12 +30,8 @@ Identified what is taking time:
 
 - update divisions in separate thread ? or optimize division system ?
 
-- unload map objects which are not visible to any focus point for given amount of time - this means destroying meshes, materials, textures, and removing references to loaded data in RAM
-
 
 ## TIPS
 
 - attaching collision model takes a lot of memory - why ? - because it reads archive file
-
-- dedicated server doesn't need textures - we can detect if we are running as dedicated server, and skip loading textures
 

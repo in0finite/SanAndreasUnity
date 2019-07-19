@@ -2,19 +2,22 @@
 ## TODO
 
 
-- Weapons - see [weapons.md](weapons.md)
-
-- **Rigid body character**
-
-- Load map in editor ?
-
-- **Async geometry loading** - currently, geometry is loaded synchronously, which seems like the main performance bottleneck
-
 - Multiplayer - see [Multiplayer.md](Multiplayer.md)
 
-- Map - better info area ; input mouse position is not always correct ; see [Map.md](Map.md) ;
+- **Async geometry loading** - currently, geometry is loaded synchronously, which seems like the main performance bottleneck ; see [AsyncAssetLoading.md](AsyncAssetLoading.md) ;
+
+- Weapons and damage system - see [weapons.md](weapons.md)
+
+- Unloading assets - need to keep track of references to loaded assets (meshes, textures) ; need ability to release references ; when a certain asset is no longer referenced, it can be unloaded ;
+
+- Unload distant parts of the world - first need a better Cell system, which will tell which divisions are close and which are not ; unloading includes releasing reference to meshes, textures, materials, collision models ;
+
+- Rigid body character
+
+- Minimap - better info area ; input mouse position is not always correct ; see [Map.md](Map.md) ;
 
 - Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
+
 
 - Gravity setting failed to load on windows - instead of 9.81, it's loaded as 981 - maybe it happens when float.ToString() gives e
 
@@ -22,11 +25,17 @@
 
 - Reduce physics time step to 30 - make it configurable in options
 
+- Chat
+
+- Android: touch input is required ; set default fps to 25 ;
+
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
 - Script execution order: HUD before pause menu and windows ; fps counter after all ;
 
 - Optimize Console.Update() - don't do trim excess for every log message
+
+- Implement drive-by
 
 - don't fade high LOD meshes
 
@@ -49,6 +58,8 @@
 - Bug when ped gets down to low heights (trying to move him back to starting location, and causing shaking)
 
 - Minimap size should depend on screen resolution
+
+- Vehicle hijacking - throwing out other ped and entering vehicle at his seat
 
 
 - Import Vice City
