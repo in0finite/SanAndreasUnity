@@ -1,6 +1,9 @@
 
 
-# TODO
+# Multiplayer TODO
+
+
+### General
 
 - scene changing: When network (server/client) is stopped, offline scene should be loaded. But, when switching back to online scene, Loader should not load everything again. Instead, only Cell loading should be done, if the new scene is main scene. But, are old meshes/textures destroyed ? Do we leave memory behind, every time when network is stopped ? Or... just exit the game when network is stopped (display message box first ?).
 
@@ -8,13 +11,17 @@
 
 - remove spamming logs: 
 
-- test situation when player connects, and there are peds sitting in vehicles
+- error when spawning RCCAM
 
-***
+- all button events' Cmds on server should be enclosed with F.RunExceptionSafe()
+
+
+### Weapons
 
 - is weapon sound 3d ?
 
-***
+
+### Vehicles
 
 - **vehicle is bumping on clients** - disable (or destroy) wheel colliders, and sync them - this should not be done on local player, see below
 
@@ -25,15 +32,6 @@
 - try to sync rigid body forces, or just clear them on clients ? - will this help ? are forces cleared at the end of frame by physics engine ? - forces can not be accessed
 
 - add option to disable wheel colliders
-
-
-
-
-# Notes
-
-- server will have multiple Cell focus points - the game can lag too much, so server has to run on a dedicated machine
-
-- dedicated server doesn't need to load textures
 
 
 
