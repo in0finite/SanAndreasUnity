@@ -27,7 +27,7 @@
 
 - Chat
 
-- Android: touch input is required ; add some predefined folders in file browser ; HUD must run before other UI scripts ; add perms for read/write access to storage ;
+- Android: touch input is required ; add some predefined folders in file browser ; HUD must run before other UI scripts ; add perms for read/write access to storage ; forbid screen rotation ; vibrate when ped is damaged ;
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
