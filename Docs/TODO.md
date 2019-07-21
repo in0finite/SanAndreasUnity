@@ -27,7 +27,7 @@
 
 - Chat
 
-- Android: touch input is required ; set default fps to 25 ; add some predefined folders in file browser ; HUD must run before other UI scripts ;
+- Android: touch input is required ; set default fps to 25 ; add some predefined folders in file browser ; HUD must run before other UI scripts ; load config from resources ;
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
