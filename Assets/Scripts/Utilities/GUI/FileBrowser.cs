@@ -158,7 +158,7 @@ public class FileBrowser {
 		// refresh list of drives
 		try {
 			m_drives.Clear ();
-			m_drives.AddRange( Directory.GetLogicalDrives () );
+			m_drives.AddRange( GetDirectoriesForTopPanel() );
 		} catch {
 		
 		}
@@ -264,6 +264,18 @@ public class FileBrowser {
 			return Directory.GetDirectories( path );
 		} catch {
 			return new string[0];
+		}
+	}
+
+	static string[] GetDirectoriesForTopPanel()
+	{
+		if (Application.platform == RuntimePlatform.Android)
+		{
+			return new string[]{"/", "/sdcard/", "/storage/sdcard0/", "/storage/emulated/0/"};
+		}
+		else
+		{
+			return Directory.GetLogicalDrives ();
 		}
 	}
 
