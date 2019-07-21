@@ -27,7 +27,7 @@
 
 - Chat
 
-- Android: touch input is required ; set default fps to 25 ;
+- Android: touch input is required ; set default fps to 25 ; add some predefined folders in file browser ;
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
