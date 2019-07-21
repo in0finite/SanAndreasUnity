@@ -85,7 +85,7 @@ namespace SanAndreasUnity.Behaviours.Audio
 
 			s_gtaAudioFiles = GTAAudio.OpenRead (Path.Combine (Utilities.Config.GamePath, "audio"));
 
-			s_sfxGENRL137Timings = LoadSfxBankTimings (Path.Combine (Utilities.Config.DataPath, "SFX_GENRL_137.txt"));
+			s_sfxGENRL137Timings = LoadSfxBankTimings( Resources.Load<TextAsset>("Data/SFX_GENRL_137").text );
 
 			if (Instance.playStartupSound)
 			{
@@ -98,11 +98,15 @@ namespace SanAndreasUnity.Behaviours.Audio
 
 		}
 
-		public static SfxBankAudioData[] LoadSfxBankTimings (string filePath)
+		public static SfxBankAudioData[] LoadSfxBankTimings (string fileContent)
+		{
+			return LoadSfxBankTimings(fileContent.Split('\n'));
+		}
+
+		public static SfxBankAudioData[] LoadSfxBankTimings (string[] lines)
 		{
 		//	int sampleSize = 2;
 			System.IFormatProvider formatProvider = System.Globalization.CultureInfo.InvariantCulture;
-			var lines = File.ReadAllLines (filePath);
 			SfxBankAudioData[] datas = new SfxBankAudioData[(lines.Length - 1)];	// skip last line
 		//	int currentTime = 0;
 			float currentOffset = 0;
