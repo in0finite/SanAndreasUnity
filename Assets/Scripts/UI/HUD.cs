@@ -27,10 +27,6 @@ namespace SanAndreasUnity.UI {
 			Instance = this;
 		}
 
-		void Update () {
-			
-		}
-
 		void OnGUI () {
 
 			if (!Loader.HasLoaded)
