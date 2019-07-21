@@ -20,6 +20,7 @@ namespace SanAndreasUnity.Behaviours {
 		public GameObject barPrefab;
 
 		[SerializeField] [Range(10, 100)] private int m_defaultMaxFps = 60;
+		[SerializeField] [Range(10, 100)] private int m_defaultMaxFpsOnMobile = 25;
 
 		public Vector2 cursorSensitivity = new Vector2(2f, 2f);
 
@@ -34,7 +35,10 @@ namespace SanAndreasUnity.Behaviours {
 			if (null == Instance)
 				Instance = this;
 
-			SetMaxFps(m_defaultMaxFps);
+			if (Application.isMobilePlatform)
+				SetMaxFps(m_defaultMaxFpsOnMobile);
+			else
+				SetMaxFps(m_defaultMaxFps);
 
 		}
 
