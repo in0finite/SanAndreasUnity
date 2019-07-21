@@ -155,7 +155,7 @@ namespace SanAndreasUnity.Utilities
 			_substitutions.Clear ();
 
 
-			_root = JObject.Parse (File.ReadAllText (FilePath));
+			_root = JObject.Parse (Resources.Load<TextAsset>("config").text);
 
 			if (File.Exists (UserFilePath))
 			{
