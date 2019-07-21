@@ -263,26 +263,33 @@ namespace SanAndreasUnity.Importing.Animation
 		{ get { return _sGroups; } }
 
 
-        public static void Load(string path)
+		public static void Load(string path)
+		{
+			using (var reader = File.OpenText(path))
+			{
+				LoadFromStreamReader(reader);
+			}
+		}
+
+        public static void LoadFromStreamReader(StreamReader reader)
         {
-            using (var reader = File.OpenText(path))
+            
+            string line;
+            while ((line = reader.ReadLine()) != null)
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                var match = _sHeaderRegex.Match(line);
+                if (!match.Success) continue;
+
+                var group = new AnimationGroup(match, reader);
+
+                if (!_sGroups.ContainsKey(group.Name))
                 {
-                    var match = _sHeaderRegex.Match(line);
-                    if (!match.Success) continue;
-
-                    var group = new AnimationGroup(match, reader);
-
-                    if (!_sGroups.ContainsKey(group.Name))
-                    {
-                        _sGroups.Add(group.Name, new Dictionary<AnimGroup, AnimationGroup>());
-                    }
-
-                    _sGroups[group.Name].Add(group.Type, group);
+                    _sGroups.Add(group.Name, new Dictionary<AnimGroup, AnimationGroup>());
                 }
+
+                _sGroups[group.Name].Add(group.Type, group);
             }
+            
         }
 
         private static AnimationGroup GetInternal(string name, AnimGroup type)
