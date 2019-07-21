@@ -44,6 +44,12 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { WeaponsManager.Instance.drawLineFromGun = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
+		OptionsWindow.BoolInput m_useTouchInput = new OptionsWindow.BoolInput ("Use touch input") {
+			isAvailable = () => UIManager.Instance != null,
+			getValue = () => UIManager.Instance.UseTouchInput,
+			setValue = (value) => { UIManager.Instance.UseTouchInput = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
 
 		OptionsWindow.FloatInput m_pedSyncRate = new OptionsWindow.FloatInput ("Ped sync rate", 1, 60) {
 			isAvailable = () => PedManager.Instance != null,
@@ -126,7 +132,7 @@ namespace SanAndreasUnity.Settings {
 		void Awake ()
 		{
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
-				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera,
+				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera, m_useTouchInput,
 				m_pausePlayerSpawning, m_playerSpawnInterval,
 				m_pedSyncRate,
 				m_vehicleSyncRate, m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, 
