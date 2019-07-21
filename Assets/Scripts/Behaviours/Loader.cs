@@ -363,6 +363,11 @@ namespace SanAndreasUnity.Behaviours
 			{
 				AnimationGroup.Load(path);
 			}
+
+			// load custom anim groups from resources
+			TextAsset textAsset = Resources.Load<TextAsset>("Data/auxanimgrp");
+			AnimationGroup.LoadFromStreamReader( new StreamReader(new MemoryStream(textAsset.bytes)) );
+			
 		}
 
 		private static void StepLoadCarColors ()
