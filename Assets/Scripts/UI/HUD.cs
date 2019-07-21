@@ -36,11 +36,13 @@ namespace SanAndreasUnity.UI {
 			if (!Loader.HasLoaded)
 				return;
 
-			if (null == Ped.Instance)
+			var ped = Ped.Instance;
+
+			if (null == ped)
 				return;
 
 			// draw crosshair
-			if (Ped.Instance.IsAiming) {
+			if (ped.IsAiming) {
 				DrawCrosshair( new Vector2(Screen.width * 0.5f, Screen.height * 0.5f), Vector2.one * this.crosshairSize, this.crosshairScaleMode );
 			}
 
@@ -50,6 +52,10 @@ namespace SanAndreasUnity.UI {
 			// draw dot in the middle of screen
 			if (this.drawRedDotOnScreenCenter)
 				GUIUtils.DrawRect (GUIUtils.GetCenteredRect (new Vector2 (2f, 2f)), Color.red);
+
+			// let current state draw it's own hud
+			if (ped.CurrentState != null)
+				ped.CurrentState.OnDrawHUD();
 
 		}
 
