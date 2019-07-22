@@ -127,9 +127,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				return;
 
 			// left side: movement buttons: arrows
-			// right side: action buttons: crouch, enter, fly, toggle sprint, jump (repeat button), toggle aim
+			// right side: action buttons: crouch, enter, fly, toggle sprint/walk, jump (repeat button), toggle aim
 
 			this.DrawMovementTouchInput();
+			this.DrawActionsTouchInput();
 
 		}
 
@@ -169,6 +170,96 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void DrawActionsTouchInput()
 		{
+			// it's on the right side
+			// create buttons from bottom to top
+
+			CustomInput customInput = CustomInput.Instance;
+
+			float buttonHeight = Screen.height / 5f * 0.6f;
+			float buttonWidth = buttonHeight;
+
+			float bottomMargin = Screen.height * 0.05f;
+			float horizontalMargin = bottomMargin;
+
+			float xPos = Screen.width - horizontalMargin - buttonWidth;
+			float originalXPos = xPos;
+			float horizontalSpace = 5f;
+
+			// sprint/walk toggle button
+
+			bool isWalkOn = m_ped.IsWalkOn;	// preserve current value
+			bool isSprintOn = m_ped.IsSprintOn;	// preserve current value
+
+			float topY = Screen.height - bottomMargin - buttonHeight;
+			GUI.contentColor = m_ped.IsWalkOn ? Color.blue : Color.white;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Walk"))
+			{
+				isWalkOn = !isWalkOn;
+			}
+
+			//topY -= buttonHeight;
+			xPos -= buttonWidth + horizontalSpace;
+			GUI.contentColor = m_ped.IsSprintOn ? Color.blue : Color.white;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Sprint"))
+			{
+				isSprintOn = !isSprintOn;
+			}
+			GUI.contentColor = Color.white;
+			xPos = originalXPos;
+
+			// assign input
+			customInput.SetButton("Walk", isWalkOn);
+			customInput.SetButton("Sprint", isSprintOn);
+
+			// jump - repeat button
+
+			bool isJumpOn = false;
+			topY -= buttonHeight;
+			GUI.contentColor = m_ped.IsJumpOn ? Color.blue : Color.white;
+			if (GUI.RepeatButton(new Rect(xPos, topY, buttonWidth, buttonHeight), "Jump"))
+			{
+				isJumpOn = true;
+			}
+			GUI.contentColor = Color.white;
+
+			customInput.SetButton("Jump", isJumpOn);
+
+			// crouch
+			//topY -= buttonHeight;
+			xPos -= buttonWidth + horizontalSpace;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Crouch"))
+			{
+				customInput.SetKeyDown(KeyCode.C, true);
+			}
+			xPos = originalXPos;
+
+			// enter
+			topY -= buttonHeight;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Enter"))
+			{
+				customInput.SetButtonDown("Use", true);
+			}
+
+			// aim
+			bool isAimOn = m_ped.IsAimOn;	// preserve current value
+			topY -= buttonHeight;
+			GUI.contentColor = m_ped.IsAimOn ? Color.blue : Color.white;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Aim"))
+			{
+				isAimOn = !isAimOn;
+			}
+			GUI.contentColor = Color.white;
+
+			customInput.SetButton("RightClick", isAimOn);
+
+			// fly
+			topY -= buttonHeight;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Fly"))
+			{
+				customInput.SetKeyDown(KeyCode.T, true);
+			}
+
+
 
 		}
 
