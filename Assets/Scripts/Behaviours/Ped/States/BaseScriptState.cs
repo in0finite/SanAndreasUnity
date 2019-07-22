@@ -273,6 +273,28 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void OnDrawHUD()
 		{
+			if (!UIManager.Instance.UseTouchInput)
+			{
+				// we are not using touch input
+				// make sure that custom input is resetted
+				CustomInput.Instance.ResetAllInput();
+				return;
+			}
+
+			if (Event.current.type == EventType.Repaint)	// repaint event is sent once per frame, when drawing
+			{
+				// reset input only during repaint event
+				CustomInput.Instance.ResetAllInput();
+
+				// ignore mouse buttons when touch is enabled
+				CustomInput.Instance.SetButton("LeftClick", false);
+				CustomInput.Instance.SetButton("RightClick", false);
+				CustomInput.Instance.SetButtonDown("LeftClick", false);
+				CustomInput.Instance.SetButtonDown("RightClick", false);
+
+			}
+
+			// inherited states only need to draw gui, read input from user, and assign input to custom input
 
 		}
 

@@ -84,6 +84,7 @@ namespace SanAndreasUnity.Utilities
 			axes.Clear();
 			buttons.Clear();
 			buttonsDown.Clear();
+			keysDown.Clear();
 		}
 
 
