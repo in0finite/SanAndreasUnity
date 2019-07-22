@@ -123,7 +123,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			base.OnDrawHUD();
 
-			if (!UIManager.Instance.UseTouchInput)
+			if (!UIManager.Instance.UseTouchInput || !GameManager.CanPlayerReadInput())
 				return;
 
 			// left side: movement buttons: arrows
