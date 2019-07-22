@@ -252,6 +252,19 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			customInput.SetButton("RightClick", isAimOn);
 
+			// fire - repeat button
+			bool isFireOn = false;
+			xPos -= buttonWidth + horizontalSpace;
+			GUI.contentColor = m_ped.IsFireOn ? Color.blue : Color.white;
+			if (GUI.RepeatButton(new Rect(xPos, topY, buttonWidth, buttonHeight), "Fire"))
+			{
+				isFireOn = true;
+			}
+			GUI.contentColor = Color.white;
+			xPos = originalXPos;
+
+			customInput.SetButton("LeftClick", isFireOn);
+
 			// fly
 			topY -= buttonHeight;
 			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Fly"))
