@@ -12,6 +12,8 @@ namespace SanAndreasUnity.Utilities
 
 		Dictionary<string,float> axes = new Dictionary<string, float>();
 		Dictionary<string,bool> buttons = new Dictionary<string, bool>();
+		Dictionary<string,bool> buttonsDown = new Dictionary<string, bool>();
+		Dictionary<KeyCode,bool> keysDown = new Dictionary<KeyCode, bool>();
 
 
 
@@ -22,6 +24,15 @@ namespace SanAndreasUnity.Utilities
 			if (axes.TryGetValue (name, out value))
 				return value;
 			return Input.GetAxis(name);
+		}
+
+		public float GetAxisRaw(string name){
+			if (!this.IsActive)
+				return Input.GetAxisRaw(name);
+			float value = 0;
+			if (axes.TryGetValue (name, out value))
+				return value;
+			return Input.GetAxisRaw(name);
 		}
 
 		public void SetAxis(string name, float value){
@@ -37,14 +48,42 @@ namespace SanAndreasUnity.Utilities
 			return Input.GetButton(name);
 		}
 
+		public bool GetButtonDown(string name){
+			if (!this.IsActive)
+				return Input.GetButtonDown(name);
+			bool value = false;
+			if (buttonsDown.TryGetValue (name, out value))
+				return value;
+			return Input.GetButtonDown(name);
+		}
+
 		public void SetButton(string name, bool pressed){
 			buttons [name] = pressed;
+		}
+
+		public void SetButtonDown(string name, bool pressed){
+			buttonsDown [name] = pressed;
+		}
+
+		public bool GetKeyDown(KeyCode keyCode){
+			if (!this.IsActive)
+				return Input.GetKeyDown(keyCode);
+			bool value = false;
+			if (keysDown.TryGetValue (keyCode, out value))
+				return value;
+			return Input.GetKeyDown(keyCode);
+		}
+
+		public void SetKeyDown(KeyCode keyCode, bool pressed)
+		{
+			keysDown [keyCode] = pressed;
 		}
 
 		public void ResetAllInput()
 		{
 			axes.Clear();
 			buttons.Clear();
+			buttonsDown.Clear();
 		}
 
 
