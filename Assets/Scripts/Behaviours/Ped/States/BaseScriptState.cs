@@ -296,6 +296,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// inherited states only need to draw gui, read input from user, and assign input to custom input
 
+			// we will only draw gui for switching weapons
+
 		}
 
 

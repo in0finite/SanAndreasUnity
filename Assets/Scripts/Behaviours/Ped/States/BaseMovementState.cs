@@ -118,6 +118,61 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				m_ped.GetStateOrLogError<FlyState> ().EnterState (true);
 		}
 
+
+		public override void OnDrawHUD()
+		{
+			base.OnDrawHUD();
+
+			if (!UIManager.Instance.UseTouchInput)
+				return;
+
+			// left side: movement buttons: arrows
+			// right side: action buttons: crouch, enter, fly, toggle sprint, jump (repeat button), toggle aim
+
+			this.DrawMovementTouchInput();
+
+		}
+
+		protected virtual void DrawMovementTouchInput()
+		{
+			// movement buttons
+			// height - 1/3 screen height
+
+			float height = Screen.height / 3f;
+			float bottomMargin = 5f;
+			float horizontalMargin = 5f;
+
+			// we'll need 3 rows of buttons: up, left & right, down
+			float buttonHeight = (height - bottomMargin) / 3;
+			float buttonWidth = buttonHeight;
+
+			CustomInput customInput = CustomInput.Instance;
+
+			float movementVertical = 0f, movementHorizontal = 0f;
+
+			float topY = Screen.height - bottomMargin - buttonHeight;
+			if (GUI.Button(new Rect(horizontalMargin + buttonWidth, topY, buttonWidth, buttonHeight), "DOWN"))
+				movementVertical -= 1f;
+			topY -= buttonHeight;
+			if (GUI.Button(new Rect(horizontalMargin, topY, buttonWidth, buttonHeight), "LEFT"))
+				movementHorizontal -= 1f;
+			if (GUI.Button(new Rect(horizontalMargin + buttonWidth * 2, topY, buttonWidth, buttonHeight), "RIGHT"))
+				movementHorizontal += 1f;
+			topY -= buttonHeight;
+			if (GUI.Button(new Rect(horizontalMargin + buttonWidth, topY, buttonWidth, buttonHeight), "UP"))
+				movementVertical += 1f;
+
+			// set input for vertical and horizontal axis
+			customInput.SetAxis("Vertical", movementVertical);
+			customInput.SetAxis("Horizontal", movementHorizontal);
+
+		}
+
+		protected virtual void DrawActionsTouchInput()
+		{
+
+		}
+
 	}
 
 }
