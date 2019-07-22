@@ -118,30 +118,32 @@ namespace SanAndreasUnity.Behaviours
 		void ReadStates()
 		{
 
+			CustomInput customInput = CustomInput.Instance;
+
 			this.ReadCameraInput ();
 
 			m_ped.MouseScrollInput = Input.mouseScrollDelta;
 
 
-			m_ped.IsAimOn = Input.GetButton ("RightClick");
-			m_ped.IsFireOn = Input.GetButton ("LeftClick");
+			m_ped.IsAimOn = customInput.GetButton ("RightClick");
+			m_ped.IsFireOn = customInput.GetButton ("LeftClick");
 
-			m_ped.IsJumpOn = Input.GetButton ("Jump");
+			m_ped.IsJumpOn = customInput.GetButton ("Jump");
 
 
 			Vector3 inputMove = Vector3.zero;
 			if (m_smoothMovement)
-				inputMove = new Vector3 (Input.GetAxis ("Horizontal"), 0f, Input.GetAxis ("Vertical"));
+				inputMove = new Vector3 (customInput.GetAxis ("Horizontal"), 0f, customInput.GetAxis ("Vertical"));
 			else
-				inputMove = new Vector3 (Input.GetAxisRaw ("Horizontal"), 0f, Input.GetAxisRaw ("Vertical"));
+				inputMove = new Vector3 (customInput.GetAxisRaw ("Horizontal"), 0f, customInput.GetAxisRaw ("Vertical"));
 
 			if (inputMove.sqrMagnitude > 0f)
 			{
 				inputMove.Normalize();
 
-				if (Input.GetButton ("Walk"))
+				if (customInput.GetButton ("Walk"))
 					m_ped.IsWalkOn = true;
-				else if (Input.GetButton ("Sprint"))
+				else if (customInput.GetButton ("Sprint"))
 					m_ped.IsSprintOn = true;
 				else
 					m_ped.IsRunOn = true;
@@ -163,30 +165,32 @@ namespace SanAndreasUnity.Behaviours
 		void ReadEvents()
 		{
 
-			if (Input.GetButtonDown ("LeftClick"))
+			CustomInput customInput = CustomInput.Instance;
+
+			if (customInput.GetButtonDown ("LeftClick"))
 				m_ped.OnFireButtonPressed ();
 
-			if (Input.GetButtonDown ("RightClick"))
+			if (customInput.GetButtonDown ("RightClick"))
 				m_ped.OnAimButtonPressed ();
 
-			if (Input.GetKeyDown (KeyCode.Q))
+			if (customInput.GetKeyDown (KeyCode.Q))
 				m_ped.OnPreviousWeaponButtonPressed();
-			else if (Input.GetKeyDown (KeyCode.E))
+			else if (customInput.GetKeyDown (KeyCode.E))
 				m_ped.OnNextWeaponButtonPressed();
 
-			if (Input.GetButtonDown("Use"))
+			if (customInput.GetButtonDown("Use"))
 				m_ped.OnSubmitPressed ();
 
-			if (Input.GetButtonDown("Jump"))
+			if (customInput.GetButtonDown("Jump"))
 				m_ped.OnJumpButtonPressed ();
 
-			if (Input.GetKeyDown(KeyCode.C))
+			if (customInput.GetKeyDown(KeyCode.C))
 				m_ped.OnCrouchButtonPressed ();
 
-			if (Input.GetKeyDown (KeyCode.T))
+			if (customInput.GetKeyDown (KeyCode.T))
 				m_ped.OnFlyButtonPressed();
 
-			if (Input.GetKeyDown (KeyCode.R))
+			if (customInput.GetKeyDown (KeyCode.R))
 				m_ped.OnFlyThroughButtonPressed();
 
 		}
@@ -194,14 +198,16 @@ namespace SanAndreasUnity.Behaviours
 		private void ReadCameraInput ()
 		{
 
+			CustomInput customInput = CustomInput.Instance;
+
 			if (GameManager.CanPlayerReadInput())
 			{
 				// rotate camera
 
 				// FIXME: Camera rotation should be done by ped's current state. We should only assign mouse move input.
 
-				var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-                var rightAnalogDelta = new Vector2(Input.GetAxisRaw("Joystick X"), Input.GetAxisRaw("Joystick Y"));
+				var mouseDelta = new Vector2(customInput.GetAxisRaw("Mouse X"), customInput.GetAxisRaw("Mouse Y"));
+                var rightAnalogDelta = new Vector2(customInput.GetAxisRaw("Joystick X"), customInput.GetAxisRaw("Joystick Y"));
 
 				Vector2 totalMouseDelta = mouseDelta + rightAnalogDelta;
 
