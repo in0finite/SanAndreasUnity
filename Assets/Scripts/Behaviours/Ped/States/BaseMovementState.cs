@@ -136,14 +136,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected virtual void DrawMovementTouchInput()
 		{
 			// movement buttons
-			// height - 1/3 screen height
 
-			float height = Screen.height / 3f;
-			float bottomMargin = 5f;
-			float horizontalMargin = 5f;
+			float height = Screen.height * 0.4f;
+			float bottomMargin = Screen.height * 0.05f;
+			float horizontalMargin = bottomMargin;
 
 			// we'll need 3 rows of buttons: up, left & right, down
-			float buttonHeight = (height - bottomMargin) / 3;
+			float buttonHeight = height / 3;
 			float buttonWidth = buttonHeight;
 
 			CustomInput customInput = CustomInput.Instance;
@@ -151,15 +150,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			float movementVertical = 0f, movementHorizontal = 0f;
 
 			float topY = Screen.height - bottomMargin - buttonHeight;
-			if (GUI.Button(new Rect(horizontalMargin + buttonWidth, topY, buttonWidth, buttonHeight), "DOWN"))
+			if (GUI.RepeatButton(new Rect(horizontalMargin + buttonWidth, topY, buttonWidth, buttonHeight), "DOWN"))
 				movementVertical -= 1f;
 			topY -= buttonHeight;
-			if (GUI.Button(new Rect(horizontalMargin, topY, buttonWidth, buttonHeight), "LEFT"))
+			if (GUI.RepeatButton(new Rect(horizontalMargin, topY, buttonWidth, buttonHeight), "LEFT"))
 				movementHorizontal -= 1f;
-			if (GUI.Button(new Rect(horizontalMargin + buttonWidth * 2, topY, buttonWidth, buttonHeight), "RIGHT"))
+			if (GUI.RepeatButton(new Rect(horizontalMargin + buttonWidth * 2, topY, buttonWidth, buttonHeight), "RIGHT"))
 				movementHorizontal += 1f;
 			topY -= buttonHeight;
-			if (GUI.Button(new Rect(horizontalMargin + buttonWidth, topY, buttonWidth, buttonHeight), "UP"))
+			if (GUI.RepeatButton(new Rect(horizontalMargin + buttonWidth, topY, buttonWidth, buttonHeight), "UP"))
 				movementVertical += 1f;
 
 			// set input for vertical and horizontal axis
