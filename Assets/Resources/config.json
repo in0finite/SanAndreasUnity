@@ -14,7 +14,7 @@
 
   "archive_paths": [
     "${game_dir}/models/gta3.img",
-    "${game_dir}",  // load gta3.img before loading game folder, because game path could be invalid
+    "${game_dir}",
     "${game_dir}/models/gta_int.img",
     "${game_dir}/models/player.img",
     "${game_dir}/anim/anim.img",
