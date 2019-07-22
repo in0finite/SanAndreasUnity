@@ -19,8 +19,9 @@ namespace SanAndreasUnity.Utilities
 			if (!this.IsActive)
 				return Input.GetAxis(name);
 			float value = 0;
-			axes.TryGetValue (name, out value);
-			return value;
+			if (axes.TryGetValue (name, out value))
+				return value;
+			return Input.GetAxis(name);
 		}
 
 		public void SetAxis(string name, float value){
@@ -31,8 +32,9 @@ namespace SanAndreasUnity.Utilities
 			if (!this.IsActive)
 				return Input.GetButton(name);
 			bool value = false;
-			buttons.TryGetValue (name, out value);
-			return value;
+			if (buttons.TryGetValue (name, out value))
+				return value;
+			return Input.GetButton(name);
 		}
 
 		public void SetButton(string name, bool pressed){
