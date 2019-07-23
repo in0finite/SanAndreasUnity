@@ -406,6 +406,13 @@ namespace SanAndreasUnity.Behaviours
 			// fist texture
 			Weapon.FistTexture = TextureDictionary.Load("hud").GetDiffuse("fist").Texture;
 
+			// arrow textures
+			var pcbtnsTxd = TextureDictionary.Load("pcbtns");
+			UI.HUD.LeftArrowTexture = pcbtnsTxd.GetDiffuse("left").Texture;
+			UI.HUD.RightArrowTexture = pcbtnsTxd.GetDiffuse("right").Texture;
+			UI.HUD.UpArrowTexture = pcbtnsTxd.GetDiffuse("up").Texture;
+			UI.HUD.DownArrowTexture = pcbtnsTxd.GetDiffuse("down").Texture;
+
 		}
 
 

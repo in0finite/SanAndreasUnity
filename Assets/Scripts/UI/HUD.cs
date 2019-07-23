@@ -21,6 +21,11 @@ namespace SanAndreasUnity.UI {
 
 		public bool drawRedDotOnScreenCenter = false;
 
+		public static Texture2D LeftArrowTexture { get; set; }
+		public static Texture2D RightArrowTexture { get; set; }
+		public static Texture2D UpArrowTexture { get; set; }
+		public static Texture2D DownArrowTexture { get; set; }
+
 
 
 		void Awake () {
