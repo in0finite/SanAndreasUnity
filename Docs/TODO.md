@@ -27,7 +27,7 @@
 
 - Chat
 
-- Android: HUD must run before other UI scripts ; add perms for read/write access to storage ; forbid screen rotation ; vibrate when ped is damaged ; disable left and right mouse click ; vehicle touch input: forward, backward, handbrake, left & right ; weapon switching buttons ; states to implement hud: fly, ; circular button for movement ; buttons which don't work: aim, sprint, walk ;
+- Android: HUD must run before other UI scripts ; add perms for read/write access to storage ; forbid screen rotation ; vibrate when ped is damaged ; disable left and right mouse click ; vehicle touch input: forward, backward, handbrake, left & right ; weapon switching buttons ; states to implement hud: fly, ; circular button for movement ; buttons which don't work: aim, sprint, walk ; lock cursor when testing finishes ;
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 

@@ -304,7 +304,26 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void ResetCustomInput()
 		{
-			CustomInput.Instance.ResetAllInput();
+			var customInput = CustomInput.Instance;
+
+			if (!UIManager.Instance.UseTouchInput)
+			{
+				// touch input is not used
+				customInput.ResetAllInput();
+				return;
+			}
+
+			// preserve input for: walk, sprint, aim
+
+			bool isWalkOn = customInput.GetButton("Walk");
+			bool isSprintOn = customInput.GetButton("Sprint");
+			bool isAimOn = customInput.GetButton("RightClick");
+
+			customInput.ResetAllInput();
+
+			customInput.SetButton("Walk", isWalkOn);
+			customInput.SetButton("Sprint", isSprintOn);
+			customInput.SetButton("RightClick", isAimOn);
 		}
 
 		protected virtual void DrawMovementTouchInput()
@@ -360,11 +379,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// sprint/walk toggle button
 
-			bool isWalkOn = m_ped.IsWalkOn;	// preserve current value
-			bool isSprintOn = m_ped.IsSprintOn;	// preserve current value
+			bool isWalkOn = customInput.GetButton("Walk");	// preserve current value
+			bool isSprintOn = customInput.GetButton("Sprint");	// preserve current value
 
 			float topY = Screen.height - bottomMargin - buttonHeight;
-			GUI.contentColor = m_ped.IsWalkOn ? Color.blue : Color.white;
+			GUI.contentColor = isWalkOn ? Color.blue : Color.white;
 			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Walk"))
 			{
 				isWalkOn = !isWalkOn;
@@ -372,7 +391,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			//topY -= buttonHeight;
 			xPos -= buttonWidth + horizontalSpace;
-			GUI.contentColor = m_ped.IsSprintOn ? Color.blue : Color.white;
+			GUI.contentColor = isSprintOn ? Color.blue : Color.white;
 			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Sprint"))
 			{
 				isSprintOn = !isSprintOn;
@@ -414,9 +433,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			}
 
 			// aim
-			bool isAimOn = m_ped.IsAimOn;	// preserve current value
+			bool isAimOn = customInput.GetButton("RightClick");	// preserve current value
 			topY -= buttonHeight;
-			GUI.contentColor = m_ped.IsAimOn ? Color.blue : Color.white;
+			GUI.contentColor = isAimOn ? Color.blue : Color.white;
 			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Aim"))
 			{
 				isAimOn = !isAimOn;
