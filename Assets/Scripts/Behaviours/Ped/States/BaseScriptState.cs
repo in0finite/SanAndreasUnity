@@ -288,7 +288,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 				// ignore mouse buttons when touch is enabled
 				CustomInput.Instance.SetButton("LeftClick", false);
-				CustomInput.Instance.SetButton("RightClick", false);
+				if (!CustomInput.Instance.HasButton("RightClick"))
+					CustomInput.Instance.SetButton("RightClick", false);
 				CustomInput.Instance.SetButtonDown("LeftClick", false);
 				CustomInput.Instance.SetButtonDown("RightClick", false);
 
@@ -315,9 +316,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// preserve input for: walk, sprint, aim
 
-			bool isWalkOn = customInput.GetButton("Walk");
-			bool isSprintOn = customInput.GetButton("Sprint");
-			bool isAimOn = customInput.GetButton("RightClick");
+			bool isWalkOn = customInput.GetButtonNoDefaultInput("Walk");
+			bool isSprintOn = customInput.GetButtonNoDefaultInput("Sprint");
+			bool isAimOn = customInput.GetButtonNoDefaultInput("RightClick");
 
 			customInput.ResetAllInput();
 

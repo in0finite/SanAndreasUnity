@@ -48,6 +48,20 @@ namespace SanAndreasUnity.Utilities
 			return Input.GetButton(name);
 		}
 
+		public bool GetButtonNoDefaultInput(string name){
+			if (!this.IsActive)
+				return false;
+			bool value = false;
+			buttons.TryGetValue (name, out value);
+			return value;
+		}
+
+		public bool HasButton(string name){
+			if (!this.IsActive)
+				return false;
+			return buttons.ContainsKey (name);
+		}
+
 		public bool GetButtonDown(string name){
 			if (!this.IsActive)
 				return Input.GetButtonDown(name);
