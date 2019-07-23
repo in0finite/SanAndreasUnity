@@ -277,14 +277,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			{
 				// we are not using touch input, or we should not read input right now
 				// make sure that custom input is resetted
-				CustomInput.Instance.ResetAllInput();
+				this.ResetCustomInput();
 				return;
 			}
 
 			if (Event.current.type == EventType.Repaint)	// repaint event is sent once per frame, when drawing
 			{
 				// reset input only during repaint event
-				CustomInput.Instance.ResetAllInput();
+				this.ResetCustomInput();
 
 				// ignore mouse buttons when touch is enabled
 				CustomInput.Instance.SetButton("LeftClick", false);
@@ -294,9 +294,157 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			}
 
-			// inherited states only need to draw gui, read input from user, and assign input to custom input
+			// left side: movement buttons: arrows
+			// right side: action buttons: crouch, enter, fly, toggle sprint/walk, jump (repeat button), toggle aim
 
-			// we will only draw gui for switching weapons
+			this.DrawMovementTouchInput();
+			this.DrawActionsTouchInput();
+
+		}
+
+		protected virtual void ResetCustomInput()
+		{
+			CustomInput.Instance.ResetAllInput();
+		}
+
+		protected virtual void DrawMovementTouchInput()
+		{
+			// movement buttons
+
+			float height = Screen.height * 0.4f;
+			float bottomMargin = Screen.height * 0.05f;
+			float horizontalMargin = bottomMargin;
+
+			// we'll need 3 rows of buttons: up, left & right, down
+			float buttonHeight = height / 3;
+			float buttonWidth = buttonHeight;
+
+			CustomInput customInput = CustomInput.Instance;
+
+			float movementVertical = 0f, movementHorizontal = 0f;
+
+			float topY = Screen.height - bottomMargin - buttonHeight;
+			if (GUI.RepeatButton(new Rect(horizontalMargin + buttonWidth, topY, buttonWidth, buttonHeight), UI.HUD.DownArrowTexture))
+				movementVertical -= 1f;
+			topY -= buttonHeight;
+			if (GUI.RepeatButton(new Rect(horizontalMargin, topY, buttonWidth, buttonHeight), UI.HUD.LeftArrowTexture))
+				movementHorizontal -= 1f;
+			if (GUI.RepeatButton(new Rect(horizontalMargin + buttonWidth * 2, topY, buttonWidth, buttonHeight), UI.HUD.RightArrowTexture))
+				movementHorizontal += 1f;
+			topY -= buttonHeight;
+			if (GUI.RepeatButton(new Rect(horizontalMargin + buttonWidth, topY, buttonWidth, buttonHeight), UI.HUD.UpArrowTexture))
+				movementVertical += 1f;
+
+			// set input for vertical and horizontal axis
+			customInput.SetAxis("Vertical", movementVertical);
+			customInput.SetAxis("Horizontal", movementHorizontal);
+
+		}
+
+		protected virtual void DrawActionsTouchInput()
+		{
+			// it's on the right side
+			// create buttons from bottom to top
+
+			CustomInput customInput = CustomInput.Instance;
+
+			float buttonHeight = Screen.height / 5f * 0.6f;
+			float buttonWidth = buttonHeight;
+
+			float bottomMargin = Screen.height * 0.05f;
+			float horizontalMargin = bottomMargin;
+
+			float xPos = Screen.width - horizontalMargin - buttonWidth;
+			float originalXPos = xPos;
+			float horizontalSpace = 5f;
+
+			// sprint/walk toggle button
+
+			bool isWalkOn = m_ped.IsWalkOn;	// preserve current value
+			bool isSprintOn = m_ped.IsSprintOn;	// preserve current value
+
+			float topY = Screen.height - bottomMargin - buttonHeight;
+			GUI.contentColor = m_ped.IsWalkOn ? Color.blue : Color.white;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Walk"))
+			{
+				isWalkOn = !isWalkOn;
+			}
+
+			//topY -= buttonHeight;
+			xPos -= buttonWidth + horizontalSpace;
+			GUI.contentColor = m_ped.IsSprintOn ? Color.blue : Color.white;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Sprint"))
+			{
+				isSprintOn = !isSprintOn;
+			}
+			GUI.contentColor = Color.white;
+			xPos = originalXPos;
+
+			// assign input
+			customInput.SetButton("Walk", isWalkOn);
+			customInput.SetButton("Sprint", isSprintOn);
+
+			// jump - repeat button
+
+			bool isJumpOn = false;
+			topY -= buttonHeight;
+			GUI.contentColor = m_ped.IsJumpOn ? Color.blue : Color.white;
+			if (GUI.RepeatButton(new Rect(xPos, topY, buttonWidth, buttonHeight), "Jump"))
+			{
+				isJumpOn = true;
+			}
+			GUI.contentColor = Color.white;
+
+			customInput.SetButton("Jump", isJumpOn);
+
+			// crouch
+			//topY -= buttonHeight;
+			xPos -= buttonWidth + horizontalSpace;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Crouch"))
+			{
+				customInput.SetKeyDown(KeyCode.C, true);
+			}
+			xPos = originalXPos;
+
+			// enter
+			topY -= buttonHeight;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Enter"))
+			{
+				customInput.SetButtonDown("Use", true);
+			}
+
+			// aim
+			bool isAimOn = m_ped.IsAimOn;	// preserve current value
+			topY -= buttonHeight;
+			GUI.contentColor = m_ped.IsAimOn ? Color.blue : Color.white;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Aim"))
+			{
+				isAimOn = !isAimOn;
+			}
+			GUI.contentColor = Color.white;
+
+			customInput.SetButton("RightClick", isAimOn);
+
+			// fire - repeat button
+			bool isFireOn = false;
+			xPos -= buttonWidth + horizontalSpace;
+			GUI.contentColor = m_ped.IsFireOn ? Color.blue : Color.white;
+			if (GUI.RepeatButton(new Rect(xPos, topY, buttonWidth, buttonHeight), "Fire"))
+			{
+				isFireOn = true;
+			}
+			GUI.contentColor = Color.white;
+			xPos = originalXPos;
+
+			customInput.SetButton("LeftClick", isFireOn);
+
+			// fly
+			topY -= buttonHeight;
+			if (GUI.Button(new Rect(xPos, topY, buttonWidth, buttonHeight), "Fly"))
+			{
+				customInput.SetKeyDown(KeyCode.T, true);
+			}
+
 
 		}
 
