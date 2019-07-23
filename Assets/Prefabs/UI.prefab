@@ -2469,6 +2469,7 @@ GameObject:
   - component: {fileID: 5276166029133205497}
   - component: {fileID: 2601409855260129285}
   - component: {fileID: 1001696752572998561}
+  - component: {fileID: 4551117954529856185}
   m_Layer: 0
   m_Name: MovementButton
   m_TagString: Untagged
@@ -2579,6 +2580,22 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &4551117954529856185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4269826247867591473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c4791292f9958a9fbed806e4ded7cfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftArrow: {fileID: 1126114949254154696}
+  rightArrow: {fileID: 8882690897287738119}
+  upArrow: {fileID: 2109694461557635166}
+  downArrow: {fileID: 833226323754409474}
 --- !u!1 &4539774699302292208
 GameObject:
   m_ObjectHideFlags: 0
@@ -2746,6 +2763,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6831965866518684118}
+  - component: {fileID: 1778824086211100969}
   m_Layer: 0
   m_Name: TouchInput
   m_TagString: Untagged
@@ -2768,6 +2786,18 @@ Transform:
   m_Father: {fileID: 4450559263798022}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1778824086211100969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4957097452703587359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45aa345221bfc4f68b568dfb0da703aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5220313559694819154
 GameObject:
   m_ObjectHideFlags: 0

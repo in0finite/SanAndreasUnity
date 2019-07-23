@@ -14,6 +14,11 @@ namespace SanAndreasUnity.Utilities
     //Static class with extra functions
     public static class F
     {
+
+        private static Vector3[] m_fourCornersArray = new Vector3[4];
+
+
+
         //Returns the number with the greatest absolute value
         public static float MaxAbs(params float[] nums)
         {
@@ -733,6 +738,32 @@ namespace SanAndreasUnity.Utilities
 		public	static	Rect	CreateRect(Vector2 center, Vector2 size) {
 			return new Rect (center - size / 2.0f, size);
 		}
+
+        public static Rect GetRect (this RectTransform rectTransform)
+        {
+
+            Vector3[] localCorners = m_fourCornersArray;
+            rectTransform.GetLocalCorners (localCorners);
+
+            float xMin = float.PositiveInfinity, yMin = float.PositiveInfinity;
+            float xMax = float.NegativeInfinity, yMax = float.NegativeInfinity;
+
+            for (int i = 0; i < localCorners.Length; i++) {
+                Vector3 corner = localCorners [i];
+
+                if (corner.x < xMin)
+                    xMin = corner.x;
+                else if (corner.x > xMax)
+                    xMax = corner.x;
+
+                if (corner.y < yMin)
+                    yMin = corner.y;
+                else if (corner.y > yMax)
+                    yMax = corner.y;
+            }
+
+            return new Rect (xMin, yMin, xMax - xMin, yMax - yMin);
+        }
 
 		public	static	Texture2D	CreateTexture (int width, int height, Color color) {
 

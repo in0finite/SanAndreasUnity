@@ -273,6 +273,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void OnDrawHUD()
 		{
+			return;
+
 			if (!UIManager.Instance.UseTouchInput || !GameManager.CanPlayerReadInput())
 			{
 				// we are not using touch input, or we should not read input right now
