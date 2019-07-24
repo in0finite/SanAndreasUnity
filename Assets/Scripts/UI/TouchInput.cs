@@ -144,6 +144,12 @@ namespace SanAndreasUnity.UI
 			if (movementButton.IsPointerDown && movementButton.IsPointerInside)
 			{
 				input = movementButton.GetMovement();
+				
+				// ignore mouse move input while movement button is pressed
+				customInput.SetAxis("Mouse X", 0);
+				customInput.SetAxis("Mouse Y", 0);
+				customInput.SetAxis("Joystick X", 0);
+				customInput.SetAxis("Joystick Y", 0);
 			}
 
 			// set input for vertical and horizontal axis
@@ -156,8 +162,6 @@ namespace SanAndreasUnity.UI
 		{
 
 			var customInput = CustomInput.Instance;
-			// Ped ped = Ped.Instance;
-			// bool pedExists = ped != null;
 
 
 			// get status of jump & fire repeat butons
