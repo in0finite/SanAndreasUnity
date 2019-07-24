@@ -144,7 +144,6 @@ namespace SanAndreasUnity.UI
 			if (movementButton.IsPointerDown && movementButton.IsPointerInside)
 			{
 				input = movementButton.GetMovement();
-				Debug.LogFormat("pointer is down, input: {0}", input);
 			}
 
 			// set input for vertical and horizontal axis

@@ -36,13 +36,11 @@ namespace SanAndreasUnity.Utilities
 
 		public void OnPointerDown(PointerEventData pointerEventData)
 	    {
-	        Debug.Log(name + " Click in Progress");
 	        m_isPointerDown = true;
 	    }
 
 	    public void OnPointerUp(PointerEventData pointerEventData)
 	    {
-	        Debug.Log(name + "No longer being clicked");
 	        m_isPointerDown = false;
 	    }
 
@@ -65,7 +63,6 @@ namespace SanAndreasUnity.Utilities
 	    	if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(this.transform as RectTransform, mousePos, null, out localPoint))
 	    		return Vector2.zero;
 	    	Vector2 diff = localPoint;
-	    	Debug.LogFormat("mousePos: {0}, diff: {1}", mousePos, diff);
 	    	if (diff.sqrMagnitude < float.Epsilon)
 	    		return Vector2.zero;
 	    	return diff.normalized;
