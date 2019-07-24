@@ -2798,6 +2798,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45aa345221bfc4f68b568dfb0da703aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activeButtonColor: {r: 0, g: 0, b: 1, a: 1}
+  inactiveButtonColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
 --- !u!1 &5220313559694819154
 GameObject:
   m_ObjectHideFlags: 0
