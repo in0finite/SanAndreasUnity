@@ -27,11 +27,11 @@
 
 - Chat
 
-- Android: HUD must run before other UI scripts ; add perms for read/write access to storage ; forbid screen rotation ; disable left and right mouse click ; vehicle touch input: forward, backward, handbrake, left & right ; weapon switching buttons ; circular button for movement ; lock cursor when testing finishes ; must use new UI system ; don't report mouse move input while movement button is being pressed ; remove HUD code from state class ; event system should have SEO defined ;
+- Android: add perms for read/write access to storage ; forbid screen rotation ; assign app version ;
+
+- Touch input: HUD must run before other UI scripts ; vehicle touch input: forward, backward, handbrake, left & right ; weapon switching buttons ; lock cursor when testing finishes ; don't report mouse move input while movement button is being pressed ; remove HUD code from state class ; remove spamming logs ;
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
-
-- Script execution order: HUD before pause menu and windows ; fps counter after all ;
 
 - Optimize Console.Update() - don't do trim excess for every log message
 
