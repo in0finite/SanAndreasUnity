@@ -17,17 +17,6 @@ namespace SanAndreasUnity.Utilities
 
 
 
-		void Awake()
-		{
-			// setup references
-
-			// leftArrow = this.transform.FindChild("LeftArrow").GetComponent<RawImage>();
-			// rightArrow = this.transform.FindChild("RightArrow").GetComponent<RawImage>();
-			// upArrow = this.transform.FindChild("UpArrow").GetComponent<RawImage>();
-			// downArrow = this.transform.FindChild("DownArrow").GetComponent<RawImage>();
-
-		}
-
 		void OnDisable()
 		{
 			m_isPointerDown = false;
