@@ -29,7 +29,7 @@
 
 - Android: add perms for read/write access to storage ; forbid screen rotation ; assign app version ;
 
-- Touch input: HUD must run before other UI scripts ; vehicle touch input: forward, backward, handbrake, left & right ; weapon switching buttons ; lock cursor when testing finishes ; don't report mouse move input while movement button is being pressed ; remove HUD code from state class ; remove spamming logs ;
+- Touch input: vehicle touch input: forward, backward, handbrake, left & right ; weapon switching buttons ; lock cursor when testing finishes ; don't report mouse move input while movement button is being pressed ; remove HUD code from state class ; remove spamming logs ;
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
