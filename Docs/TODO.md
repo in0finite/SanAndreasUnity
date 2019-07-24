@@ -29,7 +29,7 @@
 
 - Android: add perms for read/write access to storage ; forbid screen rotation ; assign app version ;
 
-- Touch input: vehicle touch input: forward, backward, handbrake, left & right ; weapon switching buttons ; lock cursor when testing finishes ; don't report mouse move input while movement button is being pressed ;
+- Touch input: vehicle touch input: forward, backward, handbrake, left & right ; weapon switching buttons ; lock cursor when testing finishes ;
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
