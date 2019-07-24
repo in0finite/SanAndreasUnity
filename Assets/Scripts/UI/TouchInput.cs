@@ -15,7 +15,14 @@ namespace SanAndreasUnity.UI
 		Canvas canvas;
 		GameObject pedMovementInputGo;
 		Button walkButton, sprintButton, jumpButton, crouchButton, enterButton, aimButton, fireButton, flyButton;
+		UIEventsPickup jumpButtonEventsPickup, fireButtonEventsPickup;
+		Text walkButtonText, sprintButtonText, aimButtonText, jumpButtonText, fireButtonText;
 		ArrowsMovementButton movementButton;
+
+		bool m_walkPressed, m_sprintPressed, m_aimPressed, m_crouchPressed, m_enterPressed, m_flyPressed;
+
+		public Color activeButtonColor = Color.blue;
+		public Color inactiveButtonColor = Color.black;
 
 
 
@@ -38,6 +45,30 @@ namespace SanAndreasUnity.UI
 			fireButton = parent.Find("FireButton").GetComponent<Button>();
 			flyButton = parent.Find("FlyButton").GetComponent<Button>();
 			movementButton = parent.Find("MovementButton").GetComponent<ArrowsMovementButton>();
+
+			// repeat buttons: jump, fire
+			jumpButtonEventsPickup = jumpButton.gameObject.GetOrAddComponent<UIEventsPickup>();
+			fireButtonEventsPickup = fireButton.gameObject.GetOrAddComponent<UIEventsPickup>();
+
+			// text components
+			walkButtonText = walkButton.GetComponentInChildren<Text>();
+			sprintButtonText = sprintButton.GetComponentInChildren<Text>();
+			aimButtonText = aimButton.GetComponentInChildren<Text>();
+			jumpButtonText = jumpButton.GetComponentInChildren<Text>();
+			fireButtonText = fireButton.GetComponentInChildren<Text>();
+
+			// setup button event handlers
+			// note: for this to work properly, EventSystem.Update() must run before our Update()
+
+			// toggle buttons
+			walkButton.onClick.AddListener( () => m_walkPressed = true );
+			sprintButton.onClick.AddListener( () => m_sprintPressed = true );
+			aimButton.onClick.AddListener( () => m_aimPressed = true );
+
+			// click buttons: crouch, enter, fly
+			crouchButton.onClick.AddListener( () => m_crouchPressed = true );
+			enterButton.onClick.AddListener( () => m_enterPressed = true );
+			flyButton.onClick.AddListener( () => m_flyPressed = true );
 
 		}
 
@@ -72,6 +103,7 @@ namespace SanAndreasUnity.UI
 			CustomInput.Instance.SetButtonDown("RightClick", false);
 
 			this.UpdateMovementInput();
+			this.UpdateActionsInput();
 
 
 		}
@@ -87,7 +119,7 @@ namespace SanAndreasUnity.UI
 				return;
 			}
 
-			// preserve input for: walk, sprint, aim
+			// preserve input for toggle buttons: walk, sprint, aim
 
 			bool isWalkOn = customInput.GetButtonNoDefaultInput("Walk");
 			bool isSprintOn = customInput.GetButtonNoDefaultInput("Sprint");
@@ -118,6 +150,50 @@ namespace SanAndreasUnity.UI
 			// set input for vertical and horizontal axis
 			customInput.SetAxis("Vertical", input.y);
 			customInput.SetAxis("Horizontal", input.x);
+
+		}
+
+		void UpdateActionsInput()
+		{
+
+			var customInput = CustomInput.Instance;
+			// Ped ped = Ped.Instance;
+			// bool pedExists = ped != null;
+
+
+			// get status of jump & fire repeat butons
+
+			bool isJumpOn = jumpButtonEventsPickup.IsPointerInside && jumpButtonEventsPickup.IsPointerDown;
+			bool isFireOn = fireButtonEventsPickup.IsPointerInside && fireButtonEventsPickup.IsPointerDown;
+
+			customInput.SetButton("Jump", isJumpOn);
+			customInput.SetButton("LeftClick", isFireOn);
+
+			// process click events
+
+			if (m_walkPressed)
+				customInput.SetButton("Walk", ! customInput.GetButton("Walk"));
+			if (m_sprintPressed)
+				customInput.SetButton("Sprint", ! customInput.GetButton("Sprint"));
+			if (m_aimPressed)
+				customInput.SetButton("RightClick", ! customInput.GetButton("RightClick"));
+			if (m_crouchPressed)
+				customInput.SetKeyDown(KeyCode.C, true);
+			if (m_enterPressed)
+				customInput.SetButtonDown("Use", true);
+			if (m_flyPressed)
+				customInput.SetKeyDown(KeyCode.T, true);
+
+			m_walkPressed = m_sprintPressed = m_aimPressed = m_crouchPressed = m_enterPressed = m_flyPressed = false;
+
+			// set color of toggle & repeat buttons
+
+			jumpButtonText.color = isJumpOn ? this.activeButtonColor : this.inactiveButtonColor;
+			fireButtonText.color = isFireOn ? this.activeButtonColor : this.inactiveButtonColor;
+
+			walkButtonText.color = customInput.GetButton("Walk") ? this.activeButtonColor : this.inactiveButtonColor;
+			sprintButtonText.color = customInput.GetButton("Sprint") ? this.activeButtonColor : this.inactiveButtonColor;
+			aimButtonText.color = customInput.GetButton("RightClick") ? this.activeButtonColor : this.inactiveButtonColor;
 
 		}
 
