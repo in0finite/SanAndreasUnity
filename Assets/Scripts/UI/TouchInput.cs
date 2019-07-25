@@ -15,12 +15,13 @@ namespace SanAndreasUnity.UI
 		Canvas canvas;
 		GameObject pedMovementInputGo, vehicleInputGo;
 		Button walkButton, sprintButton, jumpButton, crouchButton, enterButton, aimButton, fireButton, flyButton, 
-			handbrakeButton, backwardVehicleButton, forwardVehicleButton, exitVehicleButton;
+			exitVehicleButton, nextWeaponButton, previousWeaponButton;
 		UIEventsPickup jumpButtonEventsPickup, fireButtonEventsPickup, handbrakePickup, backwardVehiclePickup, forwardVehiclePickup;
 		Text walkButtonText, sprintButtonText, aimButtonText, jumpButtonText, fireButtonText;
 		ArrowsMovementButton movementButton, turnVehicleButton;
 
-		bool m_walkPressed, m_sprintPressed, m_aimPressed, m_crouchPressed, m_enterPressed, m_flyPressed, m_exitVehiclePressed;
+		bool m_walkPressed, m_sprintPressed, m_aimPressed, m_crouchPressed, m_enterPressed, m_flyPressed, m_exitVehiclePressed,
+			m_nextWeaponPressed, m_previousWeaponPressed;
 
 		public Color activeButtonColor = Color.blue;
 		public Color inactiveButtonColor = Color.black;
@@ -47,6 +48,8 @@ namespace SanAndreasUnity.UI
 			aimButton = parent.Find("AimButton").GetComponent<Button>();
 			fireButton = parent.Find("FireButton").GetComponent<Button>();
 			flyButton = parent.Find("FlyButton").GetComponent<Button>();
+			nextWeaponButton = parent.Find("NextWeaponButton").GetComponent<Button>();
+			previousWeaponButton = parent.Find("PreviousWeaponButton").GetComponent<Button>();
 			movementButton = parent.Find("MovementButton").GetComponent<ArrowsMovementButton>();
 
 			parent = vehicleInputGo.transform;
@@ -76,11 +79,13 @@ namespace SanAndreasUnity.UI
 			sprintButton.onClick.AddListener( () => m_sprintPressed = true );
 			aimButton.onClick.AddListener( () => m_aimPressed = true );
 
-			// click buttons: crouch, enter, fly, exit vehicle
+			// click buttons: crouch, enter, fly, exit vehicle, next weapon, previous weapon
 			crouchButton.onClick.AddListener( () => m_crouchPressed = true );
 			enterButton.onClick.AddListener( () => m_enterPressed = true );
 			flyButton.onClick.AddListener( () => m_flyPressed = true );
 			exitVehicleButton.onClick.AddListener( () => m_exitVehiclePressed = true );
+			nextWeaponButton.onClick.AddListener( () => m_nextWeaponPressed = true );
+			previousWeaponButton.onClick.AddListener( () => m_previousWeaponPressed = true );
 
 		}
 
@@ -262,8 +267,13 @@ namespace SanAndreasUnity.UI
 				customInput.SetKeyDown(KeyCode.T, true);
 			if (m_exitVehiclePressed)
 				customInput.SetButtonDown("Use", true);
+			if (m_nextWeaponPressed)
+				customInput.SetKeyDown (KeyCode.E, true);
+			if (m_previousWeaponPressed)
+				customInput.SetKeyDown (KeyCode.Q, true);
 
-			m_walkPressed = m_sprintPressed = m_aimPressed = m_crouchPressed = m_enterPressed = m_flyPressed = m_exitVehiclePressed = false;
+			m_walkPressed = m_sprintPressed = m_aimPressed = m_crouchPressed = m_enterPressed = m_flyPressed = 
+				m_exitVehiclePressed = m_nextWeaponPressed = m_previousWeaponPressed = false;
 
 			// set color of toggle & repeat buttons
 
