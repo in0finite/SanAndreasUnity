@@ -128,7 +128,7 @@ namespace SanAndreasUnity.UI
 					pedMovementInputGo.SetActive(false);
 					vehicleInputGo.SetActive(true);
 
-					this.UpdateVehicleTurningInput();
+					this.UpdateVehicleMovementInput();
 				}
 				else
 				{
@@ -178,8 +178,10 @@ namespace SanAndreasUnity.UI
 			this.UpdateMovementInput(movementButton, movementButton.GetMovement());
 		}
 
-		void UpdateVehicleTurningInput()
+		void UpdateVehicleMovementInput()
 		{
+			var customInput = CustomInput.Instance;
+
 			// obtain input from arrow button
 			Vector2 input = turnVehicleButton.GetMovementPercentage();
 			// ignore y axis
@@ -187,6 +189,13 @@ namespace SanAndreasUnity.UI
 			// now input has only x value between -1 and 1
 
 			this.UpdateMovementInput(turnVehicleButton, input);
+
+			// get status of backward and forward buttons
+			bool isBackwardOn = backwardVehiclePickup.IsPointerInside && backwardVehiclePickup.IsPointerDown;
+			bool isForwardOn = forwardVehiclePickup.IsPointerInside && forwardVehiclePickup.IsPointerDown;
+			if (isBackwardOn || isForwardOn)
+				customInput.SetAxis("Vertical", isForwardOn ? 1.0f : -1.0f);
+
 		}
 
 		void UpdateMovementInput(ArrowsMovementButton arrowButton, Vector2 input)
@@ -231,6 +240,11 @@ namespace SanAndreasUnity.UI
 
 			customInput.SetButton("Jump", isJumpOn);
 			customInput.SetButton("LeftClick", isFireOn);
+
+			// get status of handbrake
+
+			bool isHandbrakeOn = handbrakePickup.IsPointerInside && handbrakePickup.IsPointerDown;
+			customInput.SetButton("Brake", isHandbrakeOn);
 
 			// process click events
 
