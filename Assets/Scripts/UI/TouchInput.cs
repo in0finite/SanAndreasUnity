@@ -13,13 +13,14 @@ namespace SanAndreasUnity.UI
 		public static TouchInput Instance { get; private set; }
 
 		Canvas canvas;
-		GameObject pedMovementInputGo;
-		Button walkButton, sprintButton, jumpButton, crouchButton, enterButton, aimButton, fireButton, flyButton;
-		UIEventsPickup jumpButtonEventsPickup, fireButtonEventsPickup;
+		GameObject pedMovementInputGo, vehicleInputGo;
+		Button walkButton, sprintButton, jumpButton, crouchButton, enterButton, aimButton, fireButton, flyButton, 
+			handbrakeButton, backwardVehicleButton, forwardVehicleButton, exitVehicleButton;
+		UIEventsPickup jumpButtonEventsPickup, fireButtonEventsPickup, handbrakePickup, backwardVehiclePickup, forwardVehiclePickup;
 		Text walkButtonText, sprintButtonText, aimButtonText, jumpButtonText, fireButtonText;
-		ArrowsMovementButton movementButton;
+		ArrowsMovementButton movementButton, turnVehicleButton;
 
-		bool m_walkPressed, m_sprintPressed, m_aimPressed, m_crouchPressed, m_enterPressed, m_flyPressed;
+		bool m_walkPressed, m_sprintPressed, m_aimPressed, m_crouchPressed, m_enterPressed, m_flyPressed, m_exitVehiclePressed;
 
 		public Color activeButtonColor = Color.blue;
 		public Color inactiveButtonColor = Color.black;
@@ -34,6 +35,8 @@ namespace SanAndreasUnity.UI
 
 			canvas = this.transform.GetChild(0).GetComponent<Canvas>();
 			pedMovementInputGo = canvas.transform.GetChild(0).gameObject;
+			vehicleInputGo = canvas.transform.GetChild(1).gameObject;
+
 			Transform parent = pedMovementInputGo.transform;
 
 			walkButton = parent.Find("WalkButton").GetComponent<Button>();
@@ -45,6 +48,14 @@ namespace SanAndreasUnity.UI
 			fireButton = parent.Find("FireButton").GetComponent<Button>();
 			flyButton = parent.Find("FlyButton").GetComponent<Button>();
 			movementButton = parent.Find("MovementButton").GetComponent<ArrowsMovementButton>();
+
+			parent = vehicleInputGo.transform;
+			exitVehicleButton = parent.Find("ExitButton").GetComponent<Button>();
+			turnVehicleButton = parent.Find("TurnButton").GetComponent<ArrowsMovementButton>();
+			// repeat buttons: handbrake, backward, forward
+			handbrakePickup = parent.Find("HandbrakeButton").gameObject.GetOrAddComponent<UIEventsPickup>();
+			backwardVehiclePickup = parent.Find("BackwardButton").gameObject.GetOrAddComponent<UIEventsPickup>();
+			forwardVehiclePickup = parent.Find("ForwardButton").gameObject.GetOrAddComponent<UIEventsPickup>();
 
 			// repeat buttons: jump, fire
 			jumpButtonEventsPickup = jumpButton.gameObject.GetOrAddComponent<UIEventsPickup>();
@@ -65,10 +76,11 @@ namespace SanAndreasUnity.UI
 			sprintButton.onClick.AddListener( () => m_sprintPressed = true );
 			aimButton.onClick.AddListener( () => m_aimPressed = true );
 
-			// click buttons: crouch, enter, fly
+			// click buttons: crouch, enter, fly, exit vehicle
 			crouchButton.onClick.AddListener( () => m_crouchPressed = true );
 			enterButton.onClick.AddListener( () => m_enterPressed = true );
 			flyButton.onClick.AddListener( () => m_flyPressed = true );
+			exitVehicleButton.onClick.AddListener( () => m_exitVehiclePressed = true );
 
 		}
 
@@ -186,8 +198,10 @@ namespace SanAndreasUnity.UI
 				customInput.SetButtonDown("Use", true);
 			if (m_flyPressed)
 				customInput.SetKeyDown(KeyCode.T, true);
+			if (m_exitVehiclePressed)
+				customInput.SetButtonDown("Use", true);
 
-			m_walkPressed = m_sprintPressed = m_aimPressed = m_crouchPressed = m_enterPressed = m_flyPressed = false;
+			m_walkPressed = m_sprintPressed = m_aimPressed = m_crouchPressed = m_enterPressed = m_flyPressed = m_exitVehiclePressed = false;
 
 			// set color of toggle & repeat buttons
 
