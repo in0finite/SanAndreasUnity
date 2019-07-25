@@ -200,8 +200,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void ReadInput()
         {
-            var accel = Input.GetAxis("Vertical");
-            var brake = Input.GetButton("Brake") ? 1.0f : 0.0f;
+            var customInput = CustomInput.Instance;
+
+            var accel = customInput.GetAxis("Vertical");
+            var brake = customInput.GetButton("Brake") ? 1.0f : 0.0f;
             var speed = Vector3.Dot(m_vehicle.Velocity, m_vehicle.transform.forward);
 
             if (speed * accel < 0f)
@@ -211,7 +213,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
 
             m_vehicle.Accelerator = accel;
-            m_vehicle.Steering = Input.GetAxis("Horizontal");
+            m_vehicle.Steering = customInput.GetAxis("Horizontal");
             m_vehicle.Braking = brake;
         }
 
