@@ -43,7 +43,7 @@ namespace SanAndreasUnity.Utilities
 	    	this.IsPointerInside = false;
 	    }
 
-	    public Vector2 GetMovement()
+	    public Vector2 GetMovementNonNormalized()
 	    {
 	    	if (!m_isPointerDown || !this.IsPointerInside)
 	    		return Vector2.zero;
@@ -52,9 +52,28 @@ namespace SanAndreasUnity.Utilities
 	    	if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(this.transform as RectTransform, mousePos, null, out localPoint))
 	    		return Vector2.zero;
 	    	Vector2 diff = localPoint;
-	    	if (diff.sqrMagnitude < float.Epsilon)
+	    	return diff;
+	    }
+
+	    public Vector2 GetMovement()
+	    {
+	    	return this.GetMovementNonNormalized().normalized;
+	    }
+
+	    public Vector2 GetMovementPercentage()
+	    {
+	    	Rect rect = (this.transform as RectTransform).rect;
+	    	float width = rect.width;
+	    	float height = rect.height;
+	    	if (width < float.Epsilon || height < float.Epsilon)
 	    		return Vector2.zero;
-	    	return diff.normalized;
+
+	    	Vector2 diff = this.GetMovementNonNormalized();
+	    	float xPerc = diff.x / (width * 0.5f);
+	    	float yPerc = diff.y / (height * 0.5f);
+	    	xPerc = Mathf.Clamp(xPerc, -1f, 1f);
+	    	yPerc = Mathf.Clamp(yPerc, -1f, 1f);
+	    	return new Vector2(xPerc, yPerc);
 	    }
 
 

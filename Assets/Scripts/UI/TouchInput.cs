@@ -86,11 +86,16 @@ namespace SanAndreasUnity.UI
 
 		void OnLoaderFinished()
 		{
-			// assign textures to movement button's arrows
+			// assign textures to movement buttons' arrows
+
 			movementButton.leftArrow.texture = HUD.LeftArrowTexture;
 			movementButton.rightArrow.texture = HUD.RightArrowTexture;
 			movementButton.upArrow.texture = HUD.DownArrowTexture;
 			movementButton.downArrow.texture = HUD.UpArrowTexture;
+
+			turnVehicleButton.leftArrow.texture = HUD.LeftArrowTexture;
+			turnVehicleButton.rightArrow.texture = HUD.RightArrowTexture;
+
 		}
 
 		void Update()
@@ -114,7 +119,7 @@ namespace SanAndreasUnity.UI
 			CustomInput.Instance.SetButtonDown("LeftClick", false);
 			CustomInput.Instance.SetButtonDown("RightClick", false);
 
-			this.UpdateMovementInput();
+			this.UpdatePedMovementInput();
 			this.UpdateActionsInput();
 
 
@@ -144,30 +149,50 @@ namespace SanAndreasUnity.UI
 			customInput.SetButton("RightClick", isAimOn);
 		}
 
-		void UpdateMovementInput()
+		void UpdatePedMovementInput()
 		{
+			// obtain input from arrow button
+			this.UpdateMovementInput(movementButton, movementButton.GetMovement());
+		}
 
-			var customInput = CustomInput.Instance;
+		void UpdateVehicleTurningInput()
+		{
+			// obtain input from arrow button
+			Vector2 input = turnVehicleButton.GetMovementPercentage();
+			// ignore y axis
+			input.y = 0;
+			// now input has only x value between -1 and 1
 
-			// obtain input from movement button
+			this.UpdateMovementInput(turnVehicleButton, input);
+		}
 
-			Vector2 input = Vector2.zero;
-
-			if (movementButton.IsPointerDown && movementButton.IsPointerInside)
+		void UpdateMovementInput(ArrowsMovementButton arrowButton, Vector2 input)
+		{
+			
+			if (arrowButton.IsPointerDown && arrowButton.IsPointerInside)
 			{
-				input = movementButton.GetMovement();
-				
-				// ignore mouse move input while movement button is pressed
-				customInput.SetAxis("Mouse X", 0);
-				customInput.SetAxis("Mouse Y", 0);
-				customInput.SetAxis("Joystick X", 0);
-				customInput.SetAxis("Joystick Y", 0);
+				// ignore mouse move input while arrow button is pressed
+				this.ResetMouseMoveInput();
 			}
 
-			// set input for vertical and horizontal axis
+			this.SetMovementAxesInput(input);
+
+		}
+
+		void ResetMouseMoveInput()
+		{
+			var customInput = CustomInput.Instance;
+			customInput.SetAxis("Mouse X", 0);
+			customInput.SetAxis("Mouse Y", 0);
+			customInput.SetAxis("Joystick X", 0);
+			customInput.SetAxis("Joystick Y", 0);
+		}
+
+		void SetMovementAxesInput(Vector2 input)
+		{
+			var customInput = CustomInput.Instance;
 			customInput.SetAxis("Vertical", input.y);
 			customInput.SetAxis("Horizontal", input.x);
-
 		}
 
 		void UpdateActionsInput()
