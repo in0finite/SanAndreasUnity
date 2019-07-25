@@ -27,7 +27,7 @@
 
 - Chat
 
-- Android: add perms for read/write access to storage ; forbid screen rotation ; assign app version ;
+- Android: 
 
 - Touch input: lock cursor when testing finishes ;
 
