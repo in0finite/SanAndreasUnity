@@ -26,6 +26,8 @@ namespace SanAndreasUnity.UI
 		public Color activeButtonColor = Color.blue;
 		public Color inactiveButtonColor = Color.black;
 
+		public float vehicleTurnMultiplier = 1.5f;
+
 
 
 		void Awake ()
@@ -192,6 +194,10 @@ namespace SanAndreasUnity.UI
 			// ignore y axis
 			input.y = 0;
 			// now input has only x value between -1 and 1
+			// apply multiplier
+			input.x *= this.vehicleTurnMultiplier;
+			// clamp between -1 and 1
+			input.x = Mathf.Clamp(input.x, -1f, 1f);
 
 			this.UpdateMovementInput(turnVehicleButton, input);
 
