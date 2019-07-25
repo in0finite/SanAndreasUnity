@@ -3736,8 +3736,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 200, y: 163}
-  m_SizeDelta: {x: 180, y: 180}
+  m_AnchoredPosition: {x: 200, y: 185}
+  m_SizeDelta: {x: 230, y: 230}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &348817199177595159
 CanvasRenderer:
@@ -3959,6 +3959,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeButtonColor: {r: 0, g: 0, b: 1, a: 1}
   inactiveButtonColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  vehicleTurnMultiplier: 1.5
 --- !u!1 &5220313559694819154
 GameObject:
   m_ObjectHideFlags: 0
