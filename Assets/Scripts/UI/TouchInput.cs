@@ -119,9 +119,32 @@ namespace SanAndreasUnity.UI
 			CustomInput.Instance.SetButtonDown("LeftClick", false);
 			CustomInput.Instance.SetButtonDown("RightClick", false);
 
-			this.UpdatePedMovementInput();
-			this.UpdateActionsInput();
+			Ped ped = Ped.Instance;
 
+			if (ped != null)
+			{
+				if (ped.IsDrivingVehicle)
+				{
+					pedMovementInputGo.SetActive(false);
+					vehicleInputGo.SetActive(true);
+
+					this.UpdateVehicleTurningInput();
+				}
+				else
+				{
+					pedMovementInputGo.SetActive(true);
+					vehicleInputGo.SetActive(false);
+
+					this.UpdatePedMovementInput();
+				}
+
+				this.UpdateActionsInput();
+			}
+			else
+			{
+				pedMovementInputGo.SetActive(false);
+				vehicleInputGo.SetActive(false);
+			}
 
 		}
 

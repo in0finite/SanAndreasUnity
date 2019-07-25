@@ -40,7 +40,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public bool IsInVehicleSeat { get { return this.CurrentState != null && this.CurrentState.RepresentsState (typeof(VehicleSittingState)); } }
 
-		public bool IsDrivingVehicle { get { return this.CurrentVehicleSeat != null && this.CurrentVehicleSeat.IsDriver; } }
+		public bool IsDrivingVehicle { get { var seat = this.CurrentVehicleSeat; return seat != null && seat.IsDriver; } }
 
 		public Vehicle.SeatAlignment CurrentVehicleSeatAlignment { get { return this.CurrentVehicleSeat.Alignment; } }
 
