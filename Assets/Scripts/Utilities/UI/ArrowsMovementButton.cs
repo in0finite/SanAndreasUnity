@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 namespace SanAndreasUnity.Utilities
 {
 
-	public class ArrowsMovementButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler
+	public class ArrowsMovementButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler, IDragHandler
 	{
 		
 		public RawImage leftArrow, rightArrow, upArrow, downArrow;
@@ -14,6 +14,8 @@ namespace SanAndreasUnity.Utilities
 		public bool IsPointerDown => m_isPointerDown;
 
 		public bool IsPointerInside { get; private set; } = false;
+
+		public Vector2 LastPointerPos { get; private set; } = Vector2.zero;
 
 
 
@@ -26,6 +28,7 @@ namespace SanAndreasUnity.Utilities
 		public void OnPointerDown(PointerEventData pointerEventData)
 	    {
 	        m_isPointerDown = true;
+	        this.LastPointerPos = pointerEventData.position;
 	    }
 
 	    public void OnPointerUp(PointerEventData pointerEventData)
@@ -36,6 +39,7 @@ namespace SanAndreasUnity.Utilities
 	    public void OnPointerEnter(PointerEventData pointerEventData)
 	    {
 	    	this.IsPointerInside = true;
+	    	this.LastPointerPos = pointerEventData.position;
 	    }
 
 	    public void OnPointerExit(PointerEventData pointerEventData)
@@ -43,13 +47,19 @@ namespace SanAndreasUnity.Utilities
 	    	this.IsPointerInside = false;
 	    }
 
+	    public void OnDrag (PointerEventData pointerEventData)
+	    {
+	    	this.LastPointerPos = pointerEventData.position;
+	    }
+
+
 	    public Vector2 GetMovementNonNormalized()
 	    {
 	    	if (!m_isPointerDown || !this.IsPointerInside)
 	    		return Vector2.zero;
-	    	Vector2 mousePos = Input.mousePosition;
+	    	Vector2 pointerPos = this.LastPointerPos;
 	    	Vector2 localPoint = Vector2.zero;
-	    	if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(this.transform as RectTransform, mousePos, null, out localPoint))
+	    	if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(this.transform as RectTransform, pointerPos, null, out localPoint))
 	    		return Vector2.zero;
 	    	Vector2 diff = localPoint;
 	    	return diff;
