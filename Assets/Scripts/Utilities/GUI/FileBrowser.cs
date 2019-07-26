@@ -104,7 +104,7 @@ public class FileBrowser {
 			if (m_centredText == null) {
 				m_centredText = new GUIStyle(GUI.skin.label);
 				m_centredText.alignment = TextAnchor.MiddleLeft;
-				m_centredText.fixedHeight = GUI.skin.button.fixedHeight;
+				m_centredText.fixedHeight = this.ButtonStyle.fixedHeight;
 			}
 			return m_centredText;
 		}
@@ -115,8 +115,9 @@ public class FileBrowser {
 	protected GUIStyle ButtonStyle {
 		get {
 			if (null == m_buttonStyle) {
-				m_buttonStyle = new GUIStyle(GUI.skin.button);
-				m_buttonStyle.fixedHeight = 25;
+				// m_buttonStyle = new GUIStyle(GUI.skin.button);
+				// m_buttonStyle.fixedHeight = 25;
+				m_buttonStyle = GUI.skin.button;
 			}
 			return m_buttonStyle;
 		}
