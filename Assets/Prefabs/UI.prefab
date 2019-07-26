@@ -836,6 +836,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 811c370837c3fcd5193972f93b509456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_defaultFontSizeOnMobile: 16
+  m_scrollbarSizeMultiplierOnMobile: 2
 --- !u!1 &1627404700688260
 GameObject:
   m_ObjectHideFlags: 0
@@ -1258,6 +1260,7 @@ MonoBehaviour:
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 1
   m_sortPriorityForMainMenu: -800
+  m_ipStr: 34.90.25.177
 --- !u!114 &7093715299490892338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1753,7 +1756,7 @@ RectTransform:
   - {fileID: 5479953436307398028}
   - {fileID: 1265500919080567582}
   m_Father: {fileID: 8332079752519860057}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2574,7 +2577,7 @@ RectTransform:
   - {fileID: 6778618495989439723}
   - {fileID: 573553469401271798}
   m_Father: {fileID: 8332079752519860057}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -3957,9 +3960,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45aa345221bfc4f68b568dfb0da703aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 229846085623062741}
+  panel: {fileID: 5812133801168753069}
+  pedMovementInputGo: {fileID: 966857434456162494}
+  vehicleInputGo: {fileID: 2795189858842500470}
   activeButtonColor: {r: 0, g: 0, b: 1, a: 1}
   inactiveButtonColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   vehicleTurnMultiplier: 1.5
+  touchPointerSensitivity: 1
 --- !u!1 &5220313559694819154
 GameObject:
   m_ObjectHideFlags: 0
@@ -4111,6 +4119,80 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: H
+--- !u!1 &5812133801168753069
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1436755762388376983}
+  - component: {fileID: 8709433115823050953}
+  - component: {fileID: 2866129522248348631}
+  m_Layer: 0
+  m_Name: Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1436755762388376983
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5812133801168753069}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8332079752519860057}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &8709433115823050953
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5812133801168753069}
+  m_CullTransparentMesh: 0
+--- !u!114 &2866129522248348631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5812133801168753069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
 --- !u!1 &5822864925844138010
 GameObject:
   m_ObjectHideFlags: 0
@@ -4614,6 +4696,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 1436755762388376983}
   - {fileID: 1812915212552721865}
   - {fileID: 6918664378015064859}
   m_Father: {fileID: 6831965866518684118}
