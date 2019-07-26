@@ -27,9 +27,9 @@
 
 - Chat
 
-- Android: 
+- Android: maybe add "/storage/" as predefined path ; predefined IP address in JoinGame window ? ;
 
-- Touch input: lock cursor when testing finishes ;
+- Touch input: repeat buttons don't work - cursor locking is probably the cause - don't lock the cursor, only hide it ; ignore mouse move input, and use panel which detects OnDrag event ; wider scrollbars ;
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
