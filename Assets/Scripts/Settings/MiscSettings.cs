@@ -50,12 +50,12 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { UIManager.Instance.UseTouchInput = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
-		OptionsWindow.IntInput m_imguiFontSize = new OptionsWindow.IntInput ("Imgui font size", 0, 25) {
-			//isAvailable = () => UIManager.Instance != null,
-			getValue = () => UIManager.Instance.ImguiFontSize,
-			setValue = (value) => { UIManager.Instance.ImguiFontSize = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart,
-		};
+		// OptionsWindow.IntInput m_imguiFontSize = new OptionsWindow.IntInput ("Imgui font size", 0, 25) {
+		// 	//isAvailable = () => UIManager.Instance != null,
+		// 	getValue = () => UIManager.Instance.ImguiFontSize,
+		// 	setValue = (value) => { UIManager.Instance.ImguiFontSize = value; GUIUtility.ExitGUI(); },
+		// 	persistType = OptionsWindow.InputPersistType.OnStart,
+		// };
 
 		OptionsWindow.FloatInput m_pedSyncRate = new OptionsWindow.FloatInput ("Ped sync rate", 1, 60) {
 			isAvailable = () => PedManager.Instance != null,
@@ -138,7 +138,7 @@ namespace SanAndreasUnity.Settings {
 		void Awake ()
 		{
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
-				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera, m_useTouchInput, m_imguiFontSize,
+				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera, m_useTouchInput,
 				m_pausePlayerSpawning, m_playerSpawnInterval,
 				m_pedSyncRate,
 				m_vehicleSyncRate, m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, 
