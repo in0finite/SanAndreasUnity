@@ -6,7 +6,7 @@ namespace SanAndreasUnity.Utilities
 {
 
 	public class UIEventsPickup : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
-		IPointerUpHandler
+		IPointerUpHandler, IDragHandler
 	{
 
 		public	event	Action<PointerEventData>	onPointerClick = delegate {};
@@ -14,6 +14,7 @@ namespace SanAndreasUnity.Utilities
 		public	event	Action<PointerEventData>	onPointerExit = delegate {};
 		public	event	Action<PointerEventData>	onPointerDown = delegate {};
 		public	event	Action<PointerEventData>	onPointerUp = delegate {};
+		public	event	Action<PointerEventData>	onDrag = delegate {};
 
 		public bool IsPointerInside { get; private set; } = false;
 		public bool IsPointerDown { get; private set; } = false;
@@ -53,6 +54,11 @@ namespace SanAndreasUnity.Utilities
 		{
 			this.IsPointerDown = false;
 			onPointerUp (eventData);
+		}
+
+		public void OnDrag (PointerEventData eventData)
+		{
+			onDrag (eventData);
 		}
 
 

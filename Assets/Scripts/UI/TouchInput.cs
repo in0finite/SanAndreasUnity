@@ -12,11 +12,12 @@ namespace SanAndreasUnity.UI
 
 		public static TouchInput Instance { get; private set; }
 
-		Canvas canvas;
-		GameObject pedMovementInputGo, vehicleInputGo;
+		public Canvas canvas;
+		public GameObject panel;
+		public GameObject pedMovementInputGo, vehicleInputGo;
 		Button walkButton, sprintButton, jumpButton, crouchButton, enterButton, aimButton, fireButton, flyButton, 
 			exitVehicleButton, nextWeaponButton, previousWeaponButton;
-		UIEventsPickup jumpButtonEventsPickup, fireButtonEventsPickup, handbrakePickup, backwardVehiclePickup, forwardVehiclePickup;
+		UIEventsPickup jumpButtonEventsPickup, fireButtonEventsPickup, handbrakePickup, backwardVehiclePickup, forwardVehiclePickup, panelPickup;
 		Text walkButtonText, sprintButtonText, aimButtonText, jumpButtonText, fireButtonText;
 		ArrowsMovementButton movementButton, turnVehicleButton;
 
@@ -28,6 +29,10 @@ namespace SanAndreasUnity.UI
 
 		public float vehicleTurnMultiplier = 1.5f;
 
+		//List<Vector2> m_panelDeltas = new List<Vector2>();
+		Vector2 m_panelDeltasSum = Vector2.zero;
+		public float touchPointerSensitivity = 1f;
+
 
 
 		void Awake ()
@@ -35,10 +40,6 @@ namespace SanAndreasUnity.UI
 			Instance = this;
 
 			// setup references
-
-			canvas = this.transform.GetChild(0).GetComponent<Canvas>();
-			pedMovementInputGo = canvas.transform.GetChild(0).gameObject;
-			vehicleInputGo = canvas.transform.GetChild(1).gameObject;
 
 			Transform parent = pedMovementInputGo.transform;
 
@@ -66,6 +67,9 @@ namespace SanAndreasUnity.UI
 			jumpButtonEventsPickup = jumpButton.gameObject.GetOrAddComponent<UIEventsPickup>();
 			fireButtonEventsPickup = fireButton.gameObject.GetOrAddComponent<UIEventsPickup>();
 
+			// panel
+			panelPickup = this.panel.GetOrAddComponent<UIEventsPickup>();
+
 			// text components
 			walkButtonText = walkButton.GetComponentInChildren<Text>();
 			sprintButtonText = sprintButton.GetComponentInChildren<Text>();
@@ -73,7 +77,7 @@ namespace SanAndreasUnity.UI
 			jumpButtonText = jumpButton.GetComponentInChildren<Text>();
 			fireButtonText = fireButton.GetComponentInChildren<Text>();
 
-			// setup button event handlers
+			// setup event handlers
 			// note: for this to work properly, EventSystem.Update() must run before our Update()
 
 			// toggle buttons
@@ -88,6 +92,9 @@ namespace SanAndreasUnity.UI
 			exitVehicleButton.onClick.AddListener( () => m_exitVehiclePressed = true );
 			nextWeaponButton.onClick.AddListener( () => m_nextWeaponPressed = true );
 			previousWeaponButton.onClick.AddListener( () => m_previousWeaponPressed = true );
+
+			// panel
+			panelPickup.onDrag += (eventData) => this.OnPanelDrag(eventData);
 
 		}
 
@@ -119,12 +126,14 @@ namespace SanAndreasUnity.UI
 
 			this.canvas.gameObject.SetActive(true);
 
+			var customInput = CustomInput.Instance;
+
 			// ignore mouse buttons when touch is enabled
-			CustomInput.Instance.SetButton("LeftClick", false);
-			if (!CustomInput.Instance.HasButton("RightClick"))
-				CustomInput.Instance.SetButton("RightClick", false);
-			CustomInput.Instance.SetButtonDown("LeftClick", false);
-			CustomInput.Instance.SetButtonDown("RightClick", false);
+			customInput.SetButton("LeftClick", false);
+			if (!customInput.HasButton("RightClick"))
+				customInput.SetButton("RightClick", false);
+			customInput.SetButtonDown("LeftClick", false);
+			customInput.SetButtonDown("RightClick", false);
 
 			Ped ped = Ped.Instance;
 
@@ -152,6 +161,14 @@ namespace SanAndreasUnity.UI
 				pedMovementInputGo.SetActive(false);
 				vehicleInputGo.SetActive(false);
 			}
+
+			// set mouse move input based on panel drag events
+
+			this.ResetMouseMoveInput();
+			customInput.SetAxis("Mouse X", m_panelDeltasSum.x / Screen.width * this.touchPointerSensitivity);
+			customInput.SetAxis("Mouse Y", m_panelDeltasSum.y / Screen.height * this.touchPointerSensitivity);
+			// reset deltas sum
+			m_panelDeltasSum = Vector2.zero;
 
 		}
 
@@ -290,6 +307,11 @@ namespace SanAndreasUnity.UI
 			sprintButtonText.color = customInput.GetButton("Sprint") ? this.activeButtonColor : this.inactiveButtonColor;
 			aimButtonText.color = customInput.GetButton("RightClick") ? this.activeButtonColor : this.inactiveButtonColor;
 
+		}
+
+		void OnPanelDrag(UnityEngine.EventSystems.PointerEventData eventData)
+		{
+			m_panelDeltasSum += eventData.delta;
 		}
 
 	}
