@@ -27,9 +27,9 @@
 
 - Chat
 
-- Android: maybe add "/storage/" as predefined path ; predefined IP address in JoinGame window ? ;
+- Android: set font size to 18 ? ;
 
-- Touch input: repeat buttons don't work - cursor locking is probably the cause - don't lock the cursor, only hide it ; ignore mouse move input, and use panel which detects OnDrag event ; wider scrollbars ;
+- Touch input: repeat buttons don't work - cursor locking is probably the cause - don't lock the cursor, only hide it ; ignore mouse move input, and use panel which detects OnDrag event ; adapt to dynamic font size: JoinGame, StartGame, main menu, utilities, map, vehicle spawner,  ;
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
