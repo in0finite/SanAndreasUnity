@@ -271,7 +271,7 @@ public class FileBrowser {
 	{
 		if (Application.platform == RuntimePlatform.Android)
 		{
-			return new string[]{"/", "/sdcard/", "/storage/sdcard0/", "/storage/sdcard1/", "/storage/emulated/0/"};
+			return new string[]{"/", "/sdcard/", "/storage/", "/storage/sdcard0/", "/storage/sdcard1/", "/storage/emulated/0/"};
 		}
 		else
 		{
