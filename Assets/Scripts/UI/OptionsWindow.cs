@@ -91,6 +91,30 @@ namespace SanAndreasUnity.UI {
 
 		}
 
+		public class IntInput : Input<int>
+		{
+			public int minValue;
+			public int maxValue;
+
+			public IntInput () { }
+
+			public IntInput (string description, int minValue, int maxValue) : base (description)
+			{
+				this.minValue = minValue;
+				this.maxValue = maxValue;
+			}
+
+			public override int Display (int currentValue)
+			{
+				return Mathf.RoundToInt( OptionsWindow.FloatSlider (currentValue, this.minValue, this.maxValue, this.description) );
+			}
+
+			public override int Load (string str)
+			{
+				return int.Parse (str, System.Globalization.CultureInfo.InvariantCulture);
+			}
+		}
+
 		public class FloatInput : Input<float>
 		{
 			public float minValue;

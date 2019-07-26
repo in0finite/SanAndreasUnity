@@ -26,7 +26,12 @@ namespace SanAndreasUnity.Behaviours
 
 		bool m_isFirstOnGUI = true;
 		
+		bool m_shouldChangeFontSize = false;
+		int m_imguiFontSize = 0;
+		public int ImguiFontSize { get => m_imguiFontSize; set { m_imguiFontSize = value; m_shouldChangeFontSize = true; } }
+
 		[SerializeField] int m_defaultFontSizeOnMobile = 16;
+
 		[SerializeField] float m_scrollbarSizeMultiplierOnMobile = 2f;
 
 		// note: UIManager's OnGUI() should execute before other OnGUI()s, because other scripts may try to create their own
@@ -45,6 +50,12 @@ namespace SanAndreasUnity.Behaviours
 	    		this.UseTouchInput = true;
 	    	}
 
+	    	// set default font size on mobile platforms
+	    	if (Application.isMobilePlatform)
+	    	{
+	    		this.ImguiFontSize = m_defaultFontSizeOnMobile;
+	    	}
+
 	    }
 
 	    void OnGUI()
@@ -53,8 +64,13 @@ namespace SanAndreasUnity.Behaviours
 	    	if (m_isFirstOnGUI)
 	    	{
 	    		m_isFirstOnGUI = false;
-
 	    		this.SetupGui();
+	    	}
+
+	    	if (m_shouldChangeFontSize)
+	    	{
+	    		m_shouldChangeFontSize = false;
+	    		SetStylesFontSize(m_imguiFontSize);
 	    	}
 
 	    }
@@ -83,9 +99,6 @@ namespace SanAndreasUnity.Behaviours
 	    			style.fixedWidth *= m_scrollbarSizeMultiplierOnMobile;
 	    		}
 
-	    		// set font size for styles
-	    		SetStylesFontSize(m_defaultFontSizeOnMobile);
-
 	    	}
 
 	    }
@@ -97,7 +110,7 @@ namespace SanAndreasUnity.Behaviours
     		var styles = new GUIStyle[]{skin.button, skin.label, skin.textArea, skin.textField, skin.toggle, skin.window, skin.box};
     		foreach (var style in styles)
     		{
-    			//Debug.LogFormat("style: {0}, font size: {1}", style.name, style.fontSize);
+    			Debug.LogFormat("style: {0}, font size: {1}", style.name, style.fontSize);
     			style.fontSize = newFontSize;
     		}
 	    }
