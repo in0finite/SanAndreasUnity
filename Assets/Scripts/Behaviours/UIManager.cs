@@ -110,7 +110,7 @@ namespace SanAndreasUnity.Behaviours
     		var styles = new GUIStyle[]{skin.button, skin.label, skin.textArea, skin.textField, skin.toggle, skin.window, skin.box};
     		foreach (var style in styles)
     		{
-    			Debug.LogFormat("style: {0}, font size: {1}", style.name, style.fontSize);
+    			//Debug.LogFormat("style: {0}, font size: {1}", style.name, style.fontSize);
     			style.fontSize = newFontSize;
     		}
 	    }
