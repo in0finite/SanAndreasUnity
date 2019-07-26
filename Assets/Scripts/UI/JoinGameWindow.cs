@@ -76,7 +76,7 @@ namespace SanAndreasUnity.UI
 				buttonAction = () => {};
 			}
 
-            if (GUILayout.Button(buttonText, GUILayout.MinWidth(80), GUILayout.Height(30), GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(buttonText, GUILayout.MinWidth(80), GUILayout.MinHeight(30), GUILayout.ExpandWidth(false)))
 				buttonAction();
 
 		}

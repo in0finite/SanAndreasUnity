@@ -22,7 +22,8 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = new Rect(Screen.width / 2 - 100, 10, 200, 180);
+			float width = 240;
+			this.windowRect = new Rect(Screen.width / 2 - width / 2, 10, width, 210);
 		}
 
 
