@@ -22,6 +22,9 @@ namespace SanAndreasUnity.Behaviours {
 		[SerializeField] [Range(10, 100)] private int m_defaultMaxFps = 60;
 		[SerializeField] [Range(10, 100)] private int m_defaultMaxFpsOnMobile = 25;
 
+		[SerializeField] [Range(5, 100)] int m_defaultPhysicsUpdateRate = 30;
+		[SerializeField] [Range(5, 100)] int m_defaultPhysicsUpdateRateOnMobile = 20;
+
 		public Vector2 cursorSensitivity = new Vector2(2f, 2f);
 
 
@@ -35,10 +38,17 @@ namespace SanAndreasUnity.Behaviours {
 			if (null == Instance)
 				Instance = this;
 
+			// set default max fps
 			if (Application.isMobilePlatform)
 				SetMaxFps(m_defaultMaxFpsOnMobile);
 			else
 				SetMaxFps(m_defaultMaxFps);
+
+			// set default physics update rate
+			if (Application.isMobilePlatform)
+				Time.fixedDeltaTime = 1.0f / m_defaultPhysicsUpdateRateOnMobile;
+			else
+				Time.fixedDeltaTime = 1.0f / m_defaultPhysicsUpdateRate;
 
 		}
 
