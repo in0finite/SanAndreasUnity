@@ -165,8 +165,8 @@ namespace SanAndreasUnity.UI
 			// set mouse move input based on panel drag events
 
 			this.ResetMouseMoveInput();
-			customInput.SetAxis("Mouse X", m_panelDeltasSum.x / Screen.width * this.touchPointerSensitivity * GameManager.Instance.CursorSensitivity.x);
-			customInput.SetAxis("Mouse Y", m_panelDeltasSum.y / Screen.height * this.touchPointerSensitivity * GameManager.Instance.CursorSensitivity.y);
+			customInput.SetAxis("Mouse X", m_panelDeltasSum.x / Screen.width * this.touchPointerSensitivity * GameManager.Instance.cursorSensitivity.x);
+			customInput.SetAxis("Mouse Y", m_panelDeltasSum.y / Screen.height * this.touchPointerSensitivity * GameManager.Instance.cursorSensitivity.y);
 			// reset deltas sum
 			m_panelDeltasSum = Vector2.zero;
 
