@@ -836,7 +836,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 811c370837c3fcd5193972f93b509456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_defaultFontSizeOnMobile: 16
+  m_defaultFontSizeOnMobile: 17
   m_scrollbarSizeMultiplierOnMobile: 2
 --- !u!1 &1627404700688260
 GameObject:
