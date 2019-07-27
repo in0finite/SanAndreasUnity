@@ -16,6 +16,11 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { Time.timeScale = value; },
 			persistType = OptionsWindow.InputPersistType.None
 		};
+		OptionsWindow.FloatInput m_physicsUpdateRate = new OptionsWindow.FloatInput( "Physics update rate", 3f, 100f ) {
+			getValue = () => 1.0f / Time.fixedUnscaledDeltaTime,
+			setValue = (value) => { Time.fixedDeltaTime = 1.0f / value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
+		};
 		OptionsWindow.FloatInput m_gravityInput = new OptionsWindow.FloatInput( "Gravity", -10f, 50f ) {
 			getValue = () => -Physics.gravity.y,
 			setValue = (value) => { Physics.gravity = new Vector3(Physics.gravity.x, -value, Physics.gravity.z); },
@@ -137,7 +142,7 @@ namespace SanAndreasUnity.Settings {
 
 		void Awake ()
 		{
-			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
+			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_physicsUpdateRate, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
 				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera, m_useTouchInput,
 				m_pausePlayerSpawning, m_playerSpawnInterval,
 				m_pedSyncRate,
