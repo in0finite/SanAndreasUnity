@@ -80,11 +80,12 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
-		public static void ChangeCursorState(bool locked)
+		public static void ChangeCursorState(bool locked, bool updateVisibility = true)
 		{
 			CursorLocked = locked;
 			Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
-			Cursor.visible = !locked;
+			if (updateVisibility)
+				Cursor.visible = !locked;
 		}
 
 		public static void ExitApplication() {
