@@ -27,9 +27,9 @@
 
 - Chat
 
-- Android: set font size to 18 ? ;
+- Android: set font size to 18 ? ; reduce physics update rate ;
 
-- Touch input: repeat buttons don't work - cursor locking is probably the cause - don't lock the cursor, only hide it ; ignore mouse move input, and use panel which detects OnDrag event ; adapt to dynamic font size: JoinGame, StartGame, main menu, utilities, map, vehicle spawner,  ;
+- Touch input: repeat buttons don't work - cursor locking is probably the cause - don't lock the cursor, only hide it ; ignore mouse move input, and use panel which detects OnDrag event ; increase maximum value for mouse sensitivity ; touch pointer sensitivity should be increased ;
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
