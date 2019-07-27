@@ -27,7 +27,7 @@ namespace SanAndreasUnity.Settings {
 		OptionsWindow.FloatInput m_mouseSensitivityXInput = new OptionsWindow.FloatInput() {
 			description = "Mouse sensitivity x",
 			minValue = 0.2f,
-			maxValue = 10f,
+			maxValue = 20f,
 			isAvailable = () => GameManager.Instance != null,
 			getValue = () => GameManager.Instance.cursorSensitivity.x,
 			setValue = (value) => { GameManager.Instance.cursorSensitivity.x = value; },
@@ -36,7 +36,7 @@ namespace SanAndreasUnity.Settings {
 		OptionsWindow.FloatInput m_mouseSensitivityYInput = new OptionsWindow.FloatInput() {
 			description = "Mouse sensitivity y",
 			minValue = 0.2f,
-			maxValue = 10f,
+			maxValue = 20f,
 			isAvailable = () => GameManager.Instance != null,
 			getValue = () => GameManager.Instance.cursorSensitivity.y,
 			setValue = (value) => { GameManager.Instance.cursorSensitivity.y = value; },
