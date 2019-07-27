@@ -111,7 +111,9 @@ namespace SanAndreasUnity.UI {
 
 			public override int Load (string str)
 			{
-				return int.Parse (str, System.Globalization.CultureInfo.InvariantCulture);
+				int value = int.Parse (str, System.Globalization.CultureInfo.InvariantCulture);
+				value = Mathf.Clamp(value, this.minValue, this.maxValue);
+				return value;
 			}
 		}
 
@@ -135,7 +137,9 @@ namespace SanAndreasUnity.UI {
 
 			public override float Load (string str)
 			{
-				return float.Parse (str, System.Globalization.CultureInfo.InvariantCulture);
+				float value = float.Parse (str, System.Globalization.CultureInfo.InvariantCulture);
+				value = Mathf.Clamp(value, this.minValue, this.maxValue);
+				return value;
 			}
 		}
 
