@@ -23,13 +23,11 @@
 
 - Does 'O' button changes quality level ?
 
-- Reduce physics time step to 30 - make it configurable in options
-
 - Chat
 
-- Android: set font size to 18 ? ; reduce physics update rate ;
+- Android: set font size to 20 ; adapt UI: StartGame button, JoinGame button, Console "Clear", main menu ; sliders should be larger ; camera zoom should be configurable (no need for persistence) ; use unsigned (debug) key alias ; increment build number ;
 
-- Touch input: repeat buttons don't work - cursor locking is probably the cause - don't lock the cursor, only hide it ; ignore mouse move input, and use panel which detects OnDrag event ; increase maximum value for mouse sensitivity ; touch pointer sensitivity should be increased ;
+- Touch input: 
 
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
