@@ -44,7 +44,12 @@ namespace SanAndreasUnity.UI
             GUILayout.Label ("Port:");
 			m_portStr = GUILayout.TextField(m_portStr, GUILayout.Width(100));
             
-            GUILayout.Space(40);
+		}
+
+		protected override void OnWindowGUIAfterContent()
+		{
+
+			GUILayout.Space(40);
 
 			// label with status
 			string strStatus = "Disconnected";
@@ -76,7 +81,7 @@ namespace SanAndreasUnity.UI
 				buttonAction = () => {};
 			}
 
-            if (GUILayout.Button(buttonText, GUILayout.MinWidth(80), GUILayout.MinHeight(30), GUILayout.ExpandWidth(false)))
+            if (GUIUtils.ButtonWithCalculatedSize(buttonText))
 				buttonAction();
 
 		}
