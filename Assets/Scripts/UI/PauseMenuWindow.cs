@@ -278,7 +278,7 @@ namespace SanAndreasUnity.UI {
 			if (this.IsOpened)
 				GUI.contentColor = MainMenu.Instance.openedWindowTextColor;
 
-			if (GUILayout.Button (this.windowName, MainMenu.ButtonLayoutOptions))
+			if (MainMenu.DrawMenuEntry (this.windowName))
 			{
 				this.IsOpened = !this.IsOpened;
 			}

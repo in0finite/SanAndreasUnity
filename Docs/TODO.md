@@ -25,7 +25,7 @@
 
 - Chat
 
-- Android: set font size to 20 ; adapt UI: StartGame button, JoinGame button, Console "Clear", main menu ; sliders should be larger ; camera zoom should be configurable (no need for persistence) ; use unsigned (debug) key alias ; increment build number ;
+- Android: set font size to 20 ; adapt UI: StartGame scrollview style, JoinGame scrollview style, main menu, options (save, load, use box as scrollview style, size), Utilities size, file browser size ; sliders should be larger ; camera zoom should be configurable (no need for persistence) ; use unsigned (debug) key alias ; increment build number ; test at 800x480 resolution ;
 
 - Touch input: 
 

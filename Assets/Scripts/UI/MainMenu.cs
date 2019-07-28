@@ -59,7 +59,7 @@ namespace SanAndreasUnity.UI
 				}
 			}
 
-			// draw buttons at bottom of screen: Main scene, Demo scene, Options, Change path to GTA, Exit
+			// draw menu entries at bottom of screen
 
 			s_buttonOptions = new GUILayoutOption[]{ GUILayout.MinWidth(minButtonWidth), GUILayout.MinHeight(minButtonHeight) };
 
@@ -81,7 +81,7 @@ namespace SanAndreasUnity.UI
 				GUILayout.Space (this.spaceBetweenButtons);
 			}
 
-			if (GUILayout.Button ("Exit", s_buttonOptions))
+			if (MainMenu.DrawMenuEntry ("Exit"))
 			{
 				GameManager.ExitApplication ();
 			}
@@ -96,6 +96,11 @@ namespace SanAndreasUnity.UI
 
 			GUILayout.EndArea ();
 
+		}
+
+		public static bool DrawMenuEntry(string text)
+		{
+			return GUIUtils.ButtonWithCalculatedSize(text);
 		}
 
 		public static void RegisterMenuEntry (MenuEntry menuEntry)
