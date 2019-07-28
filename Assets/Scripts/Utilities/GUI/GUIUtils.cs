@@ -82,10 +82,14 @@ namespace SanAndreasUnity.Utilities
 		}
 
 		public	static	bool	ButtonWithCalculatedSize( string text ) {
+			return ButtonWithCalculatedSize(new GUIContent(text));
+		}
 
-			Vector2 size = CalcScreenSizeForText (text, GUI.skin.button);
+		public static bool ButtonWithCalculatedSize(GUIContent content)
+		{
+			Vector2 size = CalcScreenSizeForContent (content, GUI.skin.button);
 
-			return GUILayout.Button (text, GUILayout.Width (size.x), GUILayout.Height (size.y));
+			return GUILayout.Button (content, GUILayout.Width (size.x), GUILayout.Height (size.y));
 		}
 
 		public	static	bool	ButtonWithColor( Rect rect, string text, Color color) {
