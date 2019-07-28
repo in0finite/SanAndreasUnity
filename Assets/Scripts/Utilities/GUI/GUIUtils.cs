@@ -85,9 +85,24 @@ namespace SanAndreasUnity.Utilities
 			return ButtonWithCalculatedSize(new GUIContent(text));
 		}
 
+		public static bool ButtonWithCalculatedSize(string text, float minWidth, float minHeight)
+		{
+			return ButtonWithCalculatedSize(new GUIContent(text), minWidth, minHeight);
+		}
+
 		public static bool ButtonWithCalculatedSize(GUIContent content)
 		{
+			return ButtonWithCalculatedSize(content, 0f, 0f);
+		}
+
+		public static bool ButtonWithCalculatedSize(GUIContent content, float minWidth, float minHeight)
+		{
 			Vector2 size = CalcScreenSizeForContent (content, GUI.skin.button);
+			
+			if (size.x < minWidth)
+				size.x = minWidth;
+			if (size.y < minHeight)
+				size.y = minHeight;
 
 			return GUILayout.Button (content, GUILayout.Width (size.x), GUILayout.Height (size.y));
 		}
