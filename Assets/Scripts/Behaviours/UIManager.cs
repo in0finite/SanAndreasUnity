@@ -31,8 +31,10 @@ namespace SanAndreasUnity.Behaviours
 		public int ImguiFontSize { get => m_imguiFontSize; set { m_imguiFontSize = value; m_shouldChangeFontSize = true; } }
 
 		[SerializeField] int m_defaultFontSizeOnMobile = 16;
+		[SerializeField] bool m_changeFontSizeInEditor = false;
 
 		[SerializeField] float m_scrollbarSizeMultiplierOnMobile = 2f;
+		[SerializeField] bool m_changeScrollbarSizeInEditor = false;
 
 		// note: UIManager's OnGUI() should execute before other OnGUI()s, because other scripts may try to create their own
 		// style from existing styles
@@ -51,7 +53,7 @@ namespace SanAndreasUnity.Behaviours
 	    	}
 
 	    	// set default font size on mobile platforms
-	    	if (Application.isMobilePlatform)
+	    	if (Application.isMobilePlatform || (m_changeFontSizeInEditor && Application.isEditor))
 	    	{
 	    		this.ImguiFontSize = m_defaultFontSizeOnMobile;
 	    	}
@@ -78,7 +80,7 @@ namespace SanAndreasUnity.Behaviours
 	    void SetupGui()
 	    {
 
-	    	if (Application.isMobilePlatform)
+	    	if (Application.isMobilePlatform || (m_changeScrollbarSizeInEditor && Application.isEditor))
 	    	{
 
 	    		var skin = GUI.skin;
