@@ -805,5 +805,9 @@ namespace SanAndreasUnity.Utilities
 			Gizmos.DrawLine (ray.origin, ray.origin + ray.direction * Camera.main.farClipPlane);
 		}
 
+
+        public static bool ScreenHasHighDensity => Application.isMobilePlatform;
+
+
     }
 }

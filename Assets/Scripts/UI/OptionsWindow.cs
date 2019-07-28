@@ -218,10 +218,8 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			float windowWidth = Screen.width * 0.85f;
-			windowWidth = Mathf.Min (windowWidth, 600);
-			float windowHeight = Screen.height * 0.8f;
-			windowHeight = Mathf.Min (windowHeight, windowWidth * 9 / 16);
+			float windowWidth = Mathf.Max (Screen.width * 0.7f, 600);
+			float windowHeight = Screen.height * 9f / 16f;
 			this.windowRect = Utilities.GUIUtils.GetCenteredRect (new Vector2 (windowWidth, windowHeight));
 
 			LoadSettings (InputPersistType.OnStart);
@@ -239,7 +237,7 @@ namespace SanAndreasUnity.UI {
 			base.OnWindowStart();
 			m_scrollViewStyle = GUI.skin.box;
 		}
-		
+
 		protected override void OnWindowGUIBeforeContent ()
 		{
 			s_categories = s_registeredInputs.Select (i => i.category).Distinct ().ToArray ();
@@ -289,13 +287,13 @@ namespace SanAndreasUnity.UI {
 			GUILayout.FlexibleSpace ();
 
 			// display Save button
-			if (GUILayout.Button ("Save", GUILayout.ExpandWidth (false)))
+			if (Utilities.GUIUtils.ButtonWithCalculatedSize ("Save"))
 				SaveSettings ();
 
 			GUILayout.Space (5);
 
 			// display Load button
-			if (GUILayout.Button ("Load", GUILayout.ExpandWidth (false)))
+			if (Utilities.GUIUtils.ButtonWithCalculatedSize ("Load"))
 				LoadSettings ();
 
 			GUILayout.EndHorizontal ();
