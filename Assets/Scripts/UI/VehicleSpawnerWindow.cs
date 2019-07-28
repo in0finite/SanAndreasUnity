@@ -11,7 +11,7 @@ namespace SanAndreasUnity.UI {
 	public class VehicleSpawnerWindow : PauseMenuWindow {
 
 		private	List<IGrouping<VehicleType, VehicleDef>>	vehicleGroupings = null;
-		private	int[]	columnWidths = new int[]{ 120, 120, 30, 70 };
+		private	int[]	columnWidths = new int[]{ 150, 120, 30, 70 };
 
 
 

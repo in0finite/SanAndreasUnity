@@ -81,7 +81,7 @@ namespace SanAndreasUnity.UI
 				buttonAction = () => {};
 			}
 
-            if (GUIUtils.ButtonWithCalculatedSize(buttonText))
+            if (GUIUtils.ButtonWithCalculatedSize(buttonText, 80, 30))
 				buttonAction();
 
 		}
