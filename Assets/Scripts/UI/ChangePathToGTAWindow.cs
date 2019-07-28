@@ -29,7 +29,7 @@ namespace SanAndreasUnity.UI {
 		{
 			
 			// adjust rect
-			this.windowRect = GUIUtils.GetCenteredRect( new Vector2( 600, 400 ) );
+			this.windowRect = GUIUtils.GetCenteredRect( FileBrowser.GetRecommendedSize() );
 
 		}
 
