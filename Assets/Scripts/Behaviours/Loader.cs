@@ -454,7 +454,7 @@ namespace SanAndreasUnity.Behaviours
 
             // display loading progress
 
-			GUILayout.BeginArea(new Rect(10, 5, 400, Screen.height));
+			GUILayout.BeginArea(new Rect(10, 5, 400, Screen.height - 5));
 
 			// current status
 			GUILayout.Label("<size=25>" + LoadingStatus + "</size>");
@@ -466,7 +466,13 @@ namespace SanAndreasUnity.Behaviours
 			// display error
 			if (m_hasErrors) {
 				GUILayout.Space (20);
-				GUILayout.Label("<size=20>" + "The following exception occured during the current step:\n" + "</size>" + m_loadException.ToString ());
+				GUILayout.Label("<size=20>" + "The following exception occured during the current step:" + "</size>");
+				GUILayout.TextArea( m_loadException.ToString () );
+				GUILayout.Space (30);
+				if (GUIUtils.ButtonWithCalculatedSize("Exit", 80, 30)) {
+					GameManager.ExitApplication();
+				}
+				GUILayout.Space(5);
 			}
 
 			// display all steps

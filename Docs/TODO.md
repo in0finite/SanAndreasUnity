@@ -25,7 +25,7 @@
 
 - Chat
 
-- Android: set font size to 23 ; adapt UI: options (save, load, size), Utilities size, file browser size ; sliders should be larger ; camera zoom should be configurable (no need for persistence) ; use unsigned (debug) key alias ; increment build number ; test at 800x480 resolution ;
+- Android: set font size to 23 ; adapt UI: options (save, load, size), Utilities size, file browser size ; sliders should be larger ; camera zoom should be configurable (no need for persistence) ; use unsigned (debug) key alias ; increment build number ; test at 800x480 resolution ; test Loader error displaying ;
 
 - Touch input: 
 
