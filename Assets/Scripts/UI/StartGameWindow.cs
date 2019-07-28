@@ -61,7 +61,7 @@ namespace SanAndreasUnity.UI
 		{
 			GUILayout.Space(40);
 
-            if (GUIUtils.ButtonWithCalculatedSize("Start"))
+            if (GUIUtils.ButtonWithCalculatedSize("Start", 80, 30))
 				StartGame();
 		}
 

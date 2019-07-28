@@ -219,7 +219,7 @@ namespace SanAndreasUnity.UI {
 
 			// adjust rect
 			float windowWidth = Mathf.Max (Screen.width * 0.7f, 600);
-			float windowHeight = Screen.height * 9f / 16f;
+			float windowHeight = windowWidth * 9f / 16f;
 			this.windowRect = Utilities.GUIUtils.GetCenteredRect (new Vector2 (windowWidth, windowHeight));
 
 			LoadSettings (InputPersistType.OnStart);
