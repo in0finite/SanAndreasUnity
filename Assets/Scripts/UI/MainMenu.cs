@@ -100,7 +100,7 @@ namespace SanAndreasUnity.UI
 
 		public static bool DrawMenuEntry(string text)
 		{
-			return GUIUtils.ButtonWithCalculatedSize(text);
+			return GUIUtils.ButtonWithCalculatedSize(text, Instance.minButtonWidth, Instance.minButtonHeight);
 		}
 
 		public static void RegisterMenuEntry (MenuEntry menuEntry)
