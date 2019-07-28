@@ -55,11 +55,14 @@ namespace SanAndreasUnity.UI
 			GUILayout.Label("Map:");
 			m_selectedSceneIndex = GUILayout.SelectionGrid(m_selectedSceneIndex, m_availableScenes, 4);
 
-            GUILayout.Space(40);
+		}
 
-            if (GUILayout.Button("Start", GUILayout.MinWidth(80), GUILayout.MinHeight(30), GUILayout.ExpandWidth(false)))
+		protected override void OnWindowGUIAfterContent()
+		{
+			GUILayout.Space(40);
+
+            if (GUIUtils.ButtonWithCalculatedSize("Start"))
 				StartGame();
-
 		}
 
 		void StartGame()
