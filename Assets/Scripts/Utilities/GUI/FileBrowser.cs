@@ -130,6 +130,8 @@ public class FileBrowser {
 
 	protected FinishedCallback m_callback;
 
+
+
 	// Browsers need at least a rect, name and callback
 	public FileBrowser(Rect screenRect, string name, FinishedCallback callback) {
 		m_name = name;
@@ -444,6 +446,13 @@ public class FileBrowser {
 
 	protected void NonMatchingDirectoryDoubleClickCallback(int i) {
 		SetNewDirectory(Path.Combine(m_currentDirectory, m_nonMatchingDirectories[i]));
+	}
+
+	public static Vector2 GetRecommendedSize()
+	{
+		float width = Mathf.Max (Screen.width * 0.75f, 600);
+		float height = width * 9f / 16f;
+		return new Vector2(width, height);
 	}
 
 }
