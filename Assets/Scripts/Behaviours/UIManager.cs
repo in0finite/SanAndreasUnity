@@ -83,16 +83,18 @@ namespace SanAndreasUnity.Behaviours
 
 	    		var skin = GUI.skin;
 
-	    		// make scrollbars wider
+	    		// make scrollbars & sliders wider
 
-	    		var styles = new GUIStyle[]{skin.horizontalScrollbar, skin.horizontalScrollbarLeftButton, skin.horizontalScrollbarRightButton, skin.horizontalScrollbarThumb};
+	    		var styles = new GUIStyle[]{skin.horizontalScrollbar, skin.horizontalScrollbarLeftButton, skin.horizontalScrollbarRightButton, skin.horizontalScrollbarThumb,
+	    			skin.horizontalSlider, skin.horizontalSliderThumb};
 	    		foreach (var style in styles)
 	    		{
 	    			//Debug.LogFormat("style: {0}, height: {1}", style.name, style.fixedHeight);
 	    			style.fixedHeight *= m_scrollbarSizeMultiplierOnMobile;
 	    		}
 
-	    		styles = new GUIStyle[]{skin.verticalScrollbar, skin.verticalScrollbarDownButton, skin.verticalScrollbarThumb, skin.verticalScrollbarUpButton};
+	    		styles = new GUIStyle[]{skin.verticalScrollbar, skin.verticalScrollbarDownButton, skin.verticalScrollbarThumb, skin.verticalScrollbarUpButton,
+	    			skin.verticalSlider, skin.verticalSliderThumb};
 	    		foreach (var style in styles)
 	    		{
 	    			//Debug.LogFormat("style: {0}, width: {1}", style.name, style.fixedWidth);
