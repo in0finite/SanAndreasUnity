@@ -23,7 +23,13 @@ namespace SanAndreasUnity.UI {
 
 			// adjust rect
 			float width = 240;
-			this.windowRect = new Rect(Screen.width / 2 - width / 2, 10, width, 210);
+			if (Utilities.F.ScreenHasHighDensity)
+			{
+				width *= 1.33f;
+				width = Mathf.Min(width, Screen.width * 0.3f);
+			}
+			float height = width * 0.9f;
+			this.windowRect = new Rect(Screen.width / 2 - width / 2, 10, width, height);
 		}
 
 
