@@ -44,6 +44,7 @@ namespace SanAndreasUnity.UI {
 
 		public	bool	useScrollView = false;
 		protected	Vector2	scrollPos = Vector2.zero;
+		protected GUIStyle m_scrollViewStyle = null;
 
 		protected	bool	isDraggable = true;
 		public bool IsDraggable { get { return this.isDraggable; } }
@@ -130,6 +131,9 @@ namespace SanAndreasUnity.UI {
 
 		void OnGUI() {
 
+			if (null == m_scrollViewStyle)
+				m_scrollViewStyle = GUI.skin.scrollView;
+
 			if (!m_hasStarted) {
 				m_hasStarted = true;
 				this.WindowStart ();
@@ -196,7 +200,7 @@ namespace SanAndreasUnity.UI {
 				this.OnWindowGUIBeforeContent ();
 
 				if (this.useScrollView)
-					this.scrollPos = GUILayout.BeginScrollView (this.scrollPos);
+					this.scrollPos = GUILayout.BeginScrollView (this.scrollPos, m_scrollViewStyle);
 
 				this.OnWindowGUI ();
 

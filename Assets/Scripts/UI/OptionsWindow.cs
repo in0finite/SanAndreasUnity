@@ -234,6 +234,12 @@ namespace SanAndreasUnity.UI {
 		}
 
 
+		protected override void OnWindowStart()
+		{
+			base.OnWindowStart();
+			m_scrollViewStyle = GUI.skin.box;
+		}
+		
 		protected override void OnWindowGUIBeforeContent ()
 		{
 			s_categories = s_registeredInputs.Select (i => i.category).Distinct ().ToArray ();
