@@ -173,7 +173,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void UpdateCameraZoom()
 		{
-			m_ped.CameraDistance = Mathf.Clamp(m_ped.CameraDistance - m_ped.MouseScrollInput.y, 2.0f, 32.0f);
+			m_ped.CameraDistance = Mathf.Clamp(m_ped.CameraDistance - m_ped.MouseScrollInput.y, PedManager.Instance.minCameraDistanceFromPed, 
+				PedManager.Instance.maxCameraDistanceFromPed);
 		}
 
 		public virtual void CheckCameraCollision()

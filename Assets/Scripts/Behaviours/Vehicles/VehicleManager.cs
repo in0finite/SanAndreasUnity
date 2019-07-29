@@ -9,6 +9,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public GameObject vehiclePrefab;
 
+        public float cameraDistanceFromVehicle = 6f;
+
         public bool syncLinearVelocity = true;
         public bool syncAngularVelocity = true;
         public Utilities.WhenOnClient whenToDisableRigidBody = Utilities.WhenOnClient.OnlyOnOtherClients;
