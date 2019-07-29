@@ -31,6 +31,8 @@ namespace SanAndreasUnity.Behaviours
 		public int ImguiFontSize { get => m_imguiFontSize; set { m_imguiFontSize = value; m_shouldChangeFontSize = true; } }
 
 		[SerializeField] int m_defaultFontSizeOnMobile = 16;
+		[SerializeField] int m_referenceScreenHeightForFontSize = 720;
+		[SerializeField] int m_maxFontSize = 23;
 		[SerializeField] bool m_changeFontSizeInEditor = false;
 
 		[SerializeField] float m_scrollbarSizeMultiplierOnMobile = 2f;
@@ -55,7 +57,10 @@ namespace SanAndreasUnity.Behaviours
 	    	// set default font size on mobile platforms
 	    	if (Application.isMobilePlatform || (m_changeFontSizeInEditor && Application.isEditor))
 	    	{
-	    		this.ImguiFontSize = m_defaultFontSizeOnMobile;
+	    		int fontSize = Mathf.RoundToInt( m_defaultFontSizeOnMobile / (float) m_referenceScreenHeightForFontSize * Screen.height );
+	    		if (fontSize > m_maxFontSize)
+	    			fontSize = m_maxFontSize;
+	    		this.ImguiFontSize = fontSize;
 	    	}
 
 	    }
