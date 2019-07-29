@@ -25,7 +25,7 @@
 
 - Chat
 
-- Android: set font size to 23 ; adapt UI: Utilities size, vehicle spawner button width ; sliders should be larger ; camera zoom should be configurable (no need for persistence) ; use unsigned (debug) key alias ; increment build number ; test at 800x480 resolution ;
+- Android: adapt UI: Utilities size ; use unsigned (debug) key alias ; increment build number ; test at 800x480 resolution ; time scale affects physics update rate setting ;
 
 - Touch input: 
 
