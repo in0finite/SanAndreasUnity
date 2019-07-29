@@ -17,7 +17,7 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.None
 		};
 		OptionsWindow.FloatInput m_physicsUpdateRate = new OptionsWindow.FloatInput( "Physics update rate", 3f, 100f ) {
-			getValue = () => 1.0f / Time.fixedUnscaledDeltaTime,
+			getValue = () => 1.0f / Time.fixedDeltaTime,
 			setValue = (value) => { Time.fixedDeltaTime = 1.0f / value; },
 			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
