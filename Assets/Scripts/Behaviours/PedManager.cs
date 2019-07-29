@@ -13,6 +13,10 @@ namespace SanAndreasUnity.Behaviours
 		public float pedTurnSpeed = 10f;
 		public bool showPedSpeedometer = true;
 
+		public float cameraDistanceFromPed = 3f;
+		public float minCameraDistanceFromPed = 2f;
+		public float maxCameraDistanceFromPed = 30f;
+
 		[Header("Health bar")]
 
 		public bool displayHealthBarAbovePeds = false;

@@ -39,12 +39,11 @@ namespace SanAndreasUnity.Behaviours
 
         public CharacterController characterController { get; private set; }
 
-		[SerializeField] private float m_cameraDistance = 3f;
-		public float CameraDistance { get { return m_cameraDistance; } set { m_cameraDistance = value; } }
+		public float CameraDistance { get { return PedManager.Instance.cameraDistanceFromPed; } set { PedManager.Instance.cameraDistanceFromPed = value; } }
 
-		[SerializeField] private float m_cameraDistanceVehicle = 6f;
-		public float CameraDistanceVehicle { get { return m_cameraDistanceVehicle; } set { m_cameraDistanceVehicle = value; } }
+		public float CameraDistanceVehicle { get { return VehicleManager.Instance.cameraDistanceFromVehicle; } set { VehicleManager.Instance.cameraDistanceFromVehicle = value; } }
 
+		// used for clamping camera rotation
 		[SerializeField] private Vector2 m_cameraClampValue = new Vector2(60, 60);
 		public Vector2 CameraClampValue { get { return m_cameraClampValue; } set { m_cameraClampValue = value; } }
 
