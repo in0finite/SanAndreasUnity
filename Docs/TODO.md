@@ -25,7 +25,7 @@
 
 - Chat
 
-- Android: adapt UI: Utilities size ; use unsigned (debug) key alias ; increment build number ; test at 800x480 resolution ;
+- Android: check Utilities size on 800x480 resolution ;
 
 - Touch input: 
 
