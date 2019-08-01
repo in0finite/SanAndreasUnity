@@ -72,15 +72,15 @@ Can help us to develop this ? In that case, join us on discord so we can discuss
 
 ###
 
+[![](http://img.youtube.com/vi/PItR-0FF7JI/0.jpg)](https://www.youtube.com/watch?v=PItR-0FF7JI)
+
+###
+
 [![](http://img.youtube.com/vi/-3GAjTSLUUg/0.jpg)](https://www.youtube.com/watch?v=-3GAjTSLUUg)
 
 ###
 
 [![](http://img.youtube.com/vi/GMxJ6u3Jbak/0.jpg)](https://www.youtube.com/watch?v=GMxJ6u3Jbak)
-
-###
-
-[![](http://files.facepunch.com/ziks/2015/April/12/vidthumb1.png)](http://files.facepunch.com/ziks/2015/April/12/2015-04-12-2011-02.mp4)
 
 ###
 
