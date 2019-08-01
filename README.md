@@ -21,29 +21,40 @@ This won't be a complete recreation, but the focus is on gameplay features, mutl
 
 For more information about the project, read this [wiki page](https://github.com/GTA-ASM/SanAndreasUnity/wiki/About-project).
 
+When running for the first time, the game will ask you for path to GTA installation. You need to own GTA in order to play it.
 
-## Setup Instructions
+
+## Download
+
+Download it for [Windows](https://github.com/GTA-ASM/SanAndreasUnity/releases/download/v3.0/SanAndreasUnity-3.0-windows.zip), [Android](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Running-on-Android) or [Linux server](https://github.com/GTA-ASM/SanAndreasUnity/releases/download/v3.0/SanAndreasUnity-3.0-linuxserver.zip).
+
+The game is tested on [Linux](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Running-on-Linux), Windows, Mac, Android and [PS Vita](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Building-for-PS-Vita). It supports both Mono and IL2CPP scripting backends, so it can be built for any platform that Unity supports, provided that you can copy PC version of GTASA to target device.
+
+
+## Multiplayer
+
+Game fully works in multiplayer.
+
+Our official server:
+
+- IP: 34.90.25.177
+
+- Port number: 7777 for Main scene, 7778 for Demo scene
+
+
+## Development setup
 
 - clone the project, including submodules: `git clone --depth 1 --recurse-submodules https://github.com/GTA-ASM/SanAndreasUnity`
 - open the project with Unity 2018.3
 - open startup scene located at Assets/Scenes/Startup.unity
 - press Play button
 
-When running for the first time, the game will ask you for path to GTA installation. You need to own GTA in order to play it.
-
-
-## Download
-
-Download it from [here](https://github.com/GTA-ASM/SanAndreasUnity/releases/download/v3.0/SanAndreasUnity-3.0-windows.zip) (for windows).
-
-The game is tested on [Linux](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Running-on-Linux), Windows, Mac, Android and [PS Vita](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Building-for-PS-Vita). It supports both Mono and IL2CPP scripting backends, so it can be built for any platform that Unity supports, provided that you can copy PC version of GTASA to target device.
-
 
 ## In-game controls
 
 Press Escape while in game to open pause menu. You'll see there a lot of utilities, and among them, there is a window which shows all controls.
 
-## TODO List
+## TODO list
 
 Here is an extensive list of [what should be implemented](/Docs/TODO.md).
 
@@ -61,15 +72,15 @@ Can help us to develop this ? In that case, join us on discord so we can discuss
 
 ###
 
+[![](http://img.youtube.com/vi/-3GAjTSLUUg/0.jpg)](https://www.youtube.com/watch?v=-3GAjTSLUUg)
+
+###
+
+[![](http://img.youtube.com/vi/GMxJ6u3Jbak/0.jpg)](https://www.youtube.com/watch?v=GMxJ6u3Jbak)
+
+###
+
 [![](http://files.facepunch.com/ziks/2015/April/12/vidthumb1.png)](http://files.facepunch.com/ziks/2015/April/12/2015-04-12-2011-02.mp4)
-
-###
-
-[![](http://files.facepunch.com/ziks/2015/April/12/vidthumb2.png)](http://files.facepunch.com/layla/2015/April/06/2015-04-06_04-32-12.mp4)
-
-###
-
-[![](http://img.youtube.com/vi/8YaVLwE9UXw/0.jpg)](https://www.youtube.com/watch?v=8YaVLwE9UXw)
 
 ###
 
