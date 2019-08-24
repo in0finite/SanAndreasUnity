@@ -4,14 +4,32 @@ using System.Data;
 using System.IO;
 using System.Text;
 using SanAndreasUnity.Importing.Archive;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.GXT
 {
     public class GTX : IDisposable
     {
-		//todo put path temp here, will refactor
-		private static string loadPath;
+		//todo will need move to a setting file, will talk about it later.
+	    enum Language
+	    {
+			american,
+			french,
+			german,
+			italian,
+			spanish
+		}
+
+	    private static Language defaultLanguage = Language.american;
+
+		//this code is pasted from ArchiveMgr; 
+		//todo will refactor in anther commit
+	    public static string GameDir => Config.Get<string>("game_dir");
+	    public static string GTXDir => Path.Combine(GameDir, "text");
+
+	    //todo put path temp here, will refactor
+		private static string loadPath=> Path.Combine(GTXDir,$"{defaultLanguage}.gxt");
 
 
         private MemoryStream _rawData;
@@ -29,8 +47,7 @@ namespace SanAndreasUnity.Importing.GXT
 
         public static void Load()
         {
-			Debug.Log("gtx load gets called");
-            //ArchiveManager.ReadFile("American")
+			Debug.LogError(loadPath);
         }
 
         public void Load1()
