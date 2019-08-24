@@ -11,6 +11,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using SanAndreasUnity.Importing.GXT;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -99,6 +100,7 @@ namespace SanAndreasUnity.Behaviours
 				new LoadingStep ( StepSetSplash2, "Set splash 2" ),
 				new LoadingStep ( StepLoadMap, "Loading map", 2.1f ),
 				new LoadingStep ( StepLoadSpecialTextures, "Loading special textures", 0.01f ),
+				new LoadingStep(StepLoadGTX ,"Loading GTX",0.1f) //todo will calculate time  
 			};
 
 
@@ -412,7 +414,11 @@ namespace SanAndreasUnity.Behaviours
 			UI.HUD.RightArrowTexture = pcbtnsTxd.GetDiffuse("right").Texture;
 			UI.HUD.UpArrowTexture = pcbtnsTxd.GetDiffuse("up").Texture;
 			UI.HUD.DownArrowTexture = pcbtnsTxd.GetDiffuse("down").Texture;
+		}
 
+		private static void StepLoadGTX()
+		{
+			GTX.Load();
 		}
 
 

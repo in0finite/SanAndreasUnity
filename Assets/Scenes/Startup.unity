@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44659364, g: 0.49642992, b: 0.57482547, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -112,6 +112,39 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &66346306 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1693201817607148, guid: 259a477cc43ab4eb184305bfc583d66e,
+    type: 3}
+  m_PrefabInstance: {fileID: 1324114424}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &66346307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 66346306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c74baf3e4586f7499860b111043508d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windowName: GTXWindow
+  m_isOpenedByDefaultInMainMenu: 0
+  m_isOpenedByDefaultInPauseMenu: 0
+  m_destroyOnClose: 0
+  windowRect:
+    serializedVersion: 2
+    x: 57.5
+    y: 78.75
+    width: 115
+    height: 157.5
+  useScrollView: 0
+  m_spaceBeforeContent: 0
+  m_spaceAfterContent: 0
+  m_registerInMainMenuOnStart: 0
+  m_sortPriorityForMainMenu: 0
 --- !u!1001 &129416363
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -232,6 +265,11 @@ PrefabInstance:
     - target: {fileID: 4450559263798022, guid: dd5c14626ef595d439de799ec08c2b16, type: 3}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8332079752519860057, guid: dd5c14626ef595d439de799ec08c2b16,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd5c14626ef595d439de799ec08c2b16, type: 3}
