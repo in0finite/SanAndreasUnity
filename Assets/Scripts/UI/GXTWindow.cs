@@ -8,7 +8,7 @@ namespace SanAndreasUnity.UI
         GXTWindow()
         {
             //this will use as menu item name as well as window title
-            this.windowName = "GTXWindow";
+            this.windowName = "GXTWindow";
         }
 
         void Start()

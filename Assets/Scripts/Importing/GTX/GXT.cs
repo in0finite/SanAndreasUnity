@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Text;
-using SanAndreasUnity.Importing.Archive;
 using SanAndreasUnity.Utilities;
-using UnityEngine;
 
 namespace SanAndreasUnity.Importing.GXT
 {
-    public class GTX : IDisposable
+    public class GXT : IDisposable
     {
 
 	    #region LoadPath
@@ -41,17 +39,17 @@ namespace SanAndreasUnity.Importing.GXT
 		public Dictionary<string, List<int>> TableEntryNameDict { get; } = new Dictionary<string, List<Int32>>();
 		public Dictionary<int, string> EntryNameWordDict { get; } = new Dictionary<int, string>();
 
-		private static GTX gtx;
-		public static GTX Gtx
+		private static GXT _gxt;
+		public static GXT Gxt
 		{
 			get
 			{
-				if (gtx == null)
+				if (_gxt == null)
 				{
-					GTX.Load();
+					GXT.Load();
 				}
 
-				return gtx;
+				return _gxt;
 			}
 		}
 
@@ -63,7 +61,7 @@ namespace SanAndreasUnity.Importing.GXT
 
 
 
-		public GTX(string fp)
+		public GXT(string fp)
         {
             var bytes = File.ReadAllBytes(loadPath);
             _rawData = new MemoryStream(bytes, false);
@@ -71,13 +69,13 @@ namespace SanAndreasUnity.Importing.GXT
 
         public static void Load()
         {
-	        if (gtx != null)
+	        if (_gxt != null)
 	        {
 		        return ;
 	        }
-			gtx=new GTX(loadPath);
-			gtx.InternalLoad();
-			gtx._rawData.Dispose();
+			_gxt=new GXT(loadPath);
+			_gxt.InternalLoad();
+			_gxt._rawData.Dispose();
         }
 
        

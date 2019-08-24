@@ -100,7 +100,7 @@ namespace SanAndreasUnity.Behaviours
 				new LoadingStep ( StepSetSplash2, "Set splash 2" ),
 				new LoadingStep ( StepLoadMap, "Loading map", 2.1f ),
 				new LoadingStep ( StepLoadSpecialTextures, "Loading special textures", 0.01f ),
-				new LoadingStep(StepLoadGTX ,"Loading GTX",0.1f) //todo will calculate time  
+				new LoadingStep(StepLoadGXT ,"Loading GTX",0.1f) //todo will calculate time  
 			};
 
 
@@ -416,9 +416,9 @@ namespace SanAndreasUnity.Behaviours
 			UI.HUD.DownArrowTexture = pcbtnsTxd.GetDiffuse("down").Texture;
 		}
 
-		private static void StepLoadGTX()
+		private static void StepLoadGXT()
 		{
-			GTX.Load();
+			GXT.Load();
 		}
 
 

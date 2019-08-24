@@ -112,39 +112,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &66346306 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1693201817607148, guid: 259a477cc43ab4eb184305bfc583d66e,
-    type: 3}
-  m_PrefabInstance: {fileID: 1324114424}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &66346307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 66346306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c74baf3e4586f7499860b111043508d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  windowName: GTXWindow
-  m_isOpenedByDefaultInMainMenu: 0
-  m_isOpenedByDefaultInPauseMenu: 0
-  m_destroyOnClose: 0
-  windowRect:
-    serializedVersion: 2
-    x: 57.5
-    y: 78.75
-    width: 115
-    height: 157.5
-  useScrollView: 0
-  m_spaceBeforeContent: 0
-  m_spaceAfterContent: 0
-  m_registerInMainMenuOnStart: 0
-  m_sortPriorityForMainMenu: 0
 --- !u!1001 &129416363
 PrefabInstance:
   m_ObjectHideFlags: 0
