@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SanAndreasUnity.Importing.GXT;
+using UnityEngine;
 
 namespace SanAndreasUnity.UI
 {
@@ -23,6 +24,10 @@ namespace SanAndreasUnity.UI
         protected override void OnWindowOpened()
         {
             base.OnWindowOpened();
+            //foreach (var kv in GTX.Gtx.EntryNameWordDict)
+            //{
+	           // Debug.LogError($"k {kv.Key} v {kv.Value}");
+            //}
         }
 
         protected override void OnWindowClosed()

@@ -11,53 +11,84 @@ namespace SanAndreasUnity.Importing.GXT
 {
     public class GTX : IDisposable
     {
-		//todo will need move to a setting file, will talk about it later.
+
+	    #region LoadPath
+		//this whole region needs refactoring
 	    enum Language
 	    {
-			american,
-			french,
-			german,
-			italian,
-			spanish
-		}
+		    american,
+		    french,
+		    german,
+		    italian,
+		    spanish
+	    }
+
 
 	    private static Language defaultLanguage = Language.american;
-
-		//this code is pasted from ArchiveMgr; 
-		//todo will refactor in anther commit
+	    //this code is pasted from ArchiveMgr; 
+	    //todo will refactor in anther commit
 	    public static string GameDir => Config.Get<string>("game_dir");
 	    public static string GTXDir => Path.Combine(GameDir, "text");
 
 	    //todo put path temp here, will refactor
-		private static string loadPath=> Path.Combine(GTXDir,$"{defaultLanguage}.gxt");
+	    private static string loadPath=> Path.Combine(GTXDir,$"{defaultLanguage}.gxt");
+		#endregion
+
+		#region GTXData
+
+		private Int16 version;
+		public List<string> SubTableNames { get; } = new List<string>();
+		public Dictionary<string, List<int>> TableEntryNameDict { get; } = new Dictionary<string, List<Int32>>();
+		public Dictionary<int, string> EntryNameWordDict { get; } = new Dictionary<int, string>();
+
+		private static GTX gtx;
+		public static GTX Gtx
+		{
+			get
+			{
+				if (gtx == null)
+				{
+					GTX.Load();
+				}
+
+				return gtx;
+			}
+		}
+
+		private  MemoryStream _rawData;
+
+		#endregion
+
+		//todo will need move to a setting file, will talk about it later.
 
 
-        private MemoryStream _rawData;
-        private Int16 version;
-        private List<string> subTableNames = new List<string>();
-        Dictionary<string,List<Int32>>tableEntryNameDict=new Dictionary<string, List<Int32>>();
-        Dictionary<Int32,string>entryNameWordDict=new Dictionary<int, string>();
 
-        public GTX(string fp)
+		public GTX(string fp)
         {
-            var bytes = File.ReadAllBytes(fp);
+            var bytes = File.ReadAllBytes(loadPath);
             _rawData = new MemoryStream(bytes, false);
-            Load1();
         }
 
         public static void Load()
         {
-			Debug.LogError(loadPath);
+	        if (gtx != null)
+	        {
+		        return ;
+	        }
+			gtx=new GTX(loadPath);
+			gtx.InternalLoad();
+			gtx._rawData.Dispose();
         }
 
-        public void Load1()
+       
+        private void InternalLoad()
         {
             var encoding = LoadHeader();
             var tkeyEntryOffsets = LoadTableBlock(encoding);
 
-            for (int i = 0; i < subTableNames.Count; i++)
+            for (int i = 0; i < SubTableNames.Count; i++)
             {
-                var subTableName = subTableNames[i];
+                var subTableName = SubTableNames[i];
                 _rawData.Seek(tkeyEntryOffsets[i], SeekOrigin.Begin);
                 using (var binReader = new BinaryReader(_rawData, encoding, true))
                 {
@@ -75,7 +106,7 @@ namespace SanAndreasUnity.Importing.GXT
             }
         }
 
-        public void LoadTKEY(BinaryReader binaryReader,string tableName)
+        private void LoadTKEY(BinaryReader binaryReader,string tableName)
         {
             //Console.WriteLine(nameof(LoadTKEY));
             var tkey = new string(binaryReader.ReadChars(4));
@@ -99,7 +130,7 @@ namespace SanAndreasUnity.Importing.GXT
                 entryOffsets.Add(entryOffset);
             }
 
-            tableEntryNameDict[tableName] = entryNames;
+            TableEntryNameDict[tableName] = entryNames;
 
             //read tdat
             var tdat =new string(binaryReader.ReadChars(4));
@@ -122,12 +153,12 @@ namespace SanAndreasUnity.Importing.GXT
                     }
                     wordBytes.Add(bytes[j]);
                 }
-                entryNameWordDict[entryName] = win1252ToString(wordBytes.ToArray());
+                EntryNameWordDict[entryName] = Win1252ToString(wordBytes.ToArray());
                 wordBytes.Clear();
             }
         }
 
-        public string win1252ToString(byte[] bytes)
+        private string Win1252ToString(byte[] bytes)
         {
             Encoding win1252 = Encoding.GetEncoding(1252);
             var utf8bytes = Encoding.Convert(win1252, Encoding.UTF8, bytes);
@@ -135,7 +166,7 @@ namespace SanAndreasUnity.Importing.GXT
         }
 
 
-        public Encoding LoadHeader()
+        private Encoding LoadHeader()
         {
             using (var binReader = new BinaryReader(_rawData, Encoding.ASCII, true))
             {
@@ -153,7 +184,7 @@ namespace SanAndreasUnity.Importing.GXT
             return Encoding.ASCII;
         }
 
-        public List<Int32> LoadTableBlock(Encoding encoding)
+        private List<Int32> LoadTableBlock(Encoding encoding)
         {
             using (var binReader = new BinaryReader(_rawData, encoding, true))
             {
@@ -172,7 +203,7 @@ namespace SanAndreasUnity.Importing.GXT
                     var offset = binReader.ReadInt32();
 
                     //Console.WriteLine($"subtablename:{subtableName} offset:{offset}");
-                    subTableNames.Add(subtableName);
+                    SubTableNames.Add(subtableName);
                     offsetList.Add(offset);
                 }
 
@@ -184,12 +215,12 @@ namespace SanAndreasUnity.Importing.GXT
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"version:{version}");
-            foreach (var kv in tableEntryNameDict)
+            foreach (var kv in TableEntryNameDict)
             {
                 stringBuilder.AppendLine($"-----------table {kv.Key} starts------------");
                 foreach (var entrykey in kv.Value)
                 {
-                    stringBuilder.AppendLine($"entry:{entrykey} value:{entryNameWordDict[entrykey]}");
+                    stringBuilder.AppendLine($"entry:{entrykey} value:{EntryNameWordDict[entrykey]}");
                 }
 
                 stringBuilder.AppendLine($"-----------table {kv.Key} ends------------");
