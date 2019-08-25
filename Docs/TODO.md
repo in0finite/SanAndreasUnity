@@ -25,6 +25,8 @@
 
 - Chat
 
+- Remove unused packages added by Unity
+
 - Android: check Utilities size on 800x480 resolution ;
 
 - Touch input: 
@@ -32,8 +34,6 @@
 - Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
 
 - Optimize Console.Update() - don't do trim excess for every log message
-
-- Implement drive-by
 
 - don't fade high LOD meshes
 
@@ -53,20 +53,14 @@
 
 - Remove unneeded assets: files from Resources, 
 
-- Bug when ped gets down to low heights (trying to move him back to starting location, and causing shaking)
-
 - Minimap size should depend on screen resolution
 
-- Vehicle hijacking - throwing out other ped and entering vehicle at his seat
+- Breakable objects - they should have a separate class which inherits MapObject ; spawn networked object with rigid body, when hit with enough force ;
 
-
-- Import Vice City
 
 - Navigation: build navmesh from static geometry at runtime
 
-- Import: AI paths, ped spawn info, item pickups, 
-
-- Implement other vehicles: airplanes, helicopters, bikes, boats
+- Import: AI paths, ped spawn info, pickups, font, 
 
 - In-game input settings
 
@@ -75,19 +69,17 @@
 
 #### Vehicles
 
+- Implement drive-by (free aiming/shooting from vehicle)
+
+- Vehicle hijacking - throwing out other ped and entering vehicle at his seat
+
 - Adapt to damage system (so that they can be damaged and destroyed)
 
+- Implement other vehicles: airplanes, helicopters, bikes, boats
+
+- Play radio stations
+
 - Wheels should be excluded from damage effects
-
-- Remove car blinkers and associated shaders
-
-- Some cars have its suspension too low to allow them to move
-
-- Car lights can't be turned off
-
-- Blinkers are not working correctly
-
-- In some cases damage to vehicles isn't performed at first collision
 
 - Repair cars with key
 

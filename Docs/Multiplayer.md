@@ -9,16 +9,20 @@
 
 - add ability for client to request: 
 
-- remove spamming logs: 
-
 - error when spawning RCCAM
 
 - all button events' Cmds on server should be enclosed with F.RunExceptionSafe()
 
+- WhenOnClient.Matches() doesn't work - as a result, on some machines, vehicle's rigid body is disabled on all clients
+
+- when host is started on windows and android (maybe on linux too ?), and when host's ped starts aiming, the clients get spamming log message "Quaternion look vector zero"
+
+- update Mirror
+
 
 ### Weapons
 
-- is weapon sound 3d ?
+- aiming accuracy is still not good - it happens because of script execution order ; fire position and direction are sent after/before skeleton changes or transform update ; it can be seen when line is drawn from gun, and ped starts moving to side ;
 
 
 ### Vehicles
