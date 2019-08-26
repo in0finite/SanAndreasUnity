@@ -25,10 +25,8 @@ namespace SanAndreasUnity.Importing.GXT
 			}
 		}
 
-		//this code is pasted from ArchiveMgr; 
-		public static string GameDir => Config.Get<string>("game_dir"); //todo this should be put in a config 
-		public static string GTXDir => Path.Combine(GameDir, "text");//todo this should be put in a config or just here?
-		private static string GetPathFromLanguage(string language) => Path.Combine(GTXDir, $"{language}.gxt");
+		public static string GXTDir => Path.Combine(Config.GamePath, "text");
+		private static string GetPathFromLanguage(string language) => Path.Combine(GXTDir, $"{language}.gxt");
 		private static string LoadPath => GetPathFromLanguage(_language);
 
 		#endregion

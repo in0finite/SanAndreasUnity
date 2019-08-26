@@ -23,17 +23,12 @@ namespace SanAndreasUnity.Importing.Archive
 	/// </summary>
     public static class ArchiveManager
     {
-        public static string GameDir
-        {
-            get { return Config.Get<string>("game_dir"); }
-        }
-
-        public static string ModelsDir { get { return Path.Combine(GameDir, "models"); } }
-        public static string DataDir { get { return Path.Combine(GameDir, "data"); } }
+        public static string ModelsDir { get { return Path.Combine(Config.GamePath, "models"); } }
+        public static string DataDir { get { return Path.Combine(Config.GamePath, "data"); } }
 
         public static string GetPath(params string[] relative)
         {
-            return relative.Aggregate(GameDir, Path.Combine).Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
+            return relative.Aggregate(Config.GamePath, Path.Combine).Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
         }
 
         private static readonly List<IArchive> _sLoadedArchives = new List<IArchive>();

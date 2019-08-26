@@ -14,6 +14,22 @@ namespace SanAndreasUnity.UI
         void Start()
         {
             this.RegisterButtonInPauseMenu();
+            this.useScrollView = true;
+            this.windowRect = Utilities.GUIUtils.GetCenteredRect(new Vector2(600, 400));
+
+		}
+
+        protected override void OnWindowGUI()
+        {
+	        base.OnWindowGUI();
+
+	        foreach (var gxtSubTableName in GXT.Gxt.SubTableNames)
+	        {
+		        if (GUILayout.Button(gxtSubTableName))
+		        {
+					Debug.LogError(gxtSubTableName);
+		        }
+	        }
         }
 
         protected override void OnWindowStart()
@@ -24,11 +40,7 @@ namespace SanAndreasUnity.UI
         protected override void OnWindowOpened()
         {
             base.OnWindowOpened();
-            //foreach (var kv in GTX.Gtx.EntryNameWordDict)
-            //{
-	           // Debug.LogError($"k {kv.Key} v {kv.Value}");
-            //}
-        }
+		}
 
         protected override void OnWindowClosed()
         {
@@ -43,12 +55,6 @@ namespace SanAndreasUnity.UI
         protected override void OnWindowGUIBeforeContent()
         {
             base.OnWindowGUIBeforeContent();
-        }
-
-        protected override void OnWindowGUI()
-        {
-            base.OnWindowGUI();
-
         }
 
         protected override void OnWindowGUIAfterContent()
