@@ -27,6 +27,8 @@
 
 - Remove unused packages added by Unity
 
+- Check what is causing huge FPS drops - it wasn't present before ; possibly it is GC ;
+
 - Android: check Utilities size on 800x480 resolution ;
 
 - Touch input: 
