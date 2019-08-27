@@ -20,7 +20,6 @@ namespace SanAndreasUnity.UI
 		{
 			//this will use as menu item name as well as window title
 			this.windowName = "GXTWindow";
-			SetUpGxtTextAreaStyle();
 
 		}
 
@@ -36,6 +35,7 @@ namespace SanAndreasUnity.UI
 		{
 			this.RegisterButtonInPauseMenu();
 			this.windowRect = Utilities.GUIUtils.GetCenteredRect(new Vector2(WindowWidth, WindowHeight));
+			SetUpGxtTextAreaStyle();
 
 		}
 
