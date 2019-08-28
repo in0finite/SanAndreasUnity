@@ -18,6 +18,7 @@ sonarqube.cmd
 /*.pdb
 /*.booproj
 /.vs
+/.vscode
 
 # Built program and data
 /*.exe
