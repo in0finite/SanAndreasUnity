@@ -157,6 +157,7 @@ namespace SanAndreasUnity.UI {
 		//	float startingY = this.toolbarAreaHeight + this.timingAreaHeight + 40f;
 
 			GUILayout.BeginHorizontal ();
+			GUILayout.Space(1);
 
 			// SIDEBAR
 
@@ -233,7 +234,9 @@ namespace SanAndreasUnity.UI {
 			// we can't display a list, because there is no way to enumerate all sounds
 			// for now, just display text field for bank index
 
-			GUILayout.Space (5);
+			GUILayout.Space (15);
+
+			GUILayout.BeginVertical();
 
 			if (null == this.SelectedAudioFile)
 			{
@@ -242,7 +245,7 @@ namespace SanAndreasUnity.UI {
 
 			if (this.SelectedAudioFile != null)
 			{
-				GUILayout.Label ("Enter bank index [0 - " + (this.SelectedAudioFile.NumBanks - 1) + "]:", GUILayout.ExpandWidth(false));
+				GUILayout.Label ("bank index [0 - " + (this.SelectedAudioFile.NumBanks - 1) + "]:", GUILayout.ExpandWidth(false));
 				m_bankIndexStr = GUILayout.TextField (m_bankIndexStr, 6, GUILayout.Width (120));
 			}
 			
@@ -255,11 +258,14 @@ namespace SanAndreasUnity.UI {
 				bool isValidBankIndex = uint.TryParse(m_bankIndexStr, out bankIndex);
 				bool displayAudioIndex = isValidBankIndex && bankIndex < m_selectedSfxFile.NumBanks;
 
-				GUILayout.Label ("Enter audio index " + (displayAudioIndex ? "[0 - " + (m_selectedSfxFile.GetNumAudioClipsFromBank(bankIndex) - 1).ToString() + "]" : "") + ":", GUILayout.ExpandWidth(false));
+				GUILayout.Label ("audio index " + (displayAudioIndex ? "[0 - " + (m_selectedSfxFile.GetNumAudioClipsFromBank(bankIndex) - 1).ToString() + "]" : "") + ":", GUILayout.ExpandWidth(false));
 				m_audioIndexStr = GUILayout.TextField (m_audioIndexStr, 6, GUILayout.Width (120));
 			}
 
 		//	GUILayout.EndArea ();
+
+			GUILayout.EndVertical();
+			GUILayout.Space(1);
 
 			GUILayout.EndHorizontal ();
 
