@@ -23,6 +23,8 @@
 
 - Does 'O' button changes quality level ?
 
+- Restore physics update rate to 50
+
 - Chat
 
 - Remove unused packages added by Unity
