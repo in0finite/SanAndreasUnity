@@ -252,7 +252,7 @@ namespace SanAndreasUnity.UI {
 			// if SFX is selected, also display text field for audio index
 			if (m_selectedSfxFile != null)
 			{
-				GUILayout.Space(15);
+				GUILayout.Space(5);
 
 				uint bankIndex;
 				bool isValidBankIndex = uint.TryParse(m_bankIndexStr, out bankIndex);
@@ -260,6 +260,18 @@ namespace SanAndreasUnity.UI {
 
 				GUILayout.Label ("audio index " + (displayAudioIndex ? "[0 - " + (m_selectedSfxFile.GetNumAudioClipsFromBank(bankIndex) - 1).ToString() + "]" : "") + ":", GUILayout.ExpandWidth(false));
 				m_audioIndexStr = GUILayout.TextField (m_audioIndexStr, 6, GUILayout.Width (120));
+			}
+
+			// display info about current clip
+			if (m_audioSource != null && m_audioSource.clip != null)
+			{
+				GUILayout.Space(15);
+				GUILayout.Label("Current clip info:");
+
+				var clip = m_audioSource.clip;
+				GUILayout.Label(string.Format("length {0} sec, num samples {1}, frequency {2}, num channels {3}, name {4}", 
+					clip.length, clip.samples, clip.frequency, clip.channels, clip.name));
+				
 			}
 
 		//	GUILayout.EndArea ();
