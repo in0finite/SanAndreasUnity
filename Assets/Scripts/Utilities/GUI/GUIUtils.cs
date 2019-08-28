@@ -270,28 +270,70 @@ namespace SanAndreasUnity.Utilities
 		public static int DrawPagedViewNumbers (Rect rect, int currentPage, int numPages)
 		{
 			int resultingPage = currentPage;
-
 			float spacing = 1f;
-			rect.width = 25f;
+			
+			var btnRect=rect;
+			btnRect.width = 25f;
+
+			/*
+			 *  <_x_x_...x_>
+			 *  suppose we got y pages, then there are y+1 spacing.
+			 *  totalWidth =y*btnWidth+(y+1)*spacing+2*btnWidth
+			 *  1) if totalWidth<= rect.width use < and > , when click result page -- or ++
+			 *  2) if totalWidth> rect.width use << and >> , when click add number of max to all,
+			 *     result page will be max+!
+			 */
+
+			var totalWidth = numPages * btnRect.width + (numPages + 1) * spacing + 2 * btnRect.width;
+			var showNextSign = totalWidth <= rect.width;
+			var maxShow =showNextSign?numPages:Mathf.FloorToInt( numPages/( (totalWidth-2*btnRect.width) /( rect.width-2*btnRect.width)));
 
 
-			if (GUI.Button (rect, "<")) {
-				resultingPage--;
+			if (GUI.Button (btnRect,showNextSign? "<":"<<")) {
+				if (showNextSign)
+				{
+					resultingPage--;
+				}
+				else
+				{
+					resultingPage -= maxShow;
+				}
 			}
-			rect.position += new Vector2(rect.width + spacing, 0f);
 
-			for (int i = 0; i < numPages; i++) {
-				var style = currentPage == (i + 1) ? GUI.skin.box : GUI.skin.button;
-				if (GUI.Button (rect, (i + 1).ToString (), style))
-					resultingPage = i + 1;
-				rect.position += new Vector2(rect.width + spacing, 0f);
+			btnRect.position += new Vector2(btnRect.width + spacing, 0f);
+
+			int startBtnIndex = 0;
+			if (maxShow != 0)
+			{
+				if (currentPage % maxShow == 0)
+				{
+					startBtnIndex =((currentPage / maxShow)-1)*maxShow;
+				}
+				else
+				{
+					startBtnIndex =currentPage / maxShow*maxShow;
+				}
+			}
+			for (int i = 0; i < maxShow; i++)
+			{
+				var btnIndex = startBtnIndex + i + 1;
+
+				var style = currentPage == btnIndex ? GUI.skin.box : GUI.skin.button;
+				if (GUI.Button (btnRect, (btnIndex).ToString (), style))
+					resultingPage = btnIndex ;
+				btnRect.position += new Vector2(btnRect.width + spacing, 0f);
 			}
 
-			if (GUI.Button (rect, ">")) {
-				resultingPage++;
+			if (GUI.Button (btnRect, showNextSign?">":">>")) {
+				if (showNextSign)
+				{
+					resultingPage++;
+				}
+				else
+				{
+					resultingPage += maxShow;
+				}
 			}
-			rect.position += new Vector2(rect.width + spacing, 0f);
-
 
 			resultingPage = Mathf.Clamp( resultingPage, 1, numPages );
 

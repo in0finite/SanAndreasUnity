@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SanAndreasUnity.Importing.GXT;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.UI
@@ -39,6 +41,9 @@ namespace SanAndreasUnity.UI
 
 		}
 
+
+		private int m_currentPageNumber = 1;
+		private int numCrcPerPage = 40;
 		protected override void OnWindowGUI()
 		{
 			base.OnWindowGUI();
@@ -62,8 +67,15 @@ namespace SanAndreasUnity.UI
 			#region CRC
 			GUILayout.BeginVertical(GUILayout.Width(WindowWidth / 3));
 			GUILayout.Label("CRC");
+			if (crcList.Count > numCrcPerPage) //only show pages when we really need
+			{
+				m_currentPageNumber = GUIUtils.DrawPagedViewNumbers(GUILayoutUtility.GetRect(WindowWidth/3,20),
+				m_currentPageNumber, crcList.Count, numCrcPerPage);
+			}
+
 			_crcScrollPos = GUILayout.BeginScrollView(_crcScrollPos);
-			foreach (var crc in crcList)
+
+			foreach (var crc in crcList.Skip((m_currentPageNumber-1)*numCrcPerPage).Take(numCrcPerPage))
 			{
 				if (GUILayout.Button(crc.ToString()))
 				{
@@ -84,36 +96,6 @@ namespace SanAndreasUnity.UI
 			GUILayout.EndHorizontal();
 			GUILayout.EndVertical();
 
-		}
-
-		protected override void OnWindowStart()
-		{
-			base.OnWindowStart();
-		}
-
-		protected override void OnWindowOpened()
-		{
-			base.OnWindowOpened();
-		}
-
-		protected override void OnWindowClosed()
-		{
-			base.OnWindowClosed();
-		}
-
-		protected override void OnLoaderFinished()
-		{
-			base.OnLoaderFinished();
-		}
-
-		protected override void OnWindowGUIBeforeContent()
-		{
-			base.OnWindowGUIBeforeContent();
-		}
-
-		protected override void OnWindowGUIAfterContent()
-		{
-			base.OnWindowGUIAfterContent();
 		}
 	}
 }
