@@ -249,8 +249,7 @@ namespace SanAndreasUnity.Behaviours
 					}
 					else
 					{
-						audioClip = Audio.AudioManager.CreateAudioClipFromSfx ("GENRL", 136, 0, 
-							Audio.AudioManager.SfxGENRL137Timings[ weaponSoundIndexes [modelId] ] );
+						audioClip = Audio.AudioManager.CreateAudioClipFromSfx ("GENRL", 136, weaponSoundIndexes [modelId]);
 						s_loadedAudioClips[modelId] = audioClip;
 					}
 					

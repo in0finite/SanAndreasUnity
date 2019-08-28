@@ -15,7 +15,10 @@ namespace SanAndreasUnity.UI {
 		GTAAudioSharp.GTAAudioStreamsFile m_selectedStreamsFile;
 		GTAAudioSharp.GTAAudioSFXFile m_selectedSfxFile;
 
-		string m_bankIndexStr = "";
+		public GTAAudioSharp.AGTAAudioFile SelectedAudioFile => m_selectedStreamsFile != null ? (GTAAudioSharp.AGTAAudioFile) m_selectedStreamsFile : (GTAAudioSharp.AGTAAudioFile) m_selectedSfxFile;
+
+		string m_bankIndexStr = "0";
+		string m_audioIndexStr = "0";
 
 		Vector2 m_sideBarScrollPos = Vector2.zero;
 
@@ -83,9 +86,10 @@ namespace SanAndreasUnity.UI {
 				else if (m_selectedSfxFile != null)
 				{
 					int index;
-					if (int.TryParse (m_bankIndexStr, out index))
+					int audioIndex;
+					if (int.TryParse (m_bankIndexStr, out index) && int.TryParse(m_audioIndexStr, out audioIndex))
 					{
-						StartPlaying (AudioManager.CreateAudioClipFromSfx (m_selectedSfxFile.Name, index, 0, null));
+						StartPlaying (AudioManager.CreateAudioClipFromSfx (m_selectedSfxFile.Name, index, audioIndex));
 					}
 
 				}
@@ -230,9 +234,30 @@ namespace SanAndreasUnity.UI {
 			// for now, just display text field for bank index
 
 			GUILayout.Space (5);
-			GUILayout.Label ("Enter bank index:");
-			m_bankIndexStr = GUILayout.TextField (m_bankIndexStr, 6, GUILayout.MaxWidth (150));
-			GUILayout.FlexibleSpace ();
+
+			if (null == this.SelectedAudioFile)
+			{
+				GUILayout.Label("Select stream or SFX file");
+			}
+
+			if (this.SelectedAudioFile != null)
+			{
+				GUILayout.Label ("Enter bank index [0 - " + (this.SelectedAudioFile.NumBanks - 1) + "]:", GUILayout.ExpandWidth(false));
+				m_bankIndexStr = GUILayout.TextField (m_bankIndexStr, 6, GUILayout.Width (120));
+			}
+			
+			// if SFX is selected, also display text field for audio index
+			if (m_selectedSfxFile != null)
+			{
+				GUILayout.Space(15);
+
+				uint bankIndex;
+				bool isValidBankIndex = uint.TryParse(m_bankIndexStr, out bankIndex);
+				bool displayAudioIndex = isValidBankIndex && bankIndex < m_selectedSfxFile.NumBanks;
+
+				GUILayout.Label ("Enter audio index " + (displayAudioIndex ? "[0 - " + (m_selectedSfxFile.GetNumAudioClipsFromBank(bankIndex) - 1).ToString() + "]" : "") + ":", GUILayout.ExpandWidth(false));
+				m_audioIndexStr = GUILayout.TextField (m_audioIndexStr, 6, GUILayout.Width (120));
+			}
 
 		//	GUILayout.EndArea ();
 
