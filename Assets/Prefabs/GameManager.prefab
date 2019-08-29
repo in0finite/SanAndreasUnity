@@ -84,6 +84,8 @@ MonoBehaviour:
   barPrefab: {fileID: 1593438409806284, guid: 92671d073b68a421fa8cf12bd74315cb, type: 3}
   m_defaultMaxFps: 60
   m_defaultMaxFpsOnMobile: 25
+  m_defaultPhysicsUpdateRate: 50
+  m_defaultPhysicsUpdateRateOnMobile: 50
   cursorSensitivity: {x: 7, y: 7}
 --- !u!114 &114805125582614736
 MonoBehaviour:
@@ -135,6 +137,9 @@ MonoBehaviour:
   pedPrefab: {fileID: 1273918895060814, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 3}
   pedTurnSpeed: 10
   showPedSpeedometer: 1
+  cameraDistanceFromPed: 3
+  minCameraDistanceFromPed: 2
+  maxCameraDistanceFromPed: 30
   displayHealthBarAbovePeds: 1
   healthBarWorldWidth: 0.65
   healthBarWorldHeight: 0.08
