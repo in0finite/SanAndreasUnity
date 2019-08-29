@@ -23,11 +23,7 @@
 
 - Does 'O' button changes quality level ?
 
-- Restore physics update rate to 50
-
 - Chat
-
-- Remove unused packages added by Unity
 
 - Check what is causing huge FPS drops - it wasn't present before ; possibly it is GC ;
 
