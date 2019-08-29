@@ -18,10 +18,10 @@ namespace SanAndreasUnity.Utilities
                 return true;
             if (when == WhenOnClient.Never)
                 return false;
-            if (isLocalPlayer && when == WhenOnClient.OnlyOnLocalPlayer)
-                return true;
-            if (isClient && when == WhenOnClient.OnlyOnOtherClients)
-                return true;
+            if (when == WhenOnClient.OnlyOnLocalPlayer)
+                return isLocalPlayer;
+            if (when == WhenOnClient.OnlyOnOtherClients)
+                return isClient && ! isLocalPlayer;
             return false;
         }
     }
