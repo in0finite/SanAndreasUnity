@@ -11,8 +11,6 @@
 
 - all button events' Cmds on server should be enclosed with F.RunExceptionSafe()
 
-- when host is started on windows and android (maybe on linux too ?), and when host's ped starts aiming, the clients get spamming log message "Quaternion look vector zero"
-
 - update Mirror
 
 

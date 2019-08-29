@@ -130,6 +130,10 @@ namespace SanAndreasUnity.Behaviours
                 if (m_net_health != this.Health)
                     m_net_health = this.Health;
 
+                Vector3 aimDir = this.AimDirection;
+                if (m_net_aimDir != aimDir)
+                    m_net_aimDir = aimDir;
+
                 if (this.WeaponHolder.CurrentWeaponSlot != m_net_currentWeaponSlot)
                 {
                     m_net_currentWeaponSlot = this.WeaponHolder.CurrentWeaponSlot;
