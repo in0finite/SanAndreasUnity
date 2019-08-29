@@ -86,9 +86,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vehiclePrefab: {fileID: 5841438317718401360, guid: abddce9c98c1ba5a992f109cfd8c5a5c,
     type: 3}
+  cameraDistanceFromVehicle: 6
   syncLinearVelocity: 1
   syncAngularVelocity: 1
-  disableRigidBodyOnClients: 0
+  whenToDisableRigidBody: 0
   syncPedTransformWhileInVehicle: 0
   syncVehicleTransformUsingSyncVars: 1
   controlInputOnLocalPlayer: 1
