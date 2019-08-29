@@ -41,6 +41,8 @@ Our official server:
 
 - Port number: 7777 for Main scene, 7778 for Demo scene
 
+Currently, there are a few sync issues, and game doesn't have client-side prediction.
+
 
 ## Development setup
 
