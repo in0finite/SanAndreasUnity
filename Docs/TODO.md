@@ -27,11 +27,7 @@
 
 - Check what is causing huge FPS drops - it wasn't present before ; possibly it is GC ;
 
-- Android: check Utilities size on 800x480 resolution ;
-
-- Touch input: 
-
-- Play sounds: horn ; empty weapon slot ; ped damage ; footsteps in run and sprint states ;
+- Play sounds: horn ; empty weapon clip ; ped damage ; footsteps in run and sprint states ;
 
 - Optimize Console.Update() - don't do trim excess for every log message
 
@@ -57,14 +53,18 @@
 
 - Breakable objects - they should have a separate class which inherits MapObject ; spawn networked object with rigid body, when hit with enough force ;
 
+- On-screen messages - they can be used for displaying: vehicle name when ped enters it, current zone, inflicted damage
+
+- Android: check Utilities size on 800x480 resolution ;
+
+- Touch input: 
+
 
 - Navigation: build navmesh from static geometry at runtime
 
 - Import: AI paths, ped spawn info, pickups, font, 
 
 - In-game input settings
-
-- Update audio library ; Don't use separate file for weapon sound timings ;
 
 
 #### Vehicles
