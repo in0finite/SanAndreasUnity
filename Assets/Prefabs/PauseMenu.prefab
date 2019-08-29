@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c74baf3e4586f7499860b111043508d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  windowName: GXTWindow
+  windowName: GXT Viewer
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
   m_destroyOnClose: 0
