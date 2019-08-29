@@ -31,7 +31,7 @@ namespace SanAndreasUnity.Importing.GXT
 
 		#endregion
 
-		#region GTXData
+		#region GXTData
 
 		private Int16 _version;
 		public List<string> SubTableNames { get; } = new List<string>();
@@ -202,26 +202,6 @@ namespace SanAndreasUnity.Importing.GXT
 
 				return offsetList;
 			}
-		}
-
-		//todo this should be refactored; unity console cannot show too much string; 
-		//maybe I should just show some items;
-		public override string ToString()
-		{
-			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.AppendLine($"version:{_version}");
-			foreach (var kv in TableEntryNameDict)
-			{
-				stringBuilder.AppendLine($"-----------table {kv.Key} starts------------");
-				foreach (var entrykey in kv.Value)
-				{
-					stringBuilder.AppendLine($"entry:{entrykey} value:{EntryNameWordDict[entrykey]}");
-				}
-
-				stringBuilder.AppendLine($"-----------table {kv.Key} ends------------");
-			}
-
-			return stringBuilder.ToString();
 		}
 
 

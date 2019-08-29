@@ -21,7 +21,7 @@ namespace SanAndreasUnity.UI
 		GXTWindow()
 		{
 			//this will use as menu item name as well as window title
-			this.windowName = "GXTWindow";
+			this.windowName = "GXT Viewer";
 
 		}
 
