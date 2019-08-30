@@ -48,8 +48,18 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
+		void OnEnable()
+		{
+			UIManager.onGUI += this.OnGUICustom;
+		}
 
-        private void OnGUI()
+		void OnDisable()
+		{
+			UIManager.onGUI -= this.OnGUICustom;
+		}
+
+
+        private void OnGUICustom()
         {
 			if (!m_ped.IsControlledByLocalPlayer)
 				return;
@@ -58,21 +68,24 @@ namespace SanAndreasUnity.Behaviours
 				return;
 			
             
+			UnityEngine.Profiling.Profiler.BeginSample ("PlayerController gui");
+
             // show that we are in flying state
 			if (m_ped.CurrentState is Peds.States.FlyState)
             {
                 int height = 25;
-                GUILayout.BeginArea(new Rect(Screen.width - 140, Screen.height - height, 140, height));
-				GUILayout.Label("Flying-mode enabled!");
-				GUILayout.EndArea();
+                Rect rect = new Rect(Screen.width - 140, Screen.height - height, 140, height);
+				GUI.Label(rect, "Flying-mode enabled!");
             }
 
             if (PedManager.Instance.showPedSpeedometer)
-                GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(5, 5)), string.Format("{0:0.0} km/h", m_deltaPos.magnitude * 3.6f / velTimer), new GUIStyle("label") { alignment = TextAnchor.MiddleCenter });
+                GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(5, 5)), string.Format("{0:0.0} km/h", m_deltaPos.magnitude * 3.6f / velTimer));
 
 			// show current ped state
 			GUI.Label (GUIUtils.GetCornerRect(ScreenCorner.BottomLeft, 250, 50), string.Format("Current ped state: {0}", m_ped.CurrentState != null ? m_ped.CurrentState.GetType().Name : "none") );
             
+			UnityEngine.Profiling.Profiler.EndSample();
+
         }
 
         private void FixedUpdate()
