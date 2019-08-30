@@ -32,6 +32,21 @@ namespace SanAndreasUnity.UI {
 			}
 		}
 
+		private bool ShouldBeDrawn {
+			get {
+				if (Behaviours.Loader.IsLoading)
+					return false;
+
+				if (!this.IsOpened)
+					return false;
+
+				if (!PauseMenu.IsOpened && !Behaviours.GameManager.IsInStartupScene)
+					return false;
+
+				return true;
+			}
+		}
+
 		[SerializeField] private bool m_destroyOnClose = false;
 		public bool DestroyOnClose { get { return m_destroyOnClose; } set { m_destroyOnClose = value; } }
 
@@ -139,15 +154,15 @@ namespace SanAndreasUnity.UI {
 				this.WindowStart ();
 			}
 
-			if (Behaviours.Loader.IsLoading)
-				return;
-
-			if (!this.IsOpened)
-				return;
-
-			if (!Behaviours.GameManager.IsInStartupScene && !PauseMenu.IsOpened)
-				return;
 			
+			if (!this.ShouldBeDrawn)
+			{
+				this.useGUILayout = false;
+				return;
+			}
+
+			this.useGUILayout = true;
+
 
 			Rect newRect;
 			Rect inputRect = this.windowRect;
