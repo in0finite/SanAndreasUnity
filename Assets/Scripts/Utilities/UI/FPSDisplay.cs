@@ -13,6 +13,7 @@ namespace SanAndreasUnity.Utilities {
         private static float fpsRed = 23.0f;*/
 		private float fpsDeltaTime = 0.0f;
 		private Texture2D fpsTexture = null;
+		private Color[] colors = null;
 		private float[] fpsHistory = new float[fpsTextureWidth];
 		private int fpsIndex = 0;
 
@@ -23,6 +24,8 @@ namespace SanAndreasUnity.Utilities {
 		void Awake () {
 
 			fpsTexture = new Texture2D(fpsTextureWidth, fpsTextureHeight, TextureFormat.RGBA32, false, true);
+
+			colors = new Color[fpsTexture.width * fpsTexture.height];
 
 		}
 		
@@ -54,8 +57,7 @@ namespace SanAndreasUnity.Utilities {
 				if (fpsTexture == null) return;
 
 				// Show FPS history
-				Color[] colors = new Color[fpsTexture.width * fpsTexture.height];
-
+				
 				for (int i = 0; i < (fpsTexture.width * fpsTexture.height); i++)
 					colors[i] = new Color(0.0f, 0.0f, 0.0f, 0.66f); // Half-transparent background for FPS graph
 

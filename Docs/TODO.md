@@ -27,6 +27,8 @@
 
 - Check what is causing huge FPS drops - it wasn't present before ; possibly it is GC ;
 
+- When doing apply on a texture, don't keep texture data in memory (or specify what to do with parameter)
+
 - Play sounds: horn ; empty weapon clip ; ped damage ; footsteps in run and sprint states ;
 
 - Optimize Console.Update() - don't do trim excess for every log message
