@@ -58,10 +58,14 @@ namespace SanAndreasUnity.Utilities {
 
 				// Show FPS history
 				
+				UnityEngine.Profiling.Profiler.BeginSample("Reset texture pixels");
 				for (int i = 0; i < (fpsTexture.width * fpsTexture.height); i++)
 					colors[i] = new Color(0.0f, 0.0f, 0.0f, 0.66f); // Half-transparent background for FPS graph
+				UnityEngine.Profiling.Profiler.EndSample();
 
+				UnityEngine.Profiling.Profiler.BeginSample("Set pixels");
 				fpsTexture.SetPixels(colors);
+				UnityEngine.Profiling.Profiler.EndSample();
 
 				// Append to history storage
 				fpsHistory[fpsIndex] = fps;
@@ -72,6 +76,7 @@ namespace SanAndreasUnity.Utilities {
 					fpsMaximum = fps;
 
 				// Draw graph into texture
+				UnityEngine.Profiling.Profiler.BeginSample("Set fps history pixels");
 				for (int i = fpsTexture.width - 1; i >= 0; i--)
 				{
 					float graphVal = (fpsHistory[f] > fpsMaximum) ? fpsMaximum : fpsHistory[f]; //Clamps
@@ -87,14 +92,18 @@ namespace SanAndreasUnity.Utilities {
 					if (f < 0)
 						f = fpsHistory.Length - 1;
 				}
+				UnityEngine.Profiling.Profiler.EndSample();
 
 				// Next entry in rolling history buffer
 				fpsIndex++;
 				if (fpsIndex >= fpsHistory.Length)
 					fpsIndex = 0;
 
-				// Draw texture on GUI
+				UnityEngine.Profiling.Profiler.BeginSample("Apply texture");
 				fpsTexture.Apply(false, false);
+				UnityEngine.Profiling.Profiler.EndSample();
+
+				// Draw texture on GUI
 				GUI.DrawTexture(GUIUtils.GetCornerRect(ScreenCorner.BottomRight, fpsTexture.width, fpsTexture.height, new Vector2(5, fpsTexture.height - 15)), fpsTexture);
 			}
 
