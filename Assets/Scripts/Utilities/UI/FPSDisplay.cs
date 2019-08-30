@@ -19,6 +19,8 @@ namespace SanAndreasUnity.Utilities {
 
 		private static bool _showFPS = true;
 
+		GUIStyle labelStyle = null;
+
 
 
 		void Awake () {
@@ -46,8 +48,10 @@ namespace SanAndreasUnity.Utilities {
 		{
 
 			UnityEngine.Profiling.Profiler.BeginSample("Reset texture pixels");
-			for (int i = 0; i < (fpsTexture.width * fpsTexture.height); i++)
-				colors[i] = new Color(0.0f, 0.0f, 0.0f, 0.66f); // Half-transparent background for FPS graph
+			int numPixels = fpsTexture.width * fpsTexture.height;
+			Color backgroundColor = new Color(0.0f, 0.0f, 0.0f, 0.66f); // Half-transparent background for FPS graph
+			for (int i = 0; i < numPixels; i++)
+				colors[i] = backgroundColor;
 			UnityEngine.Profiling.Profiler.EndSample();
 
 			UnityEngine.Profiling.Profiler.BeginSample("Set pixels");
@@ -97,20 +101,25 @@ namespace SanAndreasUnity.Utilities {
 			// if (Event.current.type != EventType.Repaint)
 			// 	return;
 
+			if (null == labelStyle)
+				labelStyle = new GUIStyle("label") { alignment = TextAnchor.MiddleLeft };
+
 			if (_showFPS)
 			{
 				float msec = fpsDeltaTime * 1000.0f;
 				float fps = 1.0f / fpsDeltaTime;
 
 				// Show FPS counter
-				GUILayout.BeginArea(GUIUtils.GetCornerRect(ScreenCorner.BottomRight, 100, 25, new Vector2(15 + fpsTexture.width, 10)));
-				GUILayout.Label(string.Format("{0:0.}fps ({1:0.0}ms)", fps, msec), new GUIStyle("label") { alignment = TextAnchor.MiddleLeft });
-				GUILayout.EndArea();
-
-				if (fpsTexture == null) return;
-
+				Rect rect = GUIUtils.GetCornerRect(ScreenCorner.BottomRight, 100, 25, new Vector2(15 + fpsTexture.width, 10));
+				UnityEngine.Profiling.Profiler.BeginSample("Draw label");
+				GUI.Label(rect, string.Format("{0:0.}fps ({1:0.0}ms)", fps, msec), labelStyle);
+				UnityEngine.Profiling.Profiler.EndSample();
+				
 				// Show FPS history
+				UnityEngine.Profiling.Profiler.BeginSample("Draw texture");
 				GUI.DrawTexture(GUIUtils.GetCornerRect(ScreenCorner.BottomRight, fpsTexture.width, fpsTexture.height, new Vector2(5, fpsTexture.height - 15)), fpsTexture);
+				UnityEngine.Profiling.Profiler.EndSample();
+				
 			}
 
 		}
