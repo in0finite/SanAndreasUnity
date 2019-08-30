@@ -38,6 +38,8 @@ namespace SanAndreasUnity.Behaviours
 		[SerializeField] float m_scrollbarSizeMultiplierOnMobile = 2f;
 		[SerializeField] bool m_changeScrollbarSizeInEditor = false;
 
+		public static event System.Action onGUI = delegate {};
+
 		// note: UIManager's OnGUI() should execute before other OnGUI()s, because other scripts may try to create their own
 		// style from existing styles
 
@@ -79,6 +81,8 @@ namespace SanAndreasUnity.Behaviours
 	    		m_shouldChangeFontSize = false;
 	    		SetStylesFontSize(m_imguiFontSize);
 	    	}
+
+			onGUI();
 
 	    }
 
