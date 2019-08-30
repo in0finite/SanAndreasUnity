@@ -115,12 +115,12 @@ namespace SanAndreasUnity.UI {
 
 		protected virtual void OnEnable()
 		{
-			
+			Behaviours.UIManager.onGUI += this.OnGUICustom;
 		}
 
 		protected virtual void OnDisable()
 		{
-			
+			Behaviours.UIManager.onGUI -= this.OnGUICustom;
 		}
 
 		void WindowStart() {
@@ -159,7 +159,7 @@ namespace SanAndreasUnity.UI {
 		}
 
 
-		void OnGUI() {
+		void OnGUICustom() {
 
 			if (null == m_scrollViewStyle)
 				m_scrollViewStyle = GUI.skin.scrollView;
@@ -172,11 +172,8 @@ namespace SanAndreasUnity.UI {
 			
 			if (!this.ShouldBeDrawn)
 			{
-				this.useGUILayout = false;
 				return;
 			}
-
-			this.useGUILayout = true;
 
 
 			Rect newRect;
