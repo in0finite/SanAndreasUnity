@@ -45,8 +45,10 @@ namespace SanAndreasUnity.UI {
 
 		}
 
-		void Awake () {
+		protected override void Awake () {
 			
+			base.Awake();
+
 			if (null == Instance)
 				Instance = this;
 

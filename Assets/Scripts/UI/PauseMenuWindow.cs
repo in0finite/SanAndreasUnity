@@ -108,6 +108,21 @@ namespace SanAndreasUnity.UI {
 			Destroy(this);
 		}
 
+		protected virtual void Awake()
+		{
+
+		}
+
+		protected virtual void OnEnable()
+		{
+			
+		}
+
+		protected virtual void OnDisable()
+		{
+			
+		}
+
 		void WindowStart() {
 
 			if (m_registerInMainMenuOnStart)
