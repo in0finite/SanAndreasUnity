@@ -20,11 +20,6 @@ namespace SanAndreasUnity.UI {
 
 		}
 
-		void Awake ()
-		{
-			
-		}
-
 		void Start ()
 		{
 			

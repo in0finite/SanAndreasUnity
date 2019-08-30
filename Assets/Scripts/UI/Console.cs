@@ -72,13 +72,15 @@ namespace SanAndreasUnity.UI
 
 		#region MonoBehaviour Messages
 
-		void OnDisable()
+		protected override void OnDisable()
 		{
 			Application.logMessageReceivedThreaded -= HandleLogThreaded;
+			base.OnDisable();
 		}
 
-		void OnEnable()
+		protected override void OnEnable()
 		{
+			base.OnEnable();
 			Application.logMessageReceivedThreaded += HandleLogThreaded;
 		}
 
