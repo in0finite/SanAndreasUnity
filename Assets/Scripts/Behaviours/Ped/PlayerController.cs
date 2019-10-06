@@ -8,8 +8,7 @@ using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours
 {
-	[DefaultExecutionOrder(-50)]
-    [RequireComponent(typeof(Ped))]
+	[RequireComponent(typeof(Ped))]
     public class PlayerController : MonoBehaviour
     {
         

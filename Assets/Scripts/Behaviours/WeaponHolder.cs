@@ -8,7 +8,6 @@ using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours {
 
-	[DefaultExecutionOrder(-70)]
 	public class WeaponHolder : MonoBehaviour {
 
 		private	Ped	m_ped;

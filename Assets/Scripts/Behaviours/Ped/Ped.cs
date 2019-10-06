@@ -12,8 +12,7 @@ using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours
 {
-	[DefaultExecutionOrder(-100)]
-    [RequireComponent(typeof(CharacterController))]
+	[RequireComponent(typeof(CharacterController))]
     public partial class Ped : 
 		#if MIRROR
 		Mirror.NetworkBehaviour
