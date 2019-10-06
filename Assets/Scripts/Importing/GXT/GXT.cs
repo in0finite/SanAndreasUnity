@@ -43,11 +43,6 @@ namespace SanAndreasUnity.Importing.GXT
 		{
 			get
 			{
-				if (_current == null)
-				{
-					GXT.Load();
-				}
-
 				return _current;
 			}
 		}

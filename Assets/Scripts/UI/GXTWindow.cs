@@ -47,6 +47,13 @@ namespace SanAndreasUnity.UI
 		protected override void OnWindowGUI()
 		{
 			base.OnWindowGUI();
+
+			if (null == GXT.Current)
+			{
+				GUILayout.Label("GXT not loaded");
+				return;
+			}
+
 			GUILayout.BeginHorizontal();
 
 			#region TableName
