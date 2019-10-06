@@ -53,11 +53,11 @@ namespace SanAndreasUnity.UI
 			GUILayout.BeginVertical(GUILayout.Width(WindowWidth / 3));
 			GUILayout.Label("TableName");
 			_tableNameScrollPos = GUILayout.BeginScrollView(_tableNameScrollPos);
-			foreach (var gxtSubTableName in GXT.Gxt.SubTableNames)
+			foreach (var gxtSubTableName in GXT.Current.SubTableNames)
 			{
 				if (GUILayout.Button(gxtSubTableName))
 				{
-					crcList = GXT.Gxt.TableEntryNameDict[gxtSubTableName];
+					crcList = GXT.Current.TableEntryNameDict[gxtSubTableName];
 				}
 			}
 			GUILayout.EndScrollView();
@@ -91,7 +91,7 @@ namespace SanAndreasUnity.UI
 			if (curCrc.HasValue)
 			{
 
-				GUILayout.TextArea(GXT.Gxt.EntryNameWordDict[curCrc.Value], _gxtTextAreaStyle);
+				GUILayout.TextArea(GXT.Current.EntryNameWordDict[curCrc.Value], _gxtTextAreaStyle);
 			}
 			GUILayout.EndHorizontal();
 			GUILayout.EndVertical();

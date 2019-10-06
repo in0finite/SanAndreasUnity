@@ -38,17 +38,17 @@ namespace SanAndreasUnity.Importing.GXT
 		public Dictionary<string, List<int>> TableEntryNameDict { get; } = new Dictionary<string, List<Int32>>();
 		public Dictionary<int, string> EntryNameWordDict { get; } = new Dictionary<int, string>();
 
-		private static GXT _gxt;
-		public static GXT Gxt
+		private static GXT _current;
+		public static GXT Current
 		{
 			get
 			{
-				if (_gxt == null)
+				if (_current == null)
 				{
 					GXT.Load();
 				}
 
-				return _gxt;
+				return _current;
 			}
 		}
 
@@ -64,13 +64,13 @@ namespace SanAndreasUnity.Importing.GXT
 
 		public static void Load()
 		{
-			if (_gxt != null)
+			if (_current != null)
 			{
 				return;
 			}
-			_gxt = new GXT(LoadPath);
-			_gxt.InternalLoad();
-			_gxt._rawData.Dispose();
+			_current = new GXT(LoadPath);
+			_current.InternalLoad();
+			_current._rawData.Dispose();
 		}
 
 
