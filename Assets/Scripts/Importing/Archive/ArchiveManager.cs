@@ -31,6 +31,18 @@ namespace SanAndreasUnity.Importing.Archive
             return relative.Aggregate(Config.GamePath, Path.Combine).Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static string GetCaseSensitiveFilePath(string fileName)
+        {
+            string filePath = null;
+            foreach(var archive in _sLoadedArchives.OfType<LooseArchive>())
+            {
+                if (archive.GetCaseSensitiveFilePath(fileName, ref filePath))
+                    return filePath;
+            }
+            throw new FileNotFoundException(fileName);
+        }
+
         private static readonly List<IArchive> _sLoadedArchives = new List<IArchive>();
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
