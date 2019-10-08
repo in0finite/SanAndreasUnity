@@ -27,7 +27,10 @@ namespace SanAndreasUnity.Importing.Archive
                 ".col",
                 ".dff",
                 ".fxp",
-                ".ifp"
+                ".ifp",
+                ".ide",
+                ".ipl",
+                ".zon",
             };
 
         private readonly Dictionary<String, LooseArchiveEntry> _fileDict;
@@ -90,5 +93,16 @@ namespace SanAndreasUnity.Importing.Archive
         {
             return File.OpenRead(_fileDict[name].FilePath);
         }
+
+        public bool GetCaseSensitiveFilePath(string fileName, ref string newPath)
+        {
+            if (_fileDict.TryGetValue(fileName, out LooseArchiveEntry entry))
+            {
+                newPath = entry.FilePath;
+                return true;
+            }
+            return false;
+        }
+
     }
 }
