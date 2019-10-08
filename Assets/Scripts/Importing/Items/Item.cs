@@ -67,6 +67,7 @@ namespace SanAndreasUnity.Importing.Items
         public static void ReadIpl(string path)
         {
             var file = new ItemFile<Placement>(ArchiveManager.GetCaseSensitiveFilePath(Path.GetFileName(path)));
+            
             foreach (var zone in file.GetSection<Zone>("zone"))
             {
                 _zones.Add(zone);
@@ -79,12 +80,12 @@ namespace SanAndreasUnity.Importing.Items
 
             var cars = new List<ParkedVehicle>(file.GetSection<ParkedVehicle>("cars"));
 
-            var streamFormat = Path.GetFileNameWithoutExtension(path).ToLower() + "_stream{0}.ipl";
-            var missed = 0;
-            for (var i = 0; ; ++i)
+            string streamFormat = Path.GetFileNameWithoutExtension(path).ToLower() + "_stream{0}.ipl";
+            int missed = 0;
+            for (int i = 0; ; ++i)
             {
-                var streamPath = string.Format(streamFormat, i);
-                if (!ArchiveManager.FileExists(streamPath))
+                string streamFileName = string.Format(streamFormat, i);
+                if (!ArchiveManager.FileExists(streamFileName))
                 {
                     ++missed;
 
@@ -92,17 +93,17 @@ namespace SanAndreasUnity.Importing.Items
                     continue;
                 }
 
-                file = new ItemFile<Placement>(ArchiveManager.ReadFile(streamPath));
+                file = new ItemFile<Placement>(ArchiveManager.ReadFile(streamFileName));
                 list.AddRange(file.GetSection<Instance>("inst"));
                 cars.AddRange(file.GetSection<ParkedVehicle>("cars"));
             }
 
             list.ResolveLod();
 
-            var lastCell = -1;
+            int lastCell = -1;
             foreach (var inst in list)
             {
-                var cell = inst.CellId & 0xff;
+                int cell = inst.CellId & 0xff;
                 if (lastCell != cell && !_placements.ContainsKey(lastCell = cell))
                 {
                     _placements.Add(cell, new List<Placement>());
@@ -117,6 +118,7 @@ namespace SanAndreasUnity.Importing.Items
             }
 
             _placements[0].AddRange(cars.Cast<Placement>());
+
         }
 
         public static TDefinition GetDefinition<TDefinition>(int id)
