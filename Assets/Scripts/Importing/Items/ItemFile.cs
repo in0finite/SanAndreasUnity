@@ -141,58 +141,70 @@ namespace SanAndreasUnity.Importing.Items
 
         public ItemFile(string path)
         {
+            using (var reader = File.OpenText(path))
+            {
+                Load(reader);
+            }
+        }
+
+        public ItemFile(StreamReader reader)
+        {
+            Load(reader);
+        }
+
+        void Load(StreamReader reader)
+        {
+            
             List<TType> curSection = null;
             ItemCtor curCtor = null;
 
-            using (var reader = File.OpenText(path))
+            string line;
+            while ((line = reader.ReadLine()) != null)
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                var hashIndex = line.IndexOf('#');
+                if (hashIndex != -1)
                 {
-                    var hashIndex = line.IndexOf('#');
-                    if (hashIndex != -1)
-                    {
-                        line = line.Substring(0, hashIndex);
-                    }
-
-                    line = line.Trim();
-
-                    if (line.Length == 0) continue;
-
-                    if (curSection == null)
-                    {
-                        line = line.ToLower();
-
-                        if (_sections.ContainsKey(line))
-                        {
-                            curSection = _sections[line];
-                        }
-                        else
-                        {
-                            curSection = new List<TType>();
-                            _sections.Add(line, curSection);
-                        }
-
-                        if (_sCtors.ContainsKey(line))
-                        {
-                            curCtor = _sCtors[line];
-                        }
-
-                        continue;
-                    }
-
-                    if (line.Equals("end"))
-                    {
-                        curSection = null;
-                        curCtor = null;
-                        continue;
-                    }
-
-                    if (curCtor == null) continue;
-
-                    curSection.Add(curCtor(line));
+                    line = line.Substring(0, hashIndex);
                 }
+
+                line = line.Trim();
+
+                if (line.Length == 0) continue;
+
+                if (curSection == null)
+                {
+                    line = line.ToLower();
+
+                    if (_sections.ContainsKey(line))
+                    {
+                        curSection = _sections[line];
+                    }
+                    else
+                    {
+                        curSection = new List<TType>();
+                        _sections.Add(line, curSection);
+                    }
+
+                    if (_sCtors.ContainsKey(line))
+                    {
+                        curCtor = _sCtors[line];
+                    }
+
+                    continue;
+                }
+
+                if (line.Equals("end"))
+                {
+                    curSection = null;
+                    curCtor = null;
+                    continue;
+                }
+
+                if (curCtor == null) continue;
+
+                curSection.Add(curCtor(line));
             }
+            
         }
 
         public ItemFile(Stream stream)
