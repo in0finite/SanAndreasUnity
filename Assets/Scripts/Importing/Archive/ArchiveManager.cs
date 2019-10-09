@@ -43,6 +43,12 @@ namespace SanAndreasUnity.Importing.Archive
             throw new FileNotFoundException(fileName);
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static string PathToCaseSensitivePath(string path)
+        {
+            return ArchiveManager.GetCaseSensitiveFilePath(Path.GetFileName(path));
+        }
+
         private static readonly List<IArchive> _sLoadedArchives = new List<IArchive>();
 
 		[MethodImpl(MethodImplOptions.Synchronized)]

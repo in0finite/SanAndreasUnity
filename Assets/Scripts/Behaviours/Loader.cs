@@ -337,8 +337,9 @@ namespace SanAndreasUnity.Behaviours
 		private static void StepLoadItemInfo ()
 		{
 			
-			foreach (var path in Config.GetPaths("item_paths"))
+			foreach (var p in Config.GetPaths("item_paths"))
 			{
+				string path = ArchiveManager.PathToCaseSensitivePath(p);
 				var ext = Path.GetExtension(path).ToLower();
 				switch (ext)
 				{
