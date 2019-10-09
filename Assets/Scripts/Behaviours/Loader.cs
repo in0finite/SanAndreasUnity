@@ -361,7 +361,7 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void StepLoadHandling ()
 		{
-			Handling.Load(Config.GetPath("handling_path"));
+			Handling.Load(ArchiveManager.PathToCaseSensitivePath(Config.GetPath("handling_path")));
 		}
 
 		private static void StepLoadAnimGroups ()

@@ -33,6 +33,7 @@ namespace SanAndreasUnity.Importing.Archive
                 ".zon",
                 ".img",
                 ".dat",
+                ".cfg",
             };
 
         private readonly Dictionary<String, LooseArchiveEntry> _fileDict;
