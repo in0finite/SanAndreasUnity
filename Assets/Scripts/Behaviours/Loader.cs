@@ -368,7 +368,7 @@ namespace SanAndreasUnity.Behaviours
 		{
 			foreach (var path in Config.GetPaths("anim_groups_paths"))
 			{
-				AnimationGroup.Load(path);
+				AnimationGroup.Load(ArchiveManager.PathToCaseSensitivePath(path));
 			}
 
 			// load custom anim groups from resources
