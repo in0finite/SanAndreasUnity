@@ -277,7 +277,11 @@ namespace SanAndreasUnity.Behaviours
 				}
 				else
 				{
-					throw new System.Exception("Archive not found: " + path);
+					// try to get case-sensitive file path
+					string caseSensitivePath = ArchiveManager.GetCaseSensitiveFilePath(Path.GetFileName(path));
+					listArchives.Add(ArchiveManager.LoadImageArchive(caseSensitivePath));
+
+				//	throw new System.Exception("Archive not found: " + path);
 				}
 			}
 
