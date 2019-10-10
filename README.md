@@ -33,15 +33,9 @@ The game is tested on [Linux](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Ru
 
 ## Multiplayer
 
-Game fully works in multiplayer.
+Game fully works in multiplayer. You can start the game as dedicated server, as a host (server & client at the same time), or you can connect to a server. This works on all supported platforms, which means you can start a host even on Android device.
 
-Our official server:
-
-- IP: 34.90.25.177
-
-- Port number: 7777 for Main scene, 7778 for Demo scene
-
-Currently, there are a few sync issues, and game doesn't have client-side prediction.
+Currently, the game doesn't have things like client-side prediction.
 
 
 ## Development setup
