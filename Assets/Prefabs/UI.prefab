@@ -837,6 +837,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_defaultFontSizeOnMobile: 23
+  m_referenceScreenHeightForFontSize: 720
+  m_maxFontSize: 23
   m_changeFontSizeInEditor: 0
   m_scrollbarSizeMultiplierOnMobile: 2
   m_changeScrollbarSizeInEditor: 0
@@ -1262,7 +1264,7 @@ MonoBehaviour:
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 1
   m_sortPriorityForMainMenu: -800
-  m_ipStr: 34.90.25.177
+  m_ipStr: 127.0.0.1
 --- !u!114 &7093715299490892338
 MonoBehaviour:
   m_ObjectHideFlags: 0
