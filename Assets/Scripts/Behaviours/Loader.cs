@@ -384,7 +384,7 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void StepLoadWeaponsData ()
 		{
-			Importing.Weapons.WeaponData.Load(Config.GetPath("weapons_path"));
+			Importing.Weapons.WeaponData.Load(ArchiveManager.PathToCaseSensitivePath(Config.GetPath("weapons_path")));
 		}
 
 		private static void StepLoadMap ()
