@@ -379,7 +379,7 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void StepLoadCarColors ()
 		{
-			CarColors.Load(Config.GetPath("car_colors_path"));
+			CarColors.Load(ArchiveManager.PathToCaseSensitivePath(Config.GetPath("car_colors_path")));
 		}
 
 		private static void StepLoadWeaponsData ()
