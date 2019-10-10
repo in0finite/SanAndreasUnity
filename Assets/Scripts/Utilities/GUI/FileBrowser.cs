@@ -276,6 +276,10 @@ public class FileBrowser {
 		{
 			return new string[]{"/", "/sdcard/", "/storage/", "/storage/sdcard0/", "/storage/sdcard1/", "/storage/emulated/0/"};
 		}
+		else if (Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxEditor)
+		{
+			return new string[]{"/", "/home/", "/mnt/", "/media/"};
+		}
 		else
 		{
 			return Directory.GetLogicalDrives ();
