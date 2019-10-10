@@ -130,7 +130,7 @@ namespace SanAndreasUnity.Behaviours.World
 		{
 			if (Water != null)
 			{
-				Water.Initialize(new WaterFile(Config.GetPath("water_path")));
+				Water.Initialize(new WaterFile(Importing.Archive.ArchiveManager.PathToCaseSensitivePath(Config.GetPath("water_path"))));
 			}
 		}
 
