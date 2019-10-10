@@ -23,11 +23,7 @@
 
 - Does 'O' button changes quality level ?
 
-- Chat
-
-- Check what is causing huge FPS drops - it wasn't present before ; possibly it is GC ;
-
-- When doing apply on a texture, don't keep texture data in memory (or specify what to do with parameter)
+- Check what is causing huge FPS drops ; it wasn't present before ? ; possibly it is GC ;
 
 - Play sounds: horn ; empty weapon clip ; ped damage ; footsteps in run and sprint states ;
 
@@ -36,8 +32,6 @@
 - don't fade high LOD meshes
 
 - Validate path to GTA ?
-
-- Split code into separate assemblies (using asmdef files)
 
 - When raycasting with weapons, don't use ped's character collider, but use his mesh
 
@@ -71,15 +65,11 @@
 
 #### Vehicles
 
-- Implement drive-by (free aiming/shooting from vehicle)
-
 - Vehicle hijacking - throwing out other ped and entering vehicle at his seat
 
 - Adapt to damage system (so that they can be damaged and destroyed)
 
 - Implement other vehicles: airplanes, helicopters, bikes, boats
-
-- Play radio stations
 
 - Wheels should be excluded from damage effects
 
