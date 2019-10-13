@@ -67,8 +67,17 @@ namespace GTAAudioSharp
                     if (Directory.Exists(directory))
                     {
                         string config_directory = Path.Combine(directory, "CONFIG");
-                        string sfx_directory = Path.Combine(directory, "SFX");
+
+                        string sfx_directory = null;
+                        string sfx_directory_1 = Path.Combine(directory, "SFX");
+                        string sfx_directory_2 = Path.Combine(directory, "sfx");
+                        if (Directory.Exists(sfx_directory_1))
+                            sfx_directory = sfx_directory_1;
+                        else if (Directory.Exists(sfx_directory_2))
+                            sfx_directory = sfx_directory_2;
+
                         string streams_directory = Path.Combine(directory, "streams");
+
                         if (Directory.Exists(config_directory) &&
                             Directory.Exists(sfx_directory) &&
                             Directory.Exists(streams_directory))
