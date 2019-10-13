@@ -37,6 +37,8 @@ Game fully works in multiplayer. You can start the game as dedicated server, as 
 
 Currently, the game doesn't have things like client-side prediction.
 
+If you want to run a dedicated server, take a look at these [instructions](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Command-line).
+
 
 ## Development setup
 
