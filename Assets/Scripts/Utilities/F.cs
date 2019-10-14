@@ -1,5 +1,4 @@
-﻿using SanAndreasUnity.Behaviours.Vehicles;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -51,30 +50,6 @@ namespace SanAndreasUnity.Utilities
             }
 
             return getting;
-        }
-
-        // WIP: This causes Unity to crash
-        /*public static void OptimizeVehicle(this Vehicle v)
-        {
-            foreach (var col in v.gameObject.GetComponentsInChildren<Collider>())
-            {
-                if (!(col is MeshCollider))
-                    Object.Destroy(col);
-            }
-
-            foreach (var go in v.gameObject.GetComponentsInChildren<MeshFilter>())
-                go.gameObject.AddComponent<MeshCollider>();
-        }*/
-
-        public static void OptimizeVehicle(this Vehicle v)
-        {
-            var cols = v.gameObject.GetComponentsInChildren<Collider>().Where(x => x.GetType() != typeof(MeshCollider));
-            foreach (var col in cols)
-                col.enabled = false;
-
-            var filters = v.gameObject.GetComponentsInChildren<MeshFilter>().Where(x => x.sharedMesh != null);
-            foreach (var filter in filters)
-                filter.gameObject.AddComponent<MeshCollider>();
         }
 
         public static Mesh GetSharedMesh(this Collider col)
