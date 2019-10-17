@@ -58,7 +58,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly float Specular;
 
         public readonly UnityEngine.Color32[] Colours;
-        public readonly Vector2[][] TexCoords;
+        public readonly UnityEngine.Vector2[][] TexCoords;
         public readonly FaceInfo[] Faces;
 
         public readonly BoundingSphere BoundingSphere;
@@ -105,13 +105,13 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             if ((Flags & (GeometryFlag.TexCoords | GeometryFlag.TexCoords2)) != 0)
             {
-                TexCoords = new Vector2[uvCount][];
+                TexCoords = new UnityEngine.Vector2[uvCount][];
                 for (var j = 0; j < uvCount; ++j)
                 {
-                    var uvs = TexCoords[j] = new Vector2[VertexCount];
+                    var uvs = TexCoords[j] = new UnityEngine.Vector2[VertexCount];
                     for (var i = 0; i < VertexCount; ++i)
                     {
-                        uvs[i] = new Vector2(reader);
+                        uvs[i] = Conversion.Types.Convert(new Vector2(reader));
                     }
                 }
             }

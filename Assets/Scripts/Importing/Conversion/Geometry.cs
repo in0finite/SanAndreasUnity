@@ -296,7 +296,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (src.TexCoords != null && src.TexCoords.Length > 0)
             {
-                mesh.uv = Utilities.F.ConvertArray( src.TexCoords[0], x => Types.Convert(x) );
+                mesh.uv = src.TexCoords[0];
             }
             // ReSharper restore ConvertClosureToMethodGroup
 
