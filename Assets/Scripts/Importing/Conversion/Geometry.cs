@@ -281,21 +281,21 @@ namespace SanAndreasUnity.Importing.Conversion
             var mesh = new Mesh();
 
             // ReSharper disable ConvertClosureToMethodGroup
-            mesh.vertices = src.Vertices.Select(x => Types.Convert(x)).ToArray();
+            mesh.vertices = Utilities.F.ConvertArray( src.Vertices, x => Types.Convert(x));
 
             if (src.Normals != null)
             {
-                mesh.normals = src.Normals.Select(x => Types.Convert(x)).ToArray();
+                mesh.normals = Utilities.F.ConvertArray( src.Normals, x => Types.Convert(x) );
             }
 
             if (src.Colours != null)
             {
-                mesh.colors32 = src.Colours.Select(x => Types.Convert(x)).ToArray();
+                mesh.colors32 = Utilities.F.ConvertArray( src.Colours, x => Types.Convert(x) );
             }
 
             if (src.TexCoords != null && src.TexCoords.Length > 0)
             {
-                mesh.uv = src.TexCoords[0].Select(x => Types.Convert(x)).ToArray();
+                mesh.uv = Utilities.F.ConvertArray( src.TexCoords[0], x => Types.Convert(x) );
             }
             // ReSharper restore ConvertClosureToMethodGroup
 
