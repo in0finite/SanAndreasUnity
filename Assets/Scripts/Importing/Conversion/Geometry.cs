@@ -286,7 +286,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (src.Normals != null)
             {
-                mesh.normals = Utilities.F.ConvertArray( src.Normals, x => Types.Convert(x) );
+                mesh.normals = src.Normals;
             }
 
             if (src.Colours != null)
