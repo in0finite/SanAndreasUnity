@@ -67,7 +67,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly UInt32 HasNormals;
 
         public readonly UnityEngine.Vector3[] Vertices;
-        public readonly Vector3[] Normals;
+        public readonly UnityEngine.Vector3[] Normals;
 
         public readonly Material[] Materials;
         public readonly MaterialSplit[] MaterialSplits;
@@ -143,10 +143,10 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             if ((Flags & GeometryFlag.Normals) != 0)
             {
-                Normals = new Vector3[VertexCount];
+                Normals = new UnityEngine.Vector3[VertexCount];
                 for (var i = 0; i < VertexCount; ++i)
                 {
-                    Normals[i] = new Vector3(reader);
+                    Normals[i] = Conversion.Types.Convert(new Vector3(reader));
                 }
             }
 
