@@ -156,6 +156,7 @@ namespace SanAndreasUnity.Behaviours
             }
 
             Debug.Log("Merging all map sprites into one sprite.");
+            TextureLoadParams textureLoadParams = new TextureLoadParams(){makeNoLongerReadable = false};
             for (int i = 0; i < tileCount; i++)
             {
                 // Offset
@@ -165,7 +166,7 @@ namespace SanAndreasUnity.Behaviours
                 string name = "radar" + ((i < 10) ? "0" : "") + i;
                 var texDict = TextureDictionary.Load(name);
 
-                Texture2D tex = texDict.GetDiffuse(name).Texture;
+                Texture2D tex = texDict.GetDiffuse(name, textureLoadParams).Texture;
 
                 if (outputChunks)
                 {
