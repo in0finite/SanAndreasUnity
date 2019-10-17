@@ -18,7 +18,6 @@ namespace SanAndreasUnity.Behaviours
         public const int texSize = 128; // width/height of single tile in px
         public const int mapSize = tileEdge * texSize; // width/height of whole map in px
         public const int uiSize = 256, uiOffset = 10;
-        private const bool outputChunks = false, outputImage = false;
 
         public static bool toggleMap;
 
@@ -147,14 +146,6 @@ namespace SanAndreasUnity.Behaviours
         {
             mapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
 
-            string folder = Path.Combine(Application.streamingAssetsPath, "map-chunks");
-
-            if (outputChunks)
-            {
-                if (!Directory.Exists(folder))
-                    Directory.CreateDirectory(folder);
-            }
-
             Debug.Log("Merging all map sprites into one sprite.");
             TextureLoadParams textureLoadParams = new TextureLoadParams(){makeNoLongerReadable = false};
             for (int i = 0; i < tileCount; i++)
@@ -168,20 +159,6 @@ namespace SanAndreasUnity.Behaviours
 
                 Texture2D tex = texDict.GetDiffuse(name, textureLoadParams).Texture;
 
-                if (outputChunks)
-                {
-                    string id = name.Substring(5);
-                    Texture2D image = new Texture2D(texSize, texSize, TextureFormat.ARGB32, false);
-
-                    for (int xx = 0; xx < texSize; ++xx)
-                        for (int yy = 0; yy < texSize; ++yy)
-                            image.SetPixel(xx, texSize - yy - 1, tex.GetPixel(xx, yy));
-
-                    image.Apply();
-
-                    File.WriteAllBytes(Path.Combine(folder, string.Format("{0}.jpg", id)), ImageConversion.EncodeToPNG(image));
-                }
-
                 for (int ii = 0; ii < texSize; ++ii)
                     for (int jj = 0; jj < texSize; ++jj)
                         mapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
@@ -190,9 +167,6 @@ namespace SanAndreasUnity.Behaviours
             Debug.Log("Finished merging minimap!");
             mapTexture.Apply(false, true);
             mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
-
-            if (outputImage)
-                File.WriteAllBytes(Path.Combine(Application.streamingAssetsPath, "gta-map.png"), mapTexture.EncodeToPNG());
 
             circleMask = Resources.Load<Sprite>("Sprites/MapCircle");
 
