@@ -188,7 +188,7 @@ namespace SanAndreasUnity.Behaviours
             }
 
             Debug.Log("Finished merging minimap!");
-            mapTexture.Apply();
+            mapTexture.Apply(false, true);
             mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
 
             if (outputImage)
