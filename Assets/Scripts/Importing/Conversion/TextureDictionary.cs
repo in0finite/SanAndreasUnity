@@ -13,7 +13,7 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             foreach (var txd in txds)
             {
-                var tex = txd.GetDiffuse(name);
+                var tex = txd.GetDiffuse(name, TextureLoadParams.Default);
                 if (tex != null) return tex;
             }
 
@@ -24,7 +24,7 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             foreach (var txd in txds)
             {
-                var tex = txd.GetAlpha(name);
+                var tex = txd.GetAlpha(name, TextureLoadParams.Default);
                 if (tex != null) return tex;
             }
 
@@ -42,6 +42,23 @@ namespace SanAndreasUnity.Importing.Conversion
             Texture = tex;
             HasAlpha = hasAlpha;
         }
+    }
+
+    public class TextureLoadParams
+    {
+        public bool makeNoLongerReadable = true;
+
+        private static TextureLoadParams _sDefault;
+        public static TextureLoadParams Default
+        {
+            get
+            {
+                if (null == _sDefault)
+                    _sDefault = new TextureLoadParams();
+                return _sDefault;
+            }
+        }
+        
     }
 
     public class TextureDictionary
@@ -121,7 +138,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return dest;
         }
 
-        private static LoadedTexture Convert(TextureNative src)
+        private static LoadedTexture Convert(TextureNative src, TextureLoadParams textureLoadParams)
         {
             TextureFormat format;
 
@@ -212,8 +229,7 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             tex.LoadRawTextureData(data);
-            tex.Apply(loadMips || autoMips,
-                false /* true */); // makeNoLongerReadable: needed to flip GUI textures. doubles memory used for textures!
+            tex.Apply(loadMips || autoMips, textureLoadParams.makeNoLongerReadable);
 
             return new LoadedTexture(tex, src.Alpha);
         }
@@ -308,15 +324,12 @@ namespace SanAndreasUnity.Importing.Conversion
             public bool IsDiffuse { get { return !string.IsNullOrEmpty(DiffuseName); } }
             public bool IsAlpha { get { return !string.IsNullOrEmpty(AlphaName); } }
 
-            public LoadedTexture Converted
+            public LoadedTexture GetConverted(TextureLoadParams textureLoadParams)
             {
-                get
-                {
-                    if (_attemptedConversion) return _converted;
-                    _attemptedConversion = true;
-                    _converted = Convert(Native);
-                    return _converted;
-                }
+                if (_attemptedConversion) return _converted;
+                _attemptedConversion = true;
+                _converted = Convert(Native, textureLoadParams);
+                return _converted;
             }
 
             public readonly TextureNative Native;
@@ -391,28 +404,33 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public LoadedTexture GetDiffuse(string name)
         {
+            return GetDiffuse(name, TextureLoadParams.Default);
+        }
+
+        public LoadedTexture GetDiffuse(string name, TextureLoadParams textureLoadParams)
+        {
             if (DontLoadTextures)
                 return new LoadedTexture(DummyTexture, false);
 
             if (!_diffuse.ContainsKey(name))
             {
-                return ParentName != null ? Parent.GetDiffuse(name) : null;
+                return ParentName != null ? Parent.GetDiffuse(name, textureLoadParams) : null;
             }
 
-            return _diffuse[name].Converted;
+            return _diffuse[name].GetConverted(textureLoadParams);
         }
 
-        public LoadedTexture GetAlpha(string name)
+        public LoadedTexture GetAlpha(string name, TextureLoadParams textureLoadParams)
         {
             if (DontLoadTextures)
                 return new LoadedTexture(DummyTexture, false);
 
             if (!_alpha.ContainsKey(name))
             {
-                return ParentName != null ? Parent.GetAlpha(name) : null;
+                return ParentName != null ? Parent.GetAlpha(name, textureLoadParams) : null;
             }
 
-            return _alpha[name].Converted;
+            return _alpha[name].GetConverted(textureLoadParams);
         }
     }
 }
