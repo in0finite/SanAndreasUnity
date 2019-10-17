@@ -281,7 +281,7 @@ namespace SanAndreasUnity.Importing.Conversion
             var mesh = new Mesh();
 
             // ReSharper disable ConvertClosureToMethodGroup
-            var meshVertices = Utilities.F.ConvertArray( src.Vertices, x => Types.Convert(x));
+            var meshVertices = src.Vertices;//Utilities.F.ConvertArray( src.Vertices, x => Types.Convert(x));
             mesh.vertices = meshVertices;
 
             if (src.Normals != null)
