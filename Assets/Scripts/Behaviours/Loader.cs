@@ -397,7 +397,8 @@ namespace SanAndreasUnity.Behaviours
 		{
 			
 			// Load mouse cursor texture
-			Texture2D mouse = TextureDictionary.Load("fronten_pc").GetDiffuse("mouse").Texture;
+			Texture2D mouse = TextureDictionary.Load("fronten_pc").GetDiffuse("mouse", 
+				new TextureLoadParams(){makeNoLongerReadable = false}).Texture;
 			Texture2D mouseFix = new Texture2D(mouse.width, mouse.height);
 
 			for (int x = 0; x < mouse.width; x++)
