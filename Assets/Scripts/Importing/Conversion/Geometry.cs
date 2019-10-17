@@ -281,7 +281,8 @@ namespace SanAndreasUnity.Importing.Conversion
             var mesh = new Mesh();
 
             // ReSharper disable ConvertClosureToMethodGroup
-            mesh.vertices = Utilities.F.ConvertArray( src.Vertices, x => Types.Convert(x));
+            var meshVertices = Utilities.F.ConvertArray( src.Vertices, x => Types.Convert(x));
+            mesh.vertices = meshVertices;
 
             if (src.Normals != null)
             {
@@ -301,7 +302,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (src.Normals == null)
             {
-                mesh.normals = CalculateNormals(src, mesh.vertices);
+                mesh.normals = CalculateNormals(src, meshVertices);
             }
 
             mesh.subMeshCount = src.MaterialSplits.Length;
