@@ -435,6 +435,17 @@ namespace SanAndreasUnity.Utilities
             return result;
         }
 
+        public static TNew[] ConvertArray<TNew, TOld>(TOld[] array, Func<TOld, TNew> selector)
+        {
+            int length = array.Length;
+            TNew[] newArray = new TNew[length];
+            for (int i = 0; i < length; i++)
+            {
+                newArray[i] = selector(array[i]);
+            }
+            return newArray;
+        }
+
 		public static IEnumerable<T> DistinctBy<T,T2>(this IEnumerable<T> enumerable, System.Func<T,T2> selector)
 		{
 			List<KeyValuePair<T,T2>> list = new List<KeyValuePair<T, T2>>();
