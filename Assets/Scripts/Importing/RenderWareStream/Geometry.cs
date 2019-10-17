@@ -57,7 +57,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly float Diffuse;
         public readonly float Specular;
 
-        public readonly Color4[] Colours;
+        public readonly UnityEngine.Color32[] Colours;
         public readonly Vector2[][] TexCoords;
         public readonly FaceInfo[] Faces;
 
@@ -96,10 +96,10 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             if ((Flags & GeometryFlag.Colors) != 0)
             {
-                Colours = new Color4[VertexCount];
+                Colours = new UnityEngine.Color32[VertexCount];
                 for (var i = 0; i < VertexCount; ++i)
                 {
-                    Colours[i] = new Color4(reader);
+                    Colours[i] = Conversion.Types.Convert(new Color4(reader));
                 }
             }
 
