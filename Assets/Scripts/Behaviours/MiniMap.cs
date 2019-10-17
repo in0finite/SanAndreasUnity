@@ -162,6 +162,9 @@ namespace SanAndreasUnity.Behaviours
                 for (int ii = 0; ii < texSize; ++ii)
                     for (int jj = 0; jj < texSize; ++jj)
                         mapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
+
+                // unload the texture (don't destroy it, because it can be a dummy texture)
+
             }
 
             mapTexture.Apply(false, true);
