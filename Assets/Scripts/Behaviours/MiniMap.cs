@@ -146,8 +146,8 @@ namespace SanAndreasUnity.Behaviours
         {
             mapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
 
-            Debug.Log("Merging all map sprites into one sprite.");
             TextureLoadParams textureLoadParams = new TextureLoadParams(){makeNoLongerReadable = false};
+            
             for (int i = 0; i < tileCount; i++)
             {
                 // Offset
@@ -164,8 +164,8 @@ namespace SanAndreasUnity.Behaviours
                         mapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
             }
 
-            Debug.Log("Finished merging minimap!");
             mapTexture.Apply(false, true);
+            
             mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
 
             circleMask = Resources.Load<Sprite>("Sprites/MapCircle");
@@ -176,7 +176,6 @@ namespace SanAndreasUnity.Behaviours
             waypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
             vehicleTexture = huds.GetDiffuse("radar_impound").Texture;
 
-            Debug.Log("Finished loading minimap textures!");
         }
 
         // --------------------------------
