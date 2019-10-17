@@ -291,7 +291,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (src.Colours != null)
             {
-                mesh.colors32 = Utilities.F.ConvertArray( src.Colours, x => Types.Convert(x) );
+                mesh.colors32 = src.Colours;
             }
 
             if (src.TexCoords != null && src.TexCoords.Length > 0)
