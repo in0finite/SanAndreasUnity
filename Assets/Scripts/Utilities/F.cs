@@ -791,6 +791,14 @@ namespace SanAndreasUnity.Utilities
 			Gizmos.DrawLine (ray.origin, ray.origin + ray.direction * Camera.main.farClipPlane);
 		}
 
+        public static void HandlesDrawText(Vector3 pos, string text, Color color)
+        {
+            #if UNITY_EDITOR
+            UnityEditor.Handles.color = color;
+            UnityEditor.Handles.Label(pos, text);
+            #endif
+        }
+
 
         public static bool ScreenHasHighDensity => Application.isMobilePlatform;
 

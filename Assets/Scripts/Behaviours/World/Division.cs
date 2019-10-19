@@ -206,6 +206,18 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void OnDrawGizmosSelected()
         {
+            Vector3 center = ((this.Min + this.Max) * 0.5f).ToVector3XZ();
+            Vector3 size = (this.Max - this.Min).ToVector3XZ();
+            size.y = 100;
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireCube(center, size);
+
+            F.HandlesDrawText(center, 
+                string.Format("total objects {0}, my objects {1}, load order {2}", _objects != null ? this.NumObjectsIncludingChildren : 0, _objects != null ? this.NumObjects : 0, this.LoadOrder),
+                Color.green);
+
+            /*
             if (!IsSubdivided) return;
 
             Gizmos.color = Color.green;
@@ -221,6 +233,8 @@ namespace SanAndreasUnity.Behaviours.World
             {
                 Gizmos.DrawLine(new Vector3(min.x, 0f, _splitVal), new Vector3(max.x, 0f, _splitVal));
             }
+            */
+
         }
 
         public float GetDistance(Vector3 pos)
