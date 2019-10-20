@@ -53,6 +53,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public Vector2 Min { get; private set; }
         public Vector2 Max { get; private set; }
+        private Bounds _bounds;
 
         public bool IsSubdivided { get { return _objects == null; } }
 
@@ -62,6 +63,7 @@ namespace SanAndreasUnity.Behaviours.World
         {
             Min = min;
             Max = max;
+            _bounds = new Bounds(((this.Min + this.Max) * 0.5f).ToVector3XZ(), (this.Max - this.Min).ToVector3XZ().WithY(10000f));
 
             var mid = (Max + Min) * .5f;
 
@@ -244,13 +246,11 @@ namespace SanAndreasUnity.Behaviours.World
 
         public float GetDistanceSquared(Vector3 pos)
         {
-            if (Contains(pos))
-				return 0f;
-
-			float dx = Mathf.Max(Min.x - pos.x, pos.x - Max.x);
-			float dz = Mathf.Max(Min.y - pos.z, pos.z - Max.y);
-
-			return new Vector2(dx, dz).sqrMagnitude;
+            pos.y = 0f; // only count X and Z axis
+            // get the closest point on bounds
+            // if position is inside bounds, the resulting distance will be 0
+            Vector3 closestPos = _bounds.ClosestPoint(pos);
+            return Vector3.SqrMagnitude(pos - closestPos);
         }
 
 		public Vector3 GetClosestPosition (List<Vector3> positions)
