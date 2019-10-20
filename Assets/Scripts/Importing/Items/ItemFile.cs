@@ -81,6 +81,17 @@ namespace SanAndreasUnity.Importing.Items
         {
             return double.Parse(_parts[index], CultureInfo.InvariantCulture);
         }
+
+        public UnityEngine.Vector3 GetUnityVec3(ref int index, bool invertYAndZ)
+        {
+            float x = GetSingle(index++);
+            float y = GetSingle(index++);
+            float z = GetSingle(index++);
+            if (invertYAndZ)
+                return new UnityEngine.Vector3(x, z, y);
+            else
+                return new UnityEngine.Vector3(x, y, z);
+        }
     }
 
     public abstract class Definition : ItemBase
