@@ -60,8 +60,11 @@ namespace SanAndreasUnity.Behaviours.World
 
             if (_canLoad && Instance.LodInstance != null)
             {
-                LodChild = dict[Instance.LodInstance];
-                LodChild.LodParent = this;
+                if (dict.TryGetValue(Instance.LodInstance, out StaticGeometry dictValue))
+                {
+                    LodChild = dictValue;
+                    LodChild.LodParent = this;
+                }
             }
 
             _isVisible = false;
