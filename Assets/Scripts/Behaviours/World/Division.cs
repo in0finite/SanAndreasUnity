@@ -31,13 +31,13 @@ namespace SanAndreasUnity.Behaviours.World
         private Division _childB;
 
         private List<MapObject> _objects;
-        public int NumObjects { get { return _objects.Count; } }
+        public int NumObjects { get { return _objects != null ? _objects.Count : 0; } }
 
         public int NumObjectsIncludingChildren
         {
             get
             {
-                int count = _objects.Count;
+                int count = this.NumObjects;
                 if (_childA != null)
                     count += _childA.NumObjectsIncludingChildren;
                 if (_childB != null)
@@ -208,15 +208,12 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void OnDrawGizmosSelected()
         {
-            Vector3 center = ((this.Min + this.Max) * 0.5f).ToVector3XZ();
-            Vector3 size = (this.Max - this.Min).ToVector3XZ();
-            size.y = 100;
-
+            
             Gizmos.color = Color.green;
-            Gizmos.DrawWireCube(center, size);
+            Gizmos.DrawWireCube(_bounds.center, _bounds.size.WithY(100f));
 
-            F.HandlesDrawText(center, 
-                string.Format("total objects {0}, my objects {1}, load order {2}", _objects != null ? this.NumObjectsIncludingChildren : 0, _objects != null ? this.NumObjects : 0, this.LoadOrder),
+            F.HandlesDrawText(_bounds.center, 
+                string.Format("total objects {0}, my objects {1}, load order {2}", this.NumObjectsIncludingChildren, this.NumObjects, this.LoadOrder),
                 Color.green);
 
             /*
