@@ -10,6 +10,9 @@ namespace SanAndreasUnity.Importing.Items
     {
         private static readonly List<Zone> _zones = new List<Zone>();
 
+        private static readonly List<EntranceExit> _enexes = new List<EntranceExit>();
+        public static List<EntranceExit> Enexes => _enexes;
+
         private static readonly Dictionary<int, IObjectDefinition> _definitions
             = new Dictionary<int, IObjectDefinition>();
 
@@ -71,6 +74,11 @@ namespace SanAndreasUnity.Importing.Items
             foreach (var zone in file.GetSection<Zone>("zone"))
             {
                 _zones.Add(zone);
+            }
+
+            foreach (var enex in file.GetSection<EntranceExit>("enex"))
+            {
+                _enexes.Add(enex);
             }
 
             var insts = file.GetSection<Instance>("inst");
