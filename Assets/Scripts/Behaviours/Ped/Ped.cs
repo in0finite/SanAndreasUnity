@@ -97,6 +97,14 @@ namespace SanAndreasUnity.Behaviours
 
 		private Coroutine m_findGroundCoroutine;
 
+		public struct FindGroundParams
+		{
+			public bool tryFromAbove;
+
+			public static FindGroundParams Default => new FindGroundParams(){tryFromAbove = true};
+			public static FindGroundParams DefaultBasedOnLoadedWorld => new FindGroundParams(){tryFromAbove = (null == Cell.Instance || Cell.Instance.HasExterior)};
+		}
+
 
 		/// <summary>Ped who is controlled by local player.</summary>
 		public static Ped Instance { get { return Net.Player.Local != null ? Net.Player.Local.OwnedPed : null; } }
@@ -232,12 +240,12 @@ namespace SanAndreasUnity.Behaviours
 				return;
 
 			if (!IsGrounded) {
-				FindGround ();
+				FindGround (FindGroundParams.DefaultBasedOnLoadedWorld);
 			}
 
         }
 
-		public void Teleport(Vector3 position, Quaternion rotation) {
+		public void Teleport(Vector3 position, Quaternion rotation, FindGroundParams parameters) {
 
 			if (!NetStatus.IsServer)
 				return;
@@ -248,8 +256,13 @@ namespace SanAndreasUnity.Behaviours
 			this.transform.position = position;
 			this.transform.rotation = rotation;
 
-			this.FindGround ();
+			this.FindGround (parameters);
 
+		}
+
+		public void Teleport(Vector3 position, Quaternion rotation)
+		{
+			this.Teleport(position, rotation, FindGroundParams.DefaultBasedOnLoadedWorld);
 		}
 
 		public void Teleport(Vector3 position) {
@@ -258,17 +271,17 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-        public void FindGround ()
+        public void FindGround (FindGroundParams parameters)
 		{
 			if (m_findGroundCoroutine != null) {
 				StopCoroutine (m_findGroundCoroutine);
 				m_findGroundCoroutine = null;
 			}
 
-			m_findGroundCoroutine = StartCoroutine (FindGroundCoroutine ());
+			m_findGroundCoroutine = StartCoroutine (FindGroundCoroutine (parameters));
 		}
 
-        private IEnumerator FindGroundCoroutine()
+        private IEnumerator FindGroundCoroutine(FindGroundParams parameters)
         {
 
 			yield return null;
@@ -444,7 +457,7 @@ namespace SanAndreasUnity.Behaviours
 				Vector3 t = this.transform.position;
 				t.y = 150;
 				this.transform.position = t;
-				this.FindGround();
+				this.FindGround(FindGroundParams.Default);
 				
             }
 
