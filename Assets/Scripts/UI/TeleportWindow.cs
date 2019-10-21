@@ -2,14 +2,16 @@
 using UnityEngine;
 using System.Linq;
 using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.UI {
 
 	public class TeleportWindow : PauseMenuWindow {
 
 		// spawn locations
-		private	List<Transform> _spawns = new List<Transform>();
-		public List<Transform> Spawns { get { return this._spawns; } }
+		private	List<TransformDataStruct> _spawns = new List<TransformDataStruct>();
+		public List<TransformDataStruct> Spawns { get { return this._spawns; } }
+		private List<string> _spawnNames = new List<string>();
 
 
 
@@ -25,9 +27,10 @@ namespace SanAndreasUnity.UI {
 		void OnSceneChanged (SceneChangedMessage msg) {
 
 			_spawns.Clear ();
+			_spawnNames.Clear();
 
 			if (!GameManager.IsInStartupScene)
-				_spawns = FindSpawnPlaces ().ToList ();
+				FindSpawnPlacesInternal();
 
 			this.AdjustWindowRect ();
 
@@ -40,6 +43,13 @@ namespace SanAndreasUnity.UI {
 			this.AdjustWindowRect ();
 		}
 
+
+		private void FindSpawnPlacesInternal()
+		{
+			var spawnPlaces = FindSpawnPlaces ();
+			_spawns = spawnPlaces.Select(tr => new TransformDataStruct(tr)).ToList();
+			_spawnNames = spawnPlaces.Select(tr => tr.name).ToList();
+		}
 
 		public static Transform[] FindSpawnPlaces ()
 		{
@@ -69,10 +79,8 @@ namespace SanAndreasUnity.UI {
 			for (int i = 1; i < _spawns.Count; i++)
 			{
 				var spawnLocation = _spawns [i];
-				if (null == spawnLocation)
-					continue;
-
-				if (GUILayout.Button (spawnLocation.name))
+				
+				if (GUILayout.Button (_spawnNames[i]))
 				{
 					if (Utilities.NetUtils.IsServer)
 						Ped.Instance.Teleport (spawnLocation.position, spawnLocation.rotation);
