@@ -317,11 +317,18 @@ namespace SanAndreasUnity.Behaviours
 				// raycast against all layers, except player
 				int raycastLayerMask = ~ Ped.LayerMask;
 
-				Vector3[] raycastPositions = new Vector3[]{ this.transform.position, this.transform.position + Vector3.up * raycastDistance };	//transform.position - Vector3.up * characterController.height;
-				Vector3[] raycastDirections = new Vector3[]{ Vector3.down, Vector3.down };
-				string[] customMessages = new string[]{ "from center", "from above" };
+				var raycastPositions = new List<Vector3>{ this.transform.position };	//transform.position - Vector3.up * characterController.height;
+				var raycastDirections = new List<Vector3>{ Vector3.down };
+				var customMessages = new List<string>{ "from center" };
 
-				for (int i = 0; i < raycastPositions.Length; i++) {
+				if (parameters.tryFromAbove)
+				{
+					raycastPositions.Add (this.transform.position + Vector3.up * raycastDistance);
+					raycastDirections.Add (Vector3.down);
+					customMessages.Add ("from above");
+				}
+
+				for (int i = 0; i < raycastPositions.Count; i++) {
 
 					if (Physics.Raycast (raycastPositions[i], raycastDirections[i], out hit, raycastDistance, raycastLayerMask)) {
 						// ray hit the ground
