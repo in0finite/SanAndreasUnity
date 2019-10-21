@@ -23,6 +23,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public List<int> CellIds = new List<int> { 0, 13 };
 
+        public bool HasExterior => this.CellIds.Contains(0);
+
         public Camera PreviewCamera;
 
 		public List<Transform> focusPoints = new List<Transform> ();
