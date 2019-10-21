@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.UI {
@@ -43,12 +44,40 @@ namespace SanAndreasUnity.UI {
 			this.AdjustWindowRect ();
 		}
 
+		protected override void OnLoaderFinished()
+		{
+			base.OnLoaderFinished();
+
+			if (_spawns.Count < 1)
+			{
+				this.FindSpawnPlacesInternal();
+				this.AdjustWindowRect();
+			}
+			
+		}
+
 
 		private void FindSpawnPlacesInternal()
 		{
-			var spawnPlaces = FindSpawnPlaces ();
-			_spawns = spawnPlaces.Select(tr => new TransformDataStruct(tr)).ToList();
-			_spawnNames = spawnPlaces.Select(tr => tr.name).ToList();
+			_spawns.Clear();
+			_spawnNames.Clear();
+
+			// if exterior is not loaded, then use enexes from loaded interiors
+			if (Cell.Instance != null && ! Cell.Instance.CellIds.Contains(0))
+			{
+				int[] loadedInteriors = Cell.Instance.CellIds.Where(id => id != 0 && id != 13).ToArray();
+				foreach(var enex in Importing.Items.Item.Enexes.Where(enex => loadedInteriors.Contains(enex.TargetInterior)))
+				{
+					_spawns.Add(new TransformDataStruct(enex.ExitPos, Quaternion.Euler(0f, enex.ExitAngle, 0f)));
+					_spawnNames.Add(enex.Name);
+				}
+			}
+			else
+			{
+				var spawnPlaces = FindSpawnPlaces ();
+				_spawns = spawnPlaces.Select(tr => new TransformDataStruct(tr)).ToList();
+				_spawnNames = spawnPlaces.Select(tr => tr.name).ToList();
+			}
 		}
 
 		public static Transform[] FindSpawnPlaces ()
