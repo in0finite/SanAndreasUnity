@@ -287,7 +287,7 @@ namespace SanAndreasUnity.Behaviours
 			yield return null;
 
 			// set y pos to high value, so that higher grounds can be loaded
-			this.transform.SetY (150);
+		//	this.transform.SetY (150);
 
 			Vector3 startingPos = this.transform.position;
 
