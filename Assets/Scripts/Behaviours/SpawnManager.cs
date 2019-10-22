@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Behaviours
     {
         public static SpawnManager Instance { get; private set; }
 
-        List<Transform> m_spawnPositions = new List<Transform>();
+        List<TransformDataStruct> m_spawnPositions = new List<TransformDataStruct>();
         GameObject m_container;
 
         public bool spawnPlayerWhenConnected = true;
@@ -95,19 +95,19 @@ namespace SanAndreasUnity.Behaviours
                 m_spawnPositions.Clear();
                 for (int i = 0; i < 5; i++)
                 {
-                    Transform spawnPos = new GameObject("Spawn position " + i).transform;
-                    spawnPos.SetParent(m_container.transform);
+                    // Transform spawnPos = new GameObject("Spawn position " + i).transform;
+                    // spawnPos.SetParent(m_container.transform);
 
-                    m_spawnPositions.Add(spawnPos);
-                    //NetManager.AddSpawnPosition(spawnPos);
+                    m_spawnPositions.Add(new TransformDataStruct());
                 }
             }
 
             // update spawn positions
-            m_spawnPositions.RemoveDeadObjects();
-            foreach (Transform spawnPos in m_spawnPositions)
+            //m_spawnPositions.RemoveDeadObjects();
+            for (int i=0; i < m_spawnPositions.Count; i++)
             {
-                spawnPos.position = focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f;
+                var transformData = new TransformDataStruct(focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f);
+                m_spawnPositions[i] = transformData;
             }
             
         }
@@ -122,7 +122,7 @@ namespace SanAndreasUnity.Behaviours
 
             //var list = NetManager.SpawnPositions.ToList();
             var list = m_spawnPositions;
-            list.RemoveDeadObjects();
+            //list.RemoveDeadObjects();
 
             if (list.Count < 1)
                 return;
@@ -134,7 +134,7 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-        public static Ped SpawnPlayer (Player player, List<Transform> spawns)
+        public static Ped SpawnPlayer (Player player, List<TransformDataStruct> spawns)
         {
             if (player.OwnedPed != null)
                 return null;
@@ -165,7 +165,7 @@ namespace SanAndreasUnity.Behaviours
             if (!this.spawnPlayerWhenConnected)
                 return;
 
-            m_spawnPositions.RemoveDeadObjects();
+            //m_spawnPositions.RemoveDeadObjects();
             SpawnPlayer(player, m_spawnPositions);
 
         }
