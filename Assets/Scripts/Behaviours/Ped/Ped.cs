@@ -304,7 +304,7 @@ namespace SanAndreasUnity.Behaviours
 				
 				if (Time.time - timeStarted > 4.0f) {
 					// timeout expired
-					Debug.LogWarning("Failed to find ground - timeout expired");
+					Debug.LogWarningFormat("Failed to find ground for ped {0} - timeout expired", this.DescriptionForLogging);
 					yield break;
 				}
 
@@ -353,8 +353,8 @@ namespace SanAndreasUnity.Behaviours
 			this.transform.position = hit.point + Vector3.up * characterController.height * 1.5f;
 			this.Velocity = Vector3.zero;
 
-			Debug.LogFormat ("Found ground at {0}, distance {1}, object name {2}, num attempts {3}, {4}", hit.point, hit.distance, 
-				hit.transform.name, numAttempts, customMessage);
+			Debug.LogFormat ("Found ground at {0}, distance {1}, object name {2}, num attempts {3}, {4}, ped {5}", hit.point, hit.distance, 
+				hit.transform.name, numAttempts, customMessage, this.DescriptionForLogging);
 
 		}
 
