@@ -68,7 +68,7 @@ namespace SanAndreasUnity.UI {
 				int[] loadedInteriors = Cell.Instance.CellIds.Where(id => id != 0 && id != 13).ToArray();
 				foreach(var enex in Importing.Items.Item.Enexes.Where(enex => loadedInteriors.Contains(enex.TargetInterior)))
 				{
-					_spawns.Add(new TransformDataStruct(enex.ExitPos, Quaternion.Euler(0f, enex.ExitAngle, 0f)));
+					_spawns.Add(new TransformDataStruct(enex.ExitPos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.ExitAngle, 0f)));
 					_spawnNames.Add(enex.Name);
 				}
 			}
