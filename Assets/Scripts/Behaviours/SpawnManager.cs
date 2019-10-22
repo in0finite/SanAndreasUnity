@@ -11,9 +11,6 @@ namespace SanAndreasUnity.Behaviours
     {
         public static SpawnManager Instance { get; private set; }
 
-        List<TransformDataStruct> m_spawnPositions = new List<TransformDataStruct>();
-        GameObject m_container;
-
         public bool spawnPlayerWhenConnected = true;
         public bool IsSpawningPaused { get; set; } = false;
         public float spawnInterval = 4f;
@@ -39,7 +36,6 @@ namespace SanAndreasUnity.Behaviours
             
             // spawn players that were connected during loading process - this will always be the case for
             // local player
-            UpdateSpawnPositions();
             SpawnPlayers();
 
         }
@@ -60,8 +56,6 @@ namespace SanAndreasUnity.Behaviours
             if (!NetStatus.IsServer)
                 return;
             
-            this.UpdateSpawnPositions();
-
             if (this.IsSpawningPaused)
                 return;
 
@@ -74,42 +68,21 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-        void UpdateSpawnPositions()
+        public List<TransformDataStruct> GetSpawnPositions()
         {
-            if (!Loader.HasLoaded)
-                return;
-            
-            if (!NetStatus.IsServer)
-                return;
+            var spawns = new List<TransformDataStruct>();
 
             Transform focusPos = GetSpawnFocusPos();
             if (null == focusPos)
-                return;
+                return spawns;
             
-            if (null == m_container)
-            {
-                // create parent game object for spawn positions
-                m_container = new GameObject("Spawn positions");
-
-                // create spawn positions
-                m_spawnPositions.Clear();
-                for (int i = 0; i < 5; i++)
-                {
-                    // Transform spawnPos = new GameObject("Spawn position " + i).transform;
-                    // spawnPos.SetParent(m_container.transform);
-
-                    m_spawnPositions.Add(new TransformDataStruct());
-                }
-            }
-
-            // update spawn positions
-            //m_spawnPositions.RemoveDeadObjects();
-            for (int i=0; i < m_spawnPositions.Count; i++)
+            for (int i=0; i < 5; i++)
             {
                 var transformData = new TransformDataStruct(focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f);
-                m_spawnPositions[i] = transformData;
+                spawns.Add(transformData);
             }
-            
+
+            return spawns;
         }
 
         void SpawnPlayers()
@@ -120,10 +93,8 @@ namespace SanAndreasUnity.Behaviours
             if (!Loader.HasLoaded)
                 return;
 
-            //var list = NetManager.SpawnPositions.ToList();
-            var list = m_spawnPositions;
-            //list.RemoveDeadObjects();
-
+            var list = GetSpawnPositions();
+            
             if (list.Count < 1)
                 return;
             
@@ -165,8 +136,7 @@ namespace SanAndreasUnity.Behaviours
             if (!this.spawnPlayerWhenConnected)
                 return;
 
-            //m_spawnPositions.RemoveDeadObjects();
-            SpawnPlayer(player, m_spawnPositions);
+            SpawnPlayer(player, GetSpawnPositions());
 
         }
 
