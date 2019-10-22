@@ -255,6 +255,7 @@ namespace SanAndreasUnity.Behaviours
 
 			this.transform.position = position;
 			this.transform.rotation = rotation;
+			this.Heading = rotation.TransformDirection(Vector3.forward);
 
 			this.FindGround (parameters);
 
