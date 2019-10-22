@@ -284,12 +284,12 @@ namespace SanAndreasUnity.Behaviours
         private IEnumerator FindGroundCoroutine(FindGroundParams parameters)
         {
 
-			yield return null;
-
 			// set y pos to high value, so that higher grounds can be loaded
 		//	this.transform.SetY (150);
 
 			Vector3 startingPos = this.transform.position;
+
+			yield return null;
 
 			// wait for loader to finish, in case he didn't
 			while (!Loader.HasLoaded)
