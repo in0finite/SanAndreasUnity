@@ -16,10 +16,6 @@
 
 - Minimap - better info area ; input mouse position is not always correct ; see [Map.md](Map.md) ;
 
-- Teleport : when ground is too far away (like on mountains), geometry around it will not be loaded, and raycast will not succeed ; when position is too low, player gets constantly respawned ; adapt all other teleport code ;
-
-
-- Gravity setting failed to load on windows - instead of 9.81, it's loaded as 981 - maybe it happens when float.ToString() gives e
 
 - Does 'O' button changes quality level ?
 
@@ -33,8 +29,6 @@
 
 - Validate path to GTA ?
 
-- When raycasting with weapons, don't use ped's character collider, but use his mesh
-
 - Vehicles window: it's too slow - use pages ; display additional info ;
 
 - Non-working ped model ids: WMYST, 0, special peds at the end, 
@@ -45,29 +39,19 @@
 
 - Remove unneeded assets: files from Resources, 
 
-- Minimap size should depend on screen resolution
-
 - Breakable objects - they should have a separate class which inherits MapObject ; spawn networked object with rigid body, when hit with enough force ;
 
 - On-screen messages - they can be used for displaying: vehicle name when ped enters it, current zone, inflicted damage
 
 - Android: check Utilities size on 800x480 resolution ;
 
-- Touch input: 
-
 
 - Navigation: build navmesh from static geometry at runtime
 
-- Import: AI paths, ped spawn info, pickups, font, 
-
-- In-game input settings
+- Import: AI paths, ped spawn info, font, 
 
 
 #### Vehicles
-
-- Vehicle hijacking - throwing out other ped and entering vehicle at his seat
-
-- Adapt to damage system (so that they can be damaged and destroyed)
 
 - Implement other vehicles: airplanes, helicopters, bikes, boats
 
