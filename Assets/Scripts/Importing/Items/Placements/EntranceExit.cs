@@ -37,6 +37,7 @@ namespace SanAndreasUnity.Importing.Items.Placements
             TargetInterior = GetInt(index++);
             Flags = GetInt(index++);
             Name = GetString(index++);
+            Name = Name.Substring(1, Name.Length - 2);  // remove quotes
             SkyColorType = GetInt(index++);
             NumPedsToSpawn = GetInt(index++);
             TimeOn = GetInt(index++);
