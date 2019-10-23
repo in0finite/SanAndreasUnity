@@ -147,6 +147,21 @@ namespace SanAndreasUnity.Behaviours.World
 		}
 
 
+        public IEnumerable<EntranceExit> GetEnexesFromLoadedInteriors()
+        {
+            int[] loadedInteriors = this.CellIds.Where(id => id != 0 && id != 13).ToArray();
+            foreach(var enex in Importing.Items.Item.Enexes.Where(enex => loadedInteriors.Contains(enex.TargetInterior)))
+            {
+                yield return enex;
+            }
+        }
+
+        public static TransformDataStruct GetEnexExitTransform(EntranceExit enex)
+        {
+            return new TransformDataStruct(enex.ExitPos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.ExitAngle, 0f));
+        }
+
+
         private void Update()
         {
 
