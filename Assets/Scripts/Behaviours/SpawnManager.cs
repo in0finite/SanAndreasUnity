@@ -68,7 +68,7 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-        public List<TransformDataStruct> GetSpawnPositions()
+        List<TransformDataStruct> GetSpawnPositionsFromFocus()
         {
             var spawns = new List<TransformDataStruct>();
 
@@ -83,6 +83,19 @@ namespace SanAndreasUnity.Behaviours
             }
 
             return spawns;
+        }
+
+        List<TransformDataStruct> GetSpawnPositionsFromInteriors()
+        {
+            return World.Cell.Instance.GetEnexesFromLoadedInteriors().Select(enex => World.Cell.GetEnexExitTransform(enex)).ToList();
+        }
+
+        public List<TransformDataStruct> GetSpawnPositions()
+        {
+            if (null == World.Cell.Instance || World.Cell.Instance.HasExterior)
+                return GetSpawnPositionsFromFocus();
+            else
+                return GetSpawnPositionsFromInteriors();
         }
 
         void SpawnPlayers()
