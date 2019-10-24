@@ -174,6 +174,15 @@ namespace SanAndreasUnity.Behaviours
 				this.gameObject.DestroyComponent<OutOfRangeDestroyer>();
 			}
 
+			// find ground
+			if (NetStatus.IsServer)
+			{
+				if (!this.IsGrounded)
+				{
+					this.FindGround (FindGroundParams.DefaultBasedOnLoadedWorld);
+				}
+			}
+
         }
 
 		void OnEnable ()
@@ -233,17 +242,6 @@ namespace SanAndreasUnity.Behaviours
 			this.SwitchState(typeof(T));
 		}
 
-
-        internal void OnSpawn()
-        {
-            if (!NetStatus.IsServer)
-				return;
-
-			if (!IsGrounded) {
-				FindGround (FindGroundParams.DefaultBasedOnLoadedWorld);
-			}
-
-        }
 
 		public void Teleport(Vector3 position, Quaternion rotation, FindGroundParams parameters) {
 

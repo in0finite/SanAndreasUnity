@@ -163,8 +163,6 @@ namespace SanAndreasUnity.Behaviours
                 {
 					loadedModelOnStartup = true;
 
-                    m_ped.OnSpawn();
-
                     // load model on startup
                     
 					// only load it if it wasn't loaded so far
