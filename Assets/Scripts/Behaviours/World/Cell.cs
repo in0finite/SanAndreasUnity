@@ -18,6 +18,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 		private Dictionary<Instance, StaticGeometry> m_insts;
 		private MapObject[] m_cars;
+        private List<EntranceExitMapObject> m_enexes;
 
         public Division RootDivision { get; private set; }
 
@@ -119,12 +120,23 @@ namespace SanAndreasUnity.Behaviours.World
 			}
 		}
 
+        internal void CreateEnexes()
+        {
+            m_enexes = new List<EntranceExitMapObject>(256);
+            foreach(var enex in Item.Enexes.Where(enex => this.CellIds.Contains(enex.TargetInterior)))
+            {
+                m_enexes.Add(EntranceExitMapObject.Create(enex));
+            }
+        }
+
 		internal void AddMapObjectsToDivisions ()
 		{
 			var enumerable = m_insts.Values.Cast<MapObject> ();
 
 			if (m_cars != null)
 				enumerable = enumerable.Concat (m_cars);
+
+            enumerable = enumerable.Concat(m_enexes);
 
 			RootDivision.AddRange (enumerable);
 
