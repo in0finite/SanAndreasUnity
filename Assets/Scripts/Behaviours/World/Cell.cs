@@ -64,6 +64,8 @@ namespace SanAndreasUnity.Behaviours.World
 			if (null == Instance)
 				Instance = this;
 			
+            this.CellIds = Enumerable.Range(0, 19).ToList();
+
         }
 
         private void Start()
