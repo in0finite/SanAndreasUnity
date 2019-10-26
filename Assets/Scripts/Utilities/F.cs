@@ -209,6 +209,14 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
+        public static IEnumerable<Transform> GetFirstLevelChildren(this Transform tr)
+        {
+            for (int i = 0; i < tr.childCount; i++)
+            {
+                yield return tr.GetChild(i);
+            }
+        }
+
 		public static void SetY(this Transform t, float yPos) {
 			Vector3 pos = t.position;
 			pos.y = yPos;
