@@ -83,7 +83,7 @@ namespace SanAndreasUnity.UI {
 		{
 			var obj = GameObject.Find("Player Spawns");
 			if (obj)
-				return obj.GetComponentsInChildren<Transform> ();
+				return obj.transform.GetFirstLevelChildren().ToArray();
 			return new Transform[0];
 		}
 
@@ -104,7 +104,7 @@ namespace SanAndreasUnity.UI {
 			}
 
 
-			for (int i = 1; i < _spawns.Count; i++)
+			for (int i = 0; i < _spawns.Count; i++)
 			{
 				var spawnLocation = _spawns [i];
 				
