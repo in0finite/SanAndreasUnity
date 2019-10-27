@@ -58,6 +58,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public bool loadParkedVehicles = true;
         
+        public GameObject enexPrefab;
+
 
 
         private void Awake()
