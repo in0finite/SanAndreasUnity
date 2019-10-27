@@ -22,14 +22,16 @@ namespace SanAndreasUnity.Behaviours.World
 
             name = string.Format("ENEX ({0})", info.Name);
 
-            Initialize(info.EntrancePos, Quaternion.identity);
+            float height = 2f;
+
+            Initialize(info.EntrancePos + Vector3.up * height * 0.5f, Quaternion.identity);
 
             gameObject.SetActive(false);
             gameObject.isStatic = true;
 
             // collider
             var collider = gameObject.GetComponent<BoxCollider>();
-            collider.size = new Vector3(info.Size.x, 2f, info.Size.y);
+            collider.size = new Vector3(info.Size.x, height, info.Size.y);
             collider.isTrigger = true;
 
             // need rigid body for detecting collisions
