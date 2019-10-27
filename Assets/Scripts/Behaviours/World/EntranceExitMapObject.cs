@@ -1,12 +1,20 @@
 ﻿using UnityEngine;
 using SanAndreasUnity.Importing.Items.Placements;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours.World
 {
 
     public class EntranceExitMapObject : MapObject
     {
-        
+        Coroutine m_animateArrowCoroutine;
+        public float minArrowPos = -1f;
+        public float maxArrowPos = 1f;
+        public Transform arrowTransform;
+        public float arrowMoveSpeed = 0.3f;
+
+
+
         public static EntranceExitMapObject Create(EntranceExit info)
         {
             var obj = Object.Instantiate(Cell.Instance.enexPrefab).GetComponent<EntranceExitMapObject>();
@@ -40,6 +48,19 @@ namespace SanAndreasUnity.Behaviours.World
             rb.isKinematic = true;
 
         }
+
+        void OnEnable()
+        {
+            m_animateArrowCoroutine = this.StartCoroutine(this.AnimateArrow());
+        }
+
+        void OnDisable()
+        {
+            if (m_animateArrowCoroutine != null)
+                this.StopCoroutine(m_animateArrowCoroutine);
+            m_animateArrowCoroutine = null;
+        }
+
 
         void OnDrawGizmosSelected()
         {
@@ -76,6 +97,37 @@ namespace SanAndreasUnity.Behaviours.World
         void OnTriggerEnter(Collider collider)
         {
             Debug.LogFormat("OnTriggerEnter() - with {0}", collider.gameObject.name);
+        }
+
+        System.Collections.IEnumerator AnimateArrow()
+        {
+
+            // place arrow at center
+            float center = (this.minArrowPos + this.maxArrowPos) * 0.5f;
+            this.arrowTransform.localPosition = this.arrowTransform.localPosition.WithY(center);
+
+            yield return null;
+
+            // move arrow up/down
+
+            // set initial sign (direction of movement)
+            float sign = Mathf.Sign(Random.Range(-1f, 1f));
+
+            while (true)
+            {
+                float y = this.arrowTransform.localPosition.y;
+                y += sign * this.arrowMoveSpeed * Time.deltaTime;
+                if (y >= this.maxArrowPos || y <= this.minArrowPos)
+                {
+                    // clamp
+                    y = Mathf.Clamp(y, this.minArrowPos, this.maxArrowPos);
+                    // flip direction
+                    sign = - sign;
+                }
+                this.arrowTransform.localPosition = this.arrowTransform.localPosition.WithY(y);
+                yield return null;
+            }
+
         }
 
     }
