@@ -103,17 +103,13 @@ namespace SanAndreasUnity.Behaviours
         }
 
         public Texture2D NorthBlip { get { return this.northBlip; } }
-
         public Texture2D PlayerBlip { get { return this.playerBlip; } }
-
         public Texture2D WaypointTexture { get { return this.waypointTexture; } }
-
         public Texture2D VehicleTexture => this.vehicleTexture;
-
+        public Texture2D GreenHouseTexture { get; private set; }
         public Texture2D MapTexture { get { return this.mapTexture; } }
 
         public Texture2D BlackPixel { get { return this.blackPixel; } }
-
         public Texture2D SeaPixel { get { return this.seaPixel; } }
 
         #endregion "Properties"
@@ -178,6 +174,7 @@ namespace SanAndreasUnity.Behaviours
             playerBlip = huds.GetDiffuse("radar_centre").Texture;
             waypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
             vehicleTexture = huds.GetDiffuse("radar_impound").Texture;
+            GreenHouseTexture = huds.GetDiffuse("radar_propertyG").Texture;
 
         }
 

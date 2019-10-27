@@ -20,6 +20,7 @@ namespace SanAndreasUnity.UI {
 		private	float	m_playerPointerSize = 10;
 		public float PlayerPointerSize { get => m_playerPointerSize; set { m_playerPointerSize = value; } }
 		private	bool	m_drawZones = false;
+		private bool m_drawEnexes = true;
 
 		private	bool	m_isWaypointPlaced = false;
 		private	Vector2	m_waypointMapPos = Vector2.zero;
@@ -541,6 +542,7 @@ namespace SanAndreasUnity.UI {
 			GUILayout.Label ("Player size: " + (int) m_playerPointerSize, GUILayout.ExpandWidth(false));
 			m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
 			m_drawZones = GUILayout.Toggle (m_drawZones, "Draw zones");
+			m_drawEnexes = GUILayout.Toggle(m_drawEnexes, "Draw enexes");
 
 			GUILayout.EndHorizontal ();
 
@@ -593,6 +595,15 @@ namespace SanAndreasUnity.UI {
 
 			// draw registered items
 			onDrawMapItems();
+
+			// draw enexes
+			if (m_drawEnexes)
+			{
+				foreach (var enex in Behaviours.World.EntranceExitMapObject.AllObjects)
+				{
+					this.DrawItemOnMap(MiniMap.Instance.GreenHouseTexture, enex.transform.position, 10);
+				}
+			}
 
 			// draw player pointer
 			if (Ped.Instance != null)

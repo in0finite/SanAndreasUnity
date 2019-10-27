@@ -1,13 +1,18 @@
 ﻿using UnityEngine;
 using SanAndreasUnity.Importing.Items.Placements;
 using SanAndreasUnity.Utilities;
+using System.Collections.Generic;
 
 namespace SanAndreasUnity.Behaviours.World
 {
 
     public class EntranceExitMapObject : MapObject
     {
+        static List<EntranceExitMapObject> s_allObjects = new List<EntranceExitMapObject>();
+        public static IEnumerable<EntranceExitMapObject> AllObjects => s_allObjects;
+
         Coroutine m_animateArrowCoroutine;
+
         public float minArrowPos = -1f;
         public float maxArrowPos = 1f;
         public Transform arrowTransform;
@@ -51,11 +56,14 @@ namespace SanAndreasUnity.Behaviours.World
 
         void OnEnable()
         {
+            s_allObjects.Add(this);
             m_animateArrowCoroutine = this.StartCoroutine(this.AnimateArrow());
         }
 
         void OnDisable()
         {
+            s_allObjects.Remove(this);
+            
             if (m_animateArrowCoroutine != null)
                 this.StopCoroutine(m_animateArrowCoroutine);
             m_animateArrowCoroutine = null;
