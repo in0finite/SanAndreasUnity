@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Behaviours.World
         
         public static EntranceExitMapObject Create(EntranceExit info)
         {
-            var obj = new GameObject().AddComponent<EntranceExitMapObject>();
+            var obj = Object.Instantiate(Cell.Instance.enexPrefab).GetComponent<EntranceExitMapObject>();
             obj.Initialize(info);
             return obj;
         }
@@ -27,13 +27,13 @@ namespace SanAndreasUnity.Behaviours.World
             gameObject.SetActive(false);
             gameObject.isStatic = true;
 
-            // add box collider
-            var collider = gameObject.AddComponent<BoxCollider>();
+            // collider
+            var collider = gameObject.GetComponent<BoxCollider>();
             collider.size = new Vector3(info.Size.x, 2f, info.Size.y);
             collider.isTrigger = true;
 
             // need rigid body for detecting collisions
-            var rb = gameObject.AddComponent<Rigidbody>();
+            var rb = gameObject.GetComponent<Rigidbody>();
             rb.mass = 0f;
             rb.isKinematic = true;
 
