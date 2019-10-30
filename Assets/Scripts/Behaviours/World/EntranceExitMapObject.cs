@@ -85,26 +85,23 @@ namespace SanAndreasUnity.Behaviours.World
                 return float.PositiveInfinity;
             }
 
-            if (this.HasLoaded)
-                return float.PositiveInfinity;
-
             return dist * dist;
         }
 
         protected override void OnLoad()
         {
-            Debug.LogFormat("OnLoad() - {0}", this.gameObject.name);
+            //Debug.LogFormat("OnLoad() - {0}", this.gameObject.name);
         }
 
         protected override void OnShow()
         {
-            Debug.LogFormat("OnShow() - {0}", this.gameObject.name);
+            //Debug.LogFormat("OnShow() - {0}", this.gameObject.name);
             this.gameObject.SetActive(true);
         }
 
         void OnTriggerEnter(Collider collider)
         {
-            Debug.LogFormat("OnTriggerEnter() - with {0}", collider.gameObject.name);
+            //Debug.LogFormat("OnTriggerEnter() - with {0}", collider.gameObject.name);
         }
 
         System.Collections.IEnumerator AnimateArrow()
