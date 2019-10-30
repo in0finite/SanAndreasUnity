@@ -35,8 +35,8 @@ namespace SanAndreasUnity.Behaviours.World
 		public static Cell Instance { get ; private set; }
 
         // Statistics
-        private int totalNumObjects = 0;
 
+        private int totalNumObjects = 0;
         private int numLeavesLoadedThisFrame = 0;
         private int numObjectsLoadedThisFrame = 0;
         private float[] measuredTimes = new float[3];
@@ -44,16 +44,13 @@ namespace SanAndreasUnity.Behaviours.World
         private int numMapObjectsUpdatedLoadOrder = 0;
         private Division containingDivision = null;
 
-        // variable used by Division class
         public float divisionLoadOrderDistanceFactor = 16;
 
-        // variable used by Division class
         public float divisionRefreshDistanceDelta = 20;
 
 		[Range(0.1f, 3f)]
 		public float divisionsUpdateInterval = 0.3f;
 
-        // variable used by MapObject class
         public float maxDrawDistance = 500;
 
         public bool loadParkedVehicles = true;
