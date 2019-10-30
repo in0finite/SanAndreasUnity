@@ -2,6 +2,7 @@
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
+using System.Linq;
 
 namespace SanAndreasUnity.UI {
 
@@ -599,9 +600,9 @@ namespace SanAndreasUnity.UI {
 			// draw enexes
 			if (m_drawEnexes)
 			{
-				foreach (var enex in Behaviours.World.EntranceExitMapObject.AllObjects)
+				foreach (var enex in Importing.Items.Item.Enexes.Where(enex => enex.TargetInterior == 0))
 				{
-					this.DrawItemOnMap(MiniMap.Instance.GreenHouseTexture, enex.transform.position, 10);
+					this.DrawItemOnMap(MiniMap.Instance.GreenHouseTexture, enex.EntrancePos, 10);
 				}
 			}
 
