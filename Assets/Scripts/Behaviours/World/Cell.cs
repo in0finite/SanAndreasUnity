@@ -133,7 +133,8 @@ namespace SanAndreasUnity.Behaviours.World
 			if (m_cars != null)
 				enumerable = enumerable.Concat (m_cars);
 
-            enumerable = enumerable.Concat(m_enexes);
+            if (m_enexes != null)
+                enumerable = enumerable.Concat(m_enexes);
 
 			RootDivision.AddRange (enumerable);
 
