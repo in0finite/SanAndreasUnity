@@ -21,7 +21,7 @@ namespace SanAndreasUnity.UI {
 		private	float	m_playerPointerSize = 10;
 		public float PlayerPointerSize { get => m_playerPointerSize; set { m_playerPointerSize = value; } }
 		private	bool	m_drawZones = false;
-		private bool m_drawEnexes = true;
+		private bool m_drawEnexes = false;
 
 		private	bool	m_isWaypointPlaced = false;
 		private	Vector2	m_waypointMapPos = Vector2.zero;
