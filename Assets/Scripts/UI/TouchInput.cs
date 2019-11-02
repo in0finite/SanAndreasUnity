@@ -16,7 +16,7 @@ namespace SanAndreasUnity.UI
 		public GameObject panel;
 		public GameObject pedMovementInputGo, vehicleInputGo;
 		Button walkButton, sprintButton, jumpButton, crouchButton, enterButton, aimButton, fireButton, flyButton, 
-			exitVehicleButton, nextWeaponButton, previousWeaponButton;
+			exitVehicleButton, nextWeaponButton, previousWeaponButton, nextRadioStationButton, previousRadioStationButton;
 		UIEventsPickup jumpButtonEventsPickup, fireButtonEventsPickup, handbrakePickup, backwardVehiclePickup, forwardVehiclePickup, panelPickup;
 		Text walkButtonText, sprintButtonText, aimButtonText, jumpButtonText, fireButtonText;
 		ArrowsMovementButton movementButton, turnVehicleButton;
@@ -58,13 +58,15 @@ namespace SanAndreasUnity.UI
 			parent = vehicleInputGo.transform;
 			exitVehicleButton = parent.Find("ExitButton").GetComponent<Button>();
 			turnVehicleButton = parent.Find("TurnButton").GetComponent<ArrowsMovementButton>();
-			// repeat buttons: handbrake, backward, forward
-			handbrakePickup = parent.Find("HandbrakeButton").gameObject.GetOrAddComponent<UIEventsPickup>();
+            nextRadioStationButton = parent.Find("NextRadioStationButton").GetComponent<Button>();
+            previousRadioStationButton = parent.Find("PreviousRadioStationButton").GetComponent<Button>();
+            // repeat buttons: handbrake, backward, forward
+            handbrakePickup = parent.Find("HandbrakeButton").gameObject.GetOrAddComponent<UIEventsPickup>();
 			backwardVehiclePickup = parent.Find("BackwardButton").gameObject.GetOrAddComponent<UIEventsPickup>();
 			forwardVehiclePickup = parent.Find("ForwardButton").gameObject.GetOrAddComponent<UIEventsPickup>();
 
-			// repeat buttons: jump, fire
-			jumpButtonEventsPickup = jumpButton.gameObject.GetOrAddComponent<UIEventsPickup>();
+            // repeat buttons: jump, fire
+            jumpButtonEventsPickup = jumpButton.gameObject.GetOrAddComponent<UIEventsPickup>();
 			fireButtonEventsPickup = fireButton.gameObject.GetOrAddComponent<UIEventsPickup>();
 
 			// panel
@@ -92,9 +94,11 @@ namespace SanAndreasUnity.UI
 			exitVehicleButton.onClick.AddListener( () => m_exitVehiclePressed = true );
 			nextWeaponButton.onClick.AddListener( () => m_nextWeaponPressed = true );
 			previousWeaponButton.onClick.AddListener( () => m_previousWeaponPressed = true );
+            nextRadioStationButton.onClick.AddListener(() => m_nextWeaponPressed = true);
+            previousRadioStationButton.onClick.AddListener(() => m_previousWeaponPressed = true);
 
-			// panel
-			panelPickup.onDrag += (eventData) => this.OnPanelDrag(eventData);
+            // panel
+            panelPickup.onDrag += (eventData) => this.OnPanelDrag(eventData);
 
 		}
 

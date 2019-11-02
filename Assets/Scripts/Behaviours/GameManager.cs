@@ -31,6 +31,7 @@ namespace SanAndreasUnity.Behaviours {
 		/// <summary> Are we in a startup scene ? </summary>
 		public static bool IsInStartupScene { get { return UnityEngine.SceneManagement.SceneManager.GetActiveScene ().buildIndex == 0; } }
 
+        public static Vehicles.Radio Radio { get { return Instance.gameObject.GetComponent<Vehicles.Radio>(); } }
 
 
 		private void Awake() {
