@@ -17,32 +17,26 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private AudioSource radio;
 
-        public void PlayRadio()
+        private void PlayRadio()
         {
-            if (currentRadioStation == 0)
-                return;
-            if (null != radio)
-                radio.Stop();
-            radio = AudioManager.PlayStream(radioStations[currentRadioStation - 1], currentRadioStationPos);
-        }
-
-        public void RadioUpdate()
-        {
-            if (currentRadioStation == 0)
-                return;
-            if (null == radio || !radio.isPlaying)
+            radio.Stop();
+            var clip = AudioManager.CreateAudioClipFromStream(radioStations[currentRadioStation - 1], currentRadioStationPos);
+            if (clip != null)
             {
-                currentRadioStationPos++;
-                if (currentRadioStationPos > radioEndPos)
-                    currentRadioStationPos = radioStartPos;
-                PlayRadio();
+                radio.time = 0.0f;
+                radio.clip = clip;
+                radio.Play();
+
+                Destroy(clip, clip.length);
             }
         }
 
-        public void StopRadio()
+        private void ContinueRadio()
         {
-            if (null != radio)
-                radio.Stop();
+            currentRadioStationPos++;
+            if (currentRadioStationPos > radioEndPos)
+                currentRadioStationPos = radioStartPos;
+            PlayRadio();
         }
 
         public void SwitchRadioStation(bool next)
@@ -61,7 +55,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
             if (currentRadioStation == 0)
             {
-                StopRadio();
+                radio.Stop();
             }
             else
             {

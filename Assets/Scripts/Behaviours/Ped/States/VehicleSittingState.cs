@@ -24,8 +24,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public override void OnBecameInactive()
 		{
-            if (m_ped == Ped.Instance)
-                GameManager.Radio.StopRadio();
 			m_vehicleParentOffset = Vector3.zero;
 			this.Cleanup();
 
@@ -86,13 +84,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// play anims
 			this.UpdateAnimsInternal();
 
-            if (m_ped == Ped.Instance)
-                GameManager.Radio.StartRadio(vehicle);
 		}
 
         public override void OnPreviousWeaponButtonPressed()
         {
-            if (m_ped == Ped.Instance && m_ped.IsDrivingVehicle)
+            if (m_ped.IsControlledByLocalPlayer && m_ped.IsDrivingVehicle)
                 CurrentVehicle.SwitchRadioStation(false);
             else
                 base.OnPreviousWeaponButtonPressed();
@@ -100,7 +96,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         public override void OnNextWeaponButtonPressed()
         {
-            if (m_ped == Ped.Instance && m_ped.IsDrivingVehicle)
+            if (m_ped.IsControlledByLocalPlayer && m_ped.IsDrivingVehicle)
                 CurrentVehicle.SwitchRadioStation(true);
             else
                 base.OnNextWeaponButtonPressed();

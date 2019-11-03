@@ -172,6 +172,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             this.NetTransform = this.GetComponent<Mirror.NetworkTransform>();
             _props = new MaterialPropertyBlock();
+            radio = GetComponent<AudioSource>();
         }
 
         void OnEnable()
@@ -416,7 +417,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 UpdateColors();
             }
-            
+
+            if (currentRadioStation != 0 && Ped.Instance.CurrentVehicle == this)
+            {
+                if (!radio.isPlaying)
+                {
+                    ContinueRadio();
+                }
+            }
+            else
+            {
+                radio.Stop();
+            }
         }
 
         private void FixedUpdate()
