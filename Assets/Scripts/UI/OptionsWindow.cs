@@ -115,6 +115,12 @@ namespace SanAndreasUnity.UI {
 				value = Mathf.Clamp(value, this.minValue, this.maxValue);
 				return value;
 			}
+
+			public override string SaveAsString (int value)
+			{
+				return value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			}
+			
 		}
 
 		public class FloatInput : Input<float>
@@ -141,6 +147,12 @@ namespace SanAndreasUnity.UI {
 				value = Mathf.Clamp(value, this.minValue, this.maxValue);
 				return value;
 			}
+
+			public override string SaveAsString (float value)
+			{
+				return value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			}
+
 		}
 
 		public class BoolInput : Input<bool>
