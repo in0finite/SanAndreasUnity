@@ -25,17 +25,23 @@ namespace SanAndreasUnity.UI {
 			public string description = "";
 			public InputPersistType persistType = InputPersistType.None;
 			public string category = "";
+			public System.Func<bool> isAvailable = () => true;
 
 			public abstract void Load ();
 			public abstract void Save ();
 			public abstract void Display ();
+			public abstract void SetValueNonGeneric(object value);
+			public abstract object GetValueNonGeneric();
+			public abstract void SetDefaultValueNonGeneric(object value);
+			public abstract object GetDefaultValueNonGeneric();
+
 		}
 
 		public abstract class Input<T> : Input
 		{
+			public T defaultValue = default(T);
 			public System.Func<T> getValue = () => default(T);
 			public System.Action<T> setValue = (val) => {};
-			public System.Func<bool> isAvailable = () => true;
 
 
 			public Input ()
@@ -87,6 +93,26 @@ namespace SanAndreasUnity.UI {
 
 			public virtual string SaveAsString (T value) {
 				return value.ToString ();
+			}
+
+			public override void SetValueNonGeneric(object value)
+			{
+				this.setValue((T)value);
+			}
+
+			public override object GetValueNonGeneric()
+			{
+				return this.getValue();
+			}
+
+			public override void SetDefaultValueNonGeneric(object value)
+			{
+				this.defaultValue = (T) value;
+			}
+
+			public override object GetDefaultValueNonGeneric()
+			{
+				return this.defaultValue;
 			}
 
 		}
@@ -296,6 +322,10 @@ namespace SanAndreasUnity.UI {
 		protected override void OnWindowGUIAfterContent ()
 		{
 			GUILayout.BeginHorizontal ();
+
+			if (Utilities.GUIUtils.ButtonWithCalculatedSize ("Reset"))
+				ResetSettingsToDefaults ();
+
 			GUILayout.FlexibleSpace ();
 
 			// display Save button
@@ -370,7 +400,14 @@ namespace SanAndreasUnity.UI {
 
 		public static void RegisterInput (Input input)
 		{
-			s_registeredInputs.AddIfNotPresent ( input );
+			if (s_registeredInputs.AddIfNotPresent ( input ))
+			{
+				// assign default value
+				if (input.isAvailable())
+				{
+					input.SetDefaultValueNonGeneric(input.GetValueNonGeneric());
+				}
+			}
 		}
 
 		public static void RegisterInputs (string category, params Input[] inputs)
@@ -414,6 +451,21 @@ namespace SanAndreasUnity.UI {
 			}
 
 			PlayerPrefs.Save ();
+
+		}
+
+		public static void ResetSettingsToDefaults()
+		{
+
+			foreach (var input in s_registeredInputs)
+			{
+				F.RunExceptionSafe (() => {
+					if (input.isAvailable())
+					{
+						input.SetValueNonGeneric(input.GetDefaultValueNonGeneric());
+					}
+				});
+			}
 
 		}
 
