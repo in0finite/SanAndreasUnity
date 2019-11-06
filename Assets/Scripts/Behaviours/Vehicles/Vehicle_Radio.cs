@@ -1,6 +1,4 @@
-﻿using SanAndreasUnity.Behaviours.Audio;
-using SanAndreasUnity.Net;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,22 +6,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 {
     public partial class Vehicle
     {
-        private static readonly string[] radioStations = { "CH", "CO", "CR", "DS", "HC", "MH", "MR", "NJ", "RE", "RG", "TK" };
-        private static readonly int radioStartPos = 3;
-        private static readonly int radioEndPos = 114;
-
-        public int currentRadioStation = 3;
-        public int currentRadioStationPos = 3;
+        private int currentRadioStationIndex;
+        private RadioStation CurrentRadioStation { get { return RadioStation.stations[currentRadioStationIndex]; } }
 
         private AudioSource radio;
 
-        private void PlayRadio()
+        public void PlayRadio()
         {
             radio.Stop();
-            var clip = AudioManager.CreateAudioClipFromStream(radioStations[currentRadioStation - 1], currentRadioStationPos);
+            var clip = CurrentRadioStation.CurrentClip;
             if (clip != null)
             {
-                radio.time = 0.0f;
+                radio.time = CurrentRadioStation.currentTime;
                 radio.clip = clip;
                 radio.Play();
 
@@ -33,27 +27,29 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void ContinueRadio()
         {
-            currentRadioStationPos++;
-            if (currentRadioStationPos > radioEndPos)
-                currentRadioStationPos = radioStartPos;
+            CurrentRadioStation.NextClip();
             PlayRadio();
         }
 
         public void SwitchRadioStation(bool next)
         {
+            if (currentRadioStationIndex != -1)
+            {
+                CurrentRadioStation.currentTime = radio.time;
+            }
             if (next)
             {
-                currentRadioStation++;
-                if (currentRadioStation > radioStations.Length)
-                    currentRadioStation = 0;
+                currentRadioStationIndex++;
+                if (currentRadioStationIndex >= RadioStation.stations.Length)
+                    currentRadioStationIndex = -1;
             }
             else
             {
-                currentRadioStation--;
-                if (currentRadioStation < 0)
-                    currentRadioStation = radioStations.Length;
+                currentRadioStationIndex--;
+                if (currentRadioStationIndex < -1)
+                    currentRadioStationIndex = RadioStation.stations.Length - 1;
             }
-            if (currentRadioStation == 0)
+            if (currentRadioStationIndex == -1)
             {
                 radio.Stop();
             }

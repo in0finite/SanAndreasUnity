@@ -189,8 +189,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             this.ApplySyncRate(VehicleManager.Instance.vehicleSyncRate);
 
-            currentRadioStation = Random.Range(1, radioStations.Length);
-            currentRadioStationPos = Random.Range(radioStartPos, radioEndPos);
+            currentRadioStationIndex = Random.Range(0, RadioStation.stations.Length);
 
             Debug.LogFormat("Created vehicle - id {0}, name {1}, time: {2}", this.Definition.Id, 
                 this.Definition.GameName, F.CurrentDateForLogging);
@@ -421,7 +420,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 UpdateColors();
             }
 
-            if (currentRadioStation != 0 && null != Ped.Instance && Ped.Instance.CurrentVehicle == this)
+            if (currentRadioStationIndex != -1 && null != Ped.Instance && Ped.Instance.CurrentVehicle == this)
             {
                 if (!radio.isPlaying)
                 {
@@ -430,7 +429,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
             else
             {
-                radio.Stop();
+                if (radio.isPlaying)
+                {
+                    CurrentRadioStation.currentTime = radio.time;
+                    radio.Stop();
+                }
             }
         }
 
