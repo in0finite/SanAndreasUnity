@@ -477,7 +477,10 @@ namespace SanAndreasUnity.UI {
 				F.RunExceptionSafe (() => {
 					if (input.isAvailable())
 					{
-						input.SetValueNonGeneric(input.GetDefaultValueNonGeneric());
+						object defaultValue = input.GetDefaultValueNonGeneric();
+						object currentValue = input.GetValueNonGeneric();
+						if (! defaultValue.Equals(currentValue))
+							input.SetValueNonGeneric(defaultValue);
 					}
 				});
 			}
