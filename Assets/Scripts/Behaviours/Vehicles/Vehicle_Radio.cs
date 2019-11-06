@@ -59,7 +59,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
             else
             {
-                currentRadioStationPos = Random.Range(radioStartPos, radioEndPos);
                 PlayRadio();
             }
         }
