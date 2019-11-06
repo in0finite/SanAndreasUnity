@@ -260,6 +260,8 @@ namespace SanAndreasUnity.UI {
 			float windowHeight = windowWidth * 9f / 16f;
 			this.windowRect = Utilities.GUIUtils.GetCenteredRect (new Vector2 (windowWidth, windowHeight));
 
+			SaveDefaultValues();
+
 			LoadSettings (InputPersistType.OnStart);
 
 		}
@@ -400,14 +402,7 @@ namespace SanAndreasUnity.UI {
 
 		public static void RegisterInput (Input input)
 		{
-			if (s_registeredInputs.AddIfNotPresent ( input ))
-			{
-				// assign default value
-				if (input.isAvailable())
-				{
-					input.SetDefaultValueNonGeneric(input.GetValueNonGeneric());
-				}
-			}
+			s_registeredInputs.AddIfNotPresent ( input );
 		}
 
 		public static void RegisterInputs (string category, params Input[] inputs)
@@ -451,6 +446,26 @@ namespace SanAndreasUnity.UI {
 			}
 
 			PlayerPrefs.Save ();
+
+		}
+
+		static void SaveDefaultValues()
+		{
+
+			foreach (var input in s_registeredInputs)
+			{
+				F.RunExceptionSafe (() => {
+					// assign default value
+					if (input.isAvailable())
+					{
+						input.SetDefaultValueNonGeneric(input.GetValueNonGeneric());
+					}
+					else
+					{
+						Debug.LogErrorFormat("Input '{0}' was not available when tried to obtain default value", input.description);
+					}
+				});
+			}
 
 		}
 
