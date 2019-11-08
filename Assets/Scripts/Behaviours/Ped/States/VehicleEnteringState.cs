@@ -55,6 +55,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		internal void EnterVehicle(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment, bool immediate)
 		{
+            vehicle.PlayRadio();
 			// first assign params
 			this.CurrentVehicle = vehicle;
 			this.CurrentVehicleSeatAlignment = seatAlignment;
