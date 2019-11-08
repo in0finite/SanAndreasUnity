@@ -3,6 +3,7 @@ using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Animation;
 using System.Linq;
+using SanAndreasUnity.Behaviours.Audio;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
@@ -19,7 +20,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			base.OnBecameActive();
 			if (m_isServer)	// clients will do this when vehicle gets assigned
 				this.EnterVehicleInternal();
-		}
+        }
 
 		public override void OnBecameInactive()
 		{
@@ -85,8 +86,23 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+        public override void OnPreviousWeaponButtonPressed()
+        {
+            if (m_ped.IsControlledByLocalPlayer && m_ped.IsDrivingVehicle)
+                CurrentVehicle.SwitchRadioStation(false);
+            else
+                base.OnPreviousWeaponButtonPressed();
+        }
 
-		public override void OnSubmitPressed()
+        public override void OnNextWeaponButtonPressed()
+        {
+            if (m_ped.IsControlledByLocalPlayer && m_ped.IsDrivingVehicle)
+                CurrentVehicle.SwitchRadioStation(true);
+            else
+                base.OnNextWeaponButtonPressed();
+        }
+
+        public override void OnSubmitPressed()
 		{
 			// exit the vehicle
 
