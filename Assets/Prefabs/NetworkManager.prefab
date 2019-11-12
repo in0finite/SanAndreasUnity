@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 434938348018962339}
   - component: {fileID: 2570981519678807036}
   - component: {fileID: 4862460140142645991}
+  - component: {fileID: 8720984785530044672}
+  - component: {fileID: 2615086005589439192}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -116,3 +118,36 @@ MonoBehaviour:
   NoDelay: 1
   serverMaxMessageSize: 16384
   clientMaxMessageSize: 16384
+--- !u!114 &8720984785530044672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4549513672316258300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65d5e9cc49a255842837a7d853db68fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_serverPort: 18418
+  simulateResponding: 0
+  gameServerPortNumber: 7777
+--- !u!114 &2615086005589439192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4549513672316258300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97d06c4b188731a47baf1a65a4b8a512, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawGUI: 1
+  offsetX: 5
+  offsetY: 150
+  width: 500
+  height: 400
+  refreshInterval: 3
