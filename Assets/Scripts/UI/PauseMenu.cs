@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using System.Linq;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.UI {
 	
@@ -29,6 +30,8 @@ namespace SanAndreasUnity.UI {
 	//	private	static	bool	m_changedWindowStyle = false;
 
 		public Color openedWindowTextColor = Color.green;
+
+		string m_chatText = "";
 
 
 
@@ -140,6 +143,22 @@ namespace SanAndreasUnity.UI {
 			}
 
 			GUI.EndGroup ();
+
+			// chat input
+
+			string buttonText = "Send";
+			Vector2 buttonSize = GUIUtils.CalcScreenSizeForText(buttonText, GUI.skin.button);
+			Rect rect = GUIUtils.GetCornerRect(ScreenCorner.BottomRight, buttonSize, new Vector2(40, 40));
+			if (GUI.Button(rect, buttonText))
+			{
+				Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer(m_chatText);
+				m_chatText = "";
+			}
+
+			float textInputWidth = 200;
+			rect.xMin -= textInputWidth;
+			rect.xMax -= buttonSize.x + 15;
+			m_chatText = GUI.TextField(rect, m_chatText, 100);
 
 		}
 
