@@ -68,7 +68,7 @@ namespace SanAndreasUnity.UI {
 			DrawHud( this.hudScreenCorner, this.hudSize, this.hudPadding, this.healthColor, this.healthBackgroundColor );
 
 			// draw chat
-			if (! GameManager.IsInStartupScene && ! PauseMenu.IsOpened)
+			if (! GameManager.IsInStartupScene)
 				DrawChat(m_chatMessages);
 
 			// draw dot in the middle of screen
