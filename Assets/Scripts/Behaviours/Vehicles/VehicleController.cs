@@ -17,7 +17,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [SyncVar] float m_net_acceleration;
         [SyncVar] float m_net_steering;
         [SyncVar] float m_net_braking;
-        [SyncVar(hook=nameof(OnNetPositionChanged))] Vector3 m_net_position;
+		[SyncVar] bool m_net_isHornOn;
+		[SyncVar(hook=nameof(OnNetPositionChanged))] Vector3 m_net_position;
         [SyncVar(hook=nameof(OnNetRotationChanged))] Quaternion m_net_rotation;
         [SyncVar] Vector3 m_net_linearVelocity;
         [SyncVar] Vector3 m_net_angularVelocity;
@@ -141,7 +142,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_acceleration = m_vehicle.Accelerator;
                 m_net_steering = m_vehicle.Steering;
                 m_net_braking = m_vehicle.Braking;
-                m_net_position = m_vehicle.transform.position;
+				m_net_isHornOn = m_vehicle.IsHornOn;
+				m_net_position = m_vehicle.transform.position;
                 m_net_rotation = m_vehicle.transform.rotation;
                 m_net_linearVelocity = m_vehicle.RigidBody.velocity;
                 m_net_angularVelocity = m_vehicle.RigidBody.angularVelocity;
@@ -166,7 +168,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     m_vehicle.Accelerator = m_net_acceleration;
                     m_vehicle.Steering = m_net_steering;
                     m_vehicle.Braking = m_net_braking;
-                }
+					m_vehicle.IsHornOn = m_net_isHornOn;
+				}
 
                 // update wheels
                 if (!this.IsControlledByLocalPlayer || (this.IsControlledByLocalPlayer && !VehicleManager.Instance.controlWheelsOnLocalPlayer))

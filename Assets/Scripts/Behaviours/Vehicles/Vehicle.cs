@@ -159,7 +159,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
-        private VehicleController _controller;
+		public bool IsHornOn
+		{
+			get; set;
+		}
+
+		private AudioSource horn;
+		private VehicleController _controller;
 
         bool m_isServer => Net.NetStatus.IsServer;
         public bool IsControlledByLocalPlayer => Ped.Instance != null && Ped.Instance.CurrentVehicle == this && Ped.Instance.CurrentVehicleSeat.IsDriver;
@@ -173,7 +179,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             this.NetTransform = this.GetComponent<Mirror.NetworkTransform>();
             _props = new MaterialPropertyBlock();
             radio = GetComponent<AudioSource>();
-        }
+			horn = this.gameObject.AddComponent<AudioSource>();
+		}
 
         void OnEnable()
         {
@@ -191,7 +198,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             currentRadioStationIndex = Random.Range(0, RadioStation.stations.Length);
 
-            Debug.LogFormat("Created vehicle - id {0}, name {1}, time: {2}", this.Definition.Id, 
+			Debug.LogFormat("Created vehicle - id {0}, name {1}, time: {2}", this.Definition.Id, 
                 this.Definition.GameName, F.CurrentDateForLogging);
         }
 
@@ -295,7 +302,29 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             _colorsChanged = true;
         }
 
-        public VehicleDef Definition { get; private set; }
+		public virtual void PlayHornSound()
+		{
+			if (!IsHornOn) return;
+			if (horn.clip == null)
+			{
+				//TODO add vehicle dependent horn sound
+				var audioClip = Audio.AudioManager.CreateAudioClipFromSfx("GENRL", 67, 3);
+				horn.playOnAwake = false;
+				horn.spatialBlend = 1;
+				horn.maxDistance = 15;
+				horn.clip = MakeSubclip(audioClip, audioClip.length / 1.75f, (audioClip.length / 1.75f) + 0.05f);
+			}
+			if (horn && horn.clip)
+			{
+				if (!horn.isPlaying)
+				{
+					horn.loop = true;
+					horn.Play();
+				}
+			}
+		}
+
+		public VehicleDef Definition { get; private set; }
 
         public Transform DriverTransform { get; private set; }
 
@@ -435,7 +464,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     radio.Stop();
                 }
             }
-        }
+
+			if (IsHornOn) { PlayHornSound(); }
+			else { horn.loop = false; }
+			IsHornOn = false;
+		}
 
         private void FixedUpdate()
         {
@@ -461,5 +494,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 this.NetTransform.syncInterval = 1.0f / syncRate;
         }
 
-    }
+		private AudioClip MakeSubclip(AudioClip clip, float start, float stop)
+		{
+			int frequency = clip.frequency;
+			float timeLength = stop - start;
+			int samplesLength = (int)(frequency * timeLength);
+			AudioClip newClip = AudioClip.Create(clip.name + "-sub", samplesLength, 1, frequency, false);
+			float[] data = new float[samplesLength];
+			clip.GetData(data, (int)(frequency * start));
+			newClip.SetData(data, 0);
+			return newClip;
+		}
+
+	}
 }

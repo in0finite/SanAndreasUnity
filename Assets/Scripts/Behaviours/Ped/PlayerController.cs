@@ -205,6 +205,9 @@ namespace SanAndreasUnity.Behaviours
 			if (customInput.GetKeyDown (KeyCode.R))
 				m_ped.OnFlyThroughButtonPressed();
 
+			if (customInput.GetKey(KeyCode.H))
+				m_ped.OnHornButtonPressed();
+
 		}
 
 		private void ReadCameraInput ()

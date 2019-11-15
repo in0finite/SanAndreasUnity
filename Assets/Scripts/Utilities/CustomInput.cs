@@ -88,6 +88,16 @@ namespace SanAndreasUnity.Utilities
 			return Input.GetKeyDown(keyCode);
 		}
 
+		public bool GetKey(KeyCode keyCode)
+		{
+			if (!this.IsActive)
+				return Input.GetKey(keyCode);
+			bool value = false;
+			if (keysDown.TryGetValue(keyCode, out value))
+				return value;
+			return Input.GetKey(keyCode);
+		}
+
 		public void SetKeyDown(KeyCode keyCode, bool pressed)
 		{
 			keysDown [keyCode] = pressed;
