@@ -11,6 +11,7 @@ namespace SanAndreasUnity.UI
         Queue<Chat.ChatMessage> m_chatMessages = new Queue<Chat.ChatMessage>();
 
         public int maxNumChatMessages = 5;
+        public float timeToRemoveMessage = 3f;
 
         public ScreenCorner chatAreaCorner = ScreenCorner.BottomLeft;
         public Vector2 chatAreaPadding = new Vector2(50, 50);
@@ -29,7 +30,21 @@ namespace SanAndreasUnity.UI
 				m_chatMessages.Dequeue();
 			
 			m_chatMessages.Enqueue(chatMsg);
+
+            if (!this.IsInvoking(nameof(RemoveMessage)))
+                this.Invoke(nameof(RemoveMessage), this.timeToRemoveMessage);
 		}
+
+        void RemoveMessage()
+        {
+            if (m_chatMessages.Count > 0)
+                m_chatMessages.Dequeue();
+            
+            // invoke again if there are more messages
+            if (m_chatMessages.Count > 0)
+                this.Invoke(nameof(RemoveMessage), this.timeToRemoveMessage);
+            
+        }
 
         void OnGUICustom()
         {
