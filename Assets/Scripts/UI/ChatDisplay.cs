@@ -12,6 +12,9 @@ namespace SanAndreasUnity.UI
 
         public int maxNumChatMessages = 5;
 
+        public ScreenCorner chatAreaCorner = ScreenCorner.BottomLeft;
+        public Vector2 chatAreaPadding = new Vector2(50, 50);
+
 
 
         void Start()
@@ -43,7 +46,7 @@ namespace SanAndreasUnity.UI
 
 			float width = Screen.width * 0.25f;
 			float height = Screen.height * 0.33f;
-			Rect rect = GUIUtils.GetCornerRect(ScreenCorner.BottomLeft, new Vector2(width, height), Vector2.one * 50);
+			Rect rect = GUIUtils.GetCornerRect(this.chatAreaCorner, new Vector2(width, height), this.chatAreaPadding);
 
 			GUILayout.BeginArea(rect);
 
