@@ -33,7 +33,17 @@ namespace SanAndreasUnity.UI
 
 			rect.xMin -= this.textInputWidth;
 			rect.xMax -= buttonSize.x + 15;
+            GUI.SetNextControlName("chat_text_input");
 			m_chatText = GUI.TextField(rect, m_chatText, 100);
+            if (Event.current.isKey && GUI.GetNameOfFocusedControl () == "chat_text_input")
+            {
+                if (Event.current.keyCode == KeyCode.Return)
+                {
+                    // enter pressed
+                    Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer(m_chatText);
+				    m_chatText = "";
+                }
+            }
 
         }
 
