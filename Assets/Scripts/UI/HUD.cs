@@ -26,27 +26,10 @@ namespace SanAndreasUnity.UI {
 		public static Texture2D UpArrowTexture { get; set; }
 		public static Texture2D DownArrowTexture { get; set; }
 
-		public int maxNumChatMessages = 5;
-
-		Queue<Chat.ChatMessage> m_chatMessages = new Queue<Chat.ChatMessage>();
-
 
 
 		void Awake () {
 			Instance = this;
-		}
-
-		void Start()
-		{
-			Chat.ChatManager.onChatMessage += OnChatMsg;
-		}
-
-		void OnChatMsg(Chat.ChatMessage chatMsg)
-		{
-			if (m_chatMessages.Count >= this.maxNumChatMessages)
-				m_chatMessages.Dequeue();
-			
-			m_chatMessages.Enqueue(chatMsg);
 		}
 
 		void OnGUI () {
@@ -66,10 +49,6 @@ namespace SanAndreasUnity.UI {
 
 			// draw hud
 			DrawHud( this.hudScreenCorner, this.hudSize, this.hudPadding, this.healthColor, this.healthBackgroundColor );
-
-			// draw chat
-			if (! GameManager.IsInStartupScene)
-				DrawChat(m_chatMessages);
 
 			// draw dot in the middle of screen
 			if (this.drawRedDotOnScreenCenter)
@@ -186,26 +165,6 @@ namespace SanAndreasUnity.UI {
 			float borderWidth = 2f; //rect.height / 8f;
 
 			GUIUtils.DrawBar (rect, fillPerc, fillColor, backgroundColor, borderWidth);
-		}
-
-		static void DrawChat(Queue<Chat.ChatMessage> chatMessages)
-		{
-			if (chatMessages.Count < 1)
-				return;
-
-			float width = Screen.width * 0.25f;
-			float height = Screen.height * 0.33f;
-			Rect rect = GUIUtils.GetCornerRect(ScreenCorner.BottomLeft, new Vector2(width, height), Vector2.one * 50);
-
-			GUILayout.BeginArea(rect);
-
-			foreach (var chatMsg in chatMessages)
-			{
-				GUILayout.Label("<color=blue>" + chatMsg.sender + "</color> : " + chatMsg.msg);
-			}
-
-			GUILayout.EndArea();
-
 		}
 
 	}
