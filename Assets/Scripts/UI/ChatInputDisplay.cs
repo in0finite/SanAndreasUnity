@@ -44,6 +44,7 @@ namespace SanAndreasUnity.UI
 				    m_chatText = "";
                 }
             }
+            GUI.SetNextControlName("");
 
         }
 
