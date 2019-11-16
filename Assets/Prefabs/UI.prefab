@@ -769,6 +769,8 @@ GameObject:
   - component: {fileID: 114473132252556806}
   - component: {fileID: 821925318372548346}
   - component: {fileID: 5292052593724244546}
+  - component: {fileID: 2924933615473672835}
+  - component: {fileID: 5362122402378082596}
   m_Layer: 0
   m_Name: UI
   m_TagString: UI
@@ -842,6 +844,37 @@ MonoBehaviour:
   m_changeFontSizeInEditor: 0
   m_scrollbarSizeMultiplierOnMobile: 2
   m_changeScrollbarSizeInEditor: 0
+--- !u!114 &2924933615473672835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611271869868126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 812fd88a08aca424f9fb291bb5d7e409, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxNumChatMessages: 5
+  timeToRemoveMessage: 4
+  chatAreaCorner: 3
+  chatAreaPadding: {x: 50, y: 50}
+--- !u!114 &5362122402378082596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611271869868126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae6511ace97a7db4381c0ce08b9ed6da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenCorner: 2
+  padding: {x: 15, y: 50}
+  textInputWidth: 200
 --- !u!1 &1627404700688260
 GameObject:
   m_ObjectHideFlags: 0
