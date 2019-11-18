@@ -32,7 +32,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private readonly string streamName;
         private int clipIndex;
 
-        public AudioClip CurrentClip { get { return AudioManager.CreateAudioClipFromStream(streamName, clipIndex); } }
+        public AudioClip LoadCurrentClip() { return AudioManager.CreateAudioClipFromStream(streamName, clipIndex); }
         public float currentTime;
 
         private RadioStation(string streamName)

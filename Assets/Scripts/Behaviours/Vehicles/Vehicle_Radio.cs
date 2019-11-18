@@ -14,7 +14,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public void PlayRadio()
         {
             m_radioAudioSource.Stop();
-            var clip = CurrentRadioStation.CurrentClip;
+            var clip = CurrentRadioStation.LoadCurrentClip();
             if (clip != null)
             {
                 m_radioAudioSource.time = CurrentRadioStation.currentTime;
@@ -37,6 +37,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 CurrentRadioStation.currentTime = m_radioAudioSource.time;
             }
+
             if (next)
             {
                 currentRadioStationIndex++;
@@ -49,6 +50,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (currentRadioStationIndex < -1)
                     currentRadioStationIndex = RadioStation.stations.Length - 1;
             }
+
             if (currentRadioStationIndex == -1)
             {
                 m_radioAudioSource.Stop();
@@ -57,6 +59,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 PlayRadio();
             }
+
         }
 
     }
