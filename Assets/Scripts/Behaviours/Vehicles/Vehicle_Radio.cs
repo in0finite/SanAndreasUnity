@@ -14,6 +14,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public void PlayRadio()
         {
             m_radioAudioSource.Stop();
+
+            // destroy current clip
+            if (m_radioAudioSource.clip != null)
+            {
+                Destroy(m_radioAudioSource.clip);
+                m_radioAudioSource.clip = null;
+            }
+
             var clip = CurrentRadioStation.LoadCurrentClip();
             if (clip != null)
             {
