@@ -95,6 +95,8 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsFireOn { get ; set ; }
 		public bool IsHoldingWeapon { get { return m_weaponHolder.IsHoldingWeapon; } }
 
+		public EntranceExitMapObject CurrentEnex { get; private set; }
+
 		private Coroutine m_findGroundCoroutine;
 
 		public struct FindGroundParams
@@ -635,12 +637,26 @@ namespace SanAndreasUnity.Behaviours
 
 		internal void OnStartCollidingWithEnex(EntranceExitMapObject enex)
 		{
+			if (this.CurrentEnex != null)	// already colliding with enex
+				return;
+			
+			this.CurrentEnex = enex;
+			
+			// teleport to counterpart
+			var counterPart = Importing.Items.Item.Enexes.FirstOrDefault(e => e.Name == enex.Info.Name && e != enex.Info);
+			if (counterPart != null)
+			{
+				TransformDataStruct transformData = Cell.GetEnexExitTransform(counterPart);
+				this.Teleport(transformData.position, transformData.rotation, new FindGroundParams(){tryFromAbove = false});
+			}
 
 		}
 
 		internal void OnStopCollidingWithEnex(EntranceExitMapObject enex)
 		{
-
+			if (enex == this.CurrentEnex)
+				this.CurrentEnex = null;
+			
 		}
 
 
