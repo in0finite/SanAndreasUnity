@@ -633,6 +633,17 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
+		internal void OnStartCollidingWithEnex(EntranceExitMapObject enex)
+		{
+
+		}
+
+		internal void OnStopCollidingWithEnex(EntranceExitMapObject enex)
+		{
+
+		}
+
+
 		void OnDrawGizmosSelected ()
 		{
 
