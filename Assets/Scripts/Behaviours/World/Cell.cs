@@ -173,6 +173,11 @@ namespace SanAndreasUnity.Behaviours.World
             return new TransformDataStruct(enex.ExitPos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.ExitAngle, 0f));
         }
 
+        public static TransformDataStruct GetEnexEntranceTransform(EntranceExit enex)
+        {
+            return new TransformDataStruct(enex.EntrancePos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.EntranceAngle, 0f));
+        }
+
 
         private void Update()
         {
