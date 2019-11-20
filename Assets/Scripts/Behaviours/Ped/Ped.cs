@@ -637,7 +637,7 @@ namespace SanAndreasUnity.Behaviours
 
 		internal void OnStartCollidingWithEnex(EntranceExitMapObject enex)
 		{
-			if (this.CurrentEnex != null)	// already colliding with enex
+			if (this.CurrentEnex != null && this.CurrentEnex.gameObject.activeInHierarchy)	// already colliding with enex
 				return;
 			
 			this.CurrentEnex = enex;
