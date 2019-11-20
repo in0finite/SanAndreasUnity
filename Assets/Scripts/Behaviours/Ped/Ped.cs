@@ -643,11 +643,14 @@ namespace SanAndreasUnity.Behaviours
 			this.CurrentEnex = enex;
 			
 			// teleport to counterpart
-			var counterPart = Importing.Items.Item.Enexes.FirstOrDefault(e => e.Name == enex.Info.Name && e != enex.Info);
-			if (counterPart != null)
+			if (NetStatus.IsServer)
 			{
-				TransformDataStruct transformData = Cell.GetEnexExitTransform(counterPart);
-				this.Teleport(transformData.position, transformData.rotation, new FindGroundParams(){tryFromAbove = false});
+				var counterPart = Importing.Items.Item.Enexes.FirstOrDefault(e => e.Name == enex.Info.Name && e != enex.Info);
+				if (counterPart != null)
+				{
+					TransformDataStruct transformData = Cell.GetEnexExitTransform(counterPart);
+					this.Teleport(transformData.position, transformData.rotation, new FindGroundParams(){tryFromAbove = false});
+				}
 			}
 
 		}
