@@ -95,7 +95,7 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsFireOn { get ; set ; }
 		public bool IsHoldingWeapon { get { return m_weaponHolder.IsHoldingWeapon; } }
 
-		public EntranceExitMapObject CurrentEnex { get; private set; }
+		public EntranceExitMapObject CurrentCollidingEnex { get; private set; }
 
 		private Coroutine m_findGroundCoroutine;
 
@@ -637,10 +637,10 @@ namespace SanAndreasUnity.Behaviours
 
 		internal void OnStartCollidingWithEnex(EntranceExitMapObject enex)
 		{
-			if (this.CurrentEnex != null && this.CurrentEnex.gameObject.activeInHierarchy)	// already colliding with enex
+			if (this.CurrentCollidingEnex != null && this.CurrentCollidingEnex.gameObject.activeInHierarchy)	// already colliding with enex
 				return;
 			
-			this.CurrentEnex = enex;
+			this.CurrentCollidingEnex = enex;
 			
 			// teleport to counterpart
 			if (NetStatus.IsServer)
@@ -659,8 +659,8 @@ namespace SanAndreasUnity.Behaviours
 
 		internal void OnStopCollidingWithEnex(EntranceExitMapObject enex)
 		{
-			if (enex == this.CurrentEnex)
-				this.CurrentEnex = null;
+			if (enex == this.CurrentCollidingEnex)
+				this.CurrentCollidingEnex = null;
 			
 		}
 
