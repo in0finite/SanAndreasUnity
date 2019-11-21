@@ -96,6 +96,8 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsHoldingWeapon { get { return m_weaponHolder.IsHoldingWeapon; } }
 
 		public EntranceExitMapObject CurrentCollidingEnex { get; private set; }
+		public Importing.Items.Placements.EntranceExit FirstEnex { get; private set; }
+		public Importing.Items.Placements.EntranceExit SecondEnex { get; private set; }
 
 		private Coroutine m_findGroundCoroutine;
 
@@ -645,13 +647,30 @@ namespace SanAndreasUnity.Behaviours
 			// teleport to counterpart
 			if (NetStatus.IsServer)
 			{
-				var matchingEnexes = Importing.Items.Item.Enexes.Where(e => e.Name == enex.Info.Name && e != enex.Info);
-				Debug.LogFormat("Matching enexes:\n{0}", string.Join("\n", matchingEnexes.Select(e => e.TargetInterior + " - " + e.Flags)));
-				var counterPart = matchingEnexes.FirstOrDefault();
-				if (counterPart != null)
+				if (enex.Info == this.SecondEnex)
 				{
-					TransformDataStruct transformData = Cell.GetEnexExitTransform(counterPart);
-					this.Teleport(transformData.position, transformData.rotation, new FindGroundParams(){tryFromAbove = false});
+					// we collided with second enex
+					// teleport back to first enex ; reset first and second enex
+					var tmpEnex = this.FirstEnex;
+					this.FirstEnex = null;
+					this.SecondEnex = null;
+					this.TeleportToEnex(tmpEnex);
+				}
+				else
+				{
+					var matchingEnexes = Importing.Items.Item.Enexes.Where(e => e.Name == enex.Info.Name && e != enex.Info);
+					Debug.LogFormat("Matching enexes:\n{0}", string.Join("\n", matchingEnexes.Select(e => e.TargetInterior + " - " + e.Flags)));
+					var counterPart = matchingEnexes.FirstOrDefault();
+					if (counterPart != null)
+					{
+						// found a counterpart where we can teleport
+						
+						// remember first and second enex
+						this.FirstEnex = enex.Info;
+						this.SecondEnex = counterPart;
+						// teleport
+						this.TeleportToEnex(counterPart);
+					}
 				}
 			}
 
@@ -662,6 +681,12 @@ namespace SanAndreasUnity.Behaviours
 			if (enex == this.CurrentCollidingEnex)
 				this.CurrentCollidingEnex = null;
 			
+		}
+
+		void TeleportToEnex(Importing.Items.Placements.EntranceExit enex)
+		{
+			TransformDataStruct transformData = Cell.GetEnexExitTransform(enex);
+			this.Teleport(transformData.position, transformData.rotation, new FindGroundParams(){tryFromAbove = false});
 		}
 
 
