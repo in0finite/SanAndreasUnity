@@ -98,6 +98,7 @@ namespace SanAndreasUnity.Behaviours
 		public EntranceExitMapObject CurrentCollidingEnex { get; private set; }
 		public Importing.Items.Placements.EntranceExit FirstEnex { get; private set; }
 		public Importing.Items.Placements.EntranceExit SecondEnex { get; private set; }
+		bool m_ignoreNextCollisionWithSecondEnex = false;
 
 		private Coroutine m_findGroundCoroutine;
 
@@ -650,11 +651,21 @@ namespace SanAndreasUnity.Behaviours
 				if (enex.Info == this.SecondEnex)
 				{
 					// we collided with second enex
-					// teleport back to first enex ; reset first and second enex
-					var tmpEnex = this.FirstEnex;
-					this.FirstEnex = null;
-					this.SecondEnex = null;
-					this.TeleportToEnex(tmpEnex);
+
+					if (m_ignoreNextCollisionWithSecondEnex)
+					{
+						// ignore this collision
+						// collision will be processed next time
+						m_ignoreNextCollisionWithSecondEnex = false;
+					}
+					else
+					{
+						// teleport back to first enex ; reset first and second enex
+						var tmpEnex = this.FirstEnex;
+						this.FirstEnex = null;
+						this.SecondEnex = null;
+						this.TeleportToEnex(tmpEnex);
+					}
 				}
 				else
 				{
@@ -668,7 +679,8 @@ namespace SanAndreasUnity.Behaviours
 						// remember first and second enex
 						this.FirstEnex = enex.Info;
 						this.SecondEnex = counterPart;
-						// teleport
+						// teleport to second enex
+						m_ignoreNextCollisionWithSecondEnex = true;
 						this.TeleportToEnex(counterPart);
 					}
 				}
