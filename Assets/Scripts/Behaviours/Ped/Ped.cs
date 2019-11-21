@@ -645,7 +645,9 @@ namespace SanAndreasUnity.Behaviours
 			// teleport to counterpart
 			if (NetStatus.IsServer)
 			{
-				var counterPart = Importing.Items.Item.Enexes.FirstOrDefault(e => e.Name == enex.Info.Name && e != enex.Info);
+				var matchingEnexes = Importing.Items.Item.Enexes.Where(e => e.Name == enex.Info.Name && e != enex.Info);
+				Debug.LogFormat("Matching enexes:\n{0}", string.Join("\n", matchingEnexes.Select(e => e.TargetInterior + " - " + e.Flags)));
+				var counterPart = matchingEnexes.FirstOrDefault();
 				if (counterPart != null)
 				{
 					TransformDataStruct transformData = Cell.GetEnexExitTransform(counterPart);
