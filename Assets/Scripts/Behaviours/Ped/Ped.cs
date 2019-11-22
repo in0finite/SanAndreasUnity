@@ -705,7 +705,7 @@ namespace SanAndreasUnity.Behaviours
 		void TeleportToEnex(Importing.Items.Placements.EntranceExit enex)
 		{
 			TransformDataStruct transformData = Cell.GetEnexExitTransform(enex);
-			this.Teleport(transformData.position, transformData.rotation, new FindGroundParams(){tryFromAbove = false});
+			this.Teleport(transformData.position, transformData.rotation, new FindGroundParams(false, 50));
 		}
 
 
