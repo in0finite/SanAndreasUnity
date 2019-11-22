@@ -324,7 +324,7 @@ namespace SanAndreasUnity.Behaviours
 				this.Velocity = Vector3.zero;
 
 				RaycastHit hit;
-				float raycastDistance = 1000f;
+				float raycastDistance = parameters.raycastDistance;
 				// raycast against all layers, except player
 				int raycastLayerMask = ~ Ped.LayerMask;
 
