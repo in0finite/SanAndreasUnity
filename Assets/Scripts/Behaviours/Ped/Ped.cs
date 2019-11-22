@@ -105,9 +105,16 @@ namespace SanAndreasUnity.Behaviours
 		public struct FindGroundParams
 		{
 			public bool tryFromAbove;
+			public float raycastDistance;
 
-			public static FindGroundParams Default => new FindGroundParams(){tryFromAbove = true};
-			public static FindGroundParams DefaultBasedOnLoadedWorld => new FindGroundParams(){tryFromAbove = (null == Cell.Instance || Cell.Instance.HasExterior)};
+			public FindGroundParams(bool tryFromAbove = true, float raycastDistance = 1000)
+			{
+				this.tryFromAbove = tryFromAbove;
+				this.raycastDistance = raycastDistance;
+			}
+
+			public static FindGroundParams DefaultBasedOnLoadedWorld => new FindGroundParams((null == Cell.Instance || Cell.Instance.HasExterior));
+
 		}
 
 
@@ -468,7 +475,7 @@ namespace SanAndreasUnity.Behaviours
 				Vector3 t = this.transform.position;
 				t.y = 150;
 				this.transform.position = t;
-				this.FindGround(FindGroundParams.Default);
+				this.FindGround(new FindGroundParams());
 				
             }
 
