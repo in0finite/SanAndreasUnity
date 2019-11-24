@@ -98,7 +98,7 @@ namespace SanAndreasUnity.Behaviours
 		public EntranceExitMapObject CurrentCollidingEnex { get; private set; }
 		public Importing.Items.Placements.EntranceExit FirstEnex { get; private set; }
 		public Importing.Items.Placements.EntranceExit SecondEnex { get; private set; }
-		bool m_ignoreNextCollisionWithSecondEnex = false;
+		Importing.Items.Placements.EntranceExit m_enexToIgnoreNextCollision;
 
 		private Coroutine m_findGroundCoroutine;
 
@@ -652,43 +652,46 @@ namespace SanAndreasUnity.Behaviours
 			
 			this.CurrentCollidingEnex = enex;
 			
-			// teleport to counterpart
 			if (NetStatus.IsServer)
 			{
-				if (enex.Info == this.SecondEnex)
+				if (enex.Info == m_enexToIgnoreNextCollision)
 				{
-					// we collided with second enex
+					// we should ignore this collision
+					// collision will be processed next time
+					m_enexToIgnoreNextCollision = null;
+				}
+				else
+				{
+					if (enex.Info == this.SecondEnex)
+					{
+						// we collided with second enex
 
-					if (m_ignoreNextCollisionWithSecondEnex)
-					{
-						// ignore this collision
-						// collision will be processed next time
-						m_ignoreNextCollisionWithSecondEnex = false;
-					}
-					else
-					{
 						// teleport back to first enex ; reset first and second enex
 						var tmpEnex = this.FirstEnex;
 						this.FirstEnex = null;
 						this.SecondEnex = null;
+						m_enexToIgnoreNextCollision = tmpEnex;	// ignore next collision with first enex
 						this.TeleportToEnex(tmpEnex);
 					}
-				}
-				else
-				{
-					var matchingEnexes = Importing.Items.Item.Enexes.Where(e => e.Name == enex.Info.Name && e != enex.Info);
-					Debug.LogFormat("Matching enexes:\n{0}", string.Join("\n", matchingEnexes.Select(e => e.TargetInterior + " - " + e.Flags)));
-					var counterPart = matchingEnexes.FirstOrDefault(e => e.TargetInterior != enex.Info.TargetInterior);
-					if (counterPart != null)
+					else
 					{
-						// found a counterpart where we can teleport
-						
-						// remember first and second enex
-						this.FirstEnex = enex.Info;
-						this.SecondEnex = counterPart;
-						// teleport to second enex
-						m_ignoreNextCollisionWithSecondEnex = true;
-						this.TeleportToEnex(counterPart);
+						var matchingEnexes = Importing.Items.Item.Enexes.Where(e => e.Name == enex.Info.Name && e != enex.Info);
+						Debug.LogFormat("Matching enexes:\n{0}", string.Join("\n", matchingEnexes.Select(e => e.TargetInterior + " - " + e.Flags)));
+						var counterPart = matchingEnexes.FirstOrDefault(e => e.TargetInterior != enex.Info.TargetInterior);
+						if (counterPart != null)
+						{
+							// found a counterpart where we can teleport
+							
+							// remember first and second enex
+							this.FirstEnex = enex.Info;
+							this.SecondEnex = counterPart;
+
+							// ignore next collision with second enex
+							m_enexToIgnoreNextCollision = counterPart;
+
+							// teleport to second enex
+							this.TeleportToEnex(counterPart);
+						}
 					}
 				}
 			}
