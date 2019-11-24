@@ -22,7 +22,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public Division RootDivision { get; private set; }
 
-        public List<int> CellIds = new List<int> { 0, 13 };
+        private List<int> CellIds = Enumerable.Range(0, 19).ToList();
 
         public bool HasExterior => this.CellIds.Contains(0);
 
@@ -64,8 +64,6 @@ namespace SanAndreasUnity.Behaviours.World
 			if (null == Instance)
 				Instance = this;
 			
-            this.CellIds = Enumerable.Range(0, 19).ToList();
-
         }
 
         private void Start()
