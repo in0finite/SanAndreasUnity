@@ -188,7 +188,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void OnDisable()
         {
-			Destroy(horn);
+			      Destroy(horn);
             s_vehicles.Remove(this);
         }
 
@@ -198,13 +198,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             currentRadioStationIndex = Random.Range(0, RadioStation.stations.Length);
 
-			Debug.LogFormat("Created vehicle - id {0}, name {1}, time: {2}", this.Definition.Id, 
-                this.Definition.GameName, F.CurrentDateForLogging);
-			horn = Audio.AudioManager.CreateAudioClipFromSfx("GENRL", 67, this.Definition.HornId);
-			_vehicleHornSound = MakeSubclip(horn, horn.length / 2f, horn.length);
-			hornAudioSource = this.gameObject.AddComponent<AudioSource>();
-			hornAudioSource.clip = _vehicleHornSound;
-		}
+            Debug.LogFormat("Created vehicle - id {0}, name {1}, time: {2}", this.Definition.Id, 
+                      this.Definition.GameName, F.CurrentDateForLogging);
+            horn = Audio.AudioManager.CreateAudioClipFromSfx("GENRL", 67, this.Definition.HornId);
+            _vehicleHornSound = MakeSubclip(horn, horn.length / 2f, horn.length);
+            hornAudioSource = this.gameObject.AddComponent<AudioSource>();
+            hornAudioSource.clip = _vehicleHornSound;
+        }
 
         public void SetColors(params int[] clrIndices)
         {
@@ -447,7 +447,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 UpdateColors();
             }
 
-            if (currentRadioStationIndex != -1 && null != Ped.Instance && Ped.Instance.CurrentVehicle == this)
+            var localPed = Ped.Instance;
+            if (currentRadioStationIndex != -1 && null != localPed && localPed.CurrentVehicle == this && localPed.IsInVehicleSeat)
             {
                 if (!m_radioAudioSource.isPlaying)
                 {

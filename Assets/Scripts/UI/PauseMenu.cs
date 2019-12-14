@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using System.Linq;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.UI {
 	
@@ -29,6 +30,8 @@ namespace SanAndreasUnity.UI {
 	//	private	static	bool	m_changedWindowStyle = false;
 
 		public Color openedWindowTextColor = Color.green;
+
+		public static event System.Action onGUI = delegate {};
 
 
 
@@ -140,6 +143,9 @@ namespace SanAndreasUnity.UI {
 			}
 
 			GUI.EndGroup ();
+
+
+			onGUI();
 
 		}
 

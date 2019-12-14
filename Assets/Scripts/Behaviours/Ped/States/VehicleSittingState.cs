@@ -3,7 +3,6 @@ using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Animation;
 using System.Linq;
-using SanAndreasUnity.Behaviours.Audio;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
@@ -84,12 +83,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// play anims
 			this.UpdateAnimsInternal();
 
+			// start vehicle radio
+			if (m_ped.IsControlledByLocalPlayer)
+			{
+				vehicle.PlayRadio();
+			}
+
 		}
 
         public override void OnPreviousWeaponButtonPressed()
         {
             if (m_ped.IsControlledByLocalPlayer && m_ped.IsDrivingVehicle)
-                CurrentVehicle.SwitchRadioStation(false);
+                this.CurrentVehicle.SwitchRadioStation(false);
             else
                 base.OnPreviousWeaponButtonPressed();
         }
@@ -97,7 +102,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         public override void OnNextWeaponButtonPressed()
         {
             if (m_ped.IsControlledByLocalPlayer && m_ped.IsDrivingVehicle)
-                CurrentVehicle.SwitchRadioStation(true);
+                this.CurrentVehicle.SwitchRadioStation(true);
             else
                 base.OnNextWeaponButtonPressed();
         }
