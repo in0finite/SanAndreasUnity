@@ -178,7 +178,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             this.NetTransform = this.GetComponent<Mirror.NetworkTransform>();
             _props = new MaterialPropertyBlock();
-            radio = GetComponent<AudioSource>();
+            m_radioAudioSource = GetComponent<AudioSource>();
 		}
 
         void OnEnable()
@@ -449,17 +449,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (currentRadioStationIndex != -1 && null != Ped.Instance && Ped.Instance.CurrentVehicle == this)
             {
-                if (!radio.isPlaying)
+                if (!m_radioAudioSource.isPlaying)
                 {
                     ContinueRadio();
                 }
             }
             else
             {
-                if (radio.isPlaying)
+                if (m_radioAudioSource.isPlaying)
                 {
-                    CurrentRadioStation.currentTime = radio.time;
-                    radio.Stop();
+                    CurrentRadioStation.currentTime = m_radioAudioSource.time;
+                    m_radioAudioSource.Stop();
                 }
             }
 
