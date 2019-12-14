@@ -102,6 +102,21 @@ namespace SanAndreasUnity.Behaviours.World
         void OnTriggerEnter(Collider collider)
         {
             //Debug.LogFormat("OnTriggerEnter() - with {0}", collider.gameObject.name);
+
+            var ped = collider.gameObject.GetComponent<Ped>();
+            if (ped != null)
+                ped.OnStartCollidingWithEnex(this);
+            
+        }
+
+        void OnTriggerExit(Collider collider)
+        {
+            //Debug.LogFormat("OnTriggerExit() - with {0}", collider.gameObject.name);
+
+            var ped = collider.gameObject.GetComponent<Ped>();
+            if (ped != null)
+                ped.OnStopCollidingWithEnex(this);
+            
         }
 
         System.Collections.IEnumerator AnimateArrow()

@@ -22,7 +22,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public Division RootDivision { get; private set; }
 
-        public List<int> CellIds = new List<int> { 0, 13 };
+        private List<int> CellIds = Enumerable.Range(0, 19).ToList();
 
         public bool HasExterior => this.CellIds.Contains(0);
 
@@ -171,6 +171,11 @@ namespace SanAndreasUnity.Behaviours.World
         public static TransformDataStruct GetEnexExitTransform(EntranceExit enex)
         {
             return new TransformDataStruct(enex.ExitPos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.ExitAngle, 0f));
+        }
+
+        public static TransformDataStruct GetEnexEntranceTransform(EntranceExit enex)
+        {
+            return new TransformDataStruct(enex.EntrancePos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.EntranceAngle, 0f));
         }
 
 

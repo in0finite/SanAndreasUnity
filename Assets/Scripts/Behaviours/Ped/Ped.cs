@@ -95,14 +95,26 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsFireOn { get ; set ; }
 		public bool IsHoldingWeapon { get { return m_weaponHolder.IsHoldingWeapon; } }
 
+		public EntranceExitMapObject CurrentCollidingEnex { get; private set; }
+		public Importing.Items.Placements.EntranceExit FirstEnex { get; private set; }
+		public Importing.Items.Placements.EntranceExit SecondEnex { get; private set; }
+		Importing.Items.Placements.EntranceExit m_enexToIgnoreNextCollision;
+
 		private Coroutine m_findGroundCoroutine;
 
 		public struct FindGroundParams
 		{
 			public bool tryFromAbove;
+			public float raycastDistance;
 
-			public static FindGroundParams Default => new FindGroundParams(){tryFromAbove = true};
-			public static FindGroundParams DefaultBasedOnLoadedWorld => new FindGroundParams(){tryFromAbove = (null == Cell.Instance || Cell.Instance.HasExterior)};
+			public FindGroundParams(bool tryFromAbove = true, float raycastDistance = 1000)
+			{
+				this.tryFromAbove = tryFromAbove;
+				this.raycastDistance = raycastDistance;
+			}
+
+			public static FindGroundParams DefaultBasedOnLoadedWorld => new FindGroundParams((null == Cell.Instance || Cell.Instance.HasExterior));
+
 		}
 
 
@@ -312,7 +324,7 @@ namespace SanAndreasUnity.Behaviours
 				this.Velocity = Vector3.zero;
 
 				RaycastHit hit;
-				float raycastDistance = 1000f;
+				float raycastDistance = parameters.raycastDistance;
 				// raycast against all layers, except player
 				int raycastLayerMask = ~ Ped.LayerMask;
 
@@ -463,7 +475,7 @@ namespace SanAndreasUnity.Behaviours
 				Vector3 t = this.transform.position;
 				t.y = 150;
 				this.transform.position = t;
-				this.FindGround(FindGroundParams.Default);
+				this.FindGround(new FindGroundParams());
 				
             }
 
@@ -636,6 +648,73 @@ namespace SanAndreasUnity.Behaviours
 		{
 			if (this.CurrentState != null)
 				this.CurrentState.OnHornButtonPressed();
+		}
+
+
+		internal void OnStartCollidingWithEnex(EntranceExitMapObject enex)
+		{
+			if (this.CurrentCollidingEnex != null && this.CurrentCollidingEnex.gameObject.activeInHierarchy)	// already colliding with enex
+				return;
+			
+			this.CurrentCollidingEnex = enex;
+			
+			if (NetStatus.IsServer)
+			{
+				if (enex.Info == m_enexToIgnoreNextCollision)
+				{
+					// we should ignore this collision
+					// collision will be processed next time
+					m_enexToIgnoreNextCollision = null;
+				}
+				else
+				{
+					if (enex.Info == this.SecondEnex)
+					{
+						// we collided with second enex
+
+						// teleport back to first enex ; reset first and second enex
+						var tmpEnex = this.FirstEnex;
+						this.FirstEnex = null;
+						this.SecondEnex = null;
+						m_enexToIgnoreNextCollision = tmpEnex;	// ignore next collision with first enex
+						this.TeleportToEnex(tmpEnex);
+					}
+					else
+					{
+						var matchingEnexes = Importing.Items.Item.Enexes.Where(e => e.Name == enex.Info.Name && e != enex.Info);
+						Debug.LogFormat("Matching enexes:\n{0}", string.Join("\n", matchingEnexes.Select(e => e.TargetInterior + " - " + e.Flags)));
+						var counterPart = matchingEnexes.FirstOrDefault(e => e.TargetInterior != enex.Info.TargetInterior);
+						if (counterPart != null)
+						{
+							// found a counterpart where we can teleport
+							
+							// remember first and second enex
+							this.FirstEnex = enex.Info;
+							this.SecondEnex = counterPart;
+
+							// ignore next collision with second enex
+							m_enexToIgnoreNextCollision = counterPart;
+
+							// teleport to second enex
+							this.TeleportToEnex(counterPart);
+						}
+					}
+				}
+			}
+
+		}
+
+		internal void OnStopCollidingWithEnex(EntranceExitMapObject enex)
+		{
+			if (enex == this.CurrentCollidingEnex)
+				this.CurrentCollidingEnex = null;
+			
+		}
+
+		void TeleportToEnex(Importing.Items.Placements.EntranceExit enex)
+		{
+			TransformDataStruct transformData = Cell.GetEnexExitTransform(enex);
+			this.Teleport(transformData.position, transformData.rotation, new FindGroundParams(false, 50));
 		}
 
 
