@@ -102,7 +102,16 @@ namespace SanAndreasUnity.Behaviours.Peds.States
                 base.OnNextWeaponButtonPressed();
         }
 
-        public override void OnSubmitPressed()
+		public override void OnHornButtonPressed()
+		{
+			if (Ped.Instance.CurrentVehicle == null) base.OnHornButtonPressed();
+			else
+			{
+				Ped.Instance.CurrentVehicle.IsHornOn = true;
+			}
+		}
+
+		public override void OnSubmitPressed()
 		{
 			// exit the vehicle
 

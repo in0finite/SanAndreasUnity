@@ -27,12 +27,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         None, Left, Right, Emergency
     }
-
 #if CLIENT
     public partial class Vehicle : Networking.Networkable
 #else
 
-    public partial class Vehicle : MonoBehaviour
+	public partial class Vehicle : MonoBehaviour
 #endif
     {
         static List<Vehicle> s_vehicles = new List<Vehicle>();
@@ -163,8 +162,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 		{
 			get; set;
 		}
-
-		private AudioSource horn;
+		private AudioSource hornAudioSource;
+		AudioClip horn;
+		AudioClip _vehicleHornSound;
 		private VehicleController _controller;
 
         bool m_isServer => Net.NetStatus.IsServer;
@@ -179,7 +179,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             this.NetTransform = this.GetComponent<Mirror.NetworkTransform>();
             _props = new MaterialPropertyBlock();
             radio = GetComponent<AudioSource>();
-			horn = this.gameObject.AddComponent<AudioSource>();
 		}
 
         void OnEnable()
@@ -189,6 +188,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void OnDisable()
         {
+			Destroy(horn);
             s_vehicles.Remove(this);
         }
 
@@ -200,7 +200,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
 			Debug.LogFormat("Created vehicle - id {0}, name {1}, time: {2}", this.Definition.Id, 
                 this.Definition.GameName, F.CurrentDateForLogging);
-        }
+			horn = Audio.AudioManager.CreateAudioClipFromSfx("GENRL", 67, this.Definition.HornId);
+			_vehicleHornSound = MakeSubclip(horn, horn.length / 2f, horn.length);
+			hornAudioSource = this.gameObject.AddComponent<AudioSource>();
+			hornAudioSource.clip = _vehicleHornSound;
+		}
 
         public void SetColors(params int[] clrIndices)
         {
@@ -305,21 +309,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 		public virtual void PlayHornSound()
 		{
 			if (!IsHornOn) return;
-			if (horn.clip == null)
+			hornAudioSource.playOnAwake = false;
+			hornAudioSource.spatialBlend = 1;
+			hornAudioSource.maxDistance = 15;
+			if (hornAudioSource && hornAudioSource.clip)
 			{
-				//TODO add vehicle dependent horn sound
-				var audioClip = Audio.AudioManager.CreateAudioClipFromSfx("GENRL", 67, 3);
-				horn.playOnAwake = false;
-				horn.spatialBlend = 1;
-				horn.maxDistance = 15;
-				horn.clip = MakeSubclip(audioClip, audioClip.length / 1.75f, (audioClip.length / 1.75f) + 0.05f);
-			}
-			if (horn && horn.clip)
-			{
-				if (!horn.isPlaying)
+				if (!hornAudioSource.isPlaying)
 				{
-					horn.loop = true;
-					horn.Play();
+					hornAudioSource.loop = true;
+					hornAudioSource.Play();
 				}
 			}
 		}
@@ -466,7 +464,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
 
 			if (IsHornOn) { PlayHornSound(); }
-			else { horn.loop = false; }
+			else { hornAudioSource.loop = false; }
 			IsHornOn = false;
 		}
 
@@ -494,6 +492,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 this.NetTransform.syncInterval = 1.0f / syncRate;
         }
 
+		//TODO add vehicle type horn sound, rename the method appropriately
 		private AudioClip MakeSubclip(AudioClip clip, float start, float stop)
 		{
 			int frequency = clip.frequency;

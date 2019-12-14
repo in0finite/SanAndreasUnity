@@ -309,8 +309,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void OnHornButtonPressed()
 		{
-			if (Ped.Instance.CurrentVehicle == null) return;
-			Ped.Instance.CurrentVehicle.IsHornOn = true;
+
 		}
 	}
 
