@@ -101,7 +101,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			}
 			else if (ped.IsSprintOn)
 			{
-				ped.SwitchState<StandAimState> ();
+				ped.SwitchState<SprintState> ();
 			}
 			else
 			{
