@@ -199,6 +199,12 @@ namespace SanAndreasUnity.Behaviours
 			if (customInput.GetKeyDown(KeyCode.C))
 				m_ped.OnCrouchButtonPressed ();
 
+			if (customInput.GetKeyDown(KeyCode.G))
+				m_ped.OnButtonPressed ("G");
+
+			if (customInput.GetKeyDown(KeyCode.H))
+				m_ped.OnButtonPressed ("H");
+
 			if (customInput.GetKeyDown (KeyCode.T))
 				m_ped.OnFlyButtonPressed();
 
