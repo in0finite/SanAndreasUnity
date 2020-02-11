@@ -11,6 +11,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override AnimId movementWeaponAnim { get { return new AnimId (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi); } }
 
 
+		protected override void SwitchToAimState()
+		{
+			// don't switch to aim state
+			// we will switch to aim state from other movement states
+		}
+
 	}
 
 }

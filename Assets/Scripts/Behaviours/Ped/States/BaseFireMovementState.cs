@@ -66,16 +66,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			{
 				ped.SwitchState<WalkFireState> ();
 			}
-			else if (ped.IsRunOn)
+			else if (ped.IsRunOn || ped.IsSprintOn)
 			{
 				if(ped.CurrentWeapon != null && ped.CurrentWeapon.HasFlag(GunFlag.AIMWITHARM))
 					ped.SwitchState<RunFireState> ();
 				else
 					ped.SwitchState<WalkFireState> ();
-			}
-			else if (ped.IsSprintOn)
-			{
-				ped.SwitchState<StandFireState> ();
 			}
 			else
 			{

@@ -57,7 +57,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			else if (ped.IsSprintOn)
 			{
 				if (ped.CurrentWeapon != null && !ped.CurrentWeapon.CanSprintWithIt)
-					ped.SwitchState<StandState> ();
+					ped.SwitchState<RunState> ();
 				else
 					ped.SwitchState<SprintState> ();
 			}

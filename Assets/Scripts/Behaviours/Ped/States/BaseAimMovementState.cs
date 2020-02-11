@@ -59,12 +59,22 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected virtual bool SwitchToNonAimMovementState ()
 		{
 			// check if we should exit aiming state
+
 			if (!m_ped.IsHoldingWeapon || !m_ped.IsAimOn)
 			{
-			//	Debug.LogFormat ("Exiting aim state, IsHoldingWeapon {0}, IsAimOn {1}", m_ped.IsHoldingWeapon, m_ped.IsAimOn);
 				BaseMovementState.SwitchToMovementStateBasedOnInput (m_ped);
 				return true;
 			}
+
+			if (m_ped.IsSprintOn)
+			{
+				if (null == m_weapon || m_weapon.CanSprintWithIt)
+				{
+					m_ped.SwitchState<SprintState>();
+					return true;
+				}
+			}
+
 			return false;
 		}
 
@@ -92,16 +102,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			{
 				ped.SwitchState<WalkAimState> ();
 			}
-			else if (ped.IsRunOn)
+			else if (ped.IsRunOn || ped.IsSprintOn)
 			{
 				if (ped.CurrentWeapon != null && ped.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
 					ped.SwitchState<RunAimState> ();
 				else
 					ped.SwitchState<WalkAimState> ();
-			}
-			else if (ped.IsSprintOn)
-			{
-				ped.SwitchState<StandAimState> ();
 			}
 			else
 			{
