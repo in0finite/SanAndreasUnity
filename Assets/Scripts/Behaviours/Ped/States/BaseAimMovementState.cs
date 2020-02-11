@@ -568,6 +568,34 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+		protected override void OnButtonPressedOnServer(string buttonName)
+		{
+			if (buttonName == "G")
+			{
+				// try to recruit peds to follow you
+				if (m_weapon != null)
+				{
+					if (m_weapon.ProjectileRaycast(m_ped.IsControlledByLocalPlayer ? m_weapon.GetFirePos() : m_ped.NetFirePos, 
+						m_ped.IsControlledByLocalPlayer ? m_weapon.GetFireDir() : m_ped.NetFireDir, out RaycastHit hit))
+					{
+						// see if ped is hit
+						var pedStalker = hit.transform.GetComponent<PedStalker>();
+						if (pedStalker != null)
+						{
+							if (pedStalker.TargetPed == m_ped)
+								pedStalker.TargetPed = null;
+							else
+								pedStalker.TargetPed = m_ped;
+						}
+					}
+				}
+			}
+			else
+			{
+				base.OnButtonPressed(buttonName);
+			}
+		}
+
 	}
 
 }
