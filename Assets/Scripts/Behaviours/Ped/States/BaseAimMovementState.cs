@@ -579,9 +579,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 						m_ped.IsControlledByLocalPlayer ? m_weapon.GetFireDir() : m_ped.NetFireDir, out RaycastHit hit))
 					{
 						// see if ped is hit
-						var pedStalker = hit.transform.GetComponent<PedStalker>();
-						if (pedStalker != null)
+						var ped = hit.transform.GetComponent<Ped>();
+						if (ped != null && ped != m_ped && null == ped.PlayerOwner)
 						{
+							// ray hit a ped who is not controlled by any player
+							var pedStalker = ped.gameObject.GetOrAddComponent<PedStalker>();
 							if (pedStalker.TargetPed == m_ped)
 								pedStalker.TargetPed = null;
 							else
