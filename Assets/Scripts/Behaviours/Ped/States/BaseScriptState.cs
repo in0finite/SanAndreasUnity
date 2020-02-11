@@ -258,8 +258,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public virtual void OnButtonPressed(string buttonName)
 		{
-			if (m_shouldSendButtonEvents)
+			if (m_isServer)
+				this.OnButtonPressedOnServer(buttonName);
+			else if (m_shouldSendButtonEvents)
 				PedSync.Local.OnButtonPressed(buttonName);
+		}
+
+		protected virtual void OnButtonPressedOnServer(string buttonName)
+		{
+			
 		}
 
 		public virtual void OnFlyButtonPressed()
