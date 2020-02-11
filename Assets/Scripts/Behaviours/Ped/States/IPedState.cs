@@ -11,6 +11,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		//void OnCollision(Collision info);
 		void OnDamaged(DamageInfo info);
 
+		void OnButtonPressed(string buttonName);
 		void OnFireButtonPressed();
 		void OnAimButtonPressed();
 		void OnSubmitPressed ();

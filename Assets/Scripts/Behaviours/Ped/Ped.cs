@@ -588,6 +588,12 @@ namespace SanAndreasUnity.Behaviours
 			this.IsJumpOn = false;
 		}
 
+		public void OnButtonPressed (string buttonName)
+		{
+			if (this.CurrentState != null)
+				this.CurrentState.OnButtonPressed (buttonName);
+		}
+
 		public void OnFireButtonPressed ()
 		{
 			if (this.CurrentState != null)

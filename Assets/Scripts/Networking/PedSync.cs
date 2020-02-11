@@ -84,6 +84,15 @@ namespace SanAndreasUnity.Net
         }
 
 
+        public void OnButtonPressed(string buttonName) => this.CmdOnButtonPressed(buttonName);
+
+        [Command]
+        void CmdOnButtonPressed(string buttonName)
+        {
+            if (m_ped != null)
+                m_ped.OnButtonPressed(buttonName);
+        }
+
         public void OnCrouchButtonPressed() => this.CmdOnCrouchButtonPressed();
         
         [Command]
