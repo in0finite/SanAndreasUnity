@@ -256,6 +256,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				PedSync.Local.OnPreviousWeaponButtonPressed();
 		}
 
+		public virtual void OnButtonPressed(string buttonName)
+		{
+			if (m_shouldSendButtonEvents)
+				PedSync.Local.OnButtonPressed(buttonName);
+		}
+
 		public virtual void OnFlyButtonPressed()
 		{
 
