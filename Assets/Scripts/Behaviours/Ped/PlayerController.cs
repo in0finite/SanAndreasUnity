@@ -142,6 +142,8 @@ namespace SanAndreasUnity.Behaviours
 
 			m_ped.IsJumpOn = customInput.GetButton ("Jump");
 
+			if(m_ped.CurrentVehicle) m_ped.CurrentVehicle.IsHornOn = customInput.GetKey(KeyCode.H);
+
 
 			Vector3 inputMove = Vector3.zero;
 			if (m_smoothMovement)
@@ -210,7 +212,6 @@ namespace SanAndreasUnity.Behaviours
 
 			if (customInput.GetKeyDown (KeyCode.R))
 				m_ped.OnFlyThroughButtonPressed();
-
 		}
 
 		private void ReadCameraInput ()

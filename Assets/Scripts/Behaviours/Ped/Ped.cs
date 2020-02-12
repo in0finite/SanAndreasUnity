@@ -650,6 +650,12 @@ namespace SanAndreasUnity.Behaviours
 				this.CurrentState.OnFlyThroughButtonPressed ();
 		}
 
+		public void OnHornButtonPressed()
+		{
+			if (this.CurrentState != null)
+				this.CurrentState.OnHornButtonPressed();
+		}
+
 
 		internal void OnStartCollidingWithEnex(EntranceExitMapObject enex)
 		{

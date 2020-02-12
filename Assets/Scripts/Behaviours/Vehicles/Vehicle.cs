@@ -27,12 +27,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         None, Left, Right, Emergency
     }
-
 #if CLIENT
     public partial class Vehicle : Networking.Networkable
 #else
 
-    public partial class Vehicle : MonoBehaviour
+	public partial class Vehicle : MonoBehaviour
 #endif
     {
         static List<Vehicle> s_vehicles = new List<Vehicle>();
@@ -159,7 +158,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
-        private VehicleController _controller;
+		public bool IsHornOn
+		{
+			get; set;
+		}
+		private AudioSource hornAudioSource;
+		AudioClip horn;
+		AudioClip _vehicleHornSound;
+		private VehicleController _controller;
 
         bool m_isServer => Net.NetStatus.IsServer;
         public bool IsControlledByLocalPlayer => Ped.Instance != null && Ped.Instance.CurrentVehicle == this && Ped.Instance.CurrentVehicleSeat.IsDriver;
@@ -173,7 +179,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             this.NetTransform = this.GetComponent<Mirror.NetworkTransform>();
             _props = new MaterialPropertyBlock();
             m_radioAudioSource = GetComponent<AudioSource>();
-        }
+		}
 
         void OnEnable()
         {
@@ -182,6 +188,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void OnDisable()
         {
+			      Destroy(horn);
             s_vehicles.Remove(this);
         }
 
@@ -192,7 +199,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             currentRadioStationIndex = Random.Range(0, RadioStation.stations.Length);
 
             Debug.LogFormat("Created vehicle - id {0}, name {1}, time: {2}", this.Definition.Id, 
-                this.Definition.GameName, F.CurrentDateForLogging);
+                      this.Definition.GameName, F.CurrentDateForLogging);
+            horn = Audio.AudioManager.CreateAudioClipFromSfx("GENRL", 67, this.Definition.HornId);
+            _vehicleHornSound = MakeSubclip(horn, horn.length / 2f, horn.length);
+            hornAudioSource = this.gameObject.AddComponent<AudioSource>();
+            hornAudioSource.clip = _vehicleHornSound;
         }
 
         public void SetColors(params int[] clrIndices)
@@ -295,7 +306,23 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             _colorsChanged = true;
         }
 
-        public VehicleDef Definition { get; private set; }
+		public virtual void PlayHornSound()
+		{
+			if (!IsHornOn) return;
+			hornAudioSource.playOnAwake = false;
+			hornAudioSource.spatialBlend = 1;
+			hornAudioSource.maxDistance = 15;
+			if (hornAudioSource && hornAudioSource.clip)
+			{
+				if (!hornAudioSource.isPlaying)
+				{
+					hornAudioSource.loop = true;
+					hornAudioSource.Play();
+				}
+			}
+		}
+
+		public VehicleDef Definition { get; private set; }
 
         public Transform DriverTransform { get; private set; }
 
@@ -436,7 +463,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     m_radioAudioSource.Stop();
                 }
             }
-        }
+
+			if (IsHornOn) { PlayHornSound(); }
+			else { hornAudioSource.loop = false; }
+			IsHornOn = false;
+		}
 
         private void FixedUpdate()
         {
@@ -462,5 +493,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 this.NetTransform.syncInterval = 1.0f / syncRate;
         }
 
-    }
+		//TODO add vehicle type horn sound, rename the method appropriately
+		private AudioClip MakeSubclip(AudioClip clip, float start, float stop)
+		{
+			int frequency = clip.frequency;
+			float timeLength = stop - start;
+			int samplesLength = (int)(frequency * timeLength);
+			AudioClip newClip = AudioClip.Create(clip.name + "-sub", samplesLength, 1, frequency, false);
+			float[] data = new float[samplesLength];
+			clip.GetData(data, (int)(frequency * start));
+			newClip.SetData(data, 0);
+			return newClip;
+		}
+
+	}
 }

@@ -7,8 +7,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public partial class Vehicle
     {
         private int currentRadioStationIndex;
-        private RadioStation CurrentRadioStation { get { return RadioStation.stations[currentRadioStationIndex]; } }
-
+		private RadioStation CurrentRadioStation { get { return RadioStation.stations[currentRadioStationIndex]; } }
         private AudioSource m_radioAudioSource;
 
         public void PlayRadio()

@@ -1,6 +1,7 @@
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Net;
+using System;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
@@ -319,6 +320,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
             weapon.PlayFireSound();
 		}
 
+		public virtual void OnHornButtonPressed()
+		{
+
+		}
 	}
 
 }
