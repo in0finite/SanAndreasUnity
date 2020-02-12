@@ -29,6 +29,7 @@ GameObject:
   - component: {fileID: 114803762585694722}
   - component: {fileID: 114244562150032294}
   - component: {fileID: 114293662543306134}
+  - component: {fileID: 7181738364298022858}
   m_Layer: 11
   m_Name: States
   m_TagString: Untagged
@@ -297,6 +298,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e111211033b048ca9ca00766168ed4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7181738364298022858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 603044a9ff214434db928f6a43fd0b8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1273918895060814
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,12 +381,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncInterval: 0.1
   shouldPlayAnims: 1
-  TurnSpeed: 10
-  jumpSpeed: 8
-  m_cameraDistance: 3
-  m_cameraDistanceVehicle: 6
   m_cameraClampValue: {x: 60, y: 60}
   m_maxHealth: 100
+  m_inputSendInterval: 0.033333335
   m_enterVehicleRadius: 2
 --- !u!114 &114173420020992462
 MonoBehaviour:
@@ -387,7 +397,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e796a954503384dbd1282729710af5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CursorSensitivity: {x: 7, y: 7}
   clampInDegrees: {x: 60, y: 60}
   smoothing: {x: 10, y: 10}
   m_doSmooth: 0
