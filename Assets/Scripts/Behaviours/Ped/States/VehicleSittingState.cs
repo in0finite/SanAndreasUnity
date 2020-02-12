@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 	public class VehicleSittingState : BaseVehicleState
 	{
-		Vector3 m_vehicleParentOffset = Vector3.zero;
+		protected Vector3 m_vehicleParentOffset = Vector3.zero;
 		//Vector3 m_rootFramePos = Vector3.zero;
 
 
@@ -51,7 +51,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			this.EnterVehicle(vehicle, vehicle.GetSeat(seatAlignment));
 		}
 
-		public void EnterVehicle(Vehicle vehicle, Vehicle.Seat seat)
+		public virtual void EnterVehicle(Vehicle vehicle, Vehicle.Seat seat)
 		{
 			this.CurrentVehicle = vehicle;
 			this.CurrentVehicleSeatAlignment = seat.Alignment;
@@ -59,7 +59,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_ped.SwitchState<VehicleSittingState> ();
 		}
 
-		void EnterVehicleInternal()
+		protected virtual void EnterVehicleInternal()
 		{
 			Vehicle vehicle = this.CurrentVehicle;
 			Vehicle.Seat seat = this.CurrentVehicleSeat;
@@ -116,6 +116,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			else
 				base.OnSubmitPressed();
 
+		}
+
+		public override void OnAimButtonPressed()
+		{
+			if (m_isServer)
+				m_ped.GetStateOrLogError<DriveByState>().EnterVehicle(this.CurrentVehicle, this.CurrentVehicleSeatAlignment);
+			else
+				base.OnAimButtonPressed();
 		}
 
 		public override void UpdateState() {
