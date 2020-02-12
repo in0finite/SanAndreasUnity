@@ -592,10 +592,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 					}
 				}
 			}
-			else
-			{
-				base.OnButtonPressed(buttonName);
-			}
 		}
 
 	}
