@@ -24,16 +24,16 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			BaseVehicleState.PreparePedForVehicle(m_ped, this.CurrentVehicle, this.CurrentVehicleSeat);
 
-            PlayAnims();
+            UpdateAnimsInternal();
 
         }
 
-        protected override void UpdateAnims()
-        {
-            PlayAnims();
-        }
+        // protected override void UpdateAnims()
+        // {
+        //     UpdateAnimsInternal();
+        // }
 
-        void PlayAnims()
+        protected override void UpdateAnimsInternal()
         {
             if (this.CurrentVehicleSeat != null)
                 m_model.PlayAnim(new Importing.Animation.AnimId("ped", "DrivebyL_" + (this.CurrentVehicleSeat.IsLeftHand ? "L" : "R")));
