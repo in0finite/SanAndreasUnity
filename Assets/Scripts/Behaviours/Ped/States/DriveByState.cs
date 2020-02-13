@@ -36,7 +36,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         protected override void UpdateAnimsInternal()
         {
             if (this.CurrentVehicleSeat != null)
+            {
                 m_model.PlayAnim(new Importing.Animation.AnimId("ped", "DrivebyL_" + (this.CurrentVehicleSeat.IsLeftHand ? "L" : "R")));
+                m_model.LastAnimState.wrapMode = WrapMode.ClampForever;
+            }
         }
 
         void IAimState.StartFiring()
