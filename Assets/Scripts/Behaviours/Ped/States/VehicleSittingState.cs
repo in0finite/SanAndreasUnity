@@ -137,7 +137,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			
 		}
 
-		void UpdateAnimsInternal()
+		protected virtual void UpdateAnimsInternal()
 		{
 			var seat = this.CurrentVehicleSeat;
 			if (seat != null)
