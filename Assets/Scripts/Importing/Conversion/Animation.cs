@@ -194,22 +194,26 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static readonly Dictionary<string, Package> _sLoaded
             = new Dictionary<string, Package>();
-		/// All loaded anims. Each entry contains file name and corresponding ifp package.
-		public static IEnumerable<KeyValuePair<string, Package>> Loaded { get { return _sLoaded; } }
+		/// All loaded ifp packages. Each entry contains file name and corresponding ifp package.
+		public static IReadOnlyDictionary<string, Package> Loaded { get { return _sLoaded; } }
 
+
+        public static Package LoadPackageOnly(string fileName)
+        {
+            Package package;
+
+            if (_sLoaded.TryGetValue(fileName, out package))
+                return package;
+            
+            package = new Package(fileName);
+            _sLoaded.Add(fileName, package);
+
+            return package;
+        }
 
         public static Animation Load(string fileName, string clipName, FrameContainer frames)
         {
-            Package package;
-            if (!_sLoaded.ContainsKey(fileName))
-            {
-                _sLoaded.Add(fileName, package = new Package(fileName));
-            }
-            else
-            {
-                package = _sLoaded[fileName];
-            }
-
+            Package package = LoadPackageOnly(fileName);
             return package.Load(clipName, frames);
         }
 

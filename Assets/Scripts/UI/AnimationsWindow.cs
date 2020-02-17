@@ -17,6 +17,8 @@ namespace SanAndreasUnity.UI {
 		private float m_maxScrollViewHeight = 600;
 		private int m_selectedPackageIndex = 0;
 
+		private string[] m_ifpFileNames = new string[] {};
+
 
 		AnimationsWindow() {
 
@@ -33,6 +35,14 @@ namespace SanAndreasUnity.UI {
 
 			// adjust rect
 			this.windowRect = Utilities.GUIUtils.GetCenteredRect( new Vector2( 500, Screen.height * 0.85f ) );
+		}
+
+		protected override void OnLoaderFinished()
+		{
+			base.OnLoaderFinished();
+
+			// cache all IFPs
+			m_ifpFileNames = Importing.Archive.ArchiveManager.GetFileNamesWithExtension("ifp").ToArray();
 		}
 
 
@@ -178,22 +188,37 @@ namespace SanAndreasUnity.UI {
 
 		void DisplayPackages(bool playerExists)
 		{
-			var packages = Importing.Conversion.Animation.Loaded.ToArray ();
-			if (packages.Length < 1)
+			var packageNames = m_ifpFileNames;
+			if (packageNames.Length < 1)
 			{
-				GUILayout.Label ("There are no loaded ifp packages");
+				GUILayout.Label ("There are no ifp packages");
 				return;
 			}
 
 			float animHeight = 25;
 
 			GUILayout.Label ("Ifp name:");
-			m_selectedPackageIndex = GUILayout.Toolbar(m_selectedPackageIndex, packages.Select(p => p.Key).ToArray());
+			int newPackageIndex = GUILayout.Toolbar(m_selectedPackageIndex, packageNames);
 
-			var package = packages [m_selectedPackageIndex].Value.AnimPackage;
+			if (newPackageIndex != m_selectedPackageIndex)
+			{
+				// changed selected package
+
+				m_selectedPackageIndex = newPackageIndex;
+
+				// load the package if it was not loaded so far
+				bool packageLoaded = Importing.Conversion.Animation.Loaded.ContainsKey(packageNames[newPackageIndex]);
+				if (!packageLoaded)
+					Importing.Conversion.Animation.LoadPackageOnly(packageNames[newPackageIndex]);
+				
+			}
+
+			var package = Importing.Conversion.Animation.Loaded[packageNames[m_selectedPackageIndex]].AnimPackage;
 			var clips = package.Clips;
 
 			GUILayout.Space (10);
+
+			// display all clips from this IFP package
 
 			m_scrollViewPos = GUILayout.BeginScrollView (m_scrollViewPos, GUILayout.MinHeight(m_minScrollViewHeight), GUILayout.MaxHeight(m_maxScrollViewHeight));
 
