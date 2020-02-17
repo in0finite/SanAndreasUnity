@@ -73,6 +73,21 @@ namespace SanAndreasUnity.Importing.Archive
             return _sLoadedArchives.Any(x => x.ContainsFile(name));
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void GetFileNamesWithExtension(string ext, List<string> fileNames)
+        {
+            foreach (var archive in _sLoadedArchives)
+                fileNames.AddRange(archive.GetFileNamesWithExtension(ext));
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static List<string> GetFileNamesWithExtension(string ext)
+        {
+            var list = new List<string>();
+            GetFileNamesWithExtension(ext, list);
+            return list;
+        }
+
 		[MethodImpl(MethodImplOptions.Synchronized)]
         public static Stream ReadFile(string name)
         {
