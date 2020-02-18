@@ -42,7 +42,7 @@ namespace SanAndreasUnity.UI {
 			base.OnLoaderFinished();
 
 			// cache all IFPs
-			m_ifpFileNames = Importing.Archive.ArchiveManager.GetFileNamesWithExtension("ifp").ToArray();
+			m_ifpFileNames = Importing.Archive.ArchiveManager.GetFileNamesWithExtension(".ifp").ToArray();
 		}
 
 
