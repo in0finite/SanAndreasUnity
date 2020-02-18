@@ -24,9 +24,56 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         {
             if (this.CurrentVehicleSeat != null)
             {
-                m_model.PlayAnim(new Importing.Animation.AnimId("ped", "DrivebyL_" + (this.CurrentVehicleSeat.IsLeftHand ? "L" : "R")));
+                bool adjustBonePositions;
+                m_model.PlayAnim(new Importing.Animation.AnimId("drivebys", this.GetAnimBasedOnAimDir(out adjustBonePositions)));
                 m_model.LastAnimState.wrapMode = WrapMode.ClampForever;
+                if (adjustBonePositions)
+                {
+                    m_model.RootFrame.transform.localPosition = Vector3.zero;
+                    m_model.UnnamedFrame.transform.localPosition = Vector3.zero;
+                }
             }
+        }
+
+        string GetAnimBasedOnAimDir(out bool adjustBonePositions)
+        {
+            // 4 types: forward, backward, same side, opposite side
+
+            Vector3 aimDir = m_ped.AimDirection;
+            Vector3 vehicleDir = this.CurrentVehicle.transform.forward;
+            bool isLeftSeat = this.CurrentVehicleSeat.IsLeftHand;
+            string leftOrRightLetter = isLeftSeat ? "L" : "R";
+
+            float angle = Vector3.Angle(aimDir, vehicleDir);
+            float rightAngle = Vector3.Angle(aimDir, this.CurrentVehicle.transform.right);
+
+            adjustBonePositions = true;
+
+            if (angle < 45)
+            {
+                // aiming forward
+                return "Gang_Driveby" + leftOrRightLetter + "HS_Fwd";
+            }
+            else if (angle < 135)
+            {
+                // aiming to left or right side
+                bool isAimingToLeftSide = rightAngle > 90;
+                if (isLeftSeat != isAimingToLeftSide)   // aiming to opposite side
+                {
+                    adjustBonePositions = false;
+                    return "Gang_DrivebyTop_" + leftOrRightLetter + "HS";
+                }
+                else    // aiming to same side
+                {
+                    return "Gang_Driveby" + leftOrRightLetter + "HS";
+                }
+            }
+            else
+            {
+                // aiming backward
+                return "Gang_Driveby" + leftOrRightLetter + "HS_Bwd";
+            }
+
         }
 
         void IAimState.StartFiring()
