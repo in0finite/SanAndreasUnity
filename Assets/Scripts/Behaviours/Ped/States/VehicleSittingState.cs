@@ -51,12 +51,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			this.EnterVehicle(vehicle, vehicle.GetSeat(seatAlignment));
 		}
 
-		public virtual void EnterVehicle(Vehicle vehicle, Vehicle.Seat seat)
+		public void EnterVehicle(Vehicle vehicle, Vehicle.Seat seat)
 		{
 			this.CurrentVehicle = vehicle;
 			this.CurrentVehicleSeatAlignment = seat.Alignment;
 
-			m_ped.SwitchState<VehicleSittingState> ();
+			m_ped.SwitchState (this.GetType());
 		}
 
 		protected virtual void EnterVehicleInternal()
