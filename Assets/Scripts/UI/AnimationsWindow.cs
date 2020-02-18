@@ -19,6 +19,8 @@ namespace SanAndreasUnity.UI {
 		private int m_selectedPackageIndex = 0;
 
 		private string[] m_ifpFileNames = new string[] {};
+		private string[] m_currentlyDisplayedIfpFileNames = new string[] {};
+		private string m_ifpSearchText = "";
 
 
 		AnimationsWindow() {
@@ -44,6 +46,8 @@ namespace SanAndreasUnity.UI {
 
 			// cache all IFPs
 			m_ifpFileNames = Importing.Archive.ArchiveManager.GetFileNamesWithExtension(".ifp").Select(fileName => fileName.Substring(0, fileName.Length - 4)).ToArray();
+
+			m_currentlyDisplayedIfpFileNames = m_ifpFileNames;
 		}
 
 
@@ -189,7 +193,7 @@ namespace SanAndreasUnity.UI {
 
 		void DisplayPackages(bool playerExists)
 		{
-			var packageNames = m_ifpFileNames;
+			var packageNames = m_currentlyDisplayedIfpFileNames;
 			if (packageNames.Length < 1)
 			{
 				GUILayout.Label ("There are no ifp packages");
@@ -198,7 +202,18 @@ namespace SanAndreasUnity.UI {
 
 			float animHeight = 25;
 
+			// search box
+			GUILayout.BeginHorizontal();
 			GUILayout.Label ("Ifp name:");
+			GUILayout.Space(5);
+			m_ifpSearchText = GUILayout.TextField(m_ifpSearchText);
+			GUILayout.Space(5);
+			if (GUILayout.Button("Search"))
+			{
+				this.SearchIfps();
+			}
+			GUILayout.EndHorizontal();
+
 			m_packagesScrollViewPos = GUILayout.BeginScrollView(m_packagesScrollViewPos, GUILayout.MinHeight(50));
 			int newPackageIndex = GUILayout.Toolbar(m_selectedPackageIndex, packageNames);
 			GUILayout.EndScrollView();
@@ -249,6 +264,19 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.EndScrollView ();
 
+		}
+
+		void SearchIfps()
+		{
+			string text = m_ifpSearchText.Trim();
+
+			if (string.IsNullOrWhiteSpace(text))
+			{
+				m_currentlyDisplayedIfpFileNames = m_ifpFileNames;
+				return;
+			}
+
+			m_currentlyDisplayedIfpFileNames = m_ifpFileNames.Where(fileName => fileName.Contains(text)).ToArray();
 		}
 
 		void PlayAnim(AnimId animId)
