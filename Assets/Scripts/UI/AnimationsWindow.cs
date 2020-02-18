@@ -16,7 +16,7 @@ namespace SanAndreasUnity.UI {
 		private bool m_displayAnimStats = false;
 		private float m_minScrollViewHeight = 200;
 		private float m_maxScrollViewHeight = 600;
-		private int m_selectedPackageIndex = 0;
+		private int m_selectedPackageIndex = -1;
 
 		private string[] m_ifpFileNames = new string[] {};
 		private string[] m_currentlyDisplayedIfpFileNames = new string[] {};
@@ -193,13 +193,8 @@ namespace SanAndreasUnity.UI {
 
 		void DisplayPackages(bool playerExists)
 		{
-			var packageNames = m_currentlyDisplayedIfpFileNames;
-			if (packageNames.Length < 1)
-			{
-				GUILayout.Label ("There are no ifp packages");
-				return;
-			}
-
+			string[] packageNames = m_currentlyDisplayedIfpFileNames;
+			
 			float animHeight = 25;
 
 			// search box
@@ -225,11 +220,17 @@ namespace SanAndreasUnity.UI {
 				m_selectedPackageIndex = newPackageIndex;
 
 				// load the package if it was not loaded so far
-				bool packageLoaded = Importing.Conversion.Animation.Loaded.ContainsKey(packageNames[newPackageIndex]);
-				if (!packageLoaded)
-					Importing.Conversion.Animation.LoadPackageOnly(packageNames[newPackageIndex]);
+				if (newPackageIndex >= 0)
+				{
+					bool packageLoaded = Importing.Conversion.Animation.Loaded.ContainsKey(packageNames[newPackageIndex]);
+					if (!packageLoaded)
+						Importing.Conversion.Animation.LoadPackageOnly(packageNames[newPackageIndex]);
+				}
 				
 			}
+
+			if (newPackageIndex < 0)
+				return;
 
 			string selectedIfpName = packageNames[m_selectedPackageIndex];
 
@@ -277,6 +278,7 @@ namespace SanAndreasUnity.UI {
 			}
 
 			m_currentlyDisplayedIfpFileNames = m_ifpFileNames.Where(fileName => fileName.Contains(text)).ToArray();
+			m_selectedPackageIndex = -1;
 		}
 
 		void PlayAnim(AnimId animId)
