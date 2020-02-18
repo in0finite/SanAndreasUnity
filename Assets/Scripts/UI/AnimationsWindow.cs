@@ -213,7 +213,12 @@ namespace SanAndreasUnity.UI {
 				
 			}
 
-			var package = Importing.Conversion.Animation.Loaded[packageNames[m_selectedPackageIndex]].AnimPackage;
+			string selectedIfpName = packageNames[m_selectedPackageIndex];
+
+			if (! Importing.Conversion.Animation.Loaded.ContainsKey(selectedIfpName))
+				return;
+
+			var package = Importing.Conversion.Animation.Loaded[selectedIfpName].AnimPackage;
 			var clips = package.Clips;
 
 			GUILayout.Space (10);
