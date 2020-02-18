@@ -10,6 +10,7 @@ namespace SanAndreasUnity.UI {
 	public class AnimationsWindow : PauseMenuWindow {
 
 		private	Vector2	m_scrollViewPos = Vector2.zero;
+		private Vector2 m_packagesScrollViewPos = Vector2.zero;
 		private bool m_displayPackages = true;
 		private bool m_displayWalkcycleAnims = false;
 		private bool m_displayAnimStats = false;
@@ -198,7 +199,9 @@ namespace SanAndreasUnity.UI {
 			float animHeight = 25;
 
 			GUILayout.Label ("Ifp name:");
+			m_packagesScrollViewPos = GUILayout.BeginScrollView(m_packagesScrollViewPos, GUILayout.MinHeight(50));
 			int newPackageIndex = GUILayout.Toolbar(m_selectedPackageIndex, packageNames);
+			GUILayout.EndScrollView();
 
 			if (newPackageIndex != m_selectedPackageIndex)
 			{
