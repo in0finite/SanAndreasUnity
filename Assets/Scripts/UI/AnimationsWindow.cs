@@ -201,16 +201,17 @@ namespace SanAndreasUnity.UI {
 			GUILayout.BeginHorizontal();
 			GUILayout.Label ("Ifp name:");
 			GUILayout.Space(5);
-			m_ifpSearchText = GUILayout.TextField(m_ifpSearchText);
+			m_ifpSearchText = GUILayout.TextField(m_ifpSearchText, GUILayout.Width(120));
 			GUILayout.Space(5);
 			if (GUILayout.Button("Search"))
 			{
 				this.SearchIfps();
 			}
+			GUILayout.FlexibleSpace();
 			GUILayout.EndHorizontal();
 
 			m_packagesScrollViewPos = GUILayout.BeginScrollView(m_packagesScrollViewPos, GUILayout.MinHeight(50));
-			int newPackageIndex = GUILayout.Toolbar(m_selectedPackageIndex, packageNames);
+			int newPackageIndex = GUILayout.Toolbar(m_selectedPackageIndex, packageNames, GUILayout.MinHeight(animHeight));
 			GUILayout.EndScrollView();
 
 			if (newPackageIndex != m_selectedPackageIndex)
