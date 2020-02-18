@@ -7,14 +7,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
     public class DriveByState : VehicleSittingState, IAimState
     {
         
-        public override void EnterVehicle(Vehicle vehicle, Vehicle.Seat seat)
-		{
-			this.CurrentVehicle = vehicle;
-			this.CurrentVehicleSeatAlignment = seat.Alignment;
-
-			m_ped.SwitchState<DriveByState> ();
-		}
-
         protected override void EnterVehicleInternal()
         {
             if (m_isServer)
@@ -27,11 +19,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
             UpdateAnimsInternal();
 
         }
-
-        // protected override void UpdateAnims()
-        // {
-        //     UpdateAnimsInternal();
-        // }
 
         protected override void UpdateAnimsInternal()
         {
