@@ -9,10 +9,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         
         protected override void EnterVehicleInternal()
         {
-            if (m_isServer)
-				m_vehicleParentOffset = m_model.VehicleParentOffset;
-			else if (m_isClientOnly)
-				m_model.VehicleParentOffset = m_vehicleParentOffset;
+            m_vehicleParentOffset = Vector3.zero;
+            m_model.VehicleParentOffset = Vector3.zero;
 
 			BaseVehicleState.PreparePedForVehicle(m_ped, this.CurrentVehicle, this.CurrentVehicleSeat);
 
@@ -24,18 +22,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         {
             if (this.CurrentVehicleSeat != null)
             {
-                bool adjustBonePositions;
-                m_model.PlayAnim(new Importing.Animation.AnimId("drivebys", this.GetAnimBasedOnAimDir(out adjustBonePositions)));
+                var animId = new Importing.Animation.AnimId("drivebys", this.GetAnimBasedOnAimDir());
+                m_model.PlayAnim(animId);
                 m_model.LastAnimState.wrapMode = WrapMode.ClampForever;
-                if (adjustBonePositions)
-                {
-                    m_model.RootFrame.transform.localPosition = Vector3.zero;
-                    m_model.UnnamedFrame.transform.localPosition = Vector3.zero;
-                }
+                m_model.VehicleParentOffset = m_model.GetAnim(animId.AnimName).RootEnd;
+                m_model.RootFrame.transform.localPosition = Vector3.zero;
             }
         }
 
-        string GetAnimBasedOnAimDir(out bool adjustBonePositions)
+        string GetAnimBasedOnAimDir()
         {
             // 4 types: forward, backward, same side, opposite side
 
@@ -46,8 +41,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
             float angle = Vector3.Angle(aimDir, vehicleDir);
             float rightAngle = Vector3.Angle(aimDir, this.CurrentVehicle.transform.right);
-
-            adjustBonePositions = true;
 
             if (angle < 45)
             {
@@ -60,7 +53,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
                 bool isAimingToLeftSide = rightAngle > 90;
                 if (isLeftSeat != isAimingToLeftSide)   // aiming to opposite side
                 {
-                    adjustBonePositions = false;
                     return "Gang_DrivebyTop_" + leftOrRightLetter + "HS";
                 }
                 else    // aiming to same side
