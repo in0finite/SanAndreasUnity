@@ -58,9 +58,12 @@ namespace SanAndreasUnity.Importing.Conversion
 
             foreach (var bone in animation.Bones)
             {
-                if (-1 == bone.BoneId)  // what are these used for ?
+                if (!frames.HasBoneWithId(bone.BoneId)) // what are these used for ?
+                {
+                    Debug.LogWarning($"Bone with id {bone.BoneId} does not exist");
                     continue;
-
+                }
+                
                 var bFrames = bone.Frames;
                 var frame = frames.GetByBoneId(bone.BoneId);
 

@@ -49,6 +49,11 @@ namespace SanAndreasUnity.Behaviours
             return _frames[index];
         }
 
+        public bool HasBoneWithId(int boneId)
+        {
+            return _boneIdDict.ContainsKey(boneId);
+        }
+
         public Frame GetByBoneId(int boneId)
         {
             return _boneIdDict[boneId];
