@@ -126,15 +126,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				base.OnAimButtonPressed();
 		}
 
-		public override void UpdateState() {
-
-			base.UpdateState();
-
-			if (!this.IsActiveState)
-				return;
-
+		protected override void UpdateAnims()
+		{
 			this.UpdateAnimsInternal();
-			
 		}
 
 		protected virtual void UpdateAnimsInternal()
