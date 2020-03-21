@@ -37,6 +37,7 @@ namespace SanAndreasUnity.Stats
                 sb.AppendFormat("state: {0}\n", ped.CurrentState != null ? ped.CurrentState.GetType().Name : "");
                 sb.AppendFormat("velocity: {0}\n", ped.Velocity);
                 sb.AppendFormat("is grounded: {0}\n", ped.IsGrounded);
+                sb.AppendFormat("vehicle offset: {0}\n", ped.PlayerModel.VehicleParentOffset);
                 sb.AppendFormat("model id: {0}\n", ped.PedDef != null ? ped.PedDef.Id.ToString() : "");
                 sb.AppendFormat("model name: {0}\n", ped.PedDef != null ? ped.PedDef.ModelName : "");
                 sb.AppendFormat("\n");
