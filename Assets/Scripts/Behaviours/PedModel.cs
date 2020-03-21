@@ -514,14 +514,19 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
+		public Anim GetAnim (string animName)
+		{
+			Anim result;
+            return _loadedAnims.TryGetValue (animName, out result) ? result : null;
+		}
+
         public Anim GetAnim (AnimGroup group, AnimIndex anim)
         {
             string animName = GetAnimName (group, anim);
 			if (string.IsNullOrEmpty (animName))
 				return null;
 
-            Anim result;
-            return _loadedAnims.TryGetValue (animName, out result) ? result : null;
+            return GetAnim(animName);
         }
 
         public string GetAnimName (AnimGroup group, AnimIndex anim)
