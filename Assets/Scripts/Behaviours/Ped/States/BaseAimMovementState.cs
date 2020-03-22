@@ -418,20 +418,25 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
-		protected virtual bool TryFire ()
+		public static bool TryFire (Ped ped)
 		{
-			if (m_weapon != null)
+			if (ped.CurrentWeapon != null)
 			{
-				if (m_isServer)
+				if (Net.NetStatus.IsServer)
 				{
-					if (m_ped.IsControlledByLocalPlayer || null == m_ped.PlayerOwner)
-						return TryFire(m_ped, m_weapon.GetFirePos(), m_weapon.GetFireDir());
+					if (ped.IsControlledByLocalPlayer || null == ped.PlayerOwner)
+						return TryFire(ped, ped.CurrentWeapon.GetFirePos(), ped.CurrentWeapon.GetFireDir());
 					else	// this ped is owned by remote client
-						return TryFire(m_ped, m_ped.NetFirePos, m_ped.NetFireDir);
+						return TryFire(ped, ped.NetFirePos, ped.NetFireDir);
 				}
 			}
 			return false;
 		}
+
+        protected virtual bool TryFire()
+        {
+            return TryFire(m_ped);
+        }
 
 		public static bool TryFire (Ped ped, Vector3 firePos, Vector3 fireDir)
 		{
