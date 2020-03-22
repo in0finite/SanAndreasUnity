@@ -60,7 +60,8 @@ namespace SanAndreasUnity.Importing.Conversion
             {
                 if (!frames.HasBoneWithId(bone.BoneId)) // what are these used for ?
                 {
-                    Debug.LogWarning($"Bone with id {bone.BoneId} does not exist");
+                    if (bone.BoneId != -1)
+                        Debug.LogWarning($"Bone with id {bone.BoneId} does not exist");
                     continue;
                 }
                 
