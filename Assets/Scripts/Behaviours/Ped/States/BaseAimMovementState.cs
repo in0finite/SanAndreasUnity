@@ -425,21 +425,21 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				if (m_isServer)
 				{
 					if (m_ped.IsControlledByLocalPlayer || null == m_ped.PlayerOwner)
-						return this.TryFire(m_weapon.GetFirePos(), m_weapon.GetFireDir());
+						return TryFire(m_ped, m_weapon.GetFirePos(), m_weapon.GetFireDir());
 					else	// this ped is owned by remote client
-						return this.TryFire(m_ped.NetFirePos, m_ped.NetFireDir);
+						return TryFire(m_ped, m_ped.NetFirePos, m_ped.NetFireDir);
 				}
 			}
 			return false;
 		}
 
-		protected virtual bool TryFire (Vector3 firePos, Vector3 fireDir)
+		public static bool TryFire (Ped ped, Vector3 firePos, Vector3 fireDir)
 		{
-			Ped ped = m_ped;
+            bool isServer = Net.NetStatus.IsServer;
 			var weapon = ped.CurrentWeapon;
 
 
-			if (!m_isServer)	// for now, do this only on server
+			if (!isServer)	// for now, do this only on server
 				return false;
 
 			if (Net.NetStatus.IsClientOnly && ! ped.IsControlledByLocalPlayer)
@@ -455,7 +455,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (weapon.AmmoInClip < 1)
 				return false;
 
-			if (m_isServer)
+			if (isServer)
 			{
 				ped.StartFiring ();
 
@@ -474,7 +474,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			weapon.UpdateGunFlashRotation ();
 
 			// fire projectile
-			if (m_isServer)
+			if (isServer)
 				F.RunExceptionSafe( () => weapon.FireProjectile (firePos, fireDir) );
 
 			// send fire event to server
@@ -487,8 +487,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			F.RunExceptionSafe (() => weapon.PlayFireSound() );
 
 			// notify clients
-			if (m_isServer)
-				Net.PedSync.OnWeaponFired(m_ped, weapon, firePos);
+			if (isServer)
+				Net.PedSync.OnWeaponFired(ped, weapon, firePos);
 
 
 			return true;
