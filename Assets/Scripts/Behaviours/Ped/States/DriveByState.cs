@@ -6,7 +6,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
     public class DriveByState : VehicleSittingState, IAimState
     {
-        
+        public float AimAnimMaxTime = 0f;
+        public float AimAnimFireMaxTime = 0f;
+
+
+
         protected override void EnterVehicleInternal()
         {
             m_vehicleParentOffset = Vector3.zero;
@@ -25,6 +29,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
                 var animId = new Importing.Animation.AnimId("drivebys", this.GetAnimBasedOnAimDir());
                 m_model.PlayAnim(animId);
                 m_model.LastAnimState.wrapMode = WrapMode.ClampForever;
+
+                if (m_ped.CurrentWeapon != null)
+                {
+                    m_ped.CurrentWeapon.AimAnimState = m_model.LastAnimState;
+
+                    BaseAimMovementState.UpdateAimAnim(m_ped, m_model.LastAnimState, this.AimAnimMaxTime, this.AimAnimFireMaxTime, () => BaseAimMovementState.TryFire(m_ped));
+                }
+
                 m_model.VehicleParentOffset = m_model.GetAnim(animId.AnimName).RootEnd;
                 m_model.RootFrame.transform.localPosition = Vector3.zero;
             }
@@ -68,10 +80,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         }
 
-        void IAimState.StartFiring()
+        public virtual void StartFiring()
         {
             // switch to firing state
-
+            m_ped.GetStateOrLogError<DriveByFireState>().EnterVehicle(this.CurrentVehicle, this.CurrentVehicleSeatAlignment);
         }
 
         // camera
