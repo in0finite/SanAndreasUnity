@@ -113,6 +113,9 @@ namespace SanAndreasUnity.Behaviours
 		//public bool IsInsideFireAnim { get { return this.AimAnimState != null && this.AimAnimState.enabled && this.AimAnimState.time > this.AimAnimMaxTime; } }
 		public Transform GunFlash { get; private set; }
 
+        public float LastTimeWhenFired { get; protected set; } = float.NegativeInfinity;
+        public float TimeSinceFired => Time.time - this.LastTimeWhenFired;
+
 
 		// weapon sounds are located in SFX -> GENRL -> BANK 137
 		// these indexes represent indexes of sounds in that bank
@@ -613,7 +616,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public virtual void FireProjectile (Vector3 firePos, Vector3 fireDir)
 		{
-			
+
+            this.LastTimeWhenFired = Time.time;
+
 			// raycast against all (non-breakable ?) objects
 
 			RaycastHit hit;
