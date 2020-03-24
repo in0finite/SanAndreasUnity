@@ -6,9 +6,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
     public class DriveByState : VehicleSittingState, IAimState
     {
-        public float AimAnimMaxTime = 0f;
-        public float AimAnimFireMaxTime = 0f;
-
+        
+        // TODO:
+        // - add real aim anims ?
+        // - drive-by exiting state - activated when going from drive-by to sitting state, or when trying to exit vehicle
+        // - camera
+        // - weapon's gun flash should depend on last time when fired, not on anim time
 
 
         protected override void EnterVehicleInternal()
@@ -94,7 +97,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
             var ped = m_ped;
             var weapon = ped.CurrentWeapon;
             var state = m_model.LastAnimState;
-            float aimAnimMaxTime = this.AimAnimMaxTime;
+            float aimAnimMaxTime = state.length * 0.5f;
 
             if (state.time >= aimAnimMaxTime)
             {
