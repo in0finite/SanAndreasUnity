@@ -18,11 +18,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			BaseVehicleState.PreparePedForVehicle(m_ped, this.CurrentVehicle, this.CurrentVehicleSeat);
 
-            UpdateAnimsInternal();
+            // we should not update firing from here, because it can cause stack overflow
+            this.UpdateAnimsInternal(false);
 
         }
 
         protected override void UpdateAnimsInternal()
+        {
+            this.UpdateAnimsInternal(true);
+        }
+
+        void UpdateAnimsInternal(bool bUpdateFiring)
         {
             if (this.CurrentVehicleSeat != null)
             {
@@ -30,11 +36,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
                 m_model.PlayAnim(animId);
                 m_model.LastAnimState.wrapMode = WrapMode.ClampForever;
 
-                if (m_ped.CurrentWeapon != null)
+                if (bUpdateFiring)
                 {
-                    m_ped.CurrentWeapon.AimAnimState = m_model.LastAnimState;
+                    if (m_ped.CurrentWeapon != null)
+                    {
+                        m_ped.CurrentWeapon.AimAnimState = m_model.LastAnimState;
 
-                    BaseAimMovementState.UpdateAimAnim(m_ped, m_model.LastAnimState, this.AimAnimMaxTime, this.AimAnimFireMaxTime, () => BaseAimMovementState.TryFire(m_ped));
+                        this.UpdateAimAnim(() => BaseAimMovementState.TryFire(m_ped));
+                    }
                 }
 
                 m_model.VehicleParentOffset = m_model.GetAnim(animId.AnimName).RootEnd;
@@ -76,6 +85,51 @@ namespace SanAndreasUnity.Behaviours.Peds.States
             {
                 // aiming backward
                 return "Gang_Driveby" + leftOrRightLetter + "HS_Bwd";
+            }
+
+        }
+
+        void UpdateAimAnim(System.Func<bool> tryFireFunc)
+        {
+            var ped = m_ped;
+            var weapon = ped.CurrentWeapon;
+            var state = m_model.LastAnimState;
+            float aimAnimMaxTime = this.AimAnimMaxTime;
+
+            if (state.time >= aimAnimMaxTime)
+            {
+                // keep the anim at max time
+                state.time = aimAnimMaxTime;
+                ped.AnimComponent.Sample();
+                state.enabled = false;
+
+                if (ped.IsFiring)
+                {
+                    // check if weapon finished firing
+                    if (weapon != null && weapon.TimeSinceFired >= (weapon.AimAnimFireMaxTime - weapon.AimAnimMaxTime))
+                    {
+                        if (Net.NetStatus.IsServer)
+                        {
+                            ped.StopFiring();
+                        }
+                    }
+                }
+                else
+                {
+                    // check if we should start firing
+
+                    if (ped.IsFireOn && tryFireFunc())
+                    {
+                        // we started firing
+
+                    }
+                    else
+                    {
+                        // we should remain in aim state
+                        
+                    }
+                }
+
             }
 
         }
