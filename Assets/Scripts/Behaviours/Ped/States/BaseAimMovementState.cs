@@ -529,29 +529,33 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// ignore
 		}
 
-		public override void CheckCameraCollision ()
+        public override void CheckCameraCollision()
+        {
+            CheckCameraCollision(m_ped, this.GetCameraFocusPos());
+        }
+
+        public static void CheckCameraCollision (Ped ped, Vector3 cameraFocusPos)
 		{
-			Vector3 cameraFocusPos = this.GetCameraFocusPos ();
 			Vector3 castFrom = cameraFocusPos;
 			float distance;
-			Vector3 castDir = -m_ped.Camera.transform.forward;
-
+			Vector3 castDir = -ped.Camera.transform.forward;
+            
 			// use distance from gun aiming offset ?
-			if (m_ped.CurrentWeapon != null && m_ped.CurrentWeapon.GunAimingOffset != null)
+			if (ped.CurrentWeapon != null && ped.CurrentWeapon.GunAimingOffset != null)
 			{
 			//	Vector3 desiredCameraPos = this.transform.TransformPoint (- _player.CurrentWeapon.GunAimingOffset.Aim) + Vector3.up * .5f;
 			//	Vector3 desiredCameraPos = this.transform.TransformPoint( new Vector3(0.8f, 1.0f, -1) );
-				Vector3 desiredCameraPos = cameraFocusPos + m_ped.Camera.transform.TransformVector (m_ped.WeaponHolder.cameraAimOffset);
+				Vector3 desiredCameraPos = cameraFocusPos + ped.Camera.transform.TransformVector (ped.WeaponHolder.cameraAimOffset);
 				Vector3 diff = desiredCameraPos - castFrom;
 				distance = diff.magnitude;
 				castDir = diff.normalized;
 			}
 			else
 			{
-				distance = m_ped.CameraDistance;
+				distance = ped.CameraDistance;
 			}
 
-			BaseScriptState.CheckCameraCollision(m_ped, castFrom, castDir, distance);
+			BaseScriptState.CheckCameraCollision(ped, castFrom, castDir, distance);
 
 		}
 
