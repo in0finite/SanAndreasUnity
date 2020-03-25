@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         // - add real aim anims ?
         // - drive-by exiting state - activated when going from drive-by to sitting state, or when trying to exit vehicle
         // - camera
-        // - weapon's gun flash should depend on last time when fired, not on anim time
+        // - weapon's gun flash should depend on last time when fired, not on anim time - maybe don't change it, because we may play real aim anims
 
 
         protected override void EnterVehicleInternal()
@@ -143,7 +143,30 @@ namespace SanAndreasUnity.Behaviours.Peds.States
             m_ped.GetStateOrLogError<DriveByFireState>().EnterVehicle(this.CurrentVehicle, this.CurrentVehicleSeatAlignment);
         }
 
-        // camera
+        
+        public override void UpdateCameraZoom()
+        {
+            // ignore
+        }
+
+        public override void CheckCameraCollision()
+        {
+            BaseAimMovementState.CheckCameraCollision(m_ped, this.GetCameraFocusPos());
+        }
+
+        public override Vector3 GetCameraFocusPos()
+        {
+            var seat = m_ped.CurrentVehicleSeat;
+            if (seat != null && seat.Parent != null)
+                return seat.Parent.transform.position + Vector3.up * 1.5f - m_ped.Camera.transform.forward * 1.5f;
+            else
+                return base.GetCameraFocusPos();
+
+            //return m_ped.transform.position + Vector3.up * 0.5f;
+
+            //return m_ped.PlayerModel.Head.transform.position;
+        }
+
 
         public override void OnAimButtonPressed()
         {

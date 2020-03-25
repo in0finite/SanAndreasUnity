@@ -193,7 +193,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				m_ped.CameraDistanceVehicle);
 		}
 
-		public new Vector3 GetCameraFocusPos()
+		public override Vector3 GetCameraFocusPos()
 		{
 			if (m_ped.CurrentVehicle != null)
 				return m_ped.CurrentVehicle.transform.position;
