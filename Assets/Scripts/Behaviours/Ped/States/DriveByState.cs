@@ -158,7 +158,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         {
             var seat = m_ped.CurrentVehicleSeat;
             if (seat != null && seat.Parent != null)
-                return seat.Parent.transform.position + Vector3.up * 1.5f - m_ped.Camera.transform.forward * 1.5f;
+                return seat.Parent.transform.position + Vector3.up * DriveByManager.Instance.cameraHeightOffset - m_ped.Camera.transform.forward * DriveByManager.Instance.cameraBackwardOffset;
             else
                 return base.GetCameraFocusPos();
 
