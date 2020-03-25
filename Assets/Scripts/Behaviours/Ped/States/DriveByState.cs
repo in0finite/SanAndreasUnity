@@ -12,6 +12,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         // - drive-by exiting state - activated when going from drive-by to sitting state, or when trying to exit vehicle
         // - camera
         // - weapon's gun flash should depend on last time when fired, not on anim time - maybe don't change it, because we may play real aim anims
+        // - ignore current vehicle when raycasting for weapon shot
+        // - sometimes fire direction is going up in the sky when aiming opposite of vehicle's direction
 
 
         protected override void EnterVehicleInternal()
@@ -151,20 +153,25 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         public override void CheckCameraCollision()
         {
-            BaseAimMovementState.CheckCameraCollision(m_ped, this.GetCameraFocusPos());
+            BaseScriptState.CheckCameraCollision(m_ped, this.GetCameraFocusPos(), - m_ped.Camera.transform.forward, this.GetCameraDistance());
         }
 
         public override Vector3 GetCameraFocusPos()
         {
             var seat = m_ped.CurrentVehicleSeat;
             if (seat != null && seat.Parent != null)
-                return seat.Parent.transform.position + Vector3.up * DriveByManager.Instance.cameraHeightOffset - m_ped.Camera.transform.forward * DriveByManager.Instance.cameraBackwardOffset;
+                return seat.Parent.transform.position + Vector3.up * DriveByManager.Instance.cameraHeightOffset;
             else
                 return base.GetCameraFocusPos();
 
             //return m_ped.transform.position + Vector3.up * 0.5f;
 
             //return m_ped.PlayerModel.Head.transform.position;
+        }
+
+        public override float GetCameraDistance()
+        {
+            return DriveByManager.Instance.cameraBackwardOffset;
         }
 
 

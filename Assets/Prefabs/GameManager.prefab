@@ -266,5 +266,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6f2ab743454cf049be175e623857b0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraHeightOffset: 1
-  cameraBackwardOffset: 1
+  cameraHeightOffset: 1.5
+  cameraBackwardOffset: 2.2
