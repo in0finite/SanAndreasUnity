@@ -153,6 +153,9 @@ namespace SanAndreasUnity.Behaviours
 		NetworkedWeapon m_netWeapon;
 		public NetworkedWeapon NetWeapon => m_netWeapon;
 
+        // "size of the array determines how many raycasts will occur"
+        static readonly RaycastHit[] s_raycastHitBuffer = new RaycastHit[2];
+
 
 
 		static Weapon ()
@@ -657,10 +660,42 @@ namespace SanAndreasUnity.Behaviours
 
 		public bool ProjectileRaycast (Vector3 source, Vector3 dir, out RaycastHit hit, WeaponAttackParams parameters)
 		{
-			return Physics.Raycast (source, dir, out hit, this.MaxRange, WeaponsManager.Instance.projectileRaycastMask);
-		}
+            if (null == parameters.GameObjectToIgnoreWhenRaycasting)
+                return Physics.Raycast(source, dir, out hit, this.MaxRange, WeaponsManager.Instance.projectileRaycastMask);
 
-		public void GetLineFromGun (out Vector3 start, out Vector3 end, WeaponAttackParams parameters)
+
+            // clear the buffer (not sure if it is needed)
+            for (int i = 0; i < s_raycastHitBuffer.Length; i++)
+            {
+                s_raycastHitBuffer[i] = new RaycastHit();
+            }
+
+			int numHits = Physics.RaycastNonAlloc (source, dir, s_raycastHitBuffer, this.MaxRange, WeaponsManager.Instance.projectileRaycastMask);
+
+            if (numHits < 1)
+            {
+                hit = new RaycastHit();
+                return false;
+            }
+
+            // "Note that the order of the results is undefined"
+            // - that's why we need to search for closest hit
+
+            var validHits = s_raycastHitBuffer
+                .Where(h => h.collider != null && h.transform.gameObject != parameters.GameObjectToIgnoreWhenRaycasting);
+
+            if (!validHits.Any())
+            {
+                hit = new RaycastHit();
+                return false;
+            }
+
+            hit = validHits.Aggregate((h1, h2) => h1.distance <= h2.distance ? h1 : h2);
+
+            return true;
+        }
+
+        public void GetLineFromGun (out Vector3 start, out Vector3 end, WeaponAttackParams parameters)
 		{
 			float distance = this.MaxRange;
 			Vector3 firePos = this.GetFirePos ();
