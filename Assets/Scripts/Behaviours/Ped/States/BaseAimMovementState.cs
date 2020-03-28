@@ -418,16 +418,16 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
-		public static bool TryFire (Ped ped)
+		public static bool TryFire (Ped ped, WeaponAttackParams weaponAttackParams)
 		{
 			if (ped.CurrentWeapon != null)
 			{
 				if (Net.NetStatus.IsServer)
 				{
 					if (ped.IsControlledByLocalPlayer || null == ped.PlayerOwner)
-						return TryFire(ped, ped.CurrentWeapon.GetFirePos(), ped.CurrentWeapon.GetFireDir());
+						return TryFire(ped, ped.CurrentWeapon.GetFirePos(), ped.CurrentWeapon.GetFireDir(weaponAttackParams), weaponAttackParams);
 					else	// this ped is owned by remote client
-						return TryFire(ped, ped.NetFirePos, ped.NetFireDir);
+						return TryFire(ped, ped.NetFirePos, ped.NetFireDir, weaponAttackParams);
 				}
 			}
 			return false;
@@ -435,10 +435,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         protected virtual bool TryFire()
         {
-            return TryFire(m_ped);
+            return TryFire(m_ped, WeaponAttackParams.Default);
         }
 
-		public static bool TryFire (Ped ped, Vector3 firePos, Vector3 fireDir)
+		public static bool TryFire (Ped ped, Vector3 firePos, Vector3 fireDir, WeaponAttackParams weaponAttackParams)
 		{
             bool isServer = Net.NetStatus.IsServer;
 			var weapon = ped.CurrentWeapon;
@@ -480,7 +480,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// fire projectile
 			if (isServer)
-				F.RunExceptionSafe( () => weapon.FireProjectile (firePos, fireDir) );
+				F.RunExceptionSafe( () => weapon.FireProjectile (firePos, fireDir, weaponAttackParams) );
 
 			// send fire event to server
 			if (Net.NetStatus.IsClientOnly && ped.IsControlledByLocalPlayer)
@@ -584,8 +584,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				// try to recruit peds to follow you
 				if (m_weapon != null)
 				{
-					if (m_weapon.ProjectileRaycast(m_ped.IsControlledByLocalPlayer ? m_weapon.GetFirePos() : m_ped.NetFirePos, 
-						m_ped.IsControlledByLocalPlayer ? m_weapon.GetFireDir() : m_ped.NetFireDir, out RaycastHit hit))
+					if (m_weapon.ProjectileRaycast(
+                        m_ped.IsControlledByLocalPlayer ? m_weapon.GetFirePos() : m_ped.NetFirePos, 
+						m_ped.IsControlledByLocalPlayer ? m_weapon.GetFireDir(WeaponAttackParams.Default) : m_ped.NetFireDir,
+                        out RaycastHit hit,
+                        WeaponAttackParams.Default))
 					{
 						// see if ped is hit
 						var ped = hit.transform.GetComponent<Ped>();

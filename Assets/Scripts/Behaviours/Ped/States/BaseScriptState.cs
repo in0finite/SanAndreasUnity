@@ -319,6 +319,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
             weapon.PlayFireSound();
 		}
 
-	}
+
+        public virtual Vector3 GetFireDirection()
+        {
+            return m_ped.CurrentWeapon != null ? m_ped.CurrentWeapon.GetFireDir(WeaponAttackParams.Default) : m_ped.AimDirection;
+        }
+
+    }
 
 }

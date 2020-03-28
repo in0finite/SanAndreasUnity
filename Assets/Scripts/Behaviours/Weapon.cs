@@ -73,6 +73,13 @@ namespace SanAndreasUnity.Behaviours
 //		public int damage = 0;
 //	}
 
+    public struct WeaponAttackParams
+    {
+        public GameObject GameObjectToIgnoreWhenRaycasting { get; set; }
+
+        public static WeaponAttackParams Default { get => new WeaponAttackParams(); }
+    }
+
 	public class Weapon : MonoBehaviour
 	{
 		private WeaponDef definition = null;
@@ -363,7 +370,7 @@ namespace SanAndreasUnity.Behaviours
 				if (m_ped != null && m_ped.CurrentWeapon == this)
 				{
 					Vector3 start, end;
-					this.GetLineFromGun (out start, out end);
+					this.GetLineFromGun (out start, out end, WeaponAttackParams.Default);
 					GLDebug.DrawLine (start, end, Color.red, 0, true);
 				}
 			}
@@ -609,12 +616,12 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		public void FireProjectile ()
+		public void FireProjectile (WeaponAttackParams parameters)
 		{
-			this.FireProjectile(this.GetFirePos(), this.GetFireDir());
+			this.FireProjectile(this.GetFirePos(), this.GetFireDir(parameters), parameters);
 		}
 
-		public virtual void FireProjectile (Vector3 firePos, Vector3 fireDir)
+		public virtual void FireProjectile (Vector3 firePos, Vector3 fireDir, WeaponAttackParams parameters)
 		{
 
             this.LastTimeWhenFired = Time.time;
@@ -622,7 +629,7 @@ namespace SanAndreasUnity.Behaviours
 			// raycast against all (non-breakable ?) objects
 
 			RaycastHit hit;
-			if (this.ProjectileRaycast (firePos, fireDir, out hit))
+			if (this.ProjectileRaycast (firePos, fireDir, out hit, parameters))
 			{
 				// if target object has damageable script, inflict damage to it
 
@@ -648,18 +655,18 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		public bool ProjectileRaycast (Vector3 source, Vector3 dir, out RaycastHit hit)
+		public bool ProjectileRaycast (Vector3 source, Vector3 dir, out RaycastHit hit, WeaponAttackParams parameters)
 		{
 			return Physics.Raycast (source, dir, out hit, this.MaxRange, WeaponsManager.Instance.projectileRaycastMask);
 		}
 
-		public void GetLineFromGun (out Vector3 start, out Vector3 end)
+		public void GetLineFromGun (out Vector3 start, out Vector3 end, WeaponAttackParams parameters)
 		{
 			float distance = this.MaxRange;
 			Vector3 firePos = this.GetFirePos ();
-			Vector3 fireDir = this.GetFireDir ();
+			Vector3 fireDir = this.GetFireDir (parameters);
 			RaycastHit hit;
-			if (this.ProjectileRaycast (firePos, fireDir, out hit))
+			if (this.ProjectileRaycast (firePos, fireDir, out hit, parameters))
 			{
 				distance = hit.distance;
 			}
@@ -682,7 +689,7 @@ namespace SanAndreasUnity.Behaviours
 			return firePos;
 		}
 
-		public virtual Vector3 GetFireDir ()
+		public virtual Vector3 GetFireDir (WeaponAttackParams parameters)
 		{
 			
 			if (m_ped)
@@ -697,7 +704,7 @@ namespace SanAndreasUnity.Behaviours
 
 					// raycast
 					RaycastHit hit;
-					if (this.ProjectileRaycast (ray.origin, ray.direction, out hit))
+					if (this.ProjectileRaycast (ray.origin, ray.direction, out hit, parameters))
 					{
 						return (hit.point - this.GetFirePos ()).normalized;
 					}
@@ -746,7 +753,7 @@ namespace SanAndreasUnity.Behaviours
 
 			// ray based on firing direction
 			Gizmos.color = Color.black;
-			GizmosDrawCastedRay (firePos, this.GetFireDir ());
+			GizmosDrawCastedRay (firePos, this.GetFireDir (WeaponAttackParams.Default));
 
 		}
 
@@ -754,7 +761,7 @@ namespace SanAndreasUnity.Behaviours
 		{
 			float distance = 100f;
 			RaycastHit hit;
-			if (this.ProjectileRaycast (source, dir, out hit))
+			if (this.ProjectileRaycast (source, dir, out hit, WeaponAttackParams.Default))
 			{
 				distance = hit.distance;
 			}
