@@ -15,6 +15,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         // - sometimes fire direction is going up in the sky when aiming opposite of vehicle's direction
 
 
+
+        public WeaponAttackParams WeaponAttackParams
+        {
+            get => new WeaponAttackParams { GameObjectToIgnoreWhenRaycasting = 
+                this.CurrentVehicle != null ? this.CurrentVehicle.gameObject : null };
+        }
+
+
+
         protected override void EnterVehicleInternal()
         {
             m_vehicleParentOffset = Vector3.zero;
@@ -46,7 +55,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
                     {
                         m_ped.CurrentWeapon.AimAnimState = m_model.LastAnimState;
 
-                        this.UpdateAimAnim(() => BaseAimMovementState.TryFire(m_ped));
+                        this.UpdateAimAnim(() => BaseAimMovementState.TryFire(m_ped, this.WeaponAttackParams));
                     }
                 }
 
@@ -179,6 +188,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
                 m_ped.GetStateOrLogError<VehicleSittingState>().EnterVehicle(this.CurrentVehicle, this.CurrentVehicleSeatAlignment);
             else
                 base.OnAimButtonPressed();
+        }
+
+        public override Vector3 GetFireDirection()
+        {
+            return m_ped.CurrentWeapon != null ? m_ped.CurrentWeapon.GetFireDir(this.WeaponAttackParams) : m_ped.AimDirection;
         }
 
     }
