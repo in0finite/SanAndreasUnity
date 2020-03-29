@@ -669,12 +669,6 @@ namespace SanAndreasUnity.Behaviours
                 return Physics.Raycast(source, dir, out hit, this.MaxRange, WeaponsManager.Instance.projectileRaycastMask);
 
 
-            // clear the buffer (not sure if it is needed)
-            for (int i = 0; i < s_raycastHitBuffer.Length; i++)
-            {
-                s_raycastHitBuffer[i] = new RaycastHit();
-            }
-
 			int numHits = Physics.RaycastNonAlloc (source, dir, s_raycastHitBuffer, this.MaxRange, WeaponsManager.Instance.projectileRaycastMask);
 
             if (numHits < 1)
