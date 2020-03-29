@@ -209,6 +209,21 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
+        public static IEnumerable<Transform> GetAllParents(this Transform tr)
+        {
+            Transform currentParent = tr.parent;
+            while (currentParent != null)
+            {
+                yield return currentParent;
+                currentParent = currentParent.parent;
+            }
+        }
+
+        public static bool IsParentOf(this Transform tr, Transform child)
+        {
+            return child.GetAllParents().Any(p => p == tr);
+        }
+
         public static IEnumerable<Transform> GetFirstLevelChildren(this Transform tr)
         {
             for (int i = 0; i < tr.childCount; i++)
