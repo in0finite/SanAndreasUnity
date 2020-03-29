@@ -507,23 +507,6 @@ namespace SanAndreasUnity.Behaviours
 		public Vector3 CrouchSpineRotationOffset { get; set; }
 
 
-		public bool IsAimingBack () {
-
-			if (null == m_ped)
-				return false;
-
-			if (!this.HasFlag (GunFlag.AIMWITHARM))
-				return false;
-
-			if (!m_ped.IsAiming)
-				return false;
-			
-			Vector3 aimDirLocal = m_ped.transform.InverseTransformDirection (m_ped.AimDirection);
-
-			float oppositeSideAngle = Vector3.Angle( Vector3.forward, aimDirLocal.WithXAndZ () );
-			return oppositeSideAngle > WeaponsSettings.AIMWITHARM_maxAimAngle;
-		}
-
 		// TODO: this function should be removed, and new one should be created: OnAnimsUpdated
 		public virtual void UpdateAnimWhileHolding ()
 		{
@@ -710,7 +693,12 @@ namespace SanAndreasUnity.Behaviours
 			end = firePos + fireDir * distance;
 		}
 
-		public virtual Vector3 GetFirePos ()
+        Vector3 GetFirePos()
+        {
+            return m_ped != null ? m_ped.FirePosition : this.GetFirePosWithoutPed();
+        }
+
+        public Vector3 GetFirePosWithoutPed ()
 		{
 			Vector3 firePos;
 
@@ -724,44 +712,30 @@ namespace SanAndreasUnity.Behaviours
 			return firePos;
 		}
 
-		public virtual Vector3 GetFireDir (WeaponAttackParams parameters)
+		Vector3 GetFireDir (WeaponAttackParams parameters)
 		{
-			
-			if (m_ped)
+			if (m_ped != null)
 			{
-				if (this.IsAimingBack ())
-					return m_ped.transform.up;
-
-				if (m_ped.IsControlledByLocalPlayer && m_ped.Camera != null)
-				{
-					// find ray going into the world
-					Ray ray = m_ped.Camera.GetRayFromCenter ();
-
-					// raycast
-					RaycastHit hit;
-					if (this.ProjectileRaycast (ray.origin, ray.direction, out hit, parameters))
-					{
-						return (hit.point - this.GetFirePos ()).normalized;
-					}
-
-					// if any object is hit, direction will be from fire position to hit point
-
-					// if not, direction will be same as aim direction
-
-				}
-
-				return m_ped.WeaponHolder.AimDirection;
+                return m_ped.FireDirection;
 			}
-			else if (this.GunFlash)
-				return this.GunFlash.transform.right;
 			else
-				return this.transform.right;
+            {
+                return this.GetFireDirWithoutPed();
+            }
 		}
 
-		#endregion
+        public Vector3 GetFireDirWithoutPed()
+        {
+            if (this.GunFlash)
+                return this.GunFlash.transform.right;
+            else
+                return this.transform.right;
+        }
+
+        #endregion
 
 
-		public virtual void OnDrawGizmosSelected ()
+        public virtual void OnDrawGizmosSelected ()
 		{
 			// draw rays from gun
 

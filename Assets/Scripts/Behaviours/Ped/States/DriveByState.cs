@@ -11,8 +11,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         // - add real aim anims ?
         // - drive-by exiting state - activated when going from drive-by to sitting state, or when trying to exit vehicle
         // - weapon's gun flash should depend on last time when fired, not on anim time - maybe don't change it, because we may play real aim anims
-        // - ignore current vehicle when raycasting for weapon shot
-        // - sometimes fire direction is going up in the sky when aiming opposite of vehicle's direction
+        // - sometimes fire direction is going up in the sky when aiming opposite of vehicle's direction - this happens with AWA weapons only
 
 
 
@@ -190,9 +189,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
                 base.OnAimButtonPressed();
         }
 
-        public override Vector3 GetFireDirection()
+        public virtual Vector3 GetFirePosition()
         {
-            return m_ped.CurrentWeapon != null ? m_ped.CurrentWeapon.GetFireDir(this.WeaponAttackParams) : m_ped.AimDirection;
+            return BaseAimMovementState.GetFirePosition(m_ped);
+        }
+
+        public virtual Vector3 GetFireDirection()
+        {
+            return BaseAimMovementState.GetFireDirection(m_ped, () => false, this.WeaponAttackParams);
         }
 
     }

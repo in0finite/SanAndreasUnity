@@ -425,7 +425,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				if (Net.NetStatus.IsServer)
 				{
 					if (ped.IsControlledByLocalPlayer || null == ped.PlayerOwner)
-						return TryFire(ped, ped.CurrentWeapon.GetFirePos(), ped.CurrentWeapon.GetFireDir(weaponAttackParams), weaponAttackParams);
+						return TryFire(ped, ped.FirePosition, ped.FireDirection, weaponAttackParams);
 					else	// this ped is owned by remote client
 						return TryFire(ped, ped.NetFirePos, ped.NetFireDir, weaponAttackParams);
 				}
@@ -499,7 +499,69 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			return true;
 		}
 
-		public virtual void OnClientTriedToFire(Vector3 firePos, Vector3 fireDir)
+        public virtual Vector3 GetFirePosition()
+        {
+            return GetFirePosition(m_ped);
+        }
+
+        public static Vector3 GetFirePosition(Ped ped)
+        {
+            return ped.CurrentWeapon != null ? ped.CurrentWeapon.GetFirePosWithoutPed() : ped.transform.position;
+        }
+
+        public virtual Vector3 GetFireDirection()
+        {
+            return GetFireDirection(m_ped, () => IsAimingBack(m_ped), WeaponAttackParams.Default);
+        }
+
+        public static Vector3 GetFireDirection(Ped ped, System.Func<bool> isAimingBackFunc, WeaponAttackParams weaponAttackParams)
+        {
+            if (null == ped.CurrentWeapon)
+                return ped.AimDirection;
+
+            if (isAimingBackFunc())
+                return ped.transform.up;
+
+            if (ped.IsControlledByLocalPlayer && ped.Camera != null)
+            {
+                // find ray going into the world
+                Ray ray = ped.Camera.GetRayFromCenter();
+
+                // raycast
+                RaycastHit hit;
+                if (ped.CurrentWeapon.ProjectileRaycast(ray.origin, ray.direction, out hit, weaponAttackParams))
+                {
+                    return (hit.point - ped.FirePosition).normalized;
+                }
+
+                // if any object is hit, direction will be from fire position to hit point
+
+                // if not, direction will be same as aim direction
+
+            }
+
+            return ped.AimDirection;
+        }
+
+        public static bool IsAimingBack(Ped ped)
+        {
+            if (null == ped.CurrentWeapon)
+                return false;
+
+            if (!ped.CurrentWeapon.HasFlag(GunFlag.AIMWITHARM))
+                return false;
+
+            if (!ped.IsAiming)
+                return false;
+
+            Vector3 aimDirLocal = ped.transform.InverseTransformDirection(ped.AimDirection);
+
+            float oppositeSideAngle = Vector3.Angle(Vector3.forward, aimDirLocal.WithXAndZ());
+            return oppositeSideAngle > WeaponsManager.Instance.AIMWITHARM_maxAimAngle;
+        }
+
+
+        public virtual void OnClientTriedToFire(Vector3 firePos, Vector3 fireDir)
 		{
 			if (null == m_weapon)
 				return;
@@ -585,8 +647,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				if (m_weapon != null)
 				{
 					if (m_weapon.ProjectileRaycast(
-                        m_ped.IsControlledByLocalPlayer ? m_weapon.GetFirePos() : m_ped.NetFirePos, 
-						m_ped.IsControlledByLocalPlayer ? m_weapon.GetFireDir(WeaponAttackParams.Default) : m_ped.NetFireDir,
+                        m_ped.IsControlledByLocalPlayer ? m_ped.FirePosition : m_ped.NetFirePos, 
+						m_ped.IsControlledByLocalPlayer ? m_ped.FireDirection : m_ped.NetFireDir,
                         out RaycastHit hit,
                         WeaponAttackParams.Default))
 					{
