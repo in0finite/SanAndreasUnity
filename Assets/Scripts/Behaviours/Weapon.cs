@@ -687,7 +687,7 @@ namespace SanAndreasUnity.Behaviours
             // - that's why we need to search for closest hit
 
             var validHits = s_raycastHitBuffer
-                .Where(h => h.collider != null && h.transform.gameObject != parameters.GameObjectToIgnoreWhenRaycasting);
+                .Where(h => h.collider != null && parameters.GameObjectToIgnoreWhenRaycasting != h.transform.gameObject && ! parameters.GameObjectToIgnoreWhenRaycasting.transform.IsParentOf(h.transform));
 
             if (!validHits.Any())
             {
