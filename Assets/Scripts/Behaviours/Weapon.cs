@@ -156,6 +156,8 @@ namespace SanAndreasUnity.Behaviours
         // "size of the array determines how many raycasts will occur"
         static readonly RaycastHit[] s_raycastHitBuffer = new RaycastHit[2];
 
+        WeaponAttackParams m_lastRaycastWeaponAttackParams = WeaponAttackParams.Default;
+
 
 
 		static Weapon ()
@@ -373,7 +375,7 @@ namespace SanAndreasUnity.Behaviours
 				if (m_ped != null && m_ped.CurrentWeapon == this)
 				{
 					Vector3 start, end;
-					this.GetLineFromGun (out start, out end, WeaponAttackParams.Default);
+					this.GetLineFromGun (out start, out end, m_lastRaycastWeaponAttackParams);
 					GLDebug.DrawLine (start, end, Color.red, 0, true);
 				}
 			}
@@ -660,6 +662,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public bool ProjectileRaycast (Vector3 source, Vector3 dir, out RaycastHit hit, WeaponAttackParams parameters)
 		{
+            m_lastRaycastWeaponAttackParams = parameters;
+
+
             if (null == parameters.GameObjectToIgnoreWhenRaycasting)
                 return Physics.Raycast(source, dir, out hit, this.MaxRange, WeaponsManager.Instance.projectileRaycastMask);
 
