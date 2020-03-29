@@ -8,7 +8,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		void StartFiring ();
 
+        Vector3 GetFirePosition();
+        Vector3 GetFireDirection();
 
-	}
+    }
 
 }

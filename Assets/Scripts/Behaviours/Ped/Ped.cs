@@ -89,9 +89,9 @@ namespace SanAndreasUnity.Behaviours
 		public Weapon CurrentWeapon { get { return m_weaponHolder.CurrentWeapon; } }
 		public bool IsFiring { get { return m_weaponHolder.IsFiring; } }
 		public Vector3 AimDirection { get { return m_weaponHolder.AimDirection; } set => m_weaponHolder.AimDirection = value; }
-		public Vector3 FirePosition => this.CurrentWeapon != null ? this.CurrentWeapon.GetFirePos() : this.transform.position;
-		public Vector3 FireDirection => this.CurrentState.GetFireDirection();
-		public bool IsAimOn { get ; set ; }
+		public Vector3 FirePosition => this.CurrentState is Peds.States.IAimState ? ((Peds.States.IAimState) this.CurrentState).GetFirePosition() : this.transform.position;
+		public Vector3 FireDirection => this.CurrentState is Peds.States.IAimState ? ((Peds.States.IAimState) this.CurrentState).GetFireDirection() : this.transform.forward;
+        public bool IsAimOn { get ; set ; }
 		public bool IsFireOn { get ; set ; }
 		public bool IsHoldingWeapon { get { return m_weaponHolder.IsHoldingWeapon; } }
 
