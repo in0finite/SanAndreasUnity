@@ -153,8 +153,8 @@ namespace SanAndreasUnity.Behaviours
 		NetworkedWeapon m_netWeapon;
 		public NetworkedWeapon NetWeapon => m_netWeapon;
 
-        // "size of the array determines how many raycasts will occur"
-        static readonly RaycastHit[] s_raycastHitBuffer = new RaycastHit[2];
+        // "size of the array determines how many raycasts will occur" - I don't think this is true
+        static readonly RaycastHit[] s_raycastHitBuffer = new RaycastHit[100];
 
         WeaponAttackParams m_lastRaycastWeaponAttackParams = WeaponAttackParams.Default;
 
@@ -687,6 +687,7 @@ namespace SanAndreasUnity.Behaviours
             // - that's why we need to search for closest hit
 
             var validHits = s_raycastHitBuffer
+                .Take(numHits)
                 .Where(h => h.collider != null && parameters.GameObjectToIgnoreWhenRaycasting != h.transform.gameObject && ! parameters.GameObjectToIgnoreWhenRaycasting.transform.IsParentOf(h.transform));
 
             if (!validHits.Any())
