@@ -11,8 +11,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         // - add real aim anims ?
         // - drive-by exiting state - activated when going from drive-by to sitting state, or when trying to exit vehicle
         // - weapon's gun flash should depend on last time when fired, not on anim time - maybe don't change it, because we may play real aim anims
-        // - sometimes fire direction is going up in the sky when aiming opposite of vehicle's direction - this happens with AWA weapons only
-
+        
 
 
         public WeaponAttackParams WeaponAttackParams
@@ -30,8 +29,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			BaseVehicleState.PreparePedForVehicle(m_ped, this.CurrentVehicle, this.CurrentVehicleSeat);
 
-            // we should not update firing from here, because it can cause stack overflow
-            this.UpdateAnimsInternal(false);
+            // only update firing if ped is not currently firing, because otherwise it can cause stack overflow
+            // by switching states indefinitely
+            // also, we must update firing here, because otherwise shooting rate will be lower
+            this.UpdateAnimsInternal(!m_ped.IsFiring);
 
         }
 
