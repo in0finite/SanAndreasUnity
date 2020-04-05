@@ -311,8 +311,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 603044a9ff214434db928f6a43fd0b8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AimAnimMaxTime: 0.3
-  AimAnimFireMaxTime: 0.5
 --- !u!114 &2421064630445689714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,8 +323,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8feb24af1a72c0446b1978fd54b64643, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AimAnimMaxTime: 0.3
-  AimAnimFireMaxTime: 0.5
 --- !u!1 &1273918895060814
 GameObject:
   m_ObjectHideFlags: 0
