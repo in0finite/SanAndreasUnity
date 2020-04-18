@@ -18,6 +18,7 @@ namespace SanAndreasUnity.UI
 		public float spaceBetweenButtons = 5f;
 
 		public Color openedWindowTextColor = Color.green;
+		public Color ClosedWindowTextColor => this.buttonPrefab.GetComponentInChildren<Text>().color;
 
 		static MenuEntry s_rootMenuEntry = new MenuEntry();
 
@@ -53,6 +54,8 @@ namespace SanAndreasUnity.UI
 			int indexOfMenuEntry = s_rootMenuEntry.AddChild (menuEntry);
 
 			GameObject buttonGo = Instantiate(Instance.buttonPrefab);
+			
+			buttonGo.name = menuEntry.name;
 
 			buttonGo.GetComponentInChildren<Text>().text = menuEntry.name;
 
@@ -61,6 +64,19 @@ namespace SanAndreasUnity.UI
 
 			buttonGo.GetComponent<Button>().onClick.AddListener(() => menuEntry.clickAction());
 
+		}
+
+		public static Button GetMenuEntryButton(MenuEntry entry)
+		{
+			Transform child = Instance.buttonsContainer.transform.Find(entry.name);
+			return child != null ? child.GetComponent<Button>() : null;
+		}
+
+		public static void SetEntryColor(MenuEntry entry, Color color)
+		{
+			var button = GetMenuEntryButton(entry);
+			if (button != null)
+				button.GetComponentInChildren<Text>().color = color;
 		}
 
 	}
