@@ -3,6 +3,7 @@ using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using UnityEngine.SceneManagement;
 using SanAndreasUnity.Utilities;
+using UnityEngine.UI;
 
 namespace SanAndreasUnity.UI
 {
@@ -26,6 +27,11 @@ namespace SanAndreasUnity.UI
 		public static GUILayoutOption[] ButtonLayoutOptions { get { return s_buttonOptions; } }
 
 		static MenuEntry s_rootMenuEntry = new MenuEntry();
+
+		static bool s_hasMenuEntriesToAdd = false;
+
+		public RectTransform buttonsContainer;
+		public GameObject buttonPrefab;
 
 
 
@@ -105,7 +111,37 @@ namespace SanAndreasUnity.UI
 
 		public static void RegisterMenuEntry (MenuEntry menuEntry)
 		{
-			s_rootMenuEntry.AddChild (menuEntry);
+			int indexOfMenuEntry = s_rootMenuEntry.AddChild (menuEntry);
+
+			GameObject buttonGo = Instantiate(Instance.buttonPrefab);
+
+			buttonGo.GetComponentInChildren<Text>().text = menuEntry.name;
+
+			buttonGo.transform.SetParent(Instance.buttonsContainer.transform, false);
+			buttonGo.transform.SetSiblingIndex(indexOfMenuEntry);
+
+			buttonGo.GetComponent<Button>().onClick.AddListener(() => menuEntry.clickAction());
+
+			//Instance.buttonsContainer.GetComponent<HorizontalLayoutGroup>();
+
+			//MenuEntriesChanged();
+		}
+
+		static void MenuEntriesChanged()
+		{
+			if (s_hasMenuEntriesToAdd)
+				return;
+
+			s_hasMenuEntriesToAdd = true;
+
+			Instance.Invoke(nameof(UpdateMenuEntries), 0.0001f);
+		}
+
+		void UpdateMenuEntries()
+		{
+			s_hasMenuEntriesToAdd = false;
+
+
 		}
 
 	}

@@ -296,8 +296,8 @@ namespace SanAndreasUnity.UI {
 
 			this.IsRegisteredInMainMenu = true;
 
-			MenuEntry menuEntry = new MenuEntry(){name = this.windowName, sortPriority = m_sortPriorityForMainMenu, 
-				drawAction = () => this.OnMainMenuGUI()};
+			MenuEntry menuEntry = new MenuEntry(){ name = this.windowName, sortPriority = m_sortPriorityForMainMenu, 
+				drawAction = () => this.OnMainMenuGUI(), clickAction = this.OnButtonClickedInMainMenu };
 			MainMenu.RegisterMenuEntry (menuEntry);
 		}
 
@@ -311,10 +311,15 @@ namespace SanAndreasUnity.UI {
 
 			if (MainMenu.DrawMenuEntry (this.windowName))
 			{
-				this.IsOpened = !this.IsOpened;
+				this.OnButtonClickedInMainMenu();
 			}
 
 			GUI.contentColor = originalColor;
+		}
+
+		private void OnButtonClickedInMainMenu()
+		{
+			this.IsOpened = !this.IsOpened;
 		}
 
 	}
