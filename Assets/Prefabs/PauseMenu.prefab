@@ -116,7 +116,6 @@ GameObject:
   - component: {fileID: 114396965753478646}
   - component: {fileID: 114184621571316304}
   - component: {fileID: 114509004744246330}
-  - component: {fileID: 5185162781855978487}
   - component: {fileID: 114096753951945486}
   m_Layer: 0
   m_Name: PauseMenu
@@ -453,33 +452,6 @@ MonoBehaviour:
   m_registerInMainMenuOnStart: 0
   m_sortPriorityForMainMenu: 0
   numPedsPerPage: 30
---- !u!114 &5185162781855978487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1693201817607148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c74baf3e4586f7499860b111043508d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  windowName: GXT Viewer
-  m_isOpenedByDefaultInMainMenu: 0
-  m_isOpenedByDefaultInPauseMenu: 0
-  m_destroyOnClose: 0
-  windowRect:
-    serializedVersion: 2
-    x: 57.5
-    y: 78.75
-    width: 115
-    height: 157.5
-  useScrollView: 0
-  m_spaceBeforeContent: 0
-  m_spaceAfterContent: 0
-  m_registerInMainMenuOnStart: 0
-  m_sortPriorityForMainMenu: 0
 --- !u!114 &114096753951945486
 MonoBehaviour:
   m_ObjectHideFlags: 0
