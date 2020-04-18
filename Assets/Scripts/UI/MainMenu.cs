@@ -35,6 +35,10 @@ namespace SanAndreasUnity.UI
 		{
 			if (null == Instance)
 				Instance = this;
+
+			// add Exit button
+			RegisterMenuEntry(new MenuEntry { name = "Exit", sortPriority = int.MaxValue, 
+				clickAction = () => GameManager.ExitApplication() });
 		}
 
 		void OnGUI ()
@@ -64,11 +68,6 @@ namespace SanAndreasUnity.UI
 				if (item.drawAction != null)
 					item.drawAction();
 				GUILayout.Space (this.spaceBetweenButtons);
-			}
-
-			if (MainMenu.DrawMenuEntry ("Exit"))
-			{
-				GameManager.ExitApplication ();
 			}
 
 			GUILayout.FlexibleSpace ();
