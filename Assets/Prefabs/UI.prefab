@@ -689,6 +689,7 @@ MonoBehaviour:
   spaceAtBottom: 40
   spaceBetweenButtons: 30
   openedWindowTextColor: {r: 0, g: 1, b: 0, a: 1}
+  canvas: {fileID: 4580190521452898284}
   buttonsContainer: {fileID: 8593699161208457630}
   buttonPrefab: {fileID: 9144763033384219215, guid: c5e7e3e4ef714514090db34e6278e452,
     type: 3}

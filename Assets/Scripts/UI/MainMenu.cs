@@ -21,6 +21,7 @@ namespace SanAndreasUnity.UI
 
 		static MenuEntry s_rootMenuEntry = new MenuEntry();
 
+		public Canvas canvas;
 		public RectTransform buttonsContainer;
 		public GameObject buttonPrefab;
 
@@ -36,15 +37,11 @@ namespace SanAndreasUnity.UI
 				clickAction = () => GameManager.ExitApplication() });
 		}
 
-		void OnGUI ()
+		void OnSceneChanged(SceneChangedMessage sceneChangedMessage)
 		{
-			if (!GameManager.IsInStartupScene)
-				return;
-
-			// draw main menu gui
-
-
+			this.canvas.enabled = GameManager.IsInStartupScene;
 		}
+
 
 		public static bool DrawMenuEntry(string text)
 		{
