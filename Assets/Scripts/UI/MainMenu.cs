@@ -19,8 +19,6 @@ namespace SanAndreasUnity.UI
 
 		public Color openedWindowTextColor = Color.green;
 
-		public bool drawLogo = false;
-
 		private static GUILayoutOption[] s_buttonOptions = new GUILayoutOption[0];
 		public static GUILayoutOption[] ButtonLayoutOptions { get { return s_buttonOptions; } }
 
@@ -45,16 +43,6 @@ namespace SanAndreasUnity.UI
 				return;
 
 			// draw main menu gui
-
-			// logo
-
-			if (this.drawLogo)
-			{
-				if (GameManager.Instance.logoTexture != null)
-				{
-					GUI.DrawTexture (GUIUtils.GetCenteredRect (GameManager.Instance.logoTexture.GetSize ()), GameManager.Instance.logoTexture);
-				}
-			}
 
 			// draw menu entries at bottom of screen
 
