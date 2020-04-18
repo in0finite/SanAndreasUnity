@@ -21,8 +21,6 @@ namespace SanAndreasUnity.UI
 
 		static MenuEntry s_rootMenuEntry = new MenuEntry();
 
-		static bool s_hasMenuEntriesToAdd = false;
-
 		public RectTransform buttonsContainer;
 		public GameObject buttonPrefab;
 
@@ -65,26 +63,6 @@ namespace SanAndreasUnity.UI
 			buttonGo.transform.SetSiblingIndex(indexOfMenuEntry);
 
 			buttonGo.GetComponent<Button>().onClick.AddListener(() => menuEntry.clickAction());
-
-			//Instance.buttonsContainer.GetComponent<HorizontalLayoutGroup>();
-
-			//MenuEntriesChanged();
-		}
-
-		static void MenuEntriesChanged()
-		{
-			if (s_hasMenuEntriesToAdd)
-				return;
-
-			s_hasMenuEntriesToAdd = true;
-
-			Instance.Invoke(nameof(UpdateMenuEntries), 0.0001f);
-		}
-
-		void UpdateMenuEntries()
-		{
-			s_hasMenuEntriesToAdd = false;
-
 
 		}
 
