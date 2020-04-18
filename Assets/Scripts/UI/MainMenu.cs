@@ -19,8 +19,6 @@ namespace SanAndreasUnity.UI
 
 		public Color openedWindowTextColor = Color.green;
 
-		public bool drawBackground = false;
-		public Color backgroundColor = Color.black;
 		public bool drawLogo = false;
 
 		private static GUILayoutOption[] s_buttonOptions = new GUILayoutOption[0];
@@ -47,13 +45,6 @@ namespace SanAndreasUnity.UI
 				return;
 
 			// draw main menu gui
-
-			// background
-
-			if (this.drawBackground)
-			{
-				GUIUtils.DrawRect (GUIUtils.ScreenRect, this.backgroundColor);
-			}
 
 			// logo
 
