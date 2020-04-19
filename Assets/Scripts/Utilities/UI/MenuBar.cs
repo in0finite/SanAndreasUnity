@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,43 +8,57 @@ namespace SanAndreasUnity.Utilities
 
     public class MenuBar : MonoBehaviour
     {
-		MenuBarEntry m_rootMenuEntry = new MenuBarEntry();
-
 		public RectTransform buttonsContainer;
 		public GameObject buttonPrefab;
 
 		public Color DefaultMenuEntryTextColor => this.buttonPrefab.GetComponentInChildren<Text>().color;
 
-
-
-		public void RegisterMenuEntry(MenuBarEntry menuEntry)
+        public IEnumerable<MenuBarEntry> MenuBarEntries
 		{
-			int indexOfMenuEntry = m_rootMenuEntry.AddChild(menuEntry);
-
-			GameObject buttonGo = Object.Instantiate(this.buttonPrefab);
-
-			buttonGo.name = menuEntry.name;
-
-			buttonGo.GetComponentInChildren<Text>().text = menuEntry.name;
-
-			buttonGo.transform.SetParent(this.buttonsContainer.transform, false);
-			buttonGo.transform.SetSiblingIndex(indexOfMenuEntry);
-
-			buttonGo.GetComponent<Button>().onClick.AddListener(() => menuEntry.clickAction());
-
+			get
+			{
+				for (int i = 0; i < this.buttonsContainer.transform.childCount; i++)
+				{
+					var entry = this.buttonsContainer.transform.GetChild(i).GetComponent<MenuBarEntry>();
+					if (entry != null)
+						yield return entry;
+				}
+			}
 		}
 
-		public Button GetMenuEntryButton(MenuBarEntry entry)
+
+        public MenuBarEntry RegisterMenuEntry(string entryName, int sortPriority, System.Action clickAction)
 		{
-			Transform child = this.buttonsContainer.transform.Find(entry.name);
-			return child != null ? child.GetComponent<Button>() : null;
+			GameObject buttonGo = Object.Instantiate(this.buttonPrefab);
+
+			buttonGo.name = entryName;
+
+			buttonGo.GetComponentInChildren<Text>().text = entryName;
+
+			buttonGo.transform.SetParent(this.buttonsContainer.transform, false);
+			
+			buttonGo.GetComponentOrThrow<Button>().onClick.AddListener(() => clickAction());
+
+			var entry = buttonGo.GetComponentOrThrow<MenuBarEntry>();
+
+			entry.sortPriority = sortPriority;
+
+			// sort entries
+
+			var list = this.MenuBarEntries.ToList();
+			list.Sort((a, b) => a.sortPriority.CompareTo(b.sortPriority));
+
+			for (int i = 0; i < list.Count; i++)
+			{
+				list[i].transform.SetSiblingIndex(i);
+			}
+
+			return entry;
 		}
 
 		public void SetEntryColor(MenuBarEntry entry, Color color)
 		{
-			var button = GetMenuEntryButton(entry);
-			if (button != null)
-				button.GetComponentInChildren<Text>().color = color;
+			entry.GetComponentInChildren<Text>().color = color;
 		}
 
 	}

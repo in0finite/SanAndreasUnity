@@ -270,13 +270,8 @@ namespace SanAndreasUnity.UI {
 
 		public	void	RegisterButtonInPauseMenu() {
 
-			m_pauseMenuEntry = new Utilities.MenuBarEntry
-			{
-				name = this.windowName,
-				clickAction = this.OnButtonClickedInPauseMenu
-			};
-			
-			PauseMenu.Instance.menuBar.RegisterMenuEntry(m_pauseMenuEntry);
+			m_pauseMenuEntry = PauseMenu.Instance.menuBar.RegisterMenuEntry(this.windowName, 0, 
+				this.OnButtonClickedInPauseMenu);
 
 		}
 
