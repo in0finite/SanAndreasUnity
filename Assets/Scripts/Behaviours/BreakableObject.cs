@@ -17,12 +17,6 @@ namespace SanAndreasUnity.Behaviours
 		[Tooltip("Minimum square impulse to break that object.")]
 		[SerializeField] private float m_impulse = 1000.0f;
 		public float Impulse { get { return m_impulse; } set { m_impulse = value; } }
-		
-		[SerializeField] private float m_health = 200.0f;
-		public float Health { get { return m_health; } set { m_health = value; } }
-
-		[SerializeField] private float m_maxHealth = 200.0f;
-		public float MaxHealth { get { return m_maxHealth; } set { m_maxHealth = value; } }
 
 		[Tooltip("Effect created after object got break.")]
 		[SerializeField] private ParticleSystem m_breakEffect = null;
@@ -44,18 +38,22 @@ namespace SanAndreasUnity.Behaviours
 		[SerializeField] private bool m_isBroken;
 		public bool IsBroken { get { return m_isBroken; } set { m_isBroken = value; } }
 
+		public bool m_respawned = true;
+
 		private void Awake()
 		{
 			
 		}
 
-		void Respawn()
+		public void Respawn()
 		{
 			Quaternion quaternion = Quaternion.identity;
 			quaternion.eulerAngles = RespawnRotation;
 			transform.SetPositionAndRotation(RespawnPosition, quaternion);
 			gameObject.GetComponent<MeshRenderer>().enabled = true;
-			gameObject.GetComponent<Rigidbody>().isKinematic = true;
+			gameObject.GetComponent<Rigidbody>().isKinematic = false;
+			gameObject.GetComponent<Rigidbody>().detectCollisions = true;
+			gameObject.GetComponent<Damageable>().ResetHealth();
 			transform.Find("Collision").gameObject.SetActive(true);
 			IsBroken = false;
 		}
@@ -83,7 +81,8 @@ namespace SanAndreasUnity.Behaviours
 			{
    				gameObject.GetComponent<MeshRenderer>().enabled = false;
 				transform.Find("Collision").gameObject.SetActive(false);
-				gameObject.GetComponent<Rigidbody>().isKinematic = false;
+				gameObject.GetComponent<Rigidbody>().isKinematic = true;
+				gameObject.GetComponent<Rigidbody>().detectCollisions = false;
 				gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
 				gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 				Invoke("Respawn", m_respawnTime);

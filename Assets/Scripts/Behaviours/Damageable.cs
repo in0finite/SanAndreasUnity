@@ -24,6 +24,11 @@ namespace SanAndreasUnity.Behaviours
 
 		public DamageInfo LastDamageInfo { get; private set; }
 
+		public void ResetHealth()
+		{
+			Health = MaxHealth;
+		}
+
 		public void Damage (DamageInfo info)
 		{
 			if (info.amount > 0.0f)

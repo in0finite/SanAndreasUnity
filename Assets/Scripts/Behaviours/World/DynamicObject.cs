@@ -15,7 +15,6 @@ namespace SanAndreasUnity.Behaviours.World
         Vector3 m_startPosition;
         Quaternion m_startRotation;
         float m_lastMoved;
-        bool m_respawned = true;
         bool m_savePositionAndRotationEstablished = false;
         BreakableObject m_breakableObject;
         Damageable m_damageable;
@@ -25,6 +24,10 @@ namespace SanAndreasUnity.Behaviours.World
         #region Methods
         private void Start()
         {
+
+            Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+            rb.Sleep();
+            rb.mass = 10.0f;
             m_breakableObject = gameObject.AddComponent<BreakableObject>();
             m_damageable = gameObject.AddComponent<Damageable>();
             m_damageable.OnDamage.AddListener(OnDamage);
@@ -44,6 +47,7 @@ namespace SanAndreasUnity.Behaviours.World
                 if (rb.IsSleeping())
                     rb.WakeUp();
                 rb.AddForceAtPosition(-damageInfo.hitNormal * 2, damageInfo.hitPoint - transform.position); // @TODO fix calculations
+                //rb.AddForceAtPosition(damageInfo.hitPoint - transform.position , - damageInfo.hitNormal * 2);
             }
             else
             {
@@ -89,36 +93,27 @@ namespace SanAndreasUnity.Behaviours.World
         void OnCollisionStay(Collision collisionInfo)
         {
             m_lastMoved = Time.realtimeSinceStartup;
-            m_respawned = false;
         }
 
-        void Respawn()
-        {
-            transform.SetPositionAndRotation(m_startPosition, m_startRotation);
-            m_respawned = true;
-            GetComponent<Rigidbody>().Sleep();
-        }
         void CheckForRespawn()
         {
-            if (m_respawned)
+            if (m_breakableObject.m_respawned)
                 return;
 
             // if fall below map
             if(transform.position.y < -100.0f)
             {
-                Respawn();
+                m_breakableObject.Respawn();
             }
 
             if (m_lastMoved + 5.0f < Time.realtimeSinceStartup)
             {
                 if (m_savePositionAndRotationEstablished)
                 {
-                    Respawn();
+                    m_breakableObject.Respawn();
                 }
                 else
                 {
-                    m_startPosition = transform.position;
-                    m_startRotation = transform.rotation;
                     m_breakableObject.RespawnPosition = m_startPosition;
                     m_breakableObject.RespawnRotation = m_startRotation.eulerAngles;
                     m_savePositionAndRotationEstablished = true;
@@ -129,9 +124,6 @@ namespace SanAndreasUnity.Behaviours.World
         public static DynamicObject CreateDynamic()
         {
             GameObject gameObject = new GameObject();
-            Rigidbody rb = gameObject.AddComponent<Rigidbody>();
-            rb.Sleep();
-            rb.mass = 10.0f;
             DynamicObject dynamicObject = gameObject.AddComponent<DynamicObject>();
             gameObject.layer = LayerMask.NameToLayer("DynamicObject");
             return dynamicObject;
