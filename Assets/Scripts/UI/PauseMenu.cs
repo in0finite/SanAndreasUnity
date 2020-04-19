@@ -55,7 +55,21 @@ namespace SanAndreasUnity.UI {
 		}
 
 		void Start () {
-			
+
+			this.menuBar.RegisterMenuEntry(new MenuBarEntry
+			{
+				name = "Resume",
+				sortPriority = int.MinValue,
+				clickAction = () => IsOpened = false,
+			});
+
+			this.menuBar.RegisterMenuEntry(new MenuBarEntry
+			{
+				name = "Exit",
+				sortPriority = int.MaxValue,
+				clickAction = () => GameManager.ExitApplication (),
+			});
+
 		}
 
 		public	static	PauseMenuWindow[]	GetAllWindows() {
