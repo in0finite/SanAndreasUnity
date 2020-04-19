@@ -36,18 +36,17 @@ namespace SanAndreasUnity.Behaviours.World
                 return;
 
             DamageInfo damageInfo = m_damageable.LastDamageInfo;
-            //m_breakableObject.Health -= damageInfo.amount;
-            if(m_breakableObject.Health > 0.0f)
+            m_damageable.Health -= damageInfo.amount;
+            if(m_damageable.Health > 0.0f)
             {
                 m_breakableObject.PlayWeaponDamageEffect();
                 Rigidbody rb = gameObject.GetComponent<Rigidbody>();
                 if (rb.IsSleeping())
                     rb.WakeUp();
-                rb.AddForceAtPosition(transform.position - damageInfo.hitPoint, -damageInfo.hitNormal * 10); // @TODO fix calculations
+                rb.AddForceAtPosition(-damageInfo.hitNormal * 2, damageInfo.hitPoint - transform.position); // @TODO fix calculations
             }
             else
             {
-
                 m_breakableObject.Break();
             }
         }
@@ -77,7 +76,12 @@ namespace SanAndreasUnity.Behaviours.World
         {
             base.OnLoaded();
 
+            // set particles same texture as object it is attached to
             ParticleSystemRenderer renderer = m_breakableObject.WeaponDamageEffect.GetComponent<ParticleSystemRenderer>();
+            renderer.material.mainTexture = transform.GetComponent<Renderer>().materials[0].mainTexture;
+            renderer.material.mainTextureScale = new Vector2(.3f, .3f);
+
+            renderer = m_breakableObject.BreakEffect.GetComponent<ParticleSystemRenderer>();
             renderer.material.mainTexture = transform.GetComponent<Renderer>().materials[0].mainTexture;
             renderer.material.mainTextureScale = new Vector2(.3f, .3f);
         }

@@ -13,6 +13,12 @@ namespace SanAndreasUnity.Behaviours
 
 	public class Damageable : MonoBehaviour
 	{
+		[SerializeField] private float m_health = 100.0f;
+		public float Health { get { return m_health; } set { m_health = value; } }
+
+		[SerializeField] private float m_maxHealth = 100.0f;
+		public float MaxHealth { get { return m_maxHealth; } set { m_maxHealth = value; } }
+
 		[SerializeField] private UnityEvent m_onDamage = new UnityEvent ();
 		public UnityEvent OnDamage { get { return m_onDamage; } set { m_onDamage = value; } }
 

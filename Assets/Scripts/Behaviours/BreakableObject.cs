@@ -14,8 +14,8 @@ namespace SanAndreasUnity.Behaviours
 		[SerializeField] private bool m_affectShooting = false;
 		public bool AffectShooting { get { return m_affectShooting; } set { m_affectShooting = value; } }
 
-		[Tooltip("Minimum impulse to break that object.")]
-		[SerializeField] private float m_impulse = 400.0f;
+		[Tooltip("Minimum square impulse to break that object.")]
+		[SerializeField] private float m_impulse = 1000.0f;
 		public float Impulse { get { return m_impulse; } set { m_impulse = value; } }
 		
 		[SerializeField] private float m_health = 200.0f;
@@ -51,11 +51,12 @@ namespace SanAndreasUnity.Behaviours
 
 		void Respawn()
 		{
-			Health = MaxHealth;
 			Quaternion quaternion = Quaternion.identity;
 			quaternion.eulerAngles = RespawnRotation;
 			transform.SetPositionAndRotation(RespawnPosition, quaternion);
-			gameObject.SetActive(true);
+			gameObject.GetComponent<MeshRenderer>().enabled = true;
+			gameObject.GetComponent<Rigidbody>().isKinematic = true;
+			transform.Find("Collision").gameObject.SetActive(true);
 			IsBroken = false;
 		}
 
@@ -63,7 +64,7 @@ namespace SanAndreasUnity.Behaviours
 		{
 			if(WeaponDamageEffect)
 			{
-				WeaponDamageEffect.Emit(10);
+				WeaponDamageEffect.Emit(Random.Range(7, 12));
 			}
 		}
 
@@ -75,14 +76,17 @@ namespace SanAndreasUnity.Behaviours
 			IsBroken = true;
 			if (BreakEffect)
 			{
-				if(!BreakEffect.isPlaying)
- 					BreakEffect.Play();
+ 				BreakEffect.Emit(Random.Range(10,20));
 			}
 
 			if (m_respawnTime > 0)
 			{
+   				gameObject.GetComponent<MeshRenderer>().enabled = false;
+				transform.Find("Collision").gameObject.SetActive(false);
+				gameObject.GetComponent<Rigidbody>().isKinematic = false;
+				gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+				gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 				Invoke("Respawn", m_respawnTime);
-				gameObject.SetActive(false);
 			}
 			else
 				Respawn();

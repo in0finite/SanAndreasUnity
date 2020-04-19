@@ -635,7 +635,11 @@ namespace SanAndreasUnity.Behaviours
 					}
 					else
 					{
-						damageable.Damage( new DamageInfo() { amount = this.Damage } );
+						DamageInfo damageInfo = new DamageInfo();
+						damageInfo.amount = Damage;
+						damageInfo.hitNormal = hit.normal;
+						damageInfo.hitPoint = hit.point;
+						damageable.Damage(damageInfo);
 					}
 					
 				}
