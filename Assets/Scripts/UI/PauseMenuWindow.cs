@@ -301,24 +301,8 @@ namespace SanAndreasUnity.UI {
 			this.IsRegisteredInMainMenu = true;
 
 			m_mainMenuEntry = new MenuEntry(){ name = this.windowName, sortPriority = m_sortPriorityForMainMenu, 
-				drawAction = () => this.OnMainMenuGUI(), clickAction = this.OnButtonClickedInMainMenu };
+				clickAction = this.OnButtonClickedInMainMenu };
 			MainMenu.RegisterMenuEntry (m_mainMenuEntry);
-		}
-
-		private void OnMainMenuGUI ()
-		{
-			// draw a button in main menu
-
-			var originalColor = GUI.contentColor;
-			if (this.IsOpened)
-				GUI.contentColor = MainMenu.Instance.openedWindowTextColor;
-
-			if (MainMenu.DrawMenuEntry (this.windowName))
-			{
-				this.OnButtonClickedInMainMenu();
-			}
-
-			GUI.contentColor = originalColor;
 		}
 
 		private void OnButtonClickedInMainMenu()

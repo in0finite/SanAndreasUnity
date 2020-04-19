@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
-using UnityEngine.SceneManagement;
-using SanAndreasUnity.Utilities;
 using UnityEngine.UI;
 
 namespace SanAndreasUnity.UI
@@ -11,11 +9,6 @@ namespace SanAndreasUnity.UI
 	public class MainMenu : MonoBehaviour {
 
 		public static MainMenu Instance { get; private set; }
-
-		public float minButtonHeight = 25f;
-		public float minButtonWidth = 70f;
-		public float spaceAtBottom = 15f;
-		public float spaceBetweenButtons = 5f;
 
 		public Color openedWindowTextColor = Color.green;
 		public Color ClosedWindowTextColor => this.buttonPrefab.GetComponentInChildren<Text>().color;
@@ -43,11 +36,6 @@ namespace SanAndreasUnity.UI
 			this.canvas.enabled = GameManager.IsInStartupScene;
 		}
 
-
-		public static bool DrawMenuEntry(string text)
-		{
-			return GUIUtils.ButtonWithCalculatedSize(text, Instance.minButtonWidth, Instance.minButtonHeight);
-		}
 
 		public static void RegisterMenuEntry (MenuEntry menuEntry)
 		{
