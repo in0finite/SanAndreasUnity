@@ -22,6 +22,9 @@ namespace SanAndreasUnity.UI {
 				if (this.IsRegisteredInMainMenu)
 					MainMenu.SetEntryColor(m_mainMenuEntry, m_isOpened ? MainMenu.Instance.openedWindowTextColor : MainMenu.Instance.ClosedWindowTextColor);
 
+				if (m_pauseMenuEntry != null)
+					PauseMenu.Instance.menuBar.SetEntryColor(m_pauseMenuEntry, m_isOpened ? PauseMenu.Instance.openedWindowTextColor : PauseMenu.Instance.ClosedWindowTextColor);
+
 				if (m_isOpened)
 				{
 					this.OnWindowOpened ();
@@ -84,6 +87,8 @@ namespace SanAndreasUnity.UI {
 		public float SpaceBeforeContent { get { return m_spaceBeforeContent; } set { m_spaceBeforeContent = value; } }
 		[SerializeField]	private	float	m_spaceAfterContent = 0f;
 		public float SpaceAfterContent { get { return m_spaceAfterContent; } set { m_spaceAfterContent = value; } }
+
+		private Utilities.MenuBarEntry m_pauseMenuEntry;
 
 		[SerializeField]	private	bool	m_registerInMainMenuOnStart = false;
 		public	bool	IsRegisteredInMainMenu { get; private set; }
@@ -265,32 +270,19 @@ namespace SanAndreasUnity.UI {
 
 		public	void	RegisterButtonInPauseMenu() {
 
-			PauseMenu.onDrawItems += this.OnPauseMenuGUI;
+			m_pauseMenuEntry = new Utilities.MenuBarEntry
+			{
+				name = this.windowName,
+				clickAction = this.OnButtonClickedInPauseMenu
+			};
+			
+			PauseMenu.Instance.menuBar.RegisterMenuEntry(m_pauseMenuEntry);
 
 		}
 
-		public	void	UnRegisterButtonInPauseMenu() {
-
-			PauseMenu.onDrawItems -= this.OnPauseMenuGUI;
-
-		}
-
-		private	void	OnPauseMenuGUI() {
-
-			// display button for opening/closing window
-
-			var originalColor = GUI.contentColor;
-			if (this.IsOpened)
-				GUI.contentColor = PauseMenu.Instance.openedWindowTextColor;
-
-		//	string text = this.IsOpened ? "Hide " + this.windowName : "Show " + this.windowName;
-			string text = this.windowName;
-
-			if (GUILayout.Button (text)) {
-				this.IsOpened = ! this.IsOpened;
-			}
-
-			GUI.contentColor = originalColor;
+		private void OnButtonClickedInPauseMenu()
+		{
+			this.IsOpened = !this.IsOpened;
 		}
 
 		public void RegisterInMainMenu ()

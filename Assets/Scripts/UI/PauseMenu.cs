@@ -19,19 +19,29 @@ namespace SanAndreasUnity.UI {
 				return m_isOpened;
 			}
 			set {
+				if (m_isOpened == value)
+					return;
+
 				m_isOpened = value;
+
+				Instance.canvas.enabled = m_isOpened;
 			}
 		}
 
 		public	static	event System.Action	onDrawItems = delegate {};
 
-	//	public	Color	windowsColor = new Color(0.5f, 0.5f, 0.5f, 0.8f);
-	//	private	static	Texture2D	m_windowBackgroundTexture = null;
-	//	private	static	bool	m_changedWindowStyle = false;
+		//	public	Color	windowsColor = new Color(0.5f, 0.5f, 0.5f, 0.8f);
+		//	private	static	Texture2D	m_windowBackgroundTexture = null;
+		//	private	static	bool	m_changedWindowStyle = false;
+
+		public MenuBar menuBar;
 
 		public Color openedWindowTextColor = Color.green;
+		public Color ClosedWindowTextColor => this.menuBar.DefaultMenuEntryTextColor;
 
 		public static event System.Action onGUI = delegate {};
+
+		public Canvas canvas;
 
 
 
