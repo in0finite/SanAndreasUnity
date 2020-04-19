@@ -9,18 +9,28 @@ namespace SanAndreasUnity.Behaviours
 
 		public Damageable Damageable { get; private set; }
 
-		public float Health { get { return this.Damageable.Health; } set { this.Damageable.Health = value; } }
-		[SerializeField] private float m_maxHealth = 100f;
+		[SerializeField] private float m_health = 100.0f;
+		public float Health { get { return m_health; } set { m_health = value; } }
+
+		[SerializeField] private float m_maxHealth = 100.0f;
 		public float MaxHealth { get { return m_maxHealth; } set { m_maxHealth = value; } }
 
 		public Bar HealthBar { get; private set; }
 
+		public void OnDamage()
+		{
+			DamageInfo info = Damageable.LastDamageInfo;
+			Health -= info.amount;
 
+			if (Health <= 0f)
+			{
+				Destroy(gameObject);
+			}
+		}
 
 		void AwakeForDamage ()
 		{
-			this.Damageable = this.GetComponentOrThrow<Damageable> ();
-
+			Damageable = this.GetComponentOrThrow<Damageable>();
 		}
 
 		void StartForDamage ()

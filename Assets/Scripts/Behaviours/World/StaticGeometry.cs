@@ -1,4 +1,4 @@
-﻿using SanAndreasUnity.Importing.Conversion;
+using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Items.Placements;
@@ -180,7 +180,14 @@ namespace SanAndreasUnity.Behaviours.World
 
 			_isGeometryLoaded = true;
 
-		}
+            OnLoaded();
+
+        }
+
+        protected virtual void OnLoaded()
+        {
+
+        }
 
 		private void OnCollisionModelAttached ()
 		{

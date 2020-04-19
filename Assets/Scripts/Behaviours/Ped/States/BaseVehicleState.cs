@@ -133,6 +133,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 					ped.NetTransform.enabled = false;
 			}
 
+			ped.transform.Find("DynamicObjectCollision").gameObject.SetActive(false);
 		}
 
 		protected void Cleanup()
@@ -142,6 +143,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				m_ped.characterController.enabled = true;
 				m_ped.transform.SetParent(null, true);
 				m_model.IsInVehicle = false;
+				m_ped.transform.Find("DynamicObjectCollision").gameObject.SetActive(true);
 				// enable network transform
 				if (m_ped.NetTransform != null)
 					m_ped.NetTransform.enabled = true;

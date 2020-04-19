@@ -29,8 +29,6 @@ GameObject:
   - component: {fileID: 114803762585694722}
   - component: {fileID: 114244562150032294}
   - component: {fileID: 114293662543306134}
-  - component: {fileID: 7181738364298022858}
-  - component: {fileID: 2421064630445689714}
   m_Layer: 11
   m_Name: States
   m_TagString: Untagged
@@ -299,30 +297,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e111211033b048ca9ca00766168ed4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7181738364298022858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1154474390377672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 603044a9ff214434db928f6a43fd0b8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2421064630445689714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1154474390377672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8feb24af1a72c0446b1978fd54b64643, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1273918895060814
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,6 +333,7 @@ Transform:
   m_Children:
   - {fileID: 4389762674885628}
   - {fileID: 4073572401439152}
+  - {fileID: 4301934661494823351}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -395,6 +370,7 @@ MonoBehaviour:
   syncInterval: 0.1
   shouldPlayAnims: 1
   m_cameraClampValue: {x: 60, y: 60}
+  m_health: 100
   m_maxHealth: 100
   m_inputSendInterval: 0.033333335
   m_enterVehicleRadius: 2
@@ -444,12 +420,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62374ff6df2c74f9699075492ef7fdb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_health: 100
   m_onDamage:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114220037769542022}
-        m_MethodName: HandleDamageByDefault
+      - m_Target: {fileID: 114099438993920694}
+        m_MethodName: OnDamage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -459,8 +434,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &8031585062060932984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -475,7 +448,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverOnly: 0
   localPlayerAuthority: 0
-  m_AssetId: 9d45d42a7408c1e4ab325d6840364b84
+  m_AssetId: 
   m_SceneId: 0
 --- !u!114 &4594788420466467901
 MonoBehaviour:
@@ -551,3 +524,48 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!1 &5725062646588365247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4301934661494823351}
+  - component: {fileID: 3387284206384491600}
+  m_Layer: 12
+  m_Name: DynamicObjectCollision
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4301934661494823351
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5725062646588365247}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4388436116821042}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &3387284206384491600
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5725062646588365247}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.4
+  m_Height: 1.6723415
+  m_Direction: 1
+  m_Center: {x: 0, y: -0.28882927, z: 0}

@@ -1,4 +1,4 @@
-﻿using SanAndreasUnity.Behaviours.Vehicles;
+using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Animation;
 using System.Collections;

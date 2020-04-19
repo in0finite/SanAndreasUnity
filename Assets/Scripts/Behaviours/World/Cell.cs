@@ -87,7 +87,16 @@ namespace SanAndreasUnity.Behaviours.World
 
 			m_insts = new Dictionary<Instance,StaticGeometry> (48 * 1024);
 			foreach (var plcm in placements) {
-				m_insts.Add (plcm, StaticGeometry.Create ());
+                if(DynamicObjectsManager.Instance.IsModelDynamic(plcm.ObjectId))
+                {
+                    DynamicObject dynamicObject = DynamicObject.CreateDynamic();
+                    m_insts.Add(plcm, dynamicObject);
+                }
+                else
+                {
+                    StaticGeometry staticGeometry = StaticGeometry.Create();
+                    m_insts.Add(plcm, staticGeometry);
+                }
 			}
 			//m_insts = placements.ToDictionary(x => x, x => StaticGeometry.Create());
 

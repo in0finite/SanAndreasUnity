@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44659364, g: 0.49642992, b: 0.57482547, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -233,6 +233,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8332079752519860057, guid: dd5c14626ef595d439de799ec08c2b16,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd5c14626ef595d439de799ec08c2b16, type: 3}
 --- !u!1 &732841203
@@ -367,6 +372,40 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 259a477cc43ab4eb184305bfc583d66e, type: 3}
+--- !u!1 &1592346296 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1297494511425690, guid: 9678826ffd3ed244997780ccbdec99b7,
+    type: 3}
+  m_PrefabInstance: {fileID: 508769729}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1592346297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592346296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 021d1f7ca58ae1742939e6baa8123cf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effects:
+  - name: Debris
+    particleSystem: {fileID: 6384021061454035513, guid: 33b5f99766048ad458325d50e4b46a6b,
+      type: 3}
+--- !u!114 &1592346311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592346296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d79e8737a3e3eb7428b7c07e6dcd02ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1683889267
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -374,11 +413,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4549513672316258300, guid: 7f1167f19fe2f0303abfd5803ceac47a,
-        type: 3}
-      propertyPath: m_Name
-      value: NetworkManager
-      objectReference: {fileID: 0}
     - target: {fileID: 434938348018962339, guid: 7f1167f19fe2f0303abfd5803ceac47a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -433,6 +467,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4549513672316258300, guid: 7f1167f19fe2f0303abfd5803ceac47a,
+        type: 3}
+      propertyPath: m_Name
+      value: NetworkManager
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f1167f19fe2f0303abfd5803ceac47a, type: 3}
