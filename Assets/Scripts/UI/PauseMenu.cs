@@ -70,6 +70,8 @@ namespace SanAndreasUnity.UI {
 				clickAction = () => GameManager.ExitApplication (),
 			});
 
+			this.canvas.enabled = IsOpened;
+
 		}
 
 		public	static	PauseMenuWindow[]	GetAllWindows() {
