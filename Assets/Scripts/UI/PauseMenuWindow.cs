@@ -19,6 +19,9 @@ namespace SanAndreasUnity.UI {
 				
 				m_isOpened = value;
 
+				if (this.IsRegisteredInMainMenu)
+					MainMenu.SetEntryColor(m_mainMenuEntry, m_isOpened ? MainMenu.Instance.openedWindowTextColor : MainMenu.Instance.ClosedWindowTextColor);
+
 				if (m_isOpened)
 				{
 					this.OnWindowOpened ();
@@ -84,6 +87,7 @@ namespace SanAndreasUnity.UI {
 
 		[SerializeField]	private	bool	m_registerInMainMenuOnStart = false;
 		public	bool	IsRegisteredInMainMenu { get; private set; }
+		private MenuEntry m_mainMenuEntry;
 		[SerializeField] int m_sortPriorityForMainMenu = 0;
 
 		private static GameObject s_windowsContainer;
@@ -296,25 +300,14 @@ namespace SanAndreasUnity.UI {
 
 			this.IsRegisteredInMainMenu = true;
 
-			MenuEntry menuEntry = new MenuEntry(){name = this.windowName, sortPriority = m_sortPriorityForMainMenu, 
-				drawAction = () => this.OnMainMenuGUI()};
-			MainMenu.RegisterMenuEntry (menuEntry);
+			m_mainMenuEntry = new MenuEntry(){ name = this.windowName, sortPriority = m_sortPriorityForMainMenu, 
+				clickAction = this.OnButtonClickedInMainMenu };
+			MainMenu.RegisterMenuEntry (m_mainMenuEntry);
 		}
 
-		private void OnMainMenuGUI ()
+		private void OnButtonClickedInMainMenu()
 		{
-			// draw a button in main menu
-
-			var originalColor = GUI.contentColor;
-			if (this.IsOpened)
-				GUI.contentColor = MainMenu.Instance.openedWindowTextColor;
-
-			if (MainMenu.DrawMenuEntry (this.windowName))
-			{
-				this.IsOpened = !this.IsOpened;
-			}
-
-			GUI.contentColor = originalColor;
+			this.IsOpened = !this.IsOpened;
 		}
 
 	}

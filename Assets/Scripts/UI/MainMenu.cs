@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
-using UnityEngine.SceneManagement;
-using SanAndreasUnity.Utilities;
+using UnityEngine.UI;
 
 namespace SanAndreasUnity.UI
 {
@@ -11,21 +10,14 @@ namespace SanAndreasUnity.UI
 
 		public static MainMenu Instance { get; private set; }
 
-		public float minButtonHeight = 25f;
-		public float minButtonWidth = 70f;
-		public float spaceAtBottom = 15f;
-		public float spaceBetweenButtons = 5f;
-
 		public Color openedWindowTextColor = Color.green;
-
-		public bool drawBackground = false;
-		public Color backgroundColor = Color.black;
-		public bool drawLogo = false;
-
-		private static GUILayoutOption[] s_buttonOptions = new GUILayoutOption[0];
-		public static GUILayoutOption[] ButtonLayoutOptions { get { return s_buttonOptions; } }
+		public Color ClosedWindowTextColor => this.buttonPrefab.GetComponentInChildren<Text>().color;
 
 		static MenuEntry s_rootMenuEntry = new MenuEntry();
+
+		public Canvas canvas;
+		public RectTransform buttonsContainer;
+		public GameObject buttonPrefab;
 
 
 
@@ -33,79 +25,46 @@ namespace SanAndreasUnity.UI
 		{
 			if (null == Instance)
 				Instance = this;
+
+			// add Exit button
+			RegisterMenuEntry(new MenuEntry { name = "Exit", sortPriority = int.MaxValue, 
+				clickAction = () => GameManager.ExitApplication() });
 		}
 
-		void OnGUI ()
+		void OnSceneChanged(SceneChangedMessage sceneChangedMessage)
 		{
-			if (!GameManager.IsInStartupScene)
-				return;
-
-			// draw main menu gui
-
-			// background
-
-			if (this.drawBackground)
-			{
-				GUIUtils.DrawRect (GUIUtils.ScreenRect, this.backgroundColor);
-			}
-
-			// logo
-
-			if (this.drawLogo)
-			{
-				if (GameManager.Instance.logoTexture != null)
-				{
-					GUI.DrawTexture (GUIUtils.GetCenteredRect (GameManager.Instance.logoTexture.GetSize ()), GameManager.Instance.logoTexture);
-				}
-			}
-
-			// draw menu entries at bottom of screen
-
-			s_buttonOptions = new GUILayoutOption[]{ GUILayout.MinWidth(minButtonWidth), GUILayout.MinHeight(minButtonHeight) };
-
-			GUILayout.BeginArea (new Rect (0f, Screen.height - (minButtonHeight + spaceAtBottom), Screen.width, minButtonHeight + spaceAtBottom));
-		//	GUILayout.Space (5);
-		//	GUILayout.FlexibleSpace ();
-
-
-			GUILayout.BeginHorizontal ();
-
-			GUILayout.Space (5);
-			GUILayout.FlexibleSpace ();
-
-			// draw registered menu items
-			foreach (var item in s_rootMenuEntry.children)
-			{
-				if (item.drawAction != null)
-					item.drawAction();
-				GUILayout.Space (this.spaceBetweenButtons);
-			}
-
-			if (MainMenu.DrawMenuEntry ("Exit"))
-			{
-				GameManager.ExitApplication ();
-			}
-
-			GUILayout.FlexibleSpace ();
-			GUILayout.Space (5);
-
-			GUILayout.EndHorizontal ();
-
-			// add some space below buttons
-		//	GUILayout.Space (spaceAtBottom);
-
-			GUILayout.EndArea ();
-
+			this.canvas.enabled = GameManager.IsInStartupScene;
 		}
 
-		public static bool DrawMenuEntry(string text)
-		{
-			return GUIUtils.ButtonWithCalculatedSize(text, Instance.minButtonWidth, Instance.minButtonHeight);
-		}
 
 		public static void RegisterMenuEntry (MenuEntry menuEntry)
 		{
-			s_rootMenuEntry.AddChild (menuEntry);
+			int indexOfMenuEntry = s_rootMenuEntry.AddChild (menuEntry);
+
+			GameObject buttonGo = Instantiate(Instance.buttonPrefab);
+			
+			buttonGo.name = menuEntry.name;
+
+			buttonGo.GetComponentInChildren<Text>().text = menuEntry.name;
+
+			buttonGo.transform.SetParent(Instance.buttonsContainer.transform, false);
+			buttonGo.transform.SetSiblingIndex(indexOfMenuEntry);
+
+			buttonGo.GetComponent<Button>().onClick.AddListener(() => menuEntry.clickAction());
+
+		}
+
+		public static Button GetMenuEntryButton(MenuEntry entry)
+		{
+			Transform child = Instance.buttonsContainer.transform.Find(entry.name);
+			return child != null ? child.GetComponent<Button>() : null;
+		}
+
+		public static void SetEntryColor(MenuEntry entry, Color color)
+		{
+			var button = GetMenuEntryButton(entry);
+			if (button != null)
+				button.GetComponentInChildren<Text>().color = color;
 		}
 
 	}
