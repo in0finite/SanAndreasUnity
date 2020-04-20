@@ -16,7 +16,7 @@ namespace SanAndreasUnity.Behaviours
         // Update is called once per frame
         private void Update()
         {
-            if (Input.GetKeyDown(actionKey))
+            if (Input.GetKeyDown(actionKey) && GameManager.CanPlayerReadInput())
             {
                 if (Utilities.NetUtils.IsServer)
                     ChangePedestrianModel();

@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
-            if (Input.GetKeyDown(spawnKey))
+            if (Input.GetKeyDown(spawnKey) && GameManager.CanPlayerReadInput())
             {
                 if (Utilities.NetUtils.IsServer)
                     SpawnVehicle();

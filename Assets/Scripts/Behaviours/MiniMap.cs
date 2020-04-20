@@ -377,18 +377,18 @@ namespace SanAndreasUnity.Behaviours
                 Debug.Log("Minimap started!");
             }
 
-            if (Input.GetKeyDown(KeyCode.N))
+            if (Input.GetKeyDown(KeyCode.N) && GameManager.CanPlayerReadInput())
                 ++zoomSelector;
-            else if (Input.GetKeyDown(KeyCode.B))
+            else if (Input.GetKeyDown(KeyCode.B) && GameManager.CanPlayerReadInput())
                 --zoomSelector;
 
-            if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.B))
+            if ((Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.B)) && GameManager.CanPlayerReadInput())
             {
                 if (zoomCoroutine != null) StopCoroutine(zoomCoroutine);
                 zoomCoroutine = StartCoroutine(ChangeZoom(Input.GetKeyDown(KeyCode.N)));
             }
 
-            if (Input.GetKeyDown(KeyCode.F8))
+            if (Input.GetKeyDown(KeyCode.F8) && GameManager.CanPlayerReadInput())
                 toggleInfo = !toggleInfo;
 
             //if (Input.GetKeyDown(KeyCode.M))
