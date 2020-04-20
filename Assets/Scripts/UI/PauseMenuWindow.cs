@@ -19,8 +19,8 @@ namespace SanAndreasUnity.UI {
 				
 				m_isOpened = value;
 
-				if (this.IsRegisteredInMainMenu)
-					MainMenu.SetEntryColor(m_mainMenuEntry, m_isOpened ? MainMenu.Instance.openedWindowTextColor : MainMenu.Instance.ClosedWindowTextColor);
+				if (m_mainMenuEntry != null)
+					MainMenu.Instance.menuBar.SetEntryColor(m_mainMenuEntry, m_isOpened ? MainMenu.Instance.openedWindowTextColor : MainMenu.Instance.ClosedWindowTextColor);
 
 				if (m_pauseMenuEntry != null)
 					PauseMenu.Instance.menuBar.SetEntryColor(m_pauseMenuEntry, m_isOpened ? PauseMenu.Instance.openedWindowTextColor : PauseMenu.Instance.ClosedWindowTextColor);
@@ -91,9 +91,8 @@ namespace SanAndreasUnity.UI {
 		private Utilities.MenuBarEntry m_pauseMenuEntry;
 
 		[SerializeField]	private	bool	m_registerInMainMenuOnStart = false;
-		public	bool	IsRegisteredInMainMenu { get; private set; }
-		private MenuEntry m_mainMenuEntry;
-		[SerializeField] int m_sortPriorityForMainMenu = 0;
+		[SerializeField]	private	int		m_sortPriorityForMainMenu = 0;
+		private Utilities.MenuBarEntry m_mainMenuEntry;
 
 		private static GameObject s_windowsContainer;
 
@@ -282,14 +281,11 @@ namespace SanAndreasUnity.UI {
 
 		public void RegisterInMainMenu ()
 		{
-			if (this.IsRegisteredInMainMenu)
+			if (m_mainMenuEntry != null)
 				return;
 
-			this.IsRegisteredInMainMenu = true;
-
-			m_mainMenuEntry = new MenuEntry(){ name = this.windowName, sortPriority = m_sortPriorityForMainMenu, 
-				clickAction = this.OnButtonClickedInMainMenu };
-			MainMenu.RegisterMenuEntry (m_mainMenuEntry);
+			m_mainMenuEntry = MainMenu.Instance.menuBar.RegisterMenuEntry (this.windowName, m_sortPriorityForMainMenu, 
+				this.OnButtonClickedInMainMenu);
 		}
 
 		private void OnButtonClickedInMainMenu()

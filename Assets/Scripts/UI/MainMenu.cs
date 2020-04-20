@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
-using UnityEngine.UI;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.UI
 {
@@ -10,14 +10,12 @@ namespace SanAndreasUnity.UI
 
 		public static MainMenu Instance { get; private set; }
 
-		public Color openedWindowTextColor = Color.green;
-		public Color ClosedWindowTextColor => this.buttonPrefab.GetComponentInChildren<Text>().color;
+		public MenuBar menuBar;
 
-		static MenuEntry s_rootMenuEntry = new MenuEntry();
+		public Color openedWindowTextColor = Color.green;
+		public Color ClosedWindowTextColor => this.menuBar.DefaultMenuEntryTextColor;
 
 		public Canvas canvas;
-		public RectTransform buttonsContainer;
-		public GameObject buttonPrefab;
 
 
 
@@ -27,44 +25,12 @@ namespace SanAndreasUnity.UI
 				Instance = this;
 
 			// add Exit button
-			RegisterMenuEntry(new MenuEntry { name = "Exit", sortPriority = int.MaxValue, 
-				clickAction = () => GameManager.ExitApplication() });
+			this.menuBar.RegisterMenuEntry("Exit", int.MaxValue, () => GameManager.ExitApplication());
 		}
 
 		void OnSceneChanged(SceneChangedMessage sceneChangedMessage)
 		{
 			this.canvas.enabled = GameManager.IsInStartupScene;
-		}
-
-
-		public static void RegisterMenuEntry (MenuEntry menuEntry)
-		{
-			int indexOfMenuEntry = s_rootMenuEntry.AddChild (menuEntry);
-
-			GameObject buttonGo = Instantiate(Instance.buttonPrefab);
-			
-			buttonGo.name = menuEntry.name;
-
-			buttonGo.GetComponentInChildren<Text>().text = menuEntry.name;
-
-			buttonGo.transform.SetParent(Instance.buttonsContainer.transform, false);
-			buttonGo.transform.SetSiblingIndex(indexOfMenuEntry);
-
-			buttonGo.GetComponent<Button>().onClick.AddListener(() => menuEntry.clickAction());
-
-		}
-
-		public static Button GetMenuEntryButton(MenuEntry entry)
-		{
-			Transform child = Instance.buttonsContainer.transform.Find(entry.name);
-			return child != null ? child.GetComponent<Button>() : null;
-		}
-
-		public static void SetEntryColor(MenuEntry entry, Color color)
-		{
-			var button = GetMenuEntryButton(entry);
-			if (button != null)
-				button.GetComponentInChildren<Text>().color = color;
 		}
 
 	}

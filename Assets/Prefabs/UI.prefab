@@ -684,11 +684,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f5b556e077dc4e268ae212027bb0276, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuBar: {fileID: 8469116886705650871}
   openedWindowTextColor: {r: 0, g: 1, b: 0, a: 1}
   canvas: {fileID: 4580190521452898284}
-  buttonsContainer: {fileID: 8593699161208457630}
-  buttonPrefab: {fileID: 9144763033384219215, guid: c5e7e3e4ef714514090db34e6278e452,
-    type: 3}
 --- !u!1 &1594478129176806
 GameObject:
   m_ObjectHideFlags: 0
@@ -6753,6 +6751,7 @@ GameObject:
   - component: {fileID: 8593699161208457630}
   - component: {fileID: 8945428129181930115}
   - component: {fileID: 87587368906071952}
+  - component: {fileID: 8469116886705650871}
   m_Layer: 5
   m_Name: ButtonsContainer
   m_TagString: Untagged
@@ -6810,6 +6809,21 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 0
+--- !u!114 &8469116886705650871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440295692224049306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3009b992d8a5e69499f649956b583a0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonsContainer: {fileID: 8593699161208457630}
+  buttonPrefab: {fileID: 9144763033384219215, guid: c5e7e3e4ef714514090db34e6278e452,
+    type: 3}
 --- !u!1 &7884037108542363516
 GameObject:
   m_ObjectHideFlags: 0
