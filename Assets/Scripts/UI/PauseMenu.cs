@@ -11,20 +11,20 @@ namespace SanAndreasUnity.UI {
 
 		public static PauseMenu Instance { get; private set; }
 
-		private static bool m_isOpened = false;
+		private static bool s_isOpened = false;
 
 		public	static	bool	IsOpened
 		{
 			get {
-				return m_isOpened;
+				return s_isOpened;
 			}
 			set {
-				if (m_isOpened == value)
+				if (s_isOpened == value)
 					return;
 
-				m_isOpened = value;
+				s_isOpened = value;
 
-				Instance.canvas.enabled = m_isOpened;
+				Instance.canvas.enabled = s_isOpened;
 			}
 		}
 
