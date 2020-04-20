@@ -6,17 +6,8 @@ namespace SanAndreasUnity.Behaviours
 {
 	public class BreakableObject : MonoBehaviour
 	{
-		[Tooltip("Does strong enough collision impulse can cause object to break?")]
-		[SerializeField] private bool m_canBeCrashed = false;
-		public bool CanBeCrashed { get { return m_canBeCrashed; } set { m_canBeCrashed = value; } }
-
-		[Tooltip("Do shooting cause object to move?")]
-		[SerializeField] private bool m_affectShooting = false;
-		public bool AffectShooting { get { return m_affectShooting; } set { m_affectShooting = value; } }
-
-		[Tooltip("Minimum square impulse to break that object.")]
-		[SerializeField] private float m_impulse = 1000.0f;
-		public float Impulse { get { return m_impulse; } set { m_impulse = value; } }
+		[SerializeField] private DynamicObjectProperties m_dynamicObjectProperties;
+		public DynamicObjectProperties DynamicObjectProperties { get { return m_dynamicObjectProperties; } set { m_dynamicObjectProperties = value; } }
 
 		[Tooltip("Effect created after object got break.")]
 		[SerializeField] private ParticleSystem m_breakEffect = null;
@@ -25,10 +16,7 @@ namespace SanAndreasUnity.Behaviours
 		[Tooltip("Effect created after object get shoot by weapon.")]
 		[SerializeField] private ParticleSystem m_weaponDamageEffect = null;
 		public ParticleSystem WeaponDamageEffect { get { return m_weaponDamageEffect; } set { m_weaponDamageEffect = value; } }
-		
-		[Tooltip("After how many seconds, object will respawn.")]
-		[SerializeField] private float m_respawnTime = 5.0f;
-		public float RespawnTime { get { return m_respawnTime; } set { m_respawnTime = value; } }
+
 		[SerializeField] private Vector3 m_respawnPosition;
 		public Vector3 RespawnPosition { get { return m_respawnPosition; } set { m_respawnPosition = value; } }
 
@@ -77,7 +65,7 @@ namespace SanAndreasUnity.Behaviours
  				BreakEffect.Emit(Random.Range(10,20));
 			}
 
-			if (m_respawnTime > 0)
+			if (DynamicObjectsManager.Instance.RespawnTime > 0)
 			{
    				gameObject.GetComponent<MeshRenderer>().enabled = false;
 				transform.Find("Collision").gameObject.SetActive(false);
@@ -85,7 +73,7 @@ namespace SanAndreasUnity.Behaviours
 				gameObject.GetComponent<Rigidbody>().detectCollisions = false;
 				gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
 				gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-				Invoke("Respawn", m_respawnTime);
+				Invoke("Respawn", DynamicObjectsManager.Instance.RespawnTime);
 			}
 			else
 				Respawn();
@@ -93,13 +81,13 @@ namespace SanAndreasUnity.Behaviours
 
 		void OnCollisionEnter(Collision collision)
 		{
-			if (!CanBeCrashed)
+			if (!DynamicObjectProperties.canBeCrashedByPed)
 				return;
 
 			Quaternion quaternion = Quaternion.identity;
 			quaternion.eulerAngles = RespawnRotation;
 
-			if (collision.impulse.sqrMagnitude > Impulse)
+			if (collision.impulse.sqrMagnitude > DynamicObjectProperties.breakImpulse)
 			{
            		Break();
 			}

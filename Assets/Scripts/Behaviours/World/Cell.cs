@@ -89,7 +89,7 @@ namespace SanAndreasUnity.Behaviours.World
 			foreach (var plcm in placements) {
                 if(DynamicObjectsManager.Instance.IsModelDynamic(plcm.ObjectId))
                 {
-                    DynamicObject dynamicObject = DynamicObject.CreateDynamic();
+                    DynamicObject dynamicObject = DynamicObject.CreateDynamic(plcm.ObjectId);
                     m_insts.Add(plcm, dynamicObject);
                 }
                 else
