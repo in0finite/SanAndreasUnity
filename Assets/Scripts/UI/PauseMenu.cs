@@ -28,8 +28,6 @@ namespace SanAndreasUnity.UI {
 			}
 		}
 
-		public	static	event System.Action	onDrawItems = delegate {};
-
 		//	public	Color	windowsColor = new Color(0.5f, 0.5f, 0.5f, 0.8f);
 		//	private	static	Texture2D	m_windowBackgroundTexture = null;
 		//	private	static	bool	m_changedWindowStyle = false;
@@ -137,27 +135,6 @@ namespace SanAndreasUnity.UI {
 
 			// draw title
 			Utilities.GUIUtils.CenteredLabel (new Vector2 (Screen.width / 2.0f, 20), "<b>PAUSE MENU</b>");
-
-
-			GUI.BeginGroup (new Rect (10, 0, 250, Screen.height));
-
-			GUILayout.Space (20);
-
-			if (GUILayout.Button ("Resume"))
-				IsOpened = false;
-			
-			GUILayout.Space (10);
-
-			// draw all registered items
-			onDrawItems ();
-
-			GUILayout.Space (10);
-
-			if (GUILayout.Button ("Exit")) {
-				GameManager.ExitApplication ();
-			}
-
-			GUI.EndGroup ();
 
 
 			onGUI();
