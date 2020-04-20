@@ -2,6 +2,7 @@
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
+using UnityEngine.UI;
 
 namespace SanAndreasUnity.UI {
 	
@@ -21,6 +22,13 @@ namespace SanAndreasUnity.UI {
 
 		public bool drawRedDotOnScreenCenter = false;
 
+		public Canvas canvas;
+		public RawImage weaponImage;
+		public Text weaponAmmoText;
+		public RawImage healthBackgroundImage;
+		public RawImage healthForegroundImage;
+		public RawImage crosshairImage;
+
 		public static Texture2D LeftArrowTexture { get; set; }
 		public static Texture2D RightArrowTexture { get; set; }
 		public static Texture2D UpArrowTexture { get; set; }
@@ -30,6 +38,43 @@ namespace SanAndreasUnity.UI {
 
 		void Awake () {
 			Instance = this;
+		}
+
+		void Update()
+		{
+			if (!Loader.HasLoaded)
+			{
+				this.canvas.enabled = false;
+				return;
+			}
+
+			var ped = Ped.Instance;
+
+			if (null == ped)
+			{
+				this.canvas.enabled = false;
+				return;
+			}
+
+			this.canvas.enabled = true;
+
+			this.crosshairImage.enabled = ped.IsAiming;
+
+			var weapon = ped.CurrentWeapon;
+
+			Texture2D weaponTextureToDisplay = weapon != null ? weapon.HudTexture : Weapon.FistTexture;
+			if (this.weaponImage.texture != weaponTextureToDisplay)
+				this.weaponImage.texture = weaponTextureToDisplay;
+
+			//System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+			string ammoText = weapon != null ? weapon.AmmoOutsideOfClip + "-" + weapon.AmmoInClip : string.Empty;
+			if (this.weaponAmmoText.text != ammoText)
+				this.weaponAmmoText.text = ammoText;
+
+			float healthPerc = Mathf.Clamp01( ped.Health / ped.MaxHealth );
+			this.healthForegroundImage.rectTransform.sizeDelta = new Vector2(this.healthBackgroundImage.rectTransform.sizeDelta.x * healthPerc, this.healthForegroundImage.rectTransform.sizeDelta.y);
+
 		}
 
 		void OnGUI () {
