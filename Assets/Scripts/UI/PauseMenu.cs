@@ -28,10 +28,6 @@ namespace SanAndreasUnity.UI {
 			}
 		}
 
-		//	public	Color	windowsColor = new Color(0.5f, 0.5f, 0.5f, 0.8f);
-		//	private	static	Texture2D	m_windowBackgroundTexture = null;
-		//	private	static	bool	m_changedWindowStyle = false;
-
 		public MenuBar menuBar;
 
 		public Color openedWindowTextColor = Color.green;
@@ -47,8 +43,6 @@ namespace SanAndreasUnity.UI {
 			
 			if (null == Instance)
 				Instance = this;
-
-		//	m_windowBackgroundTexture = Utilities.F.CreateTexture (1, 1, this.windowsColor);
 
 		}
 
@@ -126,11 +120,6 @@ namespace SanAndreasUnity.UI {
 
 			if (!Loader.HasLoaded || !IsOpened)
 				return;
-
-//			if (!m_changedWindowStyle) {
-//				m_changedWindowStyle = true;
-//				GUI.skin.window.normal.background = m_windowBackgroundTexture;
-//			}
 
 
 			// draw title
