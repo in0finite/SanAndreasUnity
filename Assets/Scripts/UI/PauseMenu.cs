@@ -33,8 +33,6 @@ namespace SanAndreasUnity.UI {
 		public Color openedWindowTextColor = Color.green;
 		public Color ClosedWindowTextColor => this.menuBar.DefaultMenuEntryTextColor;
 
-		public static event System.Action onGUI = delegate {};
-
 		public Canvas canvas;
 
 
@@ -113,15 +111,6 @@ namespace SanAndreasUnity.UI {
 						GameManager.ChangeCursorState (shouldBeLocked);
 				}
 			}
-
-		}
-
-		void OnGUI() {
-
-			if (!Loader.HasLoaded || !IsOpened)
-				return;
-
-			onGUI();
 
 		}
 
