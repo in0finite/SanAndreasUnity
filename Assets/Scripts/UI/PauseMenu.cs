@@ -121,11 +121,6 @@ namespace SanAndreasUnity.UI {
 			if (!Loader.HasLoaded || !IsOpened)
 				return;
 
-
-			// draw title
-			Utilities.GUIUtils.CenteredLabel (new Vector2 (Screen.width / 2.0f, 20), "<b>PAUSE MENU</b>");
-
-
 			onGUI();
 
 		}
