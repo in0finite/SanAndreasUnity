@@ -17,20 +17,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public Bar HealthBar { get; private set; }
 
-		public void OnDamage()
-		{
-			DamageInfo info = Damageable.LastDamageInfo;
-			Health -= info.amount;
-
-			if (Health <= 0f)
-			{
-				Destroy(gameObject);
-			}
-		}
-
 		void AwakeForDamage ()
 		{
-			Damageable = this.GetComponentOrThrow<Damageable>();
+			this.Damageable = this.GetComponentOrThrow<Damageable>();
 		}
 
 		void StartForDamage ()

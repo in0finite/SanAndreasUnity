@@ -12,10 +12,6 @@ namespace SanAndreasUnity.Behaviours.World
     {
         #region Variables
 
-        Vector3 m_startPosition;
-        Quaternion m_startRotation;
-        float m_lastMoved;
-        bool m_savePositionAndRotationEstablished = false;
         BreakableObject m_breakableObject;
         Damageable m_damageable;
         bool m_loaded = false;
@@ -89,27 +85,19 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
-        protected override void OnLoad()
+        protected override void OnShow()
         {
-            if (!m_loaded)
-            {
-                m_breakableObject.RespawnPosition = transform.position;
-                m_breakableObject.RespawnRotation = transform.rotation.eulerAngles;
-
-                m_breakableObject.BreakEffect = ParticleSystemManager.Instance.GetByNane("Debris");
-                m_breakableObject.BreakEffect.transform.SetParent(transform, false);
-                m_breakableObject.BreakEffect.transform.localPosition = Vector3.zero;
-                m_breakableObject.BreakEffect.transform.localRotation = Quaternion.identity;
-                m_breakableObject.BreakEffect.name += " breakEffect";
-                m_breakableObject.WeaponDamageEffect = ParticleSystemManager.Instance.GetByNane("Debris");
-                m_breakableObject.WeaponDamageEffect.transform.SetParent(transform, false);
-                m_breakableObject.WeaponDamageEffect.transform.localPosition = Vector3.zero;
-                m_breakableObject.WeaponDamageEffect.transform.localRotation = Quaternion.identity;
-                m_breakableObject.WeaponDamageEffect.name += " weaponDamageEffect";
-                InvokeRepeating("CheckForRespawn", 1f, 1f);
-                m_loaded = true;
-            }
-            base.OnLoad();
+            m_breakableObject.BreakEffect = ParticleSystemManager.Instance.GetByNane("Debris");
+            m_breakableObject.BreakEffect.transform.SetParent(transform, false);
+            m_breakableObject.BreakEffect.transform.localPosition = Vector3.zero;
+            m_breakableObject.BreakEffect.transform.localRotation = Quaternion.identity;
+            m_breakableObject.BreakEffect.name += " breakEffect";
+            m_breakableObject.WeaponDamageEffect = ParticleSystemManager.Instance.GetByNane("Debris");
+            m_breakableObject.WeaponDamageEffect.transform.SetParent(transform, false);
+            m_breakableObject.WeaponDamageEffect.transform.localPosition = Vector3.zero;
+            m_breakableObject.WeaponDamageEffect.transform.localRotation = Quaternion.identity;
+            m_breakableObject.WeaponDamageEffect.name += " weaponDamageEffect";
+            base.OnShow();
         }
 
         protected override void OnLoaded()
@@ -120,42 +108,9 @@ namespace SanAndreasUnity.Behaviours.World
             ParticleSystemRenderer renderer = m_breakableObject.WeaponDamageEffect.GetComponent<ParticleSystemRenderer>();
             renderer.material.mainTexture = transform.GetComponent<Renderer>().materials[0].mainTexture;
             renderer.material.mainTextureScale = new Vector2(.3f, .3f);
-
             renderer = m_breakableObject.BreakEffect.GetComponent<ParticleSystemRenderer>();
             renderer.material.mainTexture = transform.GetComponent<Renderer>().materials[0].mainTexture;
             renderer.material.mainTextureScale = new Vector2(.3f, .3f);
-        }
-
-        void OnCollisionStay(Collision collisionInfo)
-        {
-            m_lastMoved = Time.realtimeSinceStartup;
-        }
-
-        void CheckForRespawn()
-        {
-            if (m_breakableObject.m_respawned)
-                return;
-
-            if (m_lastMoved + DynamicObjectsManager.Instance.RespawnTime < Time.realtimeSinceStartup)
-            {
-                // if fall below map
-                if (transform.position.y < -100.0f)
-                {
-                    m_breakableObject.Respawn();
-                    return;
-                }
-
-                if (m_savePositionAndRotationEstablished)
-                {
-                    m_breakableObject.Respawn();
-                }
-                else
-                {
-                    m_breakableObject.RespawnPosition = m_startPosition;
-                    m_breakableObject.RespawnRotation = m_startRotation.eulerAngles;
-                    m_savePositionAndRotationEstablished = true;
-                }
-            }
         }
 
         public static DynamicObject CreateDynamic(int objectId)

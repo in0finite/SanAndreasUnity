@@ -29,12 +29,15 @@ namespace SanAndreasUnity.Behaviours
 			Health = MaxHealth;
 		}
 
-		public void Damage (DamageInfo info)
+		public void HandleDamageByDefault()
 		{
-			if (info.amount > 0.0f)
+			DamageInfo info = this.LastDamageInfo;
+
+			this.Health -= info.amount;
+
+			if (this.Health <= 0f)
 			{
-				LastDamageInfo = info;
-				m_onDamage.Invoke();
+				Destroy(this.gameObject);
 			}
 		}
 	}
