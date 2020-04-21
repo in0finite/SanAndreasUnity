@@ -69,6 +69,8 @@ namespace SanAndreasUnity.Behaviours
 		private static bool m_showFileBrowser = false;
 		private static FileBrowser m_fileBrowser = null;
 
+		public static event System.Action onLoadSpecialTextures = delegate { };
+
 
 
 		void Start ()
@@ -409,18 +411,12 @@ namespace SanAndreasUnity.Behaviours
 			mouseFix.Apply();
 			Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
 
-			// load crosshair texture
-			Weapon.CrosshairTexture = TextureDictionary.Load("hud").GetDiffuse("siteM16").Texture;
-
 			// fist texture
 			Weapon.FistTexture = TextureDictionary.Load("hud").GetDiffuse("fist").Texture;
 
-			// arrow textures
-			var pcbtnsTxd = TextureDictionary.Load("pcbtns");
-			UI.HUD.LeftArrowTexture = pcbtnsTxd.GetDiffuse("left").Texture;
-			UI.HUD.RightArrowTexture = pcbtnsTxd.GetDiffuse("right").Texture;
-			UI.HUD.UpArrowTexture = pcbtnsTxd.GetDiffuse("up").Texture;
-			UI.HUD.DownArrowTexture = pcbtnsTxd.GetDiffuse("down").Texture;
+			
+			onLoadSpecialTextures();
+
 		}
 
 		private static void StepLoadGXT()

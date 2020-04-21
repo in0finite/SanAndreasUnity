@@ -3,6 +3,7 @@ using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
 using UnityEngine.UI;
+using SanAndreasUnity.Importing.Conversion;
 
 namespace SanAndreasUnity.UI {
 	
@@ -38,6 +39,80 @@ namespace SanAndreasUnity.UI {
 
 		void Awake () {
 			Instance = this;
+
+			Loader.onLoadSpecialTextures += LoadTextures;
+		}
+
+		void LoadTextures()
+		{
+			// load arrow textures
+			var pcbtnsTxd = TextureDictionary.Load("pcbtns");
+			LeftArrowTexture = pcbtnsTxd.GetDiffuse("left").Texture;
+			RightArrowTexture = pcbtnsTxd.GetDiffuse("right").Texture;
+			UpArrowTexture = pcbtnsTxd.GetDiffuse("up").Texture;
+			DownArrowTexture = pcbtnsTxd.GetDiffuse("down").Texture;
+
+			LoadCrosshairTexture();
+
+		}
+
+		void LoadCrosshairTexture()
+		{
+
+			Texture2D originalTex = TextureDictionary.Load("hud")
+				.GetDiffuse("siteM16", new TextureLoadParams { makeNoLongerReadable = false })
+				.Texture;
+
+			// construct crosshair texture
+
+			int originalWidth = originalTex.width;
+			int originalHeight = originalTex.height;
+
+			Texture2D tex = new Texture2D(originalWidth * 2, originalHeight * 2);
+
+			// bottom left
+			for (int i = 0; i < originalWidth; i++)
+			{
+				for (int j = 0; j < originalHeight; j++)
+				{
+					tex.SetPixel(i, j, originalTex.GetPixel(i, j));
+				}
+			}
+
+			// bottom right - flip around X axis
+			for (int i = 0; i < originalWidth; i++)
+			{
+				for (int j = 0; j < originalHeight; j++)
+				{
+					tex.SetPixel(originalWidth - i + originalWidth, j, originalTex.GetPixel(i, j));
+				}
+			}
+
+			// top left - flip Y axis
+			for (int i = 0; i < originalWidth; i++)
+			{
+				for (int j = 0; j < originalHeight; j++)
+				{
+					tex.SetPixel(i, originalHeight - j + originalHeight, originalTex.GetPixel(i, j));
+				}
+			}
+
+			// top right - flip both X and Y axes
+			for (int i = 0; i < originalWidth; i++)
+			{
+				for (int j = 0; j < originalHeight; j++)
+				{
+					tex.SetPixel(originalWidth - i + originalWidth, originalHeight - j + originalHeight, originalTex.GetPixel(i, j));
+				}
+			}
+
+			//tex.Apply(false, true);
+			tex.Apply();
+
+			Weapon.CrosshairTexture = tex;
+			this.crosshairImage.enabled = true;
+			this.crosshairImage.texture = tex;
+
 		}
 
 		void Update()
@@ -89,7 +164,7 @@ namespace SanAndreasUnity.UI {
 
 			// draw crosshair
 			if (ped.IsAiming) {
-				DrawCrosshair( new Vector2(Screen.width * 0.5f, Screen.height * 0.5f), Vector2.one * this.crosshairSize, this.crosshairScaleMode );
+				//DrawCrosshair( new Vector2(Screen.width * 0.5f, Screen.height * 0.5f), Vector2.one * this.crosshairSize, this.crosshairScaleMode );
 			}
 
 			// draw hud
