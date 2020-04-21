@@ -22,10 +22,6 @@ namespace SanAndreasUnity.Behaviours
     {
         public static DynamicObjectsManager Instance { get; private set; }
 
-        [Tooltip("Time after breakable model get respawn")]
-        [SerializeField] private float m_respawnTime = 30.0f;
-        public float RespawnTime { get { return m_respawnTime; } set { m_respawnTime = value; } }
-
         // https://dev.prineside.com/en/gtasa_samp_model_id/search/?q=1265
         private Dictionary<int, DynamicObjectProperties> m_dynamicObjects = new Dictionary<int, DynamicObjectProperties>
         {

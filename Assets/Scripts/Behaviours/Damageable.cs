@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace SanAndreasUnity.Behaviours
@@ -29,14 +30,13 @@ namespace SanAndreasUnity.Behaviours
 			Health = MaxHealth;
 		}
 
-		public void HandleDamageByDefault()
+		public void HandleDamageByDefault ()
 		{
 			DamageInfo info = this.LastDamageInfo;
 
 			this.Health -= info.amount;
 
-			if (this.Health <= 0f)
-			{
+			if (this.Health <= 0f) {
 				Destroy(this.gameObject);
 			}
 		}

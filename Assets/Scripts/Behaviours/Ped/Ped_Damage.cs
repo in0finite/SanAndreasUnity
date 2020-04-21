@@ -17,6 +17,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public Bar HealthBar { get; private set; }
 
+
+
 		void AwakeForDamage ()
 		{
 			this.Damageable = this.GetComponentOrThrow<Damageable>();

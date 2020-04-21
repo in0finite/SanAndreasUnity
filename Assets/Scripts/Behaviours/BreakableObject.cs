@@ -65,18 +65,13 @@ namespace SanAndreasUnity.Behaviours
  				BreakEffect.Emit(Random.Range(10,20));
 			}
 
-			if (DynamicObjectsManager.Instance.RespawnTime > 0)
-			{
-   				gameObject.GetComponent<MeshRenderer>().enabled = false;
-				transform.Find("Collision").gameObject.SetActive(false);
-				gameObject.GetComponent<Rigidbody>().isKinematic = true;
-				gameObject.GetComponent<Rigidbody>().detectCollisions = false;
-				gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
-				gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-				Invoke("Respawn", DynamicObjectsManager.Instance.RespawnTime);
-			}
-			else
-				Respawn();
+   			gameObject.GetComponent<MeshRenderer>().enabled = false;
+			transform.Find("Collision").gameObject.SetActive(false);
+			gameObject.GetComponent<Rigidbody>().isKinematic = true;
+			gameObject.GetComponent<Rigidbody>().detectCollisions = false;
+			gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+			gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+			Destroy(gameObject, 1);
 		}
 
 		void OnCollisionEnter(Collision collision)

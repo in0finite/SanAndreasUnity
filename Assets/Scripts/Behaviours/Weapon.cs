@@ -639,7 +639,7 @@ namespace SanAndreasUnity.Behaviours
 						damageInfo.amount = Damage;
 						damageInfo.hitNormal = hit.normal;
 						damageInfo.hitPoint = hit.point;
-						damageable.Damage(damageInfo);
+						damageable.OnDamage.Invoke();
 					}
 					
 				}
