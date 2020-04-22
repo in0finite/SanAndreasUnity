@@ -298,7 +298,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e111211033b048ca9ca00766168ed4b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
 --- !u!114 &7181738364298022858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -447,7 +447,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_health: 100
-  m_maxHealth: 100
   m_onDamage:
     m_PersistentCalls:
       m_Calls:
