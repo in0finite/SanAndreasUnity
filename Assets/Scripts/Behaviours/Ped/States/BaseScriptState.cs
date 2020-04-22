@@ -285,12 +285,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
-		public virtual void OnDrawHUD()
-		{
-			
-		}
-
-
 		public virtual void OnSwitchedStateByServer(byte[] data)
 		{
 			m_ped.SwitchState(this.GetType());
