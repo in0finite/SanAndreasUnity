@@ -4,6 +4,7 @@ using UnityEngine.Events;
 
 namespace SanAndreasUnity.Behaviours
 {
+
 	public class DamageInfo
 	{
 		public float amount = 0f;
@@ -14,7 +15,7 @@ namespace SanAndreasUnity.Behaviours
 
 	public class Damageable : MonoBehaviour
 	{
-		[SerializeField] private float m_health = 100.0f;
+		[SerializeField] private float m_health = 0.0f;
 		public float Health { get { return m_health; } set { m_health = value; } }
 
 		[SerializeField] private UnityEvent m_onDamage = new UnityEvent ();

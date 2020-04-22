@@ -25,7 +25,7 @@ namespace SanAndreasUnity.Behaviours.World
             gameObject.AddComponent<Rigidbody>();
             m_breakableObject = gameObject.AddComponent<BreakableObject>();
             m_damageable = gameObject.AddComponent<Damageable>();
-            m_damageable.OnDamage.AddListener(m_damageable.HandleDamageByDefault);
+
             m_damageable.OnDamage.AddListener(OnDamage);
             if(m_model != 0)
             {
