@@ -33,8 +33,8 @@ namespace SanAndreasUnity.Behaviours
 		{
 			this.HealthBar = Object.Instantiate (GameManager.Instance.barPrefab, this.transform).GetComponentOrThrow<Bar> ();
 			//	this.HealthBar.SetBorderWidth (0.1f);
-			this.HealthBar.BackgroundColor = UI.HUD.Instance.healthBackgroundColor;
-			this.HealthBar.FillColor = UI.HUD.Instance.healthColor;
+			this.HealthBar.BackgroundColor = PedManager.Instance.healthBackgroundColor;
+			this.HealthBar.FillColor = PedManager.Instance.healthColor;
 			this.HealthBar.BorderColor = Color.black;
 
 			this.UpdateHealthBar ();
@@ -72,7 +72,7 @@ namespace SanAndreasUnity.Behaviours
 			rect.height = Mathf.Min (rect.height, PedManager.Instance.healthBarMaxScreenHeight);
 
 			float borderWidth = Mathf.Min( 2f, rect.height / 4f );
-			GUIUtils.DrawBar( rect, this.Health / this.MaxHealth, UI.HUD.Instance.healthColor, UI.HUD.Instance.healthBackgroundColor, borderWidth );
+			GUIUtils.DrawBar( rect, this.Health / this.MaxHealth, PedManager.Instance.healthColor, PedManager.Instance.healthBackgroundColor, borderWidth );
 
 		}
 

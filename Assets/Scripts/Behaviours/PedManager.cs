@@ -24,6 +24,8 @@ namespace SanAndreasUnity.Behaviours
 		public float healthBarWorldHeight = 0.1f;
 		public float healthBarMaxScreenHeight = 20f;
 		public float healthBarVerticalOffset = 0.3f;
+		public Color healthColor = Color.red;
+		public Color healthBackgroundColor = (Color.red + Color.black) * 0.5f;
 
 		[Header("Ped AI")]
 
