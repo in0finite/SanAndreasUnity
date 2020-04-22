@@ -84,7 +84,7 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int j = 0; j < originalHeight; j++)
 				{
-					tex.SetPixel(originalWidth - i + originalWidth, j, originalTex.GetPixel(i, j));
+					tex.SetPixel(originalWidth - i - 1 + originalWidth, j, originalTex.GetPixel(i, j));
 				}
 			}
 
@@ -93,7 +93,7 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int j = 0; j < originalHeight; j++)
 				{
-					tex.SetPixel(i, originalHeight - j + originalHeight, originalTex.GetPixel(i, j));
+					tex.SetPixel(i, originalHeight - j - 1 + originalHeight, originalTex.GetPixel(i, j));
 				}
 			}
 
@@ -102,7 +102,7 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int j = 0; j < originalHeight; j++)
 				{
-					tex.SetPixel(originalWidth - i + originalWidth, originalHeight - j + originalHeight, originalTex.GetPixel(i, j));
+					tex.SetPixel(originalWidth - i - 1 + originalWidth, originalHeight - j - 1 + originalHeight, originalTex.GetPixel(i, j));
 				}
 			}
 
