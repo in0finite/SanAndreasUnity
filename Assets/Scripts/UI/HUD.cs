@@ -106,8 +106,7 @@ namespace SanAndreasUnity.UI {
 				}
 			}
 
-			//tex.Apply(false, true);
-			tex.Apply();
+			tex.Apply(true, true);
 
 			Weapon.CrosshairTexture = tex;
 			this.crosshairImage.enabled = true;
