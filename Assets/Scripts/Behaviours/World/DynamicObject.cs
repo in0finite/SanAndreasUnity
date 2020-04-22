@@ -25,6 +25,7 @@ namespace SanAndreasUnity.Behaviours.World
             gameObject.AddComponent<Rigidbody>();
             m_breakableObject = gameObject.AddComponent<BreakableObject>();
             m_damageable = gameObject.AddComponent<Damageable>();
+            m_damageable.OnDamage.AddListener(m_damageable.HandleDamageByDefault);
             m_damageable.OnDamage.AddListener(OnDamage);
             if(m_model != 0)
             {
@@ -56,15 +57,11 @@ namespace SanAndreasUnity.Behaviours.World
                     health = 1000,
                 };
             }
-            m_damageable.MaxHealth = m_breakableObject.DynamicObjectProperties.health;
-            m_damageable.Health = m_damageable.MaxHealth;
+            m_damageable.Health = m_breakableObject.DynamicObjectProperties.health;
         }
 
         void OnDamage()
         {
-            if (m_breakableObject.IsBroken)
-                return;
-
             DamageInfo damageInfo = m_damageable.LastDamageInfo;
 
             if (m_breakableObject.DynamicObjectProperties.canBeShooted)
@@ -85,8 +82,10 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
-        protected override void OnShow()
+        protected override void OnLoaded()
         {
+            base.OnLoaded();
+
             m_breakableObject.BreakEffect = ParticleSystemManager.Instance.GetByNane("Debris");
             m_breakableObject.BreakEffect.transform.SetParent(transform, false);
             m_breakableObject.BreakEffect.transform.localPosition = Vector3.zero;
@@ -97,12 +96,6 @@ namespace SanAndreasUnity.Behaviours.World
             m_breakableObject.WeaponDamageEffect.transform.localPosition = Vector3.zero;
             m_breakableObject.WeaponDamageEffect.transform.localRotation = Quaternion.identity;
             m_breakableObject.WeaponDamageEffect.name += " weaponDamageEffect";
-            base.OnShow();
-        }
-
-        protected override void OnLoaded()
-        {
-            base.OnLoaded();
 
             // set particles same texture as object it is attached to
             ParticleSystemRenderer renderer = m_breakableObject.WeaponDamageEffect.GetComponent<ParticleSystemRenderer>();

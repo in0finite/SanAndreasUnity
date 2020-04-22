@@ -420,11 +420,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62374ff6df2c74f9699075492ef7fdb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_health: 100
+  m_maxHealth: 100
   m_onDamage:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114099438993920694}
-        m_MethodName: OnDamage
+      - m_Target: {fileID: 114220037769542022}
+        m_MethodName: HandleDamageByDefault
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -434,6 +436,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &8031585062060932984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,7 +452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverOnly: 0
   localPlayerAuthority: 0
-  m_AssetId: 
+  m_AssetId: 9d45d42a7408c1e4ab325d6840364b84
   m_SceneId: 0
 --- !u!114 &4594788420466467901
 MonoBehaviour:

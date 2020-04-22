@@ -17,33 +17,9 @@ namespace SanAndreasUnity.Behaviours
 		[SerializeField] private ParticleSystem m_weaponDamageEffect = null;
 		public ParticleSystem WeaponDamageEffect { get { return m_weaponDamageEffect; } set { m_weaponDamageEffect = value; } }
 
-		[SerializeField] private Vector3 m_respawnPosition;
-		public Vector3 RespawnPosition { get { return m_respawnPosition; } set { m_respawnPosition = value; } }
-
-		[SerializeField] private Vector3 m_respawnRotation;
-		public Vector3 RespawnRotation { get { return m_respawnRotation; } set { m_respawnRotation = value; } }
-		
-		[SerializeField] private bool m_isBroken;
-		public bool IsBroken { get { return m_isBroken; } set { m_isBroken = value; } }
-
-		public bool m_respawned = true;
-
 		private void Awake()
 		{
 			
-		}
-
-		public void Respawn()
-		{
-			Quaternion quaternion = Quaternion.identity;
-			quaternion.eulerAngles = RespawnRotation;
-			transform.SetPositionAndRotation(RespawnPosition, quaternion);
-			gameObject.GetComponent<MeshRenderer>().enabled = true;
-			gameObject.GetComponent<Rigidbody>().isKinematic = false;
-			gameObject.GetComponent<Rigidbody>().detectCollisions = true;
-			gameObject.GetComponent<Damageable>().ResetHealth();
-			transform.Find("Collision").gameObject.SetActive(true);
-			IsBroken = false;
 		}
 
 		public void PlayWeaponDamageEffect()
@@ -56,10 +32,6 @@ namespace SanAndreasUnity.Behaviours
 
 		public void Break()
 		{
-			if (IsBroken)
-				return;
-
-			IsBroken = true;
 			if (BreakEffect)
 			{
  				BreakEffect.Emit(Random.Range(10,20));
@@ -71,16 +43,13 @@ namespace SanAndreasUnity.Behaviours
 			gameObject.GetComponent<Rigidbody>().detectCollisions = false;
 			gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
 			gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-			Destroy(gameObject, 1);
+			Destroy(this, 1);
 		}
 
 		void OnCollisionEnter(Collision collision)
 		{
 			if (!DynamicObjectProperties.canBeCrashedByPed)
 				return;
-
-			Quaternion quaternion = Quaternion.identity;
-			quaternion.eulerAngles = RespawnRotation;
 
 			if (collision.impulse.sqrMagnitude > DynamicObjectProperties.breakImpulse)
 			{
