@@ -22,6 +22,12 @@ namespace SanAndreasUnity.Behaviours
 
 		public DamageInfo LastDamageInfo { get; private set; }
 
+		public void Damage(DamageInfo info)
+		{
+			this.LastDamageInfo = info;
+			m_onDamage.Invoke();
+		}
+
 		public void HandleDamageByDefault ()
 		{
 			DamageInfo info = this.LastDamageInfo;
@@ -29,9 +35,10 @@ namespace SanAndreasUnity.Behaviours
 			this.Health -= info.amount;
 
 			if (this.Health <= 0f) {
-				Destroy(this.gameObject);
+				Destroy (this.gameObject);
 			}
 		}
+
 	}
 
 }
