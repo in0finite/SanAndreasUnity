@@ -79,9 +79,6 @@ namespace SanAndreasUnity.Behaviours
 
             if (PedManager.Instance.showPedSpeedometer)
                 GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(60, 5)), string.Format("{0:0.0} km/h", m_deltaPos.magnitude * 3.6f / velTimer));
-
-			// show current ped state
-			GUI.Label (GUIUtils.GetCornerRect(ScreenCorner.BottomLeft, 250, 50), string.Format("Current ped state: {0}", m_ped.CurrentState != null ? m_ped.CurrentState.GetType().Name : "none") );
             
 			UnityEngine.Profiling.Profiler.EndSample();
 

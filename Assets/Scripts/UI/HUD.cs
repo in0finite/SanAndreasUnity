@@ -17,6 +17,7 @@ namespace SanAndreasUnity.UI {
 		public RawImage healthBackgroundImage;
 		public RawImage healthForegroundImage;
 		public RawImage crosshairImage;
+		public Text pedStateText;
 
 		public static Texture2D LeftArrowTexture { get; set; }
 		public static Texture2D RightArrowTexture { get; set; }
@@ -134,6 +135,10 @@ namespace SanAndreasUnity.UI {
 
 			float healthPerc = Mathf.Clamp01( ped.Health / ped.MaxHealth );
 			this.healthForegroundImage.rectTransform.sizeDelta = new Vector2(this.healthBackgroundImage.rectTransform.sizeDelta.x * healthPerc, this.healthForegroundImage.rectTransform.sizeDelta.y);
+
+			string pedStateDisplayText = "Current ped state: " + (ped.CurrentState != null ? ped.CurrentState.GetType().Name : "none");
+			if (pedStateDisplayText != this.pedStateText.text)
+				this.pedStateText.text = pedStateDisplayText;
 
 		}
 
