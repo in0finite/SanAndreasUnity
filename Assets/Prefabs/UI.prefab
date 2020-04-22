@@ -2034,14 +2034,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32c417c622c0c4e2e8e323b02ec0ac9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crosshairSize: 30.7
-  crosshairScaleMode: 0
-  hudScreenCorner: 1
-  hudSize: {x: 100, y: 100}
-  hudPadding: {x: 10, y: 10}
-  healthColor: {r: 1, g: 0, b: 0, a: 1}
-  healthBackgroundColor: {r: 0.5, g: 0, b: 0, a: 1}
-  drawRedDotOnScreenCenter: 0
   canvas: {fileID: 4131323802850815283}
   weaponImage: {fileID: 6771412568036498924}
   weaponAmmoText: {fileID: 6557433332548340509}
