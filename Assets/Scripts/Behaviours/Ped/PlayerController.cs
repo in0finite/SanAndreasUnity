@@ -47,28 +47,6 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-		void OnEnable()
-		{
-			UIManager.onGUI += this.OnGUICustom;
-		}
-
-		void OnDisable()
-		{
-			UIManager.onGUI -= this.OnGUICustom;
-		}
-
-
-        private void OnGUICustom()
-        {
-			if (!m_ped.IsControlledByLocalPlayer)
-				return;
-
-			if (!Loader.HasLoaded)
-				return;
-			
-            
-        }
-
         private void FixedUpdate()
         {
             m_velCounter -= Time.deltaTime;
