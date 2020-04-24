@@ -69,14 +69,6 @@ namespace SanAndreasUnity.Behaviours
             
 			UnityEngine.Profiling.Profiler.BeginSample ("PlayerController gui");
 
-            // show that we are in flying state
-			if (m_ped.CurrentState is Peds.States.FlyState)
-            {
-                int height = 25;
-                Rect rect = new Rect(Screen.width - 140, Screen.height - height, 140, height);
-				GUI.Label(rect, "Flying-mode enabled!");
-            }
-
             if (PedManager.Instance.showPedSpeedometer)
                 GUI.Label(GUIUtils.GetCornerRect(ScreenCorner.TopLeft, 100, 25, new Vector2(60, 5)), string.Format("{0:0.0} km/h", m_deltaPos.magnitude * 3.6f / velTimer));
             
