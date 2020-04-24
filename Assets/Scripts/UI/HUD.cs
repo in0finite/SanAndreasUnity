@@ -18,6 +18,7 @@ namespace SanAndreasUnity.UI {
 		public RawImage healthForegroundImage;
 		public RawImage crosshairImage;
 		public Text pedStateText;
+		public Text pedVelocityText;
 
 		public static Texture2D LeftArrowTexture { get; set; }
 		public static Texture2D RightArrowTexture { get; set; }
@@ -139,6 +140,14 @@ namespace SanAndreasUnity.UI {
 			string pedStateDisplayText = "Current ped state: " + (ped.CurrentState != null ? ped.CurrentState.GetType().Name : "none");
 			if (pedStateDisplayText != this.pedStateText.text)
 				this.pedStateText.text = pedStateDisplayText;
+
+			this.pedVelocityText.enabled = PedManager.Instance.showPedSpeedometer;
+			if (this.pedVelocityText.enabled)
+			{
+				string pedVelocityDisplayText = string.Format("{0:0.0} km/h", ped.GetComponent<PlayerController>().CurVelocity);
+				if (pedVelocityDisplayText != this.pedVelocityText.text)
+					this.pedVelocityText.text = pedVelocityDisplayText;
+			}
 
 		}
 
