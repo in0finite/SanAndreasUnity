@@ -129,6 +129,7 @@ namespace SanAndreasUnity.UI
 			}
 
 			this.canvas.gameObject.SetActive(true);
+			this.canvas.enabled = true;
 
 			var customInput = CustomInput.Instance;
 
