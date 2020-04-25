@@ -46,11 +46,7 @@ namespace SanAndreasUnity.Utilities {
 			{
 				UpdateTexture(1.0f / fpsDeltaTime);
 
-				float msec = fpsDeltaTime * 1000.0f;
-				float fps = 1.0f / fpsDeltaTime;
-				string text = string.Format("{0:0.}fps ({1:0.0}ms)", fps, msec);
-				if (this.fpsText.text != text)
-					this.fpsText.text = text;
+				UpdateText();
 			}
 			
 		}
@@ -105,6 +101,14 @@ namespace SanAndreasUnity.Utilities {
 			fpsTexture.Apply(false, false);
 			UnityEngine.Profiling.Profiler.EndSample();
 
+		}
+
+		void UpdateText()
+		{
+			float fps = 1.0f / fpsDeltaTime;
+			string text = string.Format("{0:0.0} fps", fps);
+			if (this.fpsText.text != text)
+				this.fpsText.text = text;
 		}
 
 	}
