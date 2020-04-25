@@ -55,6 +55,13 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { UIManager.Instance.UseTouchInput = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
+		OptionsWindow.BoolInput m_displayFpsInput = new OptionsWindow.BoolInput("Display FPS")
+		{
+			isAvailable = () => FPSDisplay.Instance != null,
+			getValue = () => FPSDisplay.Instance.enableTextureUpdating,
+			setValue = (value) => { DisplayFPS(value); },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
 		// OptionsWindow.IntInput m_imguiFontSize = new OptionsWindow.IntInput ("Imgui font size", 0, 25) {
 		// 	//isAvailable = () => UIManager.Instance != null,
 		// 	getValue = () => UIManager.Instance.ImguiFontSize,
@@ -143,7 +150,7 @@ namespace SanAndreasUnity.Settings {
 		void Awake ()
 		{
 			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_physicsUpdateRate, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
-				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera, m_useTouchInput,
+				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera, m_useTouchInput, m_displayFpsInput,
 				m_pausePlayerSpawning, m_playerSpawnInterval,
 				m_pedSyncRate,
 				m_vehicleSyncRate, m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, 
@@ -180,6 +187,14 @@ namespace SanAndreasUnity.Settings {
 			VehicleManager.Instance.whenToDisableRigidBody = when;
 			foreach (var v in Vehicle.AllVehicles)
 				v.GetComponent<VehicleController>().EnableOrDisableRigidBody();
+		}
+
+		static void DisplayFPS(bool bDisplay)
+		{
+			FPSDisplay.Instance.fpsImage.enabled = bDisplay;
+			FPSDisplay.Instance.fpsText.enabled = bDisplay;
+			FPSDisplay.Instance.enableTextureUpdating = bDisplay;
+			FPSDisplay.Instance.enableTextUpdating = bDisplay;
 		}
 
 

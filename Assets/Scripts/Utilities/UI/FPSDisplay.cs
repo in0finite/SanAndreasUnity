@@ -7,6 +7,8 @@ namespace SanAndreasUnity.Utilities {
 	
 	public class FPSDisplay : MonoBehaviour {
 
+		public static FPSDisplay Instance { get; private set; }
+
 		private static int s_fpsTextureWidth = 75;
 		private static int s_fpsTextureHeight = 25;
 		private static float s_fpsMaximum = 60.0f;
@@ -21,9 +23,15 @@ namespace SanAndreasUnity.Utilities {
 		public RawImage fpsImage;
 		public Text fpsText;
 
+		public bool enableTextureUpdating = true;
+		public bool enableTextUpdating = true;
+
 
 
 		void Awake () {
+
+			if (null == Instance)
+				Instance = this;
 
 			m_fpsTexture = new Texture2D(s_fpsTextureWidth, s_fpsTextureHeight, TextureFormat.RGBA32, false, true);
 
@@ -41,9 +49,11 @@ namespace SanAndreasUnity.Utilities {
 
 			if (s_showFPS)
 			{
-				UpdateTexture(1.0f / m_fpsDeltaTime);
+				if (this.enableTextureUpdating)
+					UpdateTexture(1.0f / m_fpsDeltaTime);
 
-				UpdateText();
+				if (this.enableTextUpdating)
+					UpdateText();
 			}
 			
 		}
