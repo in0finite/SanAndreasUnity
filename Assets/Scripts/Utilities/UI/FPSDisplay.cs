@@ -10,8 +10,6 @@ namespace SanAndreasUnity.Utilities {
 		private static int s_fpsTextureWidth = 75;
 		private static int s_fpsTextureHeight = 25;
 		private static float s_fpsMaximum = 60.0f;
-		/*private static float fpsGreen = 50.0f;
-        private static float fpsRed = 23.0f;*/
 		private float m_fpsDeltaTime = 0.0f;
 		private Texture2D m_fpsTexture = null;
 		private Color[] m_colors = null;
@@ -36,7 +34,6 @@ namespace SanAndreasUnity.Utilities {
 		
 		void Update () {
 
-			// FPS counting
 			m_fpsDeltaTime += (Time.unscaledDeltaTime - m_fpsDeltaTime) * 0.1f;
 
 			if (Input.GetKeyDown(KeyCode.F10))
