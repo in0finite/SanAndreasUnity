@@ -12,6 +12,7 @@ namespace SanAndreasUnity.UI {
 
 		private	List<IGrouping<VehicleType, VehicleDef>>	vehicleGroupings = null;
 		private	int[]	columnWidths = new int[]{ 150, 120, 30, 70 };
+		private string m_searchText = "";
 
 
 
@@ -52,6 +53,20 @@ namespace SanAndreasUnity.UI {
 		}
 
 
+		protected override void OnWindowGUIBeforeContent()
+		{
+			// search box
+
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Search:");
+			GUILayout.Space(5);
+			m_searchText = GUILayout.TextField(m_searchText, GUILayout.Width(120));
+			GUILayout.FlexibleSpace();
+			GUILayout.EndHorizontal();
+
+			GUILayout.Space(10);
+		}
+
 		protected override void OnWindowGUI ()
 		{
 
@@ -66,6 +81,8 @@ namespace SanAndreasUnity.UI {
 			GUILayout.Space (10);
 
 			// for each vehicle, display a button which spawns it
+
+			string nameFilter = m_searchText.Trim();
 
 			foreach (var grouping in this.vehicleGroupings) {
 				
@@ -85,6 +102,13 @@ namespace SanAndreasUnity.UI {
 
 				// display all vehicles of this type
 				foreach (var v in grouping) {
+
+					if (!string.IsNullOrWhiteSpace(nameFilter))
+					{
+						if (v.GameName.IndexOf(nameFilter, System.StringComparison.InvariantCultureIgnoreCase) < 0)
+							continue;
+					}
+
 					//GUILayout.BeginHorizontal ();
 
 					if (GUILayout.Button (v.GameName, GUILayout.Width(this.columnWidths[0]))) {
