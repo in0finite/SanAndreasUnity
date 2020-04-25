@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
+using UnityEngine.UI;
+using System.Linq;
 
 namespace SanAndreasUnity.UI
 {
@@ -13,15 +15,11 @@ namespace SanAndreasUnity.UI
         public int maxNumChatMessages = 5;
         public float timeToRemoveMessage = 3f;
 
-        public ScreenCorner chatAreaCorner = ScreenCorner.BottomLeft;
-        public Vector2 chatAreaPadding = new Vector2(50, 50);
-
 
 
         void Start()
         {
             Chat.ChatManager.onChatMessage += OnChatMsg;
-            Behaviours.UIManager.onGUI += OnGUICustom;
         }
 
         void OnChatMsg(Chat.ChatMessage chatMsg)
@@ -33,6 +31,8 @@ namespace SanAndreasUnity.UI
 
             if (!this.IsInvoking(nameof(RemoveMessage)))
                 this.Invoke(nameof(RemoveMessage), this.timeToRemoveMessage);
+
+            this.UpdateUI();
 		}
 
         void RemoveMessage()
@@ -43,36 +43,29 @@ namespace SanAndreasUnity.UI
             // invoke again if there are more messages
             if (m_chatMessages.Count > 0)
                 this.Invoke(nameof(RemoveMessage), this.timeToRemoveMessage);
-            
+
+            this.UpdateUI();
         }
 
-        void OnGUICustom()
+        void UpdateUI()
         {
+            Text[] texts = this.gameObject.GetFirstLevelChildrenComponents<Text>().ToArray();
+            Chat.ChatMessage[] chatMessages = m_chatMessages.ToArray();
 
-            if (! Behaviours.GameManager.IsInStartupScene)
-                DrawChat();
+            for (int i = 0; i < texts.Length; i++)
+            {
+                if (i < chatMessages.Length)
+                    texts[i].text = GetDisplayTextForChatMessage(chatMessages[i]);
+                else
+                    texts[i].text = "";
+            }
 
         }
 
-        void DrawChat()
-		{
-			if (m_chatMessages.Count < 1)
-				return;
-
-			float width = Screen.width * 0.25f;
-			float height = Screen.height * 0.33f;
-			Rect rect = GUIUtils.GetCornerRect(this.chatAreaCorner, new Vector2(width, height), this.chatAreaPadding);
-
-			GUILayout.BeginArea(rect);
-
-			foreach (var chatMsg in m_chatMessages)
-			{
-				GUILayout.Label("<color=blue>" + chatMsg.sender + "</color> : " + chatMsg.msg);
-			}
-
-			GUILayout.EndArea();
-
-		}
+        string GetDisplayTextForChatMessage(Chat.ChatMessage chatMessage)
+        {
+            return "<color=blue>" + chatMessage.sender + "</color> : " + chatMessage.msg;
+        }
 
     }
 

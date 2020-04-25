@@ -232,7 +232,12 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
-		public static void SetY(this Transform t, float yPos) {
+        public static IEnumerable<T> GetFirstLevelChildrenComponents<T>(this GameObject go) where T : Component
+        {
+            return go.transform.GetFirstLevelChildren().SelectMany(c => c.GetComponents<T>());
+        }
+
+        public static void SetY(this Transform t, float yPos) {
 			Vector3 pos = t.position;
 			pos.y = yPos;
 			t.position = pos;
