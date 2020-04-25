@@ -18,8 +18,6 @@ namespace SanAndreasUnity.Utilities {
 		private float[] m_fpsHistory = new float[s_fpsTextureWidth];
 		private int m_fpsIndex = 0;
 
-		private static bool s_showFPS = true;
-
 		public RawImage fpsImage;
 		public Text fpsText;
 
@@ -44,17 +42,11 @@ namespace SanAndreasUnity.Utilities {
 
 			m_fpsDeltaTime += (Time.unscaledDeltaTime - m_fpsDeltaTime) * 0.1f;
 
-			if (Input.GetKeyDown(KeyCode.F10))
-				s_showFPS = !s_showFPS;
+			if (this.enableTextureUpdating)
+				UpdateTexture(1.0f / m_fpsDeltaTime);
 
-			if (s_showFPS)
-			{
-				if (this.enableTextureUpdating)
-					UpdateTexture(1.0f / m_fpsDeltaTime);
-
-				if (this.enableTextUpdating)
-					UpdateText();
-			}
+			if (this.enableTextUpdating)
+				UpdateText();
 			
 		}
 
