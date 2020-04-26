@@ -200,7 +200,7 @@ namespace SanAndreasUnity.Behaviours
         // Zoom vars
         public float curZoomPercentage;
 
-        private float lastZoom, lastLerpedZoom, lerpedZoomCounter;
+        private float lastZoom, lerpedZoomCounter;
 
         private int zoomSelector = 2;
 
@@ -391,68 +391,8 @@ namespace SanAndreasUnity.Behaviours
             if (Input.GetKeyDown(KeyCode.F8) && GameManager.CanPlayerReadInput())
                 toggleInfo = !toggleInfo;
 
-            //if (Input.GetKeyDown(KeyCode.M))
-            //    toggleMap = !toggleMap;
 
-            float mousePosY = screenDims.y - Input.mousePosition.y;
-            Vector2 movement = Vector2.zero, // WIP : + offset
-                    centerOffset = new Vector2(Mathf.Lerp(0, 1, Mathf.Clamp01((Input.mousePosition.x - mapUpperLeftCorner.x) / windowSize.x)), Mathf.Lerp(0, 1, Mathf.Clamp01((mousePosY - mapUpperLeftCorner.y) / windowSize.y)));
 
-            /*if (Input.mousePosition.x < mapUpperLeftCorner.x)
-                centerOffset.x = 0;
-            else if (Input.mousePosition.x > windowSize.x)
-                centerOffset.x = 1;
-
-            if (mousePosY < mapUpperLeftCorner.y)
-                centerOffset.y = 0;
-            else if (mousePosY > windowSize.y)
-                centerOffset.y = 1;*/
-
-            bool isScrolling = false;
-
-            Vector2 realMousePos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
-            mapMousePosition = TransformPosition(new Vector2(Input.mousePosition.x, mousePosY) - mapUpperLeftCorner);
-
-            if (Input.mouseScrollDelta != Vector2.zero)
-            {
-                //mapScale += Input.mouseScrollDelta.y * Time.fixedDeltaTime * mapZoomScaler;
-
-                // WIP: I want to scroll to mouse position
-
-                if (Input.mouseScrollDelta.y > 0)
-                {
-                    // WIP: I have to get the current map texture position (like a Raycast) and set the the center with this
-                    //mapScroll.x += centerOffset.x * mapMovement * 5;
-                    //mapScroll.y += centerOffset.y * mapMovement * 5;
-
-                    //mapZoomPos = mapMousePosition - windowSize / 2; //Vector2.Lerp(windowSize / 2 - baseMapRect / 2, mapMousePosition - windowSize / 2, curZoomPercentage);
-                    curZoom *= constZoom;
-                    mapZoomPos = realMousePos - constZoom * (realMousePos - mapZoomPos);
-                }
-
-                curZoom = Mathf.Clamp(curZoom, mapMinScale, mapMaxScale);
-
-                isScrolling = true;
-            }
-
-            //Debug.LogFormat("Zoom Center: {0}, Mouse Pos: {1}; Map Scroll: {2}", centerOffset * mapRect, new Vector2(Input.mousePosition.x, mousePosY), mapScroll);
-
-            if (!isScrolling)
-            {
-                if (Input.GetMouseButton(2))
-                {
-                    movement.x = centerOffset.x * mapMovement;
-                    movement.y = centerOffset.y * mapMovement;
-                }
-                else
-                {
-                    movement.x = Input.GetAxis("Horizontal") * mapMovement;
-                    movement.y = Input.GetAxis("Vertical") * mapMovement;
-                }
-
-                mapScroll.x -= movement.x;
-                mapScroll.y += movement.y;
-            }
         }
 
         private Vector2 TransformPosition(Vector2 mousePos)
