@@ -12,7 +12,6 @@ namespace SanAndreasUnity.Utilities {
 		private static int s_fpsTextureWidth = 75;
 		private static int s_fpsTextureHeight = 25;
 		private static float s_fpsMaximum = 60.0f;
-		private float m_fpsDeltaTime = 0.0f;
 		private Texture2D m_fpsTexture = null;
 		private Color[] m_colors = null;
 		private float[] m_fpsHistory = new float[s_fpsTextureWidth];
@@ -41,16 +40,16 @@ namespace SanAndreasUnity.Utilities {
 
 			if (this.updateFPS)
 			{
-				m_fpsDeltaTime = Time.unscaledDeltaTime;
-
-				UpdateTexture(1.0f / m_fpsDeltaTime);
+				UpdateTexture();
 				UpdateText();
 			}
 
 		}
 
-		void UpdateTexture(float fps)
+		void UpdateTexture()
 		{
+
+			float fps = 1.0f / Time.unscaledDeltaTime;
 
 			UnityEngine.Profiling.Profiler.BeginSample("Reset texture pixels");
 			int numPixels = m_fpsTexture.width * m_fpsTexture.height;
@@ -103,7 +102,7 @@ namespace SanAndreasUnity.Utilities {
 
 		void UpdateText()
 		{
-			float fps = 1.0f / m_fpsDeltaTime;
+			float fps = 1.0f / Time.unscaledDeltaTime;
 			string text = string.Format("{0:0.0} fps", fps);
 			if (this.fpsText.text != text)
 				this.fpsText.text = text;
