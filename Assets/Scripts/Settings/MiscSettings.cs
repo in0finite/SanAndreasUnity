@@ -58,7 +58,7 @@ namespace SanAndreasUnity.Settings {
 		OptionsWindow.BoolInput m_displayFpsInput = new OptionsWindow.BoolInput("Display FPS")
 		{
 			isAvailable = () => FPSDisplay.Instance != null,
-			getValue = () => FPSDisplay.Instance.enableTextureUpdating,
+			getValue = () => FPSDisplay.Instance.updateFPS,
 			setValue = (value) => { DisplayFPS(value); },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
@@ -193,8 +193,7 @@ namespace SanAndreasUnity.Settings {
 		{
 			FPSDisplay.Instance.fpsImage.enabled = bDisplay;
 			FPSDisplay.Instance.fpsText.enabled = bDisplay;
-			FPSDisplay.Instance.enableTextureUpdating = bDisplay;
-			FPSDisplay.Instance.enableTextUpdating = bDisplay;
+			FPSDisplay.Instance.updateFPS = bDisplay;
 		}
 
 

@@ -21,8 +21,7 @@ namespace SanAndreasUnity.Utilities {
 		public RawImage fpsImage;
 		public Text fpsText;
 
-		public bool enableTextureUpdating = true;
-		public bool enableTextUpdating = true;
+		public bool updateFPS = true;
 
 
 
@@ -40,14 +39,14 @@ namespace SanAndreasUnity.Utilities {
 		
 		void Update () {
 
-			m_fpsDeltaTime += (Time.unscaledDeltaTime - m_fpsDeltaTime) * 0.1f;
+			if (this.updateFPS)
+			{
+				m_fpsDeltaTime += (Time.unscaledDeltaTime - m_fpsDeltaTime) * 0.1f;
 
-			if (this.enableTextureUpdating)
 				UpdateTexture(1.0f / m_fpsDeltaTime);
-
-			if (this.enableTextUpdating)
 				UpdateText();
-			
+			}
+
 		}
 
 		void UpdateTexture(float fps)

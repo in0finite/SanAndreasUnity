@@ -382,8 +382,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fpsImage: {fileID: 6132537284630574696}
   fpsText: {fileID: 8790997500914401142}
-  enableTextureUpdating: 0
-  enableTextUpdating: 0
+  updateFPS: 0
 --- !u!1 &1266252102531166
 GameObject:
   m_ObjectHideFlags: 0
