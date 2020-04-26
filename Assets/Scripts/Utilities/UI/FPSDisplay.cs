@@ -41,7 +41,7 @@ namespace SanAndreasUnity.Utilities {
 
 			if (this.updateFPS)
 			{
-				m_fpsDeltaTime += (Time.unscaledDeltaTime - m_fpsDeltaTime) * 0.1f;
+				m_fpsDeltaTime = Time.unscaledDeltaTime;
 
 				UpdateTexture(1.0f / m_fpsDeltaTime);
 				UpdateText();
