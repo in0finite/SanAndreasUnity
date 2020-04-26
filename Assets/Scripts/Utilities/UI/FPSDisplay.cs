@@ -9,9 +9,9 @@ namespace SanAndreasUnity.Utilities {
 
 		public static FPSDisplay Instance { get; private set; }
 
-		private static int s_fpsTextureWidth = 75;
-		private static int s_fpsTextureHeight = 25;
-		private static float s_fpsMaximum = 60.0f;
+		private static readonly int s_fpsTextureWidth = 75;
+		private static readonly int s_fpsTextureHeight = 25;
+		private float m_fpsMaximum = 60.0f;
 		private Texture2D m_fpsTexture = null;
 		private Color[] m_colors = null;
 		private float[] m_fpsHistory = new float[s_fpsTextureWidth];
@@ -68,16 +68,16 @@ namespace SanAndreasUnity.Utilities {
 			int f = m_fpsIndex;
 
 			if (fps > m_fpsHistory.Average())
-				s_fpsMaximum = fps;
+				m_fpsMaximum = fps;
 
 			// Draw graph into texture
 			UnityEngine.Profiling.Profiler.BeginSample("Set fps history pixels");
 			for (int i = m_fpsTexture.width - 1; i >= 0; i--)
 			{
-				float graphVal = (m_fpsHistory[f] > s_fpsMaximum) ? s_fpsMaximum : m_fpsHistory[f]; //Clamps
-				int height = (int)(graphVal * m_fpsTexture.height / (s_fpsMaximum + 0.1f)); //Returns the height of the desired point with a padding of 0.1f units
+				float graphVal = (m_fpsHistory[f] > m_fpsMaximum) ? m_fpsMaximum : m_fpsHistory[f]; //Clamps
+				int height = (int)(graphVal * m_fpsTexture.height / (m_fpsMaximum + 0.1f)); //Returns the height of the desired point with a padding of 0.1f units
 
-				float p = m_fpsHistory[f] / s_fpsMaximum,
+				float p = m_fpsHistory[f] / m_fpsMaximum,
 				r = Mathf.Lerp(1, 1 - p, p),
 				g = Mathf.Lerp(p * 2, p, p);
 
