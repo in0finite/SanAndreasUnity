@@ -32,6 +32,8 @@ namespace SanAndreasUnity.Behaviours
                              maskTransform,
                              mapContainer;
 
+        public Text zoneNameLabel;
+
         public float zoom = 1.3f;
         private const float scaleConst = 1f;
 
@@ -379,6 +381,12 @@ namespace SanAndreasUnity.Behaviours
 
             if (playerImage != null && m_ped != null)
                 playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (m_ped.transform.eulerAngles.y + 180));
+
+            // update zone name label
+
+            string currentZoneName = this.ZoneName;
+            if (currentZoneName != this.zoneNameLabel.text)
+                this.zoneNameLabel.text = currentZoneName;
 
         }
 
