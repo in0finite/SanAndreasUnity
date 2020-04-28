@@ -21,10 +21,6 @@ namespace SanAndreasUnity.Behaviours
 
         public static bool toggleMap;
 
-        public Canvas outlineCanvas,
-                      iconCanvas,
-                      canvas;
-
         public Image northImage,
                      playerImage,
                      outlineImage,
@@ -116,26 +112,8 @@ namespace SanAndreasUnity.Behaviours
 
         public static void AssingMinimap()
         {
-            GameObject UI = GameObject.FindGameObjectWithTag("UI");
-            Transform root = UI != null ? UI.transform : null;
-
-            GameObject minimap = GameObject.FindGameObjectWithTag("Minimap");
-            if (minimap == null)
-            {
-                minimap = new GameObject();
-
-                minimap.name = "Minimap";
-                minimap.tag = "Minimap";
-
-                minimap.transform.parent = root;
-            }
-
-            MiniMap map = minimap.GetComponent<MiniMap>();
-
-            if (map == null)
-                map = minimap.AddComponent<MiniMap>();
-
-            if (!map.isSetup) map.Setup();
+            if (!Instance.isSetup)
+                Instance.Setup();
         }
 
         private void loadTextures()
@@ -182,7 +160,6 @@ namespace SanAndreasUnity.Behaviours
 
         #region Private fields
 
-        // Texture & control flags
 		private Ped m_ped => Ped.Instance;
 
         private PlayerController playerController => PlayerController.Instance;
@@ -192,15 +169,15 @@ namespace SanAndreasUnity.Behaviours
         private Texture2D northBlip, playerBlip, waypointTexture, vehicleTexture, mapTexture;
         private Sprite mapSprite, circleMask;
 
-        private Transform northPivot;
+        public RectTransform northPivot;
 
         // Flags
-        private bool enableMinimap, isReady, isSetup;
+        private bool enabledMinimap, isReady, isSetup;
 
         // Zoom vars
         public float curZoomPercentage;
 
-        private float lastZoom, lerpedZoomCounter;
+        private float lastZoom;
 
         private int zoomSelector = 2;
 
@@ -215,40 +192,13 @@ namespace SanAndreasUnity.Behaviours
         private float fAlpha = 1;
         private bool showZoomPanel;
 
-        private Vector2 mapScroll,
-            screenCenter,
-            screenDims,
-            //baseMapRect,
-            windowSize,
-            //constantMapRect,
-            mapUpperLeftCorner,
-            mapRect,
-            mapMousePosition,
-            mapZoomPos; //, baseMapSize;
-
-        private const float mapMaxScale = 1f,
-                            mapMinScale = .25f,
-                            constZoom = 1.25f;
-
         private float curZoom = 1;
-
-        //private float mapScale = mapMaxScale / 1.5f,
-        //              baseScale;
 
         #endregion Private fields
 
         private void Setup()
         {
             loadTextures();
-
-            if (canvas != null && canvas.enabled)
-                canvas.enabled = false;
-
-            if (iconCanvas != null && iconCanvas.enabled)
-                iconCanvas.enabled = false;
-
-            if (outlineCanvas != null && outlineCanvas.enabled)
-                outlineCanvas.enabled = false;
 
             blackPixel = new Texture2D(1, 1);
             blackPixel.SetPixel(0, 0, new Color(0, 0, 0, .5f));
@@ -278,57 +228,23 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!isReady) return;
 
-            if (!enableMinimap)
+            if (!enabledMinimap)
             {
+                enabledMinimap = true;
+
                 Debug.Log("Starting to enable minimap!");
 
-                string error = "{0} is null or disabled! (Please, keep it active!)";
-
-                if (canvas != null && !canvas.enabled)
-                    canvas.enabled = true;
-                else
-                    Debug.LogErrorFormat(error, "Canvas");
-
-                if (iconCanvas != null && !iconCanvas.enabled)
-                    iconCanvas.enabled = true;
-                else
-                    Debug.LogErrorFormat(error, "IconCanvas");
-
-                if (outlineCanvas != null && !outlineCanvas.enabled)
-                    outlineCanvas.enabled = true;
-                else
-                    Debug.LogErrorFormat(error, "OutlineCanvas");
-
-                if (northBlip != null && northImage != null)
-                    northImage.sprite = Sprite.Create(northBlip, new Rect(0, 0, northBlip.width, northBlip.height), new Vector2(northBlip.width, northBlip.height) / 2);
-                else
-                    Debug.LogErrorFormat(error, "NorthImage");
-
-                if (playerBlip != null && playerImage != null)
-                    playerImage.sprite = Sprite.Create(playerBlip, new Rect(0, 0, playerBlip.width, playerBlip.height), new Vector2(playerBlip.width, playerBlip.height) / 2);
-                else
-                    Debug.LogErrorFormat(error, "PlayerImage");
-
-                if (mapImage != null)
-                    mapImage.sprite = mapSprite;
-
-                if (maskImage != null && maskImage.sprite == null)
+                northImage.sprite = Sprite.Create(northBlip, new Rect(0, 0, northBlip.width, northBlip.height), new Vector2(northBlip.width, northBlip.height) / 2);
+                playerImage.sprite = Sprite.Create(playerBlip, new Rect(0, 0, playerBlip.width, playerBlip.height), new Vector2(playerBlip.width, playerBlip.height) / 2);
+                mapImage.sprite = mapSprite;
+                if (maskImage.sprite == null)
                     maskImage.sprite = circleMask;
-
-                if (mapContainer != null)
-                    mapContainer.sizeDelta = new Vector2(uiSize, uiSize);
-                else
-                    Debug.LogErrorFormat(error, "MapContainer");
-
-                if (maskTransform == null)
-                    Debug.LogErrorFormat(error, "MaskTransform");
-
+                
                 curZoomPercentage = zooms[zoomSelector];
 
-                enableMinimap = true;
 
-                // Must review: For some reason values are Y-axis inverted
 
+                /*
                 float left = Screen.width - uiSize - uiOffset,
                       top = Screen.height - uiSize - uiOffset * 2;
 
@@ -364,15 +280,9 @@ namespace SanAndreasUnity.Behaviours
                     outlineImage.rectTransform.sizeDelta = Vector2.one * uiSize;
                     outlineImage.rectTransform.localScale = Vector3.one * 1.05f;
                 }
+                */
 
-                //baseScale = Screen.width / (float)mapTexture.width;
-                screenCenter = new Vector2(Screen.width, Screen.height) / 2;
-                screenDims = screenCenter * 2;
-                windowSize = new Vector2(Screen.width - 120, Screen.height - 120);
-                //baseMapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
-                // This value is constant
-                //constantMapRect = new Vector2(mapTexture.width, mapTexture.height) * (baseScale * 2);
-                mapUpperLeftCorner = Vector2.one * 60;
+
 
                 Debug.Log("Minimap started!");
             }
@@ -393,12 +303,6 @@ namespace SanAndreasUnity.Behaviours
 
 
 
-        }
-
-        private Vector2 TransformPosition(Vector2 mousePos)
-        {
-            //Vector2 realMapScroll = new Vector2(-mapScroll.x, mapScroll.y);
-            return mousePos - mapScroll;
         }
 
         public static Vector2 WorldPosToMapPos(Vector3 worldPos)
@@ -440,36 +344,39 @@ namespace SanAndreasUnity.Behaviours
             if (!isReady) return;
             if (playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
 
-            if (mapTransform != null)
-            {
-                float deltaZoom = realZoom - lastZoom;
+            
+            float deltaZoom = realZoom - lastZoom;
 
-                mapTransform.localScale = new Vector3(realZoom, realZoom, 1);
+            //mapContainer.localScale = new Vector3(realZoom, realZoom, 1);
 
-                lastZoom = realZoom;
-            }
+            lastZoom = realZoom;
+            
 
-            Vector3 defPos = (new Vector3(pPos.x, pPos.z, 0) * (uiSize / -1000f)) / scaleConst; // Why?
-            // calibrator
+            //Vector3 defPos = (new Vector3(pPos.x, pPos.z, 0) * (uiSize / -1000f)) / scaleConst; // Why?
 
-            if (mapContainer != null)
-            {
-                // WIP: Make this static to avoid shakering
-                float lerpedZoom = realZoom; //Mathf.Lerp(lastLerpedZoom, realZoom, lerpedZoomCounter);
+            //if (mapContainer != null)
+            //{
 
-                mapContainer.localPosition = new Vector3(defPos.x * lerpedZoom, defPos.y * lerpedZoom, 1);
+            //    mapContainer.localPosition = new Vector3(defPos.x * 1f, defPos.y * 1f, 1);
 
-                lerpedZoomCounter += Time.deltaTime;
+            //    lerpedZoomCounter += Time.deltaTime;
 
-                if (lerpedZoomCounter > 1)
-                    lerpedZoomCounter = 0;
-            }
+            //    if (lerpedZoomCounter > 1)
+            //        lerpedZoomCounter = 0;
+            //}
+
+
+            Vector3 focusPos = pPos;
+            int worldSize = mapSize * 4;
+            Vector3 mapPos = - new Vector3(focusPos.x, focusPos.z, 0f) * mapSize / (float)worldSize;
+            mapImage.rectTransform.localPosition = mapPos;
+
 
             float relAngle = Camera.main != null ? Camera.main.transform.eulerAngles.y : 0f;
 
-            if (maskTransform != null)
-                maskTransform.localRotation = Quaternion.Euler(0, 0, relAngle);
-
+            //mapContainer.pivot = new Vector2(mapPos.x, mapPos.y);
+            mapContainer.localRotation = Quaternion.Euler(0, 0, relAngle);
+            
             if (northPivot != null)
                 northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
 
@@ -518,73 +425,19 @@ namespace SanAndreasUnity.Behaviours
 
             if (!toggleMap)
             {
-                GUILayout.BeginArea(new Rect(Screen.width - uiSize - 10, uiSize + 20, uiSize, 80));
-
-                GUIStyle style = new GUIStyle("label") { alignment = TextAnchor.MiddleCenter };
-
-                Vector2 labelSize = new Vector2(uiSize, 25);
-                Rect labelRect = new Rect(Vector2.zero, labelSize);
-
-				// display player pos
-
-//                GUI.DrawTexture(labelRect, blackPixel);
-//                GUI.Label(labelRect,
-//                    string.Format("x: {0}, y: {1}, z: {2}", pPos.x.ToString("F2"), pPos.y.ToString("F2"), pPos.z.ToString("F2")),
-//                    style);
 
 				// display current zone name
 
-				Rect zoneRect = labelRect; //new Rect(uiSize / 2 - uiSize / (2 * 3), 25, uiSize / 3, 25);
-
-                GUI.DrawTexture(zoneRect, blackPixel);
-                GUI.Label(zoneRect, ZoneName, style);
 
                 if (showZoomPanel)
                 {
-                    Color previousColor = GUI.color;
 
-                    Rect zoomPanel = new Rect(uiSize / 2 - uiSize / (2 * 4), 55, uiSize / 4, 25);
+                    //string.Format("x{0}", curZoomPercentage.ToString("F2"))
 
-                    GUI.color = new Color(0, 0, 0, fAlpha);
-
-                    GUI.DrawTexture(zoomPanel, blackPixel);
-
-                    GUI.color = new Color(255, 255, 255, fAlpha);
-
-                    GUI.Label(zoomPanel, string.Format("x{0}", curZoomPercentage.ToString("F2")), style);
-
-                    GUI.color = previousColor;
                 }
 
-                GUILayout.EndArea();
             }
-            else
-            {
-                mapRect = new Vector2(mapTexture.width, mapTexture.height); //* (baseScale * (mapScale / mapMaxScale) * 2);
-
-                GUI.DrawTexture(new Rect(50, 50, Screen.width - 100, Screen.height - 100), blackPixel);
-
-                GUI.DrawTexture(new Rect(mapUpperLeftCorner, windowSize), seaPixel);
-
-                GUILayout.BeginArea(new Rect(mapUpperLeftCorner, windowSize));
-
-                GUILayout.BeginArea(new Rect(mapScroll, mapRect * curZoom));
-
-                GUI.DrawTexture(new Rect(mapZoomPos, mapRect * curZoom), mapTexture);
-                //if (Event.current.type.Equals(EventType.Repaint))
-                //GUI.DrawTexture(new Rect(10, 10, 100, 100), mapTexture);
-
-                GUI.DrawTexture(new Rect(Vector2.zero, Vector2.one * 16), blackPixel);
-
-                // WIP: I have to load move cursor
-                // WIP: I have to load map bars
-                // WIP: I have to load marker
-                // WIP: Draw player pointer & undescovered zones
-                // + drag & drop
-
-                GUILayout.EndArea();
-                GUILayout.EndArea();
-            }
+            
         }
     }
 }
