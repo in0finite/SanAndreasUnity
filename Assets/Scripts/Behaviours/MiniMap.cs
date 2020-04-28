@@ -345,13 +345,6 @@ namespace SanAndreasUnity.Behaviours
             if (playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
 
             
-            float deltaZoom = realZoom - lastZoom;
-
-            //mapContainer.localScale = new Vector3(realZoom, realZoom, 1);
-
-            lastZoom = realZoom;
-            
-
             //Vector3 defPos = (new Vector3(pPos.x, pPos.z, 0) * (uiSize / -1000f)) / scaleConst; // Why?
 
             //if (mapContainer != null)
@@ -376,12 +369,16 @@ namespace SanAndreasUnity.Behaviours
 
             //mapContainer.pivot = new Vector2(mapPos.x, mapPos.y);
             mapContainer.localRotation = Quaternion.Euler(0, 0, relAngle);
-            
+
+            mapContainer.localScale = new Vector3(realZoom, realZoom, 1);
+            lastZoom = realZoom;
+
             if (northPivot != null)
                 northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
 
             if (playerImage != null && m_ped != null)
                 playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (m_ped.transform.eulerAngles.y + 180));
+
         }
 
         private IEnumerator ChangeZoom(bool isIncreasing)
