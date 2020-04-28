@@ -22,10 +22,11 @@ namespace SanAndreasUnity.Behaviours
         public static bool toggleMap;
 
         public Image northImage,
-                     playerImage,
                      outlineImage,
                      maskImage,
                      mapImage;
+
+        public RawImage playerImage;
 
         public RectTransform mapTransform,
                              maskTransform,
@@ -235,7 +236,7 @@ namespace SanAndreasUnity.Behaviours
                 Debug.Log("Starting to enable minimap!");
 
                 northImage.sprite = Sprite.Create(northBlip, new Rect(0, 0, northBlip.width, northBlip.height), new Vector2(northBlip.width, northBlip.height) / 2);
-                playerImage.sprite = Sprite.Create(playerBlip, new Rect(0, 0, playerBlip.width, playerBlip.height), new Vector2(playerBlip.width, playerBlip.height) / 2);
+                playerImage.texture = this.PlayerBlip;
                 mapImage.sprite = mapSprite;
                 if (maskImage.sprite == null)
                     maskImage.sprite = circleMask;
