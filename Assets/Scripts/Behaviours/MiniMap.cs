@@ -67,7 +67,7 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        private float _gTimer;
+        private float _timeWhenRetrievedZoneName = 0f;
 
         private string _lastZoneName = "";
 
@@ -75,8 +75,9 @@ namespace SanAndreasUnity.Behaviours
         {
             get
             {
-                if (_gTimer == 0)
+                if (Time.time - _timeWhenRetrievedZoneName > 2f)
                 {
+                    _timeWhenRetrievedZoneName = Time.time;
                     _lastZoneName = Zone.GetZoneName(this.FocusPos);
                 }
 
@@ -320,9 +321,6 @@ namespace SanAndreasUnity.Behaviours
             if (playerController != null)
                 realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
 
-            _gTimer += Time.fixedDeltaTime;
-            if (_gTimer > 1)
-                _gTimer = 0;
         }
 
         private void LateUpdate()
