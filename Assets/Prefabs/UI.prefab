@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 222961533395048624}
   - component: {fileID: 114468575846868774}
   m_Layer: 0
-  m_Name: Outline-Image
+  m_Name: Wrapper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -159,7 +159,7 @@ GameObject:
   - component: {fileID: 114690809005601046}
   - component: {fileID: 114487661805984862}
   m_Layer: 5
-  m_Name: Minimap
+  m_Name: Mask
   m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -601,7 +601,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224402533417526356}
   m_Layer: 5
-  m_Name: Minimap-Container
+  m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -639,7 +639,7 @@ GameObject:
   - component: {fileID: 222341476611336406}
   - component: {fileID: 114943004525129146}
   m_Layer: 5
-  m_Name: Minimap-Image
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7538,7 +7538,7 @@ GameObject:
   - component: {fileID: 8548189601126062776}
   - component: {fileID: 5534263035109067597}
   m_Layer: 0
-  m_Name: NewMinimap
+  m_Name: Minimap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
