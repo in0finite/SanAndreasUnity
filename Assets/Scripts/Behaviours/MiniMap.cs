@@ -55,8 +55,6 @@ namespace SanAndreasUnity.Behaviours
 
         public bool debugActive = true;
 
-        #region "Properties"
-
         public static MiniMap Instance { get; private set; }
 
         private float realZoom
@@ -98,51 +96,6 @@ namespace SanAndreasUnity.Behaviours
 
         public Texture2D BlackPixel { get { return this.blackPixel; } }
         public Texture2D SeaPixel { get { return this.seaPixel; } }
-
-        #endregion "Properties"
-
-        private void LoadGameTextures()
-        {
-            mapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
-
-            TextureLoadParams textureLoadParams = new TextureLoadParams(){makeNoLongerReadable = false};
-            
-            for (int i = 0; i < tileCount; i++)
-            {
-                // Offset
-                int y = ((i / tileEdge) + 1) * texSize,
-                    x = (i % tileEdge) * texSize;
-
-                string name = "radar" + ((i < 10) ? "0" : "") + i;
-                var texDict = TextureDictionary.Load(name);
-
-                Texture2D tex = texDict.GetDiffuse(name, textureLoadParams).Texture;
-
-                for (int ii = 0; ii < texSize; ++ii)
-                    for (int jj = 0; jj < texSize; ++jj)
-                        mapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
-
-                // unload the texture (don't destroy it, because it can be a dummy texture)
-
-            }
-
-            mapTexture.Apply(false, true);
-            
-            huds = TextureDictionary.Load("hud");
-            northBlip = huds.GetDiffuse("radar_north").Texture;
-            playerBlip = huds.GetDiffuse("radar_centre").Texture;
-            waypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
-            vehicleTexture = huds.GetDiffuse("radar_impound").Texture;
-            GreenHouseTexture = huds.GetDiffuse("radar_propertyG").Texture;
-
-            northImage.sprite = Sprite.Create(northBlip, new Rect(0, 0, northBlip.width, northBlip.height), new Vector2(northBlip.width, northBlip.height) / 2);
-            playerImage.texture = this.PlayerBlip;
-            mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
-            mapImage.sprite = mapSprite;
-            
-        }
-
-        // --------------------------------
 
         private Ped m_ped => Ped.Instance;
 
@@ -186,6 +139,47 @@ namespace SanAndreasUnity.Behaviours
             seaPixel = new Texture2D(1, 1);
             seaPixel.SetPixel(0, 0, new Color(.45f, .54f, .678f));
             seaPixel.Apply();
+
+        }
+
+        private void LoadGameTextures()
+        {
+            mapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
+
+            TextureLoadParams textureLoadParams = new TextureLoadParams() { makeNoLongerReadable = false };
+
+            for (int i = 0; i < tileCount; i++)
+            {
+                // Offset
+                int y = ((i / tileEdge) + 1) * texSize,
+                    x = (i % tileEdge) * texSize;
+
+                string name = "radar" + ((i < 10) ? "0" : "") + i;
+                var texDict = TextureDictionary.Load(name);
+
+                Texture2D tex = texDict.GetDiffuse(name, textureLoadParams).Texture;
+
+                for (int ii = 0; ii < texSize; ++ii)
+                    for (int jj = 0; jj < texSize; ++jj)
+                        mapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
+
+                // unload the texture (don't destroy it, because it can be a dummy texture)
+
+            }
+
+            mapTexture.Apply(false, true);
+
+            huds = TextureDictionary.Load("hud");
+            northBlip = huds.GetDiffuse("radar_north").Texture;
+            playerBlip = huds.GetDiffuse("radar_centre").Texture;
+            waypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
+            vehicleTexture = huds.GetDiffuse("radar_impound").Texture;
+            GreenHouseTexture = huds.GetDiffuse("radar_propertyG").Texture;
+
+            northImage.sprite = Sprite.Create(northBlip, new Rect(0, 0, northBlip.width, northBlip.height), new Vector2(northBlip.width, northBlip.height) / 2);
+            playerImage.texture = this.PlayerBlip;
+            mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
+            mapImage.sprite = mapSprite;
 
         }
 
