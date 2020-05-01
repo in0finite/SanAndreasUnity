@@ -324,28 +324,5 @@ namespace SanAndreasUnity.Behaviours
             return zoomVal;
         }
 
-        private void OnGUI()
-        {
-			if (!Loader.HasLoaded)
-				return;
-
-            if (!toggleInfo) return;
-
-            if (!toggleMap)
-            {
-
-				// display current zone name
-
-
-                if (showZoomPanel)
-                {
-
-                    //string.Format("x{0}", curZoomPercentage.ToString("F2"))
-
-                }
-
-            }
-            
-        }
     }
 }
