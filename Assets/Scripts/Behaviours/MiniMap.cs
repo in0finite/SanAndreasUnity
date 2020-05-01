@@ -47,6 +47,8 @@ namespace SanAndreasUnity.Behaviours
                      mapZoomScaler = 1,
                      mapMovement = 5;
 
+        public Vector3 FocusPos { get; set; } = Vector3.zero;
+
         public bool debugActive = true;
 
         #region "Properties"
@@ -65,18 +67,6 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        private Vector3 pPos
-        {
-            get
-            {
-                if (m_ped != null)
-                    return m_ped.transform.position;
-                if (Camera.main != null)
-                    return Camera.main.transform.position;
-                return Vector3.zero;
-            }
-        }
-
         private float _gTimer;
 
         private string _zName;
@@ -90,7 +80,7 @@ namespace SanAndreasUnity.Behaviours
                     Vector3 playerPos = Vector3.zero;
                     try
                     {
-                        playerPos = pPos;
+                        playerPos = this.FocusPos;
                     }
                     catch { }
 
@@ -347,7 +337,7 @@ namespace SanAndreasUnity.Behaviours
             if (!isReady) return;
             if (playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
 
-            
+
             //Vector3 defPos = (new Vector3(pPos.x, pPos.z, 0) * (uiSize / -1000f)) / scaleConst; // Why?
 
             //if (mapContainer != null)
@@ -362,11 +352,23 @@ namespace SanAndreasUnity.Behaviours
             //}
 
 
-            Vector3 focusPos = pPos;
+            // update focus position
+
+            var ped = m_ped;
+            if (ped != null)
+                this.FocusPos = ped.transform.position;
+            else if (Camera.main != null)
+                this.FocusPos = Camera.main.transform.position;
+
+
+            // update position
+
             int worldSize = mapSize * 4;
-            Vector3 mapPos = - new Vector3(focusPos.x, focusPos.z, 0f) * mapSize / (float)worldSize;
+            Vector3 mapPos = - new Vector3(this.FocusPos.x, this.FocusPos.z, 0f) * mapSize / (float)worldSize;
             mapImage.rectTransform.localPosition = mapPos;
 
+
+            // update rotation
 
             float relAngle = Camera.main != null ? Camera.main.transform.eulerAngles.y : 0f;
 
