@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Behaviours
         public const int mapSize = tileEdge * texSize; // width/height of whole map in px
         public const int uiSize = 256, uiOffset = 10;
 
-        public static bool toggleMap;
+        public static MiniMap Instance { get; private set; }
 
         public Image northImage,
                      outlineImage,
@@ -30,43 +30,25 @@ namespace SanAndreasUnity.Behaviours
 
         public RectTransform mapTransform,
                              maskTransform,
-                             mapContainer;
+                             mapContainer,
+                             northPivot;
 
         public Text zoneNameLabel;
 
         private Canvas _canvas;
 
+        private const float maxVelocityForZooming = 300f;
+        public static readonly float[] availableZooms = new float[] { .5f, .75f, 1f, 1.2f, 1.4f, 1.6f, 2f, 2.5f, 3f, 5f };
+
         public float zoom = 1.3f;
-        
-        public const float maxVelocity = 300f;
-        public static float[] zooms = new float[10] { .5f, .75f, 1f, 1.2f, 1.4f, 1.6f, 2f, 2.5f, 3f, 5f };
-
-        // Why?
-        [HideInInspector] [Obsolete] public float calibrator = 2.34f;
-
-        public float zoomDuration = 1,
-                     mapZoomScaler = 1,
-                     mapMovement = 5;
+        public float zoomDuration = 1;
+        private float curZoomPercentage;
+        public int zoomSelector = 2;
+        private Coroutine zoomCoroutine;
 
         public Vector3 FocusPos { get; set; } = Vector3.zero;
 
         public bool IsMinimapVisible => _canvas.enabled && this.gameObject.activeInHierarchy;
-
-        public bool debugActive = true;
-
-        public static MiniMap Instance { get; private set; }
-
-        private float realZoom
-        {
-            get
-            {
-                return zoom;
-            }
-            set
-            {
-                zoom = value;
-            }
-        }
 
         private float _timeWhenRetrievedZoneName = 0f;
 
@@ -103,13 +85,6 @@ namespace SanAndreasUnity.Behaviours
 
         private Texture2D northBlip, playerBlip, waypointTexture, vehicleTexture, mapTexture;
         private Sprite mapSprite;
-
-        public RectTransform northPivot;
-
-        // Zoom vars
-        public float curZoomPercentage;
-        private int zoomSelector = 2;
-        private Coroutine zoomCoroutine;
 
         private Texture2D blackPixel, seaPixel;
 
@@ -177,7 +152,7 @@ namespace SanAndreasUnity.Behaviours
 
             _canvas = this.GetComponentInParent<Canvas>();
 
-            curZoomPercentage = zooms[zoomSelector];
+            curZoomPercentage = availableZooms[zoomSelector];
 
         }
 
@@ -240,7 +215,7 @@ namespace SanAndreasUnity.Behaviours
 
             var playerController = m_playerController;
             if (playerController != null)
-                realZoom = Mathf.Lerp(.9f, 1.3f, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
+                zoom = Mathf.Lerp(.9f, 1.3f, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocityForZooming) / maxVelocityForZooming) * curZoomPercentage;
 
             // read input
 
@@ -262,7 +237,7 @@ namespace SanAndreasUnity.Behaviours
             //mapContainer.pivot = new Vector2(mapPos.x, mapPos.y);
             mapContainer.localRotation = Quaternion.Euler(0, 0, relAngle);
 
-            mapContainer.localScale = new Vector3(realZoom, realZoom, 1);
+            mapContainer.localScale = new Vector3(zoom, zoom, 1);
             
             if (northPivot != null)
                 northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
@@ -283,8 +258,8 @@ namespace SanAndreasUnity.Behaviours
             float fAlpha = 1;
 
             zoomSelector = GetClampedZoomSelector(zoomSelector);
-            float curZoom = zooms[zoomSelector % zooms.Length],
-                  lastZoom = zooms[GetClampedZoomSelector(zoomSelector - 1 * (isIncreasing ? 1 : -1)) % zooms.Length];
+            float curZoom = availableZooms[zoomSelector % availableZooms.Length],
+                  lastZoom = availableZooms[GetClampedZoomSelector(zoomSelector - 1 * (isIncreasing ? 1 : -1)) % availableZooms.Length];
 
             float t = 0;
             while (t < zoomDuration)
@@ -303,7 +278,7 @@ namespace SanAndreasUnity.Behaviours
             int zoomVal = val == null ? zoomSelector : val.Value;
 
             if (zoomVal < 0)
-                zoomVal = zooms.Length - 1;
+                zoomVal = availableZooms.Length - 1;
 
             return zoomVal;
         }
