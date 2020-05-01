@@ -280,7 +280,7 @@ namespace SanAndreasUnity.Behaviours
                 Debug.Log("Minimap started!");
             }
 
-            if (GameManager.CanPlayerReadInput())
+            if (GameManager.CanPlayerReadInput() && this.IsMinimapVisible)
             {
                 this.ReadInput();
             }
