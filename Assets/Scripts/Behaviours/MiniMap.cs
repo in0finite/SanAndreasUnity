@@ -94,7 +94,7 @@ namespace SanAndreasUnity.Behaviours
                     }
                     catch { }
 
-                    _zName = SZone.GetZoneName(ZoneHelpers.zoneInfoList, playerPos);
+                    _zName = Zone.GetZoneName(ZoneHelpers.zoneInfoList, playerPos);
                 }
 
                 return _zName;

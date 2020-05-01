@@ -569,7 +569,7 @@ namespace SanAndreasUnity.UI {
 			Vector3 mouseWorldPos;
 			if (this.GetWorldPosUnderMouse (out mouseWorldPos)) {
 				GUILayout.Label ("cursor world pos: " + mouseWorldPos);
-				GUILayout.Label ("Zone: " + SZone.GetZoneName (mouseWorldPos, true), GUILayout.Width(80));
+				GUILayout.Label ("Zone: " + Zone.GetZoneName (mouseWorldPos, true), GUILayout.Width(80));
 			}
 
 			GUILayout.EndHorizontal ();
@@ -615,7 +615,7 @@ namespace SanAndreasUnity.UI {
 			// draw all zones
 			if (m_drawZones) {
 				
-				foreach (var zone in SZone.AllZones) {
+				foreach (var zone in Zone.AllZones) {
 					
 					Vector2 min = MiniMap.WorldPosToMapPos (zone.vmin);
 					Vector2 max = MiniMap.WorldPosToMapPos (zone.vmax);
