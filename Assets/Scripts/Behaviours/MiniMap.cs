@@ -149,7 +149,7 @@ namespace SanAndreasUnity.Behaviours
 
 		private Ped m_ped => Ped.Instance;
 
-        private PlayerController playerController => PlayerController.Instance;
+        private PlayerController m_playerController => PlayerController.Instance;
 
         private TextureDictionary huds;
 
@@ -314,19 +314,10 @@ namespace SanAndreasUnity.Behaviours
             return new Vector3(mapPos.x * mul, 0.0f, mapPos.y * mul);
         }
 
-        private void FixedUpdate()
-        {
-            if (playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
-
-            if (playerController != null)
-                realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
-
-        }
-
         private void LateUpdate()
         {
             if (!isReady) return;
-            if (playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
+            if (m_playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
 
 
             //Vector3 defPos = (new Vector3(pPos.x, pPos.z, 0) * (uiSize / -1000f)) / scaleConst; // Why?
@@ -351,13 +342,17 @@ namespace SanAndreasUnity.Behaviours
             else if (Camera.main != null)
                 this.FocusPos = Camera.main.transform.position;
 
+            // update zoom based on ped's velocity
+
+            var playerController = m_playerController;
+            if (playerController != null)
+                realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
 
             // update position
 
             int worldSize = mapSize * 4;
             Vector3 mapPos = - new Vector3(this.FocusPos.x, this.FocusPos.z, 0f) * mapSize / (float)worldSize;
             mapImage.rectTransform.localPosition = mapPos;
-
 
             // update rotation
 
