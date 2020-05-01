@@ -425,7 +425,7 @@ namespace SanAndreasUnity.Utilities
             {
                 Zone zone = zones[i];
 
-                if (!worldPos.IsInside(zone.vmin, zone.vmax))
+                if (!IsInside(worldPos, zone.vmin, zone.vmax))
                     continue;
 
                 if (zone.volume < minVolume)
@@ -478,19 +478,16 @@ namespace SanAndreasUnity.Utilities
             return GetZoneName(ZoneHelpers.zoneInfoList, worldPos2D);
         }
 
+        public static bool IsInside(Vector3 p, Vector3 vmin, Vector3 vmax)
+        {
+            return p.x >= vmin.x && p.x <= vmax.x && p.y >= vmin.y && p.y <= vmax.y && p.z >= vmin.z && p.z <= vmax.z;
+        }
+
         public static bool IsInside(Vector2 pos, Zone zone)
         {
             return pos.x >= zone.vmin.x && pos.x <= zone.vmax.x && pos.y >= zone.vmin.z && pos.y <= zone.vmax.z;
         }
 
-    }
-
-    public static class ZHelpers
-    {
-        public static bool IsInside(this Vector3 p, Vector3 vmin, Vector3 vmax)
-        {
-            return p.x >= vmin.x && p.x <= vmax.x && p.y >= vmin.y && p.y <= vmax.y && p.z >= vmin.z && p.z <= vmax.z;
-        }
     }
 
 }
