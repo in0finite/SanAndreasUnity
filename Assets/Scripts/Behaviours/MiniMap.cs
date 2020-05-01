@@ -241,20 +241,6 @@ namespace SanAndreasUnity.Behaviours
                 return;
 
 
-            //Vector3 defPos = (new Vector3(pPos.x, pPos.z, 0) * (uiSize / -1000f)) / scaleConst; // Why?
-
-            //if (mapContainer != null)
-            //{
-
-            //    mapContainer.localPosition = new Vector3(defPos.x * 1f, defPos.y * 1f, 1);
-
-            //    lerpedZoomCounter += Time.deltaTime;
-
-            //    if (lerpedZoomCounter > 1)
-            //        lerpedZoomCounter = 0;
-            //}
-
-
             // update focus position
 
             var ped = m_ped;
