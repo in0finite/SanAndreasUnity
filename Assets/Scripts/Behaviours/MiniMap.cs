@@ -1,12 +1,8 @@
-﻿using SanAndreasUnity.Behaviours.Vehicles;
-using SanAndreasUnity.Importing.Conversion;
+﻿using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Utilities;
-using System;
 using System.Collections;
-using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -77,9 +73,6 @@ namespace SanAndreasUnity.Behaviours
 
         public Texture2D BlackPixel { get; private set; }
         public Texture2D SeaPixel { get; private set; }
-
-        private Ped m_ped => Ped.Instance;
-        private PlayerController m_playerController => PlayerController.Instance;
 
         private TextureDictionary huds;
 
@@ -202,7 +195,7 @@ namespace SanAndreasUnity.Behaviours
 
             // update focus position
 
-            var ped = m_ped;
+            var ped = Ped.Instance;
             if (ped != null)
                 this.FocusPos = ped.transform.position;
             else if (Camera.main != null)
@@ -210,7 +203,7 @@ namespace SanAndreasUnity.Behaviours
 
             // update zoom based on ped's velocity
 
-            var playerController = m_playerController;
+            var playerController = PlayerController.Instance;
             if (playerController != null)
                 zoom = Mathf.Lerp(.9f, 1.3f, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocityForZooming) / maxVelocityForZooming) * curZoomPercentage;
 
@@ -239,8 +232,8 @@ namespace SanAndreasUnity.Behaviours
             if (northPivot != null)
                 northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
 
-            if (playerImage != null && m_ped != null)
-                playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (m_ped.transform.eulerAngles.y + 180));
+            if (playerImage != null && ped != null)
+                playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, relAngle - (ped.transform.eulerAngles.y + 180));
 
             // update zone name label
 
