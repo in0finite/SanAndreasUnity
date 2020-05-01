@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Utilities
 {
@@ -404,7 +403,7 @@ namespace SanAndreasUnity.Utilities
 
         public string name;
 
-        public const string defaultZoneName = "San Andreas";
+        public static readonly string defaultZoneName = "San Andreas";
 
         public static Zone[] AllZones { get { return ZoneHelpers.zoneInfoList; } }
 
