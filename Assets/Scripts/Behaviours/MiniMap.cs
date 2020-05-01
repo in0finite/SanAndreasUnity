@@ -37,8 +37,7 @@ namespace SanAndreasUnity.Behaviours
         private Canvas _canvas;
 
         public float zoom = 1.3f;
-        private const float scaleConst = 1f;
-
+        
         public const float maxVelocity = 300f;
         public static float[] zooms = new float[10] { .5f, .75f, 1f, 1.2f, 1.4f, 1.6f, 2f, 2.5f, 3f, 5f };
 
@@ -61,11 +60,11 @@ namespace SanAndreasUnity.Behaviours
         {
             get
             {
-                return zoom * scaleConst;
+                return zoom;
             }
             set
             {
-                zoom = value / scaleConst;
+                zoom = value;
             }
         }
 
@@ -98,7 +97,6 @@ namespace SanAndreasUnity.Behaviours
         public Texture2D SeaPixel { get { return this.seaPixel; } }
 
         private Ped m_ped => Ped.Instance;
-
         private PlayerController m_playerController => PlayerController.Instance;
 
         private TextureDictionary huds;
@@ -110,17 +108,10 @@ namespace SanAndreasUnity.Behaviours
 
         // Zoom vars
         public float curZoomPercentage;
-        private float lastZoom;
         private int zoomSelector = 2;
         private Coroutine zoomCoroutine;
 
-        // GUI Elements
         private Texture2D blackPixel, seaPixel;
-
-        private float fAlpha = 1;
-        private bool showZoomPanel;
-
-        private float curZoom = 1;
 
 
 
@@ -249,7 +240,7 @@ namespace SanAndreasUnity.Behaviours
 
             var playerController = m_playerController;
             if (playerController != null)
-                realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
+                realZoom = Mathf.Lerp(.9f, 1.3f, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
 
             // read input
 
@@ -272,8 +263,7 @@ namespace SanAndreasUnity.Behaviours
             mapContainer.localRotation = Quaternion.Euler(0, 0, relAngle);
 
             mapContainer.localScale = new Vector3(realZoom, realZoom, 1);
-            lastZoom = realZoom;
-
+            
             if (northPivot != null)
                 northPivot.localRotation = Quaternion.Euler(0, 0, relAngle);
 
@@ -290,8 +280,7 @@ namespace SanAndreasUnity.Behaviours
 
         private IEnumerator ChangeZoom(bool isIncreasing)
         {
-            showZoomPanel = true;
-            fAlpha = 1;
+            float fAlpha = 1;
 
             zoomSelector = GetClampedZoomSelector(zoomSelector);
             float curZoom = zooms[zoomSelector % zooms.Length],
@@ -306,7 +295,6 @@ namespace SanAndreasUnity.Behaviours
                 fAlpha -= Time.fixedDeltaTime / zoomDuration;
             }
 
-            showZoomPanel = false;
             zoomCoroutine = null;
         }
 
