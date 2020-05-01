@@ -74,10 +74,6 @@ namespace SanAndreasUnity.Behaviours
         public Texture2D BlackPixel { get; private set; }
         public Texture2D SeaPixel { get; private set; }
 
-        private TextureDictionary huds;
-
-        private Sprite mapSprite;
-
 
 
         public void Load()
@@ -122,7 +118,7 @@ namespace SanAndreasUnity.Behaviours
 
             MapTexture.Apply(false, true);
 
-            huds = TextureDictionary.Load("hud");
+            var huds = TextureDictionary.Load("hud");
             NorthBlip = huds.GetDiffuse("radar_north").Texture;
             PlayerBlip = huds.GetDiffuse("radar_centre").Texture;
             WaypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
@@ -131,8 +127,7 @@ namespace SanAndreasUnity.Behaviours
 
             northImage.sprite = Sprite.Create(NorthBlip, new Rect(0, 0, NorthBlip.width, NorthBlip.height), new Vector2(NorthBlip.width, NorthBlip.height) / 2);
             playerImage.texture = this.PlayerBlip;
-            mapSprite = Sprite.Create(MapTexture, new Rect(0, 0, MapTexture.width, MapTexture.height), new Vector2(MapTexture.width, MapTexture.height) / 2);
-            mapImage.sprite = mapSprite;
+            mapImage.sprite = Sprite.Create(MapTexture, new Rect(0, 0, MapTexture.width, MapTexture.height), new Vector2(MapTexture.width, MapTexture.height) / 2);
 
         }
 
