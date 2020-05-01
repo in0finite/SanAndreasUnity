@@ -199,19 +199,6 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-        private void Update()
-        {
-            if (!this.IsMinimapVisible)
-                return;
-
-
-            if (GameManager.CanPlayerReadInput() && this.IsMinimapVisible)
-            {
-                this.ReadInput();
-            }
-
-        }
-
         private void ReadInput()
         {
 
@@ -288,13 +275,20 @@ namespace SanAndreasUnity.Behaviours
             if (playerController != null)
                 realZoom = Mathf.Lerp(.9f * scaleConst, 1.3f * scaleConst, 1 - Mathf.Clamp(playerController.CurVelocity, 0, maxVelocity) / maxVelocity) * curZoomPercentage;
 
-            // update position
+            // read input
+
+            if (GameManager.CanPlayerReadInput())
+            {
+                this.ReadInput();
+            }
+
+            // update position of UI
 
             int worldSize = mapSize * 4;
             Vector3 mapPos = - new Vector3(this.FocusPos.x, this.FocusPos.z, 0f) * mapSize / (float)worldSize;
             mapImage.rectTransform.localPosition = mapPos;
 
-            // update rotation
+            // update rotation of UI
 
             float relAngle = Camera.main != null ? Camera.main.transform.eulerAngles.y : 0f;
 
