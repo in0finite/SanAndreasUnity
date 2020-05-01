@@ -58,7 +58,7 @@ namespace SanAndreasUnity.UI {
 			int originalWidth = originalTex.width;
 			int originalHeight = originalTex.height;
 
-			Texture2D tex = new Texture2D(originalWidth * 2, originalHeight * 2);
+			Texture2D tex = new Texture2D(originalWidth * 2, originalHeight * 2, TextureFormat.ARGB32, false, true);
 
 			// bottom left
 			for (int i = 0; i < originalWidth; i++)
@@ -96,7 +96,7 @@ namespace SanAndreasUnity.UI {
 				}
 			}
 
-			tex.Apply(true, true);
+			tex.Apply(false, true);
 
 			Weapon.CrosshairTexture = tex;
 			this.crosshairImage.enabled = true;
