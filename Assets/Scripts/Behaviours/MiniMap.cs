@@ -69,7 +69,7 @@ namespace SanAndreasUnity.Behaviours
 
         private float _gTimer;
 
-        private string _zName;
+        private string _lastZoneName = "";
 
         private string ZoneName
         {
@@ -77,17 +77,10 @@ namespace SanAndreasUnity.Behaviours
             {
                 if (_gTimer == 0)
                 {
-                    Vector3 playerPos = Vector3.zero;
-                    try
-                    {
-                        playerPos = this.FocusPos;
-                    }
-                    catch { }
-
-                    _zName = Zone.GetZoneName(ZoneHelpers.zoneInfoList, playerPos);
+                    _lastZoneName = Zone.GetZoneName(this.FocusPos);
                 }
 
-                return _zName;
+                return _lastZoneName;
             }
         }
 
