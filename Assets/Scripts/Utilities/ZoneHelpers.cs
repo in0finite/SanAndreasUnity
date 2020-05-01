@@ -413,34 +413,54 @@ public class SZone
 		name = n;
 	}
 
-	public static string GetZoneName (SZone[] sZones, Vector3 worldPos)
+	public static string GetZoneName (SZone[] zones, Vector3 worldPos)
 	{
-		try {
-			return sZones.Where (x => worldPos.IsInside (x.vmin, x.vmax))
-			//	.Select (x => new { Center = x.centerPos, Zone = x })
-			//	.OrderBy (x => Vector3.Distance (worldPos, x.Center))
-				.OrderBy(x => x.volume)
-			//	.Select (x => x.Zone)
-				.FirstOrDefault ()
-				.name;
-		} catch {
-			return defaultZoneName;
-		}
+        float minVolume = float.PositiveInfinity;
+        SZone targetZone = null;
+
+        for (int i = 0; i < zones.Length; i++)
+        {
+            SZone zone = zones[i];
+
+            if (!worldPos.IsInside(zone.vmin, zone.vmax))
+                continue;
+
+            if (zone.volume < minVolume)
+            {
+                minVolume = zone.volume;
+                targetZone = zone;
+            }
+        }
+
+        if (targetZone != null)
+            return targetZone.name;
+        else
+            return defaultZoneName;
 	}
 
-	public static string GetZoneName (SZone[] sZones, Vector2 worldPos2D)
+	public static string GetZoneName (SZone[] zones, Vector2 worldPos2D)
 	{
-		try {
-			return sZones.Where (x => IsInside( worldPos2D, x ))
-			//	.Select (x => new { Center = (x.minPos2D + x.maxPos2D) * 0.5f, Zone = x })
-			//	.OrderBy (x => Vector2.Distance (worldPos2D, x.Center))
-				.OrderBy( x => x.squaredSize )
-			//	.Select (x => x.Zone)
-				.FirstOrDefault ()
-				.name;
-		} catch {
-			return defaultZoneName;
-		}
+        float minSquaredSize = float.PositiveInfinity;
+        SZone targetZone = null;
+
+        for (int i = 0; i < zones.Length; i++)
+        {
+            SZone zone = zones[i];
+
+            if (!IsInside(worldPos2D, zone))
+                continue;
+
+            if (zone.squaredSize < minSquaredSize)
+            {
+                minSquaredSize = zone.squaredSize;
+                targetZone = zone;
+            }
+        }
+
+        if (targetZone != null)
+            return targetZone.name;
+        else
+            return defaultZoneName;
 	}
 
 	public static string GetZoneName( Vector3 worldPos, bool use2DPos = false ) {
