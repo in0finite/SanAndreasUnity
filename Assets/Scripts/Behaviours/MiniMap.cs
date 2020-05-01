@@ -68,25 +68,22 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        public Texture2D NorthBlip { get { return this.northBlip; } }
-        public Texture2D PlayerBlip { get { return this.playerBlip; } }
-        public Texture2D WaypointTexture { get { return this.waypointTexture; } }
-        public Texture2D VehicleTexture => this.vehicleTexture;
+        public Texture2D NorthBlip { get; private set; }
+        public Texture2D PlayerBlip { get; private set; }
+        public Texture2D WaypointTexture { get; private set; }
+        public Texture2D VehicleTexture { get; private set; }
         public Texture2D GreenHouseTexture { get; private set; }
-        public Texture2D MapTexture { get { return this.mapTexture; } }
+        public Texture2D MapTexture { get; private set; }
 
-        public Texture2D BlackPixel { get { return this.blackPixel; } }
-        public Texture2D SeaPixel { get { return this.seaPixel; } }
+        public Texture2D BlackPixel { get; private set; }
+        public Texture2D SeaPixel { get; private set; }
 
         private Ped m_ped => Ped.Instance;
         private PlayerController m_playerController => PlayerController.Instance;
 
         private TextureDictionary huds;
 
-        private Texture2D northBlip, playerBlip, waypointTexture, vehicleTexture, mapTexture;
         private Sprite mapSprite;
-
-        private Texture2D blackPixel, seaPixel;
 
 
 
@@ -95,19 +92,19 @@ namespace SanAndreasUnity.Behaviours
 
             LoadGameTextures();
 
-            blackPixel = new Texture2D(1, 1);
-            blackPixel.SetPixel(0, 0, new Color(0, 0, 0, .5f));
-            blackPixel.Apply();
+            BlackPixel = new Texture2D(1, 1);
+            BlackPixel.SetPixel(0, 0, new Color(0, 0, 0, .5f));
+            BlackPixel.Apply();
 
-            seaPixel = new Texture2D(1, 1);
-            seaPixel.SetPixel(0, 0, new Color(.45f, .54f, .678f));
-            seaPixel.Apply();
+            SeaPixel = new Texture2D(1, 1);
+            SeaPixel.SetPixel(0, 0, new Color(.45f, .54f, .678f));
+            SeaPixel.Apply();
 
         }
 
         private void LoadGameTextures()
         {
-            mapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
+            MapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
 
             TextureLoadParams textureLoadParams = new TextureLoadParams() { makeNoLongerReadable = false };
 
@@ -124,24 +121,24 @@ namespace SanAndreasUnity.Behaviours
 
                 for (int ii = 0; ii < texSize; ++ii)
                     for (int jj = 0; jj < texSize; ++jj)
-                        mapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
+                        MapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
 
                 // unload the texture (don't destroy it, because it can be a dummy texture)
 
             }
 
-            mapTexture.Apply(false, true);
+            MapTexture.Apply(false, true);
 
             huds = TextureDictionary.Load("hud");
-            northBlip = huds.GetDiffuse("radar_north").Texture;
-            playerBlip = huds.GetDiffuse("radar_centre").Texture;
-            waypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
-            vehicleTexture = huds.GetDiffuse("radar_impound").Texture;
+            NorthBlip = huds.GetDiffuse("radar_north").Texture;
+            PlayerBlip = huds.GetDiffuse("radar_centre").Texture;
+            WaypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
+            VehicleTexture = huds.GetDiffuse("radar_impound").Texture;
             GreenHouseTexture = huds.GetDiffuse("radar_propertyG").Texture;
 
-            northImage.sprite = Sprite.Create(northBlip, new Rect(0, 0, northBlip.width, northBlip.height), new Vector2(northBlip.width, northBlip.height) / 2);
+            northImage.sprite = Sprite.Create(NorthBlip, new Rect(0, 0, NorthBlip.width, NorthBlip.height), new Vector2(NorthBlip.width, NorthBlip.height) / 2);
             playerImage.texture = this.PlayerBlip;
-            mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
+            mapSprite = Sprite.Create(MapTexture, new Rect(0, 0, MapTexture.width, MapTexture.height), new Vector2(MapTexture.width, MapTexture.height) / 2);
             mapImage.sprite = mapSprite;
 
         }
