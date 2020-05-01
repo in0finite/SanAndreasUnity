@@ -4,10 +4,13 @@ using System.Linq;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 
-public class ZoneHelpers
+namespace SanAndreasUnity.Utilities
 {
-    public static SZone[] zoneInfoList =
+
+    public class ZoneHelpers
     {
+        public static SZone[] zoneInfoList =
+        {
         new SZone(-2353, 2275, 0, -2153, 2475, 200, "Bayside Marina"),
         new SZone(-2741, 2175, 0, -2353, 2722, 200, "Bayside"),
         new SZone(-2741, 1268, 0, -2533, 1490, 200, "Battery Point"),
@@ -386,103 +389,108 @@ public class ZoneHelpers
         new SZone(2541, -2059, -89, 2703, -1941, 110, "Willowfield"),
         new SZone(1098, 1726, -89, 1197, 2243, 110, "Whitewood Estates")
     };
-}
-
-public class SZone
-{
-    public Vector3 vmin, vmax;
-
-	public Vector2 minPos2D { get { return new Vector2 (this.vmin.x, this.vmin.z); } }
-	public Vector2 maxPos2D { get { return new Vector2 (this.vmax.x, this.vmax.z); } }
-	public Vector3 centerPos { get { return (this.vmin + this.vmax) * 0.5f; } }
-
-	public float volume { get { Vector3 size = this.vmax - this.vmin; return size.x * size.y * size.z; } }
-	public float squaredSize { get { Vector2 size = this.maxPos2D - this.minPos2D; return size.x * size.y; } }
-
-	public string name;
-
-	public const string defaultZoneName = "San Andreas";
-
-	public static SZone[] AllZones { get { return ZoneHelpers.zoneInfoList; } }
-
-
-	public SZone (int x1, int z1, int y1, int x2, int z2, int y2, string n)
-	{
-		vmin = new Vector3 (x1, y1, z1);
-		vmax = new Vector3 (x2, y2, z2);
-		name = n;
-	}
-
-	public static string GetZoneName (SZone[] zones, Vector3 worldPos)
-	{
-        float minVolume = float.PositiveInfinity;
-        SZone targetZone = null;
-
-        for (int i = 0; i < zones.Length; i++)
-        {
-            SZone zone = zones[i];
-
-            if (!worldPos.IsInside(zone.vmin, zone.vmax))
-                continue;
-
-            if (zone.volume < minVolume)
-            {
-                minVolume = zone.volume;
-                targetZone = zone;
-            }
-        }
-
-        if (targetZone != null)
-            return targetZone.name;
-        else
-            return defaultZoneName;
-	}
-
-	public static string GetZoneName (SZone[] zones, Vector2 worldPos2D)
-	{
-        float minSquaredSize = float.PositiveInfinity;
-        SZone targetZone = null;
-
-        for (int i = 0; i < zones.Length; i++)
-        {
-            SZone zone = zones[i];
-
-            if (!IsInside(worldPos2D, zone))
-                continue;
-
-            if (zone.squaredSize < minSquaredSize)
-            {
-                minSquaredSize = zone.squaredSize;
-                targetZone = zone;
-            }
-        }
-
-        if (targetZone != null)
-            return targetZone.name;
-        else
-            return defaultZoneName;
-	}
-
-	public static string GetZoneName( Vector3 worldPos, bool use2DPos = false ) {
-		if (use2DPos)
-			return GetZoneName (worldPos.ToVec2WithXAndZ ());
-		return GetZoneName (ZoneHelpers.zoneInfoList, worldPos);
-	}
-
-	public static string GetZoneName( Vector2 worldPos2D ) {
-		return GetZoneName (ZoneHelpers.zoneInfoList, worldPos2D);
-	}
-
-	public static bool IsInside(Vector2 pos, SZone zone) {
-		return pos.x >= zone.vmin.x && pos.x <= zone.vmax.x && pos.y >= zone.vmin.z && pos.y <= zone.vmax.z;
-	}
-
-}
-
-public static class ZHelpers
-{
-    public static bool IsInside(this Vector3 p, Vector3 vmin, Vector3 vmax)
-    {
-        return p.x >= vmin.x && p.x <= vmax.x && p.y >= vmin.y && p.y <= vmax.y && p.z >= vmin.z && p.z <= vmax.z;
     }
+
+    public class SZone
+    {
+        public Vector3 vmin, vmax;
+
+        public Vector2 minPos2D { get { return new Vector2(this.vmin.x, this.vmin.z); } }
+        public Vector2 maxPos2D { get { return new Vector2(this.vmax.x, this.vmax.z); } }
+        public Vector3 centerPos { get { return (this.vmin + this.vmax) * 0.5f; } }
+
+        public float volume { get { Vector3 size = this.vmax - this.vmin; return size.x * size.y * size.z; } }
+        public float squaredSize { get { Vector2 size = this.maxPos2D - this.minPos2D; return size.x * size.y; } }
+
+        public string name;
+
+        public const string defaultZoneName = "San Andreas";
+
+        public static SZone[] AllZones { get { return ZoneHelpers.zoneInfoList; } }
+
+
+        public SZone(int x1, int z1, int y1, int x2, int z2, int y2, string n)
+        {
+            vmin = new Vector3(x1, y1, z1);
+            vmax = new Vector3(x2, y2, z2);
+            name = n;
+        }
+
+        public static string GetZoneName(SZone[] zones, Vector3 worldPos)
+        {
+            float minVolume = float.PositiveInfinity;
+            SZone targetZone = null;
+
+            for (int i = 0; i < zones.Length; i++)
+            {
+                SZone zone = zones[i];
+
+                if (!worldPos.IsInside(zone.vmin, zone.vmax))
+                    continue;
+
+                if (zone.volume < minVolume)
+                {
+                    minVolume = zone.volume;
+                    targetZone = zone;
+                }
+            }
+
+            if (targetZone != null)
+                return targetZone.name;
+            else
+                return defaultZoneName;
+        }
+
+        public static string GetZoneName(SZone[] zones, Vector2 worldPos2D)
+        {
+            float minSquaredSize = float.PositiveInfinity;
+            SZone targetZone = null;
+
+            for (int i = 0; i < zones.Length; i++)
+            {
+                SZone zone = zones[i];
+
+                if (!IsInside(worldPos2D, zone))
+                    continue;
+
+                if (zone.squaredSize < minSquaredSize)
+                {
+                    minSquaredSize = zone.squaredSize;
+                    targetZone = zone;
+                }
+            }
+
+            if (targetZone != null)
+                return targetZone.name;
+            else
+                return defaultZoneName;
+        }
+
+        public static string GetZoneName(Vector3 worldPos, bool use2DPos = false)
+        {
+            if (use2DPos)
+                return GetZoneName(worldPos.ToVec2WithXAndZ());
+            return GetZoneName(ZoneHelpers.zoneInfoList, worldPos);
+        }
+
+        public static string GetZoneName(Vector2 worldPos2D)
+        {
+            return GetZoneName(ZoneHelpers.zoneInfoList, worldPos2D);
+        }
+
+        public static bool IsInside(Vector2 pos, SZone zone)
+        {
+            return pos.x >= zone.vmin.x && pos.x <= zone.vmax.x && pos.y >= zone.vmin.z && pos.y <= zone.vmax.z;
+        }
+
+    }
+
+    public static class ZHelpers
+    {
+        public static bool IsInside(this Vector3 p, Vector3 vmin, Vector3 vmax)
+        {
+            return p.x >= vmin.x && p.x <= vmax.x && p.y >= vmin.y && p.y <= vmax.y && p.z >= vmin.z && p.z <= vmax.z;
+        }
+    }
+
 }
