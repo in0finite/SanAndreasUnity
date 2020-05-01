@@ -392,8 +392,7 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void StepLoadMap ()
 		{
-			//MiniMap.loadTextures();
-			MiniMap.AssingMinimap ();
+			MiniMap.Instance.Load ();
 		}
 
 		private static void StepLoadSpecialTextures ()

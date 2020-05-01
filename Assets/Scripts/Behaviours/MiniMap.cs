@@ -101,13 +101,7 @@ namespace SanAndreasUnity.Behaviours
 
         #endregion "Properties"
 
-        public static void AssingMinimap()
-        {
-            if (!Instance.isSetup)
-                Instance.Setup();
-        }
-
-        private void loadTextures()
+        private void LoadGameTextures()
         {
             mapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
 
@@ -134,10 +128,6 @@ namespace SanAndreasUnity.Behaviours
 
             mapTexture.Apply(false, true);
             
-            mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
-
-            circleMask = Resources.Load<Sprite>("Sprites/MapCircle");
-
             huds = TextureDictionary.Load("hud");
             northBlip = huds.GetDiffuse("radar_north").Texture;
             playerBlip = huds.GetDiffuse("radar_centre").Texture;
@@ -145,33 +135,30 @@ namespace SanAndreasUnity.Behaviours
             vehicleTexture = huds.GetDiffuse("radar_impound").Texture;
             GreenHouseTexture = huds.GetDiffuse("radar_propertyG").Texture;
 
+            northImage.sprite = Sprite.Create(northBlip, new Rect(0, 0, northBlip.width, northBlip.height), new Vector2(northBlip.width, northBlip.height) / 2);
+            playerImage.texture = this.PlayerBlip;
+            mapSprite = Sprite.Create(mapTexture, new Rect(0, 0, mapTexture.width, mapTexture.height), new Vector2(mapTexture.width, mapTexture.height) / 2);
+            mapImage.sprite = mapSprite;
+            
         }
 
         // --------------------------------
 
-        #region Private fields
-
-		private Ped m_ped => Ped.Instance;
+        private Ped m_ped => Ped.Instance;
 
         private PlayerController m_playerController => PlayerController.Instance;
 
         private TextureDictionary huds;
 
         private Texture2D northBlip, playerBlip, waypointTexture, vehicleTexture, mapTexture;
-        private Sprite mapSprite, circleMask;
+        private Sprite mapSprite;
 
         public RectTransform northPivot;
 
-        // Flags
-        private bool enabledMinimap, isReady, isSetup;
-
         // Zoom vars
         public float curZoomPercentage;
-
         private float lastZoom;
-
         private int zoomSelector = 2;
-
         private Coroutine zoomCoroutine;
 
         // Toggle flags
@@ -185,11 +172,12 @@ namespace SanAndreasUnity.Behaviours
 
         private float curZoom = 1;
 
-        #endregion Private fields
 
-        private void Setup()
+
+        public void Load()
         {
-            loadTextures();
+
+            LoadGameTextures();
 
             blackPixel = new Texture2D(1, 1);
             blackPixel.SetPixel(0, 0, new Color(0, 0, 0, .5f));
@@ -199,9 +187,6 @@ namespace SanAndreasUnity.Behaviours
             seaPixel.SetPixel(0, 0, new Color(.45f, .54f, .678f));
             seaPixel.Apply();
 
-            isSetup = true;
-            isReady = true;
-            Debug.Log("Finished minimap setup!");
         }
 
         private void Awake()
@@ -210,75 +195,15 @@ namespace SanAndreasUnity.Behaviours
 
             _canvas = this.GetComponentInParent<Canvas>();
 
-            if (!isReady)
-                return;
+            curZoomPercentage = zooms[zoomSelector];
 
-            if (!isSetup)
-                Setup();
         }
 
         private void Update()
         {
-            if (!isReady) return;
+            if (!this.IsMinimapVisible)
+                return;
 
-            if (!enabledMinimap)
-            {
-                enabledMinimap = true;
-
-                Debug.Log("Starting to enable minimap!");
-
-                northImage.sprite = Sprite.Create(northBlip, new Rect(0, 0, northBlip.width, northBlip.height), new Vector2(northBlip.width, northBlip.height) / 2);
-                playerImage.texture = this.PlayerBlip;
-                mapImage.sprite = mapSprite;
-                if (maskImage.sprite == null)
-                    maskImage.sprite = circleMask;
-                
-                curZoomPercentage = zooms[zoomSelector];
-
-
-
-                /*
-                float left = Screen.width - uiSize - uiOffset,
-                      top = Screen.height - uiSize - uiOffset * 2;
-
-                Vector3 globalPos = new Vector3(left, top, 0) / 2;
-
-                if (maskTransform != null)
-                    maskTransform.localPosition = globalPos;
-
-                if (playerImage != null)
-                {
-                    playerImage.rectTransform.localPosition = globalPos;
-                    playerImage.rectTransform.localScale = Vector3.one * .2f;
-                    playerImage.rectTransform.localRotation = Quaternion.Euler(0, 0, 180);
-                }
-
-                if (northImage != null)
-                {
-                    northPivot = northImage.rectTransform.parent;
-
-                    northImage.rectTransform.localPosition = new Vector3(0, uiSize / 2, 0) / .2f;
-                    northImage.rectTransform.localRotation = Quaternion.Euler(0, 180, 0);
-                }
-
-                if (northPivot != null)
-                {
-                    northPivot.localPosition = globalPos;
-                    northPivot.localScale = Vector3.one * .2f;
-                }
-
-                if (outlineImage != null)
-                {
-                    outlineImage.rectTransform.localPosition = globalPos;
-                    outlineImage.rectTransform.sizeDelta = Vector2.one * uiSize;
-                    outlineImage.rectTransform.localScale = Vector3.one * 1.05f;
-                }
-                */
-
-
-
-                Debug.Log("Minimap started!");
-            }
 
             if (GameManager.CanPlayerReadInput() && this.IsMinimapVisible)
             {
@@ -430,7 +355,7 @@ namespace SanAndreasUnity.Behaviours
 			if (!Loader.HasLoaded)
 				return;
 
-            if (!isReady || !toggleInfo) return;
+            if (!toggleInfo) return;
 
             if (!toggleMap)
             {
