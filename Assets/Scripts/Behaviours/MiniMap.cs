@@ -34,6 +34,8 @@ namespace SanAndreasUnity.Behaviours
 
         public Text zoneNameLabel;
 
+        private Canvas _canvas;
+
         public float zoom = 1.3f;
         private const float scaleConst = 1f;
 
@@ -48,6 +50,8 @@ namespace SanAndreasUnity.Behaviours
                      mapMovement = 5;
 
         public Vector3 FocusPos { get; set; } = Vector3.zero;
+
+        public bool IsMinimapVisible => _canvas.enabled && this.gameObject.activeInHierarchy;
 
         public bool debugActive = true;
 
@@ -204,6 +208,8 @@ namespace SanAndreasUnity.Behaviours
         {
             Instance = this;
 
+            _canvas = this.GetComponentInParent<Canvas>();
+
             if (!isReady)
                 return;
 
@@ -316,8 +322,8 @@ namespace SanAndreasUnity.Behaviours
 
         private void LateUpdate()
         {
-            if (!isReady) return;
-            if (m_playerController != null && !GameManager.CanPlayerReadInput() && debugActive) return;
+            if (!this.IsMinimapVisible)
+                return;
 
 
             //Vector3 defPos = (new Vector3(pPos.x, pPos.z, 0) * (uiSize / -1000f)) / scaleConst; // Why?
