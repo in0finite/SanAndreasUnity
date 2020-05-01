@@ -114,9 +114,6 @@ namespace SanAndreasUnity.Behaviours
         private int zoomSelector = 2;
         private Coroutine zoomCoroutine;
 
-        // Toggle flags
-        private bool toggleInfo = true;
-
         // GUI Elements
         private Texture2D blackPixel, seaPixel;
 
@@ -209,9 +206,6 @@ namespace SanAndreasUnity.Behaviours
                     StopCoroutine(zoomCoroutine);
                 zoomCoroutine = StartCoroutine(ChangeZoom(zoomIn));
             }
-
-            if (Input.GetKeyDown(KeyCode.F8))
-                toggleInfo = !toggleInfo;
 
         }
 
