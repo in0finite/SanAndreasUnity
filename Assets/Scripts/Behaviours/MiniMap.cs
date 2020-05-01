@@ -195,17 +195,19 @@ namespace SanAndreasUnity.Behaviours
 
         private void ReadInput()
         {
+            bool zoomIn = Input.GetKeyDown(KeyCode.N);
+            bool zoomOut = Input.GetKeyDown(KeyCode.B);
 
-            if (Input.GetKeyDown(KeyCode.N))
+            if (zoomIn)
                 ++zoomSelector;
-            else if (Input.GetKeyDown(KeyCode.B))
+            else if (zoomOut)
                 --zoomSelector;
 
-            if (Input.GetKeyDown(KeyCode.N) || Input.GetKeyDown(KeyCode.B))
+            if (zoomIn || zoomOut)
             {
                 if (zoomCoroutine != null)
                     StopCoroutine(zoomCoroutine);
-                zoomCoroutine = StartCoroutine(ChangeZoom(Input.GetKeyDown(KeyCode.N)));
+                zoomCoroutine = StartCoroutine(ChangeZoom(zoomIn));
             }
 
             if (Input.GetKeyDown(KeyCode.F8))
