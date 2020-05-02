@@ -210,8 +210,7 @@ namespace SanAndreasUnity.Behaviours
 
             // update position of UI
 
-            int worldSize = mapSize * 4;
-            Vector3 mapPos = - new Vector3(this.FocusPos.x, this.FocusPos.z, 0f) * mapSize / (float)worldSize;
+            Vector3 mapPos = - new Vector3(this.FocusPos.x, this.FocusPos.z, 0f) * (mapSize / (float)mapEdge);
             mapImage.rectTransform.localPosition = mapPos;
 
             // update rotation of UI
