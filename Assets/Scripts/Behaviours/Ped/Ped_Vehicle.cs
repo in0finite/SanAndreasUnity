@@ -87,7 +87,8 @@ namespace SanAndreasUnity.Behaviours
 		{
 
 			// find any vehicles that have a seat inside the checking radius and sort by closest seat
-			return FindObjectsOfType<Vehicle>()
+			return Vehicle.AllVehicles
+				.Where(x => x.Seats.Count > 0)
 				.Where(x => Vector3.Distance(transform.position, x.FindClosestSeatTransform(transform.position).position) < EnterVehicleRadius)
 				.OrderBy(x => Vector3.Distance(transform.position, x.FindClosestSeatTransform(transform.position).position))
 				.FirstOrDefault();

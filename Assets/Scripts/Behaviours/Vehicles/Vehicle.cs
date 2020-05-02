@@ -357,7 +357,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Transform GetSeatTransform(SeatAlignment alignment)
         {
-            return GetSeat(alignment).Parent;
+            var seat = GetSeat(alignment);
+            return seat != null ? seat.Parent : null;
         }
 
         public void StopControlling()
