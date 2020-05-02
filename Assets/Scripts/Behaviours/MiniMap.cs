@@ -19,10 +19,9 @@ namespace SanAndreasUnity.Behaviours
 
         public Image northImage,
                      outlineImage,
-                     maskImage,
-                     mapImage;
+                     maskImage;
 
-        public RawImage playerImage;
+        public RawImage mapImage, playerImage;
 
         public RectTransform mapTransform,
                              maskTransform,
@@ -127,7 +126,7 @@ namespace SanAndreasUnity.Behaviours
 
             northImage.sprite = Sprite.Create(NorthBlip, new Rect(0, 0, NorthBlip.width, NorthBlip.height), new Vector2(NorthBlip.width, NorthBlip.height) / 2);
             playerImage.texture = this.PlayerBlip;
-            mapImage.sprite = Sprite.Create(MapTexture, new Rect(0, 0, MapTexture.width, MapTexture.height), new Vector2(MapTexture.width, MapTexture.height) / 2);
+            mapImage.texture = MapTexture;
 
         }
 
