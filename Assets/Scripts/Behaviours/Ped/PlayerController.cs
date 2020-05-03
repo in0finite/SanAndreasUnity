@@ -244,7 +244,7 @@ namespace SanAndreasUnity.Behaviours
 
 				// draw closest seat
 
-                var closestSeat = vehicle.FindClosestSeat(transform.position);
+                var closestSeat = vehicle.GetSeatAlignmentOfClosestSeat(transform.position);
 
                 if (closestSeat != Vehicle.SeatAlignment.None)
                 {

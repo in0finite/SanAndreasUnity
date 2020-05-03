@@ -101,7 +101,7 @@ namespace SanAndreasUnity.Behaviours
 			if (null == vehicle)
 				return null;
 
-			var seat = vehicle.FindClosestSeat(this.transform.position);
+			var seat = vehicle.GetSeatAlignmentOfClosestSeat(this.transform.position);
 
 			this.EnterVehicle(vehicle, seat);
 

@@ -334,18 +334,25 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             m_rearRightLightOk = m_rearRightLight != null;
         }
 
-        public SeatAlignment FindClosestSeat(Vector3 position)
+        public SeatAlignment GetSeatAlignmentOfClosestSeat(Vector3 position)
         {
-            var seat = _seats.Select((s, i) => new { s, i })
-                .OrderBy(x => Vector3.Distance(position, x.s.Parent.position))
-                .FirstOrDefault();
+            var seat = FindClosestSeat(position);
+            return seat != null ? seat.Alignment : SeatAlignment.None;
+        }
 
-            return (seat == null ? SeatAlignment.None : seat.s.Alignment);
+        public Seat FindClosestSeat(Vector3 position)
+        {
+            if (this.Seats.Count < 1)
+                return null;
+
+            return this.Seats.Aggregate((a, b) => 
+                Vector3.Distance(position, a.Parent.position) < Vector3.Distance(position, b.Parent.position) ? a : b);
         }
 
         public Transform FindClosestSeatTransform(Vector3 position)
         {
-            return GetSeatTransform(FindClosestSeat(position));
+            var seat = FindClosestSeat(position);
+            return seat != null ? seat.Parent : null;
         }
 
         public Seat GetSeat(SeatAlignment alignment)
