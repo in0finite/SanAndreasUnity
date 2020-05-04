@@ -83,12 +83,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// play anims
 			this.UpdateAnimsInternal();
 
-			// start vehicle radio
-			if (m_ped.IsControlledByLocalPlayer)
-			{
-				//vehicle.PlayRadio();
-			}
-
 		}
 
         public override void OnPreviousWeaponButtonPressed()
