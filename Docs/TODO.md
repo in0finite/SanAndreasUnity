@@ -41,14 +41,10 @@
 
 - Breakable objects - they should have a separate class which inherits MapObject ; spawn networked object with rigid body, when hit with enough force ;
 
-- On-screen messages - they can be used for displaying: vehicle name when ped enters it, current zone, inflicted damage
-
 - Android: check Utilities size on 800x480 resolution ;
 
 
 - Navigation: build navmesh from static geometry at runtime
-
-- Import: AI paths, ped spawn info, font, 
 
 
 #### Vehicles

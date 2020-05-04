@@ -11,13 +11,6 @@
 
 - all button events' Cmds on server should be enclosed with F.RunExceptionSafe()
 
-- update Mirror
-
-
-### Weapons
-
-- aiming accuracy is still not good - it happens because of script execution order ; fire position and direction are sent after/before skeleton changes or transform update ; it can be seen when line is drawn from gun, and ped starts moving to side ;
-
 
 ### Vehicles
 
