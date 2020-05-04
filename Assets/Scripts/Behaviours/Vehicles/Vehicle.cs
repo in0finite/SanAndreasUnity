@@ -172,7 +172,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             this.NetTransform = this.GetComponent<Mirror.NetworkTransform>();
             _props = new MaterialPropertyBlock();
-            m_radioAudioSource = GetComponent<AudioSource>();
+            this.Awake_Radio();
         }
 
         void OnEnable()
@@ -189,7 +189,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             this.ApplySyncRate(VehicleManager.Instance.vehicleSyncRate);
 
-            currentRadioStationIndex = Random.Range(0, RadioStation.stations.Length);
+            this.Start_Radio();
 
             Debug.LogFormat("Created vehicle - id {0}, name {1}, time: {2}", this.Definition.Id, 
                 this.Definition.GameName, F.CurrentDateForLogging);
@@ -428,22 +428,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 UpdateColors();
             }
 
-            var localPed = Ped.Instance;
-            if (currentRadioStationIndex != -1 && null != localPed && localPed.CurrentVehicle == this && localPed.IsInVehicleSeat)
-            {
-                if (!m_radioAudioSource.isPlaying)
-                {
-                    ContinueRadio();
-                }
-            }
-            else
-            {
-                if (m_radioAudioSource.isPlaying)
-                {
-                    CurrentRadioStation.currentTime = m_radioAudioSource.time;
-                    m_radioAudioSource.Stop();
-                }
-            }
+            this.Update_Radio();
+
         }
 
         private void FixedUpdate()
