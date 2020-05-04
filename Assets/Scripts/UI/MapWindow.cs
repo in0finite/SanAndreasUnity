@@ -266,14 +266,22 @@ namespace SanAndreasUnity.UI {
 			if (Input.GetKeyDown (KeyCode.M)) {
 				// toggle map
 
-				if (this.IsOpened) {
-					this.IsOpened = false;
-					// also close pause menu
-					PauseMenu.IsOpened = false;
-				} else {
-					this.IsOpened = true;
-					// also open pause menu
-					PauseMenu.IsOpened = true;
+				if (this.IsOpened || GameManager.CanPlayerReadInput())
+				{
+
+					if (this.IsOpened)
+					{
+						this.IsOpened = false;
+						// also close pause menu
+						PauseMenu.IsOpened = false;
+					}
+					else
+					{
+						this.IsOpened = true;
+						// also open pause menu
+						PauseMenu.IsOpened = true;
+					}
+
 				}
 
 			}
