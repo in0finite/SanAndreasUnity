@@ -7,9 +7,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public partial class Vehicle
     {
         private int currentRadioStationIndex;
-        private RadioStation CurrentRadioStation { get { return RadioStation.stations[currentRadioStationIndex]; } }
+        //private RadioStation CurrentRadioStation { get { return RadioStation.stations[currentRadioStationIndex]; } }
 
         private AudioSource m_radioAudioSource;
+
+        bool m_isPlayingRadio = false;
+        bool m_radio_pedEnteredOrExitedVehicleLastFrame = false;
+        bool m_isWaitingForNewSound = false;
 
 
 
@@ -23,29 +27,144 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             currentRadioStationIndex = Random.Range(0, RadioStation.stations.Length);
         }
 
+        void OnPedPreparedForVehicle_Radio(Ped ped, Seat seat)
+        {
+            m_radio_pedEnteredOrExitedVehicleLastFrame = true;
+        }
+
         void Update_Radio()
         {
-            var localPed = Ped.Instance;
-            if (currentRadioStationIndex != -1 && null != localPed && localPed.CurrentVehicle == this && localPed.IsInVehicleSeat)
+
+            bool pedEnteredOrExitedVehicleLastFrame = m_radio_pedEnteredOrExitedVehicleLastFrame;
+            m_radio_pedEnteredOrExitedVehicleLastFrame = false;
+
+            if (m_isPlayingRadio)
             {
-                if (!m_radioAudioSource.isPlaying)
+                // check if we should stop playing radio sound
+
+                // radio turned off => no sound
+                if (currentRadioStationIndex < 0)
                 {
-                    ContinueRadio();
+                    this.StopPlayingRadio();
+                    return;
                 }
+
+                // no local ped inside => no sound
+                if (!this.IsLocalPedInside())
+                {
+                    this.StopPlayingRadio();
+                    return;
+                }
+
+                // we should continue playing sound
+
+                if (m_isWaitingForNewSound)
+                {
+                    // we are waiting for sound to load
+                    // don't do anything
+                }
+                else
+                {
+                    // check if sound finished playing
+                    if (!m_radioAudioSource.isPlaying)
+                    {
+                        // sound finished playing
+                        // switch to next stream in a current radio station
+                        this.StopPlayingRadio();
+                        RadioStation.stations[currentRadioStationIndex].NextClip();
+                        this.StartPlayingRadio(true);
+                        return;
+                    }
+
+                    // update current station time - this is needed in case vehicle gets destroyed - current time will not be updated
+                    RadioStation.stations[currentRadioStationIndex].currentTime = m_radioAudioSource.time;
+                }
+
             }
             else
             {
-                if (m_radioAudioSource.isPlaying)
+                // not playing radio sound
+                // check if we should start playing
+                // this can happen only if local ped entered vehicle
+
+                if (pedEnteredOrExitedVehicleLastFrame)
                 {
-                    CurrentRadioStation.currentTime = m_radioAudioSource.time;
-                    m_radioAudioSource.Stop();
+                    if (this.IsLocalPedInside())
+                    {
+                        // local ped is in vehicle
+
+                        if (currentRadioStationIndex >= 0)
+                        {
+                            // start playing sound
+                            this.StartPlayingRadio(false);
+                            return;
+                        }
+                    }
                 }
+
+                // continue not playing radio sound
+
             }
+
         }
 
-        public void PlayRadio()
+        void StopPlayingRadio()
         {
+            if (!m_isPlayingRadio)
+                return;
+
+            m_isPlayingRadio = false;
+            m_isWaitingForNewSound = false;
+
+            if (currentRadioStationIndex >= 0)
+                RadioStation.stations[currentRadioStationIndex].currentTime = m_radioAudioSource.time;
+
             m_radioAudioSource.Stop();
+        }
+
+        void StartPlayingRadio(bool playImmediately)
+        {
+            if (m_isPlayingRadio)
+                return;
+            if (currentRadioStationIndex < 0)
+                return;
+
+            m_isPlayingRadio = true;
+            m_isWaitingForNewSound = false;
+
+            if (playImmediately)
+                this.LoadAndPlayRadioSoundNow();
+            else
+                this.RequestNewRadioSound();
+
+        }
+
+        void RequestNewRadioSound()
+        {
+            this.CancelInvoke(nameof(this.LoadRadioSoundDelayed));
+            m_isWaitingForNewSound = true;
+            this.Invoke(nameof(this.LoadRadioSoundDelayed), 1.5f);
+        }
+
+        void LoadRadioSoundDelayed()
+        {
+            if (!m_isWaitingForNewSound)    // canceled in the meantime
+                return;
+
+            m_isWaitingForNewSound = false;
+
+            if (!m_isPlayingRadio)
+                return;
+            if (currentRadioStationIndex < 0)
+                return;
+
+            this.LoadAndPlayRadioSoundNow();
+        }
+
+        void LoadAndPlayRadioSoundNow()
+        {
+
+            m_radioAudioSource.Stop();  // just in case
 
             // destroy current clip
             if (m_radioAudioSource.clip != null)
@@ -54,52 +173,50 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_radioAudioSource.clip = null;
             }
 
-            var clip = CurrentRadioStation.LoadCurrentClip();
+            var clip = RadioStation.stations[currentRadioStationIndex].LoadCurrentClip();
             if (clip != null)
             {
-                m_radioAudioSource.time = CurrentRadioStation.currentTime;
                 m_radioAudioSource.clip = clip;
+                m_radioAudioSource.time = RadioStation.stations[currentRadioStationIndex].currentTime;
                 m_radioAudioSource.Play();
 
                 Destroy(clip, clip.length);
             }
-        }
 
-        private void ContinueRadio()
-        {
-            CurrentRadioStation.NextClip();
-            PlayRadio();
         }
 
         public void SwitchRadioStation(bool next)
         {
-            if (currentRadioStationIndex != -1)
-            {
-                CurrentRadioStation.currentTime = m_radioAudioSource.time;
-            }
+            int index = currentRadioStationIndex;
 
             if (next)
             {
-                currentRadioStationIndex++;
-                if (currentRadioStationIndex >= RadioStation.stations.Length)
-                    currentRadioStationIndex = -1;
+                index++;
             }
             else
             {
-                currentRadioStationIndex--;
-                if (currentRadioStationIndex < -1)
-                    currentRadioStationIndex = RadioStation.stations.Length - 1;
+                index--;
+                if (index < -1)
+                    index = RadioStation.stations.Length - 1;
             }
 
-            if (currentRadioStationIndex == -1)
-            {
-                m_radioAudioSource.Stop();
-            }
-            else
-            {
-                PlayRadio();
-            }
+            this.SwitchRadioStation(index);
+        }
 
+        public void SwitchRadioStation(int index)
+        {
+            if (index < -1 || index >= RadioStation.stations.Length)
+                index = -1;
+
+            if (currentRadioStationIndex == index)
+                return;
+
+            this.StopPlayingRadio();
+
+            currentRadioStationIndex = index;
+
+            if (this.IsLocalPedInside())
+                this.StartPlayingRadio(false);
         }
 
     }

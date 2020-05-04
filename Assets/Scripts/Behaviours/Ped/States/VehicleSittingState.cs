@@ -86,7 +86,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// start vehicle radio
 			if (m_ped.IsControlledByLocalPlayer)
 			{
-				vehicle.PlayRadio();
+				//vehicle.PlayRadio();
 			}
 
 		}

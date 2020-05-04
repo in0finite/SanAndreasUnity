@@ -166,6 +166,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Mirror.NetworkTransform NetTransform { get; private set; }
 
+        List<Ped> m_lastPreparedPeds = new List<Ped>();
+
 
 
         private void Awake()
@@ -368,10 +370,53 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             return seat != null ? seat.Parent : null;
         }
 
+        public bool IsLocalPedInside()
+        {
+            var ped = Ped.Instance;
+            if (ped != null)
+            {
+                return this.Seats.Exists(s => s.OccupyingPed == ped);
+            }
+            return false;
+        }
+
         public void StopControlling()
         {
             //Destroy(_controller);
             //_controller = null;
+        }
+
+        internal void OnPedPreparedForVehicle(Ped ped, Seat seat)
+        {
+            int numPedsToAdd = this.Seats.Count - m_lastPreparedPeds.Count;
+            for (int i = 0; i < numPedsToAdd; i++)
+            {
+                m_lastPreparedPeds.Add(null);
+            }
+
+            int index = this.Seats.FindIndex(s => s == seat);
+
+            if (m_lastPreparedPeds[index] == ped)
+                return;
+
+            m_lastPreparedPeds[index] = ped;
+
+            this.OnPedPreparedForVehicle_Radio(ped, seat);
+
+        }
+
+        internal void OnPedRemovedFromVehicle(Ped ped, Seat seat)
+        {
+            int numPedsToAdd = this.Seats.Count - m_lastPreparedPeds.Count;
+            for (int i = 0; i < numPedsToAdd; i++)
+            {
+                m_lastPreparedPeds.Add(null);
+            }
+
+            int index = this.Seats.FindIndex(s => s == seat);
+            
+            m_lastPreparedPeds[index] = null;
+
         }
 
         private void UpdateColors()

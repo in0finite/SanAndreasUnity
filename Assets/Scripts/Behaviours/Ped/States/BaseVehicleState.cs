@@ -133,6 +133,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 					ped.NetTransform.enabled = false;
 			}
 
+			F.RunExceptionSafe( () => vehicle.OnPedPreparedForVehicle(ped, seat) );
+
 		}
 
 		protected void Cleanup()
@@ -145,6 +147,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				// enable network transform
 				if (m_ped.NetTransform != null)
 					m_ped.NetTransform.enabled = true;
+				if (this.CurrentVehicle != null)
+					F.RunExceptionSafe( () => this.CurrentVehicle.OnPedRemovedFromVehicle(m_ped, this.CurrentVehicleSeat) );
 			}
 
 			if (this.CurrentVehicleSeat != null && this.CurrentVehicleSeat.OccupyingPed == m_ped)
