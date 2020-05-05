@@ -25,11 +25,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         void Awake_Radio()
         {
             m_radioAudioSource = this.GetComponent<AudioSource>();
+            m_currentRadioStationIndex = Random.Range(0, RadioStation.stations.Length);
         }
 
         void Start_Radio()
         {
-            m_currentRadioStationIndex = Random.Range(0, RadioStation.stations.Length);
+            
         }
 
         void OnPedPreparedForVehicle_Radio(Ped ped, Seat seat)
