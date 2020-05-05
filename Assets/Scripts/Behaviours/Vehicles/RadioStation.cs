@@ -8,6 +8,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public class RadioStation
     {
         private static readonly string[] streams = { "CH", "CO", "CR", "DS", "HC", "MH", "MR", "NJ", "RE", "RG", "TK" };
+        public static readonly string[] StationNames = { "PlayBack FM", "KRose", "K-DST", "Bounce FM", "SFUR", "Radio Los Santos", "Radio X", "CSR", "K-Jah", "Master Sounds", "WCTR" };
         private static readonly int startIndex = 3;
         private static readonly int endIndex = 114;
 

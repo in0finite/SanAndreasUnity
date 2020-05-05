@@ -4,6 +4,7 @@ using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
 using UnityEngine.UI;
 using SanAndreasUnity.Importing.Conversion;
+using SanAndreasUnity.Behaviours.Vehicles;
 
 namespace SanAndreasUnity.UI {
 	
@@ -19,6 +20,8 @@ namespace SanAndreasUnity.UI {
 		public RawImage crosshairImage;
 		public Text pedStateText;
 		public Text pedVelocityText;
+		public Text radioStationText;
+		public RawImage radioStationImage;
 
 		public static Texture2D LeftArrowTexture { get; set; }
 		public static Texture2D RightArrowTexture { get; set; }
@@ -147,6 +150,19 @@ namespace SanAndreasUnity.UI {
 				string pedVelocityDisplayText = string.Format("{0:0.0} km/h", ped.GetComponent<PlayerController>().CurVelocity);
 				if (pedVelocityDisplayText != this.pedVelocityText.text)
 					this.pedVelocityText.text = pedVelocityDisplayText;
+			}
+
+			var vehicle = ped.CurrentVehicle;
+			if (vehicle != null)
+			{
+				string text = vehicle.CurrentRadioStationIndex >= 0 ? RadioStation.StationNames[vehicle.CurrentRadioStationIndex] : "Radio Off";
+				if (this.radioStationText.text != text)
+					this.radioStationText.text = text;
+			}
+			else
+			{
+				if (this.radioStationText.text != "")
+					this.radioStationText.text = "";
 			}
 
 		}
