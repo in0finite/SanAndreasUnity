@@ -106,6 +106,21 @@ namespace SanAndreasUnity.Stats
                         objects.Add(Vector3.Distance(closestSeat.position, ped.transform.position));
                     }
 
+                    // radio
+
+                    texts.Add("radio");
+                    objects.Add("");
+
+                    texts.AddRange(new string[] { "\tis playing", "\tstation index", "\tis waiting for new sound" });
+                    objects.AddRange(new object[] { vehicle.IsPlayingRadio, vehicle.CurrentRadioStationIndex, vehicle.IsWaitingForNewRadioSound });
+                    
+                    if (vehicle.RadioAudioSource != null && vehicle.RadioAudioSource.clip != null)
+                    {
+                        var clip = vehicle.RadioAudioSource.clip;
+                        texts.AddRange(new string[] { "\tclip time", "\tclip length", "\tclip size" });
+                        objects.AddRange(new object[] { vehicle.RadioAudioSource.time, clip.length, (Utilities.F.GetAudioClipSizeInBytes(clip) / 1024.0f) + " KB" });
+                    }
+
 
                     sb.AppendFormat("Current vehicle:\n");
                     for (int i = 0; i < objects.Count; i++)

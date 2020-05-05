@@ -7,12 +7,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     public partial class Vehicle
     {
         private int m_currentRadioStationIndex;
-        
+        public int CurrentRadioStationIndex => m_currentRadioStationIndex;
+
         private AudioSource m_radioAudioSource;
+        public AudioSource RadioAudioSource => m_radioAudioSource;
 
         bool m_isPlayingRadio = false;
+        public bool IsPlayingRadio => m_isPlayingRadio;
+
         bool m_radio_pedAssignedToVehicleLastFrame = false;
+
         bool m_isWaitingForNewRadioSound = false;
+        public bool IsWaitingForNewRadioSound => m_isWaitingForNewRadioSound;
 
 
 

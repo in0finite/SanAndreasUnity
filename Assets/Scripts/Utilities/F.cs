@@ -835,5 +835,10 @@ namespace SanAndreasUnity.Utilities
         public static bool ScreenHasHighDensity => Application.isMobilePlatform;
 
 
+        public static int GetAudioClipSizeInBytes(AudioClip clip)
+        {
+            return clip.samples * sizeof(float);
+        }
+
     }
 }
