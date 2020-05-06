@@ -401,7 +401,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             m_lastPreparedPeds[index] = ped;
 
-            this.OnPedPreparedForVehicle_Radio(ped, seat);
+            this.OnPedAssignedToVehicle_Radio(ped, seat);
 
         }
 

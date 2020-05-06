@@ -33,7 +33,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             
         }
 
-        void OnPedPreparedForVehicle_Radio(Ped ped, Seat seat)
+        void OnPedAssignedToVehicle_Radio(Ped ped, Seat seat)
         {
             m_radio_pedAssignedToVehicleLastFrame = true;
         }
