@@ -20,6 +20,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         bool m_isWaitingForNewRadioSound = false;
         public bool IsWaitingForNewRadioSound => m_isWaitingForNewRadioSound;
 
+        public float TimeWhenRadioStationChanged { get; private set; } = float.NegativeInfinity;
+        public float TimeSinceRadioStationChanged => Time.time - this.TimeWhenRadioStationChanged;
+
 
 
         void Awake_Radio()
@@ -216,6 +219,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (m_currentRadioStationIndex == index)
                 return;
+
+            this.TimeWhenRadioStationChanged = Time.time;
 
             this.StopPlayingRadio();
 
