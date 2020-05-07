@@ -91,7 +91,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         return;
                     }
 
-                    // update current station time - this is needed in case vehicle gets destroyed - current time will not be updated
+                    // update current station time - this is needed in case vehicle gets destroyed - current time will not be updated - or maybe it will ?
                     RadioStation.stations[m_currentRadioStationIndex].currentTime = m_radioAudioSource.time;
                 }
 
