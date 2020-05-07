@@ -193,7 +193,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_radioAudioSource.time = RadioStation.stations[m_currentRadioStationIndex].currentTime;
                 m_radioAudioSource.Play();
 
-                Destroy(clip, clip.length);
+                // this shouldn't be done because if the audio source is stopped and started again (eg. when ped exits the vehicle), 
+                // the clip may get destroyed before the audio source finishes playing
+                //Destroy(clip, clip.length);
             }
 
         }
