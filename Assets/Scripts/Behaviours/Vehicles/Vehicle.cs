@@ -185,6 +185,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         void OnDisable()
         {
             s_vehicles.Remove(this);
+
+            this.OnDisable_Radio();
         }
 
         void Start()

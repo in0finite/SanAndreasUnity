@@ -31,6 +31,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             m_currentRadioStationIndex = Random.Range(0, RadioStation.stations.Length);
         }
 
+        void OnDisable_Radio()
+        {
+            // need to destroy audio clip here, because otherwise it will stay in memory
+            this.StopPlayingRadio();
+        }
+
         void Start_Radio()
         {
             
@@ -129,6 +135,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 RadioStation.stations[m_currentRadioStationIndex].currentTime = m_radioAudioSource.time;
 
             m_radioAudioSource.Stop();
+
+            this.DestroyCurrentRadioClip();
         }
 
         void StartPlayingRadio(bool playImmediately)
@@ -175,12 +183,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             m_radioAudioSource.Stop();  // just in case
 
-            // destroy current clip
-            if (m_radioAudioSource.clip != null)
-            {
-                Destroy(m_radioAudioSource.clip);
-                m_radioAudioSource.clip = null;
-            }
+            this.DestroyCurrentRadioClip();
 
             var clip = RadioStation.stations[m_currentRadioStationIndex].LoadCurrentClip();
             if (clip != null)
@@ -192,6 +195,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 Destroy(clip, clip.length);
             }
 
+        }
+
+        void DestroyCurrentRadioClip()
+        {
+            if (m_radioAudioSource.clip != null)
+            {
+                Destroy(m_radioAudioSource.clip);
+                m_radioAudioSource.clip = null;
+            }
         }
 
         public void SwitchRadioStation(bool next)
