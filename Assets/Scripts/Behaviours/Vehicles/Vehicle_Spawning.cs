@@ -232,9 +232,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public class Seat
         {
-            public SeatAlignment Alignment { get; set; }
+            public SeatAlignment Alignment { get; internal set; }
 
-            public Transform Parent { get; set; }
+            public Transform Parent { get; internal set; }
 
 			/// <summary> Ped that is occupying this seat. </summary>
 			public Ped OccupyingPed { get; internal set; }
