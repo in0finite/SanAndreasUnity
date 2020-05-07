@@ -131,7 +131,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             m_isPlayingRadio = false;
             m_isWaitingForNewRadioSound = false;
 
-            if (m_currentRadioStationIndex >= 0)
+            // save current station's time
+            if (m_currentRadioStationIndex >= 0 && m_radioAudioSource.isPlaying)
                 RadioStation.stations[m_currentRadioStationIndex].currentTime = m_radioAudioSource.time;
 
             m_radioAudioSource.Stop();
