@@ -1764,7 +1764,7 @@ MonoBehaviour:
   pedStateText: {fileID: 7285285471400155620}
   pedVelocityText: {fileID: 6556768988591572453}
   radioStationText: {fileID: 261304231076654976}
-  radioStationImage: {fileID: 0}
+  m_radioStationLabelDuration: 3
 --- !u!1 &1693155584687832567
 GameObject:
   m_ObjectHideFlags: 0

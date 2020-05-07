@@ -21,7 +21,6 @@ namespace SanAndreasUnity.UI {
 		public Text pedStateText;
 		public Text pedVelocityText;
 		public Text radioStationText;
-		public RawImage radioStationImage;
 
 		[SerializeField] [Range(0.3f, 10f)] float m_radioStationLabelDuration = 3f;
 
