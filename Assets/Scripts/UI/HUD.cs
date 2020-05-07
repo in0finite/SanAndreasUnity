@@ -23,6 +23,8 @@ namespace SanAndreasUnity.UI {
 		public Text radioStationText;
 		public RawImage radioStationImage;
 
+		[SerializeField] [Range(0.3f, 10f)] float m_radioStationLabelDuration = 3f;
+
 		public static Texture2D LeftArrowTexture { get; set; }
 		public static Texture2D RightArrowTexture { get; set; }
 		public static Texture2D UpArrowTexture { get; set; }
@@ -152,18 +154,22 @@ namespace SanAndreasUnity.UI {
 					this.pedVelocityText.text = pedVelocityDisplayText;
 			}
 
+			string textForRadioStation = "";
 			var vehicle = ped.CurrentVehicle;
 			if (vehicle != null)
 			{
-				string text = vehicle.CurrentRadioStationIndex >= 0 ? RadioStation.StationNames[vehicle.CurrentRadioStationIndex] : "Radio Off";
-				if (this.radioStationText.text != text)
-					this.radioStationText.text = text;
+				var seat = ped.CurrentVehicleSeat;
+
+				if (vehicle.TimeSinceRadioStationChanged < m_radioStationLabelDuration 
+					|| (seat != null && seat.TimeSincePedChanged < m_radioStationLabelDuration))
+				{
+					textForRadioStation = vehicle.CurrentRadioStationIndex >= 0 ? 
+						RadioStation.StationNames[vehicle.CurrentRadioStationIndex] : "Radio Off";
+				}
 			}
-			else
-			{
-				if (this.radioStationText.text != "")
-					this.radioStationText.text = "";
-			}
+
+			if (this.radioStationText.text != textForRadioStation)
+				this.radioStationText.text = textForRadioStation;
 
 		}
 
