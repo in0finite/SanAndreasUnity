@@ -10,7 +10,7 @@ using System;
 
 namespace SanAndreasUnity
 {
-    class RagdollBuilder : ScriptableWizard
+    public class RagdollBuilder
     {
         public Transform pelvis;
 
@@ -106,12 +106,6 @@ namespace SanAndreasUnity
             }
         }
 
-        [MenuItem("GameObject/3D Object/Ragdoll...", false, 2000)]
-        static void CreateWizard()
-        {
-            ScriptableWizard.DisplayWizard<RagdollBuilder>("Create Ragdoll");
-        }
-
         void DecomposeVector(out Vector3 normalCompo, out Vector3 tangentCompo, Vector3 outwardDir, Vector3 outwardNormal)
         {
             outwardNormal = outwardNormal.normalized;
@@ -133,23 +127,6 @@ namespace SanAndreasUnity
             forward = Vector3.Cross(right, up);
             if (flipForward)
                 forward = -forward;
-        }
-
-        void OnWizardUpdate()
-        {
-            errorString = CheckConsistency();
-            CalculateAxes();
-
-            if (errorString.Length != 0)
-            {
-                helpString = "Drag all bones from the hierarchy into their slots.\nMake sure your character is in T-Stand.\n";
-            }
-            else
-            {
-                helpString = "Make sure your character is in T-Stand.\nMake sure the blue axis faces in the same direction the chracter is looking.\nUse flipForward to flip the direction";
-            }
-
-            isValid = errorString.Length == 0;
         }
 
         void PrepareBones()
@@ -290,15 +267,15 @@ namespace SanAndreasUnity
 
                 Component[] joints = bone.anchor.GetComponentsInChildren(typeof(Joint));
                 foreach (Joint joint in joints)
-                    DestroyImmediate(joint);
+                    UnityEngine.Object.DestroyImmediate(joint);
 
                 Component[] bodies = bone.anchor.GetComponentsInChildren(typeof(Rigidbody));
                 foreach (Rigidbody body in bodies)
-                    DestroyImmediate(body);
+                    UnityEngine.Object.DestroyImmediate(body);
 
                 Component[] colliders = bone.anchor.GetComponentsInChildren(typeof(Collider));
                 foreach (Collider collider in colliders)
-                    DestroyImmediate(collider);
+                    UnityEngine.Object.DestroyImmediate(collider);
             }
         }
 
@@ -508,7 +485,7 @@ namespace SanAndreasUnity
         void AddHeadCollider()
         {
             if (head.GetComponent<Collider>())
-                Destroy(head.GetComponent<Collider>());
+                UnityEngine.Object.Destroy(head.GetComponent<Collider>());
 
             float radius = Vector3.Distance(leftArm.transform.position, rightArm.transform.position);
             radius /= 4;
