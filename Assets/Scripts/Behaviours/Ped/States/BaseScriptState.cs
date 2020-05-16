@@ -194,7 +194,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			float distance = cameraDistance;
 			var castRay = new Ray(castFrom, castDir);
 			RaycastHit hitInfo;
-			int ignoreLayer = (1 << MapObject.BreakableLayer) | (1 << Vehicles.Vehicle.Layer) | Ped.LayerMask;
+			int ignoreLayer = (1 << MapObject.BreakableLayer) | (1 << Vehicles.Vehicle.Layer) | Ped.LayerMask | Ped.PedBoneLayerMask;
 
 			if (Physics.SphereCast(castRay, 0.25f, out hitInfo, distance, ~ ignoreLayer))
 			{
