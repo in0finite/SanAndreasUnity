@@ -129,7 +129,7 @@ namespace SanAndreasUnity
                 forward = -forward;
         }
 
-        void PrepareBones()
+        public void PrepareBones()
         {
             if (pelvis)
             {
@@ -158,16 +158,16 @@ namespace SanAndreasUnity
             AddJoint("Head", head, "Middle Spine", worldRight, worldForward, -40, 25, 25, null, 1, 1.0F);
         }
 
-        void OnWizardCreate()
+        public void OnWizardCreate()
         {
             Cleanup();
             BuildCapsules();
             AddBreastColliders();
             AddHeadCollider();
 
-            BuildBodies();
-            BuildJoints();
-            CalculateMass();
+            //BuildBodies();
+            //BuildJoints();
+            //CalculateMass();
         }
 
         BoneInfo FindBone(string name)

@@ -90,6 +90,10 @@ namespace SanAndreasUnity.Behaviours
         public Transform Spine { get; private set; }
         public Transform R_Thigh { get; private set; }
         public Transform L_Thigh { get; private set; }
+		public Transform R_Calf { get; private set; }
+		public Transform L_Calf { get; private set; }
+		public Transform R_Foot { get; private set; }
+		public Transform L_Foot { get; private set; }
 
 		public Transform Pelvis { get; private set; }
 
@@ -309,9 +313,44 @@ namespace SanAndreasUnity.Behaviours
 			Spine = getFrame(" Spine");
             R_Thigh = getFrame(" R Thigh");
             L_Thigh = getFrame(" L Thigh");
+			R_Calf = getFrame(" R Calf");
+			L_Calf = getFrame(" L Calf");
+			R_Foot = getFrame(" R Foot");
+			L_Foot = getFrame(" L Foot");
 			Pelvis = getFrame(" Pelvis");
 
+			this.SetupRagdoll();
+
         }
+
+		void SetupRagdoll()
+		{
+			// maybe assign forward vector to be the same as Z axis ?
+
+			RagdollBuilder rb = new RagdollBuilder
+			{
+				pelvis = this.RootFrame.transform,
+				leftHips = this.L_Thigh.transform,
+				leftKnee = this.L_Calf.transform,
+				leftFoot = this.L_Foot.transform,
+				rightHips = this.R_Thigh.transform,
+				rightKnee = this.R_Calf.transform,
+				rightFoot = this.R_Foot.transform,
+				leftArm = this.LeftUpperArm.transform,
+				leftElbow = this.LeftForeArm.transform,
+				rightArm = this.RightUpperArm.transform,
+				rightElbow = this.RightForeArm.transform,
+				middleSpine = this.UpperSpine.transform,
+				head = this.Head.transform
+			};
+
+			rb.PrepareBones();
+			rb.OnWizardCreate();
+
+			// set layer
+			this.RootFrame.gameObject.SetLayerRecursive("PedBone");
+
+		}
 
 		/// <summary>
 		/// Resets the state of the model. This includes position, rotation, and velocity of every frame (bone).
