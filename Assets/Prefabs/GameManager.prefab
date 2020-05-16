@@ -122,7 +122,7 @@ MonoBehaviour:
   crouchSpineRotationOffset2: {x: 0, y: 15, z: 90}
   projectileRaycastMask:
     serializedVersion: 2
-    m_Bits: 4294967291
+    m_Bits: 5889
   drawLineFromGun: 0
 --- !u!114 &114529712737653322
 MonoBehaviour:
