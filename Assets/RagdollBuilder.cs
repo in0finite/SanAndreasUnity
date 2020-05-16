@@ -30,6 +30,7 @@ namespace SanAndreasUnity
 
         public Transform middleSpine = null;
         public Transform head = null;
+        public Transform jaw = null;
 
 
         public float totalMass = 20;
@@ -502,6 +503,12 @@ namespace SanAndreasUnity
             else
                 center[direction] = radius;
             sphere.center = center;
+
+            // jaw
+
+            SphereCollider jawSphere = jaw.gameObject.AddComponent<SphereCollider>();
+            jawSphere.radius = radius * 0.75f;
+
         }
     }
 }

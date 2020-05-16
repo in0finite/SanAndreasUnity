@@ -79,6 +79,7 @@ namespace SanAndreasUnity.Behaviours
 		public Transform RightClavicle { get; private set; }
 
 		public Transform Head { get; private set; }
+		public Transform Jaw { get; private set; }
 
 		public Transform Neck { get; private set; }
 		public Transform LBreast { get; private set; }
@@ -305,6 +306,7 @@ namespace SanAndreasUnity.Behaviours
 			RightClavicle = getFrame ("Bip01 R Clavicle");
 			LeftClavicle = getFrame ("Bip01 L Clavicle");
 			Head = getFrame (" Head");
+			Jaw = getFrame(" Jaw");
 			Neck = getFrame (" Neck");
 			LBreast = getFrame ("L breast");
 			RBreast = getFrame ("R breast");
@@ -341,7 +343,8 @@ namespace SanAndreasUnity.Behaviours
 				rightArm = this.RightUpperArm.transform,
 				rightElbow = this.RightForeArm.transform,
 				middleSpine = this.UpperSpine.transform,
-				head = this.Head.transform
+				head = this.Head.transform,
+				jaw = this.Jaw.transform,
 			};
 
 			rb.PrepareBones();
