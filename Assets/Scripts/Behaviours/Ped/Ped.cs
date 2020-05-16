@@ -68,6 +68,8 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 		public static int LayerMask { get { return UnityEngine.LayerMask.GetMask ("Player"); } }
+		public static readonly string PedBoneLayerName = "PedBone";
+		public static int PedBoneLayerMask { get { return UnityEngine.LayerMask.GetMask(PedBoneLayerName); } }
 
         public bool IsGrounded { get { return characterController.isGrounded; } }
 

@@ -351,7 +351,7 @@ namespace SanAndreasUnity.Behaviours
 			rb.OnWizardCreate();
 
 			// set layer
-			this.RootFrame.gameObject.SetLayerRecursive("PedBone");
+			this.RootFrame.gameObject.SetLayerRecursive(Ped.PedBoneLayerName);
 
 		}
 
