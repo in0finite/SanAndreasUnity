@@ -509,6 +509,16 @@ namespace SanAndreasUnity
             SphereCollider jawSphere = jaw.gameObject.AddComponent<SphereCollider>();
             jawSphere.radius = radius * 0.75f;
 
+            // box collider for area around neck
+            // width = 0.75 * breast width
+            // depth = 0.5 * breast depth
+            // height = head radius * 0.65
+
+            BoxCollider breastBox = middleSpine.gameObject.GetComponent<BoxCollider>();
+            BoxCollider newBox = middleSpine.gameObject.AddComponent<BoxCollider>();
+            newBox.size = new Vector3(radius * 0.65f, 0.75f * breastBox.size.y, 0.5f * breastBox.size.z);
+            newBox.center = breastBox.center + Vector3.right * (breastBox.size.x * 0.5f + newBox.size.x * 0.5f);
+
         }
     }
 }
