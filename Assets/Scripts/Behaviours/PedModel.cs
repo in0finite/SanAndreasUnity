@@ -321,7 +321,7 @@ namespace SanAndreasUnity.Behaviours
 			L_Foot = getFrame(" L Foot");
 			Pelvis = getFrame(" Pelvis");
 
-			this.SetupRagdoll();
+			F.RunExceptionSafe(() => this.SetupRagdoll());
 
         }
 
