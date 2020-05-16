@@ -8,6 +8,7 @@ namespace SanAndreasUnity.Behaviours
 	public class DamageInfo
 	{
 		public float amount = 0f;
+		public Transform raycastHitTransform = null;
 		public object data = null;
 	}
 

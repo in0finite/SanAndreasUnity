@@ -87,6 +87,21 @@ namespace SanAndreasUnity.Behaviours
 			return pos;
 		}
 
+		public void OnDamaged()
+		{
+			DamageInfo damageInfo = this.Damageable.LastDamageInfo;
+
+			float amount = this.PlayerModel.GetAmountOfDamageForBone(damageInfo.raycastHitTransform, damageInfo.amount);
+
+			this.Health -= amount;
+
+			if (this.Health <= 0)
+			{
+				Object.Destroy(this.gameObject);
+			}
+
+		}
+
 
 	}
 

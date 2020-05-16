@@ -448,8 +448,8 @@ MonoBehaviour:
   m_onDamage:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114220037769542022}
-        m_MethodName: HandleDamageByDefault
+      - m_Target: {fileID: 114099438993920694}
+        m_MethodName: OnDamaged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

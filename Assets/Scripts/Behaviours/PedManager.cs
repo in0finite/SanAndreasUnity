@@ -17,6 +17,12 @@ namespace SanAndreasUnity.Behaviours
 		public float minCameraDistanceFromPed = 2f;
 		public float maxCameraDistanceFromPed = 30f;
 
+		[Header("Damage")]
+
+		public float legAndArmDamageMultiplier = 0.8f;
+		public float stomachAndChestDamageMultiplier = 1.0f;
+		public float headDamageMultiplier = 4.0f;
+
 		[Header("Health bar")]
 
 		public bool displayHealthBarAbovePeds = false;

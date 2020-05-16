@@ -98,6 +98,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public Transform Pelvis { get; private set; }
 
+		readonly Dictionary<Transform, int> m_damageLevelPerBones = new Dictionary<Transform, int>();
+
 		public class FrameAnimData
 		{
 			public Vector3 pos;
@@ -327,7 +329,8 @@ namespace SanAndreasUnity.Behaviours
 
 		void SetupRagdoll()
 		{
-			// maybe assign forward vector to be the same as Z axis ?
+
+			m_damageLevelPerBones.Clear();
 
 			RagdollBuilder rb = new RagdollBuilder
 			{
@@ -353,6 +356,41 @@ namespace SanAndreasUnity.Behaviours
 			// set layer
 			this.RootFrame.gameObject.SetLayerRecursive(Ped.PedBoneLayerName);
 
+			// assign damage level for bones
+
+			Transform[] stomachAndChest = new Transform[] { this.RootFrame.transform, this.UpperSpine.transform };
+			Transform[] legsAndHands = new Transform[] { this.L_Thigh, this.R_Thigh, this.L_Calf, this.R_Calf, 
+				this.L_Foot, this.R_Foot, this.LeftUpperArm, this.RightUpperArm, this.LeftForeArm, this.RightForeArm };
+			Transform[] headAndJaw = new Transform[] { this.Head.transform, this.Jaw.transform };
+
+			foreach (var bone in stomachAndChest)
+			{
+				m_damageLevelPerBones[bone] = 2;
+			}
+			foreach (var bone in legsAndHands)
+			{
+				m_damageLevelPerBones[bone] = 1;
+			}
+			foreach (var bone in headAndJaw)
+			{
+				m_damageLevelPerBones[bone] = 3;
+			}
+
+		}
+
+		public float GetAmountOfDamageForBone(Transform boneTransform, float baseDamageValue)
+		{
+			if (m_damageLevelPerBones.TryGetValue(boneTransform, out int damageLevel))
+			{
+				if (1 == damageLevel)
+					return baseDamageValue * PedManager.Instance.legAndArmDamageMultiplier;
+				if (2 == damageLevel)
+					return baseDamageValue * PedManager.Instance.stomachAndChestDamageMultiplier;
+				if (3 == damageLevel)
+					return baseDamageValue * PedManager.Instance.headDamageMultiplier;
+			}
+
+			return 0f;
 		}
 
 		/// <summary>
