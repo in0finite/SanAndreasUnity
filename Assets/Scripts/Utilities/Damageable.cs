@@ -27,7 +27,8 @@ namespace SanAndreasUnity.Utilities
 		public void Damage (DamageInfo info)
 		{
 			this.LastDamageInfo = info;
-			m_onDamage.Invoke ();
+
+			F.RunExceptionSafe(() => m_onDamage.Invoke());
 		}
 
 		public void HandleDamageByDefault ()
