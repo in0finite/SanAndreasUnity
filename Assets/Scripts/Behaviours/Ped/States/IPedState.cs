@@ -9,8 +9,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		void PostUpdateState ();
 
 		//void OnCollision(Collision info);
-		void OnDamaged(DamageInfo info);
-
+		
 		void OnButtonPressed(string buttonName);
 		void OnFireButtonPressed();
 		void OnAimButtonPressed();

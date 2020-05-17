@@ -279,11 +279,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
-		public virtual void OnDamaged(DamageInfo info)
-		{
-
-		}
-
 
 		public virtual void OnSwitchedStateByServer(byte[] data)
 		{
