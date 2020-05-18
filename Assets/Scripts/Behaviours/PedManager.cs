@@ -23,6 +23,10 @@ namespace SanAndreasUnity.Behaviours
 		public float stomachAndChestDamageMultiplier = 1.0f;
 		public float headDamageMultiplier = 4.0f;
 
+		public float inflictedDamageMessageVelocityInScreenPerc = 0.2f;
+		public float inflictedDamageMessageLifetime = 1.0f;
+		public Color inflictedDamageMessageColor = Color.green;
+
 		[Header("Health bar")]
 
 		public bool displayHealthBarAbovePeds = false;

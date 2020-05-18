@@ -635,7 +635,12 @@ namespace SanAndreasUnity.Behaviours
 					}
 					else
 					{
-						damageable.Damage( new DamageInfo() { amount = this.Damage, raycastHitTransform = hit.transform } );
+						damageable.Damage(new DamageInfo()
+						{
+							amount = this.Damage,
+							raycastHitTransform = hit.transform,
+							attacker = m_ped,
+						});
 					}
 					
 				}

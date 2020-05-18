@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 8105402029215217183}
   - component: {fileID: 1318502437576191535}
   - component: {fileID: 7442340376164908290}
+  - component: {fileID: 8446601354455743255}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -142,6 +143,12 @@ MonoBehaviour:
   cameraDistanceFromPed: 4
   minCameraDistanceFromPed: 2
   maxCameraDistanceFromPed: 30
+  legAndArmDamageMultiplier: 0.8
+  stomachAndChestDamageMultiplier: 1
+  headDamageMultiplier: 4
+  inflictedDamageMessageVelocityInScreenPerc: 0.2
+  inflictedDamageMessageLifetime: 0.5
+  inflictedDamageMessageColor: {r: 0.09838911, g: 0.6320754, b: 0.09838911, a: 1}
   displayHealthBarAbovePeds: 1
   healthBarWorldWidth: 0.65
   healthBarWorldHeight: 0.08
@@ -270,3 +277,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraHeightOffset: 1.5
   cameraBackwardOffset: 2.2
+--- !u!114 &8446601354455743255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297494511425690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c72eda03771ae74aa128f3c7218283a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_drawMessages: 1

@@ -9,6 +9,7 @@ namespace SanAndreasUnity.Utilities
 	{
 		public float amount = 0f;
 		public Transform raycastHitTransform = null;
+		public object attacker = null;
 		public object data = null;
 	}
 

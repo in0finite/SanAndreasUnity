@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -89,6 +90,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public void OnDamaged()
 		{
+			if (!NetStatus.IsServer)
+				return;
+
 			DamageInfo damageInfo = this.Damageable.LastDamageInfo;
 
 			float amount = this.PlayerModel.GetAmountOfDamageForBone(damageInfo.raycastHitTransform, damageInfo.amount);
@@ -100,8 +104,37 @@ namespace SanAndreasUnity.Behaviours
 				Object.Destroy(this.gameObject);
 			}
 
+			// notify clients
+			this.SendDamagedEventToClients(damageInfo, amount);
+
 		}
 
+		public void SendDamagedEventToClients(DamageInfo damageInfo, float damageAmount)
+		{
+			Ped attackingPed = damageInfo.attacker as Ped;
+
+			PedSync.SendDamagedEvent(this.gameObject, attackingPed != null ? attackingPed.gameObject : null, damageAmount);
+		}
+
+		public void OnReceivedDamageEventFromServer(float damageAmount, Ped attackingPed)
+		{
+			if (attackingPed != null && attackingPed.IsControlledByLocalPlayer)
+			{
+				this.DisplayInflictedDamageMessage(damageAmount);
+			}
+		}
+
+		public void DisplayInflictedDamageMessage(float damageAmount)
+		{
+			OnScreenMessageManager.Instance.AddMessage(
+				new OnScreenMessage
+				{
+					velocity = Random.insideUnitCircle.normalized * PedManager.Instance.inflictedDamageMessageVelocityInScreenPerc,
+					color = PedManager.Instance.inflictedDamageMessageColor,
+					timeLeft = PedManager.Instance.inflictedDamageMessageLifetime,
+					text = damageAmount.ToString(),
+				});
+		}
 
 	}
 

@@ -172,5 +172,29 @@ namespace SanAndreasUnity.Net
             
         }
 
+        public static void SendDamagedEvent(GameObject damagedPedGo, GameObject attackingPedGo, float damageAmount)
+        {
+            NetStatus.ThrowIfNotOnServer();
+
+            foreach (var p in Player.AllPlayersEnumerable)
+            {
+                p.GetComponent<PedSync>().TargetDamagedEvent(p.connectionToClient, damagedPedGo, attackingPedGo, damageAmount);
+            }
+        }
+
+        [TargetRpc]
+        private void TargetDamagedEvent(NetworkConnection conn, GameObject damagedPedGo, 
+            GameObject attackingPedGo, float damageAmount)
+        {
+            F.RunExceptionSafe(() =>
+            {
+                Ped damagedPed = damagedPedGo != null ? damagedPedGo.GetComponent<Ped>() : null;
+                Ped attackingPed = attackingPedGo != null ? attackingPedGo.GetComponent<Ped>() : null;
+
+                if (damagedPed != null)
+                    damagedPed.OnReceivedDamageEventFromServer(damageAmount, attackingPed);
+            });
+        }
+
     }
 }
