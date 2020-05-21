@@ -16,8 +16,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         public WeaponAttackParams WeaponAttackParams
         {
-            get => new WeaponAttackParams { GameObjectToIgnoreWhenRaycasting = 
-                this.CurrentVehicle != null ? this.CurrentVehicle.gameObject : null };
+            get => new WeaponAttackParams
+            {
+                RigidBodyToIgnoreWhenRaycasting = this.CurrentVehicle != null ? this.CurrentVehicle.RigidBody : null,
+                RigidBodyLayerToIgnoreWhenRaycasting = Vehicle.Layer,
+            };
         }
 
 

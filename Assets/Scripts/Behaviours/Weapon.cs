@@ -75,9 +75,10 @@ namespace SanAndreasUnity.Behaviours
 
     public struct WeaponAttackParams
     {
-        public GameObject GameObjectToIgnoreWhenRaycasting { get; set; }
+		public Rigidbody RigidBodyToIgnoreWhenRaycasting { get; set; }
+		public int RigidBodyLayerToIgnoreWhenRaycasting { get; set; }
 
-        public static WeaponAttackParams Default { get => new WeaponAttackParams(); }
+		public static WeaponAttackParams Default { get => new WeaponAttackParams(); }
     }
 
 	public class Weapon : MonoBehaviour
@@ -653,7 +654,7 @@ namespace SanAndreasUnity.Behaviours
             m_lastRaycastWeaponAttackParams = parameters;
 
 
-            if (null == parameters.GameObjectToIgnoreWhenRaycasting)
+            if (null == parameters.RigidBodyToIgnoreWhenRaycasting)
                 return Physics.Raycast(source, dir, out hit, this.MaxRange, WeaponsManager.Instance.projectileRaycastMask);
 
 
@@ -670,7 +671,7 @@ namespace SanAndreasUnity.Behaviours
 
             var validHits = s_raycastHitBuffer
                 .Take(numHits)
-                .Where(h => h.collider != null && parameters.GameObjectToIgnoreWhenRaycasting != h.transform.gameObject && ! parameters.GameObjectToIgnoreWhenRaycasting.transform.IsParentOf(h.transform));
+                .Where(h => h.collider != null && (parameters.RigidBodyToIgnoreWhenRaycasting != h.rigidbody || parameters.RigidBodyLayerToIgnoreWhenRaycasting != h.collider.gameObject.layer));
 
             if (!validHits.Any())
             {
