@@ -621,7 +621,7 @@ namespace SanAndreasUnity.Behaviours
 			{
 				// if target object has damageable script, inflict damage to it
 
-				var damageable = hit.transform.GetComponentInParent<Damageable> ();
+				var damageable = hit.collider.gameObject.GetComponentInParent<Damageable> ();
 				if (damageable)
 				{
 					// ray hit something that can be damaged
@@ -638,7 +638,7 @@ namespace SanAndreasUnity.Behaviours
 						damageable.Damage(new DamageInfo()
 						{
 							amount = this.Damage,
-							raycastHitTransform = hit.transform,
+							raycastHitTransform = hit.collider.transform,
 							attacker = m_ped,
 						});
 					}
