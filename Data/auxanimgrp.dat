@@ -1,0 +1,162 @@
+#
+# filename:  auxanimgrp.dat
+# description:	This file describes additional anim association groups. 
+#
+#format is
+# name, filename, animtype, numanims
+#  animlist....
+#end
+#
+# name: 	name of animation definition group
+# filename:	name of file in which these animations occur (minus the IFP extension)
+# animtype:	type of animations 
+# numanims:	number of animations in groups
+#
+
+default, ped, car, 12
+	CAR_sit
+	CAR_sitp
+	Drive_L
+	Drive_R
+	CAR_getin_LHS
+	CAR_getin_RHS
+	CAR_getout_LHS
+	CAR_getout_RHS
+	CAR_closedoor_LHS
+	CAR_closedoor_RHS
+	CAR_close_LHS
+	CAR_close_RHS
+end
+
+default, ped, mywalkcycle, 4
+	IDLE_ARMED
+	FUCKU
+	GUN_STAND
+	sprint_civi
+end
+
+default, ped, gun, 23
+	GunCrouchBwd
+	GunCrouchFwd
+	GunMove_BWD
+	GunMove_FWD
+	GunMove_L
+	GunMove_R
+	Gun_2_IDLE
+	GUN_BUTT
+	GUN_BUTT_crouch
+	Gun_stand
+	IDLE_armed
+	run_1armed﻿
+	run_armed
+	run_left
+	run_right
+	run_player﻿
+	sprint_civi
+	WALK_armed
+	WALK_start_armed
+	SHOT_leftP
+	SHOT_partial
+	SHOT_partial_B
+	SHOT_rightP
+end
+
+default, weapons, weapons, 17
+	SHP_1H_Lift
+	SHP_1H_Lift_End
+	SHP_1H_Ret
+	SHP_1H_Ret_S
+	SHP_2H_Lift
+	SHP_2H_Lift_End
+	SHP_2H_Ret
+	SHP_2H_Ret_S
+	SHP_Ar_Lift
+	SHP_Ar_Lift_End
+	SHP_Ar_Ret
+	SHP_Ar_Ret_S
+	SHP_G_Lift_In
+	SHP_G_Lift_Out
+	SHP_Tray_In
+	SHP_Tray_Out
+	SHP_Tray_Pose
+end
+
+default, colt45, colt45, 7
+	colt45_fire
+	COLT45_RELOAD
+	colt45_crouchfire
+	colt45_fire_2hands
+	2guns_crouchfire
+	colt45_crouchreload
+	sawnoff_reload
+end
+
+default, silenced, silenced, 4
+	CrouchReload
+	SilenceCrouchfire
+	Silence_fire
+	Silence_reload
+end
+
+default, python, python, 5
+	python_crouchfire
+	python_crouchreload
+	python_fire
+	python_fire_poor
+	python_reload
+end
+
+default, shotgun, shotgun, 3
+	shotgun_crouchfire
+	shotgun_fire
+	shotgun_fire_poor
+end
+
+default, buddy, buddy, 5
+	buddy_crouchfire
+	buddy_crouchreload
+	buddy_fire
+	buddy_fire_poor
+	buddy_fire_reload
+end
+
+default, tec, tec, 4
+	TEC_crouchfire
+	TEC_crouchreload
+	TEC_fire
+	TEC_reload
+end
+
+default, uzi, uzi, 5
+	UZI_crouchfire
+	UZI_crouchreload
+	UZI_fire
+	UZI_fire_poor
+	UZI_reload
+end
+
+default, rifle, rifle, 5
+	RIFLE_crouchfire
+	RIFLE_crouchload
+	RIFLE_fire
+	RIFLE_fire_poor
+	RIFLE_load
+end
+
+default, rocket, rocket, 5
+	idle_rocket
+	RocketFire
+	run_rocket
+	walk_rocket
+	WALK_start_rocket
+end
+
+default, flame, flame, 1
+	FLAME_fire
+end
+
+default, grenade, grenade, 3
+	WEAPON_start_throw
+	WEAPON_throw
+	WEAPON_throwu
+end

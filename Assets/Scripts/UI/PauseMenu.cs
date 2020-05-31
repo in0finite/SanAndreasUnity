@@ -1,0 +1,130 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using SanAndreasUnity.Behaviours;
+using System.Linq;
+
+namespace SanAndreasUnity.UI {
+	
+	public class PauseMenu : MonoBehaviour {
+
+		private static bool m_isOpened = false;
+
+		public	static	bool	IsOpened
+		{
+			get {
+				return m_isOpened;
+			}
+			set {
+				m_isOpened = value;
+			}
+		}
+
+		public	static	event System.Action	onDrawItems = delegate {};
+
+	//	public	Color	windowsColor = new Color(0.5f, 0.5f, 0.5f, 0.8f);
+	//	private	static	Texture2D	m_windowBackgroundTexture = null;
+	//	private	static	bool	m_changedWindowStyle = false;
+
+
+
+		void Awake () {
+			
+		//	m_windowBackgroundTexture = Utilities.F.CreateTexture (1, 1, this.windowsColor);
+
+		}
+
+		void Start () {
+			
+		}
+
+		public	static	PauseMenuWindow[]	GetAllWindows() {
+			return FindObjectsOfType<PauseMenuWindow> ();
+		}
+
+		void Update () {
+
+			// toggle pause menu
+			if (Loader.HasLoaded && Input.GetButtonDown ("Start")) {
+				
+				if (IsOpened) {
+					// if there is a modal window, close it, otherwise close pause menu
+					var window = GetAllWindows ().FirstOrDefault (w => w.IsOpened && w.IsModal);
+					if (window != null) {
+						window.IsOpened = false;
+					} else {
+						IsOpened = !IsOpened;
+					}
+				} else {
+					IsOpened = !IsOpened;
+				}
+
+			}
+
+		//	if (IsOpened && Input.GetKeyDown(KeyCode.M))
+		//		IsOpened = false;
+
+		//	if (MiniMap.toggleMap && Input.GetKeyDown(KeyCode.Escape))
+		//		MiniMap.toggleMap = false;
+
+//			bool isConsoleStateChanged = Console.Instance.m_openKey != Console.Instance.m_closeKey ?
+//				Input.GetKeyDown(Console.Instance.m_openKey) || Input.GetKeyDown(Console.Instance.m_closeKey) :
+//				Input.GetKeyDown(Console.Instance.m_openKey);
+//
+//			if (m_playerController != null) {
+//				// WTF is this ?!
+//
+//				// Fixed: If Escape is pressed, map isn't available
+//				if (!IsOpened && (Input.GetKeyDown (KeyCode.Escape) || isConsoleStateChanged || Input.GetKeyDown (KeyCode.F1) || (m_playerController.CursorLocked && Input.GetKeyDown (KeyCode.M))))
+//					m_playerController.ChangeCursorState (!m_playerController.CursorLocked);
+//			}
+
+			// unlock and show cursor while pause menu is opened
+			if (Loader.HasLoaded) {
+				bool shouldBeLocked = !IsOpened;
+				if (GameManager.CursorLocked != shouldBeLocked)
+					GameManager.ChangeCursorState (shouldBeLocked);
+			}
+
+		}
+
+		void OnGUI() {
+
+			if (!Loader.HasLoaded || !IsOpened)
+				return;
+
+//			if (!m_changedWindowStyle) {
+//				m_changedWindowStyle = true;
+//				GUI.skin.window.normal.background = m_windowBackgroundTexture;
+//			}
+
+
+			// draw title
+			Utilities.GUIUtils.CenteredLabel (new Vector2 (Screen.width / 2.0f, 20), "<b>PAUSE MENU</b>");
+
+
+			GUI.BeginGroup (new Rect (10, 0, 250, Screen.height));
+
+			GUILayout.Space (20);
+
+			if (GUILayout.Button ("Resume"))
+				IsOpened = false;
+			
+			GUILayout.Space (10);
+
+			// draw all registered items
+			onDrawItems ();
+
+			GUILayout.Space (10);
+
+			if (GUILayout.Button ("Exit")) {
+				GameManager.ExitApplication ();
+			}
+
+			GUI.EndGroup ();
+
+		}
+
+	}
+
+}
