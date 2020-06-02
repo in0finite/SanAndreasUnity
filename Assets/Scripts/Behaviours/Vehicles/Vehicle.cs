@@ -190,9 +190,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             this.OnDisable_Radio();
 
-            if (m_highDetailMeshesParent != null)
+            if (this.HighDetailMeshesParent != null)
             {
-                Destroy(m_highDetailMeshesParent.gameObject);
+                Destroy(this.HighDetailMeshesParent.gameObject);
             }
 
         }
@@ -499,7 +499,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void UpdateHighDetailMeshes()
         {
-            m_highDetailMeshesParent.SetPositionAndRotation(this.transform.position, this.transform.rotation);
+            this.HighDetailMeshesParent.SetPositionAndRotation(this.transform.position, this.transform.rotation);
 
             for (int i = 0; i < m_highDetailMeshObjectsToUpdate.Count; i++)
             {

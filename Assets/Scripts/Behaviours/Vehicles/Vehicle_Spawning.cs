@@ -274,7 +274,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private static GameObject s_highDetailMeshesContainer;
 
-        private Transform m_highDetailMeshesParent;
+        public Transform HighDetailMeshesParent { get; private set; }
         private List<KeyValuePair<Transform, Transform>> m_highDetailMeshObjectsToUpdate = new List<KeyValuePair<Transform, Transform>>();
 
         private readonly List<Wheel> _wheels = new List<Wheel>();
@@ -541,7 +541,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
 
             GameObject parent = new GameObject(this.gameObject.name);
-            m_highDetailMeshesParent = parent.transform;
+            this.HighDetailMeshesParent = parent.transform;
             parent.transform.parent = s_highDetailMeshesContainer.transform;
             parent.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
 
