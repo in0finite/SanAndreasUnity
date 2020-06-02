@@ -112,6 +112,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static int LayerMask { get { return 1 << Layer; } }
 
+        public static int MeshLayer => UnityEngine.LayerMask.NameToLayer("VehicleMesh");
+
         private static int _sLightsId = -1;
 
         protected static int LightsId
