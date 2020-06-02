@@ -428,7 +428,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   autoAddWeapon: 0
   m_aimWithRifleMaxAnimTime: 0.7
-  cameraAimOffset: {x: 0.7, y: 0.2, z: -1}
+  cameraAimOffset: {x: 0.6, y: 0.2, z: -2}
   SpineOffset: {x: 0, y: 45, z: 90}
   weaponAttachType: 1
   rotatePlayerInDirectionOfAiming: 1
