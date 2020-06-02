@@ -17,6 +17,8 @@ namespace SanAndreasUnity.Behaviours
 		public float minCameraDistanceFromPed = 2f;
 		public float maxCameraDistanceFromPed = 30f;
 
+		public LayerMask cameraRaycastIgnoredLayerMask = 0;
+
 		[Header("Damage")]
 
 		public float legAndArmDamageMultiplier = 0.8f;

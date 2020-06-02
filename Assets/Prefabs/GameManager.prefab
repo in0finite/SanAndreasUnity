@@ -143,6 +143,9 @@ MonoBehaviour:
   cameraDistanceFromPed: 4
   minCameraDistanceFromPed: 2
   maxCameraDistanceFromPed: 30
+  cameraRaycastIgnoredLayerMask:
+    serializedVersion: 2
+    m_Bits: 15158
   legAndArmDamageMultiplier: 0.8
   stomachAndChestDamageMultiplier: 1
   headDamageMultiplier: 4
