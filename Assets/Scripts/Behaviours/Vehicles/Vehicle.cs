@@ -481,12 +481,25 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             this.Update_Radio();
 
+            this.UpdateHighDetailMeshes();
+
         }
 
         private void FixedUpdate()
         {
             //    NetworkingFixedUpdate();
             PhysicsFixedUpdate();
+        }
+
+        void UpdateHighDetailMeshes()
+        {
+            m_highDetailMeshesParent.SetPositionAndRotation(this.transform.position, this.transform.rotation);
+
+            for (int i = 0; i < m_highDetailMeshObjectsToUpdate.Count; i++)
+            {
+                var item = m_highDetailMeshObjectsToUpdate[i];
+                item.Value.SetPositionAndRotation(item.Key.position, item.Key.rotation);
+            }
         }
 
         private IEnumerator DelayedBlinkersTurnOff()

@@ -272,6 +272,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private FrameContainer _frames;
 
+        private static GameObject s_highDetailMeshesContainer;
+
+        private Transform m_highDetailMeshesParent;
+        private List<KeyValuePair<Transform, Transform>> m_highDetailMeshObjectsToUpdate = new List<KeyValuePair<Transform, Transform>>();
+
         private readonly List<Wheel> _wheels = new List<Wheel>();
         private readonly List<Seat> _seats = new List<Seat>();
 
@@ -513,6 +518,54 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             
 
             gameObject.SetLayerRecursive(Layer);
+
+            SetupHighDetailMesh();
+
+        }
+
+        void SetupHighDetailMesh()
+        {
+            // We need to add mesh colliders with high detail vehicle's mesh.
+            // These colliders will be used, among other things, when raycasting with weapons.
+            // This is a problem because Unity does not support concave (non-convex) mesh colliders attached to rigid body.
+            // Tried adding a separate kinematic rigid body (kinematic ones work with concave mesh colliders) to each object with a mesh filter, but without success.
+            // So, we are left with the following options:
+            // - somehow generate multiple convex meshes from a concave mesh
+            // - create a separate game object with mesh colliders, and update his position/rotation every frame to be the same as vehicle's
+            // Option with a separate game object is chosen.
+
+
+            if (null == s_highDetailMeshesContainer)
+            {
+                s_highDetailMeshesContainer = new GameObject("Vehicle high detail meshes container");
+            }
+
+            GameObject parent = new GameObject(this.gameObject.name);
+            m_highDetailMeshesParent = parent.transform;
+            parent.transform.parent = s_highDetailMeshesContainer.transform;
+            parent.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
+
+            // for each mesh filter, create child game object with mesh collider
+
+            foreach (var meshFilter in this.gameObject.GetComponentsInChildren<MeshFilter>())
+            {
+                GameObject child = new GameObject(meshFilter.gameObject.name, typeof(MeshCollider));
+                child.layer = Vehicle.MeshLayer;
+                child.transform.parent = parent.transform;
+                child.transform.SetPositionAndRotation(meshFilter.transform.position, meshFilter.transform.rotation);
+
+                var meshCollider = child.GetComponent<MeshCollider>();
+                meshCollider.convex = false;
+                meshCollider.sharedMesh = meshFilter.sharedMesh;
+
+                if (null != meshFilter.gameObject.GetComponent<Rigidbody>())
+                {
+                    // this object has a rigid body, so it will move
+                    // make sure that we update transform of this object
+                    m_highDetailMeshObjectsToUpdate.Add(new KeyValuePair<Transform, Transform>(meshFilter.transform, child.transform));
+                }
+
+            }
 
         }
     }
