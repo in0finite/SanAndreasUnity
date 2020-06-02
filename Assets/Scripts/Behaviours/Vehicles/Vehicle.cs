@@ -189,6 +189,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             s_vehicles.Remove(this);
 
             this.OnDisable_Radio();
+
+            if (m_highDetailMeshesParent != null)
+            {
+                Destroy(m_highDetailMeshesParent.gameObject);
+            }
+
         }
 
         void Start()
