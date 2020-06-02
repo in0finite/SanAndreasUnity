@@ -558,9 +558,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 meshCollider.convex = false;
                 meshCollider.sharedMesh = meshFilter.sharedMesh;
 
-                if (null != meshFilter.gameObject.GetComponent<Rigidbody>())
+                if (null != meshFilter.gameObject.GetComponent<Rigidbody>()
+                    || null != meshFilter.transform.parent.GetComponent<Rigidbody>()
+                    || null != meshFilter.transform.parent.GetComponent<WheelCollider>())
                 {
-                    // this object has a rigid body, so it will move
+                    // this object has a dedicated rigid body or is a wheel, so it will move
                     // make sure that we update transform of this object
                     m_highDetailMeshObjectsToUpdate.Add(new KeyValuePair<Transform, Transform>(meshFilter.transform, child.transform));
                 }
