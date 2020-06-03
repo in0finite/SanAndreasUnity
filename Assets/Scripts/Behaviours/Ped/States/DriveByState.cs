@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using SanAndreasUnity.Behaviours.Vehicles;
+using System.Collections.Generic;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
@@ -11,15 +12,39 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         // - add real aim anims ?
         // - drive-by exiting state - activated when going from drive-by to sitting state, or when trying to exit vehicle
         // - weapon's gun flash should depend on last time when fired, not on anim time - maybe don't change it, because we may play real aim anims
-        
 
+
+
+        readonly List<GameObject> m_gameObjectToIgnoreWhenRaycasting = new List<GameObject>();
+        readonly List<int> m_layersToIgnoreWhenRaycasting = new List<int>();
 
         public WeaponAttackParams WeaponAttackParams
         {
-            get => new WeaponAttackParams
+            get
             {
-                GameObjectToIgnoreWhenRaycasting = this.CurrentVehicle != null ? this.CurrentVehicle.gameObject : null,
-            };
+                m_gameObjectToIgnoreWhenRaycasting.Clear();
+                m_layersToIgnoreWhenRaycasting.Clear();
+
+                if (this.CurrentVehicle != null)
+                {
+                    m_gameObjectToIgnoreWhenRaycasting.Add(this.CurrentVehicle.gameObject);
+                    m_layersToIgnoreWhenRaycasting.Add(LayerMask.NameToLayer(Ped.PedBoneLayerName));
+
+                    if (this.CurrentVehicle.HighDetailMeshesParent != null)
+                    {
+                        m_gameObjectToIgnoreWhenRaycasting.Add(this.CurrentVehicle.HighDetailMeshesParent.gameObject);
+                        m_layersToIgnoreWhenRaycasting.Add(Vehicle.MeshLayer);
+                    }
+
+                    return new WeaponAttackParams
+                    {
+                        GameObjectsToIgnoreWhenRaycasting = m_gameObjectToIgnoreWhenRaycasting,
+                        LayersToIgnoreWhenRaycasting = m_layersToIgnoreWhenRaycasting,
+                    };
+                }
+
+                return WeaponAttackParams.Default;
+            }
         }
 
 

@@ -75,7 +75,8 @@ namespace SanAndreasUnity.Behaviours
 
     public struct WeaponAttackParams
     {
-		public GameObject GameObjectToIgnoreWhenRaycasting { get; set; }
+		public List<int> LayersToIgnoreWhenRaycasting { get; set; }
+		public List<GameObject> GameObjectsToIgnoreWhenRaycasting { get; set; }
 
 		public static WeaponAttackParams Default { get => new WeaponAttackParams(); }
     }
@@ -653,7 +654,7 @@ namespace SanAndreasUnity.Behaviours
             m_lastRaycastWeaponAttackParams = parameters;
 
 
-            if (null == parameters.GameObjectToIgnoreWhenRaycasting)
+            if (null == parameters.GameObjectsToIgnoreWhenRaycasting)
                 return Physics.Raycast(source, dir, out hit, this.MaxRange, WeaponsManager.Instance.projectileRaycastMask);
 
 
@@ -670,7 +671,7 @@ namespace SanAndreasUnity.Behaviours
 
             var validHits = s_raycastHitBuffer
                 .Take(numHits)
-				.Where(h => h.collider != null && parameters.GameObjectToIgnoreWhenRaycasting != h.transform.gameObject && !parameters.GameObjectToIgnoreWhenRaycasting.transform.IsParentOf(h.transform));
+				.Where(h => h.collider != null && !ShouldIgnoreObjectWhenRaycasting(h.collider, parameters));
 
             if (!validHits.Any())
             {
@@ -682,6 +683,20 @@ namespace SanAndreasUnity.Behaviours
 
             return true;
         }
+
+		private static bool ShouldIgnoreObjectWhenRaycasting(Collider collider, WeaponAttackParams parameters)
+		{
+			if (!parameters.LayersToIgnoreWhenRaycasting.Contains(collider.gameObject.layer))
+				return false;
+
+			if (parameters.GameObjectsToIgnoreWhenRaycasting.Exists(go => go == collider.gameObject))
+				return true;
+
+			if (parameters.GameObjectsToIgnoreWhenRaycasting.Exists(go => go.transform.IsParentOf(collider.transform)))
+				return true;
+
+			return false;
+		}
 
         public void GetLineFromGun (out Vector3 start, out Vector3 end, WeaponAttackParams parameters)
 		{
