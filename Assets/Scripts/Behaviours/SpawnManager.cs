@@ -63,7 +63,8 @@ namespace SanAndreasUnity.Behaviours
             {
                 // enough time passed
                 m_lastSpawnTime = Time.time;
-                this.SpawnPlayers();
+
+                F.RunExceptionSafe(() => this.SpawnPlayers());
             }
 
         }
