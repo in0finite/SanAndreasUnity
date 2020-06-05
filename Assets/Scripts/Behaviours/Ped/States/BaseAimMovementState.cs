@@ -643,26 +643,31 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			if (buttonName == "G")
 			{
-				// try to recruit peds to follow you
-				if (m_weapon != null)
+				RecruitPedUnderWeaponToFollowPed(m_ped);
+			}
+		}
+
+		public static void RecruitPedUnderWeaponToFollowPed(Ped pedToFollow)
+		{
+			// try to recruit peds to follow you
+			if (pedToFollow.CurrentWeapon != null)
+			{
+				if (pedToFollow.CurrentWeapon.ProjectileRaycast(
+					pedToFollow.IsControlledByLocalPlayer ? pedToFollow.FirePosition : pedToFollow.NetFirePos,
+					pedToFollow.IsControlledByLocalPlayer ? pedToFollow.FireDirection : pedToFollow.NetFireDir,
+					out RaycastHit hit,
+					WeaponAttackParams.Default))
 				{
-					if (m_weapon.ProjectileRaycast(
-                        m_ped.IsControlledByLocalPlayer ? m_ped.FirePosition : m_ped.NetFirePos, 
-						m_ped.IsControlledByLocalPlayer ? m_ped.FireDirection : m_ped.NetFireDir,
-                        out RaycastHit hit,
-                        WeaponAttackParams.Default))
+					// see if ped is hit
+					var hitPed = hit.transform.GetComponent<Ped>();
+					if (hitPed != null && hitPed != pedToFollow && null == hitPed.PlayerOwner)
 					{
-						// see if ped is hit
-						var ped = hit.transform.GetComponent<Ped>();
-						if (ped != null && ped != m_ped && null == ped.PlayerOwner)
-						{
-							// ray hit a ped who is not controlled by any player
-							var pedStalker = ped.gameObject.GetOrAddComponent<PedStalker>();
-							if (pedStalker.TargetPed == m_ped)
-								pedStalker.TargetPed = null;
-							else
-								pedStalker.TargetPed = m_ped;
-						}
+						// ray hit a ped who is not controlled by any player
+						var pedStalker = hitPed.gameObject.GetOrAddComponent<PedStalker>();
+						if (pedStalker.TargetPed == pedToFollow)
+							pedStalker.TargetPed = null;
+						else
+							pedStalker.TargetPed = pedToFollow;
 					}
 				}
 			}
