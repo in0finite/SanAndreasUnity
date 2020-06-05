@@ -78,7 +78,9 @@ namespace SanAndreasUnity.Behaviours
                 return false;
             }
 
-            transformData = new TransformDataStruct(focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f);
+            transformData = new TransformDataStruct(
+                focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f,
+                Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
 
             return true;
         }
