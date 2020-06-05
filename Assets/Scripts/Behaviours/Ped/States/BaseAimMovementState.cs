@@ -643,34 +643,43 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			if (buttonName == "G")
 			{
+				// try to recruit peds to follow you
 				RecruitPedUnderWeaponToFollowPed(m_ped);
 			}
 		}
 
 		public static void RecruitPedUnderWeaponToFollowPed(Ped pedToFollow)
 		{
-			// try to recruit peds to follow you
-			if (pedToFollow.CurrentWeapon != null)
+			if (null == pedToFollow.CurrentWeapon)
+				return;
+
+			RaycastHit hit;
+			if (!pedToFollow.CurrentWeapon.ProjectileRaycast(
+				pedToFollow.IsControlledByLocalPlayer ? pedToFollow.FirePosition : pedToFollow.NetFirePos,
+				pedToFollow.IsControlledByLocalPlayer ? pedToFollow.FireDirection : pedToFollow.NetFireDir,
+				out hit,
+				WeaponAttackParams.Default))
 			{
-				if (pedToFollow.CurrentWeapon.ProjectileRaycast(
-					pedToFollow.IsControlledByLocalPlayer ? pedToFollow.FirePosition : pedToFollow.NetFirePos,
-					pedToFollow.IsControlledByLocalPlayer ? pedToFollow.FireDirection : pedToFollow.NetFireDir,
-					out RaycastHit hit,
-					WeaponAttackParams.Default))
-				{
-					// see if ped is hit
-					var hitPed = hit.transform.GetComponent<Ped>();
-					if (hitPed != null && hitPed != pedToFollow && null == hitPed.PlayerOwner)
-					{
-						// ray hit a ped who is not controlled by any player
-						var pedStalker = hitPed.gameObject.GetOrAddComponent<PedStalker>();
-						if (pedStalker.TargetPed == pedToFollow)
-							pedStalker.TargetPed = null;
-						else
-							pedStalker.TargetPed = pedToFollow;
-					}
-				}
+				return;
 			}
+
+			// see if ped is hit
+
+			var damageable = hit.collider.gameObject.GetComponentInParent<Damageable>();
+			if (null == damageable)
+				return;
+
+			var hitPed = damageable.GetComponent<Ped>();
+			if (hitPed != null && hitPed != pedToFollow && null == hitPed.PlayerOwner)
+			{
+				// ray hit a ped who is not controlled by any player
+				var pedStalker = hitPed.gameObject.GetOrAddComponent<PedStalker>();
+				if (pedStalker.TargetPed == pedToFollow)
+					pedStalker.TargetPed = null;
+				else
+					pedStalker.TargetPed = pedToFollow;
+			}
+			
 		}
 
 	}
