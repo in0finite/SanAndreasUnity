@@ -68,34 +68,35 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-        List<TransformDataStruct> GetSpawnPositionsFromFocus()
+        bool GetSpawnPositionFromFocus(out TransformDataStruct transformData)
         {
-            var spawns = new List<TransformDataStruct>();
-
             Transform focusPos = GetSpawnFocusPos();
             if (null == focusPos)
-                return spawns;
-            
-            for (int i=0; i < 5; i++)
             {
-                var transformData = new TransformDataStruct(focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f);
-                spawns.Add(transformData);
+                transformData = new TransformDataStruct();
+                return false;
             }
 
-            return spawns;
+            transformData = new TransformDataStruct(focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f);
+
+            return true;
         }
 
-        List<TransformDataStruct> GetSpawnPositionsFromInteriors()
+        bool GetSpawnPositionFromInteriors(out TransformDataStruct transformData)
         {
-            return World.Cell.Instance.GetEnexesFromLoadedInteriors().Select(enex => World.Cell.GetEnexExitTransform(enex)).ToList();
+            transformData = World.Cell.GetEnexExitTransform(
+                World.Cell.Instance.GetEnexesFromLoadedInteriors()
+                .ToList()
+                .RandomElement());
+            return true;
         }
 
-        public List<TransformDataStruct> GetSpawnPositions()
+        public bool GetSpawnPosition(out TransformDataStruct transformData)
         {
             if (null == World.Cell.Instance || World.Cell.Instance.HasExterior)
-                return GetSpawnPositionsFromFocus();
+                return GetSpawnPositionFromFocus(out transformData);
             else
-                return GetSpawnPositionsFromInteriors();
+                return GetSpawnPositionFromInteriors(out transformData);
         }
 
         void SpawnPlayers()
@@ -106,25 +107,24 @@ namespace SanAndreasUnity.Behaviours
             if (!Loader.HasLoaded)
                 return;
 
-            var list = GetSpawnPositions();
-            
-            if (list.Count < 1)
-                return;
-            
+            TransformDataStruct transformData;
+
             foreach (var player in Player.AllPlayers)
             {
-                SpawnPlayer(player, list);
+                if (this.GetSpawnPosition(out transformData))
+                    SpawnPlayer(player, transformData);
+                else
+                    break;
             }
 
         }
 
-        public static Ped SpawnPlayer (Player player, List<TransformDataStruct> spawns)
+        public static Ped SpawnPlayer (Player player, TransformDataStruct spawnPlace)
         {
             if (player.OwnedPed != null)
                 return null;
 
-            var spawn = spawns.RandomElement();
-            var ped = Ped.SpawnPed(Ped.RandomPedId, spawn.position, spawn.rotation, false);
+            var ped = Ped.SpawnPed(Ped.RandomPedId, spawnPlace.position, spawnPlace.rotation, false);
             ped.NetPlayerOwnerGameObject = player.gameObject;
             ped.WeaponHolder.autoAddWeapon = true;
             // this ped should not be destroyed when he gets out of range
@@ -149,7 +149,8 @@ namespace SanAndreasUnity.Behaviours
             if (!this.spawnPlayerWhenConnected)
                 return;
 
-            SpawnPlayer(player, GetSpawnPositions());
+            if (this.GetSpawnPosition(out TransformDataStruct transformData))
+                SpawnPlayer(player, transformData);
 
         }
 
