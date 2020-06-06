@@ -12,8 +12,6 @@ namespace SanAndreasUnity.Utilities
 
 		public Color TextColor { get => this.TextComponent.color; set => this.TextComponent.color = value; }
 
-		//public Color backgroundColor = new Color(0, 0, 0, 1);   // transparent
-
 		/// in percentage of screen dimensions
 		public Vector2 ScreenPos
 		{
