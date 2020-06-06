@@ -7,11 +7,14 @@ namespace SanAndreasUnity.Utilities
 	public class OnScreenMessageManager : MonoBehaviour
 	{
 
+		public GameObject messagePrefab;
+
+		public RectTransform messagesContainer;
+
 		private List<OnScreenMessage> m_onScreenMessages = new List<OnScreenMessage>();
 		public IReadOnlyList<OnScreenMessage> Messages => m_onScreenMessages;
 
-		[SerializeField] private bool m_drawMessages = true;
-		public static bool DrawMessages { get { return Instance.m_drawMessages; } set { Instance.m_drawMessages = value; } }
+		public int messagePoolSize = 10;
 
 		public static OnScreenMessageManager Instance { get; private set; }
 
@@ -25,52 +28,32 @@ namespace SanAndreasUnity.Utilities
 		void Update()
 		{
 
+			m_onScreenMessages.RemoveDeadObjects();
+
 			foreach (var msg in m_onScreenMessages)
 			{
 				msg.timeLeft -= Time.deltaTime;
-				msg.screenPos += msg.velocity * Time.deltaTime;
+				msg.ScreenPos += msg.velocity * Time.deltaTime;
+				if (msg.timeLeft <= 0)
+				{
+					Object.Destroy(msg);
+				}
 			}
 
-			m_onScreenMessages.RemoveAll(msg => msg.timeLeft <= 0);
-
 		}
 
-		void OnGUI()
+		public OnScreenMessage CreateMessage()
 		{
-			// draw messages
+			messagePrefab.GetComponentOrThrow<OnScreenMessage>();
 
-			if (!m_drawMessages)
-				return;
+			GameObject messageGo = Object.Instantiate(messagePrefab);
+			messageGo.transform.SetParent(messagesContainer, false);
 
-			var originalColor = GUI.color;
-			var originalBackgroundColor = GUI.backgroundColor;
+			OnScreenMessage message = messageGo.GetComponent<OnScreenMessage>();
 
-			Vector2 screenSize = new Vector2(Screen.width, Screen.height);
+			m_onScreenMessages.Add(message);
 
-			foreach (var msg in m_onScreenMessages)
-			{
-				GUI.color = msg.color;
-				GUI.backgroundColor = msg.backgroundColor;
-
-				Vector2 size = Utilities.GUIUtils.CalcScreenSizeForContent(new GUIContent(msg.text), GUI.skin.label);
-
-				GUI.Label(new Rect(Vector2.Scale(msg.screenPos, screenSize), size), msg.text);
-			}
-
-			GUI.color = originalColor;
-			GUI.backgroundColor = originalBackgroundColor;
-
-		}
-
-
-		public void AddMessage(OnScreenMessage msg)
-		{
-			m_onScreenMessages.Add(msg);
-		}
-
-		public void RemoveMessage(OnScreenMessage msg)
-		{
-			m_onScreenMessages.Remove(msg);
+			return message;
 		}
 
 	}

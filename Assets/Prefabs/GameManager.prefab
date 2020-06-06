@@ -295,4 +295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c72eda03771ae74aa128f3c7218283a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_drawMessages: 1
+  messagePrefab: {fileID: 2694704631655002565, guid: 6d322e231f3455d48956d7437520a7c9,
+    type: 3}
+  messagesContainer: {fileID: 0}
+  messagePoolSize: 10

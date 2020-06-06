@@ -126,14 +126,12 @@ namespace SanAndreasUnity.Behaviours
 
 		public void DisplayInflictedDamageMessage(float damageAmount)
 		{
-			OnScreenMessageManager.Instance.AddMessage(
-				new OnScreenMessage
-				{
-					velocity = Random.insideUnitCircle.normalized * PedManager.Instance.inflictedDamageMessageVelocityInScreenPerc,
-					color = PedManager.Instance.inflictedDamageMessageColor,
-					timeLeft = PedManager.Instance.inflictedDamageMessageLifetime,
-					text = damageAmount.ToString(),
-				});
+			var msg = OnScreenMessageManager.Instance.CreateMessage();
+
+			msg.velocity = Random.insideUnitCircle.normalized * PedManager.Instance.inflictedDamageMessageVelocityInScreenPerc;
+			msg.TextColor = PedManager.Instance.inflictedDamageMessageColor;
+			msg.timeLeft = PedManager.Instance.inflictedDamageMessageLifetime;
+			msg.Text = damageAmount.ToString();
 		}
 
 	}
