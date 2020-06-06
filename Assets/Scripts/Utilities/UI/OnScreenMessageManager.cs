@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Utilities
 
 		public RectTransform messagesContainer;
 
-		private List<OnScreenMessage> m_onScreenMessages = new List<OnScreenMessage>();
+		private readonly List<OnScreenMessage> m_onScreenMessages = new List<OnScreenMessage>();
 		public IReadOnlyList<OnScreenMessage> Messages => m_onScreenMessages;
 
 		public int messagePoolSize = 10;
@@ -28,16 +28,32 @@ namespace SanAndreasUnity.Utilities
 		void Update()
 		{
 
-			m_onScreenMessages.RemoveDeadObjects();
+			bool hasDeadMessages = false;
 
-			foreach (var msg in m_onScreenMessages)
+			for (int i = 0; i < m_onScreenMessages.Count; i++)
 			{
+				var msg = m_onScreenMessages[i];
+
+				if (null == msg)
+				{
+					hasDeadMessages = true;
+					continue;
+				}
+
+				if (msg.velocity != Vector2.zero)
+					msg.ScreenPos += msg.velocity * Time.deltaTime;
+
 				msg.timeLeft -= Time.deltaTime;
-				msg.ScreenPos += msg.velocity * Time.deltaTime;
 				if (msg.timeLeft <= 0)
 				{
 					Object.Destroy(msg.gameObject);
 				}
+			}
+
+			if (hasDeadMessages)
+			{
+				// only remove dead objects if there are any, because this method allocates memory
+				m_onScreenMessages.RemoveDeadObjects();
 			}
 
 		}
