@@ -140,6 +140,9 @@ MonoBehaviour:
   pedPrefab: {fileID: 1273918895060814, guid: 9d45d42a7408c1e4ab325d6840364b84, type: 3}
   pedTurnSpeed: 10
   showPedSpeedometer: 1
+  groundFindingIgnoredLayerMask:
+    serializedVersion: 2
+    m_Bits: 14902
   cameraDistanceFromPed: 4
   minCameraDistanceFromPed: 2
   maxCameraDistanceFromPed: 30
