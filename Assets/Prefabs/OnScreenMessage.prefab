@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8122135491475348229}
   - component: {fileID: 6596440728574097929}
   - component: {fileID: 7210735960633946770}
+  - component: {fileID: 7722006331998504974}
   m_Layer: 0
   m_Name: OnScreenMessage
   m_TagString: Untagged
@@ -79,3 +80,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: New Text
+--- !u!114 &7722006331998504974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2694704631655002565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 045805ea374bdf54aa0a3c99b0f48c18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocity: {x: 0, y: 0}
+  timeLeft: 2
