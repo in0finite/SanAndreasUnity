@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Vehicles;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Stats
 {
@@ -164,6 +165,11 @@ namespace SanAndreasUnity.Stats
                 sb.AppendLine();
 
             }
+
+            // on-screen messages
+            sb.AppendFormat("num on-screen messages: {0}\n", OnScreenMessageManager.Instance.Messages.Count);
+            sb.AppendFormat("num pooled on-screen messages: {0}\n", OnScreenMessageManager.Instance.NumPooledMessages);
+
 
             GUILayout.Label(sb.ToString());
 
