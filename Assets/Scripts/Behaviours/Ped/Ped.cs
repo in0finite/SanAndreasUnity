@@ -327,8 +327,7 @@ namespace SanAndreasUnity.Behaviours
 
 				RaycastHit hit;
 				float raycastDistance = parameters.raycastDistance;
-				// raycast against all layers, except player
-				int raycastLayerMask = ~ Ped.LayerMask;
+				int raycastLayerMask = ~ PedManager.Instance.groundFindingIgnoredLayerMask;
 
 				var raycastPositions = new List<Vector3>{ this.transform.position };	//transform.position - Vector3.up * characterController.height;
 				var raycastDirections = new List<Vector3>{ Vector3.down };

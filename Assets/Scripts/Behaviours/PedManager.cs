@@ -11,7 +11,12 @@ namespace SanAndreasUnity.Behaviours
 		public GameObject pedPrefab;
 
 		public float pedTurnSpeed = 10f;
+
 		public bool showPedSpeedometer = true;
+
+		public LayerMask groundFindingIgnoredLayerMask = 0;
+
+		[Header("Camera")]
 
 		public float cameraDistanceFromPed = 3f;
 		public float minCameraDistanceFromPed = 2f;
