@@ -192,6 +192,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8446601354455743255, guid: 9678826ffd3ed244997780ccbdec99b7,
+        type: 3}
+      propertyPath: messagesContainer
+      value: 
+      objectReference: {fileID: 603823381}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9678826ffd3ed244997780ccbdec99b7, type: 3}
 --- !u!1001 &589245766
@@ -410,6 +415,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd5c14626ef595d439de799ec08c2b16, type: 3}
+--- !u!224 &603823381 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8743615454504171472, guid: dd5c14626ef595d439de799ec08c2b16,
+    type: 3}
+  m_PrefabInstance: {fileID: 589245766}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &732841203
 GameObject:
   m_ObjectHideFlags: 0
