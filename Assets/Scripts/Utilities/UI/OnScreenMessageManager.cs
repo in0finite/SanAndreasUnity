@@ -36,7 +36,7 @@ namespace SanAndreasUnity.Utilities
 				msg.ScreenPos += msg.velocity * Time.deltaTime;
 				if (msg.timeLeft <= 0)
 				{
-					Object.Destroy(msg);
+					Object.Destroy(msg.gameObject);
 				}
 			}
 
