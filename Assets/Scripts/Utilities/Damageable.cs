@@ -20,6 +20,7 @@ namespace SanAndreasUnity.Utilities
 		public float Health { get { return m_health; } set { m_health = value; } }
 
 		[SerializeField] private UnityEvent m_onDamage = new UnityEvent ();
+		public UnityEvent OnDamageEvent => m_onDamage;
 
 		public DamageInfo LastDamageInfo { get; private set; }
 
