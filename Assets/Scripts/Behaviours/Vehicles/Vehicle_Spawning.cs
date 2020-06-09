@@ -444,6 +444,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             InitializePhysics();
 
+            this.Health = this.MaxHealth = this.HandlingData.Mass;
+
             foreach (var pair in _frames.Where(x => x.Name.StartsWith("door_")))
             {
                 var doorAlignment = GetDoorAlignment(pair.Name);
@@ -544,6 +546,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             this.HighDetailMeshesParent = parent.transform;
             parent.transform.parent = s_highDetailMeshesContainer.transform;
             parent.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
+
+            this.SetupDamagable();
 
             // for each mesh filter, create child game object with mesh collider
 

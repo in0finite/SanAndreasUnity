@@ -9,12 +9,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Damageable Damageable { get; private set; }
 
-        public float Health { get => this.Damageable.Health; set => this.Damageable.Health = value; }
+        public float Health { get; set; } = 1000;
 
         public float MaxHealth { get; set; } = 1000;
 
         public bool IsUnderFlame { get; private set; } = false;
         public bool IsUnderSmoke { get; private set; } = false;
+
+        bool m_alreadyExploded = false;
 
         public float TimeWhenBecameUnderFlame { get; private set; } = float.NegativeInfinity;
 
@@ -22,7 +24,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void Awake_Damage()
         {
-            this.Damageable = this.GetComponentOrThrow<Damageable>();
+
+        }
+
+        void SetupDamagable()
+        {
+            this.Damageable = this.HighDetailMeshesParent.gameObject.AddComponent<Damageable>();
             this.Damageable.OnDamageEvent.AddListener(() => this.OnDamaged());
         }
 
@@ -75,6 +82,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public void Explode()
         {
+            if (m_alreadyExploded)
+                return;
+
+            m_alreadyExploded = true;
+
+
+            Object.Destroy(this.gameObject);
 
         }
 

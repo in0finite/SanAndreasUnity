@@ -176,6 +176,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             this.NetTransform = this.GetComponent<Mirror.NetworkTransform>();
             _props = new MaterialPropertyBlock();
+            this.Awake_Damage();
             this.Awake_Radio();
         }
 
@@ -484,6 +485,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 UpdateColors();
             }
+
+            this.Update_Damage();
 
             this.Update_Radio();
 
