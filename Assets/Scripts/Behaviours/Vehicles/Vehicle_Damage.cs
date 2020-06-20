@@ -22,6 +22,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public float TimeWhenBecameUnderFlame { get; private set; } = float.NegativeInfinity;
 
         GameObject m_smokeGameObject;
+        GameObject m_flameGameObject;
 
 
 
@@ -72,7 +73,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (this.IsUnderFlame)
                     this.TimeWhenBecameUnderFlame = Time.time;
                 // update vfx
-
+                this.UpdateFlameVfx();
             }
 
             if (this.IsUnderFlame && Time.time - this.TimeWhenBecameUnderFlame >= 5)
@@ -100,6 +101,27 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 {
                     Object.Destroy(m_smokeGameObject);
                     m_smokeGameObject = null;
+                }
+            }
+        }
+
+        void UpdateFlameVfx()
+        {
+            if (this.IsUnderFlame)
+            {
+                if (null == m_flameGameObject)
+                {
+                    Transform parent = this.EngineTransform != null ? this.EngineTransform : this.transform;
+                    m_flameGameObject = Object.Instantiate(
+                        VehicleManager.Instance.flamePrefab, parent.position, parent.rotation, parent);
+                }
+            }
+            else
+            {
+                if (null != m_flameGameObject)
+                {
+                    Object.Destroy(m_flameGameObject);
+                    m_flameGameObject = null;
                 }
             }
         }

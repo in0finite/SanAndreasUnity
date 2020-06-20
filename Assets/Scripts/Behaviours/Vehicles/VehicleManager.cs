@@ -29,6 +29,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public float explosionLeftoverPartsMass = 100f;
 
         public GameObject smokePrefab;
+        public GameObject flamePrefab;
 
 
 
