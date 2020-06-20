@@ -125,7 +125,7 @@ namespace SanAndreasUnity.Net
         void CmdRequestToDestroyMyVehicles()
         {
             F.RunExceptionSafe( () => {
-                this.DestroyPlayersVehicles();
+                this.ExplodePlayersVehicles();
             });
         }
 
@@ -135,6 +135,15 @@ namespace SanAndreasUnity.Net
             foreach (var v in m_myVehicles)
             {
                 Destroy(v.gameObject);
+            }
+        }
+
+        void ExplodePlayersVehicles()
+        {
+            m_myVehicles.RemoveDeadObjects();
+            foreach (var v in m_myVehicles)
+            {
+                v.Explode();
             }
         }
 
