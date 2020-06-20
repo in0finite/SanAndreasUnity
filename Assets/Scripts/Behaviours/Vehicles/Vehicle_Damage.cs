@@ -159,7 +159,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             rigidBody.maxDepenetrationVelocity = VehicleManager.Instance.explosionLeftoverPartsMaxDepenetrationVelocity;
             rigidBody.AddExplosionForce(explosionForce, explosionCenter, explosionRadius);
 
-            Object.Destroy(meshFilter.gameObject, VehicleManager.Instance.explosionLeftoverPartsLifetime);
+            Object.Destroy(meshFilter.gameObject, VehicleManager.Instance.explosionLeftoverPartsLifetime * Random.Range(0.8f, 1.2f));
         }
 
     }
