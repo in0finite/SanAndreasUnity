@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
+using System.Linq;
 
 namespace SanAndreasUnity.UI {
 
@@ -81,10 +82,10 @@ namespace SanAndreasUnity.UI {
 
 			if (GUILayout.Button("Destroy all vehicles"))
 			{
-				var vehicles = FindObjectsOfType<Behaviours.Vehicles.Vehicle> ();
+				var vehicles = Behaviours.Vehicles.Vehicle.AllVehicles.ToArray();
 				
 				foreach (var v in vehicles) {
-					Destroy (v.gameObject);
+					v.Explode();
 				}
 			}
 
