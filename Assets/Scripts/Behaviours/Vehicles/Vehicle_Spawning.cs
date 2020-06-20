@@ -272,6 +272,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private FrameContainer _frames;
 
+        public Transform EngineTransform { get; private set; }
+
         private static GameObject s_highDetailMeshesContainer;
 
         public Transform HighDetailMeshesParent { get; private set; }
@@ -381,6 +383,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 Destroy(gameObject);
                 return;
             }
+
+            var engineFrame = _frames.FirstOrDefault(x => x.Name == "engine");
+            if (engineFrame != null)
+                this.EngineTransform = engineFrame.transform;
 
             foreach (var frame in _frames)
             {
