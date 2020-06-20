@@ -95,3 +95,7 @@ MonoBehaviour:
   controlInputOnLocalPlayer: 1
   controlWheelsOnLocalPlayer: 1
   vehicleSyncRate: 20
+  explosionForceMultiplier: 700
+  explosionLeftoverPartsLifetime: 30
+  explosionLeftoverPartsMaxDepenetrationVelocity: 15
+  explosionLeftoverPartsMass: 100

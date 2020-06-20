@@ -1,4 +1,5 @@
-﻿using SanAndreasUnity.Utilities;
+﻿using System.Linq;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
@@ -87,8 +88,57 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             m_alreadyExploded = true;
 
+            // destroy this game object
 
             Object.Destroy(this.gameObject);
+
+            // detach the following parts:
+            // - doors
+            // - wheels
+            // - bonnet
+            // - boot
+            // - windscreen
+            // - exhaust
+
+            string[] startingNames = new string[] { "door_", "wheel_", "bonnet_", "boot_", "windscreen_", "exhaust_" };
+            Vector3 explosionCenter = this.transform.position;
+            float explosionForce = Mathf.Sqrt(this.HandlingData.Mass) * VehicleManager.Instance.explosionForceMultiplier;
+            float explosionRadius = 10f;
+
+            foreach (var frame in _frames)
+            {
+                if (!frame.gameObject.activeInHierarchy)
+                    continue;
+
+                if (!startingNames.Any(n => frame.gameObject.name.StartsWith(n)))
+                    continue;
+
+                var meshFilter = frame.GetComponentInChildren<MeshFilter>();
+                if (null == meshFilter)
+                    continue;
+
+                if (!meshFilter.gameObject.activeInHierarchy)
+                    continue;
+
+                meshFilter.transform.SetParent(null, true);
+                meshFilter.gameObject.name = "vehicle_part_" + meshFilter.gameObject.name;
+                meshFilter.gameObject.layer = UnityEngine.LayerMask.NameToLayer("Default");
+                var meshCollider = meshFilter.gameObject.GetOrAddComponent<MeshCollider>();
+                meshCollider.convex = true;
+                meshCollider.sharedMesh = meshFilter.sharedMesh;
+                var rigidBody = meshFilter.gameObject.GetOrAddComponent<Rigidbody>();
+                rigidBody.mass = VehicleManager.Instance.explosionLeftoverPartsMass;
+                rigidBody.drag = 0.05f;
+                rigidBody.maxDepenetrationVelocity = VehicleManager.Instance.explosionLeftoverPartsMaxDepenetrationVelocity;
+                rigidBody.AddExplosionForce(explosionForce, explosionCenter, explosionRadius);
+
+                Object.Destroy(meshFilter.gameObject, VehicleManager.Instance.explosionLeftoverPartsLifetime);
+            }
+
+            // add rigid body to them and apply force
+
+            // create explosion effect
+
 
         }
 
