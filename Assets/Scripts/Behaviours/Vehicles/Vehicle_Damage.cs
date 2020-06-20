@@ -88,7 +88,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             m_alreadyExploded = true;
 
-            // destroy this game object
+            // destroy this game object before doing anything else
 
             Object.Destroy(this.gameObject);
 
@@ -113,33 +113,50 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (!startingNames.Any(n => frame.gameObject.name.StartsWith(n)))
                     continue;
 
-                var meshFilter = frame.GetComponentInChildren<MeshFilter>();
-                if (null == meshFilter)
-                    continue;
-
-                if (!meshFilter.gameObject.activeInHierarchy)
-                    continue;
-
-                meshFilter.transform.SetParent(null, true);
-                meshFilter.gameObject.name = "vehicle_part_" + meshFilter.gameObject.name;
-                meshFilter.gameObject.layer = UnityEngine.LayerMask.NameToLayer("Default");
-                var meshCollider = meshFilter.gameObject.GetOrAddComponent<MeshCollider>();
-                meshCollider.convex = true;
-                meshCollider.sharedMesh = meshFilter.sharedMesh;
-                var rigidBody = meshFilter.gameObject.GetOrAddComponent<Rigidbody>();
-                rigidBody.mass = VehicleManager.Instance.explosionLeftoverPartsMass;
-                rigidBody.drag = 0.05f;
-                rigidBody.maxDepenetrationVelocity = VehicleManager.Instance.explosionLeftoverPartsMaxDepenetrationVelocity;
-                rigidBody.AddExplosionForce(explosionForce, explosionCenter, explosionRadius);
-
-                Object.Destroy(meshFilter.gameObject, VehicleManager.Instance.explosionLeftoverPartsLifetime);
+                DetachFrameDuringExplosion(frame, explosionCenter, explosionForce, explosionRadius);
             }
 
-            // add rigid body to them and apply force
+            // chassis need to be handled after all other objects are detached, because chassis can sometimes
+            // have other objects as children
+
+            Frame chassisFrame = _frames.FirstOrDefault(f => f.Name == "chassis");
+
+            if (null == chassisFrame)
+            {
+                Debug.LogError($"Chassis object not found on vehicle {this.DescriptionForLogging}");
+            }
+            else
+            {
+                DetachFrameDuringExplosion(chassisFrame, explosionCenter, explosionForce, explosionRadius);
+            }
 
             // create explosion effect
 
 
+        }
+
+        void DetachFrameDuringExplosion(Frame frame, Vector3 explosionCenter, float explosionForce, float explosionRadius)
+        {
+            var meshFilter = frame.GetComponentInChildren<MeshFilter>();
+            if (null == meshFilter)
+                return;
+
+            if (!meshFilter.gameObject.activeInHierarchy)
+                return;
+
+            meshFilter.transform.SetParent(null, true);
+            meshFilter.gameObject.name = "vehicle_part_" + meshFilter.gameObject.name;
+            meshFilter.gameObject.layer = UnityEngine.LayerMask.NameToLayer("Default");
+            var meshCollider = meshFilter.gameObject.GetOrAddComponent<MeshCollider>();
+            meshCollider.convex = true;
+            meshCollider.sharedMesh = meshFilter.sharedMesh;
+            var rigidBody = meshFilter.gameObject.GetOrAddComponent<Rigidbody>();
+            rigidBody.mass = VehicleManager.Instance.explosionLeftoverPartsMass;
+            rigidBody.drag = 0.05f;
+            rigidBody.maxDepenetrationVelocity = VehicleManager.Instance.explosionLeftoverPartsMaxDepenetrationVelocity;
+            rigidBody.AddExplosionForce(explosionForce, explosionCenter, explosionRadius);
+
+            Object.Destroy(meshFilter.gameObject, VehicleManager.Instance.explosionLeftoverPartsLifetime);
         }
 
     }
