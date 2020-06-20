@@ -113,7 +113,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (!startingNames.Any(n => frame.gameObject.name.StartsWith(n)))
                     continue;
 
-                DetachFrameDuringExplosion(frame, explosionCenter, explosionForce, explosionRadius);
+                DetachFrameDuringExplosion(
+                    frame, explosionCenter, explosionForce, explosionRadius, VehicleManager.Instance.explosionLeftoverPartsMass);
             }
 
             // chassis need to be handled after all other objects are detached, because chassis can sometimes
@@ -127,7 +128,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
             else
             {
-                DetachFrameDuringExplosion(chassisFrame, explosionCenter, explosionForce, explosionRadius);
+                DetachFrameDuringExplosion(
+                    chassisFrame, explosionCenter, explosionForce, explosionRadius, this.HandlingData.Mass * 0.9f);
             }
 
             // create explosion effect
@@ -135,7 +137,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         }
 
-        void DetachFrameDuringExplosion(Frame frame, Vector3 explosionCenter, float explosionForce, float explosionRadius)
+        void DetachFrameDuringExplosion(
+            Frame frame, Vector3 explosionCenter, float explosionForce, float explosionRadius, float mass)
         {
             var meshFilter = frame.GetComponentInChildren<MeshFilter>();
             if (null == meshFilter)
@@ -151,7 +154,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             meshCollider.convex = true;
             meshCollider.sharedMesh = meshFilter.sharedMesh;
             var rigidBody = meshFilter.gameObject.GetOrAddComponent<Rigidbody>();
-            rigidBody.mass = VehicleManager.Instance.explosionLeftoverPartsMass;
+            rigidBody.mass = mass;
             rigidBody.drag = 0.05f;
             rigidBody.maxDepenetrationVelocity = VehicleManager.Instance.explosionLeftoverPartsMaxDepenetrationVelocity;
             rigidBody.AddExplosionForce(explosionForce, explosionCenter, explosionRadius);
