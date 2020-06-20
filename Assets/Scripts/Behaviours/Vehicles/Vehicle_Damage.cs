@@ -92,13 +92,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             Object.Destroy(this.gameObject);
 
-            // detach the following parts:
-            // - doors
-            // - wheels
-            // - bonnet
-            // - boot
-            // - windscreen
-            // - exhaust
+            // detach vehicle parts and apply explosion force on them
 
             string[] startingNames = new string[] { "door_", "wheel_", "bonnet_", "boot_", "windscreen_", "exhaust_" };
             Vector3 explosionCenter = this.transform.position;
