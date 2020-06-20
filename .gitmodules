@@ -1,3 +1,6 @@
 [submodule "Assets/MirrorLite"]
 	path = Assets/MirrorLite
 	url = https://github.com/GTA-ASM/MirrorLite
+[submodule "Assets/UnityStandardAssets"]
+	path = Assets/UnityStandardAssets
+	url = https://github.com/GTA-ASM/UnityStandardAssets
