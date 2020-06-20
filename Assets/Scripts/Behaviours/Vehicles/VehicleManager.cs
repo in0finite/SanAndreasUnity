@@ -28,6 +28,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public float explosionLeftoverPartsMaxDepenetrationVelocity = 15f;
         public float explosionLeftoverPartsMass = 100f;
 
+        public GameObject smokePrefab;
+
+
 
         void Awake()
         {

@@ -96,6 +96,8 @@ MonoBehaviour:
   controlWheelsOnLocalPlayer: 1
   vehicleSyncRate: 20
   explosionForceMultiplier: 700
+  explosionChassisForceMultiplier: 11000
   explosionLeftoverPartsLifetime: 30
   explosionLeftoverPartsMaxDepenetrationVelocity: 15
   explosionLeftoverPartsMass: 100
+  smokePrefab: {fileID: 100000, guid: c5d4e25823f45c946b9dd01264b40a1b, type: 3}

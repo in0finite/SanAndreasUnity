@@ -21,6 +21,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public float TimeWhenBecameUnderFlame { get; private set; } = float.NegativeInfinity;
 
+        GameObject m_smokeGameObject;
+
 
 
         void Awake_Damage()
@@ -59,7 +61,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 // smoke status changed
                 this.IsUnderSmoke = shouldBeUnderSmoke;
                 // update vfx
-
+                this.UpdateSmokeVfx();
             }
 
             bool shouldBeUnderFlame = this.MaxHealth * 0.1f >= this.Health;
@@ -79,6 +81,27 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 this.Explode();
             }
 
+        }
+
+        void UpdateSmokeVfx()
+        {
+            if (this.IsUnderSmoke)
+            {
+                if (null == m_smokeGameObject)
+                {
+                    Transform parent = this.EngineTransform != null ? this.EngineTransform : this.transform;
+                    m_smokeGameObject = Object.Instantiate(
+                        VehicleManager.Instance.smokePrefab, parent.position, parent.rotation, parent);
+                }
+            }
+            else
+            {
+                if (null != m_smokeGameObject)
+                {
+                    Object.Destroy(m_smokeGameObject);
+                    m_smokeGameObject = null;
+                }
+            }
         }
 
         public void Explode()
