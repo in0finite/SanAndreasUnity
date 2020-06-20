@@ -170,6 +170,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         List<Ped> m_lastPreparedPeds = new List<Ped>();
 
+        public string DescriptionForLogging
+        {
+            get
+            {
+                if (this.Definition != null)
+                    return $"(modelId={this.Definition.Id}, name={this.Definition.GameName})";
+                else
+                    return $"(gameObjectName={this.gameObject.name}, instanceId={this.GetInstanceID()})";
+            }
+        }
+
 
 
         private void Awake()
@@ -206,8 +217,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             this.Start_Radio();
 
-            Debug.LogFormat("Created vehicle - id {0}, name {1}, time: {2}", this.Definition.Id, 
-                this.Definition.GameName, F.CurrentDateForLogging);
+            Debug.Log($"Created vehicle {this.DescriptionForLogging}, time: {F.CurrentDateForLogging}");
         }
 
         public void SetColors(params int[] clrIndices)
