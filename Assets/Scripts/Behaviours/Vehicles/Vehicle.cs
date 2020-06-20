@@ -189,6 +189,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             s_vehicles.Remove(this);
 
+            VehiclePhysicsConstants.Changed -= this.UpdateValues;
+
             this.OnDisable_Radio();
 
             if (this.HighDetailMeshesParent != null)
