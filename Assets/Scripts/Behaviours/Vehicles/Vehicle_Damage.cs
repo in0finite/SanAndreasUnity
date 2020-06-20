@@ -83,6 +83,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public void Explode()
         {
+            F.RunExceptionSafe(() => this.ExplodeInternal());
+        }
+
+        private void ExplodeInternal()
+        {
             if (m_alreadyExploded)
                 return;
 
