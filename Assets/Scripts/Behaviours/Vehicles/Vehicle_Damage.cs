@@ -129,7 +129,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             else
             {
                 DetachFrameDuringExplosion(
-                    chassisFrame, explosionCenter, explosionForce, explosionRadius, this.HandlingData.Mass * 0.9f);
+                    chassisFrame,
+                    explosionCenter,
+                    Mathf.Sqrt(this.HandlingData.Mass) * VehicleManager.Instance.explosionChassisForceMultiplier,
+                    explosionRadius,
+                    this.HandlingData.Mass * 0.9f);
             }
 
             // create explosion effect

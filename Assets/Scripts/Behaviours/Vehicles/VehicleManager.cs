@@ -21,11 +21,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public float vehicleSyncRate = 20;
 
-        public float explosionForceMultiplier = 0.15f;
+        public float explosionForceMultiplier = 700f;
+        public float explosionChassisForceMultiplier = 11000f;
 
         public float explosionLeftoverPartsLifetime = 20f;
         public float explosionLeftoverPartsMaxDepenetrationVelocity = 15f;
-        public float explosionLeftoverPartsMass = 10f;
+        public float explosionLeftoverPartsMass = 100f;
 
 
         void Awake()
