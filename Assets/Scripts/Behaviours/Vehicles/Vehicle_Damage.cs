@@ -21,6 +21,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         bool m_alreadyExploded = false;
 
         public float TimeWhenBecameUnderFlame { get; private set; } = float.NegativeInfinity;
+        public float TimeSinceBecameUnderFlame => Time.time - this.TimeWhenBecameUnderFlame;
 
         GameObject m_smokeGameObject;
         GameObject m_flameGameObject;

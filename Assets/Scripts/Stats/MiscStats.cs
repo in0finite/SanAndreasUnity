@@ -107,6 +107,14 @@ namespace SanAndreasUnity.Stats
                         objects.Add(Vector3.Distance(closestSeat.position, ped.transform.position));
                     }
 
+                    // damage
+
+                    texts.Add("damage");
+                    objects.Add("");
+
+                    texts.AddRange(new string[] { "\thealth", "\tmax health", "\tis under flame", "\tis under smoke", "\ttime since became under flame" });
+                    objects.AddRange(new object[] { vehicle.Health, vehicle.MaxHealth, vehicle.IsUnderFlame, vehicle.IsUnderSmoke, vehicle.TimeSinceBecameUnderFlame });
+
                     // radio
 
                     texts.Add("radio");
