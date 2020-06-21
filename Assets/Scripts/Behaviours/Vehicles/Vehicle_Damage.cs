@@ -178,7 +178,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     explosionCenter,
                     Mathf.Sqrt(this.HandlingData.Mass) * VehicleManager.Instance.explosionChassisForceMultiplier,
                     explosionRadius,
-                    this.HandlingData.Mass * 0.9f);
+                    this.HandlingData.Mass * 0.8f);
             }
 
             // create explosion effect

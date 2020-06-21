@@ -23337,7 +23337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explosionForce: 500
   upwardsModifier: 3
-  radius: 10
+  radius: 15
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
