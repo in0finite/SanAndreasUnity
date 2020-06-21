@@ -182,6 +182,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             // create explosion effect
 
+            Object.Instantiate(VehicleManager.Instance.explosionPrefab, this.transform.position, this.transform.rotation);
 
         }
 

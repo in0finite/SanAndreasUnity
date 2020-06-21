@@ -30,6 +30,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public GameObject smokePrefab;
         public GameObject flamePrefab;
+        public GameObject explosionPrefab;
 
 
 

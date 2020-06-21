@@ -102,3 +102,4 @@ MonoBehaviour:
   explosionLeftoverPartsMass: 100
   smokePrefab: {fileID: 100000, guid: c5d4e25823f45c946b9dd01264b40a1b, type: 3}
   flamePrefab: {fileID: 100000, guid: 5b0110178dbbb784cab63b7529b07cc1, type: 3}
+  explosionPrefab: {fileID: 100010, guid: 2894e2899fe860745afbc810459e2cc2, type: 3}
