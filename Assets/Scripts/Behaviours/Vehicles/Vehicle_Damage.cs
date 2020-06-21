@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
+using UnityStandardAssets.Effects;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -182,7 +183,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             // create explosion effect
 
-            Object.Instantiate(VehicleManager.Instance.explosionPrefab, this.transform.position, this.transform.rotation);
+            GameObject explosionGo = Object.Instantiate(VehicleManager.Instance.explosionPrefab, this.transform.position, this.transform.rotation);
+            
+            // modify strength of explosion based on vehicle mass
+            explosionGo.GetComponentOrThrow<ExplosionPhysicsForce>().explosionForce *= this.HandlingData.Mass / 1500f;
 
         }
 
