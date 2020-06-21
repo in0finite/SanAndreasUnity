@@ -182,6 +182,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     this.HandlingData.Mass * 0.8f);
             }
 
+            // inflict damage to nearby objects
+            
+            Damageable.InflictDamageToObjectsInArea(explosionCenter, 6f, this.HandlingData.Mass);
+
             // create explosion effect
 
             GameObject explosionGo = Object.Instantiate(VehicleManager.Instance.explosionPrefab, this.transform.position, this.transform.rotation);

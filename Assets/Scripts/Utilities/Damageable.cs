@@ -44,6 +44,38 @@ namespace SanAndreasUnity.Utilities
 			}
 		}
 
+		public static void InflictDamageToObjectsInArea(Vector3 center, float radius, float damageAmount)
+		{
+			Collider[] colliders = Physics.OverlapSphere(center, radius);
+
+			var damagables = new HashSet<Damageable>();
+
+			foreach (var collider in colliders)
+			{
+				var damagable = collider.GetComponentInParent<Damageable>();
+				if (damagable != null && !damagables.Contains(damagable))
+				{
+					damagables.Add(damagable);
+				}
+			}
+
+			foreach (var damageable in damagables)
+			{
+				//Collider collider = pair.Value;
+
+				//Vector3 closestPointOnCollider = collider.ClosestPoint(center);
+				//float distanceToPointOnCollider = Vector3.Distance(center, closestPointOnCollider);
+				//float distanceToCollider = Vector3.Distance(center, collider.transform.position);
+
+				float distance = Vector3.Distance(center, damageable.transform.position);
+				float distanceFactor = 1.0f - Mathf.Clamp01(distance / radius);
+				float damageAmountBasedOnDistance = damageAmount * distanceFactor;
+
+				F.RunExceptionSafe(() => damageable.Damage(new DamageInfo() { amount = damageAmountBasedOnDistance }));
+			}
+
+		}
+
 	}
 
 }
