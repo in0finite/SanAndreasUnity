@@ -184,7 +184,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             // inflict damage to nearby objects
             
-            Damageable.InflictDamageToObjectsInArea(explosionCenter, 6f, this.HandlingData.Mass);
+            Damageable.InflictDamageToObjectsInArea(
+                explosionCenter, VehicleManager.Instance.explosionDamageRadius, this.HandlingData.Mass * VehicleManager.Instance.explosionDamageMultiplier);
 
             // create explosion effect
 
