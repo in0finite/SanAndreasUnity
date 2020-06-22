@@ -190,9 +190,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             // create explosion effect
 
             GameObject explosionGo = Object.Instantiate(VehicleManager.Instance.explosionPrefab, this.transform.position, this.transform.rotation);
-            
+
             // modify strength of explosion based on vehicle mass
-            explosionGo.GetComponentOrThrow<ExplosionPhysicsForce>().explosionForce *= this.HandlingData.Mass / 1500f;
+            float forceFactor = Mathf.Sqrt(this.HandlingData.Mass) / Mathf.Sqrt(1500f);
+            var physicsForce = explosionGo.GetComponentOrThrow<ExplosionPhysicsForce>();
+            physicsForce.explosionForce *= forceFactor;
+            physicsForce.upwardsModifier *= forceFactor;
 
         }
 
