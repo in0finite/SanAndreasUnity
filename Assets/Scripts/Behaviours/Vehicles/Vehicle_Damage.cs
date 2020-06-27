@@ -224,6 +224,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             Object.Destroy(meshFilter.gameObject, VehicleManager.Instance.explosionLeftoverPartsLifetime * Random.Range(0.8f, 1.2f));
         }
 
+        void OnDrawGizmosSelected()
+        {
+            // draw sphere indicating explosion damage radius
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(this.transform.position, VehicleManager.Instance.explosionDamageRadius);
+        }
+
     }
 
 }
