@@ -95,7 +95,9 @@ namespace SanAndreasUnity.Behaviours
 
 			DamageInfo damageInfo = this.Damageable.LastDamageInfo;
 
-			float amount = this.PlayerModel.GetAmountOfDamageForBone(damageInfo.raycastHitTransform, damageInfo.amount);
+			float amount = damageInfo.raycastHitTransform != null
+				? this.PlayerModel.GetAmountOfDamageForBone(damageInfo.raycastHitTransform, damageInfo.amount)
+				: damageInfo.amount;
 
 			this.Health -= amount;
 
