@@ -46,28 +46,55 @@ namespace SanAndreasUnity.Utilities
 
 		public static void InflictDamageToObjectsInArea(Vector3 center, float radius, float damageAmount)
 		{
-			Collider[] colliders = Physics.OverlapSphere(center, radius);
+			Collider[] overlappingColliders = Physics.OverlapSphere(center, radius);
 
-			var damagables = new HashSet<Damageable>();
+			var damagables = new Dictionary<Damageable, List<Collider>>();
 
-			foreach (var collider in colliders)
+			foreach (var collider in overlappingColliders)
 			{
 				var damagable = collider.GetComponentInParent<Damageable>();
-				if (damagable != null && !damagables.Contains(damagable))
+				if (damagable != null)
 				{
-					damagables.Add(damagable);
+					if (damagables.ContainsKey(damagable))
+					{
+						damagables[damagable].Add(collider);
+					}
+					else
+					{
+						damagables.Add(damagable, new List<Collider>() { collider });
+					}
 				}
 			}
 
-			foreach (var damageable in damagables)
+			foreach (var pair in damagables)
 			{
-				//Collider collider = pair.Value;
+				Damageable damageable = pair.Key;
+				List<Collider> colliders = pair.Value;
 
-				//Vector3 closestPointOnCollider = collider.ClosestPoint(center);
-				//float distanceToPointOnCollider = Vector3.Distance(center, closestPointOnCollider);
-				//float distanceToCollider = Vector3.Distance(center, collider.transform.position);
+				// find closest point from all colliders
 
-				float distance = Vector3.Distance(center, damageable.transform.position);
+				float closestPointDistance = float.MaxValue;
+				Collider closestPointCollider = null;
+
+				foreach (var collider in pair.Value)
+				{
+					Vector3 closestPointOnCollider = collider.ClosestPoint(center);
+					float distanceToPointOnCollider = Vector3.Distance(center, closestPointOnCollider);
+					float distanceToColliderTransform = Vector3.Distance(center, collider.transform.position);
+
+					float minDistance = Mathf.Min(distanceToPointOnCollider, distanceToColliderTransform);
+
+					if (minDistance < closestPointDistance)
+					{
+						closestPointDistance = minDistance;
+						closestPointCollider = collider;
+					}
+
+				}
+
+				// apply damage based on closest distance
+
+				float distance = closestPointDistance;
 				float distanceFactor = 1.0f - Mathf.Clamp01(distance / radius);
 				float damageAmountBasedOnDistance = damageAmount * distanceFactor;
 
