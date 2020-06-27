@@ -93,6 +93,9 @@ namespace SanAndreasUnity.Behaviours
 			if (!NetStatus.IsServer)
 				return;
 
+			if (this.Health <= 0)
+				return;
+
 			DamageInfo damageInfo = this.Damageable.LastDamageInfo;
 
 			float amount = damageInfo.raycastHitTransform != null
