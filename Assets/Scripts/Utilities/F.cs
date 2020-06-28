@@ -66,6 +66,17 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
+        public static Vector3 ClosestPointOrBoundsCenter(this Collider collider, Vector3 position)
+        {
+            if (collider is MeshCollider && !((MeshCollider)collider).convex)
+            {
+                // ClosestPoint() function is not supported on non-convex mesh colliders
+                return collider.bounds.center;
+            }
+
+            return collider.ClosestPoint(position);
+        }
+
         public static bool BetweenInclusive(this float v, float min, float max)
         {
             return v >= min && v <= max;

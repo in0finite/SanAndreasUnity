@@ -79,7 +79,7 @@ namespace SanAndreasUnity.Utilities
 
 				foreach (var collider in pair.Value)
 				{
-					Vector3 closestPointOnCollider = collider.ClosestPoint(center);
+					Vector3 closestPointOnCollider = collider.ClosestPointOrBoundsCenter(center);
 					float distanceToPointOnCollider = Vector3.Distance(center, closestPointOnCollider);
 					float distanceToColliderTransform = Vector3.Distance(center, collider.transform.position);
 

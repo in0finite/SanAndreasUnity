@@ -50,7 +50,7 @@ namespace SanAndreasUnity.Utilities
 
                 foreach (var collider in colliders)
                 {
-                    Vector3 closestPointOnCollider = collider.ClosestPoint(this.transform.position);
+                    Vector3 closestPointOnCollider = collider.ClosestPointOrBoundsCenter(this.transform.position);
 
                     Vector3 diff = closestPointOnCollider - this.transform.position;
                     float distance = diff.magnitude;
