@@ -23332,12 +23332,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 100010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ac1691131a8c844dafe8b6ace6a172a, type: 3}
+  m_Script: {fileID: 11500000, guid: 788838a8a852c8843ac90fb32e785378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   explosionForce: 6
   upwardsModifier: 2.5
   radius: 10
+  explosionMultiplier: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

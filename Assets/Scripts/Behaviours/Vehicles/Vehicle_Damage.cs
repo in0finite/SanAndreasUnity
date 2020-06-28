@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
-using UnityStandardAssets.Effects;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -196,7 +195,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             // modify strength of explosion based on vehicle mass
             float forceFactor = Mathf.Sqrt(this.HandlingData.Mass) / Mathf.Sqrt(1500f);
-            var physicsForce = explosionGo.GetComponentOrThrow<ExplosionPhysicsForce>();
+            var physicsForce = explosionGo.GetComponentOrThrow<ExplosionForce>();
             physicsForce.explosionForce *= forceFactor;
             physicsForce.upwardsModifier *= forceFactor;
 
