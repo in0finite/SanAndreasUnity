@@ -450,7 +450,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             InitializePhysics();
 
-            this.Health = this.MaxHealth = this.HandlingData.Mass;
+            this.Health = this.MaxHealth = Mathf.Pow(this.HandlingData.Mass, VehicleManager.Instance.massToHealthExponent);
 
             foreach (var pair in _frames.Where(x => x.Name.StartsWith("door_")))
             {

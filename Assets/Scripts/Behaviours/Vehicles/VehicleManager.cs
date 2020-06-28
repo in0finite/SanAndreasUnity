@@ -21,6 +21,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public float vehicleSyncRate = 20;
 
+        [Range(0.1f, 3f)] public float massToHealthExponent = 1f;
+
         public float explosionForceMultiplier = 700f;
         public float explosionChassisForceMultiplier = 11000f;
         public float explosionDamageRadius = 7f;
