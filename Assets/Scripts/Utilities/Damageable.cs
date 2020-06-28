@@ -81,13 +81,10 @@ namespace SanAndreasUnity.Utilities
 				{
 					Vector3 closestPointOnCollider = collider.ClosestPointOrBoundsCenter(center);
 					float distanceToPointOnCollider = Vector3.Distance(center, closestPointOnCollider);
-					float distanceToColliderTransform = Vector3.Distance(center, collider.transform.position);
 
-					float minDistance = Mathf.Min(distanceToPointOnCollider, distanceToColliderTransform);
-
-					if (minDistance < closestPointDistance)
+					if (distanceToPointOnCollider < closestPointDistance)
 					{
-						closestPointDistance = minDistance;
+						closestPointDistance = distanceToPointOnCollider;
 						closestPointCollider = collider;
 					}
 
