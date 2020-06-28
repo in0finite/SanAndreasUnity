@@ -75,7 +75,6 @@ namespace SanAndreasUnity.Utilities
 				// find closest point from all colliders
 
 				float closestPointDistance = float.MaxValue;
-				Collider closestPointCollider = null;
 
 				foreach (var collider in pair.Value)
 				{
@@ -85,7 +84,6 @@ namespace SanAndreasUnity.Utilities
 					if (distanceToPointOnCollider < closestPointDistance)
 					{
 						closestPointDistance = distanceToPointOnCollider;
-						closestPointCollider = collider;
 					}
 
 				}
