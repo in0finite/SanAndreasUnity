@@ -24,6 +24,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public float explosionForceMultiplier = 700f;
         public float explosionChassisForceMultiplier = 11000f;
         public float explosionDamageRadius = 7f;
+        public AnimationCurve explosionDamageOverDistanceCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
         [Range(0.1f, 3f)] public float explosionMassToDamageExponent = 1f;
 
         public float explosionLeftoverPartsLifetime = 20f;

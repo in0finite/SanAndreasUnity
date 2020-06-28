@@ -97,6 +97,32 @@ MonoBehaviour:
   vehicleSyncRate: 20
   explosionForceMultiplier: 700
   explosionChassisForceMultiplier: 11000
+  explosionDamageRadius: 7
+  explosionDamageOverDistanceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -1.8359536
+      outSlope: -1.8359536
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.049225323
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.15980668
+      outSlope: -0.15980668
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.08929417
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  explosionMassToDamageExponent: 1
   explosionLeftoverPartsLifetime: 30
   explosionLeftoverPartsMaxDepenetrationVelocity: 15
   explosionLeftoverPartsMass: 100
