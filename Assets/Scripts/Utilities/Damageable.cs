@@ -8,9 +8,17 @@ namespace SanAndreasUnity.Utilities
 	public class DamageInfo
 	{
 		public float amount = 0f;
+		public string damageType = null;
 		public Transform raycastHitTransform = null;
 		public object attacker = null;
 		public object data = null;
+	}
+
+	public static class DamageType
+	{
+		public static readonly string
+			Bullet = "Bullet",
+			Explosion = "Explosion";
 	}
 
 	public class Damageable : MonoBehaviour
