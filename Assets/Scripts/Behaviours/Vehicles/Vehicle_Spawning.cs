@@ -273,6 +273,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private FrameContainer _frames;
 
         public Transform EngineTransform { get; private set; }
+        public Transform PetrolcapTransform { get; private set; }
 
         private static GameObject s_highDetailMeshesContainer;
 
@@ -387,6 +388,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             var engineFrame = _frames.FirstOrDefault(x => x.Name == "engine");
             if (engineFrame != null)
                 this.EngineTransform = engineFrame.transform;
+
+            var petrolcapFrame = _frames.FirstOrDefault(x => x.Name == "petrolcap");
+            if (petrolcapFrame != null)
+                this.PetrolcapTransform = petrolcapFrame.transform;
 
             foreach (var frame in _frames)
             {
