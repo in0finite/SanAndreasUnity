@@ -308,6 +308,24 @@ namespace SanAndreasUnity.Behaviours.Peds.States
             weapon.PlayFireSound();
 		}
 
-    }
+		public virtual void OnDamaged(DamageInfo damageInfo)
+		{
+			float amount = damageInfo.raycastHitTransform != null
+				? m_model.GetAmountOfDamageForBone(damageInfo.raycastHitTransform, damageInfo.amount)
+				: damageInfo.amount;
+
+			m_ped.Health -= amount;
+
+			if (m_ped.Health <= 0)
+			{
+				Object.Destroy(m_ped.gameObject);
+			}
+
+			// notify clients
+			m_ped.SendDamagedEventToClients(damageInfo, amount);
+
+		}
+
+	}
 
 }

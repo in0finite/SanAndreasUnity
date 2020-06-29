@@ -96,21 +96,7 @@ namespace SanAndreasUnity.Behaviours
 			if (this.Health <= 0)
 				return;
 
-			DamageInfo damageInfo = this.Damageable.LastDamageInfo;
-
-			float amount = damageInfo.raycastHitTransform != null
-				? this.PlayerModel.GetAmountOfDamageForBone(damageInfo.raycastHitTransform, damageInfo.amount)
-				: damageInfo.amount;
-
-			this.Health -= amount;
-
-			if (this.Health <= 0)
-			{
-				Object.Destroy(this.gameObject);
-			}
-
-			// notify clients
-			this.SendDamagedEventToClients(damageInfo, amount);
+			this.CurrentState.OnDamaged(this.Damageable.LastDamageInfo);
 
 		}
 
