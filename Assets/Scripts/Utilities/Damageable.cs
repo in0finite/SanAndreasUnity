@@ -53,7 +53,7 @@ namespace SanAndreasUnity.Utilities
 		}
 
 		public static void InflictDamageToObjectsInArea(
-			Vector3 center, float radius, float damageAmount, AnimationCurve damageOverDistanceCurve)
+			Vector3 center, float radius, float damageAmount, AnimationCurve damageOverDistanceCurve, string damageType)
 		{
 			Collider[] overlappingColliders = Physics.OverlapSphere(center, radius);
 
@@ -102,7 +102,7 @@ namespace SanAndreasUnity.Utilities
 				float distanceFactor = damageOverDistanceCurve.Evaluate(Mathf.Clamp01(distance / radius));
 				float damageAmountBasedOnDistance = damageAmount * distanceFactor;
 
-				F.RunExceptionSafe(() => damageable.Damage(new DamageInfo() { amount = damageAmountBasedOnDistance }));
+				F.RunExceptionSafe(() => damageable.Damage(new DamageInfo() { amount = damageAmountBasedOnDistance, damageType = damageType }));
 			}
 
 		}

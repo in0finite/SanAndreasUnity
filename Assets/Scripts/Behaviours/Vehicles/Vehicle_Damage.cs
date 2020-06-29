@@ -187,7 +187,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 explosionCenter,
                 VehicleManager.Instance.explosionDamageRadius,
                 Mathf.Pow(this.HandlingData.Mass, VehicleManager.Instance.explosionMassToDamageExponent),
-                VehicleManager.Instance.explosionDamageOverDistanceCurve);
+                VehicleManager.Instance.explosionDamageOverDistanceCurve,
+                DamageType.Explosion);
 
             // create explosion effect
 
