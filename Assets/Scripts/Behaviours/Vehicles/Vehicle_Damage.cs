@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using SanAndreasUnity.Behaviours.Audio;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
 
@@ -24,6 +25,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         GameObject m_smokeGameObject;
         GameObject m_flameGameObject;
+
+        public static AudioClip ExplosionSound { get; private set; }
 
 
 
@@ -200,6 +203,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             physicsForce.explosionForce *= forceFactor;
             physicsForce.upwardsModifier *= forceFactor;
 
+            // assign explosion sound
+            F.RunExceptionSafe(() => AssignExplosionSound(explosionGo));
+
         }
 
         void DetachFrameDuringExplosion(
@@ -225,6 +231,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             //rigidBody.AddExplosionForce(explosionForce, explosionCenter, explosionRadius);
 
             Object.Destroy(meshFilter.gameObject, VehicleManager.Instance.explosionLeftoverPartsLifetime * Random.Range(0.8f, 1.2f));
+        }
+
+        void AssignExplosionSound(GameObject explosionGo)
+        {
+            if (null == ExplosionSound)
+                ExplosionSound = AudioManager.CreateAudioClipFromSfx("GENRL", 45, 1);
+
+            var audioSource = explosionGo.GetComponentOrThrow<AudioSource>();
+            audioSource.clip = ExplosionSound;
+            audioSource.Play();
         }
 
         void OnDrawGizmosSelected()
