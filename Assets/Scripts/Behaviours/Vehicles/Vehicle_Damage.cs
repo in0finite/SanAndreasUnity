@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using SanAndreasUnity.Behaviours.Audio;
+using SanAndreasUnity.Net;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
 
@@ -43,6 +44,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void OnDamaged()
         {
+            if (!NetStatus.IsServer)
+                return;
+
             var damageInfo = this.Damageable.LastDamageInfo;
 
             if (this.Health <= 0)
@@ -83,7 +87,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (this.IsUnderFlame && Time.time - this.TimeWhenBecameUnderFlame >= 5)
             {
                 // enough time passed since vehicle flamed - explode it
-                this.Explode();
+                if (NetStatus.IsServer)
+                {
+                    this.Explode();
+                }
             }
 
         }
