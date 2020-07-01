@@ -86,7 +86,7 @@ namespace SanAndreasUnity.Utilities
 
 				float closestPointDistance = float.MaxValue;
 
-				foreach (var collider in pair.Value)
+				foreach (var collider in colliders)
 				{
 					Vector3 closestPointOnCollider = collider.ClosestPointOrBoundsCenter(center);
 					float distanceToPointOnCollider = Vector3.Distance(center, closestPointOnCollider);

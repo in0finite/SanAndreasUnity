@@ -146,13 +146,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             Object.Destroy(this.gameObject);
 
-            // detach vehicle parts and apply explosion force on them
+            // detach vehicle parts
 
             string[] startingNames = new string[] { "door_", "wheel_", "bonnet_", "boot_", "windscreen_", "exhaust_" };
-            Vector3 explosionCenter = this.transform.position;
-            float explosionForce = Mathf.Sqrt(this.HandlingData.Mass) * VehicleManager.Instance.explosionForceMultiplier;
-            float explosionRadius = 10f;
-
+            
             foreach (var frame in _frames)
             {
                 if (!frame.gameObject.activeInHierarchy)
@@ -161,8 +158,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (!startingNames.Any(n => frame.gameObject.name.StartsWith(n)))
                     continue;
 
-                DetachFrameDuringExplosion(
-                    frame, explosionCenter, explosionForce, explosionRadius, VehicleManager.Instance.explosionLeftoverPartsMass);
+                DetachFrameDuringExplosion(frame, VehicleManager.Instance.explosionLeftoverPartsMass);
             }
 
             // chassis need to be handled after all other objects are detached, because chassis can sometimes
@@ -176,24 +172,19 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
             else
             {
-                DetachFrameDuringExplosion(
-                    chassisFrame,
-                    explosionCenter,
-                    Mathf.Sqrt(this.HandlingData.Mass) * VehicleManager.Instance.explosionChassisForceMultiplier,
-                    explosionRadius,
-                    this.HandlingData.Mass * 0.8f);
+                DetachFrameDuringExplosion(chassisFrame, this.HandlingData.Mass * 0.8f);
             }
 
             // inflict damage to nearby objects
             
             Damageable.InflictDamageToObjectsInArea(
-                explosionCenter,
+                this.transform.position,
                 VehicleManager.Instance.explosionDamageRadius,
                 Mathf.Pow(this.HandlingData.Mass, VehicleManager.Instance.explosionMassToDamageExponent),
                 VehicleManager.Instance.explosionDamageOverDistanceCurve,
                 DamageType.Explosion);
 
-            // create explosion effect
+            // create explosion - this includes effects, physics force, sound
 
             GameObject explosionGo = Object.Instantiate(VehicleManager.Instance.explosionPrefab, this.transform.position, this.transform.rotation);
 
@@ -208,8 +199,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         }
 
-        void DetachFrameDuringExplosion(
-            Frame frame, Vector3 explosionCenter, float explosionForce, float explosionRadius, float mass)
+        void DetachFrameDuringExplosion(Frame frame, float mass)
         {
             var meshFilter = frame.GetComponentInChildren<MeshFilter>();
             if (null == meshFilter)
@@ -228,8 +218,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             rigidBody.mass = mass;
             rigidBody.drag = 0.05f;
             rigidBody.maxDepenetrationVelocity = VehicleManager.Instance.explosionLeftoverPartsMaxDepenetrationVelocity;
-            //rigidBody.AddExplosionForce(explosionForce, explosionCenter, explosionRadius);
-
+            
             Object.Destroy(meshFilter.gameObject, VehicleManager.Instance.explosionLeftoverPartsLifetime * Random.Range(0.8f, 1.2f));
         }
 
