@@ -584,6 +584,24 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             }
 
+            // add petrolcap
+
+            /*
+            if (this.PetrolcapTransform != null)
+            {
+                GameObject petrolcapGo = new GameObject(this.PetrolcapTransform.name, typeof(BoxCollider));
+                petrolcapGo.layer = Vehicle.MeshLayer;
+                petrolcapGo.transform.parent = parent.transform;
+                petrolcapGo.transform.SetPositionAndRotation(this.PetrolcapTransform.position, this.PetrolcapTransform.rotation);
+
+                var boxCollider = petrolcapGo.GetComponent<BoxCollider>();
+                boxCollider.center = VehicleManager.Instance.petrolcapBoxColliderCenter;
+                boxCollider.size = VehicleManager.Instance.petrolcapBoxColliderSize;
+
+                this.PetrolcapUnderHighDetailMeshTransform = petrolcapGo.transform;
+            }
+            */
+
         }
     }
 }
