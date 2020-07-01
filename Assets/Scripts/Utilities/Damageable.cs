@@ -10,6 +10,8 @@ namespace SanAndreasUnity.Utilities
 		public float amount = 0f;
 		public string damageType = null;
 		public Transform raycastHitTransform = null;
+		public Vector3 hitPoint = Vector3.zero;
+		public Vector3 hitNormal = Vector3.up;
 		public object attacker = null;
 		public object data = null;
 	}

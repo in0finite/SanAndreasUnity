@@ -640,6 +640,8 @@ namespace SanAndreasUnity.Behaviours
 						{
 							amount = this.Damage,
 							raycastHitTransform = hit.collider.transform,
+							hitPoint = hit.point,
+							hitNormal = hit.normal,
 							attacker = m_ped,
 						});
 					}
