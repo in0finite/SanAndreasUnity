@@ -271,6 +271,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         }
 
         private FrameContainer _frames;
+        public FrameContainer Frames => _frames;
 
         public Transform EngineTransform { get; private set; }
         public Transform PetrolcapTransform { get; private set; }
