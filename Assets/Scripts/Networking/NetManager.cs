@@ -203,6 +203,8 @@ namespace SanAndreasUnity.Net
 
 		public static void Spawn(GameObject go)
 		{
+			NetStatus.ThrowIfNotOnServer();
+
 			NetworkServer.Spawn(go);
 		}
 
