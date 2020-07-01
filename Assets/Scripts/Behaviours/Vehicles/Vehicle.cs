@@ -166,6 +166,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         bool m_isServer => Net.NetStatus.IsServer;
         public bool IsControlledByLocalPlayer => Ped.Instance != null && Ped.Instance.CurrentVehicle == this && Ped.Instance.CurrentVehicleSeat.IsDriver;
 
+        public Mirror.NetworkIdentity NetIdentity { get; private set; }
+
         public Mirror.NetworkTransform NetTransform { get; private set; }
 
         List<Ped> m_lastPreparedPeds = new List<Ped>();
@@ -185,6 +187,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Awake()
         {
+            this.NetIdentity = this.GetComponentOrThrow<Mirror.NetworkIdentity>();
             this.NetTransform = this.GetComponent<Mirror.NetworkTransform>();
             _props = new MaterialPropertyBlock();
             this.Awake_Damage();

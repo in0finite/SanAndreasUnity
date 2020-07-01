@@ -27,6 +27,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public AnimationCurve explosionDamageOverDistanceCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
         [Range(0.1f, 3f)] public float explosionMassToDamageExponent = 1f;
 
+        public GameObject explosionLeftoverPartPrefab;
         public float explosionLeftoverPartsLifetime = 20f;
         public float explosionLeftoverPartsMaxDepenetrationVelocity = 15f;
         public float explosionLeftoverPartsMass = 100f;

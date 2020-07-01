@@ -95,8 +95,7 @@ MonoBehaviour:
   controlInputOnLocalPlayer: 1
   controlWheelsOnLocalPlayer: 1
   vehicleSyncRate: 20
-  explosionForceMultiplier: 700
-  explosionChassisForceMultiplier: 11000
+  massToHealthExponent: 1
   explosionDamageRadius: 7
   explosionDamageOverDistanceCurve:
     serializedVersion: 2
@@ -123,6 +122,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   explosionMassToDamageExponent: 1
+  explosionLeftoverPartPrefab: {fileID: 5998353205578393877, guid: 919ee6fe912ab4940abdedd633508610,
+    type: 3}
   explosionLeftoverPartsLifetime: 30
   explosionLeftoverPartsMaxDepenetrationVelocity: 15
   explosionLeftoverPartsMass: 100

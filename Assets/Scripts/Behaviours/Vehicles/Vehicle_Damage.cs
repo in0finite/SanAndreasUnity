@@ -165,7 +165,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (!startingNames.Any(n => frame.gameObject.name.StartsWith(n)))
                     continue;
 
-                DetachFrameDuringExplosion(frame, VehicleManager.Instance.explosionLeftoverPartsMass);
+                DetachFrameDuringExplosion(frame, VehicleManager.Instance.explosionLeftoverPartsMass, null);
             }
 
             // chassis need to be handled after all other objects are detached, because chassis can sometimes
@@ -179,7 +179,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
             else
             {
-                DetachFrameDuringExplosion(chassisFrame, this.HandlingData.Mass * 0.8f);
+                DetachFrameDuringExplosion(chassisFrame, this.HandlingData.Mass * 0.8f, null);
             }
 
             // inflict damage to nearby objects
@@ -206,7 +206,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         }
 
-        void DetachFrameDuringExplosion(Frame frame, float mass)
+        public void DetachFrameDuringExplosion(string frameName, float mass, GameObject parentGo)
+        {
+            Frame frame = this.Frames.FirstOrDefault(f => f.gameObject.name == frameName);
+            if (null == frame)
+                Debug.LogError($"Failed to find frame by name: {frameName}");
+            else
+                DetachFrameDuringExplosion(frame, mass, parentGo);
+        }
+
+        void DetachFrameDuringExplosion(Frame frame, float mass, GameObject parentGo)
         {
             var meshFilter = frame.GetComponentInChildren<MeshFilter>();
             if (null == meshFilter)
@@ -215,8 +224,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (!meshFilter.gameObject.activeInHierarchy)
                 return;
 
-            meshFilter.transform.SetParent(null, true);
-            meshFilter.gameObject.name = "vehicle_part_" + meshFilter.gameObject.name;
+            if (null == parentGo)
+                parentGo = Object.Instantiate(VehicleManager.Instance.explosionLeftoverPartPrefab, meshFilter.transform.position, meshFilter.transform.rotation);
+            
+            parentGo.name = "vehicle_part_" + meshFilter.gameObject.name;
+
+            meshFilter.transform.SetParent(parentGo.transform, true);
             meshFilter.gameObject.layer = UnityEngine.LayerMask.NameToLayer("Default");
             var meshCollider = meshFilter.gameObject.GetOrAddComponent<MeshCollider>();
             meshCollider.convex = true;
@@ -226,7 +239,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             rigidBody.drag = 0.05f;
             rigidBody.maxDepenetrationVelocity = VehicleManager.Instance.explosionLeftoverPartsMaxDepenetrationVelocity;
             
-            Object.Destroy(meshFilter.gameObject, VehicleManager.Instance.explosionLeftoverPartsLifetime * Random.Range(0.8f, 1.2f));
+            if (NetStatus.IsServer)
+            {
+                Object.Destroy(parentGo, VehicleManager.Instance.explosionLeftoverPartsLifetime * Random.Range(0.8f, 1.2f));
+
+                var netScript = parentGo.GetComponentOrThrow<NetworkedVehicleDetachedPart>();
+                netScript.InitializeOnServer(this.NetIdentity.netId, frame.gameObject.name, mass, rigidBody);
+
+                NetManager.Spawn(parentGo);
+            }
         }
 
         void AssignExplosionSound(GameObject explosionGo)
