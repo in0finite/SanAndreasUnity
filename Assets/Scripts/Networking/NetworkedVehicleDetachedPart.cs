@@ -27,6 +27,7 @@ namespace SanAndreasUnity.Net
             m_net_mass = mass;
 
             this.NetworkRigidBody.Rigidbody = rigidbody;
+            this.NetworkRigidBody.UpdateServer();
         }
 
         public override void OnStartClient()
@@ -50,6 +51,7 @@ namespace SanAndreasUnity.Net
                 Vehicle vehicle = vehicleGo.GetComponentOrThrow<Vehicle>();
                 vehicle.DetachFrameDuringExplosion(m_net_frameName, m_net_mass, this.gameObject);
                 this.NetworkRigidBody.Rigidbody = this.GetComponentInChildren<Rigidbody>();
+                this.NetworkRigidBody.UpdateClient();
             }
         }
     }
