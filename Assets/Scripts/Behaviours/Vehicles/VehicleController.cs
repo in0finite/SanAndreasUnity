@@ -21,6 +21,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [SyncVar(hook=nameof(OnNetRotationChanged))] Quaternion m_net_rotation;
         [SyncVar] Vector3 m_net_linearVelocity;
         [SyncVar] Vector3 m_net_angularVelocity;
+        [SyncVar] float m_net_health;
 
         struct WheelSyncData
         {
@@ -145,6 +146,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_rotation = m_vehicle.transform.rotation;
                 m_net_linearVelocity = m_vehicle.RigidBody.velocity;
                 m_net_angularVelocity = m_vehicle.RigidBody.angularVelocity;
+                m_net_health = m_vehicle.Health;
 
                 // wheels
                 m_net_wheelsData.Flush();   // remove current list of changes - this ensures that only the current wheel state is sent, and prevents memory leak bug in Mirror
@@ -188,6 +190,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     m_vehicle.RigidBody.velocity = m_net_linearVelocity;
                 if (VehicleManager.Instance.syncAngularVelocity)
                     m_vehicle.RigidBody.angularVelocity = m_net_angularVelocity;
+
+                m_vehicle.Health = m_net_health;
             }
         }
 
