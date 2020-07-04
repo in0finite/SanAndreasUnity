@@ -231,6 +231,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void DetachFrameDuringExplosion(Frame frame, float mass, GameObject parentGo)
         {
+            if (! this.transform.IsParentOf(frame.transform))   // already detached ?
+                return;
+
             var meshFilter = frame.GetComponentInChildren<MeshFilter>();
             if (null == meshFilter)
                 return;
