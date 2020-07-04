@@ -235,6 +235,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             meshFilter.transform.SetParent(parentGo.transform, true);
             meshFilter.gameObject.layer = UnityEngine.LayerMask.NameToLayer("Default");
             var meshCollider = meshFilter.gameObject.GetOrAddComponent<MeshCollider>();
+            meshCollider.cookingOptions = MeshColliderCookingOptions.None;
             meshCollider.convex = true;
             meshCollider.sharedMesh = meshFilter.sharedMesh;
             var rigidBody = meshFilter.gameObject.GetOrAddComponent<Rigidbody>();
