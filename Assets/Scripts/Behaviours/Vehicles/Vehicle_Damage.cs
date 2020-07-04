@@ -213,9 +213,20 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             Frame frame = this.Frames.FirstOrDefault(f => f.gameObject.name == frameName);
             if (null == frame)
+            {
                 Debug.LogError($"Failed to find frame by name: {frameName}");
+            }
             else
-                DetachFrameDuringExplosion(frame, mass, parentGo);
+            {
+                if (this.transform.IsParentOf(frame.transform))
+                {
+                    DetachFrameDuringExplosion(frame, mass, parentGo);
+                }
+                else
+                {
+                    Debug.LogError($"Can not detach frame ({frameName}) from vehicle {this.DescriptionForLogging} because it seems that the frame is already detached");
+                }
+            }
         }
 
         void DetachFrameDuringExplosion(Frame frame, float mass, GameObject parentGo)
