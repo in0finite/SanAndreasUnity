@@ -195,6 +195,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             GameObject explosionGo = Object.Instantiate(VehicleManager.Instance.explosionPrefab, this.transform.position, this.transform.rotation);
 
+            if (NetStatus.IsServer)
+                NetManager.Spawn(explosionGo);
+
             // modify strength of explosion based on vehicle mass
             float forceFactor = Mathf.Sqrt(this.HandlingData.Mass) / Mathf.Sqrt(1500f);
             var physicsForce = explosionGo.GetComponentOrThrow<ExplosionForce>();
@@ -250,7 +253,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
-        void AssignExplosionSound(GameObject explosionGo)
+        public static void AssignExplosionSound(GameObject explosionGo)
         {
             if (null == ExplosionSound)
                 ExplosionSound = AudioManager.CreateAudioClipFromSfx("GENRL", 45, 1);
