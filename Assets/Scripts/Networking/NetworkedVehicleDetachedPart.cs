@@ -15,6 +15,7 @@ namespace SanAndreasUnity.Net
         [SyncVar] float m_net_mass;
 
 
+
         void Awake()
         {
             this.NetworkRigidBody = this.GetComponentOrThrow<NetworkRigidBody>();
@@ -22,6 +23,8 @@ namespace SanAndreasUnity.Net
 
         public void InitializeOnServer(uint vehicleId, string frameName, float mass, Rigidbody rigidbody)
         {
+            NetStatus.ThrowIfNotOnServer();
+
             m_net_vehicleId = vehicleId;
             m_net_frameName = frameName;
             m_net_mass = mass;
