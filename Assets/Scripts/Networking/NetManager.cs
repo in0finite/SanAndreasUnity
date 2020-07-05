@@ -32,6 +32,8 @@ namespace SanAndreasUnity.Net
 		NetworkClientStatus m_lastClientStatus = NetworkClientStatus.Disconnected;
 		public event System.Action onClientStatusChanged = delegate {};
 
+		public static int NumSpawnedNetworkObjects => NetworkIdentity.spawned.Count;
+
 
 
 		NetManager ()

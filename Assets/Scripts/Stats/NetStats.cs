@@ -37,6 +37,8 @@ namespace SanAndreasUnity.Stats
                 GUILayout.Label("Time since last message: " + (Time.unscaledTime - NetworkClient.connection.lastMessageTime));
             }
 
+            GUILayout.Label($"Num spawned network objects: {NetManager.NumSpawnedNetworkObjects}");
+
         }
 
     }
