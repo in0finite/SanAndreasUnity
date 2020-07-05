@@ -83,12 +83,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static string SerializeColors(int[] colors)
         {
-            return colors != null ? string.Join(";", colors) : null;
+            return colors != null ? string.Join(";", colors.Select(c => c.ToString(System.Globalization.CultureInfo.InvariantCulture))) : null;
         }
 
         public static int[] DeserializeColors(string colors)
         {
-            return string.IsNullOrEmpty(colors) ? null : colors.Split(';').Select(s => int.Parse(s)).ToArray();
+            return string.IsNullOrEmpty(colors) ? null : colors.Split(';').Select(s => int.Parse(s, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
         }
 
         private void Update()
