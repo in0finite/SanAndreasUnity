@@ -17,6 +17,7 @@ namespace SanAndreasUnity.Net
 
         [SyncVar] uint m_net_vehicleNetId;
         [SyncVar] int m_net_vehicleModelId;
+        [SyncVar] string m_net_vehicleColors;
         [SyncVar] string m_net_frameName;
         [SyncVar] float m_net_mass;
 
@@ -47,6 +48,7 @@ namespace SanAndreasUnity.Net
                     vehicleInfo.numReferences--;
                     if (vehicleInfo.numReferences <= 0)
                     {
+                        // TODO: check if it is null
                         Object.Destroy(vehicleInfo.frames.gameObject);
                         s_dummyObjectsPerVehicle.Remove(m_net_vehicleNetId);
                     }
@@ -54,12 +56,13 @@ namespace SanAndreasUnity.Net
             }
         }
 
-        public void InitializeOnServer(uint vehicleNetId, int vehicleModelId, string frameName, float mass, Rigidbody rigidbody)
+        public void InitializeOnServer(uint vehicleNetId, int vehicleModelId, int[] vehicleColors, string frameName, float mass, Rigidbody rigidbody)
         {
             NetStatus.ThrowIfNotOnServer();
 
             m_net_vehicleNetId = vehicleNetId;
             m_net_vehicleModelId = vehicleModelId;
+            m_net_vehicleColors = VehicleController.SerializeColors(vehicleColors);
             m_net_frameName = frameName;
             m_net_mass = mass;
 
@@ -86,6 +89,8 @@ namespace SanAndreasUnity.Net
 
                 
                 VehicleDef def = Item.GetDefinitionOrThrow<VehicleDef>(m_net_vehicleModelId);
+
+                int[] colors = VehicleController.DeserializeColors(m_net_vehicleColors);
 
                 var geometryParts = Vehicle.LoadGeometryParts(def);
 

@@ -49,8 +49,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             m_vehicle = this.GetComponent<Vehicle>();
             m_net_id = m_vehicle.Definition.Id;
-            if (m_vehicle.Colors != null)
-                m_net_carColors = string.Join(";", m_vehicle.Colors);
+            m_net_carColors = SerializeColors(m_vehicle.Colors);
         }
 
         public override void OnStartClient()
@@ -61,7 +60,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 F.RunExceptionSafe( () => {
                     // load vehicle on clients
-                    int[] colors = string.IsNullOrEmpty(m_net_carColors) ? null : m_net_carColors.Split(';').Select(s => int.Parse(s)).ToArray();
+                    int[] colors = DeserializeColors(m_net_carColors);
                     m_vehicle = Vehicle.Create(this.gameObject, m_net_id, colors, this.transform.position, this.transform.rotation);
                     
                     // update rigid body status
@@ -80,6 +79,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             base.OnStopAuthority();
             this.EnableOrDisableRigidBody();
+        }
+
+        public static string SerializeColors(int[] colors)
+        {
+            return colors != null ? string.Join(";", colors) : null;
+        }
+
+        public static int[] DeserializeColors(string colors)
+        {
+            return string.IsNullOrEmpty(colors) ? null : colors.Split(';').Select(s => int.Parse(s)).ToArray();
         }
 
         private void Update()
