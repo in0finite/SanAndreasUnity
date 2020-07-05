@@ -126,7 +126,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private static int[] _sCarColorIds;
 
-        protected static int[] CarColorIds
+        public static int[] CarColorIds
         {
             get
             {

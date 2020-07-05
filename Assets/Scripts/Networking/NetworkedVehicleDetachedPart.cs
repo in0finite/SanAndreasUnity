@@ -5,6 +5,7 @@ using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
+using SanAndreasUnity.Importing.Vehicles;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
 
@@ -107,6 +108,7 @@ namespace SanAndreasUnity.Net
                     Transform transformDummy = new GameObject($"{def.GameName}_detached_part_{m_net_frameName}").transform;
                     vehicleInfo = new VehicleInfo();
                     vehicleInfo.frames = geometryParts.AttachFrames(transformDummy, Importing.Conversion.MaterialFlags.Vehicle);
+                    SetColors(vehicleInfo.frames, colors);
                     vehicleInfo.numReferences = 1;
                     s_dummyObjectsPerVehicle.Add(m_net_vehicleNetId, vehicleInfo);
                 }
@@ -118,7 +120,7 @@ namespace SanAndreasUnity.Net
                     throw new System.Exception($"Failed to find frame by name {m_net_frameName}");
 
                 // detach frame from dummy object
-                Vehicle.DetachFrameFromTransformDuringExplosion(vehicleInfo.frames.transform, frame, m_net_mass, this.gameObject, m_net_vehicleNetId, m_net_vehicleModelId);
+                Vehicle.DetachFrameFromTransformDuringExplosion(vehicleInfo.frames.transform, frame, m_net_mass, this.gameObject, m_net_vehicleNetId, m_net_vehicleModelId, colors);
 
             }
             else
@@ -130,6 +132,23 @@ namespace SanAndreasUnity.Net
             this.NetworkRigidBody.Rigidbody = this.GetComponentInChildren<Rigidbody>();
             this.NetworkRigidBody.UpdateClient();
 
+        }
+
+        public static void SetColors(FrameContainer frames, int[] colors)
+        {
+            var props = new MaterialPropertyBlock();
+
+            var indices = CarColors.FromIndices(colors);
+
+            int[] vehicleColorIds = Vehicle.CarColorIds;
+
+            for (int i = 0; i < vehicleColorIds.Length; ++i)
+                props.SetColor(vehicleColorIds[i], indices[i]);
+
+            foreach (var mr in frames.Select(f => f.GetComponent<MeshRenderer>()).Where(mr => mr != null))
+            {
+                mr.SetPropertyBlock(props);
+            }
         }
     }
 

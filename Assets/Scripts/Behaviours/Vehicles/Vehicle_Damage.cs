@@ -224,10 +224,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void DetachFrameDuringExplosion(Frame frame, float mass, GameObject parentGo)
         {
-            DetachFrameFromTransformDuringExplosion(this.transform, frame, mass, parentGo, this.NetIdentity.netId, this.Definition.Id);
+            DetachFrameFromTransformDuringExplosion(this.transform, frame, mass, parentGo, this.NetIdentity.netId, this.Definition.Id, this.Colors);
         }
 
-        public static void DetachFrameFromTransformDuringExplosion(Transform tr, Frame frame, float mass, GameObject parentGo, uint vehicleNetId, int vehicleModelId)
+        public static void DetachFrameFromTransformDuringExplosion(Transform tr, Frame frame, float mass, GameObject parentGo, uint vehicleNetId, int vehicleModelId, int[] vehicleColors)
         {
             if (! tr.IsParentOf(frame.transform))   // already detached ?
                 return;
@@ -260,7 +260,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 Object.Destroy(parentGo, VehicleManager.Instance.explosionLeftoverPartsLifetime * Random.Range(0.8f, 1.2f));
 
                 var netScript = parentGo.GetComponentOrThrow<NetworkedVehicleDetachedPart>();
-                netScript.InitializeOnServer(vehicleNetId, vehicleModelId, frame.gameObject.name, mass, rigidBody);
+                netScript.InitializeOnServer(vehicleNetId, vehicleModelId, vehicleColors, frame.gameObject.name, mass, rigidBody);
 
                 NetManager.Spawn(parentGo);
             }
