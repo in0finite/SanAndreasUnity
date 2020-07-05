@@ -218,14 +218,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
             else
             {
-                if (this.transform.IsParentOf(frame.transform))
-                {
-                    DetachFrameDuringExplosion(frame, mass, parentGo);
-                }
-                else
-                {
-                    Debug.LogError($"Can not detach frame ({frameName}) from vehicle {this.DescriptionForLogging} because it seems that the frame is already detached");
-                }
+                DetachFrameDuringExplosion(frame, mass, parentGo);
             }
         }
 
