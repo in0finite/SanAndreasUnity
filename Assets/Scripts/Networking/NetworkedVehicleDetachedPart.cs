@@ -1,5 +1,10 @@
-﻿using Mirror;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Mirror;
+using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Vehicles;
+using SanAndreasUnity.Importing.Items;
+using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
 
@@ -10,9 +15,20 @@ namespace SanAndreasUnity.Net
     {
         public NetworkRigidBody NetworkRigidBody { get; private set; }
 
-        [SyncVar] uint m_net_vehicleId;
+        [SyncVar] uint m_net_vehicleNetId;
+        [SyncVar] int m_net_vehicleModelId;
         [SyncVar] string m_net_frameName;
         [SyncVar] float m_net_mass;
+
+        class VehicleInfo
+        {
+            public int numReferences;
+            public FrameContainer frames;
+        }
+
+        static readonly Dictionary<uint, VehicleInfo> s_dummyObjectsPerVehicle = new Dictionary<uint, VehicleInfo>();
+
+        bool m_isReferencingFrame = false;
 
 
 
@@ -21,11 +37,29 @@ namespace SanAndreasUnity.Net
             this.NetworkRigidBody = this.GetComponentOrThrow<NetworkRigidBody>();
         }
 
-        public void InitializeOnServer(uint vehicleId, string frameName, float mass, Rigidbody rigidbody)
+        void OnDisable()
+        {
+            if (m_isReferencingFrame)
+            {
+                m_isReferencingFrame = false;
+                if (s_dummyObjectsPerVehicle.TryGetValue(m_net_vehicleNetId, out VehicleInfo vehicleInfo))
+                {
+                    vehicleInfo.numReferences--;
+                    if (vehicleInfo.numReferences <= 0)
+                    {
+                        Object.Destroy(vehicleInfo.frames.gameObject);
+                        s_dummyObjectsPerVehicle.Remove(m_net_vehicleNetId);
+                    }
+                }
+            }
+        }
+
+        public void InitializeOnServer(uint vehicleNetId, int vehicleModelId, string frameName, float mass, Rigidbody rigidbody)
         {
             NetStatus.ThrowIfNotOnServer();
 
-            m_net_vehicleId = vehicleId;
+            m_net_vehicleNetId = vehicleNetId;
+            m_net_vehicleModelId = vehicleModelId;
             m_net_frameName = frameName;
             m_net_mass = mass;
 
@@ -43,19 +77,54 @@ namespace SanAndreasUnity.Net
 
         void OnStartClientInternal()
         {
-            GameObject vehicleGo = NetManager.GetNetworkObjectById(m_net_vehicleId);
+            GameObject vehicleGo = NetManager.GetNetworkObjectById(m_net_vehicleNetId);
             if (null == vehicleGo)
             {
-                // this should not happen because vehicle must have been spawned before detached part
-                Debug.LogError($"Can not find vehicle object with id {m_net_vehicleId} for detached part with id {this.netId}");
+                // this should only happen when vehicle has been destroyed before client connected, but it's detached parts are still alive
+                // load vehicle's model, and attach it's frames to dummy object, and detach a frame from that dummy object
+
+
+                
+                VehicleDef def = Item.GetDefinitionOrThrow<VehicleDef>(m_net_vehicleModelId);
+
+                var geometryParts = Vehicle.LoadGeometryParts(def);
+
+
+                VehicleInfo vehicleInfo;
+                if (s_dummyObjectsPerVehicle.TryGetValue(m_net_vehicleNetId, out vehicleInfo))
+                {
+                    // we already created dummy object for this vehicle
+                    vehicleInfo.numReferences++;
+                }
+                else
+                {
+                    // need to create dummy object for this vehicle, and attach all vehicle's frames to it
+                    Transform transformDummy = new GameObject($"{def.GameName}_detached_part_{m_net_frameName}").transform;
+                    vehicleInfo = new VehicleInfo();
+                    vehicleInfo.frames = geometryParts.AttachFrames(transformDummy, Importing.Conversion.MaterialFlags.Vehicle);
+                    vehicleInfo.numReferences = 1;
+                    s_dummyObjectsPerVehicle.Add(m_net_vehicleNetId, vehicleInfo);
+                }
+
+                m_isReferencingFrame = true;
+
+                Frame frame = vehicleInfo.frames.FirstOrDefault(f => f.gameObject.name == m_net_frameName);
+                if (null == frame)
+                    throw new System.Exception($"Failed to find frame by name {m_net_frameName}");
+
+                // detach frame from dummy object
+                Vehicle.DetachFrameFromTransformDuringExplosion(vehicleInfo.frames.transform, frame, m_net_mass, this.gameObject, m_net_vehicleNetId, m_net_vehicleModelId);
+
             }
             else
             {
                 Vehicle vehicle = vehicleGo.GetComponentOrThrow<Vehicle>();
                 vehicle.DetachFrameDuringExplosion(m_net_frameName, m_net_mass, this.gameObject);
-                this.NetworkRigidBody.Rigidbody = this.GetComponentInChildren<Rigidbody>();
-                this.NetworkRigidBody.UpdateClient();
             }
+
+            this.NetworkRigidBody.Rigidbody = this.GetComponentInChildren<Rigidbody>();
+            this.NetworkRigidBody.UpdateClient();
+
         }
     }
 

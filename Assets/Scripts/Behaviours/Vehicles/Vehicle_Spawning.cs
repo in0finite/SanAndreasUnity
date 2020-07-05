@@ -346,6 +346,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             _seats.Add(new Seat { Parent = parent, Alignment = alignment });
         }
 
+        public static Geometry.GeometryParts LoadGeometryParts(VehicleDef vehicleDef)
+        {
+            return Geometry.Load(vehicleDef.ModelName,
+                TextureDictionary.Load(vehicleDef.TextureDictionaryName),
+                TextureDictionary.Load("vehicle"),
+                TextureDictionary.Load("misc"));
+        }
+
         private void Initialize(VehicleDef def, int[] colors = null)
         {
             Definition = def;
@@ -370,10 +378,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             name = Definition.GameName;
 
-            _geometryParts = Geometry.Load(Definition.ModelName,
-                TextureDictionary.Load(Definition.TextureDictionaryName),
-                TextureDictionary.Load("vehicle"),
-                TextureDictionary.Load("misc"));
+            _geometryParts = LoadGeometryParts(Definition);
 
             _frames = _geometryParts.AttachFrames(transform, MaterialFlags.Vehicle);
 

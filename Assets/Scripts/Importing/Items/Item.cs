@@ -135,6 +135,15 @@ namespace SanAndreasUnity.Importing.Items
             return !_definitions.ContainsKey(id) ? null : (TDefinition)_definitions[id];
         }
 
+        public static TDefinition GetDefinitionOrThrow<TDefinition>(int id)
+            where TDefinition : Definition, IObjectDefinition
+        {
+            var def = GetDefinition<TDefinition>(id);
+            if (null == def)
+                throw new System.Exception($"Failed to find definition of type {typeof(TDefinition).Name} with id {id}");
+            return def;
+        }
+
         public static IEnumerable<TDefinition> GetDefinitions<TDefinition>()
             where TDefinition : Definition
         {
