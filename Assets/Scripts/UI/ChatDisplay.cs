@@ -12,7 +12,7 @@ namespace SanAndreasUnity.UI
 
         Queue<Chat.ChatMessage> m_chatMessages = new Queue<Chat.ChatMessage>();
 
-        public int maxNumChatMessages = 5;
+        public int maxNumChatMessages = 10;
         public float timeToRemoveMessage = 3f;
 
 
