@@ -32,7 +32,7 @@ namespace SanAndreasUnity.UI
 
 		static readonly Dictionary<LogType, Color> s_logTypeColors = new Dictionary<LogType, Color>
 		{
-			{ LogType.Assert, Color.red },
+			{ LogType.Assert, Color.green },
 			{ LogType.Error, Color.red },
 			{ LogType.Exception, Color.red },
 			{ LogType.Log, Color.white },
