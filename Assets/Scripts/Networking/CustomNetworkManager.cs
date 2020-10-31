@@ -46,8 +46,11 @@ namespace SanAndreasUnity.Net
 
         void OnLoaderFinished()
         {
-            if (NetStatus.IsServer) // don't do anything on server
-                return;
+            if (NetStatus.IsServer)
+            {
+                RCON.RCONManager.StartServer();
+                return; // don't do anything on server
+            }
 
             if (!NetworkClient.isConnected)
             {
