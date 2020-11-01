@@ -65,9 +65,9 @@ namespace SanAndreasUnity.RCON
         }
         static string Server_OnClientCommandReceived(object sender, ClientSentCommandEventArgs e)
         {
-            workerInstance.ReportProgress(0); //Report our progress to the main thread
-
             secToMain.Add(e.Command); // Pass the command to the main thread
+
+            workerInstance.ReportProgress(0); //Report our progress to the main thread
 
             String commandResult = "Command didn't process correctly"; // default value
 
