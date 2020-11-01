@@ -1,6 +1,7 @@
 ﻿using Rcon;
 using Rcon.Events;
 using System;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -12,6 +13,9 @@ namespace SanAndreasUnity.RCON
         // Todo : set these from config
         private static String password = "super_secret_password";
         private static int portNumber = 25575;
+
+        private static BlockingCollection<String> mainToSec = new BlockingCollection<String>(1);
+        private static BlockingCollection<String> secToMain = new BlockingCollection<String>(1);
 
         // Object used to pass the requested command string and an awaited callback (promise)
         class RCONCommandPromise
@@ -68,15 +72,18 @@ namespace SanAndreasUnity.RCON
         }
         static string Server_OnClientCommandReceived(object sender, ClientSentCommandEventArgs e)
         {
-            TaskCompletionSource<String> promise = new TaskCompletionSource<String>();
-            RCONCommandPromise pass = new RCONCommandPromise(e, promise);
+            workerInstance.ReportProgress(0); //Report our progress to the main thread
 
-            workerInstance.ReportProgress(0, pass); //Report our progress to the main thread
+            secToMain.Add(e.Command); // Pass the command to the main thread
 
             String commandResult = "Command didn't process correctly"; // default value
 
-            // TODO add a timeout case
-            commandResult = promise.Task.GetAwaiter().GetResult();
+            try
+            {
+                // TODO add a timeout case
+                commandResult = mainToSec.Take();
+            }
+            catch (InvalidOperationException) { }
 
             return commandResult;
         }
@@ -85,13 +92,17 @@ namespace SanAndreasUnity.RCON
         // Runs in main thread
         private static void worker_progressChanged(object sender, ProgressChangedEventArgs e)
         {
-            RCONCommandPromise rcp = (RCONCommandPromise)e.UserState;
-            ClientSentCommandEventArgs c = rcp.command;
-            TaskCompletionSource<String> promise = rcp.promise;
-
             // Console.WriteLine("Main thread command interpreted {0}", c.Command);
 
-            promise.TrySetResult(CommandInterpreter.Interpret(c.Command));
+            String command = "unknown";
+            try
+            {
+                // TODO add a timeout case ?
+                command = secToMain.Take();
+            }
+            catch (InvalidOperationException) { }
+
+            mainToSec.Add(CommandInterpreter.Interpret(command));
         }
     }
 }
