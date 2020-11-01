@@ -1,5 +1,6 @@
 ﻿using Rcon;
 using Rcon.Events;
+using SanAndreasUnity.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
@@ -11,8 +12,8 @@ namespace SanAndreasUnity.RCON
     public class RCONManager : MonoBehaviour
     {
         // Todo : set these from config
-        private static String password = "super_secret_password";
-        private static int portNumber = 25575;
+        private static String password;
+        private static int portNumber;
 
         // Objects used to pass commands and responses between threads
         private static BlockingCollection<String> mainToSec = new BlockingCollection<String>(1);
@@ -22,6 +23,9 @@ namespace SanAndreasUnity.RCON
 
         public static void StartServer()
         {
+            password = Config.Get<string>("RCONpassword");
+            portNumber = Config.Get<int>("RCONport");
+
             if (workerInstance != null)
                 return;
 
