@@ -71,11 +71,7 @@ namespace SanAndreasUnity.RCON
 
             String commandResult = "Command didn't process correctly"; // default value
 
-            try
-            {
-                commandResult = mainToSec.Take();
-            }
-            catch (InvalidOperationException) { }
+            commandResult = mainToSec.Take();
 
             return commandResult;
         }
@@ -85,11 +81,8 @@ namespace SanAndreasUnity.RCON
         private static void worker_progressChanged(object sender, ProgressChangedEventArgs e)
         {
             String command = "unknown";
-            try
-            {
-                command = secToMain.Take();
-            }
-            catch (InvalidOperationException) { }
+
+            command = secToMain.Take();
 
             mainToSec.Add(CommandInterpreter.Interpret(command));
         }
