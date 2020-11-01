@@ -4,3 +4,6 @@
 [submodule "Assets/UnityStandardAssets"]
 	path = Assets/UnityStandardAssets
 	url = https://github.com/GTA-ASM/UnityStandardAssets
+[submodule "Assets/RCONdotnet"]
+	path = Assets/RCONdotnet
+	url = https://github.com/undbsd/rcon-dotnet

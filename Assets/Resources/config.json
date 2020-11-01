@@ -10,7 +10,7 @@
   "sv_max_connections": 32,
   "sv_port": 14242,
 
-  "game_dir" : "",
+  "game_dir": "",
 
   "archive_paths": [
     "${game_dir}/models/gta3.img",
@@ -35,10 +35,13 @@
   "water_path": "${game_dir}/data/water.dat",
   "car_colors_path": "${game_dir}/data/carcols.dat",
   "anim_groups_paths": [
-    "${game_dir}/data/animgrp.dat",
+    "${game_dir}/data/animgrp.dat"
   ],
   "weapons_path": "${game_dir}/data/weapon.dat",
 
   "dontLoadTextures": false,
-  
+
+  "RCON_enabled": false,
+  "RCON_password": "super_secret_password",
+  "RCON_port": 25575
 }
