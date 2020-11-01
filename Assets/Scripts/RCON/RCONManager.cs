@@ -1,5 +1,6 @@
 ﻿using Rcon;
 using Rcon.Events;
+using SanAndreasUnity.Net;
 using SanAndreasUnity.Utilities;
 using System;
 using System.Collections.Concurrent;
@@ -85,6 +86,15 @@ namespace SanAndreasUnity.RCON
             command = secToMain.Take();
 
             mainToSec.Add(CommandInterpreter.Interpret(command));
+        }
+
+        void OnLoaderFinished()
+        {
+            if (NetStatus.IsServer)
+            {
+                if (Config.Get<bool>("RCON_enabled"))
+                    StartServer();
+            }
         }
     }
 }
