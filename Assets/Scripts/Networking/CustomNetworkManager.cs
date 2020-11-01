@@ -48,7 +48,8 @@ namespace SanAndreasUnity.Net
         {
             if (NetStatus.IsServer)
             {
-                RCON.RCONManager.StartServer();
+                if (Config.Get<bool>("RCON_enabled"))
+                    RCON.RCONManager.StartServer();
                 return; // don't do anything on server
             }
 

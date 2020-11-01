@@ -23,8 +23,8 @@ namespace SanAndreasUnity.RCON
 
         public static void StartServer()
         {
-            password = Config.Get<string>("RCONpassword");
-            portNumber = Config.Get<int>("RCONport");
+            password = Config.Get<string>("RCON_password");
+            portNumber = Config.Get<int>("RCON_port");
 
             if (workerInstance != null)
                 return;

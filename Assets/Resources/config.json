@@ -41,6 +41,7 @@
 
   "dontLoadTextures": false,
 
-  "RCONpassword": "super_secret_password",
-  "RCONport": 25575
+  "RCON_enabled": false,
+  "RCON_password": "super_secret_password",
+  "RCON_port": 25575
 }
