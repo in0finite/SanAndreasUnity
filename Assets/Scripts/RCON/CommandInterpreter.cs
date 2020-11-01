@@ -3,30 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CommandInterpreter
+namespace SanAndreasUnity.RCON
 {
-    public static String Interpret(String command)
+    public class CommandInterpreter
     {
-        string[] words = command.Split(' ');
-
-        if (command == "heartbeat")
+        public static String Interpret(String command)
         {
-            // Implement heartbeat ping
-            return "Heartbeat was sent to master server";
-        }
+            string[] words = command.Split(' ');
 
-        if (command == "help")
-        {
-            return "The available commands for now are heartbeat, announce and help";
-        }
+            if (command == "heartbeat")
+            {
+                // Implement heartbeat ping
+                return "Heartbeat was sent to master server";
+            }
 
-        if (words[0] == "announce")
-        {
-            String announcement = String.Join(" ", words, 1, words.Length - 1);
-            SanAndreasUnity.Chat.ChatManager.SendChatMessageToAllPlayersAsServer(announcement);
-            return "Server : " + announcement;
-        }
+            if (command == "help")
+            {
+                return "The available commands for now are heartbeat, announce and help";
+            }
 
-        return "Unknown command";
+            if (words[0] == "announce")
+            {
+                String announcement = String.Join(" ", words, 1, words.Length - 1);
+                SanAndreasUnity.Chat.ChatManager.SendChatMessageToAllPlayersAsServer(announcement);
+                return "Server : " + announcement;
+            }
+
+            return "Unknown command";
+        }
     }
+
 }
