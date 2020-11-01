@@ -73,7 +73,6 @@ namespace SanAndreasUnity.RCON
 
             try
             {
-                // TODO add a timeout case ?
                 commandResult = mainToSec.Take();
             }
             catch (InvalidOperationException) { }
@@ -88,7 +87,6 @@ namespace SanAndreasUnity.RCON
             String command = "unknown";
             try
             {
-                // TODO add a timeout case ?
                 command = secToMain.Take();
             }
             catch (InvalidOperationException) { }
