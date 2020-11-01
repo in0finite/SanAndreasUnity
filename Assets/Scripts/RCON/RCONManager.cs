@@ -14,20 +14,9 @@ namespace SanAndreasUnity.RCON
         private static String password = "super_secret_password";
         private static int portNumber = 25575;
 
+        // Objects used to pass commands and responses between threads
         private static BlockingCollection<String> mainToSec = new BlockingCollection<String>(1);
         private static BlockingCollection<String> secToMain = new BlockingCollection<String>(1);
-
-        // Object used to pass the requested command string and an awaited callback (promise)
-        class RCONCommandPromise
-        {
-            public RCONCommandPromise(ClientSentCommandEventArgs _command, TaskCompletionSource<String> _promise)
-            {
-                command = _command;
-                promise = _promise;
-            }
-            public ClientSentCommandEventArgs command;
-            public TaskCompletionSource<String> promise;
-        }
 
         private static BackgroundWorker workerInstance = null;
 
@@ -80,7 +69,7 @@ namespace SanAndreasUnity.RCON
 
             try
             {
-                // TODO add a timeout case
+                // TODO add a timeout case ?
                 commandResult = mainToSec.Take();
             }
             catch (InvalidOperationException) { }
@@ -92,8 +81,6 @@ namespace SanAndreasUnity.RCON
         // Runs in main thread
         private static void worker_progressChanged(object sender, ProgressChangedEventArgs e)
         {
-            // Console.WriteLine("Main thread command interpreted {0}", c.Command);
-
             String command = "unknown";
             try
             {
