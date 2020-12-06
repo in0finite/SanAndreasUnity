@@ -165,7 +165,7 @@ namespace SanAndreasUnity.Behaviours
 			if (customInput.GetKeyDown(KeyCode.H))
 				m_ped.OnButtonPressed ("H");
 
-			if (customInput.GetKeyDown (KeyCode.T))
+			if (customInput.GetKeyDown (KeyCode.F))
 				m_ped.OnFlyButtonPressed();
 
 			if (customInput.GetKeyDown (KeyCode.R))

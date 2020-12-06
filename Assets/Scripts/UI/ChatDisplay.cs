@@ -1,4 +1,68 @@
-﻿using System.Collections.Generic;
+﻿using SanAndreasUnity.Utilities;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+
+
+namespace SanAndreasUnity.UI
+{
+    public class ChatDisplay : MonoBehaviour
+    {
+        public TMP_InputField inputField;
+        public TMP_Text text;
+
+        CustomInput customInput;
+
+        UnityEngine.EventSystems.EventSystem eventSystemComponent;
+
+        void Start()
+        {
+            GameObject eventSystem = GameObject.Find("EventSystem");
+            eventSystemComponent = eventSystem.GetComponent<UnityEngine.EventSystems.EventSystem>();
+
+            Chat.ChatManager.onChatMessage += OnChatMsg;
+            inputField.onSubmit.AddListener((s) => SendChatMessage(s));
+
+            customInput = CustomInput.Instance;
+        }
+
+        void Update()
+        {
+            if (customInput.GetKeyDown(KeyCode.T))
+                inputField.Select();
+        }
+
+        string GetDisplayTextForChatMessage(Chat.ChatMessage chatMessage)
+        {
+            return "<color=blue>" + chatMessage.sender + "</color> : " + chatMessage.msg;
+        }
+
+        void OnChatMsg(Chat.ChatMessage chatMsg)
+        {
+            text.text = text.text + GetDisplayTextForChatMessage(chatMsg) + "\n";
+            inputField.text = "";
+        }
+
+        void SendChatMessage(string msg)
+        {
+            eventSystemComponent.SetSelectedGameObject(null);
+            
+            this.inputField.text = "";
+
+            if (string.IsNullOrWhiteSpace(msg))
+                return;
+
+            Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer(msg);
+        }
+
+        // Fading with coroutines
+        // https://forum.unity.com/threads/simple-ui-animation-fade-in-fade-out-c.439825/
+    }
+}
+
+/*
+using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using UnityEngine.UI;
@@ -70,3 +134,4 @@ namespace SanAndreasUnity.UI
     }
 
 }
+*/
