@@ -18,6 +18,10 @@ namespace SanAndreasUnity.UI
 
         static UnityEngine.EventSystems.EventSystem eventSystemComponent;
 
+        Queue<Chat.ChatMessage> m_chatMessages = new Queue<Chat.ChatMessage>();
+        public int maxNumChatMessages = 5;
+        public float timeToRemoveMessage = 3f;
+
         void Start()
         {
             GameObject eventSystem = GameObject.Find("EventSystem");
@@ -59,8 +63,33 @@ namespace SanAndreasUnity.UI
 
         void OnChatMsg(Chat.ChatMessage chatMsg)
         {
-            text.text = text.text + GetDisplayTextForChatMessage(chatMsg) + "\n";
+            // text.text = text.text + GetDisplayTextForChatMessage(chatMsg) + "\n";
+            AddMessage(chatMsg);
             inputField.text = "";
+        }
+
+        void AddMessage(Chat.ChatMessage chatMsg)
+        {
+            if (m_chatMessages.Count >= this.maxNumChatMessages)
+                m_chatMessages.Dequeue();
+
+            m_chatMessages.Enqueue(chatMsg);
+
+            this.UpdateUI();
+        }
+
+        void UpdateUI()
+        {
+            Chat.ChatMessage[] chatMessages = m_chatMessages.ToArray();
+
+            string textStr = "";
+
+            for ( int i = 0; i < chatMessages.Length; i++)
+            {
+                textStr += GetDisplayTextForChatMessage(chatMessages[i]) + "\n";
+            }
+
+            text.text = textStr;
         }
 
         void SendChatMessage(string msg)
