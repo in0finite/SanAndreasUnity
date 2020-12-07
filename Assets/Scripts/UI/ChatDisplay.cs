@@ -9,12 +9,14 @@ namespace SanAndreasUnity.UI
 {
     public class ChatDisplay : MonoBehaviour
     {
+        public static ChatDisplay Instance = null;
+
         public TMP_InputField inputField;
         public TMP_Text text;
 
         CustomInput customInput;
 
-        UnityEngine.EventSystems.EventSystem eventSystemComponent;
+        static UnityEngine.EventSystems.EventSystem eventSystemComponent;
 
         void Start()
         {
@@ -25,12 +27,29 @@ namespace SanAndreasUnity.UI
             inputField.onSubmit.AddListener((s) => SendChatMessage(s));
 
             customInput = CustomInput.Instance;
+
+            Instance = this;
+        }
+
+        public static bool IsOpened()
+        {
+            if (Instance != null)
+            {
+                return eventSystemComponent.currentSelectedGameObject == Instance.inputField.gameObject;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         void Update()
         {
-            if (customInput.GetKeyDown(KeyCode.T))
-                inputField.Select();
+            if ( customInput != null)
+            {
+                if (customInput.GetKeyDown(KeyCode.T))
+                    inputField.Select();
+            }
         }
 
         string GetDisplayTextForChatMessage(Chat.ChatMessage chatMessage)
@@ -48,7 +67,7 @@ namespace SanAndreasUnity.UI
         {
             eventSystemComponent.SetSelectedGameObject(null);
             
-            this.inputField.text = "";
+            inputField.text = "";
 
             if (string.IsNullOrWhiteSpace(msg))
                 return;

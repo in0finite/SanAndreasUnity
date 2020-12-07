@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SanAndreasUnity.UI;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -85,9 +86,7 @@ namespace SanAndreasUnity.Behaviours {
 		}
 
 		public static bool CanPlayerReadInput() {
-
-			return Loader.HasLoaded && !UI.PauseMenu.IsOpened;
-
+			return Loader.HasLoaded && !UI.PauseMenu.IsOpened && !ChatDisplay.IsOpened();
 		}
 
 		public static void ChangeCursorState(bool locked, bool updateVisibility = true)
