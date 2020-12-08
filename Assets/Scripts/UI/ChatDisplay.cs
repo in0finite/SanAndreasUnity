@@ -20,7 +20,10 @@ namespace SanAndreasUnity.UI
 
         Queue<Chat.ChatMessage> m_chatMessages = new Queue<Chat.ChatMessage>();
         public int maxNumChatMessages = 5;
-        public float timeToRemoveMessage = 3f;
+
+        bool currentlyFading = false;
+
+        public float timeToHideChat = 5f;
 
         void Start()
         {
@@ -35,11 +38,16 @@ namespace SanAndreasUnity.UI
             Instance = this;
         }
 
+        static bool lastFrameIsOpened = false;
+
         public static bool IsOpened()
         {
             if (Instance != null)
             {
-                return eventSystemComponent.currentSelectedGameObject == Instance.inputField.gameObject;
+                bool condition = eventSystemComponent.currentSelectedGameObject == Instance.inputField.gameObject;
+                bool output = condition || lastFrameIsOpened;
+                lastFrameIsOpened = condition;
+                return output;
             }
             else
             {
@@ -52,7 +60,10 @@ namespace SanAndreasUnity.UI
             if ( customInput != null)
             {
                 if (customInput.GetKeyDown(KeyCode.T))
+                {
                     inputField.Select();
+                    UnFade();
+                }
             }
         }
 
@@ -90,13 +101,74 @@ namespace SanAndreasUnity.UI
             }
 
             text.text = textStr;
+
+            UnFade();
+            SetFadeTimeout();
+        }
+
+        IEnumerator FadeChat(bool fadeAway)
+        {
+            // fade from opaque to transparent
+            if (fadeAway)
+            {
+                // loop over 1 second backwards
+                for (float i = 1; i >= 0; i -= Time.deltaTime)
+                {
+                    if (!currentlyFading)
+                        yield break;
+
+                    // set color with i as alpha
+                    text.color = new Color(1, 1, 1, i);
+                    yield return null;
+                }
+            }
+            // fade from transparent to opaque
+            else
+            {
+                // loop over 1 second
+                for (float i = 0; i <= 1; i += Time.deltaTime)
+                {
+                    // set color with i as alpha
+                    if (!currentlyFading)
+                        yield break;
+
+                    // set color with i as alpha
+                    text.color = new Color(1, 1, 1, i);
+                    yield return null;
+                }
+            }
+        }
+
+        void StartFade()
+        {
+            if ( currentlyFading == false)
+            {
+                currentlyFading = true;
+                StartCoroutine(FadeChat(true));
+            }
+        }
+
+        void UnFade()
+        {
+            currentlyFading = false;
+            text.color = new Color(1, 1, 1, 1);
+        }
+
+        void SetFadeTimeout()
+        {
+            if (!this.IsInvoking(nameof(StartFade)))
+                this.Invoke(nameof(StartFade), this.timeToHideChat);
         }
 
         void SendChatMessage(string msg)
         {
             eventSystemComponent.SetSelectedGameObject(null);
-            
+            SetFadeTimeout();
+
             inputField.text = "";
+
+            if (!this.IsInvoking(nameof(StartFade)))
+                this.Invoke(nameof(StartFade), 5f);
 
             if (string.IsNullOrWhiteSpace(msg))
                 return;
