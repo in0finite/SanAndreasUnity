@@ -86,7 +86,7 @@ namespace SanAndreasUnity.Behaviours {
 		}
 
 		public static bool CanPlayerReadInput() {
-			return Loader.HasLoaded && !UI.PauseMenu.IsOpened && !ChatDisplay.IsOpened();
+			return Loader.HasLoaded && !UI.PauseMenu.IsOpened && !ChatDisplay.IsOpened;
 		}
 
 		public static void ChangeCursorState(bool locked, bool updateVisibility = true)
