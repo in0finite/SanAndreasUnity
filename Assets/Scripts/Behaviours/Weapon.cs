@@ -369,7 +369,10 @@ namespace SanAndreasUnity.Behaviours
 
 			this.FiresProjectile = s_weaponsUsingProjectile.Contains(this.Data.modelId1);
 			if (this.FiresProjectile)
+			{
 				this.ProjectilePrefab = WeaponsSettings.projectilePrefab;
+				this.ReloadTime = WeaponsSettings.projectileReloadTime;
+			}
 
 		}
 
@@ -523,6 +526,8 @@ namespace SanAndreasUnity.Behaviours
 		public bool FiresProjectile { get; set; } = false;
 
 		public GameObject ProjectilePrefab { get; set; }
+
+		public float ReloadTime { get; set; } = 0;
 
 
 		// TODO: this function should be removed, and new one should be created: OnAnimsUpdated
