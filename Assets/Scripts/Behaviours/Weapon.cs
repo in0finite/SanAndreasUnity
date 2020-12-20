@@ -159,6 +159,12 @@ namespace SanAndreasUnity.Behaviours
 
         WeaponAttackParams m_lastRaycastWeaponAttackParams = WeaponAttackParams.Default;
 
+        static readonly HashSet<int> s_weaponsUsingProjectile = new HashSet<int>()
+        {
+	        WeaponId.RocketLauncher,
+	        WeaponId.RocketLauncherHS,
+        };
+
 
 
 		static Weapon ()
@@ -361,6 +367,10 @@ namespace SanAndreasUnity.Behaviours
 
 			this.CrouchSpineRotationOffset = WeaponsSettings.crouchSpineRotationOffset;
 
+			this.FiresProjectile = s_weaponsUsingProjectile.Contains(this.Data.modelId1);
+			if (this.FiresProjectile)
+				this.ProjectilePrefab = WeaponsSettings.projectilePrefab;
+
 		}
 
 		protected virtual void Start ()
@@ -507,6 +517,13 @@ namespace SanAndreasUnity.Behaviours
 
 		public Vector3 CrouchSpineRotationOffset { get; set; }
 
+		/// <summary>
+		/// True if weapon doesn't inflict damage instantly, but instead fires a projectile.
+		/// </summary>
+		public bool FiresProjectile { get; set; } = false;
+
+		public GameObject ProjectilePrefab { get; set; }
+
 
 		// TODO: this function should be removed, and new one should be created: OnAnimsUpdated
 		public virtual void UpdateAnimWhileHolding ()
@@ -614,6 +631,12 @@ namespace SanAndreasUnity.Behaviours
 		{
 
             this.LastTimeWhenFired = Time.time;
+
+            if (this.FiresProjectile)
+            {
+	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), null);
+	            return;
+            }
 
 			// raycast against all (non-breakable ?) objects
 

@@ -126,6 +126,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 13569
   drawLineFromGun: 0
+  projectilePrefab: {fileID: 8038540346792760480, guid: 858b1226127ef9f4e8d16c9610e691b6,
+    type: 3}
 --- !u!114 &114529712737653322
 MonoBehaviour:
   m_ObjectHideFlags: 0

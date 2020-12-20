@@ -50,6 +50,8 @@ namespace SanAndreasUnity.Behaviours.Weapons
 
 		public bool drawLineFromGun = false;
 
+		public GameObject projectilePrefab;
+
 
 		public static WeaponsManager Instance { get; private set; }
 
