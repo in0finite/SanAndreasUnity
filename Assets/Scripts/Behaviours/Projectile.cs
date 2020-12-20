@@ -4,84 +4,87 @@ using SanAndreasUnity.Utilities;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-public class Projectile : MonoBehaviour
+namespace SanAndreasUnity.Behaviours
 {
-    public GameObject explosionPrefab;
-    public float explosionDamageAmount = 1000;
-    public float explosionDamageRadius = 5;
-    public LayerMask collisionLayerMask;
-    public float speed = 10;
-    public float lifeTime = 30;
-
-    private bool m_alreadyExploded = false;
-    private Rigidbody m_rigidBody;
-    private AudioSource m_audioSource;
-
-
-    public static Projectile Create(
-        GameObject prefab, Vector3 position, Quaternion rotation, AudioClip audioClip)
+    public class Projectile : MonoBehaviour
     {
-        var go = Instantiate(prefab, position, rotation);
+        public GameObject explosionPrefab;
+        public float explosionDamageAmount = 1000;
+        public float explosionDamageRadius = 5;
+        public LayerMask collisionLayerMask;
+        public float speed = 10;
+        public float lifeTime = 30;
 
-        var projectile = go.GetComponentOrThrow<Projectile>();
+        private bool m_alreadyExploded = false;
+        private Rigidbody m_rigidBody;
+        private AudioSource m_audioSource;
 
-        if (audioClip != null)
+
+        public static Projectile Create(
+            GameObject prefab, Vector3 position, Quaternion rotation, AudioClip audioClip)
         {
-            projectile.m_audioSource.clip = audioClip;
-            projectile.m_audioSource.Play();
+            var go = Instantiate(prefab, position, rotation);
+
+            var projectile = go.GetComponentOrThrow<Projectile>();
+
+            if (audioClip != null)
+            {
+                projectile.m_audioSource.clip = audioClip;
+                projectile.m_audioSource.Play();
+            }
+
+
+
+            return projectile;
         }
 
+        void Awake()
+        {
+            m_rigidBody = this.GetComponentOrThrow<Rigidbody>();
+            m_audioSource = this.GetComponentOrThrow<AudioSource>();
+        }
 
+        private void Start()
+        {
+            Destroy(this.gameObject, this.lifeTime);
+            m_rigidBody.velocity = this.transform.forward * this.speed;
+        }
 
-        return projectile;
-    }
+        private void OnCollisionEnter(Collision other)
+        {
+            if (m_alreadyExploded)
+                return;
 
-    void Awake()
-    {
-        m_rigidBody = this.GetComponentOrThrow<Rigidbody>();
-        m_audioSource = this.GetComponentOrThrow<AudioSource>();
-    }
+            if (((1 << other.gameObject.layer) & this.collisionLayerMask.value) == 0)
+                return;
 
-    private void Start()
-    {
-        Destroy(this.gameObject, this.lifeTime);
-        m_rigidBody.velocity = this.transform.forward * this.speed;
-    }
+            m_alreadyExploded = true;
 
-    private void OnCollisionEnter(Collision other)
-    {
-        if (m_alreadyExploded)
-            return;
+            Object.Destroy(this.gameObject);
 
-        if (((1 << other.gameObject.layer) & this.collisionLayerMask.value) == 0)
-            return;
+            Vector3 contactPoint = other.contacts[0].point;
 
-        m_alreadyExploded = true;
+            // inflict damage to nearby objects
+            Damageable.InflictDamageToObjectsInArea(
+                contactPoint,
+                this.explosionDamageRadius,
+                this.explosionDamageAmount,
+                VehicleManager.Instance.explosionDamageOverDistanceCurve,
+                DamageType.Explosion);
 
-        Object.Destroy(this.gameObject);
+            // create explosion - this includes effects, physics force, sound
 
-        Vector3 contactPoint = other.contacts[0].point;
+            GameObject explosionGo = Object.Instantiate(
+                this.explosionPrefab,
+                contactPoint,
+                this.transform.rotation);
 
-        // inflict damage to nearby objects
-        Damageable.InflictDamageToObjectsInArea(
-            contactPoint,
-            this.explosionDamageRadius,
-            this.explosionDamageAmount,
-            VehicleManager.Instance.explosionDamageOverDistanceCurve,
-            DamageType.Explosion);
+            if (NetStatus.IsServer)
+                NetManager.Spawn(explosionGo);
 
-        // create explosion - this includes effects, physics force, sound
+            // assign explosion sound
+            F.RunExceptionSafe(() => Vehicle.AssignExplosionSound(explosionGo));
 
-        GameObject explosionGo = Object.Instantiate(
-            this.explosionPrefab,
-            contactPoint,
-            this.transform.rotation);
-
-        if (NetStatus.IsServer)
-            NetManager.Spawn(explosionGo);
-
-        // assign explosion sound
-        F.RunExceptionSafe(() => Vehicle.AssignExplosionSound(explosionGo));
-
+        }
     }
 }
