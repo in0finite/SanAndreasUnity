@@ -3,6 +3,7 @@ using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Net;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
+using UnityStandardAssets.Effects;
 using Object = UnityEngine.Object;
 
 namespace SanAndreasUnity.Behaviours
@@ -12,6 +13,7 @@ namespace SanAndreasUnity.Behaviours
         public GameObject explosionPrefab;
         public float explosionDamageAmount = 1000;
         public float explosionDamageRadius = 5;
+        public float particleSystemMultiplier = 1;
         public LayerMask collisionLayerMask;
         public float speed = 10;
         public float lifeTime = 30;
@@ -93,6 +95,9 @@ namespace SanAndreasUnity.Behaviours
                 this.explosionPrefab,
                 contactPoint,
                 this.transform.rotation);
+
+            var psm = explosionGo.GetComponentOrThrow<ParticleSystemMultiplier>();
+            psm.multiplier = this.particleSystemMultiplier;
 
             if (NetStatus.IsServer)
                 NetManager.Spawn(explosionGo);
