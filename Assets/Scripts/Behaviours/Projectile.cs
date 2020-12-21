@@ -15,7 +15,7 @@ namespace SanAndreasUnity.Behaviours
         public LayerMask collisionLayerMask;
         public float speed = 10;
         public float lifeTime = 30;
-        [SerializeField] private Transform m_modelAttachTransform;
+        [SerializeField] private Transform m_modelAttachTransform = null;
 
         private bool m_alreadyExploded = false;
         private Rigidbody m_rigidBody;
