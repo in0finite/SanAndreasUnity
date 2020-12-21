@@ -1,4 +1,5 @@
 ﻿using SanAndreasUnity.Behaviours.Vehicles;
+using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Net;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace SanAndreasUnity.Behaviours
         public LayerMask collisionLayerMask;
         public float speed = 10;
         public float lifeTime = 30;
+        [SerializeField] private Transform m_modelAttachTransform;
 
         private bool m_alreadyExploded = false;
         private Rigidbody m_rigidBody;
@@ -21,7 +23,7 @@ namespace SanAndreasUnity.Behaviours
 
 
         public static Projectile Create(
-            GameObject prefab, Vector3 position, Quaternion rotation, AudioClip audioClip)
+            GameObject prefab, Vector3 position, Quaternion rotation, AudioClip audioClip, Geometry.GeometryParts model)
         {
             var go = Instantiate(prefab, position, rotation);
 
@@ -33,7 +35,10 @@ namespace SanAndreasUnity.Behaviours
                 projectile.m_audioSource.Play();
             }
 
-
+            if (model != null)
+            {
+                model.AttachFrames(projectile.m_modelAttachTransform, MaterialFlags.Default);
+            }
 
             return projectile;
         }

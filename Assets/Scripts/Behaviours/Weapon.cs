@@ -58,6 +58,8 @@ namespace SanAndreasUnity.Behaviours
 		public static readonly int FlameThrower = 361;
 		public static readonly int MiniGun = 362;
 
+		public static readonly int RocketProjectile = 345;
+
 	}
 
 //	public class WeaponData
@@ -165,6 +167,8 @@ namespace SanAndreasUnity.Behaviours
 	        WeaponId.RocketLauncher,
 	        WeaponId.RocketLauncherHS,
         };
+
+        private Geometry.GeometryParts m_projectileModel;
 
 
 
@@ -286,6 +290,12 @@ namespace SanAndreasUnity.Behaviours
 			return weapon;
 		}
 
+		void LoadProjectileModel()
+		{
+			var def = Item.GetDefinition<WeaponDef>(WeaponId.RocketProjectile);
+			m_projectileModel = Geometry.Load (def.ModelName, def.TextureDictionaryName);
+		}
+
 		internal static void OnWeaponCreatedByServer(NetworkedWeapon networkedWeapon)
 		{
 
@@ -373,6 +383,7 @@ namespace SanAndreasUnity.Behaviours
 			{
 				this.ProjectilePrefab = WeaponsSettings.projectilePrefab;
 				this.ReloadTime = WeaponsSettings.projectileReloadTime;
+				F.RunExceptionSafe(this.LoadProjectileModel);
 			}
 
 		}
@@ -640,7 +651,7 @@ namespace SanAndreasUnity.Behaviours
 
             if (this.FiresProjectile)
             {
-	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), null);
+	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), null, m_projectileModel);
 	            return;
             }
 
