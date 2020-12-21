@@ -302,10 +302,6 @@ namespace SanAndreasUnity.Behaviours
 			if (null == s_projectileSound)
 			{
 				s_projectileSound = Audio.AudioManager.CreateAudioClipFromSfx("GENRL", 136, 68);
-				// float[] samples = new float[s_projectileSound.samples];
-				// s_projectileSound.GetData(samples, 0);
-				// s_projectileSound = AudioClip.Create(s_projectileSound.name, s_projectileSound.samples * 2, s_projectileSound.channels, s_projectileSound.frequency, false);
-				// s_projectileSound.SetData(samples.Concat(samples.Reverse()).ToArray(), 0);
 			}
 		}
 
