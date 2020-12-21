@@ -169,6 +169,7 @@ namespace SanAndreasUnity.Behaviours
         };
 
         private Geometry.GeometryParts m_projectileModel;
+        private static AudioClip s_projectileSound;
 
 
 
@@ -296,6 +297,18 @@ namespace SanAndreasUnity.Behaviours
 			m_projectileModel = Geometry.Load (def.ModelName, def.TextureDictionaryName);
 		}
 
+		void LoadProjectileAudio()
+		{
+			if (null == s_projectileSound)
+			{
+				s_projectileSound = Audio.AudioManager.CreateAudioClipFromSfx("GENRL", 136, 68);
+				// float[] samples = new float[s_projectileSound.samples];
+				// s_projectileSound.GetData(samples, 0);
+				// s_projectileSound = AudioClip.Create(s_projectileSound.name, s_projectileSound.samples * 2, s_projectileSound.channels, s_projectileSound.frequency, false);
+				// s_projectileSound.SetData(samples.Concat(samples.Reverse()).ToArray(), 0);
+			}
+		}
+
 		internal static void OnWeaponCreatedByServer(NetworkedWeapon networkedWeapon)
 		{
 
@@ -384,6 +397,7 @@ namespace SanAndreasUnity.Behaviours
 				this.ProjectilePrefab = WeaponsSettings.projectilePrefab;
 				this.ReloadTime = WeaponsSettings.projectileReloadTime;
 				F.RunExceptionSafe(this.LoadProjectileModel);
+				F.RunExceptionSafe(this.LoadProjectileAudio);
 			}
 
 		}
@@ -651,7 +665,7 @@ namespace SanAndreasUnity.Behaviours
 
             if (this.FiresProjectile)
             {
-	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), null, m_projectileModel, m_ped);
+	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), s_projectileSound, m_projectileModel, m_ped);
 	            return;
             }
 
