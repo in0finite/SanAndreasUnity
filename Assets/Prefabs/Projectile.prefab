@@ -85,6 +85,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   speed: 15
+  rotationSpeed: 720
   lifeTime: 30
   m_modelAttachTransform: {fileID: 7991730905356042406}
 --- !u!136 &223436154079187918

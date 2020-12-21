@@ -5,6 +5,7 @@ using SanAndreasUnity.Utilities;
 using UnityEngine;
 using UnityStandardAssets.Effects;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -16,6 +17,7 @@ namespace SanAndreasUnity.Behaviours
         public float particleSystemMultiplier = 1;
         public LayerMask collisionLayerMask;
         public float speed = 10;
+        public float rotationSpeed = 180;
         public float lifeTime = 30;
         [SerializeField] private Transform m_modelAttachTransform = null;
 
@@ -65,6 +67,12 @@ namespace SanAndreasUnity.Behaviours
         {
             Destroy(this.gameObject, this.lifeTime);
             m_rigidBody.velocity = this.transform.forward * this.speed;
+        }
+
+        private void Update()
+        {
+            float delta = this.rotationSpeed * Time.deltaTime * Random.Range (0.75f, 1.25f);
+            m_modelAttachTransform.rotation *= Quaternion.AngleAxis (delta, Vector3.forward);
         }
 
         private void OnCollisionEnter(Collision other)
