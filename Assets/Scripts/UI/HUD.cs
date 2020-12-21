@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
@@ -29,12 +30,22 @@ namespace SanAndreasUnity.UI {
 		public static Texture2D UpArrowTexture { get; set; }
 		public static Texture2D DownArrowTexture { get; set; }
 
+		public float regularCrosshairTextureSizeMultiplier = 1.0f;
+		public float rocketCrosshairTextureSizeMultiplier = 1.5f;
+
+		public float regularCrosshairUiSizeMultiplier = 1.0f;
+		public float rocketCrosshairUiSizeMultiplier = 1.5f;
+
+		private Vector2 m_defaultCrosshairSize;
+
 
 
 		void Awake () {
 			Instance = this;
 
 			Loader.onLoadSpecialTextures += LoadTextures;
+
+			m_defaultCrosshairSize = this.crosshairImage.rectTransform.sizeDelta;
 		}
 
 		void LoadTextures()
@@ -46,23 +57,46 @@ namespace SanAndreasUnity.UI {
 			UpArrowTexture = pcbtnsTxd.GetDiffuse("up").Texture;
 			DownArrowTexture = pcbtnsTxd.GetDiffuse("down").Texture;
 
-			LoadCrosshairTexture();
+			LoadCrosshairTextures();
 
 		}
 
-		void LoadCrosshairTexture()
+		void LoadCrosshairTextures()
 		{
+			Texture2D regularCrosshairTex = ConstructCrosshairTexture("siteM16", this.regularCrosshairTextureSizeMultiplier);
+			Texture2D rocketCrosshairTex = ConstructCrosshairTexture("siterocket", this.rocketCrosshairTextureSizeMultiplier);
 
+			Weapon.CrosshairTexture = regularCrosshairTex;
+			Weapon.RocketCrosshairTexture = rocketCrosshairTex;
+
+			this.crosshairImage.enabled = true;
+			this.crosshairImage.texture = regularCrosshairTex;
+		}
+
+		static Texture2D ConstructCrosshairTexture(string textureName, float sizeMultiplier)
+		{
 			Texture2D originalTex = TextureDictionary.Load("hud")
-				.GetDiffuse("siteM16", new TextureLoadParams { makeNoLongerReadable = false })
+				.GetDiffuse(textureName, new TextureLoadParams { makeNoLongerReadable = false })
 				.Texture;
 
-			// construct crosshair texture
+			return ConstructCrosshairTexture(originalTex, sizeMultiplier);
+		}
 
+		static Texture2D ConstructCrosshairTexture(Texture2D originalTex, float sizeMultiplier)
+		{
 			int originalWidth = originalTex.width;
 			int originalHeight = originalTex.height;
+			int newWidth = Mathf.RoundToInt(originalWidth * 2 * sizeMultiplier);
+			int newHeight = Mathf.RoundToInt(originalHeight * 2 * sizeMultiplier);
 
-			Texture2D tex = new Texture2D(originalWidth * 2, originalHeight * 2, TextureFormat.ARGB32, false, true);
+			Texture2D tex = new Texture2D(newWidth, newHeight, TextureFormat.ARGB32, false, true);
+
+			if (sizeMultiplier > 1)
+			{
+				// set all pixels to transparent
+				Color[] emptyColors = new Color[newWidth * newHeight];
+				tex.SetPixels(emptyColors);
+			}
 
 			// bottom left
 			for (int i = 0; i < originalWidth; i++)
@@ -78,7 +112,7 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int j = 0; j < originalHeight; j++)
 				{
-					tex.SetPixel(originalWidth - i - 1 + originalWidth, j, originalTex.GetPixel(i, j));
+					tex.SetPixel(newWidth - i - 1 + newWidth, j, originalTex.GetPixel(i, j));
 				}
 			}
 
@@ -87,7 +121,7 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int j = 0; j < originalHeight; j++)
 				{
-					tex.SetPixel(i, originalHeight - j - 1 + originalHeight, originalTex.GetPixel(i, j));
+					tex.SetPixel(i, newHeight - j - 1 + newHeight, originalTex.GetPixel(i, j));
 				}
 			}
 
@@ -96,16 +130,13 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int j = 0; j < originalHeight; j++)
 				{
-					tex.SetPixel(originalWidth - i - 1 + originalWidth, originalHeight - j - 1 + originalHeight, originalTex.GetPixel(i, j));
+					tex.SetPixel(newWidth - i - 1 + newWidth, newHeight - j - 1 + newHeight, originalTex.GetPixel(i, j));
 				}
 			}
 
 			tex.Apply(false, true);
 
-			Weapon.CrosshairTexture = tex;
-			this.crosshairImage.enabled = true;
-			this.crosshairImage.texture = tex;
-
+			return tex;
 		}
 
 		void Update()
@@ -126,9 +157,30 @@ namespace SanAndreasUnity.UI {
 
 			this.canvas.enabled = true;
 
-			this.crosshairImage.enabled = ped.IsAiming;
-
 			var weapon = ped.CurrentWeapon;
+
+			this.crosshairImage.enabled = ped.IsAiming;
+			if (this.crosshairImage.enabled)
+			{
+				if (weapon != null)
+				{
+					Texture2D crosshairTextureToDisplay = Weapon.CrosshairTexture;
+					float uiSizeMultiplier = this.regularCrosshairUiSizeMultiplier;
+
+					if (weapon.Data.modelId1 == WeaponId.RocketLauncher || weapon.Data.modelId1 == WeaponId.RocketLauncherHS)
+					{
+						crosshairTextureToDisplay = Weapon.RocketCrosshairTexture;
+						uiSizeMultiplier = this.rocketCrosshairUiSizeMultiplier;
+					}
+
+					if (this.crosshairImage.texture != crosshairTextureToDisplay)
+						this.crosshairImage.texture = crosshairTextureToDisplay;
+
+					Vector2 uiSize = m_defaultCrosshairSize * uiSizeMultiplier;
+					if (this.crosshairImage.rectTransform.sizeDelta != uiSize)
+						this.crosshairImage.rectTransform.sizeDelta = uiSize;
+				}
+			}
 
 			Texture2D weaponTextureToDisplay = weapon != null ? weapon.HudTexture : Weapon.FistTexture;
 			if (this.weaponImage.texture != weaponTextureToDisplay)

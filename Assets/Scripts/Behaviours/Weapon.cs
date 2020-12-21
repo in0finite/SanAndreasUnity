@@ -114,6 +114,7 @@ namespace SanAndreasUnity.Behaviours
 		private static GameObject s_weaponsContainer = null;
 
 		public static Texture2D CrosshairTexture { get; set; }
+		public static Texture2D RocketCrosshairTexture { get; set; }
 		public static Texture2D FistTexture { get; set; }
 
 		public AnimationState AimAnimState { get; set; }

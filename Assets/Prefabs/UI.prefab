@@ -1765,6 +1765,10 @@ MonoBehaviour:
   pedVelocityText: {fileID: 6556768988591572453}
   radioStationText: {fileID: 261304231076654976}
   m_radioStationLabelDuration: 3
+  regularCrosshairTextureSizeMultiplier: 1
+  rocketCrosshairTextureSizeMultiplier: 1.75
+  regularCrosshairUiSizeMultiplier: 1.15
+  rocketCrosshairUiSizeMultiplier: 2.2
 --- !u!1 &1693155584687832567
 GameObject:
   m_ObjectHideFlags: 0
