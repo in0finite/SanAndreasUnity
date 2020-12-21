@@ -651,7 +651,7 @@ namespace SanAndreasUnity.Behaviours
 
             if (this.FiresProjectile)
             {
-	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), null, m_projectileModel);
+	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), null, m_projectileModel, m_ped);
 	            return;
             }
 

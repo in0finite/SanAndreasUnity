@@ -23,7 +23,12 @@ namespace SanAndreasUnity.Behaviours
 
 
         public static Projectile Create(
-            GameObject prefab, Vector3 position, Quaternion rotation, AudioClip audioClip, Geometry.GeometryParts model)
+            GameObject prefab,
+            Vector3 position,
+            Quaternion rotation,
+            AudioClip audioClip,
+            Geometry.GeometryParts model,
+            Ped shooterPed)
         {
             var go = Instantiate(prefab, position, rotation);
 
@@ -33,6 +38,11 @@ namespace SanAndreasUnity.Behaviours
             {
                 projectile.m_audioSource.clip = audioClip;
                 projectile.m_audioSource.Play();
+            }
+
+            if (shooterPed != null)
+            {
+                Physics.IgnoreCollision(shooterPed.characterController, projectile.GetComponentOrThrow<Collider>());
             }
 
             if (model != null)
