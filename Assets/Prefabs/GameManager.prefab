@@ -146,13 +146,13 @@ MonoBehaviour:
   showPedSpeedometer: 1
   groundFindingIgnoredLayerMask:
     serializedVersion: 2
-    m_Bits: 14902
+    m_Bits: 31286
   cameraDistanceFromPed: 4
   minCameraDistanceFromPed: 2
   maxCameraDistanceFromPed: 30
   cameraRaycastIgnoredLayerMask:
     serializedVersion: 2
-    m_Bits: 15158
+    m_Bits: 31542
   legAndArmDamageMultiplier: 0.8
   stomachAndChestDamageMultiplier: 1
   headDamageMultiplier: 4

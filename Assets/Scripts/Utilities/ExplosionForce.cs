@@ -11,6 +11,7 @@ namespace SanAndreasUnity.Utilities
         public float upwardsModifier = 1f;
         public float radius = 10f;
         public float explosionMultiplier = 1f;
+        public LayerMask layerMask;
 
 
         private IEnumerator Start()
@@ -22,7 +23,7 @@ namespace SanAndreasUnity.Utilities
             float multiplier = this.explosionMultiplier;
 
             float r = radius * multiplier;
-            var cols = Physics.OverlapSphere(this.transform.position, r);
+            var cols = Physics.OverlapSphere(this.transform.position, r, layerMask);
 
             var rigidbodies = new Dictionary<Rigidbody, List<Collider>>();
             foreach (var col in cols)

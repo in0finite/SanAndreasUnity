@@ -15,7 +15,6 @@ namespace SanAndreasUnity.Behaviours
         public float explosionDamageAmount = 1000;
         public float explosionDamageRadius = 5;
         public float particleSystemMultiplier = 1;
-        public LayerMask collisionLayerMask;
         public float speed = 10;
         public float rotationSpeed = 180;
         public float lifeTime = 30;
@@ -46,7 +45,12 @@ namespace SanAndreasUnity.Behaviours
 
             if (shooterPed != null)
             {
-                Physics.IgnoreCollision(shooterPed.characterController, projectile.GetComponentOrThrow<Collider>());
+                var projectileCollider = projectile.GetComponentOrThrow<Collider>();
+                var pedColliders = shooterPed.GetComponentsInChildren<Collider>();
+                foreach (var pedCollider in pedColliders)
+                {
+                    Physics.IgnoreCollision(pedCollider, projectileCollider);
+                }
             }
 
             if (model != null)
@@ -78,9 +82,6 @@ namespace SanAndreasUnity.Behaviours
         private void OnCollisionEnter(Collision other)
         {
             if (m_alreadyExploded)
-                return;
-
-            if (((1 << other.gameObject.layer) & this.collisionLayerMask.value) == 0)
                 return;
 
             m_alreadyExploded = true;

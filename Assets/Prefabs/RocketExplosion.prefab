@@ -23342,6 +23342,9 @@ MonoBehaviour:
   upwardsModifier: 2.5
   radius: 10
   explosionMultiplier: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 15105
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

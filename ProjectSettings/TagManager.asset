@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Minimap
   - UI
+  - Fire
   layers:
   - Default
   - TransparentFX
@@ -21,7 +22,7 @@ TagManager:
   - Player
   - PedBone
   - VehicleMesh
-  - 
+  - Projectile
   - 
   - 
   - 

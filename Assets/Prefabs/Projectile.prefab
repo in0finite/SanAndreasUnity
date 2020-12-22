@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7991730905356042406}
   - component: {fileID: 8654847074425390642}
   - component: {fileID: 1859652892926530849}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4594,7 +4594,7 @@ GameObject:
   - component: {fileID: 223436154079187918}
   - component: {fileID: 5633959673307472571}
   - component: {fileID: 1740834482409443228}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4632,9 +4632,6 @@ MonoBehaviour:
   explosionDamageAmount: 1500
   explosionDamageRadius: 7
   particleSystemMultiplier: 1
-  collisionLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
   speed: 15
   rotationSpeed: 720
   lifeTime: 20
