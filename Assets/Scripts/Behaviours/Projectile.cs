@@ -16,6 +16,8 @@ namespace SanAndreasUnity.Behaviours
         public float explosionDamageRadius = 5;
         public float particleSystemMultiplier = 1;
         public float speed = 10;
+        public float acceleration = 4;
+        public float maxSpeed = 50;
         public float rotationSpeed = 180;
         public float lifeTime = 30;
         [SerializeField] private Transform m_modelAttachTransform = null;
@@ -79,8 +81,18 @@ namespace SanAndreasUnity.Behaviours
 
         private void Update()
         {
+            // rotate model
             float delta = this.rotationSpeed * Time.deltaTime * Random.Range (0.75f, 1.25f);
             m_modelAttachTransform.rotation *= Quaternion.AngleAxis (delta, Vector3.forward);
+
+            // accelerate projectile
+            Vector3 currentVectorSpeed = this.RigidBody.velocity;
+            float currentSpeed = currentVectorSpeed.magnitude;
+            if (currentSpeed < this.maxSpeed)
+            {
+                float newSpeed = currentSpeed + this.acceleration * Time.deltaTime;
+                this.RigidBody.velocity = currentVectorSpeed.normalized * newSpeed;
+            }
         }
 
         private void OnCollisionEnter(Collision other)
