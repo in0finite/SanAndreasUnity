@@ -4634,7 +4634,9 @@ MonoBehaviour:
   explosionDamageAmount: 1500
   explosionDamageRadius: 7
   particleSystemMultiplier: 1
-  speed: 15
+  speed: 12
+  acceleration: 2.5
+  maxSpeed: 30
   rotationSpeed: 720
   lifeTime: 20
   m_modelAttachTransform: {fileID: 7991730905356042406}
