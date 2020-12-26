@@ -4594,6 +4594,8 @@ GameObject:
   - component: {fileID: 223436154079187918}
   - component: {fileID: 5633959673307472571}
   - component: {fileID: 1740834482409443228}
+  - component: {fileID: 4459588035354191565}
+  - component: {fileID: 4032372881333096458}
   m_Layer: 14
   m_Name: Projectile
   m_TagString: Untagged
@@ -4762,3 +4764,32 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4459588035354191565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8038540346792760480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serverOnly: 0
+  localPlayerAuthority: 0
+  m_AssetId: 858b1226127ef9f4e8d16c9610e691b6
+  m_SceneId: 0
+--- !u!114 &4032372881333096458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8038540346792760480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 665fa8c1c261a9a4dbd28a2cb558e853, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncInterval: 0.1

@@ -21,8 +21,8 @@ namespace SanAndreasUnity.Behaviours
         [SerializeField] private Transform m_modelAttachTransform = null;
 
         private bool m_alreadyExploded = false;
-        private Rigidbody m_rigidBody;
-        private AudioSource m_audioSource;
+        public Rigidbody RigidBody { get; private set; }
+        public AudioSource AudioSource { get; private set; }
 
 
         public static Projectile Create(
@@ -33,14 +33,16 @@ namespace SanAndreasUnity.Behaviours
             Geometry.GeometryParts model,
             Ped shooterPed)
         {
+            NetStatus.ThrowIfNotOnServer();
+
             var go = Instantiate(prefab, position, rotation);
 
             var projectile = go.GetComponentOrThrow<Projectile>();
 
             if (audioClip != null)
             {
-                projectile.m_audioSource.clip = audioClip;
-                projectile.m_audioSource.Play();
+                projectile.AudioSource.clip = audioClip;
+                projectile.AudioSource.Play();
             }
 
             if (shooterPed != null)
@@ -63,14 +65,16 @@ namespace SanAndreasUnity.Behaviours
 
         void Awake()
         {
-            m_rigidBody = this.GetComponentOrThrow<Rigidbody>();
-            m_audioSource = this.GetComponentOrThrow<AudioSource>();
+            this.RigidBody = this.GetComponentOrThrow<Rigidbody>();
+            this.AudioSource = this.GetComponentOrThrow<AudioSource>();
         }
 
         private void Start()
         {
-            Destroy(this.gameObject, this.lifeTime);
-            m_rigidBody.velocity = this.transform.forward * this.speed;
+            if (NetStatus.IsServer)
+                Destroy(this.gameObject, this.lifeTime);
+
+            this.RigidBody.velocity = this.transform.forward * this.speed;
         }
 
         private void Update()
@@ -81,6 +85,9 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnCollisionEnter(Collision other)
         {
+            if (!NetStatus.IsServer)
+                return;
+
             if (m_alreadyExploded)
                 return;
 
@@ -108,8 +115,7 @@ namespace SanAndreasUnity.Behaviours
             var psm = explosionGo.GetComponentOrThrow<ParticleSystemMultiplier>();
             psm.multiplier = this.particleSystemMultiplier;
 
-            if (NetStatus.IsServer)
-                NetManager.Spawn(explosionGo);
+            NetManager.Spawn(explosionGo);
 
             // assign explosion sound
             F.RunExceptionSafe(() => Vehicle.AssignExplosionSound(explosionGo));
