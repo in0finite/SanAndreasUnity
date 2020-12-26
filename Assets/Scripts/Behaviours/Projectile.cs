@@ -49,6 +49,8 @@ namespace SanAndreasUnity.Behaviours
                 }
             }
 
+            NetManager.Spawn(go);
+
             return projectile;
         }
 
