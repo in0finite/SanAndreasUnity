@@ -31,8 +31,6 @@ namespace SanAndreasUnity.Behaviours
             GameObject prefab,
             Vector3 position,
             Quaternion rotation,
-            AudioClip audioClip,
-            Geometry.GeometryParts model,
             Ped shooterPed)
         {
             NetStatus.ThrowIfNotOnServer();
@@ -40,12 +38,6 @@ namespace SanAndreasUnity.Behaviours
             var go = Instantiate(prefab, position, rotation);
 
             var projectile = go.GetComponentOrThrow<Projectile>();
-
-            if (audioClip != null)
-            {
-                projectile.AudioSource.clip = audioClip;
-                projectile.AudioSource.Play();
-            }
 
             if (shooterPed != null)
             {
@@ -57,11 +49,6 @@ namespace SanAndreasUnity.Behaviours
                 }
             }
 
-            if (model != null)
-            {
-                model.AttachFrames(projectile.m_modelAttachTransform, MaterialFlags.Default);
-            }
-
             return projectile;
         }
 
@@ -69,14 +56,33 @@ namespace SanAndreasUnity.Behaviours
         {
             this.RigidBody = this.GetComponentOrThrow<Rigidbody>();
             this.AudioSource = this.GetComponentOrThrow<AudioSource>();
-        }
 
-        private void Start()
-        {
             if (NetStatus.IsServer)
-                Destroy(this.gameObject, this.lifeTime);
+                Object.Destroy(this.gameObject, this.lifeTime);
+
+            if (Weapon.ProjectileSound != null)
+            {
+                this.AudioSource.clip = Weapon.ProjectileSound;
+                this.AudioSource.Play();
+            }
+
+            if (Weapon.ProjectileModel != null)
+            {
+                Weapon.ProjectileModel.AttachFrames(m_modelAttachTransform, MaterialFlags.Default);
+            }
 
             this.RigidBody.velocity = this.transform.forward * this.speed;
+
+            if (!NetStatus.IsServer)
+            {
+                // disable all colliders
+                var colliders = this.gameObject.GetComponentsInChildren<Collider>();
+                foreach (var c in colliders)
+                {
+                    c.enabled = false;
+                }
+            }
+
         }
 
         private void Update()

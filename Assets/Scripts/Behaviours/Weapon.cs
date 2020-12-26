@@ -168,12 +168,32 @@ namespace SanAndreasUnity.Behaviours
 	        WeaponId.RocketLauncherHS,
         };
 
-        private Geometry.GeometryParts m_projectileModel;
+        private static Geometry.GeometryParts s_projectileModel;
+        public static Geometry.GeometryParts ProjectileModel
+        {
+	        get
+	        {
+		        if (s_projectileModel != null)
+			        return s_projectileModel;
+		        F.RunExceptionSafe(LoadProjectileModel);
+		        return s_projectileModel;
+	        }
+        }
+
         private static AudioClip s_projectileSound;
+        public static AudioClip ProjectileSound
+        {
+	        get
+	        {
+		        if (s_projectileSound != null)
+			        return s_projectileSound;
+		        F.RunExceptionSafe(LoadProjectileAudio);
+		        return s_projectileSound;
+	        }
+        }
 
 
-
-		static Weapon ()
+        static Weapon ()
 		{
 			// obtain all weapon types
 			var myType = typeof (Weapon);
@@ -291,13 +311,16 @@ namespace SanAndreasUnity.Behaviours
 			return weapon;
 		}
 
-		void LoadProjectileModel()
+		static void LoadProjectileModel()
 		{
+			if (s_projectileModel != null)
+				return;
+
 			var def = Item.GetDefinition<WeaponDef>(WeaponId.RocketProjectile);
-			m_projectileModel = Geometry.Load (def.ModelName, def.TextureDictionaryName);
+			s_projectileModel = Geometry.Load (def.ModelName, def.TextureDictionaryName);
 		}
 
-		void LoadProjectileAudio()
+		static void LoadProjectileAudio()
 		{
 			if (null == s_projectileSound)
 			{
@@ -392,8 +415,8 @@ namespace SanAndreasUnity.Behaviours
 			{
 				this.ProjectilePrefab = WeaponsSettings.projectilePrefab;
 				this.ReloadTime = WeaponsSettings.projectileReloadTime;
-				F.RunExceptionSafe(this.LoadProjectileModel);
-				F.RunExceptionSafe(this.LoadProjectileAudio);
+				F.RunExceptionSafe(LoadProjectileModel);
+				F.RunExceptionSafe(LoadProjectileAudio);
 			}
 
 		}
@@ -661,7 +684,7 @@ namespace SanAndreasUnity.Behaviours
 
             if (this.FiresProjectile)
             {
-	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), s_projectileSound, m_projectileModel, m_ped);
+	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), m_ped);
 	            return;
             }
 
