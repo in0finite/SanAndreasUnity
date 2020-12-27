@@ -17,5 +17,7 @@
 /.vs
 /.vscode
 /.idea
+/Assets/Plugins/Editor/JetBrains/
+/Assets/Plugins/Editor/JetBrains.meta
 
 /config.user.json
