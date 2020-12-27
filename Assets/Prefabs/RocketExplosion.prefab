@@ -107,7 +107,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -4680,7 +4680,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -9364,7 +9364,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -9791,7 +9791,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.3
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -10151,7 +10151,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 80
+        scalar: 30
         minScalar: 80
         maxCurve:
           serializedVersion: 2
@@ -12790,7 +12790,7 @@ ParticleSystem:
   CollisionModule:
     enabled: 0
     serializedVersion: 3
-    type: 0
+    type: 1
     collisionMode: 0
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
@@ -12968,7 +12968,7 @@ ParticleSystem:
       serializedVersion: 2
       m_Bits: 4294967295
     maxCollisionShapes: 256
-    quality: 0
+    quality: 1
     voxelSize: 0.5
     collisionMessages: 0
     collidesWithDynamic: 1
@@ -14093,7 +14093,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -14136,8 +14136,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 75
-      minScalar: 75
+      scalar: 2
+      minScalar: 2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -18705,7 +18705,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -23295,10 +23295,10 @@ GameObject:
   - component: {fileID: 11400000}
   - component: {fileID: 7300375720519918962}
   - component: {fileID: 3101637387823967307}
-  - component: {fileID: 2824767527029105014}
-  - component: {fileID: 7648126233732117826}
+  - component: {fileID: 428156375163227057}
+  - component: {fileID: 3774546475598895519}
   m_Layer: 0
-  m_Name: Explosion
+  m_Name: RocketExplosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23313,7 +23313,7 @@ Transform:
   m_GameObject: {fileID: 100010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.55323696, y: 0, z: -2.234365}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 400020}
   - {fileID: 400002}
@@ -23465,7 +23465,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2824767527029105014
+--- !u!114 &428156375163227057
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -23479,9 +23479,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverOnly: 0
   localPlayerAuthority: 0
-  m_AssetId: 2894e2899fe860745afbc810459e2cc2
+  m_AssetId: 4f8c6e508a3f69243ab7b8813398b7ed
   m_SceneId: 0
---- !u!114 &7648126233732117826
+--- !u!114 &3774546475598895519
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -23601,7 +23601,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -23742,8 +23742,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 500
-      minScalar: 300
+      scalar: 50
+      minScalar: 30
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -28209,7 +28209,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -32884,7 +32884,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3
@@ -37457,7 +37457,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 2
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3

@@ -110,6 +110,9 @@ namespace SanAndreasUnity.Behaviours {
 		public	bool	rotatePlayerInDirectionOfAiming = true;
 
 
+		private float m_timeSinceStartedReloading = 0;
+
+
 
         void Awake () {
 			
@@ -161,16 +164,30 @@ namespace SanAndreasUnity.Behaviours {
 			}
 
 			// reload weapon ammo clip
+
+			bool isReloadingNow = false;
+
 			if (NetStatus.IsServer)
 			{
 				if (CurrentWeapon != null) {
-					if (CurrentWeapon.AmmoClipSize > 0 && CurrentWeapon.AmmoInClip <= 0) {
-						int amountToRefill = Mathf.Min (CurrentWeapon.AmmoClipSize, CurrentWeapon.AmmoOutsideOfClip);
-						CurrentWeapon.AmmoInClip = amountToRefill;
-						CurrentWeapon.AmmoOutsideOfClip -= amountToRefill;
+					if (CurrentWeapon.AmmoClipSize > 0 && CurrentWeapon.AmmoInClip <= 0 && CurrentWeapon.AmmoOutsideOfClip > 0)
+					{
+						isReloadingNow = true;
+						m_timeSinceStartedReloading += Time.deltaTime;
+						if (m_timeSinceStartedReloading >= CurrentWeapon.ReloadTime)
+						{
+							m_timeSinceStartedReloading = 0;
+
+							int amountToRefill = Mathf.Min(CurrentWeapon.AmmoClipSize, CurrentWeapon.AmmoOutsideOfClip);
+							CurrentWeapon.AmmoInClip = amountToRefill;
+							CurrentWeapon.AmmoOutsideOfClip -= amountToRefill;
+						}
 					}
 				}
 			}
+
+			if (!isReloadingNow)
+				m_timeSinceStartedReloading = 0;
 
 		}
 
@@ -304,6 +321,7 @@ namespace SanAndreasUnity.Behaviours {
 			this.currentWeaponSlot = slotIndex;
 
 			m_frameWhenSwitchedWeapon = Time.frameCount;
+			m_timeSinceStartedReloading = 0;
 
 			if (NetStatus.IsServer)
 				m_ped.StopFiring ();

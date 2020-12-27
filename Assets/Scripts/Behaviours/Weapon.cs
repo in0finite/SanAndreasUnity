@@ -58,6 +58,8 @@ namespace SanAndreasUnity.Behaviours
 		public static readonly int FlameThrower = 361;
 		public static readonly int MiniGun = 362;
 
+		public static readonly int RocketProjectile = 345;
+
 	}
 
 //	public class WeaponData
@@ -114,6 +116,7 @@ namespace SanAndreasUnity.Behaviours
 		private static GameObject s_weaponsContainer = null;
 
 		public static Texture2D CrosshairTexture { get; set; }
+		public static Texture2D RocketCrosshairTexture { get; set; }
 		public static Texture2D FistTexture { get; set; }
 
 		public AnimationState AimAnimState { get; set; }
@@ -159,9 +162,38 @@ namespace SanAndreasUnity.Behaviours
 
         WeaponAttackParams m_lastRaycastWeaponAttackParams = WeaponAttackParams.Default;
 
+        static readonly HashSet<int> s_weaponsUsingProjectile = new HashSet<int>()
+        {
+	        WeaponId.RocketLauncher,
+	        WeaponId.RocketLauncherHS,
+        };
+
+        private static Geometry.GeometryParts s_projectileModel;
+        public static Geometry.GeometryParts ProjectileModel
+        {
+	        get
+	        {
+		        if (s_projectileModel != null)
+			        return s_projectileModel;
+		        F.RunExceptionSafe(LoadProjectileModel);
+		        return s_projectileModel;
+	        }
+        }
+
+        private static AudioClip s_projectileSound;
+        public static AudioClip ProjectileSound
+        {
+	        get
+	        {
+		        if (s_projectileSound != null)
+			        return s_projectileSound;
+		        F.RunExceptionSafe(LoadProjectileAudio);
+		        return s_projectileSound;
+	        }
+        }
 
 
-		static Weapon ()
+        static Weapon ()
 		{
 			// obtain all weapon types
 			var myType = typeof (Weapon);
@@ -279,6 +311,23 @@ namespace SanAndreasUnity.Behaviours
 			return weapon;
 		}
 
+		static void LoadProjectileModel()
+		{
+			if (s_projectileModel != null)
+				return;
+
+			var def = Item.GetDefinition<WeaponDef>(WeaponId.RocketProjectile);
+			s_projectileModel = Geometry.Load (def.ModelName, def.TextureDictionaryName);
+		}
+
+		static void LoadProjectileAudio()
+		{
+			if (null == s_projectileSound)
+			{
+				s_projectileSound = Audio.AudioManager.CreateAudioClipFromSfx("GENRL", 136, 68);
+			}
+		}
+
 		internal static void OnWeaponCreatedByServer(NetworkedWeapon networkedWeapon)
 		{
 
@@ -360,6 +409,15 @@ namespace SanAndreasUnity.Behaviours
 			this.CrouchAimAnimFireMaxTime = WeaponsManager.ConvertAnimTime (this.Data.gunData.animLoop2End);
 
 			this.CrouchSpineRotationOffset = WeaponsSettings.crouchSpineRotationOffset;
+
+			this.FiresProjectile = s_weaponsUsingProjectile.Contains(this.Data.modelId1);
+			if (this.FiresProjectile)
+			{
+				this.ProjectilePrefab = WeaponsSettings.projectilePrefab;
+				this.ReloadTime = WeaponsSettings.projectileReloadTime;
+				F.RunExceptionSafe(LoadProjectileModel);
+				F.RunExceptionSafe(LoadProjectileAudio);
+			}
 
 		}
 
@@ -507,6 +565,15 @@ namespace SanAndreasUnity.Behaviours
 
 		public Vector3 CrouchSpineRotationOffset { get; set; }
 
+		/// <summary>
+		/// True if weapon doesn't inflict damage instantly, but instead fires a projectile.
+		/// </summary>
+		public bool FiresProjectile { get; set; } = false;
+
+		public GameObject ProjectilePrefab { get; set; }
+
+		public float ReloadTime { get; set; } = 0;
+
 
 		// TODO: this function should be removed, and new one should be created: OnAnimsUpdated
 		public virtual void UpdateAnimWhileHolding ()
@@ -614,6 +681,12 @@ namespace SanAndreasUnity.Behaviours
 		{
 
             this.LastTimeWhenFired = Time.time;
+
+            if (this.FiresProjectile)
+            {
+	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), m_ped);
+	            return;
+            }
 
 			// raycast against all (non-breakable ?) objects
 
