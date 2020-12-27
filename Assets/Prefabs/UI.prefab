@@ -6028,7 +6028,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxNumChatMessages: 5
-  timeToRemoveMessage: 4
+  timeToRemoveMessage: 9
 --- !u!1 &5868683790642842582
 GameObject:
   m_ObjectHideFlags: 0
