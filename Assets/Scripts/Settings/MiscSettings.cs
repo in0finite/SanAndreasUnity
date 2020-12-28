@@ -150,6 +150,12 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { WeaponsManager.Instance.projectileReloadTime = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
+		OptionsWindow.FloatInput m_vehicleDetachedPartLifetime = new OptionsWindow.FloatInput ("Vehicle's detached part lifetime", 10, 120) {
+			isAvailable = () => VehicleManager.Instance != null,
+			getValue = () => VehicleManager.Instance.explosionLeftoverPartsLifetime,
+			setValue = (value) => { VehicleManager.Instance.explosionLeftoverPartsLifetime = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart
+		};
 
 
 
@@ -162,6 +168,7 @@ namespace SanAndreasUnity.Settings {
 				m_vehicleSyncRate, m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, 
 				m_syncVehiclesAngularVelocity, m_controlWheelsOnLocalPlayer, m_controlVehicleInputOnLocalPlayer, 
 				m_whenToDisableVehiclesRigidBody, m_syncPedTransformWhileInVehicle,
+				m_vehicleDetachedPartLifetime,
 				m_projectileReloadTime,
 			};
 
