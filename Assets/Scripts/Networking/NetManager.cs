@@ -32,6 +32,9 @@ namespace SanAndreasUnity.Net
 		NetworkClientStatus m_lastClientStatus = NetworkClientStatus.Disconnected;
 		public event System.Action onClientStatusChanged = delegate {};
 
+		private NetworkServerStatus m_lastServerStatus = NetworkServerStatus.Stopped;
+		public event System.Action onServerStatusChanged = delegate {};
+
 		public static int NumSpawnedNetworkObjects => NetworkIdentity.spawned.Count;
 
 
@@ -54,13 +57,17 @@ namespace SanAndreasUnity.Net
 		{
 
 			NetworkClientStatus clientStatusNow = NetStatus.clientStatus;
-
 			if (clientStatusNow != m_lastClientStatus)
 			{
 				m_lastClientStatus = clientStatusNow;
-
-				// notify
 				F.InvokeEventExceptionSafe(this.onClientStatusChanged);
+			}
+
+			NetworkServerStatus serverStatusNow = NetStatus.serverStatus;
+			if (serverStatusNow != m_lastServerStatus)
+			{
+				m_lastServerStatus = serverStatusNow;
+				F.InvokeEventExceptionSafe(this.onServerStatusChanged);
 			}
 
 		}
