@@ -463,7 +463,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             this.Health = this.MaxHealth = Mathf.Pow(this.HandlingData.Mass, VehicleManager.Instance.massToHealthExponent);
 
-            this.SetupDoorsHingeJoints();
+            //this.SetupDoorsHingeJoints();
 
             var frontSeat = GetPart("ped_frontseat");
             var backSeat = GetPart("ped_backseat");
