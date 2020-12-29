@@ -29,11 +29,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void InitializePhysics()
         {
-            //Debug.Log("aaa");
-
             _geometryParts.AttachCollisionModel(transform, true);
-
-            //Debug.Log("bbb");
 
             _rigidBody = gameObject.GetComponent<Rigidbody>();
 
@@ -46,11 +42,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             foreach (var wheel in _wheels)
             {
                 var front = (wheel.Alignment & WheelAlignment.Front) == WheelAlignment.Front;
-
-                //Debug.LogFormat("Handling is Null?: {0}", HandlingData == null);
-                /*b = HandlingData == null;
-                Debug.Log(b);
-                Debug.Break();*/
 
                 wheel.Parent.position -= Vector3.up * HandlingData.SuspensionLowerLimit;
 
