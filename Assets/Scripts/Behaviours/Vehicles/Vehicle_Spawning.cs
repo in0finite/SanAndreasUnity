@@ -463,20 +463,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             this.Health = this.MaxHealth = Mathf.Pow(this.HandlingData.Mass, VehicleManager.Instance.massToHealthExponent);
 
-            foreach (var pair in _frames.Where(x => x.Name.StartsWith("door_")))
-            {
-                var doorAlignment = GetDoorAlignment(pair.Name);
-
-                if (doorAlignment == DoorAlignment.None) continue;
-
-                var hinge = pair.gameObject.AddComponent<HingeJoint>();
-                hinge.axis = Vector3.up;
-                hinge.useLimits = true;
-
-                var limit = 90.0f * ((doorAlignment == DoorAlignment.LeftFront || doorAlignment == DoorAlignment.LeftRear) ? 1.0f : -1.0f);
-                hinge.limits = new JointLimits { min = Mathf.Min(0, limit), max = Mathf.Max(0, limit), };
-                hinge.connectedBody = gameObject.GetComponent<Rigidbody>();
-            }
+            this.SetupDoorsHingeJoints();
 
             var frontSeat = GetPart("ped_frontseat");
             var backSeat = GetPart("ped_backseat");
@@ -608,6 +595,24 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
             */
 
+        }
+
+        void SetupDoorsHingeJoints()
+        {
+            foreach (var pair in _frames.Where(x => x.Name.StartsWith("door_")))
+            {
+                var doorAlignment = GetDoorAlignment(pair.Name);
+
+                if (doorAlignment == DoorAlignment.None) continue;
+
+                var hinge = pair.gameObject.AddComponent<HingeJoint>();
+                hinge.axis = Vector3.up;
+                hinge.useLimits = true;
+
+                var limit = 90.0f * ((doorAlignment == DoorAlignment.LeftFront || doorAlignment == DoorAlignment.LeftRear) ? 1.0f : -1.0f);
+                hinge.limits = new JointLimits { min = Mathf.Min(0, limit), max = Mathf.Max(0, limit), };
+                hinge.connectedBody = gameObject.GetComponent<Rigidbody>();
+            }
         }
     }
 }
