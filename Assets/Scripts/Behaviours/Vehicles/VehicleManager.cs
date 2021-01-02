@@ -36,6 +36,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public GameObject flamePrefab;
         public GameObject explosionPrefab;
 
+        [Range(0f, 1f)] public float radioVolume = 1f;
+
 
 
         void Awake()

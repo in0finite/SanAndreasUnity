@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
@@ -27,7 +28,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void Awake_Radio()
         {
-            m_radioAudioSource = this.GetComponent<AudioSource>();
+            m_radioAudioSource = this.GetComponentOrThrow<AudioSource>();
+            m_radioAudioSource.volume = VehicleManager.Instance.radioVolume;
             m_currentRadioStationIndex = Random.Range(0, RadioStation.stations.Length);
         }
 
