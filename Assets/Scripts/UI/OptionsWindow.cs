@@ -325,7 +325,7 @@ namespace SanAndreasUnity.UI {
 		{
 			GUILayout.BeginHorizontal ();
 
-			if (Utilities.GUIUtils.ButtonWithCalculatedSize ("Reset"))
+			if (Utilities.GUIUtils.ButtonWithCalculatedSize ("Reset to defaults"))
 				ResetSettingsToDefaults ();
 
 			GUILayout.FlexibleSpace ();
