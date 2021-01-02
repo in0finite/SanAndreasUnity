@@ -49,12 +49,6 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { WeaponsManager.Instance.drawLineFromGun = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
-		OptionsWindow.BoolInput m_useTouchInput = new OptionsWindow.BoolInput ("Use touch input") {
-			isAvailable = () => UIManager.Instance != null,
-			getValue = () => UIManager.Instance.UseTouchInput,
-			setValue = (value) => { UIManager.Instance.UseTouchInput = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
 		OptionsWindow.BoolInput m_displayFpsInput = new OptionsWindow.BoolInput("Display FPS")
 		{
 			isAvailable = () => FPSDisplay.Instance != null,
@@ -68,63 +62,6 @@ namespace SanAndreasUnity.Settings {
 		// 	setValue = (value) => { UIManager.Instance.ImguiFontSize = value; GUIUtility.ExitGUI(); },
 		// 	persistType = OptionsWindow.InputPersistType.OnStart,
 		// };
-
-		OptionsWindow.FloatInput m_pedSyncRate = new OptionsWindow.FloatInput ("Ped sync rate", 1, 60) {
-			isAvailable = () => PedManager.Instance != null,
-			getValue = () => PedManager.Instance.pedSyncRate,
-			setValue = (value) => { ApplyPedSyncRate(value); },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
-
-		OptionsWindow.FloatInput m_vehicleSyncRate = new OptionsWindow.FloatInput ("Vehicle sync rate", 1, 60) {
-			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.vehicleSyncRate,
-			setValue = (value) => { ApplyVehicleSyncRate(value); },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
-		OptionsWindow.BoolInput m_syncVehicleTransformUsingSyncVars = new OptionsWindow.BoolInput ("Sync vehicle transform using syncvars") {
-			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.syncVehicleTransformUsingSyncVars,
-			setValue = (value) => { VehicleManager.Instance.syncVehicleTransformUsingSyncVars = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
-		OptionsWindow.BoolInput m_syncVehiclesLinearVelocity = new OptionsWindow.BoolInput ("Sync vehicle's linear velocity") {
-			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.syncLinearVelocity,
-			setValue = (value) => { VehicleManager.Instance.syncLinearVelocity = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
-		OptionsWindow.BoolInput m_syncVehiclesAngularVelocity = new OptionsWindow.BoolInput ("Sync vehicle's angular velocity") {
-			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.syncAngularVelocity,
-			setValue = (value) => { VehicleManager.Instance.syncAngularVelocity = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
-		OptionsWindow.BoolInput m_controlWheelsOnLocalPlayer = new OptionsWindow.BoolInput ("Control wheels on local player") {
-			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.controlWheelsOnLocalPlayer,
-			setValue = (value) => { VehicleManager.Instance.controlWheelsOnLocalPlayer = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
-		OptionsWindow.BoolInput m_controlVehicleInputOnLocalPlayer = new OptionsWindow.BoolInput ("Control vehicle input on local player") {
-			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.controlInputOnLocalPlayer,
-			setValue = (value) => { VehicleManager.Instance.controlInputOnLocalPlayer = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
-		OptionsWindow.EnumInput<WhenOnClient> m_whenToDisableVehiclesRigidBody = new OptionsWindow.EnumInput<WhenOnClient> () {
-			description = "When to disable vehicle rigid body on clients",
-			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.whenToDisableRigidBody,
-			setValue = (value) => { ApplyRigidBodyState(value); },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
-		OptionsWindow.BoolInput m_syncPedTransformWhileInVehicle = new OptionsWindow.BoolInput ("Sync ped transform while in vehicle") {
-			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.syncPedTransformWhileInVehicle,
-			setValue = (value) => { VehicleManager.Instance.syncPedTransformWhileInVehicle = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
 
 		OptionsWindow.BoolInput m_enableCamera = new OptionsWindow.BoolInput ("Enable camera") {
 			getValue = () => Camera.main != null && Camera.main.enabled,
@@ -156,20 +93,33 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { VehicleManager.Instance.explosionLeftoverPartsLifetime = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
+		OptionsWindow.BoolInput m_showSpeedometerInput = new OptionsWindow.BoolInput() {
+			description = "Show speedometer",
+			isAvailable = () => PedManager.Instance != null,
+			getValue = () => PedManager.Instance.showPedSpeedometer,
+			setValue = (value) => { PedManager.Instance.showPedSpeedometer = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
+		};
+		OptionsWindow.FloatInput m_turnSpeedInput = new OptionsWindow.FloatInput() {
+			description = "Turn speed",
+			minValue = 3,
+			maxValue = 30,
+			isAvailable = () => PedManager.Instance != null,
+			getValue = () => PedManager.Instance.pedTurnSpeed,
+			setValue = (value) => { PedManager.Instance.pedTurnSpeed = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
+		};
 
 
 
 		void Awake ()
 		{
-			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_physicsUpdateRate, m_gravityInput, m_displayHealthBarsInput, m_displayMinimapInput,
-				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera, m_useTouchInput, m_displayFpsInput,
+			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_physicsUpdateRate, m_gravityInput, m_showSpeedometerInput, m_displayHealthBarsInput, m_displayMinimapInput,
+				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera, m_displayFpsInput,
 				m_pausePlayerSpawning, m_playerSpawnInterval,
-				m_pedSyncRate,
-				m_vehicleSyncRate, m_syncVehicleTransformUsingSyncVars, m_syncVehiclesLinearVelocity, 
-				m_syncVehiclesAngularVelocity, m_controlWheelsOnLocalPlayer, m_controlVehicleInputOnLocalPlayer, 
-				m_whenToDisableVehiclesRigidBody, m_syncPedTransformWhileInVehicle,
 				m_vehicleDetachedPartLifetime,
 				m_projectileReloadTime,
+				m_turnSpeedInput,
 			};
 
 			foreach (var input in inputs)
@@ -180,36 +130,12 @@ namespace SanAndreasUnity.Settings {
 
 		}
 
-		static void ApplyPedSyncRate(float syncRate)
-		{
-			PedManager.Instance.pedSyncRate = syncRate;
-			foreach (var ped in Ped.AllPedsEnumerable)
-				ped.ApplySyncRate(syncRate);
-		}
-
-		static void ApplyVehicleSyncRate(float syncRate)
-		{
-			VehicleManager.Instance.vehicleSyncRate = syncRate;
-			foreach (var v in Vehicle.AllVehicles)
-			{
-				v.ApplySyncRate(syncRate);
-			}
-		}
-
-		static void ApplyRigidBodyState(WhenOnClient when)
-		{
-			VehicleManager.Instance.whenToDisableRigidBody = when;
-			foreach (var v in Vehicle.AllVehicles)
-				v.GetComponent<VehicleController>().EnableOrDisableRigidBody();
-		}
-
 		static void DisplayFPS(bool bDisplay)
 		{
 			FPSDisplay.Instance.fpsImage.enabled = bDisplay;
 			FPSDisplay.Instance.fpsText.enabled = bDisplay;
 			FPSDisplay.Instance.updateFPS = bDisplay;
 		}
-
 
 	}
 
