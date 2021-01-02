@@ -303,19 +303,6 @@ namespace SanAndreasUnity.UI {
 				}
 			}
 
-			/*
-			var groupings = s_registeredInputs.GroupBy (i => i.category);
-			foreach (var grouping in groupings)
-			{
-				GUILayout.Label ("\n" + grouping.Key + "\n");
-
-				foreach (var input in grouping)
-				{
-					input.Display ();
-				}
-			}
-			*/
-
 
 			onGUI ();
 
