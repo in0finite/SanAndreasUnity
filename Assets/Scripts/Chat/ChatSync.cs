@@ -35,10 +35,7 @@ namespace SanAndreasUnity.Chat
 			//	msg = msg.Replace ("<i>", "");
 			//	msg = msg.Replace (">", "\\>");
 
-			// Forward this message to all clients including the sender.
-		//	ChatManager.SendChatMessageToAllPlayers( msg, p.playerName );
-			onChatMessageReceivedOnServer( p, msg );
-
+			F.InvokeEventExceptionSafe(onChatMessageReceivedOnServer, p, msg);
 
 		}
 
