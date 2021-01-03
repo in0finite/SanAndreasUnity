@@ -280,7 +280,7 @@ namespace SanAndreasUnity
             }
         }
 
-        void BuildBodies()
+        public void BuildBodies()
         {
             foreach (BoneInfo bone in bones)
             {
@@ -289,7 +289,7 @@ namespace SanAndreasUnity
             }
         }
 
-        void BuildJoints()
+        public void BuildJoints()
         {
             foreach (BoneInfo bone in bones)
             {
@@ -335,7 +335,7 @@ namespace SanAndreasUnity
             bone.summedMass = mass;
         }
 
-        void CalculateMass()
+        public void CalculateMass()
         {
             // Calculate allChildMass by summing all bodies
             CalculateMassRecurse(rootBone);

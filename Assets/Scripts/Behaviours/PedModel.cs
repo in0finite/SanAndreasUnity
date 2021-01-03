@@ -100,6 +100,8 @@ namespace SanAndreasUnity.Behaviours
 
 		readonly Dictionary<Transform, int> m_damageLevelPerBones = new Dictionary<Transform, int>();
 
+		private RagdollBuilder m_ragdollBuilder;
+
 		public class FrameAnimData
 		{
 			public Vector3 pos;
@@ -332,7 +334,7 @@ namespace SanAndreasUnity.Behaviours
 
 			m_damageLevelPerBones.Clear();
 
-			RagdollBuilder rb = new RagdollBuilder
+			RagdollBuilder rb = m_ragdollBuilder = new RagdollBuilder
 			{
 				pelvis = this.RootFrame.transform,
 				leftHips = this.L_Thigh.transform,
@@ -349,6 +351,8 @@ namespace SanAndreasUnity.Behaviours
 				head = this.Head.transform,
 				jaw = this.Jaw.transform,
 			};
+
+			rb.totalMass = PedManager.Instance.ragdollMass;
 
 			rb.PrepareBones();
 			rb.OnWizardCreate();
@@ -376,6 +380,41 @@ namespace SanAndreasUnity.Behaviours
 				m_damageLevelPerBones[bone] = 3;
 			}
 
+		}
+
+		public Transform DetachRagdoll()
+		{
+			if (null == m_ragdollBuilder)
+				return null;
+
+			if (null == this.RootFrame)
+				return null;
+
+			m_ragdollBuilder.BuildBodies();
+			m_ragdollBuilder.BuildJoints();
+			m_ragdollBuilder.CalculateMass();
+
+			m_ragdollBuilder = null;
+
+			var ragdollTransform = this.RootFrame.transform;
+
+			ragdollTransform.SetParent(null);
+
+			// add velocity to ragdoll based on current ped's velocity
+			foreach (var rb in ragdollTransform.GetComponentsInChildren<Rigidbody>())
+			{
+				rb.velocity = m_ped.Velocity;
+			}
+
+			// change layer
+			ragdollTransform.gameObject.SetLayerRecursive(0);
+
+
+
+
+			Destroy(ragdollTransform.gameObject, PedManager.Instance.ragdollLifetime * Random.Range(0.85f, 1.15f));
+
+			return ragdollTransform;
 		}
 
 		public float GetAmountOfDamageForBone(Transform boneTransform, float baseDamageValue)

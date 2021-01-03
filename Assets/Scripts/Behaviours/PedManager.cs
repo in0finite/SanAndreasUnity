@@ -55,6 +55,11 @@ namespace SanAndreasUnity.Behaviours
 
 		public float pedSyncRate = 10;
 
+		[Header("Ragdoll")]
+
+		public float ragdollMass = 100f;
+		public float ragdollLifetime = 30f;
+
 
 		void Awake ()
 		{
