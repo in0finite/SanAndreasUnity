@@ -387,16 +387,23 @@ namespace SanAndreasUnity.Behaviours
 			if (null == m_ragdollBuilder)
 				return null;
 
-			if (null == this.UnnamedFrame)
+			if (null == this.RootFrame)
 				return null;
+
+			var ragdollTransform = this.RootFrame.transform;
+
+			// remove colliders which are not part of ragdoll
+			foreach (var c in m_ragdollBuilder.AdditionalColliders)
+			{
+				Debug.Log($"removing collider on {c.name} because it is not one of ragdoll bones");
+				Object.Destroy(c);
+			}
 
 			m_ragdollBuilder.BuildBodies();
 			m_ragdollBuilder.BuildJoints();
 			m_ragdollBuilder.CalculateMass();
 
 			m_ragdollBuilder = null;
-
-			var ragdollTransform = this.UnnamedFrame.transform;
 
 			ragdollTransform.SetParent(null);
 

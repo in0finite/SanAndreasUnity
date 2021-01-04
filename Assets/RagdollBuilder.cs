@@ -5,6 +5,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 #pragma warning disable 649
 
@@ -45,7 +46,7 @@ namespace SanAndreasUnity
         Vector3 worldForward = Vector3.forward;
         public bool flipForward = false;
 
-        class BoneInfo
+        public class BoneInfo
         {
             public string name;
 
@@ -68,8 +69,13 @@ namespace SanAndreasUnity
             public float summedMass;// The mass of this and all children bodies
         }
 
-        ArrayList bones;
+        List<BoneInfo> bones;
+        public List<BoneInfo> Bones => bones;
+
         BoneInfo rootBone;
+
+        public List<Collider> AdditionalColliders = new List<Collider>();
+
 
         string CheckConsistency()
         {
@@ -139,7 +145,7 @@ namespace SanAndreasUnity
                 worldForward = pelvis.TransformDirection(forward);
             }
 
-            bones = new ArrayList();
+            bones = new List<BoneInfo>();
 
             rootBone = new BoneInfo();
             rootBone.name = "Pelvis";
@@ -519,6 +525,9 @@ namespace SanAndreasUnity
             newBox.size = new Vector3(radius * 0.65f, 0.75f * breastBox.size.y, 0.5f * breastBox.size.z);
             newBox.center = breastBox.center + Vector3.right * (breastBox.size.x * 0.5f + newBox.size.x * 0.5f);
 
+
+            AdditionalColliders.Add(jawSphere);
+            AdditionalColliders.Add(newBox);
         }
     }
 }
