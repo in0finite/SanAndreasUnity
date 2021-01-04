@@ -390,12 +390,11 @@ namespace SanAndreasUnity.Behaviours
 			if (null == this.RootFrame)
 				return null;
 
-			var ragdollTransform = this.RootFrame.transform;
+			Transform ragdollTransform = this.RootFrame.transform;
 
 			// remove colliders which are not part of ragdoll
 			foreach (var c in m_ragdollBuilder.AdditionalColliders)
 			{
-				Debug.Log($"removing collider on {c.name} because it is not one of ragdoll bones");
 				Object.Destroy(c);
 			}
 
@@ -406,7 +405,9 @@ namespace SanAndreasUnity.Behaviours
 			m_ragdollBuilder = null;
 
 			ragdollTransform.SetParent(null);
+			ragdollTransform.name = "dead body " + m_ped.name;
 
+			// setup rigid bodies
 			foreach (var rb in ragdollTransform.GetComponentsInChildren<Rigidbody>())
 			{
 				rb.drag = PedManager.Instance.ragdollDrag;
@@ -434,10 +435,7 @@ namespace SanAndreasUnity.Behaviours
 			// change layer
 			ragdollTransform.gameObject.SetLayerRecursive(GameManager.DefaultLayerIndex);
 
-
-
-
-			Destroy(ragdollTransform.gameObject, PedManager.Instance.ragdollLifetime * Random.Range(0.85f, 1.15f));
+			Object.Destroy(ragdollTransform.gameObject, PedManager.Instance.ragdollLifetime * Random.Range(0.85f, 1.15f));
 
 			return ragdollTransform;
 		}
