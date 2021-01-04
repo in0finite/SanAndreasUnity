@@ -412,6 +412,7 @@ namespace SanAndreasUnity.Behaviours
 				rb.drag = PedManager.Instance.ragdollDrag;
 				if (PedManager.Instance.ragdollMaxDepenetrationVelocity >= 0)
 					rb.maxDepenetrationVelocity = PedManager.Instance.ragdollMaxDepenetrationVelocity;
+				rb.collisionDetectionMode = PedManager.Instance.ragdollCollisionDetectionMode;
 
 				// add velocity to ragdoll based on current ped's velocity
 				rb.velocity = m_ped.Velocity;

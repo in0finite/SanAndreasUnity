@@ -176,6 +176,7 @@ MonoBehaviour:
   ragdollDrag: 0.05
   ragdollMaxDepenetrationVelocity: -1
   ragdollDamageForce: 50
+  ragdollCollisionDetectionMode: 2
 --- !u!114 &114560248511158306
 MonoBehaviour:
   m_ObjectHideFlags: 0
