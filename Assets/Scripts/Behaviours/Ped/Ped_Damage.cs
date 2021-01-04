@@ -16,6 +16,11 @@ namespace SanAndreasUnity.Behaviours
 
 		public Bar HealthBar { get; private set; }
 
+		/// <summary>
+		/// Damage info that killed the ped.
+		/// </summary>
+		public DamageInfo KillingDamageInfo { get; set; }
+
 
 
 		void AwakeForDamage ()

@@ -59,6 +59,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public float ragdollMass = 100f;
 		public float ragdollLifetime = 30f;
+		public float ragdollDrag = 0.05f;
+		public float ragdollMaxDepenetrationVelocity = 10f;
+		public float ragdollDamageForce = 4f;
 
 
 		void Awake ()

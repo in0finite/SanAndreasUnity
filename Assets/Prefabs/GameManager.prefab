@@ -171,6 +171,11 @@ MonoBehaviour:
   AIOutOfRangeTimeout: 5
   AIOutOfRangeDistance: 250
   pedSyncRate: 20
+  ragdollMass: 100
+  ragdollLifetime: 90
+  ragdollDrag: 0.05
+  ragdollMaxDepenetrationVelocity: -1
+  ragdollDamageForce: 50
 --- !u!114 &114560248511158306
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -713,9 +713,11 @@ namespace SanAndreasUnity.Behaviours
 						{
 							amount = this.Damage,
 							raycastHitTransform = hit.collider.transform,
+							hitDirection = fireDir,
 							hitPoint = hit.point,
 							hitNormal = hit.normal,
 							attacker = m_ped,
+							damageType = DamageType.Bullet,
 						});
 					}
 					

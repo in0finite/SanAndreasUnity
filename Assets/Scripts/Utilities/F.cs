@@ -92,6 +92,15 @@ namespace SanAndreasUnity.Utilities
 			return Mathf.RoundToInt (f);
 		}
 
+		public static float SqrtOrZero(this float f)
+		{
+			if (float.IsNaN(f))
+				return 0f;
+			if (f <= 0f)
+				return 0f;
+			return Mathf.Sqrt(f);
+		}
+
         public static double DateTimeToUnixTimestamp(this DateTime dateTime)
         {
             return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -

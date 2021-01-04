@@ -210,7 +210,7 @@ namespace SanAndreasUnity.Behaviours
 
 			if (this.PlayerModel != null)
 			{
-				this.PlayerModel.DetachRagdoll();
+				this.PlayerModel.DetachRagdoll(this.KillingDamageInfo);
 			}
 		}
 

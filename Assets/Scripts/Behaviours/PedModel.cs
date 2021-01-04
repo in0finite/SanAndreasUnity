@@ -382,12 +382,12 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		public Transform DetachRagdoll()
+		public Transform DetachRagdoll(DamageInfo damageInfo)
 		{
 			if (null == m_ragdollBuilder)
 				return null;
 
-			if (null == this.RootFrame)
+			if (null == this.UnnamedFrame)
 				return null;
 
 			m_ragdollBuilder.BuildBodies();
@@ -396,18 +396,35 @@ namespace SanAndreasUnity.Behaviours
 
 			m_ragdollBuilder = null;
 
-			var ragdollTransform = this.RootFrame.transform;
+			var ragdollTransform = this.UnnamedFrame.transform;
 
 			ragdollTransform.SetParent(null);
 
-			// add velocity to ragdoll based on current ped's velocity
 			foreach (var rb in ragdollTransform.GetComponentsInChildren<Rigidbody>())
 			{
+				rb.drag = PedManager.Instance.ragdollDrag;
+				if (PedManager.Instance.ragdollMaxDepenetrationVelocity >= 0)
+					rb.maxDepenetrationVelocity = PedManager.Instance.ragdollMaxDepenetrationVelocity;
+
+				// add velocity to ragdoll based on current ped's velocity
 				rb.velocity = m_ped.Velocity;
 			}
 
+			// apply force to a collider that was hit by a weapon
+			if (damageInfo != null && damageInfo.raycastHitTransform != null && damageInfo.damageType == DamageType.Bullet)
+			{
+				var c = damageInfo.raycastHitTransform.GetComponent<Collider>();
+				if (c != null && c.attachedRigidbody != null)
+				{
+					c.attachedRigidbody.AddForceAtPosition(
+						damageInfo.hitDirection * damageInfo.amount.SqrtOrZero() * PedManager.Instance.ragdollDamageForce,
+						damageInfo.hitPoint,
+						ForceMode.Impulse);
+				}
+			}
+
 			// change layer
-			ragdollTransform.gameObject.SetLayerRecursive(0);
+			ragdollTransform.gameObject.SetLayerRecursive(GameManager.DefaultLayerIndex);
 
 
 
