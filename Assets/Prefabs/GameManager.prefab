@@ -171,6 +171,8 @@ MonoBehaviour:
   AIOutOfRangeTimeout: 5
   AIOutOfRangeDistance: 250
   pedSyncRate: 20
+  ragdollPrefab: {fileID: 2141754834917738923, guid: 14d22e60f4926f64cbd36f393fe11b9a,
+    type: 3}
   ragdollMass: 100
   ragdollLifetime: 90
   ragdollDrag: 0.05

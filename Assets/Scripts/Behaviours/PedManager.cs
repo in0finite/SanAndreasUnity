@@ -57,6 +57,7 @@ namespace SanAndreasUnity.Behaviours
 
 		[Header("Ragdoll")]
 
+		public GameObject ragdollPrefab;
 		public float ragdollMass = 100f;
 		public float ragdollLifetime = 30f;
 		public float ragdollDrag = 0.05f;

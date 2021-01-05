@@ -383,7 +383,7 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		public Transform DetachRagdoll(DamageInfo damageInfo)
+		public GameObject DetachRagdoll(DamageInfo damageInfo)
 		{
 			if (null == m_ragdollBuilder)
 				return null;
@@ -406,7 +406,6 @@ namespace SanAndreasUnity.Behaviours
 			m_ragdollBuilder = null;
 
 			ragdollTransform.SetParent(null);
-			ragdollTransform.name = "dead body " + m_ped.name;
 
 			// setup rigid bodies
 			foreach (var rb in ragdollTransform.GetComponentsInChildren<Rigidbody>())
@@ -436,14 +435,16 @@ namespace SanAndreasUnity.Behaviours
 			// change layer
 			ragdollTransform.gameObject.SetLayerRecursive(GameManager.DefaultLayerIndex);
 
-			Object.Destroy(ragdollTransform.gameObject, PedManager.Instance.ragdollLifetime * Random.Range(0.85f, 1.15f));
+			GameObject ragdollGameObject = Object.Instantiate(PedManager.Instance.ragdollPrefab);
+			Object.Destroy(ragdollGameObject, PedManager.Instance.ragdollLifetime * Random.Range(0.85f, 1.15f));
+			ragdollGameObject.name = "dead body " + m_ped.name;
+			ragdollTransform.SetParent(ragdollGameObject.transform);
+			ragdollGameObject.GetComponentOrThrow<DeadBody>();
 
-			ragdollTransform.gameObject.AddComponent<DeadBody>();
-			ragdollTransform.gameObject.AddComponent<Damageable>();
-			var pushableByDamage = ragdollTransform.gameObject.AddComponent<PushableByDamage>();
-			pushableByDamage.forceMultiplier = PedManager.Instance.ragdollDamageForceWhenDetached;
+			if (Net.NetStatus.IsServer)
+				Net.NetManager.Spawn(ragdollGameObject);
 
-			return ragdollTransform;
+			return ragdollGameObject;
 		}
 
 		public float GetAmountOfDamageForBone(Transform boneTransform, float baseDamageValue)
