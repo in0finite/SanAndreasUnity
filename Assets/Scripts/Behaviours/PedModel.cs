@@ -439,6 +439,9 @@ namespace SanAndreasUnity.Behaviours
 			Object.Destroy(ragdollTransform.gameObject, PedManager.Instance.ragdollLifetime * Random.Range(0.85f, 1.15f));
 
 			ragdollTransform.gameObject.AddComponent<DeadBody>();
+			ragdollTransform.gameObject.AddComponent<Damageable>();
+			var pushableByDamage = ragdollTransform.gameObject.AddComponent<PushableByDamage>();
+			pushableByDamage.forceMultiplier = PedManager.Instance.ragdollDamageForceWhenDetached;
 
 			return ragdollTransform;
 		}
