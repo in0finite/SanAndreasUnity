@@ -207,6 +207,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             // assign explosion sound
             F.RunExceptionSafe(() => AssignExplosionSound(explosionGo));
 
+            // kill all peds inside
+            foreach (Ped ped in this.Seats
+                .Select(s => s.OccupyingPed)
+                .Where(p => p != null)
+                .ToList())
+            {
+                ped.Kill();
+            }
         }
 
         public void DetachFrameDuringExplosion(string frameName, float mass, GameObject parentGo)

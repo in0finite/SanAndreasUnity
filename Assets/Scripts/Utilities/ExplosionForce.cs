@@ -16,8 +16,7 @@ namespace SanAndreasUnity.Utilities
 
         private IEnumerator Start()
         {
-            // wait one frame because some explosions instantiate debris which should then
-            // be pushed by physics force
+            // wait one frame because some objects can be spawned right after the explosion
             yield return null;
 
             float multiplier = this.explosionMultiplier;
