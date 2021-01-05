@@ -1,20 +1,15 @@
-﻿using SanAndreasUnity.Utilities;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.Utilities
 {
     public class PushableByDamage : MonoBehaviour
     {
-        //public Rigidbody rigidBodyToPush;
         public float forceMultiplier = 1;
         private Damageable _damageable;
 
 
         private void Awake()
         {
-            // if (null == this.rigidBodyToPush)
-            //     this.rigidBodyToPush = this.GetComponentOrThrow<Rigidbody>();
-
             _damageable = this.GetComponentOrThrow<Damageable>();
             _damageable.OnDamageEvent.AddListener(this.OnDamaged);
         }
@@ -23,9 +18,6 @@ namespace SanAndreasUnity.Behaviours
         {
             if (!NetUtils.IsServer)
                 return;
-
-            // if (null == this.rigidBodyToPush)
-            //     return;
 
             DamageInfo damageInfo = _damageable.LastDamageInfo;
 
