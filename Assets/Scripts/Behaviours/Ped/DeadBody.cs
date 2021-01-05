@@ -28,5 +28,23 @@ namespace SanAndreasUnity.Behaviours.Peds
         {
             _deadBodies.Remove(this);
         }
+
+        public static DeadBody Create(Transform ragdollTransform, Ped ped)
+        {
+            NetStatus.ThrowIfNotOnServer();
+
+            GameObject ragdollGameObject = Object.Instantiate(PedManager.Instance.ragdollPrefab);
+            DeadBody deadBody = ragdollGameObject.GetComponentOrThrow<DeadBody>();
+
+            Object.Destroy(ragdollGameObject, PedManager.Instance.ragdollLifetime * Random.Range(0.85f, 1.15f));
+
+            ragdollGameObject.name = "dead body " + ped.name;
+
+            ragdollTransform.SetParent(ragdollGameObject.transform);
+
+            NetManager.Spawn(ragdollGameObject);
+
+            return deadBody;
+        }
     }
 }

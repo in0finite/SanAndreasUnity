@@ -435,16 +435,7 @@ namespace SanAndreasUnity.Behaviours
 			// change layer
 			ragdollTransform.gameObject.SetLayerRecursive(GameManager.DefaultLayerIndex);
 
-			GameObject ragdollGameObject = Object.Instantiate(PedManager.Instance.ragdollPrefab);
-			Object.Destroy(ragdollGameObject, PedManager.Instance.ragdollLifetime * Random.Range(0.85f, 1.15f));
-			ragdollGameObject.name = "dead body " + m_ped.name;
-			ragdollTransform.SetParent(ragdollGameObject.transform);
-			ragdollGameObject.GetComponentOrThrow<DeadBody>();
-
-			if (Net.NetStatus.IsServer)
-				Net.NetManager.Spawn(ragdollGameObject);
-
-			return ragdollGameObject;
+			return DeadBody.Create(ragdollTransform, m_ped).gameObject;
 		}
 
 		public float GetAmountOfDamageForBone(Transform boneTransform, float baseDamageValue)
