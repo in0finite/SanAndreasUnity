@@ -1,4 +1,5 @@
 ﻿using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Behaviours.Peds;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.UI;
 using SanAndreasUnity.Utilities;
@@ -14,6 +15,15 @@ namespace SanAndreasUnity.Settings
 			setValue = (value) => { ApplyPedSyncRate(value); },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
+        OptionsWindow.FloatInput m_deadBodySyncRate = new OptionsWindow.FloatInput
+        {
+	        description = "Dead body sync rate",
+	        minValue = 1,
+	        maxValue = 60,
+	        getValue = () => PedManager.Instance.ragdollSyncRate,
+	        setValue = ApplyDeadBodySyncRate,
+	        persistType = OptionsWindow.InputPersistType.OnStart,
+        };
 
 		OptionsWindow.FloatInput m_vehicleSyncRate = new OptionsWindow.FloatInput ("Vehicle sync rate", 1, 60) {
 			isAvailable = () => VehicleManager.Instance != null,
@@ -69,6 +79,7 @@ namespace SanAndreasUnity.Settings
         {
             OptionsWindow.RegisterInputs ("NET",
 	            m_pedSyncRate,
+	            m_deadBodySyncRate,
 	            m_vehicleSyncRate,
 	            m_syncVehicleTransformUsingSyncVars,
 	            m_syncVehiclesLinearVelocity,
@@ -84,6 +95,13 @@ namespace SanAndreasUnity.Settings
 	        PedManager.Instance.pedSyncRate = syncRate;
 	        foreach (var ped in Ped.AllPedsEnumerable)
 		        ped.ApplySyncRate(syncRate);
+        }
+
+        static void ApplyDeadBodySyncRate(float syncRate)
+        {
+	        PedManager.Instance.ragdollSyncRate = syncRate;
+	        foreach (var deadBody in DeadBody.DeadBodies)
+		        deadBody.RefreshSyncRate();
         }
 
         static void ApplyVehicleSyncRate(float syncRate)

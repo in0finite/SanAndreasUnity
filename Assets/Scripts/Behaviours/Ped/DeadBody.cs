@@ -38,6 +38,8 @@ namespace SanAndreasUnity.Behaviours.Peds
         {
             this.PushableByDamage = this.GetComponentOrThrow<PushableByDamage>();
             this.PushableByDamage.forceMultiplier = PedManager.Instance.ragdollDamageForceWhenDetached;
+
+            this.RefreshSyncRate();
         }
 
         private void OnEnable()
@@ -165,6 +167,11 @@ namespace SanAndreasUnity.Behaviours.Peds
             {
 
             }
+        }
+
+        public void RefreshSyncRate()
+        {
+            this.syncInterval = 1.0f / PedManager.Instance.ragdollSyncRate;
         }
     }
 }
