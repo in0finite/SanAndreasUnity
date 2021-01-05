@@ -383,7 +383,7 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		public GameObject DetachRagdoll(DamageInfo damageInfo)
+		public DeadBody DetachRagdoll(DamageInfo damageInfo)
 		{
 			if (null == m_ragdollBuilder)
 				return null;
@@ -435,7 +435,7 @@ namespace SanAndreasUnity.Behaviours
 			// change layer
 			ragdollTransform.gameObject.SetLayerRecursive(GameManager.DefaultLayerIndex);
 
-			return DeadBody.Create(ragdollTransform, m_ped).gameObject;
+			return DeadBody.Create(ragdollTransform, m_ped);
 		}
 
 		public float GetAmountOfDamageForBone(Transform boneTransform, float baseDamageValue)
