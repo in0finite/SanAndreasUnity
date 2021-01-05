@@ -21,6 +21,8 @@ namespace SanAndreasUnity.Behaviours
 		/// </summary>
 		public DamageInfo KillingDamageInfo { get; set; }
 
+		private bool m_alreadyKilled = false;
+
 
 
 		void AwakeForDamage ()
@@ -128,6 +130,26 @@ namespace SanAndreasUnity.Behaviours
 			msg.TextColor = PedManager.Instance.inflictedDamageMessageColor;
 			msg.timeLeft = PedManager.Instance.inflictedDamageMessageLifetime;
 			msg.Text = damageAmount.ToString();
+		}
+
+		public void Kill()
+		{
+			F.RunExceptionSafe(this.KillInternal);
+		}
+
+		void KillInternal()
+		{
+			if (m_alreadyKilled)
+				return;
+
+			m_alreadyKilled = true;
+
+			if (this.PlayerModel != null)
+			{
+				this.PlayerModel.DetachRagdoll(this.KillingDamageInfo);
+			}
+
+			Object.Destroy(this.gameObject);
 		}
 
 	}

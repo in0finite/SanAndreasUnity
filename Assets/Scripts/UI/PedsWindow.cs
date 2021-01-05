@@ -164,7 +164,7 @@ namespace SanAndreasUnity.UI {
 		{
 			foreach (var p in Ped.AllPeds)
 			{
-				Destroy (p.gameObject);
+				p.Kill();
 			}
 		}
 

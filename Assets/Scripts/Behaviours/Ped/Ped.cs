@@ -207,11 +207,6 @@ namespace SanAndreasUnity.Behaviours
 		void OnDisable ()
 		{
 			s_allPeds.Remove (this);
-
-			if (this.PlayerModel != null)
-			{
-				this.PlayerModel.DetachRagdoll(this.KillingDamageInfo);
-			}
 		}
 
 
