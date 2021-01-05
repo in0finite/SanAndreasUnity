@@ -23,6 +23,8 @@ namespace SanAndreasUnity.Behaviours.Peds
 
         private Dictionary<int, Transform> m_framesDict = new Dictionary<int, Transform>();
 
+        private Dictionary<int, Rigidbody> m_rigidBodiesDict = new Dictionary<int, Rigidbody>();
+
         [SyncVar] private int m_net_modelId;
 
         private class SyncDictionaryIntVector3 : SyncDictionary<int, Vector3>
@@ -31,6 +33,7 @@ namespace SanAndreasUnity.Behaviours.Peds
 
         private SyncDictionaryIntVector3 m_syncDictionaryBonePositions = new SyncDictionaryIntVector3();
         private SyncDictionaryIntVector3 m_syncDictionaryBoneRotations = new SyncDictionaryIntVector3();
+        private SyncDictionaryIntVector3 m_syncDictionaryBoneVelocities = new SyncDictionaryIntVector3();
 
 
 
@@ -82,6 +85,7 @@ namespace SanAndreasUnity.Behaviours.Peds
 
             var geoms = Geometry.Load(def.ModelName, def.TextureDictionaryName);
             var frames = geoms.AttachFrames(this.transform, MaterialFlags.Default);
+
             m_framesDict = frames.ToDictionary(f => f.BoneId, f => f.transform);
 
             // apply initial transformation data to bones (at the moment when ragdoll was detached) - this is needed because not all bones have rigid bodies
@@ -129,6 +133,13 @@ namespace SanAndreasUnity.Behaviours.Peds
             deadBody.m_framesDict = ragdollTransform.GetComponentsInChildren<Frame>()
                 .ToDictionary(f => f.BoneId, f => f.transform);
 
+            foreach (var pair in deadBody.m_framesDict)
+            {
+                var rb = pair.Value.GetComponent<Rigidbody>();
+                if (rb != null)
+                    deadBody.m_rigidBodiesDict.Add(pair.Key, rb);
+            }
+
             deadBody.InitSyncVarsOnServer(ped);
 
             NetManager.Spawn(ragdollGameObject);
@@ -146,6 +157,12 @@ namespace SanAndreasUnity.Behaviours.Peds
                 m_syncDictionaryBonePositions.Add(pair.Key, pair.Value.localPosition);
                 m_syncDictionaryBoneRotations.Add(pair.Key, pair.Value.localRotation.eulerAngles);
             }
+
+            // assign initial velocities
+            foreach (var pair in m_rigidBodiesDict)
+            {
+                m_syncDictionaryBoneVelocities.Add(pair.Key, pair.Value.velocity);
+            }
         }
 
         private void Update()
@@ -162,10 +179,23 @@ namespace SanAndreasUnity.Behaviours.Peds
                     if (m_syncDictionaryBoneRotations[pair.Key] != rotation)
                         m_syncDictionaryBoneRotations[pair.Key] = rotation;
                 }
+
+                foreach (var pair in m_rigidBodiesDict)
+                {
+                    Vector3 velocity = pair.Value.velocity;
+                    if (m_syncDictionaryBoneVelocities[pair.Key] != velocity)
+                        m_syncDictionaryBoneVelocities[pair.Key] = velocity;
+                }
             }
             else
             {
-
+                // apply velocity on clients
+                foreach (var pair in m_syncDictionaryBoneVelocities)
+                {
+                    int boneId = pair.Key;
+                    if (m_framesDict.TryGetValue(boneId, out Transform tr))
+                        tr.position += pair.Value * Time.deltaTime;
+                }
             }
         }
 
