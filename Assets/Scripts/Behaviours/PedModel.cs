@@ -5,6 +5,7 @@ using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Animation;
 using UnityEngine;
 using System.Linq;
+using SanAndreasUnity.Behaviours.Peds;
 using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours
@@ -436,6 +437,8 @@ namespace SanAndreasUnity.Behaviours
 			ragdollTransform.gameObject.SetLayerRecursive(GameManager.DefaultLayerIndex);
 
 			Object.Destroy(ragdollTransform.gameObject, PedManager.Instance.ragdollLifetime * Random.Range(0.85f, 1.15f));
+
+			ragdollTransform.gameObject.AddComponent<DeadBody>();
 
 			return ragdollTransform;
 		}

@@ -5,6 +5,7 @@ using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using System.Linq;
+using SanAndreasUnity.Behaviours.Peds;
 
 namespace SanAndreasUnity.UI {
 
@@ -62,10 +63,12 @@ namespace SanAndreasUnity.UI {
 
 			if (NetUtils.IsServer)
 			{
-				// button to kill all peds
-				if (GUILayout.Button ("Kill all peds", GUILayout.Width (100))) {
+				if (GUILayout.Button ("Kill all peds", GUILayout.Width (100)))
 					KillAllPeds ();
-				}
+
+				if (GUILayout.Button ("Remove all dead bodies", GUILayout.Width (180)))
+					RemoveAllDeadBodies ();
+
 				GUILayout.Space (5);
 			}
 
@@ -159,11 +162,18 @@ namespace SanAndreasUnity.UI {
 
 		private static void KillAllPeds ()
 		{
-
-			foreach (var p in Ped.AllPeds) {
+			foreach (var p in Ped.AllPeds)
+			{
 				Destroy (p.gameObject);
 			}
+		}
 
+		private static void RemoveAllDeadBodies ()
+		{
+			foreach (var db in DeadBody.DeadBodies.ToList())
+			{
+				Destroy (db.gameObject);
+			}
 		}
 
 	}
