@@ -1,6 +1,5 @@
 ﻿using SanAndreasUnity.Importing.Conversion;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using System.Linq;
 
@@ -338,7 +337,7 @@ public static class FontsImporter
                 }
             }
         }
-        flipped.Apply(false, true);
+        flipped.Apply(true, true);
 
         return flipped;
     }
