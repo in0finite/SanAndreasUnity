@@ -338,7 +338,7 @@ public static class FontsImporter
                 }
             }
         }
-        flipped.Apply(true, true);
+        flipped.Apply(false, true);
 
         return flipped;
     }
