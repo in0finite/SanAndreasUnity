@@ -19,7 +19,19 @@ namespace SanAndreasUnity.Behaviours.Peds
 
         public PushableByDamage PushableByDamage { get; private set; }
 
-        private Dictionary<int, Transform> m_framesDict = new Dictionary<int, Transform>();
+        private struct BoneInfo
+        {
+            public BoneInfo(Transform transform)
+            {
+                this.Transform = transform;
+                this.Rigidbody = transform.GetComponent<Rigidbody>();
+            }
+
+            public Transform Transform { get; set; }
+            public Rigidbody Rigidbody { get; set; }
+        }
+
+        private Dictionary<int, BoneInfo> m_framesDict = new Dictionary<int, BoneInfo>();
 
         private Dictionary<int, Rigidbody> m_rigidBodiesDict = new Dictionary<int, Rigidbody>();
 
@@ -84,7 +96,7 @@ namespace SanAndreasUnity.Behaviours.Peds
             }
             model.RagdollBuilder.BuildJoints();
 
-            m_framesDict = model.Frames.ToDictionary(f => f.BoneId, f => f.transform);
+            m_framesDict = model.Frames.ToDictionary(f => f.BoneId, f => new BoneInfo(f.transform));
 
             Object.Destroy(model.AnimComponent);
             Object.Destroy(model);
@@ -93,14 +105,15 @@ namespace SanAndreasUnity.Behaviours.Peds
             foreach (var pair in m_framesDict)
             {
                 int boneId = pair.Key;
-                Transform tr = pair.Value;
+                BoneInfo boneInfo = pair.Value;
+                Transform tr = pair.Value.Transform;
 
                 if (m_syncDictionaryBonePositions.TryGetValue(boneId, out Vector3 pos))
                     tr.localPosition = pos;
                 if (m_syncDictionaryBoneRotations.TryGetValue(boneId, out Vector3 rotation))
                     tr.localRotation = Quaternion.Euler(rotation);
                 if (m_syncDictionaryBoneVelocities.TryGetValue(boneId, out Vector3 receivedVelocity))
-                    SetVelocity(tr, receivedVelocity);
+                    SetVelocity(boneInfo, receivedVelocity);
             }
 
             // register to dictionary callbacks
@@ -115,12 +128,12 @@ namespace SanAndreasUnity.Behaviours.Peds
                 SetVelocity);
         }
 
-        private void RegisterDictionaryCallback<T>(SyncDictionary<int, T> dict, System.Action<Transform, T> action)
+        private void RegisterDictionaryCallback<T>(SyncDictionary<int, T> dict, System.Action<BoneInfo, T> action)
         {
             dict.Callback += (op, key, item) => F.RunExceptionSafe(() =>
             {
-                if (m_framesDict.TryGetValue(key, out Transform tr))
-                    action(tr, item);
+                if (m_framesDict.TryGetValue(key, out BoneInfo boneInfo))
+                    action(boneInfo, item);
             });
         }
 
@@ -138,11 +151,11 @@ namespace SanAndreasUnity.Behaviours.Peds
             ragdollTransform.SetParent(ragdollGameObject.transform);
 
             deadBody.m_framesDict = ragdollTransform.GetComponentsInChildren<Frame>()
-                .ToDictionary(f => f.BoneId, f => f.transform);
+                .ToDictionary(f => f.BoneId, f => new BoneInfo(f.transform));
 
             foreach (var pair in deadBody.m_framesDict)
             {
-                var rb = pair.Value.GetComponent<Rigidbody>();
+                var rb = pair.Value.Rigidbody;
                 if (rb != null)
                     deadBody.m_rigidBodiesDict.Add(pair.Key, rb);
             }
@@ -161,8 +174,8 @@ namespace SanAndreasUnity.Behaviours.Peds
             // assign initial bones transformations
             foreach (var pair in m_framesDict)
             {
-                m_syncDictionaryBonePositions.Add(pair.Key, pair.Value.localPosition);
-                m_syncDictionaryBoneRotations.Add(pair.Key, pair.Value.localRotation.eulerAngles);
+                m_syncDictionaryBonePositions.Add(pair.Key, pair.Value.Transform.localPosition);
+                m_syncDictionaryBoneRotations.Add(pair.Key, pair.Value.Transform.localRotation.eulerAngles);
             }
 
             // assign initial velocities
@@ -178,8 +191,8 @@ namespace SanAndreasUnity.Behaviours.Peds
             {
                 foreach (var pair in m_framesDict)
                 {
-                    Vector3 pos = pair.Value.localPosition;
-                    Vector3 rotation = pair.Value.localRotation.eulerAngles;
+                    Vector3 pos = pair.Value.Transform.localPosition;
+                    Vector3 rotation = pair.Value.Transform.localRotation.eulerAngles;
 
                     if (m_syncDictionaryBonePositions[pair.Key] != pos)
                         m_syncDictionaryBonePositions[pair.Key] = pos;
@@ -199,7 +212,7 @@ namespace SanAndreasUnity.Behaviours.Peds
                 foreach (var pair in m_framesDict)
                 {
                     int boneId = pair.Key;
-                    Transform tr = pair.Value;
+                    Transform tr = pair.Value.Transform;
 
                     // rotation
                     if (m_syncDictionaryBoneRotations.TryGetValue(boneId, out Vector3 rotation))
@@ -261,9 +274,9 @@ namespace SanAndreasUnity.Behaviours.Peds
             return tr.TransformVector(receivedVelocity);
         }
 
-        private static void SetVelocity(Transform tr, Vector3 receivedVelocity)
+        private static void SetVelocity(BoneInfo boneInfo, Vector3 receivedVelocity)
         {
-            tr.GetComponent<Rigidbody>().velocity = GetReceivedVelocityAsWorld(tr, receivedVelocity);
+            boneInfo.Rigidbody.velocity = GetReceivedVelocityAsWorld(boneInfo.Transform, receivedVelocity);
         }
     }
 }
