@@ -106,12 +106,11 @@ namespace SanAndreasUnity.Behaviours.Peds
             {
                 int boneId = pair.Key;
                 BoneInfo boneInfo = pair.Value;
-                Transform tr = pair.Value.Transform;
 
                 if (m_syncDictionaryBonePositions.TryGetValue(boneId, out Vector3 pos))
-                    tr.localPosition = pos;
+                    SetPosition(boneInfo, pos);
                 if (m_syncDictionaryBoneRotations.TryGetValue(boneId, out Vector3 rotation))
-                    tr.localRotation = Quaternion.Euler(rotation);
+                    SetRotation(boneInfo, rotation);
                 if (m_syncDictionaryBoneVelocities.TryGetValue(boneId, out Vector3 receivedVelocity))
                     SetVelocity(boneInfo, receivedVelocity);
             }
@@ -212,11 +211,12 @@ namespace SanAndreasUnity.Behaviours.Peds
                 foreach (var pair in m_framesDict)
                 {
                     int boneId = pair.Key;
-                    Transform tr = pair.Value.Transform;
+                    BoneInfo boneInfo = pair.Value;
+                    Transform tr = boneInfo.Transform;
 
                     // rotation
                     if (m_syncDictionaryBoneRotations.TryGetValue(boneId, out Vector3 rotation))
-                        tr.localRotation = Quaternion.Euler(rotation);
+                        SetRotation(boneInfo, rotation);
 
                     // after rotation is applied, transform velocity to local space and predict position based on it
                     if (m_syncDictionaryBonePositions.TryGetValue(boneId, out Vector3 pos))
@@ -233,7 +233,7 @@ namespace SanAndreasUnity.Behaviours.Peds
                         //     }
                         // }
 
-                        tr.localPosition = targetPos;
+                        SetPosition(boneInfo, targetPos);
                     }
 
                 }
@@ -272,6 +272,16 @@ namespace SanAndreasUnity.Behaviours.Peds
         private static Vector3 GetReceivedVelocityAsWorld(Transform tr, Vector3 receivedVelocity)
         {
             return tr.TransformVector(receivedVelocity);
+        }
+
+        private static void SetPosition(BoneInfo boneInfo, Vector3 receivedPosition)
+        {
+            boneInfo.Transform.localPosition = receivedPosition;
+        }
+
+        private static void SetRotation(BoneInfo boneInfo, Vector3 receivedRotation)
+        {
+            boneInfo.Transform.localRotation = Quaternion.Euler(receivedRotation);
         }
 
         private static void SetVelocity(BoneInfo boneInfo, Vector3 receivedVelocity)
