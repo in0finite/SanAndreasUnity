@@ -215,23 +215,24 @@ namespace SanAndreasUnity.Behaviours.Peds
                     if (m_syncDictionaryBonePositions.TryGetValue(boneId, out Vector3 pos))
                     {
                         Vector3 targetPos = pos;
+
+                        // predict position based on velocity and sync interval
                         // if (m_syncDictionaryBoneVelocities.TryGetValue(boneId, out Vector3 velocity))
                         // {
                         //     if (boneId == 0) // only root bone
                         //         targetPos += velocity * this.syncInterval;
                         // }
 
-                        // lerp toward target position
-                        tr.localPosition = Vector3.Lerp(tr.localPosition, targetPos, PedManager.Instance.ragdollPositionLerpFactor);
+                        tr.localPosition = targetPos;
                     }
 
                     // rotation
                     if (m_syncDictionaryBoneRotations.TryGetValue(boneId, out Vector3 rotation))
-                        tr.localRotation = Quaternion.Lerp(tr.localRotation, Quaternion.Euler(rotation), PedManager.Instance.ragdollRotationLerpFactor);
+                        tr.localRotation = Quaternion.Euler(rotation);
 
                 }
 
-                // apply velocity on clients
+                // apply velocity on clients - this is done by rigid bodies ?
                 // foreach (var pair in m_syncDictionaryBoneVelocities)
                 // {
                 //     int boneId = pair.Key;

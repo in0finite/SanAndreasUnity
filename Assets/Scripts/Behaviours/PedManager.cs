@@ -66,8 +66,6 @@ namespace SanAndreasUnity.Behaviours
 		public float ragdollDamageForceWhenDetached = 4f;
 		public CollisionDetectionMode ragdollCollisionDetectionMode = CollisionDetectionMode.Discrete;
 		[Range(1, 60)] public float ragdollSyncRate = 20f;
-		[Range(0, 1)] public float ragdollPositionLerpFactor = 0.8f;
-		[Range(0, 1)] public float ragdollRotationLerpFactor = 0.8f;
 
 
 		void Awake ()
