@@ -89,13 +89,15 @@ namespace SanAndreasUnity.Behaviours.Peds
 
             // build character joints - we need them to constraint the bones
             model.RagdollBuilder.BuildBodies();
+            //model.Frames.ForEach(f => f.gameObject.GetOrAddComponent<Rigidbody>());
             foreach (var rb in this.transform.GetComponentsInChildren<Rigidbody>())
             {
                 rb.useGravity = false;
                 rb.detectCollisions = false;
+                rb.maxAngularVelocity = 0;
                 rb.interpolation = PedManager.Instance.ragdollInterpolationMode;
             }
-            model.RagdollBuilder.BuildJoints();
+            //model.RagdollBuilder.BuildJoints();
 
             m_framesDict = model.Frames.ToDictionary(f => f.BoneId, f => new BoneInfo(f.transform));
 
@@ -117,12 +119,12 @@ namespace SanAndreasUnity.Behaviours.Peds
             }
 
             // register to dictionary callbacks
-            // RegisterDictionaryCallback(
-            //     m_syncDictionaryBonePositions,
-            //     (tr, pos) => tr.localPosition = pos);
-            // RegisterDictionaryCallback(
-            //     m_syncDictionaryBoneRotations,
-            //     (tr, rotation) => tr.localRotation = Quaternion.Euler(rotation));
+            RegisterDictionaryCallback(
+                m_syncDictionaryBonePositions,
+                SetPosition);
+            RegisterDictionaryCallback(
+                m_syncDictionaryBoneRotations,
+                SetRotation);
             RegisterDictionaryCallback(
                 m_syncDictionaryBoneVelocities,
                 SetVelocity);
@@ -194,21 +196,24 @@ namespace SanAndreasUnity.Behaviours.Peds
                     Vector3 pos = pair.Value.Transform.localPosition;
                     Vector3 rotation = pair.Value.Transform.localRotation.eulerAngles;
 
-                    if (m_syncDictionaryBonePositions[pair.Key] != pos)
+                    //if (m_syncDictionaryBonePositions[pair.Key] != pos)
                         m_syncDictionaryBonePositions[pair.Key] = pos;
-                    if (m_syncDictionaryBoneRotations[pair.Key] != rotation)
+                    //if (m_syncDictionaryBoneRotations[pair.Key] != rotation)
                         m_syncDictionaryBoneRotations[pair.Key] = rotation;
                 }
 
                 foreach (var pair in m_rigidBodiesDict)
                 {
                     Vector3 velocity = GetVelocityForSending(pair.Value);
-                    if (m_syncDictionaryBoneVelocities[pair.Key] != velocity)
+                    //if (m_syncDictionaryBoneVelocities[pair.Key] != velocity)
                         m_syncDictionaryBoneVelocities[pair.Key] = velocity;
                 }
+
+                this.SetDirtyBit(ulong.MaxValue);
             }
             else
             {
+                /*
                 foreach (var pair in m_framesDict)
                 {
                     int boneId = pair.Key;
@@ -238,6 +243,7 @@ namespace SanAndreasUnity.Behaviours.Peds
                     }
 
                 }
+                */
 
                 // apply velocity on clients - this is not done by kinematic rigid bodies
                 // foreach (var pair in m_syncDictionaryBoneVelocities)
