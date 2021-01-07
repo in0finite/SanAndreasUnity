@@ -243,10 +243,13 @@ namespace SanAndreasUnity.Behaviours.Peds
                 // {
                 //     int boneId = pair.Key;
                 //     Vector3 receivedVelocity = pair.Value;
-                //     if (m_framesDict.TryGetValue(boneId, out Transform tr))
+                //     if (m_framesDict.TryGetValue(boneId, out BoneInfo boneInfo))
                 //     {
-                //         Vector3 localVelocity = GetReceivedVelocityAsLocal(tr, receivedVelocity);
-                //         tr.localPosition += localVelocity * Time.deltaTime;
+                //         if (null == boneInfo.Rigidbody) // only for bones which don't have rigid body
+                //         {
+                //             Vector3 localVelocity = GetReceivedVelocityAsLocal(boneInfo.Transform, receivedVelocity);
+                //             boneInfo.Transform.localPosition += localVelocity * Time.deltaTime;
+                //         }
                 //     }
                 // }
             }
