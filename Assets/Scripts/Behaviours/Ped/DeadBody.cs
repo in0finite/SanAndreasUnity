@@ -89,13 +89,18 @@ namespace SanAndreasUnity.Behaviours.Peds
             Object.Destroy(model.AnimComponent);
             Object.Destroy(model);
 
-            // apply initial transformation data to bones
+            // apply initial sync data
             foreach (var pair in m_framesDict)
             {
-                if (m_syncDictionaryBonePositions.TryGetValue(pair.Key, out Vector3 pos))
-                    pair.Value.localPosition = pos;
-                if (m_syncDictionaryBoneRotations.TryGetValue(pair.Key, out Vector3 rotation))
-                    pair.Value.localRotation = Quaternion.Euler(rotation);
+                int boneId = pair.Key;
+                Transform tr = pair.Value;
+
+                if (m_syncDictionaryBonePositions.TryGetValue(boneId, out Vector3 pos))
+                    tr.localPosition = pos;
+                if (m_syncDictionaryBoneRotations.TryGetValue(boneId, out Vector3 rotation))
+                    tr.localRotation = Quaternion.Euler(rotation);
+                if (m_syncDictionaryBoneVelocities.TryGetValue(boneId, out Vector3 receivedVelocity))
+                    SetVelocity(tr, receivedVelocity);
             }
 
             // register to dictionary callbacks
