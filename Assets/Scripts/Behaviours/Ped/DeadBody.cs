@@ -122,7 +122,7 @@ namespace SanAndreasUnity.Behaviours.Peds
             //     (tr, rotation) => tr.localRotation = Quaternion.Euler(rotation));
             RegisterDictionaryCallback(
                 m_syncDictionaryBoneVelocities,
-            (tr, velocity) => tr.GetComponent<Rigidbody>().velocity = tr.TransformVector(velocity));
+            (tr, receivedVelocity) => tr.GetComponent<Rigidbody>().velocity = GetReceivedVelocityAsWorld(tr, receivedVelocity));
         }
 
         private void RegisterDictionaryCallback<T>(SyncDictionary<int, T> dict, System.Action<Transform, T> action)
@@ -178,7 +178,7 @@ namespace SanAndreasUnity.Behaviours.Peds
             // assign initial velocities
             foreach (var pair in m_rigidBodiesDict)
             {
-                m_syncDictionaryBoneVelocities.Add(pair.Key, pair.Value.velocity);
+                m_syncDictionaryBoneVelocities.Add(pair.Key, GetVelocityForSending(pair.Value));
             }
         }
 
@@ -199,7 +199,7 @@ namespace SanAndreasUnity.Behaviours.Peds
 
                 foreach (var pair in m_rigidBodiesDict)
                 {
-                    Vector3 velocity = pair.Value.transform.InverseTransformVector(pair.Value.velocity);
+                    Vector3 velocity = GetVelocityForSending(pair.Value);
                     if (m_syncDictionaryBoneVelocities[pair.Key] != velocity)
                         m_syncDictionaryBoneVelocities[pair.Key] = velocity;
                 }
@@ -211,24 +211,27 @@ namespace SanAndreasUnity.Behaviours.Peds
                     int boneId = pair.Key;
                     Transform tr = pair.Value;
 
-                    // position
+                    // rotation
+                    if (m_syncDictionaryBoneRotations.TryGetValue(boneId, out Vector3 rotation))
+                        tr.localRotation = Quaternion.Euler(rotation);
+
+                    // after rotation is applied, transform velocity to local space and predict position based on it
                     if (m_syncDictionaryBonePositions.TryGetValue(boneId, out Vector3 pos))
                     {
                         Vector3 targetPos = pos;
 
                         // predict position based on velocity and sync interval
-                        // if (m_syncDictionaryBoneVelocities.TryGetValue(boneId, out Vector3 velocity))
+                        // if (boneId == 0) // only for root bone
                         // {
-                        //     if (boneId == 0) // only root bone
-                        //         targetPos += velocity * this.syncInterval;
+                        //     if (m_syncDictionaryBoneVelocities.TryGetValue(boneId, out Vector3 receivedVelocity))
+                        //     {
+                        //         Vector3 localVelocity = GetReceivedVelocityAsLocal(tr, receivedVelocity);
+                        //         targetPos += localVelocity * this.syncInterval;
+                        //     }
                         // }
 
                         tr.localPosition = targetPos;
                     }
-
-                    // rotation
-                    if (m_syncDictionaryBoneRotations.TryGetValue(boneId, out Vector3 rotation))
-                        tr.localRotation = Quaternion.Euler(rotation);
 
                 }
 
@@ -236,8 +239,12 @@ namespace SanAndreasUnity.Behaviours.Peds
                 // foreach (var pair in m_syncDictionaryBoneVelocities)
                 // {
                 //     int boneId = pair.Key;
+                //     Vector3 receivedVelocity = pair.Value;
                 //     if (m_framesDict.TryGetValue(boneId, out Transform tr))
-                //         tr.position += pair.Value * Time.deltaTime;
+                //     {
+                //         Vector3 localVelocity = GetReceivedVelocityAsLocal(tr, receivedVelocity);
+                //         tr.localPosition += localVelocity * Time.deltaTime;
+                //     }
                 // }
             }
         }
@@ -245,6 +252,23 @@ namespace SanAndreasUnity.Behaviours.Peds
         public void RefreshSyncRate()
         {
             this.syncInterval = 1.0f / PedManager.Instance.ragdollSyncRate;
+        }
+
+        private static Vector3 GetVelocityForSending(Rigidbody rb)
+        {
+            // it's better to send local velocity, because rotation of ragdoll can change very fast, and so
+            // will the world velocity
+            return rb.transform.InverseTransformVector(rb.velocity);
+        }
+
+        private static Vector3 GetReceivedVelocityAsLocal(Transform tr, Vector3 receivedVelocity)
+        {
+            return receivedVelocity;
+        }
+
+        private static Vector3 GetReceivedVelocityAsWorld(Transform tr, Vector3 receivedVelocity)
+        {
+            return tr.TransformVector(receivedVelocity);
         }
     }
 }
