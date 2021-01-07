@@ -107,7 +107,7 @@ namespace SanAndreasUnity.Behaviours.Peds
             //     (tr, rotation) => tr.localRotation = Quaternion.Euler(rotation));
             RegisterDictionaryCallback(
                 m_syncDictionaryBoneVelocities,
-            (tr, receivedVelocity) => tr.GetComponent<Rigidbody>().velocity = GetReceivedVelocityAsWorld(tr, receivedVelocity));
+                SetVelocity);
         }
 
         private void RegisterDictionaryCallback<T>(SyncDictionary<int, T> dict, System.Action<Transform, T> action)
@@ -254,6 +254,11 @@ namespace SanAndreasUnity.Behaviours.Peds
         private static Vector3 GetReceivedVelocityAsWorld(Transform tr, Vector3 receivedVelocity)
         {
             return tr.TransformVector(receivedVelocity);
+        }
+
+        private static void SetVelocity(Transform tr, Vector3 receivedVelocity)
+        {
+            tr.GetComponent<Rigidbody>().velocity = GetReceivedVelocityAsWorld(tr, receivedVelocity);
         }
     }
 }
