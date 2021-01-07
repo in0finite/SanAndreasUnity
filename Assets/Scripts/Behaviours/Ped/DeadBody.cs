@@ -280,11 +280,22 @@ namespace SanAndreasUnity.Behaviours.Peds
 
         private static void SetPosition(BoneInfo boneInfo, Vector3 receivedPosition)
         {
+            // if (boneInfo.Rigidbody != null)
+            //     boneInfo.Rigidbody.MovePosition(boneInfo.Transform.TransformVector(receivedPosition));
+            // else
+            //     boneInfo.Transform.localPosition = receivedPosition;
+
             boneInfo.Transform.localPosition = receivedPosition;
         }
 
         private static void SetRotation(BoneInfo boneInfo, Vector3 receivedRotation)
         {
+            // Quaternion localRotation = Quaternion.Euler(receivedRotation);
+            // if (boneInfo.Rigidbody != null)
+            //     boneInfo.Rigidbody.MoveRotation(boneInfo.Transform.TransformRotation(localRotation));
+            // else
+            //     boneInfo.Transform.localRotation = localRotation;
+
             boneInfo.Transform.localRotation = Quaternion.Euler(receivedRotation);
         }
 
