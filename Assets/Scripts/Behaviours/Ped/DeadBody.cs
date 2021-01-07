@@ -239,18 +239,15 @@ namespace SanAndreasUnity.Behaviours.Peds
 
                 }
 
-                // apply velocity on clients - this is done by rigid bodies ?
+                // apply velocity on clients - this is not done by kinematic rigid bodies
                 // foreach (var pair in m_syncDictionaryBoneVelocities)
                 // {
                 //     int boneId = pair.Key;
                 //     Vector3 receivedVelocity = pair.Value;
                 //     if (m_framesDict.TryGetValue(boneId, out BoneInfo boneInfo))
                 //     {
-                //         if (null == boneInfo.Rigidbody) // only for bones which don't have rigid body
-                //         {
                 //             Vector3 localVelocity = GetReceivedVelocityAsLocal(boneInfo.Transform, receivedVelocity);
                 //             boneInfo.Transform.localPosition += localVelocity * Time.deltaTime;
-                //         }
                 //     }
                 // }
             }
