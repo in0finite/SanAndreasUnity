@@ -87,9 +87,8 @@ namespace SanAndreasUnity.Behaviours.Peds
             var model = this.gameObject.GetOrAddComponent<PedModel>();
             model.Load(m_net_modelId);
 
-            // build character joints - we need them to constraint the bones
+            // add rigid bodies - syncing looks smoother with them
             model.RagdollBuilder.BuildBodies();
-            //model.Frames.ForEach(f => f.gameObject.GetOrAddComponent<Rigidbody>());
             foreach (var rb in this.transform.GetComponentsInChildren<Rigidbody>())
             {
                 rb.useGravity = false;
