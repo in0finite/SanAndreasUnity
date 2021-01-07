@@ -83,10 +83,24 @@ namespace SanAndreasUnity.Behaviours.Peds
 
             this.gameObject.name = $"dead body {m_net_modelId} {def.ModelName}";
 
-            var geoms = Geometry.Load(def.ModelName, def.TextureDictionaryName);
-            var frames = geoms.AttachFrames(this.transform, MaterialFlags.Default);
+            // var geoms = Geometry.Load(def.ModelName, def.TextureDictionaryName);
+            // var frames = geoms.AttachFrames(this.transform, MaterialFlags.Default);
+            var model = this.gameObject.GetOrAddComponent<PedModel>();
+            model.Load(m_net_modelId);
 
-            m_framesDict = frames.ToDictionary(f => f.BoneId, f => f.transform);
+            // build character joints - we need them to constraint the bones
+            model.RagdollBuilder.BuildBodies();
+            foreach (var rb in this.transform.GetComponentsInChildren<Rigidbody>())
+            {
+                rb.isKinematic = true;
+                rb.interpolation = RigidbodyInterpolation.Extrapolate;
+            }
+            model.RagdollBuilder.BuildJoints();
+
+            m_framesDict = model.Frames.ToDictionary(f => f.BoneId, f => f.transform);
+
+            Object.Destroy(model.AnimComponent);
+            Object.Destroy(model);
 
             // apply initial transformation data to bones (at the moment when ragdoll was detached) - this is needed because not all bones have rigid bodies
             // attached, and so will not be moved/rotated by physics engine
@@ -100,12 +114,15 @@ namespace SanAndreasUnity.Behaviours.Peds
             }
 
             // register to dictionary callbacks
+            // RegisterDictionaryCallback(
+            //     m_syncDictionaryBonePositions,
+            //     (tr, pos) => tr.localPosition = pos);
+            // RegisterDictionaryCallback(
+            //     m_syncDictionaryBoneRotations,
+            //     (tr, rotation) => tr.localRotation = Quaternion.Euler(rotation));
             RegisterDictionaryCallback(
-                m_syncDictionaryBonePositions,
-                (tr, pos) => tr.localPosition = pos);
-            RegisterDictionaryCallback(
-                m_syncDictionaryBoneRotations,
-                (tr, rotation) => tr.localRotation = Quaternion.Euler(rotation));
+                m_syncDictionaryBoneVelocities,
+            (tr, velocity) => tr.GetComponent<Rigidbody>().velocity = tr.TransformVector(velocity));
         }
 
         private void RegisterDictionaryCallback<T>(SyncDictionary<int, T> dict, System.Action<Transform, T> action)
@@ -182,20 +199,45 @@ namespace SanAndreasUnity.Behaviours.Peds
 
                 foreach (var pair in m_rigidBodiesDict)
                 {
-                    Vector3 velocity = pair.Value.velocity;
+                    Vector3 velocity = pair.Value.transform.InverseTransformVector(pair.Value.velocity);
                     if (m_syncDictionaryBoneVelocities[pair.Key] != velocity)
                         m_syncDictionaryBoneVelocities[pair.Key] = velocity;
                 }
             }
             else
             {
-                // apply velocity on clients
-                foreach (var pair in m_syncDictionaryBoneVelocities)
+                foreach (var pair in m_framesDict)
                 {
                     int boneId = pair.Key;
-                    if (m_framesDict.TryGetValue(boneId, out Transform tr))
-                        tr.position += pair.Value * Time.deltaTime;
+                    Transform tr = pair.Value;
+
+                    // position
+                    if (m_syncDictionaryBonePositions.TryGetValue(boneId, out Vector3 pos))
+                    {
+                        Vector3 targetPos = pos;
+                        // if (m_syncDictionaryBoneVelocities.TryGetValue(boneId, out Vector3 velocity))
+                        // {
+                        //     if (boneId == 0) // only root bone
+                        //         targetPos += velocity * this.syncInterval;
+                        // }
+
+                        // lerp toward target position
+                        tr.localPosition = Vector3.Lerp(tr.localPosition, targetPos, PedManager.Instance.ragdollPositionLerpFactor);
+                    }
+
+                    // rotation
+                    if (m_syncDictionaryBoneRotations.TryGetValue(boneId, out Vector3 rotation))
+                        tr.localRotation = Quaternion.Lerp(tr.localRotation, Quaternion.Euler(rotation), PedManager.Instance.ragdollRotationLerpFactor);
+
                 }
+
+                // apply velocity on clients
+                // foreach (var pair in m_syncDictionaryBoneVelocities)
+                // {
+                //     int boneId = pair.Key;
+                //     if (m_framesDict.TryGetValue(boneId, out Transform tr))
+                //         tr.position += pair.Value * Time.deltaTime;
+                // }
             }
         }
 

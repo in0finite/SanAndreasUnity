@@ -102,6 +102,7 @@ namespace SanAndreasUnity.Behaviours
 		readonly Dictionary<Transform, int> m_damageLevelPerBones = new Dictionary<Transform, int>();
 
 		private RagdollBuilder m_ragdollBuilder;
+		public RagdollBuilder RagdollBuilder => m_ragdollBuilder;
 
 		public class FrameAnimData
 		{
