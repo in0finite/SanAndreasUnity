@@ -66,6 +66,7 @@ namespace SanAndreasUnity.Behaviours
 		public float ragdollDamageForceWhenDetached = 4f;
 		public CollisionDetectionMode ragdollCollisionDetectionMode = CollisionDetectionMode.Discrete;
 		[Range(1, 60)] public float ragdollSyncRate = 20f;
+		public RigidbodyInterpolation ragdollInterpolationMode = RigidbodyInterpolation.Extrapolate;
 
 
 		void Awake ()

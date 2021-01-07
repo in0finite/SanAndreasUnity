@@ -92,7 +92,7 @@ namespace SanAndreasUnity.Behaviours.Peds
             foreach (var rb in this.transform.GetComponentsInChildren<Rigidbody>())
             {
                 rb.isKinematic = true;
-                rb.interpolation = RigidbodyInterpolation.Extrapolate;
+                rb.interpolation = PedManager.Instance.ragdollInterpolationMode;
             }
             model.RagdollBuilder.BuildJoints();
 
