@@ -91,7 +91,8 @@ namespace SanAndreasUnity.Behaviours.Peds
             model.RagdollBuilder.BuildBodies();
             foreach (var rb in this.transform.GetComponentsInChildren<Rigidbody>())
             {
-                rb.isKinematic = true;
+                rb.useGravity = false;
+                rb.detectCollisions = false;
                 rb.interpolation = PedManager.Instance.ragdollInterpolationMode;
             }
             model.RagdollBuilder.BuildJoints();
