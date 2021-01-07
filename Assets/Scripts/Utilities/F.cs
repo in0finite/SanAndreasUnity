@@ -539,6 +539,14 @@ namespace SanAndreasUnity.Utilities
             return list [UnityEngine.Random.Range(0, list.Count)];
         }
 
+        public static void ForEach<T>(this IEnumerable<T> enumerable, System.Action<T> action)
+        {
+	        foreach (var element in enumerable)
+	        {
+		        action(element);
+	        }
+        }
+
         public static int RemoveDeadObjects<T> (this List<T> list) where T : UnityEngine.Object
         {
             return list.RemoveAll(item => null == item);
