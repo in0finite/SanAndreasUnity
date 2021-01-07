@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Mirror;
-using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Net;
@@ -65,15 +63,6 @@ namespace SanAndreasUnity.Behaviours.Peds
 
         private void InitialClientOnlySetup()
         {
-            // load ped model
-
-            // apply initial bones sync data (because not all bones have rigid bodies)
-
-            // apply initial ragdoll (rigid bodies) sync data - this should be done AFTER applying bones sync data
-
-
-
-
             var def = Item.GetDefinition<PedestrianDef>(m_net_modelId);
             if (null == def)
             {
@@ -83,8 +72,6 @@ namespace SanAndreasUnity.Behaviours.Peds
 
             this.gameObject.name = $"dead body {m_net_modelId} {def.ModelName}";
 
-            // var geoms = Geometry.Load(def.ModelName, def.TextureDictionaryName);
-            // var frames = geoms.AttachFrames(this.transform, MaterialFlags.Default);
             var model = this.gameObject.GetOrAddComponent<PedModel>();
             model.Load(m_net_modelId);
 
@@ -102,9 +89,7 @@ namespace SanAndreasUnity.Behaviours.Peds
             Object.Destroy(model.AnimComponent);
             Object.Destroy(model);
 
-            // apply initial transformation data to bones (at the moment when ragdoll was detached) - this is needed because not all bones have rigid bodies
-            // attached, and so will not be moved/rotated by physics engine
-
+            // apply initial transformation data to bones
             foreach (var pair in m_framesDict)
             {
                 if (m_syncDictionaryBonePositions.TryGetValue(pair.Key, out Vector3 pos))
