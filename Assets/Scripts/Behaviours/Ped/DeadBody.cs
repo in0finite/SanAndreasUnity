@@ -35,15 +35,31 @@ namespace SanAndreasUnity.Behaviours.Peds
 
         private Dictionary<int, Rigidbody> m_rigidBodiesDict = new Dictionary<int, Rigidbody>();
 
-        [SyncVar] private int m_net_modelId;
+        private int m_net_modelId;
 
-        private class SyncDictionaryIntVector3 : SyncDictionary<int, Vector3>
+        // private class SyncDictionaryIntVector3 : SyncDictionary<int, Vector3>
+        // {
+        // }
+
+        // private SyncDictionaryIntVector3 m_syncDictionaryBonePositions = new SyncDictionaryIntVector3();
+        // private SyncDictionaryIntVector3 m_syncDictionaryBoneRotations = new SyncDictionaryIntVector3();
+        // private SyncDictionaryIntVector3 m_syncDictionaryBoneVelocities = new SyncDictionaryIntVector3();
+
+        private struct BoneSyncData
         {
+            public byte boneId;
+            public Vector3 position;
+            public Vector3 rotation;
+            public Vector3 velocity;
         }
 
-        private SyncDictionaryIntVector3 m_syncDictionaryBonePositions = new SyncDictionaryIntVector3();
-        private SyncDictionaryIntVector3 m_syncDictionaryBoneRotations = new SyncDictionaryIntVector3();
-        private SyncDictionaryIntVector3 m_syncDictionaryBoneVelocities = new SyncDictionaryIntVector3();
+        // private class SyncListBoneData : SyncList<BoneSyncData>
+        // {
+        // }
+        //
+        // private SyncListBoneData m_bonesSyncData = new SyncListBoneData();
+
+        private List<BoneSyncData> m_bonesSyncData = new List<BoneSyncData>();
 
 
 
@@ -104,29 +120,19 @@ namespace SanAndreasUnity.Behaviours.Peds
             Object.Destroy(model);
 
             // apply initial sync data
-            foreach (var pair in m_framesDict)
-            {
-                int boneId = pair.Key;
-                BoneInfo boneInfo = pair.Value;
+            // first sync should've been done before calling this function
+            this.UpdateBonesAfterDeserialization((byte)m_bonesSyncData.Count);
 
-                if (m_syncDictionaryBonePositions.TryGetValue(boneId, out Vector3 pos))
-                    SetPosition(boneInfo, pos);
-                if (m_syncDictionaryBoneRotations.TryGetValue(boneId, out Vector3 rotation))
-                    SetRotation(boneInfo, rotation);
-                if (m_syncDictionaryBoneVelocities.TryGetValue(boneId, out Vector3 receivedVelocity))
-                    SetVelocity(boneInfo, receivedVelocity);
-            }
+            // foreach (var boneData in m_bonesSyncData)
+            // {
+            //     if (m_framesDict.TryGetValue(boneData.boneId, out BoneInfo boneInfo))
+            //     {
+            //         SetPosition(boneInfo, boneData.position);
+            //         SetRotation(boneInfo, boneData.rotation);
+            //         SetVelocity(boneInfo, boneData.velocity);
+            //     }
+            // }
 
-            // register to dictionary callbacks
-            RegisterDictionaryCallback(
-                m_syncDictionaryBonePositions,
-                SetPosition);
-            RegisterDictionaryCallback(
-                m_syncDictionaryBoneRotations,
-                SetRotation);
-            RegisterDictionaryCallback(
-                m_syncDictionaryBoneVelocities,
-                SetVelocity);
         }
 
         private void RegisterDictionaryCallback<T>(SyncDictionary<int, T> dict, System.Action<BoneInfo, T> action)
@@ -136,6 +142,72 @@ namespace SanAndreasUnity.Behaviours.Peds
                 if (m_framesDict.TryGetValue(key, out BoneInfo boneInfo))
                     action(boneInfo, item);
             });
+        }
+
+        public override bool OnSerialize(NetworkWriter writer, bool initialState)
+        {
+            if (initialState)
+                writer.Write(m_net_modelId);
+
+            writer.Write((byte)m_framesDict.Count);
+
+            foreach (var pair in m_framesDict)
+            {
+                int boneId = pair.Key;
+                Transform tr = pair.Value.Transform;
+
+                var boneSyncData = new BoneSyncData();
+                boneSyncData.boneId = (byte)boneId;
+                boneSyncData.position = tr.localPosition;
+                boneSyncData.rotation = tr.localRotation.eulerAngles;
+                boneSyncData.velocity = m_rigidBodiesDict.TryGetValue(boneId, out Rigidbody rb) ? GetVelocityForSending(rb) : Vector3.zero;
+
+                writer.Write(boneSyncData.boneId);
+                writer.Write(boneSyncData.position);
+                writer.Write(boneSyncData.rotation);
+                writer.Write(boneSyncData.velocity);
+            }
+
+            return true;
+        }
+
+        public override void OnDeserialize(NetworkReader reader, bool initialState)
+        {
+            if (initialState)
+                m_net_modelId = reader.ReadInt32();
+
+            byte count = reader.ReadByte();
+
+            m_bonesSyncData.EnsureCount(count);
+
+            for (int i = 0; i < count; i++)
+            {
+                var boneSyncData = new BoneSyncData();
+                boneSyncData.boneId = reader.ReadByte();
+                boneSyncData.position = reader.ReadVector3();
+                boneSyncData.rotation = reader.ReadVector3();
+                boneSyncData.velocity = reader.ReadVector3();
+                m_bonesSyncData[i] = boneSyncData;
+            }
+
+            //Debug.Log($"deserialized, count {count}, initialState {initialState}, m_net_modelId {m_net_modelId}");
+
+            F.RunExceptionSafe(() => UpdateBonesAfterDeserialization(count));
+        }
+
+        private void UpdateBonesAfterDeserialization(byte count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var boneSyncData = m_bonesSyncData[i];
+                if (m_framesDict.TryGetValue(boneSyncData.boneId, out BoneInfo boneInfo))
+                {
+                    SetPosition(boneInfo, boneSyncData.position);
+                    SetRotation(boneInfo, boneSyncData.rotation);
+                    if (boneInfo.Rigidbody != null)
+                        SetVelocity(boneInfo, boneSyncData.velocity);
+                }
+            }
         }
 
         public static DeadBody Create(Transform ragdollTransform, Ped ped)
@@ -171,44 +243,13 @@ namespace SanAndreasUnity.Behaviours.Peds
         private void InitSyncVarsOnServer(Ped ped)
         {
             m_net_modelId = ped.PedDef.Id;
-
-            // assign initial bones transformations
-            foreach (var pair in m_framesDict)
-            {
-                m_syncDictionaryBonePositions.Add(pair.Key, pair.Value.Transform.localPosition);
-                m_syncDictionaryBoneRotations.Add(pair.Key, pair.Value.Transform.localRotation.eulerAngles);
-            }
-
-            // assign initial velocities
-            foreach (var pair in m_rigidBodiesDict)
-            {
-                m_syncDictionaryBoneVelocities.Add(pair.Key, GetVelocityForSending(pair.Value));
-            }
         }
 
         private void Update()
         {
             if (NetStatus.IsServer)
             {
-                foreach (var pair in m_framesDict)
-                {
-                    Vector3 pos = pair.Value.Transform.localPosition;
-                    Vector3 rotation = pair.Value.Transform.localRotation.eulerAngles;
-
-                    //if (m_syncDictionaryBonePositions[pair.Key] != pos)
-                        m_syncDictionaryBonePositions[pair.Key] = pos;
-                    //if (m_syncDictionaryBoneRotations[pair.Key] != rotation)
-                        m_syncDictionaryBoneRotations[pair.Key] = rotation;
-                }
-
-                foreach (var pair in m_rigidBodiesDict)
-                {
-                    Vector3 velocity = GetVelocityForSending(pair.Value);
-                    //if (m_syncDictionaryBoneVelocities[pair.Key] != velocity)
-                        m_syncDictionaryBoneVelocities[pair.Key] = velocity;
-                }
-
-                this.SetDirtyBit(ulong.MaxValue);
+                this.SetDirtyBit(1);
             }
             else
             {

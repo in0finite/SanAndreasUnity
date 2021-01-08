@@ -532,6 +532,18 @@ namespace SanAndreasUnity.Utilities
 			return false;
 		}
 
+		public static void EnsureCount<T>(this List<T> list, int count)
+		{
+			if (list.Count < count)
+			{
+				int diff = count - list.Count;
+				for (int i = 0; i < diff; i++)
+				{
+					list.Add(default);
+				}
+			}
+		}
+
         public static T RandomElement<T> (this IList<T> list)
         {
             if (list.Count < 1)
