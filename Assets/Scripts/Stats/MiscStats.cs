@@ -25,6 +25,7 @@ namespace SanAndreasUnity.Stats
             sb.AppendFormat("num vehicles: {0}\n", Vehicle.NumVehicles);
             sb.AppendFormat("num dead bodies: {0}\n", DeadBody.NumDeadBodies);
             sb.AppendFormat("num bones in dead bodies: {0}\n", DeadBody.DeadBodies.Sum(db => db.NumBones));
+            sb.AppendFormat("num rigid bodies in dead bodies: {0}\n", DeadBody.DeadBodies.Sum(db => db.NumRigidBodies));
             sb.AppendFormat("num ped state changes received: {0}\n", Ped.NumStateChangesReceived);
 
             sb.AppendLine();

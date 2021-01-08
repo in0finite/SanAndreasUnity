@@ -35,6 +35,7 @@ namespace SanAndreasUnity.Behaviours.Peds
         public int NumBones => m_framesDict.Count;
 
         private Dictionary<int, Rigidbody> m_rigidBodiesDict = new Dictionary<int, Rigidbody>();
+        public int NumRigidBodies => m_rigidBodiesDict.Count;
 
         private int m_net_modelId;
 
