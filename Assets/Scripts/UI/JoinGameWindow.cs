@@ -16,10 +16,10 @@ namespace SanAndreasUnity.UI
 		int m_currentTabIndex = 0;
 
 		Mirror.NetworkDiscoveryHUD m_netDiscoveryHUD;
+        private List<ServerInfo> _servers;
+        private Vector2 _scrollViewPos;
 
-
-
-		JoinGameWindow()
+        JoinGameWindow()
         {
 
 			// set default parameters
@@ -29,7 +29,7 @@ namespace SanAndreasUnity.UI
 
 		}
 
-		void Start ()
+		async void Start ()
         {
 			// adjust rect
 			float width = Mathf.Min(650, Screen.width * 0.9f);
@@ -38,6 +38,8 @@ namespace SanAndreasUnity.UI
 			m_netDiscoveryHUD = Mirror.NetworkManager.singleton.GetComponentOrThrow<Mirror.NetworkDiscoveryHUD>();
 			m_netDiscoveryHUD.connectAction = this.ConnectFromDiscovery;
 			m_netDiscoveryHUD.drawGUI = false;
+
+	        _servers = await MasterServerClient.Instance.GetAllServers();
 
 		}
 
@@ -68,6 +70,30 @@ namespace SanAndreasUnity.UI
 				m_netDiscoveryHUD.width = (int) this.WindowSize.x - 30;
 				m_netDiscoveryHUD.DisplayServers();
 			}
+			else if (2 == m_currentTabIndex)
+            {
+                // header
+                GUILayout.BeginHorizontal();
+                GUILayout.Button("Name");
+                GUILayout.Button("Players");
+                GUILayout.EndHorizontal();
+
+                if (_servers == null) return;
+                _scrollViewPos = GUILayout.BeginScrollView(_scrollViewPos);
+
+                foreach (ServerInfo info in _servers)
+                {
+                    GUILayout.BeginHorizontal();
+
+                    GUILayout.Label(info.Name, GUILayout.Width(400));
+                    GUILayout.Label($"{info.NumPlayersOnline}/{info.MaxPlayers}");
+                    if (GUIUtils.ButtonWithCalculatedSize("Connect", 80, 30))
+                        Connect(info.IP, (ushort)info.Port);
+                    GUILayout.EndHorizontal();
+                }
+
+                GUILayout.EndScrollView();
+            }
             
 		}
 
@@ -111,6 +137,11 @@ namespace SanAndreasUnity.UI
 					buttonText = m_netDiscoveryHUD.IsRefreshing ? ( "Refreshing." + new string('.', (int) ((Time.time * 2) % 3)) ) : "Refresh LAN";
 					buttonAction = () => m_netDiscoveryHUD.Refresh();
 				}
+				if (2 == m_currentTabIndex)
+                {
+                    buttonText = "Refresh Servers";
+                    buttonAction = async () => _servers = await MasterServerClient.Instance.GetAllServers();
+                }
 			}
 
             if (GUIUtils.ButtonWithCalculatedSize(buttonText, 80, 30))
