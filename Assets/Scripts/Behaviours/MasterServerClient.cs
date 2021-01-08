@@ -101,4 +101,3 @@ public class ServerInfo
     public int Port { get; set; }
     public int MaxPlayers { get; set; }
 }
-}
