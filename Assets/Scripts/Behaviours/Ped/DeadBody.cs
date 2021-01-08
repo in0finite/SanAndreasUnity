@@ -32,6 +32,7 @@ namespace SanAndreasUnity.Behaviours.Peds
         }
 
         private Dictionary<int, BoneInfo> m_framesDict = new Dictionary<int, BoneInfo>();
+        public int NumBones => m_framesDict.Count;
 
         private Dictionary<int, Rigidbody> m_rigidBodiesDict = new Dictionary<int, Rigidbody>();
 
