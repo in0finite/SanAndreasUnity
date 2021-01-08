@@ -12,7 +12,7 @@ namespace SanAndreasUnity.UI
 		[SerializeField] string m_ipStr = "127.0.0.1";
 		string m_portStr = NetManager.defaultListenPortNumber.ToString();
 
-		string[] m_tabNames = new string[]{"Direct", "LAN"};
+		string[] m_tabNames = new string[]{"Direct", "LAN", "Internet" };
 		int m_currentTabIndex = 0;
 
 		Mirror.NetworkDiscoveryHUD m_netDiscoveryHUD;

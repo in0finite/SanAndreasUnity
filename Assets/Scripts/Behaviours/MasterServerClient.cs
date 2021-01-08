@@ -87,7 +87,8 @@ public class MasterServerClient : MonoBehaviour
 
     public async void OnDestroy()
     {
-        await UnregisterServer();
+        if (_serverInfo != null)
+            await UnregisterServer();
     }
 }
 
