@@ -37,14 +37,6 @@ namespace SanAndreasUnity.Behaviours.Peds
 
         private int m_net_modelId;
 
-        // private class SyncDictionaryIntVector3 : SyncDictionary<int, Vector3>
-        // {
-        // }
-
-        // private SyncDictionaryIntVector3 m_syncDictionaryBonePositions = new SyncDictionaryIntVector3();
-        // private SyncDictionaryIntVector3 m_syncDictionaryBoneRotations = new SyncDictionaryIntVector3();
-        // private SyncDictionaryIntVector3 m_syncDictionaryBoneVelocities = new SyncDictionaryIntVector3();
-
         private struct BoneSyncData
         {
             public byte boneId;
@@ -52,12 +44,6 @@ namespace SanAndreasUnity.Behaviours.Peds
             public Vector3 rotation;
             public Vector3 velocity;
         }
-
-        // private class SyncListBoneData : SyncList<BoneSyncData>
-        // {
-        // }
-        //
-        // private SyncListBoneData m_bonesSyncData = new SyncListBoneData();
 
         private List<BoneSyncData> m_bonesSyncData = new List<BoneSyncData>();
 
@@ -112,7 +98,6 @@ namespace SanAndreasUnity.Behaviours.Peds
                 rb.maxAngularVelocity = 0;
                 rb.interpolation = PedManager.Instance.ragdollInterpolationMode;
             }
-            //model.RagdollBuilder.BuildJoints();
 
             m_framesDict = model.Frames.ToDictionary(f => f.BoneId, f => new BoneInfo(f.transform));
 
@@ -123,25 +108,6 @@ namespace SanAndreasUnity.Behaviours.Peds
             // first sync should've been done before calling this function
             this.UpdateBonesAfterDeserialization((byte)m_bonesSyncData.Count);
 
-            // foreach (var boneData in m_bonesSyncData)
-            // {
-            //     if (m_framesDict.TryGetValue(boneData.boneId, out BoneInfo boneInfo))
-            //     {
-            //         SetPosition(boneInfo, boneData.position);
-            //         SetRotation(boneInfo, boneData.rotation);
-            //         SetVelocity(boneInfo, boneData.velocity);
-            //     }
-            // }
-
-        }
-
-        private void RegisterDictionaryCallback<T>(SyncDictionary<int, T> dict, System.Action<BoneInfo, T> action)
-        {
-            dict.Callback += (op, key, item) => F.RunExceptionSafe(() =>
-            {
-                if (m_framesDict.TryGetValue(key, out BoneInfo boneInfo))
-                    action(boneInfo, item);
-            });
         }
 
         public override bool OnSerialize(NetworkWriter writer, bool initialState)
@@ -189,8 +155,6 @@ namespace SanAndreasUnity.Behaviours.Peds
                 boneSyncData.velocity = reader.ReadVector3();
                 m_bonesSyncData[i] = boneSyncData;
             }
-
-            //Debug.Log($"deserialized, count {count}, initialState {initialState}, m_net_modelId {m_net_modelId}");
 
             F.RunExceptionSafe(() => UpdateBonesAfterDeserialization(count));
         }
@@ -250,52 +214,6 @@ namespace SanAndreasUnity.Behaviours.Peds
             if (NetStatus.IsServer)
             {
                 this.SetDirtyBit(1);
-            }
-            else
-            {
-                /*
-                foreach (var pair in m_framesDict)
-                {
-                    int boneId = pair.Key;
-                    BoneInfo boneInfo = pair.Value;
-                    Transform tr = boneInfo.Transform;
-
-                    // rotation
-                    if (m_syncDictionaryBoneRotations.TryGetValue(boneId, out Vector3 rotation))
-                        SetRotation(boneInfo, rotation);
-
-                    // after rotation is applied, transform velocity to local space and predict position based on it
-                    if (m_syncDictionaryBonePositions.TryGetValue(boneId, out Vector3 pos))
-                    {
-                        Vector3 targetPos = pos;
-
-                        // predict position based on velocity and sync interval
-                        // if (boneId == 0) // only for root bone
-                        // {
-                        //     if (m_syncDictionaryBoneVelocities.TryGetValue(boneId, out Vector3 receivedVelocity))
-                        //     {
-                        //         Vector3 localVelocity = GetReceivedVelocityAsLocal(tr, receivedVelocity);
-                        //         targetPos += localVelocity * this.syncInterval;
-                        //     }
-                        // }
-
-                        SetPosition(boneInfo, targetPos);
-                    }
-
-                }
-                */
-
-                // apply velocity on clients - this is not done by kinematic rigid bodies
-                // foreach (var pair in m_syncDictionaryBoneVelocities)
-                // {
-                //     int boneId = pair.Key;
-                //     Vector3 receivedVelocity = pair.Value;
-                //     if (m_framesDict.TryGetValue(boneId, out BoneInfo boneInfo))
-                //     {
-                //             Vector3 localVelocity = GetReceivedVelocityAsLocal(boneInfo.Transform, receivedVelocity);
-                //             boneInfo.Transform.localPosition += localVelocity * Time.deltaTime;
-                //     }
-                // }
             }
         }
 
