@@ -38,7 +38,6 @@ public class MasterServerClient : MonoBehaviour
             _serverInfo = new ServerInfo()
             {
                 Name = Config.Get<string>("name"),
-                IP = new WebClient().DownloadString("http://icanhazip.com").Trim(),
                 Port = NetManager.listenPortNumber,
                 NumPlayersOnline = Mirror.NetworkManager.singleton.numPlayers,
                 MaxPlayers = NetManager.maxNumPlayers,
@@ -74,8 +73,9 @@ public class MasterServerClient : MonoBehaviour
 
     private async Task UnregisterServer()
     {
-        await _client.PostAsync(_masterServerUrl + "/unregister", new StringContent(JsonConvert.SerializeObject(_serverInfo), Encoding.UTF8, "application/json"));
         _updating = false;
+
+        await _client.PostAsync(_masterServerUrl + "/unregister", new StringContent(JsonConvert.SerializeObject(_serverInfo), Encoding.UTF8, "application/json"));
     }
 
     public async Task<List<ServerInfo>> GetAllServers()
