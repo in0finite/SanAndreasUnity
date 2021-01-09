@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SanAndreasUnity.Net;
 using SanAndreasUnity.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -57,9 +56,8 @@ public class MasterServerClient : MonoBehaviour
             return;
         }
 
-        _serverInfo.Id = JsonConvert.DeserializeObject<Guid>(await res.Content.ReadAsStringAsync());
         _updating = true;
-        await UpdateServer();
+        Invoke(nameof(UpdateServer), 5);
     }
 
     private async Task UpdateServer()
@@ -68,7 +66,7 @@ public class MasterServerClient : MonoBehaviour
         {
             _serverInfo.NumPlayersOnline = Mirror.NetworkManager.singleton.numPlayers;
 
-            var res = await _client.PostAsync(_masterServerUrl + "/update", new StringContent(JsonConvert.SerializeObject(_serverInfo), Encoding.UTF8, "application/json"));
+            var res = await _client.PostAsync(_masterServerUrl + "/register", new StringContent(JsonConvert.SerializeObject(_serverInfo), Encoding.UTF8, "application/json"));
             if (!res.IsSuccessStatusCode) _updating = false;
             await Task.Delay(5000);
         }
@@ -76,7 +74,7 @@ public class MasterServerClient : MonoBehaviour
 
     private async Task UnregisterServer()
     {
-        await _client.PostAsync(_masterServerUrl + "/unregister", new StringContent(JsonConvert.SerializeObject(_serverInfo.Id), Encoding.UTF8, "application/json"));
+        await _client.PostAsync(_masterServerUrl + "/unregister", new StringContent(JsonConvert.SerializeObject(_serverInfo), Encoding.UTF8, "application/json"));
         _updating = false;
     }
 
@@ -94,8 +92,6 @@ public class MasterServerClient : MonoBehaviour
 
 public class ServerInfo
 {
-    public Guid Id { get; set; }
-
     public string Name { get; set; }
     public int NumPlayersOnline { get; set; }
     public string IP { get; set; }
