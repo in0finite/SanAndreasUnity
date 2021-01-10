@@ -18,6 +18,7 @@ namespace SanAndreasUnity.UI
 		Mirror.NetworkDiscoveryHUD m_netDiscoveryHUD;
         private List<ServerInfo> _servers;
         private Vector2 _scrollViewPos;
+		bool _isServersRefreshing = false;
 
         JoinGameWindow()
         {
@@ -139,8 +140,15 @@ namespace SanAndreasUnity.UI
 				}
 				if (2 == m_currentTabIndex)
                 {
-                    buttonText = "Refresh Servers";
-                    buttonAction = async () => _servers = await MasterServerClient.Instance.GetAllServers();
+					GUI.enabled = !_isServersRefreshing;
+                    buttonText = _isServersRefreshing ? ( "Refreshing Servers." + new string('.', (int) ((Time.time * 2) % 3)) ) : "Refresh Servers";
+					buttonAction = async () =>
+					{
+						_isServersRefreshing = true;
+						_servers = null;
+						_servers = await MasterServerClient.Instance.GetAllServers();
+						_isServersRefreshing = false;
+					};
                 }
 			}
 

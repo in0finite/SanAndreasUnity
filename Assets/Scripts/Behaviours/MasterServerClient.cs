@@ -52,6 +52,7 @@ public class MasterServerClient : MonoBehaviour
 
         if (!res.IsSuccessStatusCode)
         {
+            Debug.LogError( await res.Content.ReadAsStringAsync());
             return;
         }
 
