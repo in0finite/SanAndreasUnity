@@ -16,7 +16,9 @@ namespace SanAndreasUnity.Net
 
 		public static int maxNumPlayers { get => NetworkManager.singleton.maxConnections; set { NetworkManager.singleton.maxConnections = value; } }
 
-        public static TelepathyTransport telepathyTransport { get { return ((TelepathyTransport)Transport.activeTransport); } }
+		public static int numConnections => NetworkServer.connections.Count;
+
+		public static TelepathyTransport telepathyTransport { get { return ((TelepathyTransport)Transport.activeTransport); } }
 
 		public	static	string	onlineScene {
 			get {

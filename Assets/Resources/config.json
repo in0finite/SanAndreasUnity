@@ -41,6 +41,8 @@
 
   "dontLoadTextures": false,
 
+  "server_name": "San Andreas Unity Server",
+
   "RCON_enabled": false,
   "RCON_password": "super_secret_password",
   "RCON_port": 25575
