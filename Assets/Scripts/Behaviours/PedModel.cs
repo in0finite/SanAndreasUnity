@@ -5,6 +5,7 @@ using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Animation;
 using UnityEngine;
 using System.Linq;
+using SanAndreasUnity.Behaviours.Peds;
 using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours
@@ -99,6 +100,9 @@ namespace SanAndreasUnity.Behaviours
 		public Transform Pelvis { get; private set; }
 
 		readonly Dictionary<Transform, int> m_damageLevelPerBones = new Dictionary<Transform, int>();
+
+		private RagdollBuilder m_ragdollBuilder;
+		public RagdollBuilder RagdollBuilder => m_ragdollBuilder;
 
 		public class FrameAnimData
 		{
@@ -332,7 +336,7 @@ namespace SanAndreasUnity.Behaviours
 
 			m_damageLevelPerBones.Clear();
 
-			RagdollBuilder rb = new RagdollBuilder
+			RagdollBuilder rb = m_ragdollBuilder = new RagdollBuilder
 			{
 				pelvis = this.RootFrame.transform,
 				leftHips = this.L_Thigh.transform,
@@ -349,6 +353,8 @@ namespace SanAndreasUnity.Behaviours
 				head = this.Head.transform,
 				jaw = this.Jaw.transform,
 			};
+
+			rb.totalMass = PedManager.Instance.ragdollMass;
 
 			rb.PrepareBones();
 			rb.OnWizardCreate();
@@ -376,6 +382,61 @@ namespace SanAndreasUnity.Behaviours
 				m_damageLevelPerBones[bone] = 3;
 			}
 
+		}
+
+		public DeadBody DetachRagdoll(DamageInfo damageInfo)
+		{
+			if (null == m_ragdollBuilder)
+				return null;
+
+			if (null == this.RootFrame)
+				return null;
+
+			Transform ragdollTransform = this.RootFrame.transform;
+
+			// remove colliders which are not part of ragdoll
+			foreach (var c in m_ragdollBuilder.AdditionalColliders)
+			{
+				Object.Destroy(c);
+			}
+
+			m_ragdollBuilder.BuildBodies();
+			m_ragdollBuilder.BuildJoints();
+			m_ragdollBuilder.CalculateMass();
+
+			m_ragdollBuilder = null;
+
+			ragdollTransform.SetParent(null);
+
+			// setup rigid bodies
+			foreach (var rb in ragdollTransform.GetComponentsInChildren<Rigidbody>())
+			{
+				rb.drag = PedManager.Instance.ragdollDrag;
+				if (PedManager.Instance.ragdollMaxDepenetrationVelocity >= 0)
+					rb.maxDepenetrationVelocity = PedManager.Instance.ragdollMaxDepenetrationVelocity;
+				rb.collisionDetectionMode = PedManager.Instance.ragdollCollisionDetectionMode;
+
+				// add velocity to ragdoll based on current ped's velocity
+				rb.velocity = m_ped.Velocity;
+			}
+
+			// apply force to a collider that was hit by a weapon
+			if (damageInfo != null && damageInfo.raycastHitTransform != null && damageInfo.damageType == DamageType.Bullet)
+			{
+				var c = damageInfo.raycastHitTransform.GetComponent<Collider>();
+				if (c != null && c.attachedRigidbody != null)
+				{
+					c.attachedRigidbody.AddForceAtPosition(
+						damageInfo.hitDirection * damageInfo.amount.SqrtOrZero() * PedManager.Instance.ragdollDamageForce,
+						damageInfo.hitPoint,
+						ForceMode.Impulse);
+				}
+			}
+
+			// change layer
+			ragdollTransform.gameObject.SetLayerRecursive(GameManager.DefaultLayerIndex);
+
+			return DeadBody.Create(ragdollTransform, m_ped);
 		}
 
 		public float GetAmountOfDamageForBone(Transform boneTransform, float baseDamageValue)

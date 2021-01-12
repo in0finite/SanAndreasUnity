@@ -318,7 +318,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			if (m_ped.Health <= 0)
 			{
-				Object.Destroy(m_ped.gameObject);
+				m_ped.KillingDamageInfo = damageInfo;
+				m_ped.Kill();
 			}
 
 			// notify clients

@@ -10,6 +10,7 @@ namespace SanAndreasUnity.Utilities
 		public float amount = 0f;
 		public string damageType = null;
 		public Transform raycastHitTransform = null;
+		public Vector3 hitDirection = Vector3.forward;
 		public Vector3 hitPoint = Vector3.zero;
 		public Vector3 hitNormal = Vector3.up;
 		public object attacker = null;
@@ -20,7 +21,10 @@ namespace SanAndreasUnity.Utilities
 	{
 		public static readonly string
 			Bullet = "Bullet",
-			Explosion = "Explosion";
+			Explosion = "Explosion",
+			Gas = "Gas",
+			Flame = "Flame",
+			Melee = "Melee";
 	}
 
 	public class Damageable : MonoBehaviour

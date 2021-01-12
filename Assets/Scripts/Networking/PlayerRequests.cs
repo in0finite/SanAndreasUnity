@@ -115,8 +115,11 @@ namespace SanAndreasUnity.Net
         [Command]
         void CmdRequestSuicide()
         {
-            if (m_player.OwnedPed != null)
-                Destroy(m_player.OwnedPed.gameObject);
+            F.RunExceptionSafe(() =>
+            {
+                if (m_player.OwnedPed != null)
+                    m_player.OwnedPed.Kill();
+            });
         }
 
         public void RequestToDestroyMyVehicles() => this.CmdRequestToDestroyMyVehicles();

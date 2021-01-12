@@ -171,6 +171,18 @@ MonoBehaviour:
   AIOutOfRangeTimeout: 5
   AIOutOfRangeDistance: 250
   pedSyncRate: 20
+  ragdollPrefab: {fileID: 2141754834917738923, guid: 14d22e60f4926f64cbd36f393fe11b9a,
+    type: 3}
+  ragdollMass: 100
+  ragdollLifetime: 90
+  ragdollDrag: 0.05
+  ragdollMaxDepenetrationVelocity: -1
+  ragdollDamageForce: 50
+  ragdollDamageForceWhenDetached: 20
+  ragdollCollisionDetectionMode: 2
+  ragdollSyncRate: 10
+  ragdollPositionLerpFactor: 1
+  ragdollRotationLerpFactor: 1
 --- !u!114 &114560248511158306
 MonoBehaviour:
   m_ObjectHideFlags: 0

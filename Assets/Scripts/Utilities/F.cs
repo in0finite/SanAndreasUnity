@@ -92,6 +92,15 @@ namespace SanAndreasUnity.Utilities
 			return Mathf.RoundToInt (f);
 		}
 
+		public static float SqrtOrZero(this float f)
+		{
+			if (float.IsNaN(f))
+				return 0f;
+			if (f <= 0f)
+				return 0f;
+			return Mathf.Sqrt(f);
+		}
+
         public static double DateTimeToUnixTimestamp(this DateTime dateTime)
         {
             return (TimeZoneInfo.ConvertTimeToUtc(dateTime) -
@@ -523,11 +532,31 @@ namespace SanAndreasUnity.Utilities
 			return false;
 		}
 
+		public static void EnsureCount<T>(this List<T> list, int count)
+		{
+			if (list.Count < count)
+			{
+				int diff = count - list.Count;
+				for (int i = 0; i < diff; i++)
+				{
+					list.Add(default);
+				}
+			}
+		}
+
         public static T RandomElement<T> (this IList<T> list)
         {
             if (list.Count < 1)
                 throw new System.InvalidOperationException("List has no elements");
             return list [UnityEngine.Random.Range(0, list.Count)];
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> enumerable, System.Action<T> action)
+        {
+	        foreach (var element in enumerable)
+	        {
+		        action(element);
+	        }
         }
 
         public static int RemoveDeadObjects<T> (this List<T> list) where T : UnityEngine.Object

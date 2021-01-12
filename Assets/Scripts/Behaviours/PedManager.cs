@@ -55,6 +55,19 @@ namespace SanAndreasUnity.Behaviours
 
 		public float pedSyncRate = 10;
 
+		[Header("Ragdoll")]
+
+		public GameObject ragdollPrefab;
+		public float ragdollMass = 100f;
+		public float ragdollLifetime = 30f;
+		public float ragdollDrag = 0.05f;
+		public float ragdollMaxDepenetrationVelocity = 10f;
+		public float ragdollDamageForce = 4f;
+		public float ragdollDamageForceWhenDetached = 4f;
+		public CollisionDetectionMode ragdollCollisionDetectionMode = CollisionDetectionMode.Discrete;
+		[Range(1, 60)] public float ragdollSyncRate = 20f;
+		public RigidbodyInterpolation ragdollInterpolationMode = RigidbodyInterpolation.Extrapolate;
+
 
 		void Awake ()
 		{

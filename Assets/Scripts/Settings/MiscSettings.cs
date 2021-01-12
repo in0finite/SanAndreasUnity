@@ -109,6 +109,15 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { PedManager.Instance.pedTurnSpeed = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
+		OptionsWindow.FloatInput m_deadBodyLifetime = new OptionsWindow.FloatInput
+		{
+			description = "Dead body lifetime",
+			minValue = 0.5f,
+			maxValue = 300f,
+			getValue = () => PedManager.Instance.ragdollLifetime,
+			setValue = (value) => { PedManager.Instance.ragdollLifetime = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
+		};
 
 
 
@@ -118,6 +127,7 @@ namespace SanAndreasUnity.Settings {
 				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera, m_displayFpsInput,
 				m_pausePlayerSpawning, m_playerSpawnInterval,
 				m_vehicleDetachedPartLifetime,
+				m_deadBodyLifetime,
 				m_projectileReloadTime,
 				m_turnSpeedInput,
 			};
