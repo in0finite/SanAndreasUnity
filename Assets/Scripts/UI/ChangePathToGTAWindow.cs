@@ -40,9 +40,6 @@ namespace SanAndreasUnity.UI {
 				};
 			}
 
-			// load config
-			Config.Load ();
-
 			// set current directory to game directory
 			string currentGameDir = Config.GetPath (Config.const_game_dir);
 			if (!string.IsNullOrEmpty (currentGameDir))

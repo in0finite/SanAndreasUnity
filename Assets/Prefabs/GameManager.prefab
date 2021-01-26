@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 7442340376164908290}
   - component: {fileID: 8446601354455743255}
   - component: {fileID: 5853763562556677784}
+  - component: {fileID: 7588617501852694525}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -181,8 +182,7 @@ MonoBehaviour:
   ragdollDamageForceWhenDetached: 20
   ragdollCollisionDetectionMode: 2
   ragdollSyncRate: 10
-  ragdollPositionLerpFactor: 1
-  ragdollRotationLerpFactor: 1
+  ragdollInterpolationMode: 2
 --- !u!114 &114560248511158306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,5 +325,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c77317cdc437f244b8d409c229aa2e95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7588617501852694525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297494511425690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f08780b55b9ede4cb0ffd248924ba25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

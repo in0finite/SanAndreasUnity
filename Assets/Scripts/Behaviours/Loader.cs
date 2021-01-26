@@ -86,7 +86,7 @@ namespace SanAndreasUnity.Behaviours
 		{
 			
 			LoadingStep[] steps = new LoadingStep[] {
-				new LoadingStep ( StepLoadConfig, "Loading config", 0.02f ),
+				new LoadingStep ( StepConfigure, "Configuring", 0f ),
 				new LoadingStep ( StepSelectGTAPath(), "Select path to GTA", 0.0f ),
 				new LoadingStep ( StepLoadArchives, "Loading archives", 1.7f ),
 				new LoadingStep ( StepLoadSplashScreen, "Loading splash screen", 0.06f ),
@@ -229,10 +229,9 @@ namespace SanAndreasUnity.Behaviours
         {
 			FontsImporter.LoadFonts();
         }
-		private static void StepLoadConfig ()
-		{
-			Config.Load ();
 
+		private static void StepConfigure ()
+		{
 			TextureDictionary.DontLoadTextures = Config.Get<bool>("dontLoadTextures");
 		}
 

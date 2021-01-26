@@ -26,7 +26,6 @@ namespace SanAndreasUnity.Net
         {
             _client = new HttpClient();
 
-            Config.Load();
             _masterServerUrl = Config.Get<string>("masterserverurl");
 
             if (string.IsNullOrWhiteSpace(_masterServerUrl))
