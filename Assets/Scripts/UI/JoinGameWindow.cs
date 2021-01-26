@@ -16,9 +16,10 @@ namespace SanAndreasUnity.UI
 		int m_currentTabIndex = 0;
 
 		Mirror.NetworkDiscoveryHUD m_netDiscoveryHUD;
-        private List<ServerInfo> _servers;
-        private Vector2 _scrollViewPos;
-		bool _isServersRefreshing = false;
+
+        private List<ServerInfo> _serversFromMasterServer = new List<ServerInfo>();
+        private Vector2 _masterServerScrollViewPos;
+		bool _isRefreshingMasterServerList = false;
 
         JoinGameWindow()
         {
@@ -40,7 +41,7 @@ namespace SanAndreasUnity.UI
 			m_netDiscoveryHUD.connectAction = this.ConnectFromDiscovery;
 			m_netDiscoveryHUD.drawGUI = false;
 
-	        _servers = await MasterServerClient.Instance.GetAllServers();
+	        _serversFromMasterServer = await MasterServerClient.Instance.GetAllServers();
 
 		}
 
@@ -73,23 +74,29 @@ namespace SanAndreasUnity.UI
 			}
 			else if (2 == m_currentTabIndex)
             {
+	            int availableWidth = (int) (this.windowRect.width - 5);
+                float[] widthPercentages = new float[] { 0.35f, 0.25f, 0.4f };
+                string[] columnNames = new string[] {"Name", "Players", "IP" };
+
                 // header
                 GUILayout.BeginHorizontal();
-                GUILayout.Button("Name");
-                GUILayout.Button("Players");
+                for (int i = 0; i < columnNames.Length; i++)
+                {
+	                GUILayout.Button(columnNames[i], GUILayout.Width(availableWidth * widthPercentages[i]));
+                }
                 GUILayout.EndHorizontal();
 
-                if (_servers == null) return;
-                _scrollViewPos = GUILayout.BeginScrollView(_scrollViewPos);
+                _masterServerScrollViewPos = GUILayout.BeginScrollView(_masterServerScrollViewPos);
 
-                foreach (ServerInfo info in _servers)
+                foreach (ServerInfo info in _serversFromMasterServer)
                 {
                     GUILayout.BeginHorizontal();
 
-                    GUILayout.Label(info.Name, GUILayout.Width(400));
-                    GUILayout.Label($"{info.NumPlayersOnline}/{info.MaxPlayers}");
-                    if (GUIUtils.ButtonWithCalculatedSize("Connect", 80, 30))
-                        Connect(info.IP, (ushort)info.Port);
+	                GUILayout.Label(info.Name, GUILayout.Width(availableWidth * widthPercentages[0]));
+	                GUILayout.Label($"{info.NumPlayersOnline}/{info.MaxPlayers}", GUILayout.Width(availableWidth * widthPercentages[1]));
+                    if (GUILayout.Button($"{info.IP}:{info.Port}", GUILayout.Width(availableWidth * widthPercentages[2])))
+	                    ConnectToServerFromMasterServer(info);
+
                     GUILayout.EndHorizontal();
                 }
 
@@ -140,14 +147,14 @@ namespace SanAndreasUnity.UI
 				}
 				if (2 == m_currentTabIndex)
                 {
-					GUI.enabled = !_isServersRefreshing;
-                    buttonText = _isServersRefreshing ? ( "Refreshing Servers." + new string('.', (int) ((Time.time * 2) % 3)) ) : "Refresh Servers";
+					GUI.enabled = !_isRefreshingMasterServerList;
+                    buttonText = _isRefreshingMasterServerList ? ( "Refreshing." + new string('.', (int) ((Time.time * 2) % 3)) ) : "Refresh servers";
 					buttonAction = async () =>
 					{
-						_isServersRefreshing = true;
-						_servers = null;
-						_servers = await MasterServerClient.Instance.GetAllServers();
-						_isServersRefreshing = false;
+						_isRefreshingMasterServerList = true;
+						_serversFromMasterServer = new List<ServerInfo>();
+						_serversFromMasterServer = await MasterServerClient.Instance.GetAllServers();
+						_isRefreshingMasterServerList = false;
 					};
                 }
 			}
@@ -165,6 +172,11 @@ namespace SanAndreasUnity.UI
 		void ConnectFromDiscovery(Mirror.NetworkDiscovery.DiscoveryInfo info)
 		{
 			this.Connect(info.EndPoint.Address.ToString(), ushort.Parse( info.KeyValuePairs[Mirror.NetworkDiscovery.kPortKey] ));
+		}
+
+		void ConnectToServerFromMasterServer(ServerInfo serverInfo)
+		{
+			Connect(serverInfo.IP, (ushort) serverInfo.Port);
 		}
 
 		void Connect(string ip, ushort port)
