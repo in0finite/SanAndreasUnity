@@ -225,11 +225,6 @@ namespace SanAndreasUnity.Behaviours
 			Debug.LogException (ex);
 		}
 
-		private static void StepLoadFonts()
-        {
-			FontsImporter.LoadFonts();
-        }
-
 		private static void StepConfigure ()
 		{
 			TextureDictionary.DontLoadTextures = Config.Get<bool>("dontLoadTextures");
@@ -320,6 +315,11 @@ namespace SanAndreasUnity.Behaviours
 		private static void StepLoadAudio ()
 		{
 			Audio.AudioManager.InitFromLoader ();
+		}
+
+		private static void StepLoadFonts()
+		{
+			FontsImporter.LoadFonts();
 		}
 
 		private static void StepLoadCollision ()
