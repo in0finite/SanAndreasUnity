@@ -74,7 +74,7 @@ namespace SanAndreasUnity.UI
 			}
 			else if (2 == m_currentTabIndex)
             {
-	            int availableWidth = (int) (this.windowRect.width - 5);
+	            int availableWidth = (int) this.WindowSize.x - 50;
                 float[] widthPercentages = new float[] { 0.35f, 0.25f, 0.4f };
                 string[] columnNames = new string[] {"Name", "Players", "IP" };
 
