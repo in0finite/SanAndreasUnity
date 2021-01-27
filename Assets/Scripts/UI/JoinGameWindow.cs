@@ -3,6 +3,7 @@ using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Net;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SanAndreasUnity.UI
 {
@@ -146,19 +147,21 @@ namespace SanAndreasUnity.UI
                 {
 					GUI.enabled = !_isRefreshingMasterServerList;
                     buttonText = _isRefreshingMasterServerList ? ( "Refreshing." + new string('.', (int) ((Time.time * 2) % 3)) ) : "Refresh servers";
-					buttonAction = async () =>
-					{
-						_isRefreshingMasterServerList = true;
-						_serversFromMasterServer = new List<ServerInfo>();
-						_serversFromMasterServer = await MasterServerClient.Instance.GetAllServers();
-						_isRefreshingMasterServerList = false;
-					};
+					buttonAction = async () => await RefreshMasterServersButtonPressed();
                 }
 			}
 
             if (GUIUtils.ButtonWithCalculatedSize(buttonText, 80, 30))
 				buttonAction();
 
+		}
+
+		async Task RefreshMasterServersButtonPressed()
+		{
+			_isRefreshingMasterServerList = true;
+			_serversFromMasterServer = new List<ServerInfo>();
+			_serversFromMasterServer = await MasterServerClient.Instance.GetAllServers();
+			_isRefreshingMasterServerList = false;
 		}
 
 		void ConnectDirectly()
