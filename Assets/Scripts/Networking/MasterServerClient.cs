@@ -25,6 +25,7 @@ namespace SanAndreasUnity.Net
         private void Start()
         {
             _client = new HttpClient();
+            _client.Timeout = System.TimeSpan.FromSeconds(10);
 
             _masterServerUrl = Config.Get<string>("master_server_url");
 
