@@ -16,6 +16,8 @@ namespace SanAndreasUnity.Net
         public static MasterServerClient Instance { get; private set; }
         private HttpClient _client;
 
+        private const int RegisterInterval = 20;
+
 
         private void Awake()
         {
@@ -59,7 +61,7 @@ namespace SanAndreasUnity.Net
             await SendRequestToRegister();
 
             _updating = true;
-            Invoke(nameof(UpdateServer), 10);
+            Invoke(nameof(UpdateServer), RegisterInterval);
         }
 
         private async Task UpdateServer()
@@ -70,7 +72,7 @@ namespace SanAndreasUnity.Net
 
                 await SendRequestToRegister();
 
-                await Task.Delay(10000);
+                await Task.Delay(RegisterInterval * 1000);
             }
         }
 
