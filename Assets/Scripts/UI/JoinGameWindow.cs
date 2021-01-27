@@ -160,7 +160,17 @@ namespace SanAndreasUnity.UI
 		{
 			_isRefreshingMasterServerList = true;
 			_serversFromMasterServer = new List<ServerInfo>();
-			_serversFromMasterServer = await MasterServerClient.Instance.GetAllServers();
+
+			try
+			{
+				_serversFromMasterServer = await MasterServerClient.Instance.GetAllServers();
+			}
+			catch (System.Exception ex)
+			{
+				Debug.LogException(ex);
+				MessageBox.Show("Error refreshing master server", ex.ToString());
+			}
+
 			_isRefreshingMasterServerList = false;
 		}
 
