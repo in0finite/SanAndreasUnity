@@ -31,7 +31,7 @@ namespace SanAndreasUnity.UI
 
 		}
 
-		async void Start ()
+	    void Start ()
         {
 			// adjust rect
 			float width = Mathf.Min(650, Screen.width * 0.9f);
@@ -40,10 +40,7 @@ namespace SanAndreasUnity.UI
 			m_netDiscoveryHUD = Mirror.NetworkManager.singleton.GetComponentOrThrow<Mirror.NetworkDiscoveryHUD>();
 			m_netDiscoveryHUD.connectAction = this.ConnectFromDiscovery;
 			m_netDiscoveryHUD.drawGUI = false;
-
-	        _serversFromMasterServer = await MasterServerClient.Instance.GetAllServers();
-
-		}
+        }
 
 		void Update()
 		{
