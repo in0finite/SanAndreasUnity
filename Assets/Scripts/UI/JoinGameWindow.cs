@@ -158,6 +158,8 @@ namespace SanAndreasUnity.UI
             if (GUIUtils.ButtonWithCalculatedSize(buttonText, 80, 30))
 				buttonAction();
 
+            GUI.enabled = true;
+
 		}
 
 		async Task RefreshMasterServersButtonPressed()
