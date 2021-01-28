@@ -91,9 +91,13 @@ namespace SanAndreasUnity.UI
                     GUILayout.BeginHorizontal();
 
                     GUILayout.Label(info.Name, GUIUtils.CenteredLabelStyle, GUILayout.Width(availableWidth * widthPercentages[0]));
-	                GUILayout.Label($"{info.NumPlayersOnline}/{info.MaxPlayers}", GUIUtils.CenteredLabelStyle, GUILayout.Width(availableWidth * widthPercentages[1]));
-                    if (GUILayout.Button($"{info.IP}:{info.Port}", GUILayout.Width(availableWidth * widthPercentages[2])))
+
+                    GUILayout.Label($"{info.NumPlayersOnline}/{info.MaxPlayers}", GUIUtils.CenteredLabelStyle, GUILayout.Width(availableWidth * widthPercentages[1]));
+
+	                GUI.enabled = ! NetStatus.IsClientActive();
+	                if (GUILayout.Button($"{info.IP}:{info.Port}", GUILayout.Width(availableWidth * widthPercentages[2])))
 	                    ConnectToServerFromMasterServer(info);
+	                GUI.enabled = true;
 
                     GUILayout.EndHorizontal();
                 }
