@@ -21,6 +21,8 @@ namespace SanAndreasUnity.UI
         private List<ServerInfo> _serversFromMasterServer = new List<ServerInfo>();
         private Vector2 _masterServerScrollViewPos;
 		bool _isRefreshingMasterServerList = false;
+	    MessageBox _masterServerErrorMessageBox;
+
 
         JoinGameWindow()
         {
@@ -174,7 +176,10 @@ namespace SanAndreasUnity.UI
 			catch (System.Exception ex)
 			{
 				Debug.LogException(ex);
-				MessageBox.Show("Error refreshing master server", ex.ToString());
+
+				if (_masterServerErrorMessageBox != null)
+					_masterServerErrorMessageBox.DestroyWindow();
+				_masterServerErrorMessageBox = MessageBox.Show("Error refreshing master server", ex.ToString());
 			}
 
 			_isRefreshingMasterServerList = false;
