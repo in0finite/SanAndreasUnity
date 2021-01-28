@@ -37,8 +37,9 @@ namespace SanAndreasUnity.UI
 	    void Start ()
         {
 			// adjust rect
-			float width = Mathf.Min(650, Screen.width * 0.9f);
-			this.windowRect = GUIUtils.GetCenteredRect(new Vector2(width, 400));
+			float width = Mathf.Min(900, Screen.width * 0.9f);
+			float height = width * 9f / 16f;
+			this.windowRect = GUIUtils.GetCenteredRect(new Vector2(width, height));
 
 			m_netDiscoveryHUD = Mirror.NetworkManager.singleton.GetComponentOrThrow<Mirror.NetworkDiscoveryHUD>();
 			m_netDiscoveryHUD.connectAction = this.ConnectFromDiscovery;
