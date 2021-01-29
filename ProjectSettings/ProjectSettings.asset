@@ -155,7 +155,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.SAUnity.SAUnity
   buildNumber: {}
-  AndroidBundleVersionCode: 4
+  AndroidBundleVersionCode: 5
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
