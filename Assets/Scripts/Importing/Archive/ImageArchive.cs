@@ -43,6 +43,8 @@ namespace SanAndreasUnity.Importing.Archive
         {
             _stream = stream;
 
+            string archiveName = _stream is FileStream fs ? Path.GetFileName(fs.Name) : string.Empty;
+
             var reader = new BinaryReader(stream);
             Version = new String(reader.ReadChars(4));
             EntryCount = reader.ReadUInt32();
@@ -51,9 +53,22 @@ namespace SanAndreasUnity.Importing.Archive
             _fileDict = new Dictionary<string, ImageArchiveEntry>(StringComparer.InvariantCultureIgnoreCase);
             _extDict = new Dictionary<string, List<string>>(StringComparer.InvariantCultureIgnoreCase);
 
+            if (Version != "VER2")
+            {
+                UnityEngine.Debug.LogWarning($"Archive {archiveName} has unsupported version {Version}");
+                return;
+            }
+
             for (var i = 0; i < EntryCount; ++i)
             {
                 var entry = new ImageArchiveEntry(reader);
+
+                if (_fileDict.ContainsKey(entry.Name))
+                {
+                    UnityEngine.Debug.LogWarning($"file entry (name: {entry.Name}, size: {entry.Size}) already exists in archive {archiveName}");
+                    continue;
+                }
+
                 _entries.Add(entry);
                 _fileDict.Add(entry.Name, entry);
 
