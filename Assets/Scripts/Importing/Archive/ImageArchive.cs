@@ -72,8 +72,6 @@ namespace SanAndreasUnity.Importing.Archive
                 _entries.Add(entry);
                 _fileDict.Add(entry.Name, entry);
 
-                //UnityEngine.Debug.Log ("Adding image archive entry: " + entry.Name);
-
                 var ext = Path.GetExtension(entry.Name);
                 if (ext == null)
                 {
@@ -84,7 +82,6 @@ namespace SanAndreasUnity.Importing.Archive
                 if (!_extDict.ContainsKey(ext))
                 {
                     _extDict.Add(ext, new List<string>());
-                    //UnityEngine.Debug.Log("New image archive extension: \"" + ext + "\" for: \"" + entry.Name + "\"");
                 }
 
                 _extDict[ext].Add(entry.Name);
