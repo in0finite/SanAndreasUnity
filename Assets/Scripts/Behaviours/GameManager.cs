@@ -35,6 +35,18 @@ namespace SanAndreasUnity.Behaviours {
 
 
 
+		static GameManager()
+		{
+			// set culture to invariant to avoid localization problems
+			// need to do it in static constructor, before any other thread is created
+			// note: this will also run in edit-mode
+
+			System.Globalization.CultureInfo.CurrentCulture =
+				System.Globalization.CultureInfo.CurrentUICulture =
+					System.Globalization.CultureInfo.DefaultThreadCurrentCulture =
+						System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = System.Globalization.CultureInfo.InvariantCulture;
+		}
+
 		private void Awake() {
 
 			if (null == Instance)
