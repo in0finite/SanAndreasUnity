@@ -51,11 +51,14 @@ namespace SanAndreasUnity.UI {
 		void LoadTextures()
 		{
 			// load arrow textures
-			var pcbtnsTxd = TextureDictionary.Load("pcbtns");
-			LeftArrowTexture = pcbtnsTxd.GetDiffuse("left").Texture;
-			RightArrowTexture = pcbtnsTxd.GetDiffuse("right").Texture;
-			UpArrowTexture = pcbtnsTxd.GetDiffuse("up").Texture;
-			DownArrowTexture = pcbtnsTxd.GetDiffuse("down").Texture;
+			F.RunExceptionSafe(() =>
+			{
+				var pcbtnsTxd = TextureDictionary.Load("pcbtns");
+				LeftArrowTexture = pcbtnsTxd.GetDiffuse("left").Texture;
+				RightArrowTexture = pcbtnsTxd.GetDiffuse("right").Texture;
+				UpArrowTexture = pcbtnsTxd.GetDiffuse("up").Texture;
+				DownArrowTexture = pcbtnsTxd.GetDiffuse("down").Texture;
+			});
 
 			LoadCrosshairTextures();
 
