@@ -89,7 +89,7 @@ MonoBehaviour:
   logoTexture: {fileID: 2800000, guid: 7ba03d38f2c9d483eb98097a1990d3ec, type: 3}
   barPrefab: {fileID: 1593438409806284, guid: 92671d073b68a421fa8cf12bd74315cb, type: 3}
   m_defaultMaxFps: 60
-  m_defaultMaxFpsOnMobile: 25
+  m_defaultMaxFpsOnMobile: 30
   m_defaultPhysicsUpdateRate: 50
   m_defaultPhysicsUpdateRateOnMobile: 50
   cursorSensitivity: {x: 7, y: 7}
