@@ -39,6 +39,8 @@ namespace SanAndreasUnity.Importing.Archive
         public readonly String Version;
         public readonly UInt32 EntryCount;
 
+        public int NumLoadedEntries => _entries.Count;
+
         private ImageArchive(Stream stream)
         {
             _stream = stream;

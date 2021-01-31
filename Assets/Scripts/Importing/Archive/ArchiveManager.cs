@@ -16,6 +16,8 @@ namespace SanAndreasUnity.Importing.Archive
         bool ContainsFile(string name);
 
         Stream ReadFile(string name);
+
+        int NumLoadedEntries { get; }
     }
 
 	/// <summary>
@@ -50,6 +52,18 @@ namespace SanAndreasUnity.Importing.Archive
         }
 
         private static readonly List<IArchive> _sLoadedArchives = new List<IArchive>();
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static int GetNumArchives()
+        {
+            return _sLoadedArchives.Count;
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static int GetTotalNumLoadedEntries()
+        {
+            return _sLoadedArchives.Sum(a => a.NumLoadedEntries);
+        }
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
         public static LooseArchive LoadLooseArchive(string dirPath)

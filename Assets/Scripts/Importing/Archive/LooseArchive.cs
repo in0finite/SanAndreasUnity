@@ -39,6 +39,9 @@ namespace SanAndreasUnity.Importing.Archive
         private readonly Dictionary<String, LooseArchiveEntry> _fileDict;
         private readonly Dictionary<String, List<String>> _extDict;
 
+        public int NumLoadedEntries => _fileDict.Count;
+
+
         public static LooseArchive Load(string dirPath)
         {
             return new LooseArchive(dirPath);
