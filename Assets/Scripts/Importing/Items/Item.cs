@@ -3,6 +3,7 @@ using SanAndreasUnity.Importing.Items.Placements;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items
 {
@@ -63,7 +64,14 @@ namespace SanAndreasUnity.Importing.Items
             var file = new ItemFile<Definition>(path);
             foreach (var obj in file.GetItems<Definition>().OfType<IObjectDefinition>())
             {
-                _definitions.Add(obj.Id, obj);
+                if (_definitions.ContainsKey(obj.Id))
+                {
+                    Debug.LogWarning($"Definition with id {obj.Id} already exists, skipping it");
+                }
+                else
+                {
+                    _definitions.Add(obj.Id, obj);
+                }
             }
         }
 
