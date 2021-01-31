@@ -152,14 +152,18 @@ namespace SanAndreasUnity.Importing.Weapons
 						continue;
 					if (line.StartsWith ("#"))
 						continue;
-					
-					if (line.StartsWith ("$")) {
-						// weapon
-						m_loadedWeaponData.Add (new WeaponData (line));
-					} else if (line.StartsWith ("%")) {
-						// gun aiming offset
-						m_loadedGunAimingOffsets.Add (new GunAimingOffset (line));
-					}
+
+					// allow some lines to fail
+					F.RunExceptionSafe(() =>
+					{
+						if (line.StartsWith ("$")) {
+							// weapon
+							m_loadedWeaponData.Add (new WeaponData (line));
+						} else if (line.StartsWith ("%")) {
+							// gun aiming offset
+							m_loadedGunAimingOffsets.Add (new GunAimingOffset (line));
+						}
+					});
 
 				}
 			}
