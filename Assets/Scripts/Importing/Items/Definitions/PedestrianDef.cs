@@ -58,7 +58,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
             Id = GetInt(0);
             ModelName = GetString(1);
             TextureDictionaryName = GetString(2);
-            DefaultType = (PedestrianType)Enum.Parse(typeof(PedestrianType), GetString(3), true);
+            Enum.TryParse<PedestrianType>(GetString(3), true, out DefaultType);
             BehaviourName = GetString(4);
             AnimGroupName = GetString(5);
             CanDriveMask = (uint)GetInt(6, NumberStyles.HexNumber);
