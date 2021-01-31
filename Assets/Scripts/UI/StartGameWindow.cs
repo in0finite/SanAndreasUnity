@@ -61,8 +61,11 @@ namespace SanAndreasUnity.UI
 		{
 			GUILayout.Space(40);
 
+			GUI.enabled = ! NetStatus.IsServer;
             if (GUIUtils.ButtonWithCalculatedSize("Start", 80, 30))
 				StartGame();
+            GUI.enabled = true;
+
 		}
 
 		void StartGame()
