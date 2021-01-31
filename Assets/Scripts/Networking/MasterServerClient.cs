@@ -45,15 +45,22 @@ namespace SanAndreasUnity.Net
             if (string.IsNullOrWhiteSpace(_masterServerUrl))
                 return;
 
-            _serverInfo = new ServerInfo
+            _serverInfo = GetCurrentServerInfo();
+
+            await RegisterServer();
+        }
+
+        private static ServerInfo GetCurrentServerInfo()
+        {
+            return new ServerInfo
             {
                 Name = Config.Get<string>("server_name"),
                 Port = NetManager.listenPortNumber,
                 NumPlayersOnline = NetManager.numConnections,
                 MaxPlayers = NetManager.maxNumPlayers,
+                Map = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
+                Version = Application.version,
             };
-
-            await RegisterServer();
         }
 
         private async Task RegisterServer()
@@ -68,7 +75,7 @@ namespace SanAndreasUnity.Net
         {
             while (_updating)
             {
-                _serverInfo.NumPlayersOnline = NetManager.numConnections;
+                _serverInfo = GetCurrentServerInfo();
 
                 await SendRequestToRegister();
 
@@ -116,10 +123,12 @@ namespace SanAndreasUnity.Net
 
     public class ServerInfo
     {
+        public string Version { get; set; }
         public string Name { get; set; }
         public int NumPlayersOnline { get; set; }
         public string IP { get; set; }
         public int Port { get; set; }
         public int MaxPlayers { get; set; }
+        public string Map { get; set; }
     }
 }
