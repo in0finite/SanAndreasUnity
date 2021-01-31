@@ -2,6 +2,7 @@
 using SanAndreasUnity.Importing.Items.Definitions;
 using System.Collections.Generic;
 using System.Linq;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Vehicles
@@ -15,10 +16,10 @@ namespace SanAndreasUnity.Importing.Vehicles
         {
             var file = new ItemFile<Definition>(path);
 
-            Debug.LogFormat("Entries: {0}", file.GetItems<CarColorDef>().Count());
+            Debug.LogFormat("Num car color entries: {0}", file.GetItems<CarColorDef>().Count());
 
             _sColors = file.GetItems<ColorDef>().Select(x => new Color32(x.R, x.G, x.B, 255)).ToArray();
-            _sCarColors = file.GetItems<CarColorDef>().ToDictionary(x => x.Name, x => new CarColors(x));
+            _sCarColors = file.GetItems<CarColorDef>().DistinctBy(ccd => ccd.Name).ToDictionary(x => x.Name, x => new CarColors(x));
         }
 
         public static CarColors GetCarDefaults(string carName)

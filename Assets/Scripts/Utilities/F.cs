@@ -496,15 +496,14 @@ namespace SanAndreasUnity.Utilities
 
 		public static IEnumerable<T> DistinctBy<T,T2>(this IEnumerable<T> enumerable, System.Func<T,T2> selector)
 		{
-			List<KeyValuePair<T,T2>> list = new List<KeyValuePair<T, T2>>();
+			var hashSet = new HashSet<T2>();
 
-			foreach (var elem in enumerable) {
-				var value = selector (elem);
-				if (!list.Exists (item => item.Value.Equals (value)))
-					list.Add (new KeyValuePair<T, T2> (elem, value));
+			foreach (T elem in enumerable)
+			{
+				T2 value = selector (elem);
+				if (hashSet.Add(value))
+					yield return elem;
 			}
-
-			return list.Select (item => item.Key);
 		}
 
 		public static int FindIndex<T> (this IEnumerable<T> enumerable, System.Predicate<T> predicate)
