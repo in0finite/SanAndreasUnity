@@ -315,7 +315,7 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void StepLoadFonts()
 		{
-			FontsImporter.LoadFonts();
+			Importing.FontsImporter.LoadFonts();
 		}
 
 		private static void StepLoadCollision ()
