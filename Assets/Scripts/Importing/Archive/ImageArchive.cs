@@ -45,7 +45,9 @@ namespace SanAndreasUnity.Importing.Archive
         {
             _stream = stream;
 
-            string archiveName = _stream is FileStream fs ? Path.GetFileName(fs.Name) : string.Empty;
+            var fileStream = _stream as FileStream;
+            string archiveName = fileStream != null ? Path.GetFileName(fileStream.Name) : string.Empty;
+            long archiveSize = fileStream?.Length ?? 0;
 
             var reader = new BinaryReader(stream);
             Version = new String(reader.ReadChars(4));
@@ -57,7 +59,7 @@ namespace SanAndreasUnity.Importing.Archive
 
             if (Version != "VER2")
             {
-                UnityEngine.Debug.LogWarning($"Archive {archiveName} has unsupported version {Version}");
+                UnityEngine.Debug.LogWarning($"Archive {archiveName} has unsupported version {Version}, entry count {EntryCount}, size {archiveSize}");
                 return;
             }
 
