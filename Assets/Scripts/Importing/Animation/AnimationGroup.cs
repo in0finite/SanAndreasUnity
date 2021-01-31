@@ -263,11 +263,14 @@ namespace SanAndreasUnity.Importing.Animation
 		{ get { return _sGroups; } }
 
 
-		public static void Load(string path)
+		public static void Load(string fileName)
 		{
-			using (var reader = File.OpenText(path))
+			using (var stream = Archive.ArchiveManager.ReadFile(fileName))
 			{
-				LoadFromStreamReader(reader);
+				using (var reader = new StreamReader(stream))
+				{
+					LoadFromStreamReader(reader);
+				}
 			}
 		}
 

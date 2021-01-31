@@ -372,9 +372,9 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void StepLoadAnimGroups ()
 		{
-			foreach (var path in Config.GetPaths("anim_groups_paths"))
+			foreach (string fileName in Config.Get<string[]>("anim_group_files"))
 			{
-				AnimationGroup.Load(ArchiveManager.PathToCaseSensitivePath(path));
+				AnimationGroup.Load(fileName);
 			}
 
 			// load custom anim groups from resources

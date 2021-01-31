@@ -34,8 +34,8 @@
   "handling_path": "${game_dir}/data/handling.cfg",
   "water_path": "${game_dir}/data/water.dat",
   "car_colors_path": "${game_dir}/data/carcols.dat",
-  "anim_groups_paths": [
-    "${game_dir}/data/animgrp.dat"
+  "anim_group_files": [
+    "animgrp.dat"
   ],
   "weapons_path": "${game_dir}/data/weapon.dat",
 
