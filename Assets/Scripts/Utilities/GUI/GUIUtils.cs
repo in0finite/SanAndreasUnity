@@ -85,9 +85,14 @@ namespace SanAndreasUnity.Utilities
 			return ButtonWithCalculatedSize(new GUIContent(text));
 		}
 
+		public static bool ButtonWithCalculatedSize(string text, float minWidth, float minHeight, GUIStyle style)
+		{
+			return ButtonWithCalculatedSize(new GUIContent(text), minWidth, minHeight, style);
+		}
+
 		public static bool ButtonWithCalculatedSize(string text, float minWidth, float minHeight)
 		{
-			return ButtonWithCalculatedSize(new GUIContent(text), minWidth, minHeight);
+			return ButtonWithCalculatedSize(text, minWidth, minHeight, GUI.skin.button);
 		}
 
 		public static bool ButtonWithCalculatedSize(GUIContent content)
@@ -97,14 +102,19 @@ namespace SanAndreasUnity.Utilities
 
 		public static bool ButtonWithCalculatedSize(GUIContent content, float minWidth, float minHeight)
 		{
-			Vector2 size = CalcScreenSizeForContent (content, GUI.skin.button);
+			return ButtonWithCalculatedSize(content, minWidth, minHeight, GUI.skin.button);
+		}
+
+		public static bool ButtonWithCalculatedSize(GUIContent content, float minWidth, float minHeight, GUIStyle style)
+		{
+			Vector2 size = CalcScreenSizeForContent (content, style);
 			
 			if (size.x < minWidth)
 				size.x = minWidth;
 			if (size.y < minHeight)
 				size.y = minHeight;
 
-			return GUILayout.Button (content, GUILayout.Width (size.x), GUILayout.Height (size.y));
+			return GUILayout.Button (content, style, GUILayout.Width (size.x), GUILayout.Height (size.y));
 		}
 
 		public	static	bool	ButtonWithColor( Rect rect, string text, Color color) {

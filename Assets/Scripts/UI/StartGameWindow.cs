@@ -15,6 +15,13 @@ namespace SanAndreasUnity.UI
 		[SerializeField] string[] m_availableScenes = new string[0];
 		int m_selectedSceneIndex = 0;
 
+		public int width = 550;
+		public int height = 400;
+		public int minStartButtonWidth = 80;
+		public int minStartButtonHeight = 30;
+		public int minMapButtonHeight = 20;
+		public int mapSelectionGridXCount = 4;
+
 
 		StartGameWindow()
         {
@@ -29,7 +36,7 @@ namespace SanAndreasUnity.UI
 		void Start ()
         {
 			// adjust rect
-			this.windowRect = GUIUtils.GetCenteredRect(new Vector2(550, 320));
+			this.windowRect = GUIUtils.GetCenteredRect(new Vector2(this.width, this.height));
 		}
 
 		void Update()
@@ -53,7 +60,7 @@ namespace SanAndreasUnity.UI
 			m_maxNumPlayersStr = GUILayout.TextField(m_maxNumPlayersStr, GUILayout.Width(100));
 
 			GUILayout.Label("Map:");
-			m_selectedSceneIndex = GUILayout.SelectionGrid(m_selectedSceneIndex, m_availableScenes, 4);
+			m_selectedSceneIndex = GUILayout.SelectionGrid(m_selectedSceneIndex, m_availableScenes, this.mapSelectionGridXCount, GUILayout.MinHeight(this.minMapButtonHeight));
 
 		}
 
@@ -62,9 +69,11 @@ namespace SanAndreasUnity.UI
 			GUILayout.Space(40);
 
 			GUI.enabled = ! NetStatus.IsServer;
-            if (GUIUtils.ButtonWithCalculatedSize("Start", 80, 30))
+            if (GUIUtils.ButtonWithCalculatedSize("Start", this.minStartButtonWidth, this.minStartButtonHeight))
 				StartGame();
             GUI.enabled = true;
+
+            GUILayout.Space(10);
 
 		}
 

@@ -2697,13 +2697,19 @@ MonoBehaviour:
     width: 115
     height: 157.5
   useScrollView: 1
-  m_spaceBeforeContent: 0
+  m_spaceBeforeContent: 15
   m_spaceAfterContent: 0
   m_registerInMainMenuOnStart: 1
   m_sortPriorityForMainMenu: -1000
   m_availableScenes:
   - Main
   - Demo
+  width: 700
+  height: 450
+  minStartButtonWidth: 90
+  minStartButtonHeight: 30
+  minMapButtonHeight: 23
+  mapSelectionGridXCount: 5
 --- !u!114 &5136906681516469785
 MonoBehaviour:
   m_ObjectHideFlags: 0
