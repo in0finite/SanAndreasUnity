@@ -14,6 +14,7 @@ namespace SanAndreasUnity.UI
 		string m_maxNumPlayersStr = "40";
 		[SerializeField] string[] m_availableScenes = new string[0];
 		int m_selectedSceneIndex = 0;
+	    bool m_registerAtMasterServer = false;
 
 		public int width = 550;
 		public int height = 400;
@@ -61,6 +62,9 @@ namespace SanAndreasUnity.UI
 
 			GUILayout.Label("Map:");
 			m_selectedSceneIndex = GUILayout.SelectionGrid(m_selectedSceneIndex, m_availableScenes, this.mapSelectionGridXCount, GUILayout.MinHeight(this.minMapButtonHeight));
+			GUILayout.Space(5);
+
+			m_registerAtMasterServer = GUILayout.Toggle(m_registerAtMasterServer, "Register at master server");
 
 		}
 
@@ -84,6 +88,8 @@ namespace SanAndreasUnity.UI
 				ushort port = ushort.Parse(m_portStr);
 				string scene = m_availableScenes[m_selectedSceneIndex];
 				ushort maxNumPlayers = ushort.Parse(m_maxNumPlayersStr);
+
+				MasterServerClient.Instance.IsServerRegistrationEnabled = m_registerAtMasterServer;
 
 				NetManager.StartServer(port, scene, maxNumPlayers, m_dedicatedServer, m_dontListen);
 

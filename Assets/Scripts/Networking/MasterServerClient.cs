@@ -18,6 +18,9 @@ namespace SanAndreasUnity.Net
 
         private const int RegisterInterval = 20;
 
+        public bool IsServerRegistrationEnabled { get; set; } = true;
+
+
 
         private void Awake()
         {
@@ -43,6 +46,9 @@ namespace SanAndreasUnity.Net
                 return;
 
             if (string.IsNullOrWhiteSpace(_masterServerUrl))
+                return;
+
+            if (!IsServerRegistrationEnabled)
                 return;
 
             _serverInfo = GetCurrentServerInfo();
