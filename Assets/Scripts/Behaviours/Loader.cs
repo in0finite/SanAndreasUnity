@@ -402,16 +402,20 @@ namespace SanAndreasUnity.Behaviours
 		{
 			
 			// Load mouse cursor texture
-			Texture2D mouse = TextureDictionary.Load("fronten_pc").GetDiffuse("mouse", 
-				new TextureLoadParams(){makeNoLongerReadable = false}).Texture;
-			Texture2D mouseFix = new Texture2D(mouse.width, mouse.height);
+			F.RunExceptionSafe(() =>
+			{
+				Texture2D mouse = TextureDictionary.Load("fronten_pc").GetDiffuse("mouse",
+					new TextureLoadParams(){makeNoLongerReadable = false}).Texture;
+				Texture2D mouseFix = new Texture2D(mouse.width, mouse.height);
 
-			for (int x = 0; x < mouse.width; x++)
-				for (int y = 0; y < mouse.height; y++)
-					mouseFix.SetPixel(x, mouse.height - y - 1, mouse.GetPixel(x, y));
+				for (int x = 0; x < mouse.width; x++)
+					for (int y = 0; y < mouse.height; y++)
+						mouseFix.SetPixel(x, mouse.height - y - 1, mouse.GetPixel(x, y));
 
-			mouseFix.Apply();
-			Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
+				mouseFix.Apply();
+
+				Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
+			});
 
 			// fist texture
 			Weapon.FistTexture = TextureDictionary.Load("hud").GetDiffuse("fist").Texture;
