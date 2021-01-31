@@ -60,7 +60,7 @@ namespace SanAndreasUnity.Importing.Items
 
         public static void ReadIde(string path)
         {
-            var file = new ItemFile<Definition>(ArchiveManager.GetCaseSensitiveFilePath(Path.GetFileName(path)));
+            var file = new ItemFile<Definition>(path);
             foreach (var obj in file.GetItems<Definition>().OfType<IObjectDefinition>())
             {
                 _definitions.Add(obj.Id, obj);

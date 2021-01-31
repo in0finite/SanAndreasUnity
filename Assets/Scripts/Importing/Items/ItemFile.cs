@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 #endif
 using System.Reflection;
+using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Items
 {
@@ -152,9 +153,20 @@ namespace SanAndreasUnity.Importing.Items
 
         public ItemFile(string path)
         {
-            using (var reader = File.OpenText(path))
+            string fileName = Path.GetFileName(path);
+
+            if (!Archive.ArchiveManager.FileExists(fileName))
             {
-                Load(reader);
+                Debug.LogError($"Item file not found: {path}");
+                return;
+            }
+
+            using (var stream = Archive.ArchiveManager.ReadFile(fileName))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    Load(reader);
+                }
             }
         }
 
