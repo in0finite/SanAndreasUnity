@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+#pragma warning disable 618
 
 namespace SanAndreasUnity.Importing
 {
@@ -353,3 +354,4 @@ namespace SanAndreasUnity.Importing
     }
 
 }
+#pragma warning restore 618
