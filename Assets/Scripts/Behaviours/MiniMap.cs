@@ -92,6 +92,23 @@ namespace SanAndreasUnity.Behaviours
 
         private void LoadGameTextures()
         {
+            LoadMapTexture();
+
+            var huds = TextureDictionary.Load("hud");
+            NorthBlip = huds.GetDiffuse("radar_north").Texture;
+            PlayerBlip = huds.GetDiffuse("radar_centre").Texture;
+            WaypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
+            VehicleTexture = huds.GetDiffuse("radar_impound").Texture;
+            GreenHouseTexture = huds.GetDiffuse("radar_propertyG").Texture;
+
+            northImage.sprite = Sprite.Create(NorthBlip, new Rect(0, 0, NorthBlip.width, NorthBlip.height), new Vector2(NorthBlip.width, NorthBlip.height) / 2);
+            playerImage.texture = this.PlayerBlip;
+            mapImage.texture = MapTexture;
+
+        }
+
+        void LoadMapTexture()
+        {
             MapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
 
             TextureLoadParams textureLoadParams = new TextureLoadParams() { makeNoLongerReadable = false };
@@ -108,26 +125,14 @@ namespace SanAndreasUnity.Behaviours
                 Texture2D tex = texDict.GetDiffuse(name, textureLoadParams).Texture;
 
                 for (int ii = 0; ii < texSize; ++ii)
-                    for (int jj = 0; jj < texSize; ++jj)
-                        MapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
+                for (int jj = 0; jj < texSize; ++jj)
+                    MapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
 
                 // unload the texture (don't destroy it, because it can be a dummy texture)
 
             }
 
             MapTexture.Apply(false, true);
-
-            var huds = TextureDictionary.Load("hud");
-            NorthBlip = huds.GetDiffuse("radar_north").Texture;
-            PlayerBlip = huds.GetDiffuse("radar_centre").Texture;
-            WaypointTexture = huds.GetDiffuse("radar_waypoint").Texture;
-            VehicleTexture = huds.GetDiffuse("radar_impound").Texture;
-            GreenHouseTexture = huds.GetDiffuse("radar_propertyG").Texture;
-
-            northImage.sprite = Sprite.Create(NorthBlip, new Rect(0, 0, NorthBlip.width, NorthBlip.height), new Vector2(NorthBlip.width, NorthBlip.height) / 2);
-            playerImage.texture = this.PlayerBlip;
-            mapImage.texture = MapTexture;
-
         }
 
         private void Awake()
