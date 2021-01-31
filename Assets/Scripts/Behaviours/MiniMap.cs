@@ -111,6 +111,9 @@ namespace SanAndreasUnity.Behaviours
         {
             MapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
 
+            if (Config.Get<bool>("skip_minimap_load"))
+                return;
+
             TextureLoadParams textureLoadParams = new TextureLoadParams() { makeNoLongerReadable = false };
 
             for (int i = 0; i < tileCount; i++)
@@ -125,8 +128,8 @@ namespace SanAndreasUnity.Behaviours
                 Texture2D tex = texDict.GetDiffuse(name, textureLoadParams).Texture;
 
                 for (int ii = 0; ii < texSize; ++ii)
-                for (int jj = 0; jj < texSize; ++jj)
-                    MapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
+                    for (int jj = 0; jj < texSize; ++jj)
+                        MapTexture.SetPixel(x + ii, texSize - (y + jj) - 1, tex.GetPixel(ii, jj));
 
                 // unload the texture (don't destroy it, because it can be a dummy texture)
 

@@ -41,6 +41,8 @@
 
   "dontLoadTextures": false,
 
+  "skip_minimap_load": false,
+
   "server_name": "San Andreas Unity Server",
 
   "RCON_enabled": false,
