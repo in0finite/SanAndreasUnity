@@ -90,6 +90,11 @@ namespace SanAndreasUnity.Importing.Archive
             }
         }
 
+        public IEnumerable<string> GetAllFiles()
+        {
+            return _entries.Select(e => e.Name);
+        }
+
         public IEnumerable<string> GetFileNamesWithExtension(string ext)
         {
             return _extDict.ContainsKey(ext) ? _extDict[ext] : Enumerable.Empty<string>();

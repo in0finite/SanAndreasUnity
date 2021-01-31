@@ -11,6 +11,8 @@ namespace SanAndreasUnity.Importing.Archive
 {
     public interface IArchive
     {
+        IEnumerable<string> GetAllFiles();
+
         IEnumerable<string> GetFileNamesWithExtension(string ext);
 
         bool ContainsFile(string name);
@@ -63,6 +65,14 @@ namespace SanAndreasUnity.Importing.Archive
         public static int GetTotalNumLoadedEntries()
         {
             return _sLoadedArchives.Sum(a => a.NumLoadedEntries);
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static List<string> GetAllEntries()
+        {
+            return _sLoadedArchives
+                .SelectMany(a => a.GetAllFiles())
+                .ToList();
         }
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
