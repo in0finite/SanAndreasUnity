@@ -31,8 +31,6 @@ namespace SanAndreasUnity.Behaviours
 		private static bool m_hasErrors = false;
 		private static System.Exception m_loadException;
 
-		private static IArchive[] s_archives;
-
 		public class LoadingStep
 		{
 			public IEnumerator Coroutine { get; private set; }
@@ -262,31 +260,29 @@ namespace SanAndreasUnity.Behaviours
 		private static void StepLoadArchives ()
 		{
 
-			string[] archivePaths = Config.GetPaths("archive_paths");
+			string[] directoriesToCheck = { "models", "data" };
 
-			List<IArchive> listArchives = new List<IArchive>();
-
-			foreach (var path in archivePaths)
+			foreach (string directoryToCheck in directoriesToCheck)
 			{
-				if (File.Exists(path))
+				string[] caseVariations =
 				{
-					listArchives.Add(ArchiveManager.LoadImageArchive(path));
-				}
-				else if (Directory.Exists(path))
-				{
-					listArchives.Add(ArchiveManager.LoadLooseArchive(path));
-				}
-				else
-				{
-					// try to get case-sensitive file path
-					string caseSensitivePath = ArchiveManager.GetCaseSensitiveFilePath(Path.GetFileName(path));
-					listArchives.Add(ArchiveManager.LoadImageArchive(caseSensitivePath));
+					directoryToCheck,
+					directoryToCheck.FirstCharToUpper(),
+					directoryToCheck.ToUpperInvariant(),
+				};
 
-				//	throw new System.Exception("Archive not found: " + path);
-				}
+				if (caseVariations.All(d => !Directory.Exists(Path.Combine(Config.GamePath, d))))
+					throw new System.Exception($"Game folder seems to be invalid - failed to find '{directoryToCheck}' folder inside game folder");
 			}
 
-			s_archives = listArchives.FindAll(a => a != null).ToArray();
+			ArchiveManager.LoadLooseArchive(Config.GamePath);
+
+			foreach (string imgFilePath in ArchiveManager.GetFilePathsFromLooseArchivesWithExtension(".img"))
+			{
+				ArchiveManager.LoadImageArchive(imgFilePath);
+			}
+
+			Debug.Log($"num archives loaded: {ArchiveManager.GetNumArchives()}, num entries loaded: {ArchiveManager.GetTotalNumLoadedEntries()}");
 
 		}
 
@@ -327,13 +323,10 @@ namespace SanAndreasUnity.Behaviours
 			
 			int numCollisionFiles = 0;
 
-			foreach (var archive in s_archives)
+			foreach (var colFile in ArchiveManager.GetFileNamesWithExtension(".col"))
 			{
-				foreach (var colFile in archive.GetFileNamesWithExtension(".col"))
-				{
-					CollisionFile.Load(colFile);
-					numCollisionFiles++;
-				}
+				CollisionFile.Load(colFile);
+				numCollisionFiles++;
 			}
 
 			Debug.Log("Number of collision files " + numCollisionFiles);

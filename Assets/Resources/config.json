@@ -12,25 +12,12 @@
 
   "game_dir": "",
 
-  "archive_paths": [
-    "${game_dir}/models/gta3.img",
-    "${game_dir}",
-    "${game_dir}/models/gta_int.img",
-    "${game_dir}/models/player.img",
-    "${game_dir}/anim/anim.img",
-    "${game_dir}/anim/cuts.img",
-    "${game_dir}/models/cutscene.img",
-    "${game_dir}/data/Paths/carrec.img",
-    "${game_dir}/data/script/script.img"
-  ],
-
   "item_paths": [
     "${game_dir}/data/gta.dat",
     "${game_dir}/data/vehicles.ide",
     "${game_dir}/data/peds.ide",
     "${game_dir}/data/default.ide"
   ],
-
   "handling_path": "${game_dir}/data/handling.cfg",
   "water_path": "${game_dir}/data/water.dat",
   "car_colors_path": "${game_dir}/data/carcols.dat",

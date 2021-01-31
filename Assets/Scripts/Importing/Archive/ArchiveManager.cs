@@ -41,7 +41,7 @@ namespace SanAndreasUnity.Importing.Archive
             string filePath = null;
             foreach(var archive in _sLoadedArchives.OfType<LooseArchive>())
             {
-                if (archive.GetCaseSensitiveFilePath(fileName, ref filePath))
+                if (archive.GetFilePath(fileName, ref filePath))
                     return filePath;
             }
             throw new FileNotFoundException(fileName);
@@ -109,6 +109,24 @@ namespace SanAndreasUnity.Importing.Archive
         {
             var list = new List<string>();
             GetFileNamesWithExtension(ext, list);
+            return list;
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static List<string> GetFilePathsFromLooseArchivesWithExtension(string ext)
+        {
+            var list = new List<string>();
+
+            foreach (var archive in _sLoadedArchives.OfType<LooseArchive>())
+            {
+                foreach (string fileName in archive.GetFileNamesWithExtension(ext))
+                {
+                    string filePath = null;
+                    archive.GetFilePath(fileName, ref filePath);
+                    list.Add(filePath);
+                }
+            }
+
             return list;
         }
 

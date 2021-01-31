@@ -358,14 +358,12 @@ namespace SanAndreasUnity.Utilities
                 SafeDestroy(component.gameObject);
         }
 
-        public static string FirstCharToUpper(this string input)
+        public static string FirstCharToUpper(this string str)
         {
-            switch (input)
-            {
-                case null: throw new ArgumentNullException(nameof(input));
-                case "": throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input));
-                default: return input.First().ToString().ToUpper() + input.Substring(1);
-            }
+	        if (string.Empty == str)
+		        return str;
+	        
+	        return str[0].ToString().ToUpperInvariant() + str.Substring(1);
         }
 
         public static string GetGameObjectPath(this GameObject obj)

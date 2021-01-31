@@ -105,11 +105,11 @@ namespace SanAndreasUnity.Importing.Archive
             return File.OpenRead(_fileDict[name].FilePath);
         }
 
-        public bool GetCaseSensitiveFilePath(string fileName, ref string newPath)
+        public bool GetFilePath(string fileName, ref string filePath)
         {
             if (_fileDict.TryGetValue(fileName, out LooseArchiveEntry entry))
             {
-                newPath = entry.FilePath;
+                filePath = entry.FilePath;
                 return true;
             }
             return false;
