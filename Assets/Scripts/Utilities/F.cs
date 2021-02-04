@@ -263,6 +263,13 @@ namespace SanAndreasUnity.Utilities
 			t.position = pos;
 		}
 
+        public static void SetLocalY(this Transform t, float yPos)
+        {
+	        Vector3 pos = t.localPosition;
+	        pos.y = yPos;
+	        t.localPosition = pos;
+        }
+
 		public static float Distance(this Transform t, Vector3 pos)
 		{
 			return Vector3.Distance (t.position, pos);
