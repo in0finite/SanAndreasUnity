@@ -33,6 +33,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             _rigidBody = gameObject.GetComponent<Rigidbody>();
 
+            _rigidBody.interpolation = Net.NetStatus.IsServer ? VehicleManager.Instance.rigidbodyInterpolationOnServer : VehicleManager.Instance.rigidbodyInterpolationOnClient;
             HandlingData = Handling.Get<Handling.Car>(Definition.HandlingName);
 
             VConsts.Changed += UpdateValues;

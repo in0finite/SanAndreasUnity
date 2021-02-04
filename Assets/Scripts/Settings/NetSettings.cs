@@ -74,6 +74,20 @@ namespace SanAndreasUnity.Settings
 			setValue = (value) => { VehicleManager.Instance.syncPedTransformWhileInVehicle = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
+		OptionsWindow.EnumInput<RigidbodyInterpolation> m_vehicleRigidBodyInterpolationModeOnServer = new OptionsWindow.EnumInput<RigidbodyInterpolation>
+		{
+			description = "Vehicle rigid body interpolation mode on server",
+			getValue = () => VehicleManager.Instance.rigidbodyInterpolationOnServer,
+			setValue = ApplyRigidBodyInterpolationModeOnServer,
+			persistType = OptionsWindow.InputPersistType.OnStart,
+		};
+		OptionsWindow.EnumInput<RigidbodyInterpolation> m_vehicleRigidBodyInterpolationModeOnClient = new OptionsWindow.EnumInput<RigidbodyInterpolation>
+		{
+			description = "Vehicle rigid body interpolation mode on client",
+			getValue = () => VehicleManager.Instance.rigidbodyInterpolationOnClient,
+			setValue = ApplyRigidBodyInterpolationModeOnClient,
+			persistType = OptionsWindow.InputPersistType.OnStart,
+		};
 
         private void Awake()
         {
@@ -87,6 +101,8 @@ namespace SanAndreasUnity.Settings
 	            m_controlWheelsOnLocalPlayer,
 	            m_controlVehicleInputOnLocalPlayer,
 	            m_whenToDisableVehiclesRigidBody,
+	            m_vehicleRigidBodyInterpolationModeOnServer,
+	            m_vehicleRigidBodyInterpolationModeOnClient,
 	            m_syncPedTransformWhileInVehicle);
         }
 
@@ -118,6 +134,26 @@ namespace SanAndreasUnity.Settings
 	        VehicleManager.Instance.whenToDisableRigidBody = when;
 	        foreach (var v in Vehicle.AllVehicles)
 		        v.GetComponent<VehicleController>().EnableOrDisableRigidBody();
+        }
+
+        static void ApplyRigidBodyInterpolationModeOnServer(RigidbodyInterpolation interpolation)
+        {
+	        VehicleManager.Instance.rigidbodyInterpolationOnServer = interpolation;
+	        if (NetUtils.IsServer)
+	        {
+		        foreach (var rb in Vehicle.AllVehicleRigidBodies)
+			        rb.interpolation = interpolation;
+	        }
+        }
+
+        static void ApplyRigidBodyInterpolationModeOnClient(RigidbodyInterpolation interpolation)
+        {
+	        VehicleManager.Instance.rigidbodyInterpolationOnClient = interpolation;
+	        if (Net.NetStatus.IsClientOnly)
+	        {
+		        foreach (var rb in Vehicle.AllVehicleRigidBodies)
+			        rb.interpolation = interpolation;
+	        }
         }
     }
 }

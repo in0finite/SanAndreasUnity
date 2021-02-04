@@ -11,6 +11,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public float cameraDistanceFromVehicle = 6f;
 
+        public RigidbodyInterpolation rigidbodyInterpolationOnServer = RigidbodyInterpolation.None;
+        public RigidbodyInterpolation rigidbodyInterpolationOnClient = RigidbodyInterpolation.None;
+
         public bool syncLinearVelocity = true;
         public bool syncAngularVelocity = true;
         public Utilities.WhenOnClient whenToDisableRigidBody = Utilities.WhenOnClient.OnlyOnOtherClients;

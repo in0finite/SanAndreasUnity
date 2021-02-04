@@ -38,6 +38,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         static List<Vehicle> s_vehicles = new List<Vehicle>();
         public static IEnumerable<Vehicle> AllVehicles => s_vehicles;
         public static int NumVehicles => s_vehicles.Count;
+        public static IEnumerable<Rigidbody> AllVehicleRigidBodies => AllVehicles.Select(v => v.RigidBody).Where(r => r != null);
 
         private static int _sLayer = -1;
 

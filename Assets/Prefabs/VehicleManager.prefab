@@ -87,6 +87,8 @@ MonoBehaviour:
   vehiclePrefab: {fileID: 5841438317718401360, guid: abddce9c98c1ba5a992f109cfd8c5a5c,
     type: 3}
   cameraDistanceFromVehicle: 7
+  rigidbodyInterpolationOnServer: 0
+  rigidbodyInterpolationOnClient: 2
   syncLinearVelocity: 1
   syncAngularVelocity: 1
   whenToDisableRigidBody: 0
@@ -130,3 +132,4 @@ MonoBehaviour:
   smokePrefab: {fileID: 100000, guid: c5d4e25823f45c946b9dd01264b40a1b, type: 3}
   flamePrefab: {fileID: 100000, guid: 5b0110178dbbb784cab63b7529b07cc1, type: 3}
   explosionPrefab: {fileID: 100010, guid: 2894e2899fe860745afbc810459e2cc2, type: 3}
+  radioVolume: 1
