@@ -34,6 +34,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             _rigidBody = gameObject.GetComponent<Rigidbody>();
 
             _rigidBody.interpolation = Net.NetStatus.IsServer ? VehicleManager.Instance.rigidbodyInterpolationOnServer : VehicleManager.Instance.rigidbodyInterpolationOnClient;
+
+            if (Net.NetStatus.IsClientOnly)
+            {
+                _rigidBody.useGravity = false;
+                _rigidBody.detectCollisions = false;
+            }
+
             HandlingData = Handling.Get<Handling.Car>(Definition.HandlingName);
 
             VConsts.Changed += UpdateValues;
