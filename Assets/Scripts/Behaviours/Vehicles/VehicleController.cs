@@ -195,10 +195,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 // position and rotation will be applied in syncvar hooks
 
                 // apply velocity on all clients
+
                 if (VehicleManager.Instance.syncLinearVelocity)
                     m_vehicle.RigidBody.velocity = m_net_linearVelocity;
+                else
+                    m_vehicle.RigidBody.velocity = Vector3.zero;
+
                 if (VehicleManager.Instance.syncAngularVelocity)
                     m_vehicle.RigidBody.angularVelocity = m_net_angularVelocity;
+                else
+                    m_vehicle.RigidBody.angularVelocity = Vector3.zero;
+
 
                 m_vehicle.Health = m_net_health;
             }
