@@ -486,15 +486,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 wheel.Child.transform.localPosition = position;
 
-                // reset the yaw
-                wheel.Child.localRotation = wheel.Roll;
-
-                // calculate new roll
-                wheel.Child.Rotate(wheel.IsLeftHand ? Vector3.left : Vector3.right, wheel.Collider.rpm / 60.0f * 360.0f * Time.deltaTime);
-                wheel.Roll = wheel.Child.localRotation;
-
-                // apply yaw
-                wheel.Child.localRotation = Quaternion.AngleAxis(wheel.Collider.steerAngle, Vector3.up) * wheel.Roll;
+                UpdateWheelRotation(wheel, wheel.Collider.rpm, wheel.Collider.steerAngle);
             }
 
             if (_colorsChanged)
@@ -514,6 +506,19 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             //    NetworkingFixedUpdate();
             PhysicsFixedUpdate();
+        }
+
+        public static void UpdateWheelRotation(Wheel wheel, float rpm, float steerAngle)
+        {
+            // reset the yaw
+            wheel.Child.localRotation = wheel.Roll;
+
+            // calculate new roll
+            wheel.Child.Rotate(wheel.IsLeftHand ? Vector3.left : Vector3.right, rpm / 60.0f * 360.0f * Time.deltaTime);
+            wheel.Roll = wheel.Child.localRotation;
+
+            // apply yaw
+            wheel.Child.localRotation = Quaternion.AngleAxis(steerAngle, Vector3.up) * wheel.Roll;
         }
 
         void UpdateHighDetailMeshes()
