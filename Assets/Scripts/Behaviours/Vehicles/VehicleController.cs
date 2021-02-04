@@ -30,6 +30,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             public float steerAngle;
             //public float travel;
             public float localPosY;
+            public float rpm;
         }
 
         class WheelSyncList : SyncList<WheelSyncData> { }
@@ -168,6 +169,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         steerAngle = wheel.Collider.steerAngle,
                         //travel = wheel.Travel,
                         localPosY = wheel.Collider.transform.GetChild(0).localPosition.y,
+                        rpm = wheel.Collider.rpm,
                     });
                 }
             }
@@ -192,6 +194,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         w.Collider.steerAngle = data.steerAngle;
                         //w.Travel = data.travel;
                         w.Collider.transform.GetChild(0).SetLocalY(data.localPosY);
+                        Vehicle.UpdateWheelRotation(w, data.rpm, data.steerAngle);
                     }
                 }
 
