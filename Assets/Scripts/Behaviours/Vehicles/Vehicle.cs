@@ -469,24 +469,28 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void Update()
         {
 
-            foreach (var wheel in _wheels)
+            if (Net.NetStatus.IsServer
+                || (this.IsControlledByLocalPlayer && VehicleManager.Instance.controlWheelsOnLocalPlayer && ! VehicleManager.Instance.destroyWheelCollidersOnClient))
             {
-                Vector3 position = Vector3.zero;
-
-                WheelHit wheelHit;
-
-                if (wheel.Collider.GetGroundHit(out wheelHit))
+                foreach (var wheel in _wheels)
                 {
-                    position.y = (wheelHit.point.y - wheel.Collider.transform.position.y) + wheel.Collider.radius;
-                }
-                else
-                {
-                    position.y -= wheel.Collider.suspensionDistance;
-                }
+                    Vector3 position = Vector3.zero;
 
-                wheel.Child.transform.localPosition = position;
+                    WheelHit wheelHit;
 
-                UpdateWheelRotation(wheel, wheel.Collider.rpm, wheel.Collider.steerAngle);
+                    if (wheel.Collider.GetGroundHit(out wheelHit))
+                    {
+                        position.y = (wheelHit.point.y - wheel.Collider.transform.position.y) + wheel.Collider.radius;
+                    }
+                    else
+                    {
+                        position.y -= wheel.Collider.suspensionDistance;
+                    }
+
+                    wheel.Child.transform.localPosition = position;
+
+                    UpdateWheelRotation(wheel, wheel.Collider.rpm, wheel.Collider.steerAngle);
+                }
             }
 
             if (_colorsChanged)
