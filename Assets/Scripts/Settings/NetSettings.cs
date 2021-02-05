@@ -55,6 +55,13 @@ namespace SanAndreasUnity.Settings
 			setValue = (value) => { VehicleManager.Instance.controlWheelsOnLocalPlayer = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
+		OptionsWindow.BoolInput m_destroyWheelCollidersOnClient = new OptionsWindow.BoolInput
+		{
+			description = "Destroy wheel colliders on client",
+			getValue = () => VehicleManager.Instance.destroyWheelCollidersOnClient,
+			setValue = (value) => { VehicleManager.Instance.destroyWheelCollidersOnClient = value; },
+			persistType = OptionsWindow.InputPersistType.OnStart,
+		};
 		OptionsWindow.BoolInput m_controlVehicleInputOnLocalPlayer = new OptionsWindow.BoolInput ("Control vehicle input on local player") {
 			isAvailable = () => VehicleManager.Instance != null,
 			getValue = () => VehicleManager.Instance.controlInputOnLocalPlayer,
@@ -99,6 +106,7 @@ namespace SanAndreasUnity.Settings
 	            m_syncVehiclesLinearVelocity,
 	            m_syncVehiclesAngularVelocity,
 	            m_controlWheelsOnLocalPlayer,
+	            m_destroyWheelCollidersOnClient,
 	            m_controlVehicleInputOnLocalPlayer,
 	            m_whenToDisableVehiclesRigidBody,
 	            m_vehicleRigidBodyInterpolationModeOnServer,

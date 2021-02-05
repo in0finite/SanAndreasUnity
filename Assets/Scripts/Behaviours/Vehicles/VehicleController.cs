@@ -67,6 +67,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     
                     // update rigid body status
                     this.EnableOrDisableRigidBody();
+
+                    if (VehicleManager.Instance.destroyWheelCollidersOnClient)
+                    {
+                        foreach (var wheelCollider in this.GetComponentsInChildren<WheelCollider>())
+                        {
+                            Destroy(wheelCollider);
+                        }
+                    }
                 });
             }
         }
@@ -168,7 +176,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                         motorTorque = wheel.Collider.motorTorque,
                         steerAngle = wheel.Collider.steerAngle,
                         //travel = wheel.Travel,
-                        localPosY = wheel.Collider.transform.GetChild(0).localPosition.y,
+                        localPosY = wheel.Child.localPosition.y,
                         rpm = wheel.Collider.rpm,
                     });
                 }
@@ -189,11 +197,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     for (int i=0; i < m_vehicle.Wheels.Count && i < m_net_wheelsData.Count; i++) {
                         var w = m_vehicle.Wheels[i];
                         var data = m_net_wheelsData[i];
-                        w.Collider.brakeTorque = data.brakeTorque;
-                        w.Collider.motorTorque = data.motorTorque;
-                        w.Collider.steerAngle = data.steerAngle;
+
+                        if (w.Collider != null)
+                        {
+                            w.Collider.brakeTorque = data.brakeTorque;
+                            w.Collider.motorTorque = data.motorTorque;
+                            w.Collider.steerAngle = data.steerAngle;
+                        }
                         //w.Travel = data.travel;
-                        w.Collider.transform.GetChild(0).SetLocalY(data.localPosY);
+                        w.Child.SetLocalY(data.localPosY);
                         Vehicle.UpdateWheelRotation(w, data.rpm, data.steerAngle);
                     }
                 }

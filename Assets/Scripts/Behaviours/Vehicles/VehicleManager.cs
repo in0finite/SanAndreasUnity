@@ -21,6 +21,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public bool syncVehicleTransformUsingSyncVars = false;
         public bool controlInputOnLocalPlayer = true;
         public bool controlWheelsOnLocalPlayer = true;
+        public bool destroyWheelCollidersOnClient = true;
 
         public float vehicleSyncRate = 20;
 
