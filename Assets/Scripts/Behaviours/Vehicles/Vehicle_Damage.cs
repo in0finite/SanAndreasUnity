@@ -262,6 +262,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             rigidBody.mass = mass;
             rigidBody.drag = 0.05f;
             rigidBody.maxDepenetrationVelocity = VehicleManager.Instance.explosionLeftoverPartsMaxDepenetrationVelocity;
+            rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             
             if (NetStatus.IsServer)
             {
