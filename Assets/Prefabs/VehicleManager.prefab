@@ -88,14 +88,15 @@ MonoBehaviour:
     type: 3}
   cameraDistanceFromVehicle: 7
   rigidbodyInterpolationOnServer: 0
-  rigidbodyInterpolationOnClient: 2
+  rigidbodyInterpolationOnClient: 1
   syncLinearVelocity: 1
   syncAngularVelocity: 1
   whenToDisableRigidBody: 0
   syncPedTransformWhileInVehicle: 0
   syncVehicleTransformUsingSyncVars: 1
-  controlInputOnLocalPlayer: 1
-  controlWheelsOnLocalPlayer: 1
+  controlInputOnLocalPlayer: 0
+  controlWheelsOnLocalPlayer: 0
+  destroyWheelCollidersOnClient: 1
   vehicleSyncRate: 20
   massToHealthExponent: 1
   explosionDamageRadius: 7
