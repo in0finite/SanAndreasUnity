@@ -130,6 +130,8 @@ namespace SanAndreasUnity.Net
             }
 
             this.NetworkRigidBody.Rigidbody = this.GetComponentInChildren<Rigidbody>();
+            if (this.NetworkRigidBody.Rigidbody != null)
+                this.NetworkRigidBody.Rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
             this.NetworkRigidBody.UpdateClient();
 
         }
