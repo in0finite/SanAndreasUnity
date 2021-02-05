@@ -90,8 +90,8 @@ MonoBehaviour:
   barPrefab: {fileID: 1593438409806284, guid: 92671d073b68a421fa8cf12bd74315cb, type: 3}
   m_defaultMaxFps: 60
   m_defaultMaxFpsOnMobile: 30
-  m_defaultPhysicsUpdateRate: 50
-  m_defaultPhysicsUpdateRateOnMobile: 50
+  m_defaultPhysicsUpdateRate: 60
+  m_defaultPhysicsUpdateRateOnMobile: 60
   cursorSensitivity: {x: 7, y: 7}
 --- !u!114 &114805125582614736
 MonoBehaviour:
