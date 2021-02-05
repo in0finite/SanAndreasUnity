@@ -161,8 +161,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_acceleration = m_vehicle.Accelerator;
                 m_net_steering = m_vehicle.Steering;
                 m_net_braking = m_vehicle.Braking;
-                m_net_position = m_vehicle.transform.position;
-                m_net_rotation = m_vehicle.transform.rotation;
+                m_net_position = m_vehicle.RigidBody.position;
+                m_net_rotation = m_vehicle.RigidBody.rotation;
                 m_net_linearVelocity = m_vehicle.RigidBody.velocity;
                 m_net_angularVelocity = m_vehicle.RigidBody.angularVelocity;
                 m_net_health = m_vehicle.Health;
