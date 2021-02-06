@@ -136,6 +136,9 @@ namespace SanAndreasUnity.Behaviours.Peds
             if (initialState)
                 writer.Write(m_net_modelId);
 
+            byte flags = 0;
+            writer.Write(flags);
+
             Dictionary<int, BoneInfo> bonesDict = initialState ? m_framesDict : m_rigidBodiesDict;
             bool checkRigidBodyForNull = initialState;
 
@@ -166,6 +169,8 @@ namespace SanAndreasUnity.Behaviours.Peds
         {
             if (initialState)
                 m_net_modelId = reader.ReadInt32();
+
+            byte flags = reader.ReadByte();
 
             byte count = reader.ReadByte();
 
