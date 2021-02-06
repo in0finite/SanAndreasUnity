@@ -176,7 +176,7 @@ MonoBehaviour:
   ragdollPrefab: {fileID: 2141754834917738923, guid: 14d22e60f4926f64cbd36f393fe11b9a,
     type: 3}
   ragdollMass: 1000
-  ragdollLifetime: 90
+  ragdollLifetime: 60
   ragdollDrag: 0.05
   ragdollMaxDepenetrationVelocity: -1
   ragdollDamageForce: 500
