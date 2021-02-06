@@ -358,8 +358,7 @@ public class FileBrowser {
 		
 		GUILayout.BeginArea(
 			m_screenRect,
-			m_name,
-			GUI.skin.window
+			m_name
 		);
 
 		// display top panel
