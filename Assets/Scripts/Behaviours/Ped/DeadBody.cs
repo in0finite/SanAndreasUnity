@@ -52,7 +52,8 @@ namespace SanAndreasUnity.Behaviours.Peds
                 writer.Write(this.boneId);
                 writer.Write(this.position);
                 writer.Write(this.rotation);
-                writer.Write(this.velocity);
+                if (this.boneId == 0)
+                    writer.Write(this.velocity);
             }
 
             public static BoneSyncData DeSerialize(NetworkReader reader)
@@ -61,7 +62,8 @@ namespace SanAndreasUnity.Behaviours.Peds
                 boneSyncData.boneId = reader.ReadByte();
                 boneSyncData.position = reader.ReadVector3();
                 boneSyncData.rotation = reader.ReadVector3();
-                boneSyncData.velocity = reader.ReadVector3();
+                if (boneSyncData.boneId == 0)
+                    boneSyncData.velocity = reader.ReadVector3();
                 return boneSyncData;
             }
         }
