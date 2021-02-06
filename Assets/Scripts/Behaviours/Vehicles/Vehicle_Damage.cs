@@ -20,6 +20,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public bool IsUnderSmoke { get; private set; } = false;
 
         bool m_alreadyExploded = false;
+        public bool ExplodedThisFrame => m_alreadyExploded;
 
         public float TimeWhenBecameUnderFlame { get; private set; } = float.NegativeInfinity;
         public float TimeSinceBecameUnderFlame => Time.time - this.TimeWhenBecameUnderFlame;

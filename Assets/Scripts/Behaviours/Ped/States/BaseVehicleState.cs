@@ -227,6 +227,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			return true;
 		}
 
+		public override void KillPed()
+		{
+			if (m_ped.CurrentVehicle != null && m_ped.CurrentVehicle.ExplodedThisFrame)
+			{
+				base.KillPed();
+				return;
+			}
+			
+			// don't detach ragdoll, because it will collide with vehicle and vehicle will fly away
+			Object.Destroy(m_ped.gameObject);
+		}
+
 	}
 
 }
