@@ -124,6 +124,13 @@ namespace SanAndreasUnity.Behaviours.Peds
 
             m_framesDict = model.Frames.ToDictionary(f => f.BoneId, f => new BoneInfo(f.transform));
 
+            // destroy all rigid bodies except for the root bone - they work for themselves, and bones look deformed and stretched
+            m_framesDict
+                .Where(pair => pair.Key != 0)
+                .Select(pair => pair.Value.Rigidbody)
+                .WhereAlive()
+                .ForEach(Object.Destroy);
+
             Object.Destroy(model.AnimComponent);
             Object.Destroy(model);
 

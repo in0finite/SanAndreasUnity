@@ -563,6 +563,12 @@ namespace SanAndreasUnity.Utilities
 	        }
         }
 
+        public static IEnumerable<T> WhereAlive<T> (this IEnumerable<T> enumerable)
+	        where T : UnityEngine.Object
+        {
+	        return enumerable.Where(obj => obj != null);
+        }
+
         public static int RemoveDeadObjects<T> (this List<T> list) where T : UnityEngine.Object
         {
             return list.RemoveAll(item => null == item);
