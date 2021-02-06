@@ -126,6 +126,7 @@ public class FileBrowser {
 
 	protected string m_name;
 	protected Rect m_screenRect;
+	protected GUIStyle m_areaStyle;
 
 	protected Vector2 m_scrollPosition;
 
@@ -133,10 +134,10 @@ public class FileBrowser {
 
 
 
-	// Browsers need at least a rect, name and callback
-	public FileBrowser(Rect screenRect, string name, FinishedCallback callback) {
+	public FileBrowser(Rect screenRect, string name, GUIStyle areaStyle, FinishedCallback callback) {
 		m_name = name;
 		m_screenRect = screenRect;
+		m_areaStyle = areaStyle;
 		m_browserType = FileBrowserType.File;
 		m_callback = callback;
 		SetNewDirectory(Directory.GetCurrentDirectory());
@@ -355,11 +356,11 @@ public class FileBrowser {
 	}
 
 	public void OnGUI() {
-		
-		GUILayout.BeginArea(
-			m_screenRect,
-			m_name
-		);
+
+		if (m_areaStyle != null)
+			GUILayout.BeginArea(m_screenRect, m_name, m_areaStyle);
+		else
+			GUILayout.BeginArea(m_screenRect, m_name);
 
 		// display top panel
 		if (m_topPanelEntries.Count > 0) {

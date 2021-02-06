@@ -529,7 +529,7 @@ namespace SanAndreasUnity.Behaviours
 			if (null == m_fileBrowser) {
 				Rect rect = GUIUtils.GetCenteredRect (FileBrowser.GetRecommendedSize());
 
-				m_fileBrowser = new FileBrowser(rect, "Select path to GTA", (string path) => {
+				m_fileBrowser = new FileBrowser(rect, "Select path to GTA", GUI.skin.window, (string path) => {
 					m_showFileBrowser = false;
 					Config.SetString (Config.const_game_dir, path);
 					Config.SaveUserConfigSafe ();
