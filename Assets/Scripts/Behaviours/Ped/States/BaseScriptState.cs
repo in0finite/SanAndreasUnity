@@ -327,6 +327,16 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+		public virtual void KillPed()
+		{
+			if (m_model != null)
+			{
+				m_model.DetachRagdoll(m_ped.KillingDamageInfo);
+			}
+
+			Object.Destroy(m_ped.gameObject);
+		}
+
 	}
 
 }

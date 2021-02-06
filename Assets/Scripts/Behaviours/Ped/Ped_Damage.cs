@@ -144,12 +144,7 @@ namespace SanAndreasUnity.Behaviours
 
 			m_alreadyKilled = true;
 
-			if (this.PlayerModel != null)
-			{
-				this.PlayerModel.DetachRagdoll(this.KillingDamageInfo);
-			}
-
-			Object.Destroy(this.gameObject);
+			this.CurrentState.KillPed();
 		}
 
 	}
