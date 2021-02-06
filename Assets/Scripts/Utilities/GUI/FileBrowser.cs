@@ -440,7 +440,7 @@ public class FileBrowser {
 		GUI.enabled = true;
 		GUILayout.EndScrollView();
 
-		GUILayout.Space(5);
+		GUILayout.Space(20);
 
 		GUILayout.BeginHorizontal();
 		GUILayout.FlexibleSpace();
@@ -448,6 +448,8 @@ public class FileBrowser {
 		if (SanAndreasUnity.Utilities.GUIUtils.ButtonWithCalculatedSize("Cancel")) {
 			m_callback(null);
 		}
+
+		GUILayout.Space(5);
 
 		if (BrowserType == FileBrowserType.File) {
 			GUI.enabled = m_selectedFile > -1;
