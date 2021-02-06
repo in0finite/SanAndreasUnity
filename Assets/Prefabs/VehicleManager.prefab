@@ -89,6 +89,7 @@ MonoBehaviour:
   cameraDistanceFromVehicle: 7
   rigidbodyInterpolationOnServer: 0
   rigidbodyInterpolationOnClient: 1
+  rigidBodyCollisionDetectionMode: 2
   syncLinearVelocity: 1
   syncAngularVelocity: 1
   whenToDisableRigidBody: 0

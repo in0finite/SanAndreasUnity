@@ -14,6 +14,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public RigidbodyInterpolation rigidbodyInterpolationOnServer = RigidbodyInterpolation.None;
         public RigidbodyInterpolation rigidbodyInterpolationOnClient = RigidbodyInterpolation.None;
 
+        public CollisionDetectionMode rigidBodyCollisionDetectionMode = CollisionDetectionMode.Discrete;
+
         public bool syncLinearVelocity = true;
         public bool syncAngularVelocity = true;
         public Utilities.WhenOnClient whenToDisableRigidBody = Utilities.WhenOnClient.OnlyOnOtherClients;
