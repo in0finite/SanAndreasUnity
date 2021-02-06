@@ -38,6 +38,8 @@ namespace SanAndreasUnity.Behaviours.Peds
         private Dictionary<int, BoneInfo> m_rigidBodiesDict = new Dictionary<int, BoneInfo>();
         public int NumRigidBodies => m_rigidBodiesDict.Count;
 
+        public float TrafficKbps => (2 + NumRigidBodies * (1 + 12 + 12) + 12) / 1000f / this.syncInterval;
+
         private int m_net_modelId;
 
         private struct BoneSyncData

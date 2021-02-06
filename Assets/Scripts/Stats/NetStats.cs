@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Mirror;
+using SanAndreasUnity.Behaviours.Peds;
 using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Stats
@@ -24,6 +25,7 @@ namespace SanAndreasUnity.Stats
                 Utilities.GUIUtils.DrawHorizontalLine(1, 1, Color.black);
                 GUILayout.Label("Num connections: " + NetworkServer.connections.Count);
                 GUILayout.Label("Max num players: " + NetManager.maxNumPlayers);
+                GUILayout.Label($"Dead body traffic per player: {DeadBody.DeadBodies.Sum(db => db.TrafficKbps)} Kb/s");
             }
 
             if (NetStatus.IsClientActive())
