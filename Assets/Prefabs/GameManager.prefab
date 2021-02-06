@@ -182,7 +182,7 @@ MonoBehaviour:
   ragdollDamageForce: 500
   ragdollDamageForceWhenDetached: 200
   ragdollCollisionDetectionMode: 2
-  ragdollSyncRate: 10
+  ragdollSyncRate: 15
   ragdollInterpolationMode: 2
 --- !u!114 &114560248511158306
 MonoBehaviour:
