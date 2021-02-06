@@ -34,7 +34,7 @@ namespace SanAndreasUnity.Behaviours.Peds
         private Dictionary<int, BoneInfo> m_framesDict = new Dictionary<int, BoneInfo>();
         public int NumBones => m_framesDict.Count;
 
-        private Dictionary<int, Rigidbody> m_rigidBodiesDict = new Dictionary<int, Rigidbody>();
+        private Dictionary<int, BoneInfo> m_rigidBodiesDict = new Dictionary<int, BoneInfo>();
         public int NumRigidBodies => m_rigidBodiesDict.Count;
 
         private int m_net_modelId;
@@ -45,6 +45,24 @@ namespace SanAndreasUnity.Behaviours.Peds
             public Vector3 position;
             public Vector3 rotation;
             public Vector3 velocity;
+
+            public void Serialize(NetworkWriter writer)
+            {
+                writer.Write(this.boneId);
+                writer.Write(this.position);
+                writer.Write(this.rotation);
+                writer.Write(this.velocity);
+            }
+
+            public static BoneSyncData DeSerialize(NetworkReader reader)
+            {
+                var boneSyncData = new BoneSyncData();
+                boneSyncData.boneId = reader.ReadByte();
+                boneSyncData.position = reader.ReadVector3();
+                boneSyncData.rotation = reader.ReadVector3();
+                boneSyncData.velocity = reader.ReadVector3();
+                return boneSyncData;
+            }
         }
 
         private List<BoneSyncData> m_bonesSyncData = new List<BoneSyncData>();
@@ -117,23 +135,27 @@ namespace SanAndreasUnity.Behaviours.Peds
             if (initialState)
                 writer.Write(m_net_modelId);
 
-            writer.Write((byte)m_framesDict.Count);
+            Dictionary<int, BoneInfo> bonesDict = initialState ? m_framesDict : m_rigidBodiesDict;
+            bool checkRigidBodyForNull = initialState;
 
-            foreach (var pair in m_framesDict)
+            writer.Write((byte)bonesDict.Count);
+
+            foreach (var pair in bonesDict)
             {
                 int boneId = pair.Key;
                 Transform tr = pair.Value.Transform;
+                Rigidbody rb = pair.Value.Rigidbody;
 
                 var boneSyncData = new BoneSyncData();
                 boneSyncData.boneId = (byte)boneId;
                 boneSyncData.position = tr.localPosition;
                 boneSyncData.rotation = tr.localRotation.eulerAngles;
-                boneSyncData.velocity = m_rigidBodiesDict.TryGetValue(boneId, out Rigidbody rb) ? GetVelocityForSending(rb) : Vector3.zero;
+                if (checkRigidBodyForNull)
+                    boneSyncData.velocity = rb != null ? GetVelocityForSending(rb) : Vector3.zero;
+                else
+                    boneSyncData.velocity = GetVelocityForSending(rb);
 
-                writer.Write(boneSyncData.boneId);
-                writer.Write(boneSyncData.position);
-                writer.Write(boneSyncData.rotation);
-                writer.Write(boneSyncData.velocity);
+                boneSyncData.Serialize(writer);
             }
 
             return true;
@@ -150,12 +172,7 @@ namespace SanAndreasUnity.Behaviours.Peds
 
             for (int i = 0; i < count; i++)
             {
-                var boneSyncData = new BoneSyncData();
-                boneSyncData.boneId = reader.ReadByte();
-                boneSyncData.position = reader.ReadVector3();
-                boneSyncData.rotation = reader.ReadVector3();
-                boneSyncData.velocity = reader.ReadVector3();
-                m_bonesSyncData[i] = boneSyncData;
+                m_bonesSyncData[i] = BoneSyncData.DeSerialize(reader);
             }
 
             F.RunExceptionSafe(() => UpdateBonesAfterDeserialization(count));
@@ -196,7 +213,7 @@ namespace SanAndreasUnity.Behaviours.Peds
             {
                 var rb = pair.Value.Rigidbody;
                 if (rb != null)
-                    deadBody.m_rigidBodiesDict.Add(pair.Key, rb);
+                    deadBody.m_rigidBodiesDict.Add(pair.Key, new BoneInfo(rb.transform));
             }
 
             deadBody.InitSyncVarsOnServer(ped);
