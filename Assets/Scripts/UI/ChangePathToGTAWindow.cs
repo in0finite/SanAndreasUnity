@@ -35,7 +35,7 @@ namespace SanAndreasUnity.UI {
 			// create file browser
 			if (null == m_fileBrowser)
 			{
-				m_fileBrowser = new FileBrowser (new Rect (new Vector2 (0, 0), this.WindowSize), "", this.OnSelectedPath) {
+				m_fileBrowser = new FileBrowser (new Rect (new Vector2 (8, 30), new Vector2(this.WindowSize.x - 16, this.WindowSize.y - 30 - 10)), "", this.OnSelectedPath) {
 					BrowserType = FileBrowserType.Directory
 				};
 			}

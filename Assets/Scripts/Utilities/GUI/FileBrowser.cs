@@ -439,6 +439,8 @@ public class FileBrowser {
 		GUI.enabled = true;
 		GUILayout.EndScrollView();
 
+		GUILayout.Space(5);
+
 		GUILayout.BeginHorizontal();
 		GUILayout.FlexibleSpace();
 
