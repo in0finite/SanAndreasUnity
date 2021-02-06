@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Behaviours.Peds
 
         public PushableByDamage PushableByDamage { get; private set; }
 
-        private struct BoneInfo
+        public readonly struct BoneInfo
         {
             public BoneInfo(Transform transform)
             {
@@ -27,12 +27,13 @@ namespace SanAndreasUnity.Behaviours.Peds
                 this.Rigidbody = transform.GetComponent<Rigidbody>();
             }
 
-            public Transform Transform { get; set; }
-            public Rigidbody Rigidbody { get; set; }
+            public Transform Transform { get; }
+            public Rigidbody Rigidbody { get; }
         }
 
         private Dictionary<int, BoneInfo> m_framesDict = new Dictionary<int, BoneInfo>();
         public int NumBones => m_framesDict.Count;
+        public IReadOnlyDictionary<int, BoneInfo> GetBoneDictionary() => m_framesDict;
 
         private Dictionary<int, BoneInfo> m_rigidBodiesDict = new Dictionary<int, BoneInfo>();
         public int NumRigidBodies => m_rigidBodiesDict.Count;

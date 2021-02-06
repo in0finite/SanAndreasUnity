@@ -1,4 +1,5 @@
-﻿using SanAndreasUnity.Behaviours;
+﻿using System.Linq;
+using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Peds;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.UI;
@@ -22,6 +23,13 @@ namespace SanAndreasUnity.Settings
 	        maxValue = 60,
 	        getValue = () => PedManager.Instance.ragdollSyncRate,
 	        setValue = ApplyDeadBodySyncRate,
+	        persistType = OptionsWindow.InputPersistType.OnStart,
+        };
+        OptionsWindow.EnumInput<RigidbodyInterpolation> m_deadBodyInterpolationMode = new OptionsWindow.EnumInput<RigidbodyInterpolation>
+        {
+	        description = "Dead body interpolation mode",
+	        getValue = () => PedManager.Instance.ragdollInterpolationMode,
+	        setValue = ApplyDeadBodyInterpolationMode,
 	        persistType = OptionsWindow.InputPersistType.OnStart,
         };
 
@@ -101,6 +109,7 @@ namespace SanAndreasUnity.Settings
             OptionsWindow.RegisterInputs ("NET",
 	            m_pedSyncRate,
 	            m_deadBodySyncRate,
+	            m_deadBodyInterpolationMode,
 	            m_vehicleSyncRate,
 	            m_syncVehicleTransformUsingSyncVars,
 	            m_syncVehiclesLinearVelocity,
@@ -126,6 +135,19 @@ namespace SanAndreasUnity.Settings
 	        PedManager.Instance.ragdollSyncRate = syncRate;
 	        foreach (var deadBody in DeadBody.DeadBodies)
 		        deadBody.RefreshSyncRate();
+        }
+
+        static void ApplyDeadBodyInterpolationMode(RigidbodyInterpolation rigidbodyInterpolation)
+        {
+	        PedManager.Instance.ragdollInterpolationMode = rigidbodyInterpolation;
+	        foreach (var deadBody in DeadBody.DeadBodies)
+	        {
+		        deadBody.GetBoneDictionary()
+			        .Values
+			        .Select(bi => bi.Rigidbody)
+			        .Where(rb => rb != null)
+			        .ForEach(rb => rb.interpolation = rigidbodyInterpolation);
+	        }
         }
 
         static void ApplyVehicleSyncRate(float syncRate)
