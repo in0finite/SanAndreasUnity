@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 /*
 	File browser for selecting files or folders at runtime.
@@ -42,7 +43,7 @@ public class FileBrowser {
 	}
 	protected string m_filePattern;
 
-	protected List<string> m_drives = new List<string> ();
+	protected List<(string, string)> m_topPanelEntries = new List<(string, string)>();
 
 	// Optional image for directories
 	public Texture2D DirectoryImage {
@@ -158,10 +159,10 @@ public class FileBrowser {
 
 	protected void ReadDirectoryContents() {
 
-		// refresh list of drives
+		// refresh top panel
 		try {
-			m_drives.Clear ();
-			m_drives.AddRange( GetDirectoriesForTopPanel() );
+			m_topPanelEntries.Clear ();
+			m_topPanelEntries.AddRange( GetDirectoriesForTopPanel() );
 		} catch {
 		
 		}
@@ -270,19 +271,66 @@ public class FileBrowser {
 		}
 	}
 
-	static string[] GetDirectoriesForTopPanel()
+	static List<(string, string)> GetDirectoriesForTopPanel()
 	{
 		if (Application.platform == RuntimePlatform.Android)
 		{
-			return new string[]{"/", "/sdcard/", "/storage/", "/storage/sdcard0/", "/storage/sdcard1/", "/storage/emulated/0/"};
+			return new string[]{"/", "/sdcard/", "/storage/", "/storage/sdcard0/", "/storage/sdcard1/", "/storage/emulated/0/"}
+				.Select(s => (s, s))
+				.ToList();
 		}
 		else if (Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxEditor)
 		{
-			return new string[]{"/", "/home/", "/mnt/", "/media/"};
+			return new string[]{"/", "/home/", "/mnt/", "/media/"}
+				.Select(s => (s, s))
+				.ToList();
+		}
+		else if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+		{
+			var result = new List<(string, string)>();
+
+			result.AddRange(Directory.GetLogicalDrives().Select(s => (s, s)));
+
+			var specialFolders = new[]
+			{
+				Environment.SpecialFolder.UserProfile,
+				Environment.SpecialFolder.DesktopDirectory,
+				Environment.SpecialFolder.MyDocuments,
+				Environment.SpecialFolder.ProgramFiles,
+				Environment.SpecialFolder.ProgramFilesX86,
+			};
+
+			string[] specialFolderNames = new[]
+			{
+				"User",
+				"Desktop",
+				"Documents",
+				"Program Files",
+				"Program Files (x86)",
+			};
+
+			for (int i = 0; i < specialFolders.Length; i++)
+			{
+				string path = string.Empty;
+				try
+				{
+					path = Environment.GetFolderPath(specialFolders[i]);
+				}
+				catch
+				{
+				}
+
+				if (!string.IsNullOrWhiteSpace(path))
+					result.Add((specialFolderNames[i], path));
+			}
+
+			return result;
 		}
 		else
 		{
-			return Directory.GetLogicalDrives ();
+			return Directory.GetLogicalDrives()
+				.Select(s => (s, s))
+				.ToList();
 		}
 	}
 
@@ -314,13 +362,13 @@ public class FileBrowser {
 			GUI.skin.window
 		);
 
-		// display drives
-		if (m_drives.Count > 0) {
+		// display top panel
+		if (m_topPanelEntries.Count > 0) {
 			GUILayout.BeginHorizontal();
 
-			foreach (var drive in m_drives) {
-				if (GUILayout.Button (drive, this.ButtonStyle)) {
-					SetNewDirectory (drive);
+			foreach (var entry in m_topPanelEntries) {
+				if (GUILayout.Button (entry.Item1, this.ButtonStyle)) {
+					SetNewDirectory (entry.Item2);
 				}
 			}
 
