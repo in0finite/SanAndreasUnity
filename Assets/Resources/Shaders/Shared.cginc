@@ -6,15 +6,8 @@ fixed4 _Color;
 #ifdef VEHICLE
 int _CarColorIndex;
 
-fixed3 _CarColor1;
-fixed3 _CarColor2;
-fixed3 _CarColor3;
-fixed3 _CarColor4;
-
-fixed3 _HeadLightColor;
-fixed3 _TailLightColor;
-
-fixed4 _Lights;
+fixed3 _CarColor;
+fixed _CarEmission;
 
 float _Metallic;
 float _Smoothness;
@@ -45,35 +38,11 @@ void surf(Input IN, inout SurfaceOutputStandard o)
     fixed3 clr = tex2D(_MainTex, IN.uv_MainTex).rgb;
     fixed mask = tex2D(_MaskTex, IN.uv_MainTex).a;
     
-#ifdef VEHICLE
-    fixed3 carColors[9] = {
-        fixed3(1, 1, 1),
-        _CarColor1,
-        _CarColor2,
-        _CarColor3,
-        _CarColor4,
-        _HeadLightColor,
-        _HeadLightColor,
-        _TailLightColor,
-        _TailLightColor
-    };
 
-    fixed carEmission[9] = {
-        0,
-        0,
-        0,
-        0,
-        0,
-        exp(_Lights.x * 2) - 1,
-        exp(_Lights.y * 2) - 1,
-        exp(_Lights.z * 2) - 1,
-        exp(_Lights.w * 2) - 1
-    };
-#endif
 
     o.Albedo = clr
 #ifdef VEHICLE
-        * carColors[_CarColorIndex]
+        * _CarColor
 #endif
         * IN.color.rgb * _Color.rgb;
 
@@ -82,7 +51,7 @@ void surf(Input IN, inout SurfaceOutputStandard o)
 #ifdef VEHICLE
     o.Metallic = _Metallic * o.Alpha;
     o.Smoothness = _Smoothness;
-    o.Emission = carEmission[_CarColorIndex] * o.Albedo;
+    o.Emission = _CarEmission * o.Albedo;
 #else
     o.Metallic = 0;
     o.Smoothness = 0;

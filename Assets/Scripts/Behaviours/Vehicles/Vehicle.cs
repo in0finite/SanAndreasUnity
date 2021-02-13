@@ -453,16 +453,55 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             _colorsChanged = false;
 
             var indices = CarColors.FromIndices(_colors);
-            for (var i = 0; i < 4; ++i)
-                _props.SetColor(CarColorIds[i], indices[i]);
 
-            _props.SetVector(LightsId, new Vector4(_lights[0], _lights[1], _lights[2], _lights[3]));
+            Color32 headLightColor = new Color32(255, 255, 255, 255);
+            Color32 tailLightColor = new Color32(255, 255, 255, 255);
+
+            // compute car colors
+            Color32[] carColors = new []
+            {
+                new Color32(255, 255, 255, 255),
+                indices[0],
+                indices[1],
+                indices[2],
+                indices[3],
+                headLightColor,
+                headLightColor,
+                tailLightColor,
+                tailLightColor,
+            };
+
+            // compute car emissions
+            float[] carEmissions = new[]
+            {
+                0f,
+                0f,
+                0f,
+                0f,
+                0f,
+                Mathf.Exp(_lights[0] * 2) - 1,
+                Mathf.Exp(_lights[1] * 2) - 1,
+                Mathf.Exp(_lights[2] * 2) - 1,
+                Mathf.Exp(_lights[3] * 2) - 1,
+            };
 
             foreach (var frame in _frames)
             {
                 var mr = frame.GetComponent<MeshRenderer>();
                 if (mr == null) continue;
-                mr.SetPropertyBlock(_props);
+
+                // get color index from each material, and assign properties accordingly
+
+                var materials = mr.sharedMaterials;
+
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    int carColorIndex = materials[i].GetInt("_CarColorIndex");
+                    _props.SetColor("_CarColor", carColors[carColorIndex]);
+                    _props.SetFloat("_CarEmission", carEmissions[carColorIndex]);
+                    mr.SetPropertyBlock(_props, i);
+                }
+
             }
         }
 
