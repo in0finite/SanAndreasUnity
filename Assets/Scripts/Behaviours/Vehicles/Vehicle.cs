@@ -115,28 +115,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static int MeshLayer => UnityEngine.LayerMask.NameToLayer("VehicleMesh");
 
-        private static int _sLightsId = -1;
-
-        protected static int LightsId
-        {
-            get
-            {
-                return _sLightsId == -1 ? _sLightsId = Shader.PropertyToID("_Lights") : _sLightsId;
-            }
-        }
-
-        private static int[] _sCarColorIds;
-
-        public static int[] CarColorIds
-        {
-            get
-            {
-                return _sCarColorIds ?? (_sCarColorIds = Enumerable.Range(1, 4)
-                    .Select(x => Shader.PropertyToID(string.Format("_CarColor{0}", x)))
-                    .ToArray());
-            }
-        }
-
         private readonly int[] _colors = { 0, 0, 0, 0 };
         public int[] Colors => _colors;
         private readonly float[] _lights = { 0, 0, 0, 0 };
