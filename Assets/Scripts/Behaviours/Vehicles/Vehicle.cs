@@ -141,6 +141,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public int[] Colors => _colors;
         private readonly float[] _lights = { 0, 0, 0, 0 };
         private MaterialPropertyBlock _props;
+        private static readonly int CarColorPropertyId = Shader.PropertyToID("_CarColor");
+        private static readonly int CarEmissionPropertyId = Shader.PropertyToID("_CarEmission");
         private bool _colorsChanged, _isNightToggled;
 
         private const float constRearNightIntensity = .7f;
@@ -496,9 +498,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 for (int i = 0; i < materials.Length; i++)
                 {
-                    int carColorIndex = materials[i].GetInt("_CarColorIndex");
-                    _props.SetColor("_CarColor", carColors[carColorIndex]);
-                    _props.SetFloat("_CarEmission", carEmissions[carColorIndex]);
+                    int carColorIndex = materials[i].GetInt(Importing.Conversion.Geometry.CarColorIndexId);
+                    _props.SetColor(CarColorPropertyId, carColors[carColorIndex]);
+                    _props.SetFloat(CarEmissionPropertyId, carEmissions[carColorIndex]);
                     mr.SetPropertyBlock(_props, i);
                 }
 

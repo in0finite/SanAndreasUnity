@@ -53,7 +53,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static int _sCarColorIndexId = -1;
 
-        protected static int CarColorIndexId
+        public static int CarColorIndexId
         {
             get { return _sCarColorIndexId == -1 ? _sCarColorIndexId = Shader.PropertyToID("_CarColorIndex") : _sCarColorIndexId; }
         }
