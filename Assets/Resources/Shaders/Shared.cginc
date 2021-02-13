@@ -22,7 +22,9 @@ fixed _Fade;
 struct Input
 {
     float2 uv_MainTex;
+    #ifdef FADE
     float4 screenPos;
+    #endif
     float4 color : COLOR;
 };
 
