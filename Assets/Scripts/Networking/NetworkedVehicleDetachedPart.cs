@@ -136,21 +136,9 @@ namespace SanAndreasUnity.Net
 
         }
 
-        public static void SetColors(FrameContainer frames, int[] colors)
+        private static void SetColors(FrameContainer frames, int[] colors)
         {
-            var props = new MaterialPropertyBlock();
-
-            var indices = CarColors.FromIndices(colors);
-
-            int[] vehicleColorIds = Vehicle.CarColorIds;
-
-            for (int i = 0; i < vehicleColorIds.Length; ++i)
-                props.SetColor(vehicleColorIds[i], indices[i]);
-
-            foreach (var mr in frames.Select(f => f.GetComponent<MeshRenderer>()).Where(mr => mr != null))
-            {
-                mr.SetPropertyBlock(props);
-            }
+            Vehicle.UpdateMaterials(frames, colors, new []{ 0f, 0f, 0f, 0f }, new MaterialPropertyBlock());
         }
     }
 
