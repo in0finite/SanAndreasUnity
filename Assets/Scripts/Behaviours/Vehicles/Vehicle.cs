@@ -428,11 +428,20 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         }
 
-        private void UpdateColors()
+        private void UpdateMaterials()
         {
             _colorsChanged = false;
 
-            var indices = CarColors.FromIndices(_colors);
+            UpdateMaterials(_frames, _colors, _lights, _props);
+        }
+
+        public static void UpdateMaterials(
+            FrameContainer frames,
+            int[] colors,
+            float[] lights,
+            MaterialPropertyBlock materialPropertyBlock)
+        {
+            var indices = CarColors.FromIndices(colors);
 
             Color32 headLightColor = new Color32(255, 255, 255, 255);
             Color32 tailLightColor = new Color32(255, 255, 255, 255);
@@ -459,13 +468,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 0f,
                 0f,
                 0f,
-                Mathf.Exp(_lights[0] * 2) - 1,
-                Mathf.Exp(_lights[1] * 2) - 1,
-                Mathf.Exp(_lights[2] * 2) - 1,
-                Mathf.Exp(_lights[3] * 2) - 1,
+                Mathf.Exp(lights[0] * 2) - 1,
+                Mathf.Exp(lights[1] * 2) - 1,
+                Mathf.Exp(lights[2] * 2) - 1,
+                Mathf.Exp(lights[3] * 2) - 1,
             };
 
-            foreach (var frame in _frames)
+            foreach (var frame in frames)
             {
                 var mr = frame.GetComponent<MeshRenderer>();
                 if (mr == null) continue;
@@ -477,9 +486,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 for (int i = 0; i < materials.Length; i++)
                 {
                     int carColorIndex = materials[i].GetInt(Importing.Conversion.Geometry.CarColorIndexId);
-                    _props.SetColor(CarColorPropertyId, carColors[carColorIndex]);
-                    _props.SetFloat(CarEmissionPropertyId, carEmissions[carColorIndex]);
-                    mr.SetPropertyBlock(_props, i);
+                    materialPropertyBlock.SetColor(CarColorPropertyId, carColors[carColorIndex]);
+                    materialPropertyBlock.SetFloat(CarEmissionPropertyId, carEmissions[carColorIndex]);
+                    mr.SetPropertyBlock(materialPropertyBlock, i);
                 }
 
             }
@@ -514,7 +523,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (_colorsChanged)
             {
-                UpdateColors();
+                UpdateMaterials();
             }
 
             this.Update_Damage();
