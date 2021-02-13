@@ -139,7 +139,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private readonly int[] _colors = { 0, 0, 0, 0 };
         public int[] Colors => _colors;
-        private readonly float[] _lights = { 1f, 1f, 1f, 1f };
+        private readonly float[] _lights = { 0, 0, 0, 0 };
         private MaterialPropertyBlock _props;
         private bool _colorsChanged, _isNightToggled;
 
