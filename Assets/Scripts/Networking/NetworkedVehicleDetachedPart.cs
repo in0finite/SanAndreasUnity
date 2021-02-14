@@ -129,10 +129,10 @@ namespace SanAndreasUnity.Net
                 vehicle.DetachFrameDuringExplosion(m_net_frameName, m_net_mass, this.gameObject);
             }
 
-            this.NetworkRigidBody.Rigidbody = this.GetComponentInChildren<Rigidbody>();
-            if (this.NetworkRigidBody.Rigidbody != null)
-                this.NetworkRigidBody.Rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
-            this.NetworkRigidBody.UpdateClient();
+            var rb = this.GetComponentInChildren<Rigidbody>();
+            if (rb != null)
+                rb.interpolation = RigidbodyInterpolation.Interpolate;
+            this.NetworkRigidBody.Rigidbody = rb;
 
         }
 

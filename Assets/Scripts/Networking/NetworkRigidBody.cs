@@ -6,7 +6,23 @@ namespace SanAndreasUnity.Net
 
     public class NetworkRigidBody : NetworkBehaviour
     {
-        public Rigidbody Rigidbody { get; set; }
+        private Rigidbody _rigidbody;
+        public Rigidbody Rigidbody
+        {
+            get => _rigidbody;
+            set
+            {
+                if (_rigidbody == value)
+                    return;
+
+                _rigidbody = value;
+
+                if (NetStatus.IsClientOnly)
+                {
+                    this.UpdateAllPropertiesOnClient();
+                }
+            }
+        }
 
         [SyncVar(hook=nameof(OnNetPositionChanged))] Vector3 m_net_position = Vector3.zero;
         [SyncVar(hook=nameof(OnNetRotationChanged))] Vector3 m_net_rotation = Vector3.zero;
@@ -33,6 +49,17 @@ namespace SanAndreasUnity.Net
                 if (this.Rigidbody != null && this.Rigidbody.interpolation == RigidbodyInterpolation.None)
                     Debug.LogWarning($"For better sync, interpolation should be changed, rigid body: {this.Rigidbody.name}");
             }
+        }
+
+        public override void OnStartClient()
+        {
+            if (NetStatus.IsServer)
+                return;
+
+            // need to apply initial syncvar values, because otherwise the object may stay on the place where it
+            // was originally spawned on the server (if object doesn't change position, syncvars will not be updated)
+
+            this.UpdateAllPropertiesOnClient();
         }
 
         void Update()
@@ -75,7 +102,7 @@ namespace SanAndreasUnity.Net
 
         }
 
-        public void UpdateClient()
+        private void UpdateClient()
         {
             if (null == this.Rigidbody)
                 return;
@@ -90,6 +117,16 @@ namespace SanAndreasUnity.Net
 
             this.Rigidbody.velocity = m_net_velocity;
             this.Rigidbody.angularVelocity = m_net_angularVelocity;
+        }
+
+        private void UpdateAllPropertiesOnClient()
+        {
+            if (null == this.Rigidbody)
+                return;
+
+            this.Rigidbody.MovePosition(m_net_position);
+            this.Rigidbody.MoveRotation(Quaternion.Euler(m_net_rotation));
+            this.UpdateClient();
         }
 
         void OnNetPositionChanged(Vector3 pos)
