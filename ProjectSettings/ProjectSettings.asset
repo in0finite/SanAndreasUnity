@@ -156,7 +156,7 @@ PlayerSettings:
     Android: com.SAUnity.SAUnity
   buildNumber: {}
   AndroidBundleVersionCode: 6
-  AndroidMinSdkVersion: 16
+  AndroidMinSdkVersion: 24
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 

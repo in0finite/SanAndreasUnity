@@ -45,8 +45,9 @@ namespace SanAndreasUnity.Behaviours
             if (Ped.Instance)
                 return Ped.Instance.transform;
 
-            if (Camera.main)
-                return Camera.main.transform;
+            var cam = Camera.current;
+            if (cam != null)
+                return cam.transform;
 
             return null;
         }

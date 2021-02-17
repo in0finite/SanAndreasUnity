@@ -2,6 +2,7 @@
 using UnityEngine;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.UI;
+using UnityEngine.XR.ARFoundation;
 
 namespace SanAndreasUnity.Settings {
 
@@ -18,10 +19,26 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 
+		private float _arScaleValue = 0f;
+
+		private readonly OptionsWindow.FloatInput m_arScale = new OptionsWindow.FloatInput
+		{
+			description = "AR scale",
+			minValue = -1f,
+			maxValue = 1f,
+			persistType = OptionsWindow.InputPersistType.OnStart,
+		};
+
+		private ARSessionOrigin _arSessionOrigin;
+
 
 		void Awake ()
 		{
-			OptionsWindow.RegisterInputs ("WORLD", m_maxDrawDistanceInput);
+			m_arScale.getValue = () => _arScaleValue;
+			m_arScale.setValue = SetArScale;
+
+			OptionsWindow.RegisterInputs ("WORLD", m_maxDrawDistanceInput, m_arScale);
+
 			UnityEngine.SceneManagement.SceneManager.activeSceneChanged += (s1, s2) => OnActiveSceneChanged();
 		}
 
@@ -33,7 +50,24 @@ namespace SanAndreasUnity.Settings {
 			Cell cell = Object.FindObjectOfType<Cell>();
 			if (cell != null)
 				cell.maxDrawDistance = s_maxDrawDistance;
-			
+
+
+			_arSessionOrigin = FindObjectOfType<ARSessionOrigin>();
+			SetArScale(_arScaleValue);
+		}
+
+		void SetArScale(float value)
+		{
+			_arScaleValue = value;
+
+			if (_arSessionOrigin != null)
+			{
+				float absValue = Mathf.Abs(_arScaleValue);
+
+				float scale = Mathf.Pow(2.7f, absValue * 8); // max is 2.7^8 = ~2800
+
+				_arSessionOrigin.transform.localScale = _arScaleValue >= 0f ? Vector3.one * scale : Vector3.one * 1f / scale;
+			}
 		}
 
 	}
