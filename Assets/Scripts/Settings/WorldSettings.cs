@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 
-		private float _arScaleValue = 0f;
+		private float _arScaleValue = 0.5f;
 
 		private readonly OptionsWindow.FloatInput m_arScale = new OptionsWindow.FloatInput
 		{
