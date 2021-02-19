@@ -23,6 +23,22 @@ namespace SanAndreasUnity.Behaviours
 
 		private bool m_alreadyKilled = false;
 
+		public class DamageResult
+		{
+			public float DamageAmount { get; }
+
+			public DamageResult()
+			{
+			}
+
+			public DamageResult(float damageAmount)
+			{
+				DamageAmount = damageAmount;
+			}
+		}
+
+		public static event System.Action<Ped, DamageInfo, DamageResult> onDamaged = delegate {};
+
 
 
 		void AwakeForDamage ()
@@ -103,8 +119,11 @@ namespace SanAndreasUnity.Behaviours
 			if (this.Health <= 0)
 				return;
 
-			this.CurrentState.OnDamaged(this.Damageable.LastDamageInfo);
+			var damageInfo = this.Damageable.LastDamageInfo;
 
+			var damageResult = this.CurrentState.OnDamaged(damageInfo);
+
+			F.InvokeEventExceptionSafe(onDamaged, this, damageInfo, damageResult);
 		}
 
 		public void SendDamagedEventToClients(DamageInfo damageInfo, float damageAmount)

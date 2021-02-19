@@ -32,7 +32,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		void OnWeaponFiredFromServer(Weapon weapon, Vector3 firePos);
 
-		void OnDamaged(DamageInfo damageInfo);
+		Ped.DamageResult OnDamaged(DamageInfo damageInfo);
 
 	}
 

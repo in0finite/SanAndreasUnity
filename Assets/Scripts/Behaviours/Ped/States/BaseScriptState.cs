@@ -308,7 +308,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
             weapon.PlayFireSound();
 		}
 
-		public virtual void OnDamaged(DamageInfo damageInfo)
+		public virtual Ped.DamageResult OnDamaged(DamageInfo damageInfo)
 		{
 			float amount = damageInfo.raycastHitTransform != null
 				? m_model.GetAmountOfDamageForBone(damageInfo.raycastHitTransform, damageInfo.amount)
@@ -325,6 +325,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// notify clients
 			m_ped.SendDamagedEventToClients(damageInfo, amount);
 
+			return new Ped.DamageResult(amount);
 		}
 
 		public virtual void KillPed()

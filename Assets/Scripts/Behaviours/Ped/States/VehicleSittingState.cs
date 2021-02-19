@@ -195,15 +195,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				return base.GetCameraFocusPos();
 		}
 
-		public override void OnDamaged(DamageInfo damageInfo)
+		public override Ped.DamageResult OnDamaged(DamageInfo damageInfo)
 		{
 			if (damageInfo.damageType == DamageType.Explosion)
 			{
 				// ped should not be damaged by explosion while he is in vehicle
-				return;
+				return new Ped.DamageResult();
 			}
 
-			base.OnDamaged(damageInfo);
+			return base.OnDamaged(damageInfo);
 		}
 
 	}
