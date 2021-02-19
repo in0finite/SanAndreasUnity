@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
@@ -9,11 +10,14 @@ namespace SanAndreasUnity.Behaviours
 {
     public class PluginManager : MonoBehaviour
     {
+        public abstract class PluginBase
+        {
+        }
 
         public static string[] PluginDirectories => new []
         {
             #if UNITY_EDITOR
-            Path.Combine(Application.dataPath, "../SAU_Plugins"),
+            Path.Combine(Application.dataPath, $"..{Path.DirectorySeparatorChar}SAU_Plugins"),
             #else
             Path.Combine(Application.dataPath, "Plugins"),
             #endif
@@ -59,7 +63,13 @@ namespace SanAndreasUnity.Behaviours
         bool LoadPlugin(string pluginFilePath)
         {
             return F.RunExceptionSafe(
-                () => Assembly.LoadFrom(pluginFilePath),
+                () =>
+                {
+                    var asm = Assembly.LoadFrom(pluginFilePath);
+                    var types = asm.GetTypes();
+                    var pluginTypes = types.Where(t => typeof(PluginBase).IsAssignableFrom(t) && !t.IsAbstract);
+                    pluginTypes.ForEach(t => Activator.CreateInstance(t));
+                },
                 $"error loading plugin from '{pluginFilePath}': ");
         }
     }
