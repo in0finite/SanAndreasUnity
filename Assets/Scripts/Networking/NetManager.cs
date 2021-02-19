@@ -91,22 +91,26 @@ namespace SanAndreasUnity.Net
 
 		}
 
-		public	static	void	StartServer( int portNumber ) {
-
+		private static void DoErrorChecksBeforeStartingServer(int portNumber)
+		{
 			CheckIfNetworkIsStarted ();
 			CheckIfPortIsValid (portNumber);
 			CheckIfOnlineSceneIsAssigned ();
 			SetupNetworkManger( "", portNumber );
+		}
+
+		public	static	void	StartServer( int portNumber )
+		{
+
+			DoErrorChecksBeforeStartingServer(portNumber);
 			NetworkManager.singleton.StartServer ();
 
 		}
 
-		public	static	void	StartHost( int portNumber ) {
+		public	static	void	StartHost( int portNumber )
+		{
 
-			CheckIfNetworkIsStarted ();
-			CheckIfPortIsValid (portNumber);
-			CheckIfOnlineSceneIsAssigned ();
-			SetupNetworkManger( "", portNumber );
+			DoErrorChecksBeforeStartingServer(portNumber);
 			NetworkManager.singleton.StartHost ();
 
 		}
