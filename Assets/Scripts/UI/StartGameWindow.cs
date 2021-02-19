@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using SanAndreasUnity.Behaviours;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Net;
@@ -13,7 +15,7 @@ namespace SanAndreasUnity.UI
 		bool m_dedicatedServer = false;
 		string m_maxNumPlayersStr = "40";
 		[SerializeField] string[] m_availableScenes = new string[0];
-		int m_selectedSceneIndex = 0;
+		int m_selectedModeIndex = 0;
 	    bool m_registerAtMasterServer = false;
 
 		public int width = 550;
@@ -60,8 +62,12 @@ namespace SanAndreasUnity.UI
 			GUILayout.Label("Max num players:");
 			m_maxNumPlayersStr = GUILayout.TextField(m_maxNumPlayersStr, GUILayout.Width(100));
 
-			GUILayout.Label("Map:");
-			m_selectedSceneIndex = GUILayout.SelectionGrid(m_selectedSceneIndex, m_availableScenes, this.mapSelectionGridXCount, GUILayout.MinHeight(this.minMapButtonHeight));
+			GUILayout.Label("Game mode:");
+			m_selectedModeIndex = GUILayout.SelectionGrid(
+				m_selectedModeIndex,
+				m_availableScenes.Concat(GameModeManager.Instance.GameModes.Select(gm => gm.Name)).ToArray(),
+				this.mapSelectionGridXCount,
+				GUILayout.MinHeight(this.minMapButtonHeight));
 			GUILayout.Space(5);
 
 			m_registerAtMasterServer = GUILayout.Toggle(m_registerAtMasterServer, "Register at master server");
@@ -86,12 +92,23 @@ namespace SanAndreasUnity.UI
 			try
 			{
 				ushort port = ushort.Parse(m_portStr);
-				string scene = m_availableScenes[m_selectedSceneIndex];
+				string scene = m_selectedModeIndex < m_availableScenes.Length
+					? m_availableScenes[m_selectedModeIndex]
+					: m_availableScenes[0];
 				ushort maxNumPlayers = ushort.Parse(m_maxNumPlayersStr);
 
 				MasterServerClient.Instance.IsServerRegistrationEnabled = m_registerAtMasterServer;
 
 				NetManager.StartServer(port, scene, maxNumPlayers, m_dedicatedServer, m_dontListen);
+
+				// activate game mode if it is selected
+				if (m_selectedModeIndex >= m_availableScenes.Length)
+				{
+					var gm = GameModeManager.Instance.GameModes[m_availableScenes.Length - m_selectedModeIndex];
+					F.RunExceptionSafe(
+						() => GameModeManager.Instance.ActivateGameMode(gm),
+						$"Error while activating game mode '{gm.Name}': ");
+				}
 
 			}
 			catch (System.Exception ex)

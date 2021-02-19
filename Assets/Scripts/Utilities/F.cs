@@ -396,6 +396,20 @@ namespace SanAndreasUnity.Utilities
 		}
 
 
+		public static bool RunExceptionSafe (System.Action function, string errorMessagePrefix)
+		{
+			try {
+				function();
+				return true;
+			} catch(System.Exception ex) {
+				try {
+					Debug.LogError (errorMessagePrefix + ex);
+				} catch {}
+			}
+
+			return false;
+		}
+
 		public static void RunExceptionSafe (System.Action function)
 		{
 			try {
