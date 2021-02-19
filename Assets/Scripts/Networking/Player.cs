@@ -27,7 +27,14 @@ namespace SanAndreasUnity.Net
 
         public string DescriptionForLogging => "(netId=" + this.netId + ", addr=" + (this.connectionToClient != null ? this.connectionToClient.address : "") + ")";
 
+        private readonly SyncedBag.StringSyncDictionary m_syncDictionary = new SyncedBag.StringSyncDictionary();
+        public SyncedBag ExtraData { get; }
 
+
+        Player()
+        {
+            ExtraData = new SyncedBag(m_syncDictionary);
+        }
 
         public static Player GetOwningPlayer(Ped ped)
         {
