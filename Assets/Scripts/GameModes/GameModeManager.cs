@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.GameModes
 {
     public class GameModeManager : MonoBehaviour
     {
