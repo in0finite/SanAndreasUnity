@@ -26,6 +26,9 @@ namespace SanAndreasUnity.Behaviours
         public Rigidbody RigidBody { get; private set; }
         public AudioSource AudioSource { get; private set; }
 
+        public Ped ShooterPed { get; private set; }
+        public Player ShooterPlayer { get; private set; }
+
 
         public static Projectile Create(
             GameObject prefab,
@@ -38,6 +41,8 @@ namespace SanAndreasUnity.Behaviours
             var go = Instantiate(prefab, position, rotation);
 
             var projectile = go.GetComponentOrThrow<Projectile>();
+            projectile.ShooterPed = shooterPed;
+            projectile.ShooterPlayer = shooterPed != null ? shooterPed.PlayerOwner : null;
 
             if (shooterPed != null)
             {
@@ -123,7 +128,9 @@ namespace SanAndreasUnity.Behaviours
                 this.explosionDamageRadius,
                 this.explosionDamageAmount,
                 VehicleManager.Instance.explosionDamageOverDistanceCurve,
-                DamageType.Explosion);
+                DamageType.Explosion,
+                this.ShooterPed,
+                this.ShooterPlayer);
 
             // create explosion - this includes effects, physics force, sound
 

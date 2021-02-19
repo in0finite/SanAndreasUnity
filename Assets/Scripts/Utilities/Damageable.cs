@@ -14,6 +14,7 @@ namespace SanAndreasUnity.Utilities
 		public Vector3 hitPoint = Vector3.zero;
 		public Vector3 hitNormal = Vector3.up;
 		public object attacker = null;
+		public object attackingPlayer = null;
 		public object data = null;
 	}
 
@@ -59,7 +60,13 @@ namespace SanAndreasUnity.Utilities
 		}
 
 		public static void InflictDamageToObjectsInArea(
-			Vector3 center, float radius, float damageAmount, AnimationCurve damageOverDistanceCurve, string damageType)
+			Vector3 center,
+			float radius,
+			float damageAmount,
+			AnimationCurve damageOverDistanceCurve,
+			string damageType,
+			object attacker = null,
+			object attackingPlayer = null)
 		{
 			Collider[] overlappingColliders = Physics.OverlapSphere(center, radius);
 
@@ -108,7 +115,13 @@ namespace SanAndreasUnity.Utilities
 				float distanceFactor = damageOverDistanceCurve.Evaluate(Mathf.Clamp01(distance / radius));
 				float damageAmountBasedOnDistance = damageAmount * distanceFactor;
 
-				F.RunExceptionSafe(() => damageable.Damage(new DamageInfo() { amount = damageAmountBasedOnDistance, damageType = damageType }));
+				F.RunExceptionSafe(() => damageable.Damage(new DamageInfo
+				{
+					amount = damageAmountBasedOnDistance,
+					damageType = damageType,
+					attacker = attacker,
+					attackingPlayer = attackingPlayer,
+				}));
 			}
 
 		}

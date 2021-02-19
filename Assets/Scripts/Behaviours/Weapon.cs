@@ -717,6 +717,7 @@ namespace SanAndreasUnity.Behaviours
 							hitPoint = hit.point,
 							hitNormal = hit.normal,
 							attacker = m_ped,
+							attackingPlayer = m_ped != null ? m_ped.PlayerOwner : null,
 							damageType = DamageType.Bullet,
 						});
 					}
