@@ -46,9 +46,6 @@ namespace SanAndreasUnity.Behaviours
                 allFiles.AddRange(filePaths);
             }
 
-            //allFiles.RemoveAll(path => !path.EndsWith(".json", StringComparison.InvariantCultureIgnoreCase) || !path.EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase));
-
-
             int numLoaded = 0;
             foreach (string pluginFilePath in allFiles)
             {
