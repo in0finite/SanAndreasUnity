@@ -28,7 +28,6 @@ namespace SanAndreasUnity.Net
 
             if (NetStatus.IsServer)
             {
-                _syncDictionary = new SyncedBag.StringSyncDictionary();
                 var newData = new SyncedBag(_syncDictionary);
                 newData.SetData(oldData);
                 newData.SetCallbacks(oldData);
@@ -37,7 +36,6 @@ namespace SanAndreasUnity.Net
             }
             else
             {
-                _syncDictionary = new SyncedBag.StringSyncDictionary();
                 var newData = new SyncedBag(_syncDictionary);
                 newData.SetCallbacks(oldData);
                 Data = newData;
