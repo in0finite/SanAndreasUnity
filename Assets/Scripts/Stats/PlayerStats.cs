@@ -36,6 +36,9 @@ namespace SanAndreasUnity.Stats
             if (m_currentColumnNames.Length != m_currentWidths.Length)
                 return;
 
+            if (dataKeys.Length + m_widths.Length != m_currentWidths.Length)
+                return;
+
             // columns
             GUILayout.BeginHorizontal();
             m_currentIndex = 0;
