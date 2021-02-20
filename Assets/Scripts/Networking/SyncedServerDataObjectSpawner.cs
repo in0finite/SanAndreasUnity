@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SanAndreasUnity.Utilities;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace SanAndreasUnity.Net
@@ -7,6 +8,11 @@ namespace SanAndreasUnity.Net
     {
         [SerializeField] private GameObject m_syncedServerDataPrefab = null;
 
+
+        private void Awake()
+        {
+            m_syncedServerDataPrefab.GetComponentOrLogError<SyncedServerData>();
+        }
 
         private void Start()
         {
