@@ -16,7 +16,7 @@ namespace SanAndreasUnity.Net
         private readonly StringSyncDictionary m_syncDictionary;
         private readonly Dictionary<string, List<System.Action<string>>> m_callbacks = new Dictionary<string, List<Action<string>>>();
 
-        private class ArrayWrapper<T>
+        private struct ArrayWrapper<T> // use struct so that it doesn't allocate memory
         {
             public T[] array;
 
@@ -157,7 +157,7 @@ namespace SanAndreasUnity.Net
             string str = GetString(key);
             if (str == null)
                 return null;
-            return JsonUtility.FromJson<ArrayWrapper<string>>(str)?.array;
+            return JsonUtility.FromJson<ArrayWrapper<string>>(str).array;
         }
 
         public void SetStringArray(string key, string[] array)
@@ -170,7 +170,7 @@ namespace SanAndreasUnity.Net
             string str = GetString(key);
             if (str == null)
                 return null;
-            return JsonUtility.FromJson<ArrayWrapper<float>>(str)?.array;
+            return JsonUtility.FromJson<ArrayWrapper<float>>(str).array;
         }
 
         public void SetFloatArray(string key, float[] array)
