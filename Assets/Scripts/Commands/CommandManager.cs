@@ -49,6 +49,7 @@ namespace SanAndreasUnity.Commands
         {
             public string command;
             public bool hasServerPermissions;
+            public Player player;
         }
 
 
@@ -101,35 +102,38 @@ namespace SanAndreasUnity.Commands
             return string.Join(" ", args, argumentIndex + 1, args.Length - argumentIndex - 1);
         }
 
-        ProcessCommandResult ProcessCommand(string command, bool hasServerPermissions)
+        ProcessCommandResult ProcessCommand(ProcessCommandContext context)
         {
-            if (string.IsNullOrWhiteSpace(command))
+            if (string.IsNullOrWhiteSpace(context.command))
                 return ProcessCommandResult.UnknownCommand;
 
-            string[] arguments = SplitCommandIntoArguments(command);
+            string[] arguments = SplitCommandIntoArguments(context.command);
             if (0 == arguments.Length)
                 return ProcessCommandResult.InvalidCommand;
 
             if (!m_registeredCommands.TryGetValue(arguments[0], out CommandInfo commandInfo))
                 return ProcessCommandResult.UnknownCommand;
 
-            if (!hasServerPermissions && !commandInfo.allowToRunWithoutServerPermissions)
+            if (!context.hasServerPermissions && !commandInfo.allowToRunWithoutServerPermissions)
                 return ProcessCommandResult.NoPermissions;
-
-            var context = new ProcessCommandContext {command = command, hasServerPermissions = hasServerPermissions};
 
             return commandInfo.commandHandler(context);
         }
 
         public ProcessCommandResult ProcessCommandAsServer(string command)
         {
-            return ProcessCommand(command, true);
+            return ProcessCommand(new ProcessCommandContext {command = command, hasServerPermissions = true});
         }
 
         public ProcessCommandResult ProcessCommandForPlayer(Player player, string command)
         {
             bool hasServerPermissions = player == Player.Local;
-            return ProcessCommand(command, hasServerPermissions);
+            return ProcessCommand(new ProcessCommandContext
+            {
+                command = command,
+                hasServerPermissions = hasServerPermissions,
+                player = player,
+            });
         }
 
         ProcessCommandResult ProcessHelpCommand(ProcessCommandContext context)
