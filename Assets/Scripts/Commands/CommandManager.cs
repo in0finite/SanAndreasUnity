@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SanAndreasUnity.Net;
 using UnityEngine;
 
@@ -133,17 +134,10 @@ namespace SanAndreasUnity.Commands
 
         ProcessCommandResult ProcessHelpCommand(ProcessCommandContext context)
         {
-            string response = "List of available commands:\n";
-
-            foreach (var pair in m_registeredCommands)
-            {
-                if (!context.hasServerPermissions && !pair.Value.allowToRunWithoutServerPermissions)
-                    continue;
-
-                response += pair.Key + "\n";
-            }
-
-            response += "\n";
+            string response = "List of available commands: " +
+                              string.Join(", ", m_registeredCommands
+                                  .Where(pair => context.hasServerPermissions || pair.Value.allowToRunWithoutServerPermissions)
+                                  .Select(pair => pair.Key));
 
             return new ProcessCommandResult {response = response};
         }
