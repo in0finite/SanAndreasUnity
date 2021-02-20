@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using SanAndreasUnity.Net;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Chat
 {
@@ -17,6 +19,17 @@ namespace SanAndreasUnity.Chat
 		public string sender = "";
 	}
 
+	public class ChatPreprocessorResult
+	{
+		public bool shouldBeDiscarded;
+		public string finalChatMessage;
+	}
+
+	public class ChatPreprocessor
+	{
+		public System.Func<Player, string, ChatPreprocessorResult> processCallback;
+	}
+
 
 	public class ChatManager : MonoBehaviour
 	{
@@ -24,6 +37,8 @@ namespace SanAndreasUnity.Chat
 		public	static	ChatManager singleton { get ; private set ; }
 		public	string	serverChatNick = "<color=green>Server</color>";
 		public	static	event System.Action<ChatMessage>	onChatMessage = delegate {};
+
+		List<ChatPreprocessor> m_chatPreprocessors = new List<ChatPreprocessor>();
 
 
 		void Awake ()
@@ -33,7 +48,7 @@ namespace SanAndreasUnity.Chat
 
 			onChatMessage += (ChatMessage chatMsg) => Debug.Log ("<color=blue>" + chatMsg.sender + "</color> : " + chatMsg.msg);
 			
-			ChatSync.onChatMessageReceivedOnServer += (Player p, string msg) => SendChatMessageToAllPlayers( msg, "player " + p.netId ) ;
+			ChatSync.onChatMessageReceivedOnServer += OnChatMessageReceivedOnServer;
 			ChatSync.onChatMessageReceivedOnLocalPlayer += (ChatMessage chatMsg) => onChatMessage (chatMsg);
 
 		}
@@ -46,6 +61,22 @@ namespace SanAndreasUnity.Chat
 
 		}
 
+
+		private void OnChatMessageReceivedOnServer(Player player, string msg)
+		{
+			foreach (var chatPreprocessor in m_chatPreprocessors)
+			{
+				ChatPreprocessorResult result = null;
+				F.RunExceptionSafe(() => result = chatPreprocessor.processCallback(player, msg));
+
+				if (null == result || result.shouldBeDiscarded || null == result.finalChatMessage)
+					return;
+
+				msg = result.finalChatMessage;
+			}
+
+			SendChatMessageToAllPlayers(msg, "player " + player.netId);
+		}
 
 		public	static	void	SendChatMessageToAllPlayersAsServer( string msg ) {
 
@@ -106,6 +137,11 @@ namespace SanAndreasUnity.Chat
 				chatSync.SendChatMsgToClient (player.connectionToClient, msg, sender);
 			}
 
+		}
+
+		public void RegisterChatPreprocessor(ChatPreprocessor chatPreprocessor)
+		{
+			m_chatPreprocessors.Add(chatPreprocessor);
 		}
 
 	}
