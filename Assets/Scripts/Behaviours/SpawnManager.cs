@@ -16,6 +16,20 @@ namespace SanAndreasUnity.Behaviours
         public float spawnInterval = 4f;
         float m_lastSpawnTime = 0f;
 
+        public static SpawnHandler DefaultSpawnHandler { get; } = new SpawnHandler();
+
+        private SpawnHandler m_spawnHandler = DefaultSpawnHandler;
+        public SpawnHandler SpawnHandler
+        {
+            get => m_spawnHandler;
+            set
+            {
+                if (value == null)
+                    value = DefaultSpawnHandler;
+                m_spawnHandler = value;
+            }
+        }
+
 
 
         void Awake()
@@ -40,7 +54,7 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-        Transform GetSpawnFocusPos()
+        public static Transform GetSpawnFocusPos()
         {
             if (Ped.Instance)
                 return Ped.Instance.transform;
@@ -69,7 +83,16 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-        bool GetSpawnPositionFromFocus(out TransformDataStruct transformData)
+        public static bool GetSpawnPositionFromFocus(Transform focusPos, out TransformDataStruct transformData)
+        {
+            transformData = new TransformDataStruct(
+                focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f,
+                Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
+
+            return true;
+        }
+
+        public static bool GetSpawnPositionFromFocus(out TransformDataStruct transformData)
         {
             Transform focusPos = GetSpawnFocusPos();
             if (null == focusPos)
@@ -78,14 +101,10 @@ namespace SanAndreasUnity.Behaviours
                 return false;
             }
 
-            transformData = new TransformDataStruct(
-                focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f,
-                Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
-
-            return true;
+            return GetSpawnPositionFromFocus(focusPos, out transformData);
         }
 
-        bool GetSpawnPositionFromInteriors(out TransformDataStruct transformData)
+        public static bool GetSpawnPositionFromInteriors(out TransformDataStruct transformData)
         {
             transformData = World.Cell.GetEnexExitTransform(
                 World.Cell.Instance.GetEnexesFromLoadedInteriors()
@@ -94,12 +113,18 @@ namespace SanAndreasUnity.Behaviours
             return true;
         }
 
-        public bool GetSpawnPosition(out TransformDataStruct transformData)
+        bool GetSpawnPositionFromHandler(Player player, out TransformDataStruct transformData)
         {
-            if (null == World.Cell.Instance || World.Cell.Instance.HasExterior)
-                return GetSpawnPositionFromFocus(out transformData);
-            else
-                return GetSpawnPositionFromInteriors(out transformData);
+            bool success = false;
+            TransformDataStruct t = new TransformDataStruct();
+
+            F.RunExceptionSafe(() =>
+            {
+                success = this.SpawnHandler.GetSpawnPosition(player, out t);
+            });
+
+            transformData = t;
+            return success;
         }
 
         void SpawnPlayers()
@@ -114,7 +139,7 @@ namespace SanAndreasUnity.Behaviours
 
             foreach (var player in Player.AllPlayers)
             {
-                if (this.GetSpawnPosition(out transformData))
+                if (this.GetSpawnPositionFromHandler(player, out transformData))
                     SpawnPlayer(player, transformData);
                 else
                     break;
@@ -152,7 +177,7 @@ namespace SanAndreasUnity.Behaviours
             if (!this.spawnPlayerWhenConnected)
                 return;
 
-            if (this.GetSpawnPosition(out TransformDataStruct transformData))
+            if (this.GetSpawnPositionFromHandler(player, out TransformDataStruct transformData))
                 SpawnPlayer(player, transformData);
 
         }
