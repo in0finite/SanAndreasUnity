@@ -123,6 +123,17 @@ namespace SanAndreasUnity.Net
 
         }
 
+        public void Disconnect()
+        {
+            this.connectionToClient.Disconnect();
+        }
+
+        public static Player GetByNetId(uint netId)
+        {
+            var go = NetManager.GetNetworkObjectById(netId);
+            return go != null ? go.GetComponent<Player>() : null;
+        }
+
     }
 
 }
