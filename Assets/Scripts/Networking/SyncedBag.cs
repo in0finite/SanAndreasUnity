@@ -18,11 +18,11 @@ namespace SanAndreasUnity.Net
 
         private struct ArrayWrapper<T> // use struct so that it doesn't allocate memory
         {
-            public T[] array;
+            public T[] a; // use short name because it will be a part of json
 
-            public ArrayWrapper(T[] array)
+            public ArrayWrapper(T[] a)
             {
-                this.array = array;
+                this.a = a;
             }
         }
 
@@ -157,7 +157,7 @@ namespace SanAndreasUnity.Net
             string str = GetString(key);
             if (str == null)
                 return null;
-            return JsonUtility.FromJson<ArrayWrapper<string>>(str).array;
+            return JsonUtility.FromJson<ArrayWrapper<string>>(str).a;
         }
 
         public void SetStringArray(string key, string[] array)
@@ -170,7 +170,7 @@ namespace SanAndreasUnity.Net
             string str = GetString(key);
             if (str == null)
                 return null;
-            return JsonUtility.FromJson<ArrayWrapper<float>>(str).array;
+            return JsonUtility.FromJson<ArrayWrapper<float>>(str).a;
         }
 
         public void SetFloatArray(string key, float[] array)
