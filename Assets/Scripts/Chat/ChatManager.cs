@@ -105,6 +105,8 @@ namespace SanAndreasUnity.Chat
 			if (!NetStatus.IsServerStarted)
 				return;
 
+			msg = msg.Trim();
+
 			foreach (var player in Player.AllPlayers) {
 				SendChatMessageToPlayer ( player, msg, sender );
 			}

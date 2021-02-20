@@ -25,6 +25,7 @@ namespace SanAndreasUnity.Chat
 			
 			Player p = m_player;
 
+			msg = msg.Trim();
 
 			// Remove tags.
 			msg = msg.Replace ("<", "");	// the only easy way :D
@@ -50,6 +51,8 @@ namespace SanAndreasUnity.Chat
 			if (!this.isLocalPlayer) {
 				return;
 			}
+
+			msg = msg.Trim();
 
 			onChatMessageReceivedOnLocalPlayer (new ChatMessage (msg, sender));
 
