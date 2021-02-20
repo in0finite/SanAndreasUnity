@@ -16,6 +16,16 @@ namespace SanAndreasUnity.Net
         private readonly StringSyncDictionary m_syncDictionary;
         private readonly Dictionary<string, List<System.Action<string>>> m_callbacks = new Dictionary<string, List<Action<string>>>();
 
+        private class ArrayWrapper<T>
+        {
+            public T[] array;
+
+            public ArrayWrapper(T[] array)
+            {
+                this.array = array;
+            }
+        }
+
 
         public SyncedBag(StringSyncDictionary syncDictionary)
         {
@@ -66,6 +76,30 @@ namespace SanAndreasUnity.Net
             if (m_callbacks.TryGetValue(key, out var list))
             {
                 list.Remove(callback);
+            }
+        }
+
+        public void SetCallbacks(SyncedBag other)
+        {
+            if (this == other)
+                return;
+
+            m_callbacks.Clear();
+            foreach (var callback in other.m_callbacks)
+            {
+                m_callbacks.Add(callback.Key, callback.Value);
+            }
+        }
+
+        public void SetData(SyncedBag other)
+        {
+            if (this == other)
+                return;
+
+            m_syncDictionary.Clear();
+            foreach (var pair in other.m_syncDictionary)
+            {
+                m_syncDictionary.Add(pair.Key, pair.Value);
             }
         }
 
@@ -123,12 +157,25 @@ namespace SanAndreasUnity.Net
             string str = GetString(key);
             if (str == null)
                 return null;
-            return JsonUtility.FromJson<string[]>(str);
+            return JsonUtility.FromJson<ArrayWrapper<string>>(str)?.array;
         }
 
         public void SetStringArray(string key, string[] array)
         {
-            SetString(key, JsonUtility.ToJson(array));
+            SetString(key, JsonUtility.ToJson(new ArrayWrapper<string>(array)));
+        }
+
+        public float[] GetFloatArray(string key)
+        {
+            string str = GetString(key);
+            if (str == null)
+                return null;
+            return JsonUtility.FromJson<ArrayWrapper<float>>(str)?.array;
+        }
+
+        public void SetFloatArray(string key, float[] array)
+        {
+            SetString(key, JsonUtility.ToJson(new ArrayWrapper<float>(array)));
         }
     }
 }
