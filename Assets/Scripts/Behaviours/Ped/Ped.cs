@@ -131,6 +131,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public string DescriptionForLogging => "(netId = " + this.netId + ")";
 
+		public static event System.Action<Ped> onAwake = delegate {};
 		public static event System.Action<Ped> onStart = delegate {};
 
 
@@ -148,6 +149,8 @@ namespace SanAndreasUnity.Behaviours
 			this.AwakeForDamage ();
 
 			this.Awake_Net();
+
+			F.InvokeEventExceptionSafe(onAwake, this);
 
         }
 
