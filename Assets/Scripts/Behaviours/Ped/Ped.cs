@@ -131,6 +131,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public string DescriptionForLogging => "(netId = " + this.netId + ")";
 
+		public static event System.Action<Ped> onStart = delegate {};
+
 
 
         
@@ -196,6 +198,8 @@ namespace SanAndreasUnity.Behaviours
 					this.FindGround (FindGroundParams.DefaultBasedOnLoadedWorld);
 				}
 			}
+
+			F.InvokeEventExceptionSafe(onStart, this);
 
         }
 
