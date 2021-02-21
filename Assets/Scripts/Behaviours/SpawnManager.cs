@@ -16,6 +16,8 @@ namespace SanAndreasUnity.Behaviours
         public float spawnInterval = 4f;
         float m_lastSpawnTime = 0f;
 
+        public bool addWeaponsToSpawnedPlayers = true;
+
         public static SpawnHandler DefaultSpawnHandler { get; } = new SpawnHandler();
 
         private SpawnHandler m_spawnHandler = DefaultSpawnHandler;
@@ -147,14 +149,15 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-        public static Ped SpawnPlayer (Player player, TransformDataStruct spawnPlace)
+        public Ped SpawnPlayer (Player player, TransformDataStruct spawnPlace)
         {
             if (player.OwnedPed != null)
                 return null;
 
             var ped = Ped.SpawnPed(Ped.RandomPedId, spawnPlace.position, spawnPlace.rotation, false);
             ped.NetPlayerOwnerGameObject = player.gameObject;
-            ped.WeaponHolder.autoAddWeapon = true;
+            if (this.addWeaponsToSpawnedPlayers)
+                ped.WeaponHolder.autoAddWeapon = true;
             // this ped should not be destroyed when he gets out of range
             ped.gameObject.DestroyComponent<OutOfRangeDestroyer>();
 
