@@ -20,6 +20,9 @@ namespace SanAndreasUnity.Commands
 
         readonly Dictionary<Player, PlayerData> m_perPlayerData = new Dictionary<Player, PlayerData>();
 
+        List<string> m_registeredCommands = new List<string>();
+        public IReadOnlyList<string> RegisteredCommands => m_registeredCommands;
+
         public float vehicleLimitInterval = 3f;
         public float pedLimitInterval = 2f;
         public float weaponLimitInterval = 1f;
@@ -57,6 +60,8 @@ namespace SanAndreasUnity.Commands
                 cmd.commandHandler = ProcessCommand;
                 CommandManager.Singleton.RegisterCommand(cmd);
             }
+
+            m_registeredCommands = commands.Select(c => c.command).ToList();
         }
 
         private void PlayerOnDisable(Player player)
