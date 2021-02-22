@@ -19,6 +19,7 @@ namespace SanAndreasUnity.Net
         public static Player Local { get; private set; }
 
         public static event System.Action<Player> onStart = delegate {};
+        public static event System.Action<Player> onDisable = delegate {};
 
         [SyncVar(hook=nameof(OnOwnedGameObjectChanged))] GameObject m_ownedGameObject;
         Ped m_ownedPed;
@@ -58,6 +59,8 @@ namespace SanAndreasUnity.Net
                 if (this.OwnedPed)
                     Destroy(this.OwnedPed.gameObject);
             }
+
+            F.InvokeEventExceptionSafe(onDisable, this);
 
         }
 
