@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Commands
 {
-    public class VehicleCommands : MonoBehaviour
+    public class BaseCommands : MonoBehaviour
     {
-        public static VehicleCommands Singleton { get; private set; }
+        public static BaseCommands Singleton { get; private set; }
 
         private class PlayerData
         {
