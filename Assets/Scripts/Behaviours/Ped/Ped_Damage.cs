@@ -135,7 +135,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public void OnReceivedDamageEventFromServer(float damageAmount, Ped attackingPed)
 		{
-			if (attackingPed != null && attackingPed.IsControlledByLocalPlayer)
+			if (attackingPed != null && attackingPed.IsControlledByLocalPlayer && attackingPed != this)
 			{
 				this.DisplayInflictedDamageMessage(damageAmount);
 			}
@@ -148,7 +148,7 @@ namespace SanAndreasUnity.Behaviours
 			msg.velocity = Random.insideUnitCircle.normalized * PedManager.Instance.inflictedDamageMessageVelocityInScreenPerc;
 			msg.TextColor = PedManager.Instance.inflictedDamageMessageColor;
 			msg.timeLeft = PedManager.Instance.inflictedDamageMessageLifetime;
-			msg.Text = damageAmount.ToString();
+			msg.Text = Mathf.RoundToInt(damageAmount).ToString();
 		}
 
 		public void Kill()
