@@ -253,10 +253,7 @@ namespace SanAndreasUnity.UI {
 
 			Vector3 worldPos = MiniMap.MapPosToWorldPos (m_waypointMapPos);
 
-			if (Utilities.NetUtils.IsServer)
-				Ped.Instance.Teleport (worldPos);
-			else if (Net.PlayerRequests.Local != null)
-				Net.PlayerRequests.Local.RequestTeleport(worldPos, Ped.Instance.transform.rotation);
+			Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer($"/teleport {worldPos.x} {worldPos.y} {worldPos.z}");
 
 		}
 

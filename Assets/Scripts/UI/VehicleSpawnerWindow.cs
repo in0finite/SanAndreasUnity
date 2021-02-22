@@ -41,6 +41,11 @@ namespace SanAndreasUnity.UI {
 		}
 
 
+		void SendCommand(string command)
+		{
+			Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer(command);
+		}
+
 		void GetVehicleDefs() {
 
 			// get all vehicle definitions
@@ -113,14 +118,9 @@ namespace SanAndreasUnity.UI {
 
 					if (GUILayout.Button (v.GameName, GUILayout.Width(this.columnWidths[0]))) {
 						
-						if (Utilities.NetUtils.IsServer)
+						if (Net.Player.Local != null)
 						{
-							if (Ped.Instance != null)
-								Vehicle.CreateInFrontOf (v.Id, Ped.Instance.transform);
-						}
-						else if (Net.PlayerRequests.Local != null)
-						{
-							Net.PlayerRequests.Local.RequestVehicleSpawn(v.Id);
+							SendCommand($"/veh {v.Id}");
 						}
 						
 					}

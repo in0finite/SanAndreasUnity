@@ -110,13 +110,17 @@ namespace SanAndreasUnity.UI {
 				
 				if (GUILayout.Button (_spawnNames[i]))
 				{
-					if (Utilities.NetUtils.IsServer)
-						Ped.Instance.Teleport (spawnLocation.position, spawnLocation.rotation);
-					else if (Net.PlayerRequests.Local != null)
-						Net.PlayerRequests.Local.RequestTeleport(spawnLocation.position, spawnLocation.rotation);
+					Vector3 pos = spawnLocation.position;
+					Vector3 eulers = spawnLocation.rotation.eulerAngles;
+					SendCommand($"/teleport {pos.x} {pos.y} {pos.z} {eulers.x} {eulers.y} {eulers.z}");
 				}
 			}
 
+		}
+
+		void SendCommand(string command)
+		{
+			Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer(command);
 		}
 
 	}

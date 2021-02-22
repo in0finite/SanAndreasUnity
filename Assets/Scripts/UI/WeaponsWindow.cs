@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using SanAndreasUnity.Importing.Items;
+﻿using UnityEngine;
 using SanAndreasUnity.Behaviours;
-using System.Linq;
 using SanAndreasUnity.Utilities;
-using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.UI {
 
@@ -30,6 +26,11 @@ namespace SanAndreasUnity.UI {
 		}
 
 
+		void SendCommand(string command)
+		{
+			Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer(command);
+		}
+
 		protected override void OnWindowGUIBeforeContent ()
 		{
 			base.OnWindowGUIBeforeContent ();
@@ -41,22 +42,22 @@ namespace SanAndreasUnity.UI {
 				GUILayout.BeginHorizontal ();
 
 				if (GUILayout.Button ("Add random weapons", GUILayout.ExpandWidth(false)))
-					PlayerRequests.Local.AddRandomWeapons ();
+					SendCommand("/rand_w");
 
 				GUILayout.Space (5);
 
 				if (GUILayout.Button ("Remove all weapons", GUILayout.ExpandWidth(false)))
-					PlayerRequests.Local.RemoveAllWeapons ();
+					SendCommand("/rem_w");
 
 				GUILayout.Space (5);
 
 				if (GUILayout.Button ("Remove current weapon", GUILayout.ExpandWidth(false)))
-					PlayerRequests.Local.RemoveCurrentWeapon ();
+					SendCommand("/rem_current_w");
 
 				GUILayout.Space (5);
 
 				if (GUILayout.Button ("Give ammo", GUILayout.ExpandWidth (false)))
-					PlayerRequests.Local.GiveAmmo();
+					SendCommand("/ammo");
 				
 				GUILayout.EndHorizontal ();
 				GUILayout.Space (15);
@@ -87,7 +88,7 @@ namespace SanAndreasUnity.UI {
 				if (playerExists) {
 					if (GUILayout.Button ("Give", GUILayout.Width(70))) {
 						// give weapon to player
-						PlayerRequests.Local.GiveWeapon(data.modelId1);
+						SendCommand($"/w {data.modelId1}");
 					}
 				}
 

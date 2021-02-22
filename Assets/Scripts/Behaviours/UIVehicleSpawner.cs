@@ -1,5 +1,4 @@
-﻿using SanAndreasUnity.Behaviours;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -13,22 +12,11 @@ namespace SanAndreasUnity.Behaviours
         {
             if (Input.GetKeyDown(spawnKey) && GameManager.CanPlayerReadInput())
             {
-                if (Utilities.NetUtils.IsServer)
-                    SpawnVehicle();
-                else if (Net.PlayerRequests.Local != null)
-                    Net.PlayerRequests.Local.RequestVehicleSpawn(-1);
+                if (Ped.Instance != null)
+                {
+                    Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer("/veh");
+                }
             }
-        }
-
-        private void SpawnVehicle()
-        {
-    		var ped = Ped.Instance;
-
-    		if (null == ped)
-    			return;
-            
-            Vehicles.Vehicle.CreateRandomInFrontOf(ped.transform);
-            
         }
 
     }

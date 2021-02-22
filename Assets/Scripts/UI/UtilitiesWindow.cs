@@ -45,7 +45,7 @@ namespace SanAndreasUnity.UI {
 
 			if (Utilities.NetUtils.IsServer)
 				DisplayServerGui();
-			else if (Net.PlayerRequests.Local != null)
+			else if (Net.Player.Local != null)
 				DisplayClientOnlyGui();
 
 		}
@@ -61,7 +61,8 @@ namespace SanAndreasUnity.UI {
 
 			if (GUILayout.Button("Change player model"))
 			{
-				CharacterModelChanger.ChangePedestrianModel();
+				if (Ped.Instance != null)
+					Ped.Instance.PlayerModel.Load(Ped.RandomPedId);
 			}
 
 			if (GUILayout.Button("Spawn 5 peds"))
@@ -91,34 +92,37 @@ namespace SanAndreasUnity.UI {
 
 		}
 
+		void SendCommand(string command)
+		{
+			Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer(command);
+		}
+
 		void DisplayClientOnlyGui()
 		{
 
-			var pr = Net.PlayerRequests.Local;
-
 			if (GUILayout.Button("Request vehicle"))
 			{
-				pr.RequestVehicleSpawn(-1);
+				SendCommand("/veh -1");
 			}
 
 			if (GUILayout.Button("Request ped model change"))
 			{
-				pr.RequestPedModelChange();
+				SendCommand("/skin");
 			}
 
 			if (GUILayout.Button("Request suicide"))
 			{
-				pr.RequestSuicide();
+				SendCommand("/suicide");
 			}
 
 			if (GUILayout.Button("Request ped stalker"))
 			{
-				pr.SpawnPedStalker();
+				SendCommand("/stalker");
 			}
 
 			if (GUILayout.Button("Request to destroy my vehicles"))
 			{
-				pr.RequestToDestroyMyVehicles();
+				SendCommand("/dveh");
 			}
 
 		}
