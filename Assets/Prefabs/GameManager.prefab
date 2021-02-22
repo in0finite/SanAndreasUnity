@@ -33,6 +33,7 @@ GameObject:
   - component: {fileID: 7245186909460989713}
   - component: {fileID: 4992771638147279046}
   - component: {fileID: 2664216849870465946}
+  - component: {fileID: 3560199336842227889}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -242,6 +243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPlayerWhenConnected: 1
   spawnInterval: 4
+  addWeaponsToSpawnedPlayers: 1
 --- !u!114 &7524748510276763881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,3 +436,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e40fce7f02420534e8e9e2ac5e284317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3560199336842227889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297494511425690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 654f190be84f56c4e976a0ecf023ef80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vehicleLimitInterval: 3
+  pedLimitInterval: 2
+  weaponLimitInterval: 1
+  maxVehiclesPerPlayer: 3
