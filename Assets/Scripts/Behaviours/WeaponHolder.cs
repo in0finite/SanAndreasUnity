@@ -156,6 +156,13 @@ namespace SanAndreasUnity.Behaviours {
 				return;
 
 
+			// if current weapon was somehow destroyed, switch to Hand slot
+			if (this.currentWeaponSlot > 0 && null == this.weapons[this.currentWeaponSlot])
+			{
+				if (NetStatus.IsServer)
+					this.currentWeaponSlot = 0;
+			}
+
 			//this.UpdateWeaponTransform ();
 
 			if (CurrentWeapon != null) {

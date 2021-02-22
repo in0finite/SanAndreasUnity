@@ -36,10 +36,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// we should not switch to non-aim state, but instead, when fire anim finishes, we will switch back to
 			// aim state
 
-			// TODO: but, watch out, weapon may become null - if someone else destroys a weapon or changes current weapon
-			// to Hand, then weapon will be null - we may never exit fire state, because aim anim will not be updated
+			// but the current weapon may be destroyed, in which case we will not exit fire state, because aim anim will not be updated
 
-			// simply checking if weapon is null and exiting the state should solve the problem
+			if (!m_ped.IsHoldingWeapon)
+			{
+				m_ped.SwitchState<StandState>();
+				return true;
+			}
 
 			return false;
 		}
