@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Net;
@@ -39,6 +40,7 @@ namespace SanAndreasUnity.Commands
                 new CommandManager.CommandInfo("skin", "change skin", true, true, this.pedLimitInterval),
                 new CommandManager.CommandInfo("stalker", "spawn stalker ped", true, true, this.pedLimitInterval),
                 new CommandManager.CommandInfo("suicide", "commit suicide", true, true, this.pedLimitInterval),
+                new CommandManager.CommandInfo("teleport", "teleport", true, true, this.pedLimitInterval),
                 new CommandManager.CommandInfo("veh", "spawn a vehicle", true, true, this.vehicleLimitInterval),
                 new CommandManager.CommandInfo("dveh", "destroy my vehicles", true, true, 0f),
                 new CommandManager.CommandInfo("w", "give a weapon", true, true, this.weaponLimitInterval),
@@ -66,12 +68,12 @@ namespace SanAndreasUnity.Commands
             string[] arguments = CommandManager.SplitCommandIntoArguments(context.command);
             int numArguments = arguments.Length;
             Player player = context.player;
-            var pedNotAliveResult = CommandManager.ProcessCommandResult.Error("Your ped must be alive to run this command");
+            var pedNotAliveResult = CommandManager.ProcessCommandResult.Error("You must control a ped to run this command");
 
             if (arguments[0] == "skin")
             {
                 if (null == player.OwnedPed)
-                    return CommandManager.ProcessCommandResult.Error("Your ped must be alive to change skin");
+                    return pedNotAliveResult;
 
                 player.OwnedPed.PlayerModel.Load(Ped.RandomPedId);
 
@@ -80,7 +82,7 @@ namespace SanAndreasUnity.Commands
             else if (arguments[0] == "stalker")
             {
                 if (null == player.OwnedPed)
-                    return CommandManager.ProcessCommandResult.Error("Your ped must be alive to spawn stalker");
+                    return pedNotAliveResult;
 
                 Ped.SpawnPedStalker(Ped.RandomPedId, player.OwnedPed.transform, player.OwnedPed);
 
@@ -89,9 +91,33 @@ namespace SanAndreasUnity.Commands
             else if (arguments[0] == "suicide")
             {
                 if (null == player.OwnedPed)
-                    return CommandManager.ProcessCommandResult.Error("Your ped must be alive to commit suicide");
+                    return pedNotAliveResult;
 
                 player.OwnedPed.Kill();
+
+                return CommandManager.ProcessCommandResult.Success;
+            }
+            else if (arguments[0] == "teleport")
+            {
+                if (null == player.OwnedPed)
+                    return pedNotAliveResult;
+
+                Vector3 position;
+                Quaternion rotation;
+
+                try
+                {
+                    position = CommandManager.ParseVector3(arguments, 1);
+                    rotation = player.OwnedPed.transform.rotation;
+                    if (numArguments > 4)
+                        rotation = Quaternion.Euler(CommandManager.ParseVector3(arguments, 4));
+                }
+                catch
+                {
+                    return CommandManager.ProcessCommandResult.Error("Invalid syntax. Example: teleport 2000 10.2 -1000.5 or teleport 2000 10.2 -1000.5 0 45 0");
+                }
+
+                player.OwnedPed.Teleport(position, rotation);
 
                 return CommandManager.ProcessCommandResult.Success;
             }

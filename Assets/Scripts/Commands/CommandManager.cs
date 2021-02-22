@@ -133,6 +133,38 @@ namespace SanAndreasUnity.Commands
             return string.Join(" ", args, argumentIndex + 1, args.Length - argumentIndex - 1);
         }
 
+        public static Vector3 ParseVector3(string[] arguments, int startIndex)
+        {
+            if (startIndex + 3 >= arguments.Length)
+                throw new System.ArgumentException("Failed to parse Vector3: not enough arguments");
+
+            Vector3 v = Vector3.zero;
+            for (int i = 0; i < 3; i++)
+            {
+                if (!float.TryParse(arguments[startIndex + i], out float f))
+                    throw new System.ArgumentException("Failed to parse Vector3: invalid number");
+                v[i] = f;
+            }
+
+            return v;
+        }
+
+        public static Quaternion ParseQuaternion(string[] arguments, int startIndex)
+        {
+            if (startIndex + 4 >= arguments.Length)
+                throw new System.ArgumentException("Failed to parse Quaternion: not enough arguments");
+
+            Quaternion quaternion = Quaternion.identity;
+            for (int i = 0; i < 4; i++)
+            {
+                if (!float.TryParse(arguments[startIndex + i], out float f))
+                    throw new System.ArgumentException("Failed to parse Quaternion: invalid number");
+                quaternion[i] = f;
+            }
+
+            return quaternion;
+        }
+
         ProcessCommandResult ProcessCommand(ProcessCommandContext context)
         {
             if (string.IsNullOrWhiteSpace(context.command))
