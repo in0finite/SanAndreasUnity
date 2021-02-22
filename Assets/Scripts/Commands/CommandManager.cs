@@ -25,14 +25,25 @@ namespace SanAndreasUnity.Commands
         public struct CommandInfo
         {
             public string command;
+            public string description;
             public System.Func<ProcessCommandContext, ProcessCommandResult> commandHandler;
             public bool allowToRunWithoutServerPermissions;
+            public bool runOnlyOnServer;
 
             public CommandInfo(string command, bool allowToRunWithoutServerPermissions)
+                : this()
             {
                 this.command = command;
                 this.allowToRunWithoutServerPermissions = allowToRunWithoutServerPermissions;
-                this.commandHandler = null;
+            }
+
+            public CommandInfo(string command, string description, bool allowToRunWithoutServerPermissions, bool runOnlyOnServer)
+                : this()
+            {
+                this.command = command;
+                this.description = description;
+                this.allowToRunWithoutServerPermissions = allowToRunWithoutServerPermissions;
+                this.runOnlyOnServer = runOnlyOnServer;
             }
         }
 
@@ -43,6 +54,8 @@ namespace SanAndreasUnity.Commands
             public static ProcessCommandResult UnknownCommand => new ProcessCommandResult {response = "Unknown command"};
             public static ProcessCommandResult InvalidCommand => new ProcessCommandResult {response = "Invalid command"};
             public static ProcessCommandResult NoPermissions => new ProcessCommandResult {response = "You don't have permissions to run this command"};
+            public static ProcessCommandResult CanOnlyRunOnServer => new ProcessCommandResult {response = "This command can only run on server"};
+            public static ProcessCommandResult LimitInterval(float interval) => new ProcessCommandResult {response = $"You must wait for {interval} seconds before running this command again"};
         }
 
         public class ProcessCommandContext
@@ -113,6 +126,9 @@ namespace SanAndreasUnity.Commands
 
             if (!m_registeredCommands.TryGetValue(arguments[0], out CommandInfo commandInfo))
                 return ProcessCommandResult.UnknownCommand;
+
+            if (commandInfo.runOnlyOnServer && !NetStatus.IsServer)
+                return ProcessCommandResult.CanOnlyRunOnServer;
 
             if (!context.hasServerPermissions && !commandInfo.allowToRunWithoutServerPermissions)
                 return ProcessCommandResult.NoPermissions;
