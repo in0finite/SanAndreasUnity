@@ -115,7 +115,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override void OnAimButtonPressed()
 		{
 			if (m_isServer)
-				m_ped.GetStateOrLogError<DriveByState>().EnterVehicle(this.CurrentVehicle, this.CurrentVehicleSeatAlignment);
+			{
+				if (m_ped.GetStateOrLogError<DriveByState>().CanEnterState(this.CurrentVehicle, this.CurrentVehicleSeatAlignment))
+					m_ped.GetStateOrLogError<DriveByState>().EnterVehicle(this.CurrentVehicle, this.CurrentVehicleSeatAlignment);
+			}
 			else
 				base.OnAimButtonPressed();
 		}

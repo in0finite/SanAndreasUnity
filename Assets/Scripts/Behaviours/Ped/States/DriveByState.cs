@@ -63,6 +63,28 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         }
 
+        public bool CanEnterState(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment)
+        {
+            var w = m_ped.CurrentWeapon;
+            return null != w && w.IsGun;
+        }
+
+        public override void UpdateState()
+        {
+            // exit drive-by state if ped doesn't have gun weapon
+            if (m_isServer)
+            {
+                var w = m_ped.CurrentWeapon;
+                if (null == w || !w.IsGun)
+                {
+                    m_ped.GetStateOrLogError<VehicleSittingState>().EnterVehicle(this.CurrentVehicle, this.CurrentVehicleSeatAlignment);
+                    return;
+                }
+            }
+
+            base.UpdateState();
+        }
+
         protected override void UpdateAnimsInternal()
         {
             this.UpdateAnimsInternal(true);
