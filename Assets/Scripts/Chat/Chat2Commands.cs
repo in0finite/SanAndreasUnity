@@ -41,7 +41,8 @@ namespace SanAndreasUnity.Chat
             }
 
             // send response back to player
-            ChatManager.SendChatMessageToPlayer(player, response);
+            if (!string.IsNullOrWhiteSpace(response))
+                ChatManager.SendChatMessageToPlayer(player, response);
 
             // discard chat message
             return new ChatPreprocessorResult {shouldBeDiscarded = true};
