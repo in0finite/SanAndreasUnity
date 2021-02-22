@@ -120,8 +120,11 @@ namespace SanAndreasUnity.UI {
 
 				// display button which will open additional options
 				itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
-				if (GUI.Button (itemRect, "...")) {
-					m_currentPedIdWithOptions = def.Id;
+				if (NetUtils.IsServer)
+				{
+					if (GUI.Button (itemRect, "...")) {
+						m_currentPedIdWithOptions = def.Id;
+					}
 				}
 
 				if (m_currentPedIdWithOptions == def.Id) {
