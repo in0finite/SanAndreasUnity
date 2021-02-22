@@ -139,15 +139,23 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static Vehicle Create(int carId, int[] colors, Vector3 position, Quaternion rotation)
         {
-            // this probably should not be done like this
-            var go = Instantiate(VehicleManager.Instance.vehiclePrefab);
-            var v = Create(go, carId, colors, position, rotation);
-            if (Net.NetStatus.IsServer)
+            GameObject go = Instantiate(VehicleManager.Instance.vehiclePrefab);
+            try
             {
-                v.GetComponent<VehicleController>().OnAfterCreateVehicle();
-                Net.NetManager.Spawn(go);
+                var v = Create(go, carId, colors, position, rotation);
+                if (Net.NetStatus.IsServer)
+                {
+                    v.GetComponent<VehicleController>().OnAfterCreateVehicle();
+                    Net.NetManager.Spawn(go);
+                }
+                return v;
             }
-            return v;
+            catch
+            {
+                // if something fails, destroy the game object
+                Destroy(go);
+                throw;
+            }
         }
 
         public static Vehicle Create(GameObject vehicleGameObject, int carId, int[] colors, 
