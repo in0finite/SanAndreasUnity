@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SanAndreasUnity.Utilities;
+using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -14,7 +15,10 @@ namespace SanAndreasUnity.Behaviours
             {
                 if (Ped.Instance != null)
                 {
-                    Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer("/veh");
+                    if (NetUtils.IsServer)
+                        Vehicles.Vehicle.CreateRandomInFrontOf(Ped.Instance.transform);
+                    else
+                        Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer("/veh");
                 }
             }
         }

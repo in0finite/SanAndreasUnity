@@ -2,6 +2,7 @@
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using System.Linq;
+using SanAndreasUnity.Behaviours.Vehicles;
 
 namespace SanAndreasUnity.UI {
 
@@ -56,7 +57,7 @@ namespace SanAndreasUnity.UI {
 
 			if (GUILayout.Button ("Spawn random vehicle")) {
 				if (Ped.Instance != null)
-					SendCommand("/veh");
+					Vehicle.CreateRandomInFrontOf(nearbyTransform);
 			}
 
 			if (GUILayout.Button("Change player model"))
