@@ -40,6 +40,9 @@ namespace SanAndreasUnity.Chat
                 response = exception.Message;
             }
 
+            // send command back to player
+            ChatManager.SendChatMessageToPlayer(player, chatMessage);
+
             // send response back to player
             if (!string.IsNullOrWhiteSpace(response))
                 ChatManager.SendChatMessageToPlayer(player, response);
