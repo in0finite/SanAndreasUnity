@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Net;
@@ -63,19 +64,43 @@ namespace SanAndreasUnity.Commands
             m_perPlayerData.Remove(player);
         }
 
+        bool GetPedModelId(string[] arguments, int argumentIndex, out int modelId)
+        {
+            if (argumentIndex >= arguments.Length)
+            {
+                modelId = Ped.RandomPedId;
+                return true;
+            }
+
+            int id = int.Parse(arguments[argumentIndex]);
+            bool idExists = Ped.SpawnablePedDefs.Any(def => def.Id == id);
+            if (!idExists)
+            {
+                modelId = 0;
+                return false;
+            }
+
+            modelId = id;
+            return true;
+        }
+
         CommandManager.ProcessCommandResult ProcessCommand(CommandManager.ProcessCommandContext context)
         {
             string[] arguments = CommandManager.SplitCommandIntoArguments(context.command);
             int numArguments = arguments.Length;
             Player player = context.player;
             var pedNotAliveResult = CommandManager.ProcessCommandResult.Error("You must control a ped to run this command");
+            var pedModelIdDoesNotExist = CommandManager.ProcessCommandResult.Error("Specified model id does not exist");
 
             if (arguments[0] == "skin")
             {
                 if (null == player.OwnedPed)
                     return pedNotAliveResult;
 
-                player.OwnedPed.PlayerModel.Load(Ped.RandomPedId);
+                if (!GetPedModelId(arguments, 1, out int modelId))
+                    return pedModelIdDoesNotExist;
+
+                player.OwnedPed.PlayerModel.Load(modelId);
 
                 return CommandManager.ProcessCommandResult.Success;
             }
@@ -84,7 +109,10 @@ namespace SanAndreasUnity.Commands
                 if (null == player.OwnedPed)
                     return pedNotAliveResult;
 
-                Ped.SpawnPedStalker(Ped.RandomPedId, player.OwnedPed.transform, player.OwnedPed);
+                if (!GetPedModelId(arguments, 1, out int modelId))
+                    return pedModelIdDoesNotExist;
+
+                Ped.SpawnPedStalker(modelId, player.OwnedPed.transform, player.OwnedPed);
 
                 return CommandManager.ProcessCommandResult.Success;
             }

@@ -120,11 +120,9 @@ namespace SanAndreasUnity.UI {
 
 				// display button which will open additional options
 				itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
-				if (NetUtils.IsServer)
+				if (GUI.Button(itemRect, "..."))
 				{
-					if (GUI.Button (itemRect, "...")) {
-						m_currentPedIdWithOptions = def.Id;
-					}
+					m_currentPedIdWithOptions = def.Id;
 				}
 
 				if (m_currentPedIdWithOptions == def.Id) {
@@ -132,22 +130,24 @@ namespace SanAndreasUnity.UI {
 
 					if (playerExists) {
 
-						if (NetUtils.IsServer)
+						itemRect = GUIUtils.GetNextRectInARowPerc(rect, ref i, buttonSpacing, widthPercsButtons);
+						if (GUI.Button(itemRect, "Switch"))
 						{
-							itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
-							if (GUI.Button (itemRect, "Switch")) {
-								Ped.Instance.PlayerModel.Load (def.Id);
-							}
+							SendCommand($"/skin {def.Id}");
+						}
 
-							itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
-							if (GUI.Button (itemRect, "Spawn")) {
-								Ped.SpawnPed (def.Id, Ped.Instance.transform);
-							}
+						itemRect = GUIUtils.GetNextRectInARowPerc(rect, ref i, buttonSpacing, widthPercsButtons);
+						GUI.enabled = NetUtils.IsServer;
+						if (GUI.Button(itemRect, "Spawn"))
+						{
+							Ped.SpawnPed(def.Id, Ped.Instance.transform);
+						}
+						GUI.enabled = true;
 
-							itemRect = GUIUtils.GetNextRectInARowPerc (rect, ref i, buttonSpacing, widthPercsButtons);
-							if (GUI.Button (itemRect, "Spawn stalker")) {
-								Ped.SpawnPedStalker (def.Id, Ped.Instance.transform, Ped.Instance);
-							}
+						itemRect = GUIUtils.GetNextRectInARowPerc(rect, ref i, buttonSpacing, widthPercsButtons);
+						if (GUI.Button(itemRect, "Spawn stalker"))
+						{
+							SendCommand($"/stalker {def.Id}");
 						}
 
 					}
@@ -177,6 +177,11 @@ namespace SanAndreasUnity.UI {
 			{
 				Destroy (db.gameObject);
 			}
+		}
+
+		void SendCommand(string command)
+		{
+			Chat.ChatManager.SendChatMessageToAllPlayersAsLocalPlayer(command);
 		}
 
 	}
