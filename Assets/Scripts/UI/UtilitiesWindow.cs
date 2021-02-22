@@ -56,13 +56,13 @@ namespace SanAndreasUnity.UI {
 
 			if (GUILayout.Button ("Spawn random vehicle")) {
 				if (Ped.Instance != null)
-					Behaviours.Vehicles.Vehicle.CreateRandomInFrontOf(Ped.Instance.transform);
+					SendCommand("/veh");
 			}
 
 			if (GUILayout.Button("Change player model"))
 			{
 				if (Ped.Instance != null)
-					Ped.Instance.PlayerModel.Load(Ped.RandomPedId);
+					SendCommand("/skin");
 			}
 
 			if (GUILayout.Button("Spawn 5 peds"))
@@ -102,7 +102,7 @@ namespace SanAndreasUnity.UI {
 
 			if (GUILayout.Button("Request vehicle"))
 			{
-				SendCommand("/veh -1");
+				SendCommand("/veh");
 			}
 
 			if (GUILayout.Button("Request ped model change"))
