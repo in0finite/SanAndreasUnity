@@ -22,6 +22,13 @@ namespace SanAndreasUnity.Commands
 
         [SerializeField] private bool m_registerHelpCommand = true;
 
+        private struct PlayerData
+        {
+            public float timeWhenLastExecutedCommand;
+        }
+
+        readonly Dictionary<Player, PlayerData> m_perPlayerData = new Dictionary<Player, PlayerData>();
+
         public struct CommandInfo
         {
             public string command;
@@ -29,6 +36,7 @@ namespace SanAndreasUnity.Commands
             public System.Func<ProcessCommandContext, ProcessCommandResult> commandHandler;
             public bool allowToRunWithoutServerPermissions;
             public bool runOnlyOnServer;
+            public float limitInterval;
 
             public CommandInfo(string command, bool allowToRunWithoutServerPermissions)
                 : this()
@@ -37,13 +45,14 @@ namespace SanAndreasUnity.Commands
                 this.allowToRunWithoutServerPermissions = allowToRunWithoutServerPermissions;
             }
 
-            public CommandInfo(string command, string description, bool allowToRunWithoutServerPermissions, bool runOnlyOnServer)
+            public CommandInfo(string command, string description, bool allowToRunWithoutServerPermissions, bool runOnlyOnServer, float limitInterval)
                 : this()
             {
                 this.command = command;
                 this.description = description;
                 this.allowToRunWithoutServerPermissions = allowToRunWithoutServerPermissions;
                 this.runOnlyOnServer = runOnlyOnServer;
+                this.limitInterval = limitInterval;
             }
         }
 
@@ -55,7 +64,9 @@ namespace SanAndreasUnity.Commands
             public static ProcessCommandResult InvalidCommand => new ProcessCommandResult {response = "Invalid command"};
             public static ProcessCommandResult NoPermissions => new ProcessCommandResult {response = "You don't have permissions to run this command"};
             public static ProcessCommandResult CanOnlyRunOnServer => new ProcessCommandResult {response = "This command can only run on server"};
-            public static ProcessCommandResult LimitInterval(float interval) => new ProcessCommandResult {response = $"You must wait for {interval} seconds before running this command again"};
+            public static ProcessCommandResult LimitInterval(float interval) => new ProcessCommandResult {response = $"This command can only be used on an interval of {interval} seconds"};
+            public static ProcessCommandResult Error(string errorMessage) => new ProcessCommandResult {response = errorMessage};
+            public static ProcessCommandResult Success => new ProcessCommandResult();
         }
 
         public class ProcessCommandContext
@@ -72,8 +83,15 @@ namespace SanAndreasUnity.Commands
             if (null == Singleton)
                 Singleton = this;
 
+            Player.onDisable += PlayerOnDisable;
+
             if (m_registerHelpCommand)
                 RegisterCommand(new CommandInfo { command = "help", commandHandler = ProcessHelpCommand, allowToRunWithoutServerPermissions = true });
+        }
+
+        void PlayerOnDisable(Player player)
+        {
+            m_perPlayerData.Remove(player);
         }
 
         public bool RegisterCommand(CommandInfo commandInfo)
@@ -132,6 +150,17 @@ namespace SanAndreasUnity.Commands
 
             if (!context.hasServerPermissions && !commandInfo.allowToRunWithoutServerPermissions)
                 return ProcessCommandResult.NoPermissions;
+
+            if (context.player != null)
+            {
+                m_perPlayerData.TryGetValue(context.player, out PlayerData playerData);
+
+                if (commandInfo.limitInterval > 0 && Time.time - playerData.timeWhenLastExecutedCommand < commandInfo.limitInterval)
+                    return ProcessCommandResult.LimitInterval(commandInfo.limitInterval);
+
+                playerData.timeWhenLastExecutedCommand = Time.time;
+                m_perPlayerData[context.player] = playerData;
+            }
 
             return commandInfo.commandHandler(context);
         }
