@@ -66,6 +66,7 @@ namespace SanAndreasUnity.Commands
             string[] arguments = CommandManager.SplitCommandIntoArguments(context.command);
             int numArguments = arguments.Length;
             Player player = context.player;
+            var pedNotAliveResult = CommandManager.ProcessCommandResult.Error("Your ped must be alive to run this command");
 
             if (arguments[0] == "skin")
             {
@@ -125,6 +126,61 @@ namespace SanAndreasUnity.Commands
                     foreach (var vehicle in playerData.vehicles)
                         vehicle.Explode();
                 }
+
+                return CommandManager.ProcessCommandResult.Success;
+            }
+            else if (arguments[0] == "w")
+            {
+                if (arguments.Length < 2)
+                    return CommandManager.ProcessCommandResult.Error("Invalid syntax. Example: w 355");
+
+                int modelId = int.Parse(arguments[1]);
+
+                if (null == player.OwnedPed)
+                    return pedNotAliveResult;
+
+                var weapon = player.OwnedPed.WeaponHolder.SetWeaponAtSlot(modelId, 0);
+                player.OwnedPed.WeaponHolder.SwitchWeapon(weapon.SlotIndex);
+                WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
+
+                return CommandManager.ProcessCommandResult.Success;
+            }
+            else if (arguments[0] == "rand_w")
+            {
+                if (null == player.OwnedPed)
+                    return pedNotAliveResult;
+
+                player.OwnedPed.WeaponHolder.AddRandomWeapons();
+
+                return CommandManager.ProcessCommandResult.Success;
+            }
+            else if (arguments[0] == "rem_w")
+            {
+                if (null == player.OwnedPed)
+                    return pedNotAliveResult;
+
+                player.OwnedPed.WeaponHolder.RemoveAllWeapons();
+
+                return CommandManager.ProcessCommandResult.Success;
+            }
+            else if (arguments[0] == "rem_current_w")
+            {
+                if (null == player.OwnedPed)
+                    return pedNotAliveResult;
+
+                var weapon = player.OwnedPed.CurrentWeapon;
+                if (weapon != null)
+                    Destroy(weapon.gameObject);
+
+                return CommandManager.ProcessCommandResult.Success;
+            }
+            else if (arguments[0] == "ammo")
+            {
+                if (null == player.OwnedPed)
+                    return pedNotAliveResult;
+
+                foreach (var weapon in player.OwnedPed.WeaponHolder.AllWeapons)
+                    WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
 
                 return CommandManager.ProcessCommandResult.Success;
             }
