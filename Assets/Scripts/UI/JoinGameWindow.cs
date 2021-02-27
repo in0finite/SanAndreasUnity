@@ -24,6 +24,7 @@ namespace SanAndreasUnity.UI
         private Vector2 _masterServerScrollViewPos;
 		bool _isRefreshingMasterServerList = false;
 	    MessageBox _masterServerErrorMessageBox;
+	    bool m_refreshedMasterServerWhenOpened = false;
 
 
         JoinGameWindow()
@@ -54,6 +55,18 @@ namespace SanAndreasUnity.UI
 				this.IsOpened = false;
 		}
 
+
+		protected override void OnWindowOpened()
+		{
+			if (m_refreshedMasterServerWhenOpened)
+				return;
+
+			m_refreshedMasterServerWhenOpened = true;
+
+#pragma warning disable 4014
+			RefreshMasterServersButtonPressed();
+#pragma warning restore 4014
+		}
 
 		protected override void OnWindowGUI ()
 		{
