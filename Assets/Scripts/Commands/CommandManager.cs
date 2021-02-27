@@ -135,7 +135,7 @@ namespace SanAndreasUnity.Commands
 
         public static Vector3 ParseVector3(string[] arguments, int startIndex)
         {
-            if (startIndex + 3 >= arguments.Length)
+            if (startIndex + 2 >= arguments.Length)
                 throw new System.ArgumentException("Failed to parse Vector3: not enough arguments");
 
             Vector3 v = Vector3.zero;
@@ -151,7 +151,7 @@ namespace SanAndreasUnity.Commands
 
         public static Quaternion ParseQuaternion(string[] arguments, int startIndex)
         {
-            if (startIndex + 4 >= arguments.Length)
+            if (startIndex + 3 >= arguments.Length)
                 throw new System.ArgumentException("Failed to parse Quaternion: not enough arguments");
 
             Quaternion quaternion = Quaternion.identity;
