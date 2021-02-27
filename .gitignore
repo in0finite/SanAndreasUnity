@@ -1,26 +1,20 @@
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
-/[Bb]uild/
 /[Ll]ogs/
 
-/*.csproj
-/*.unityproj
-/*.sln
-/*.suo
-/*.user
-/*.userprefs
-/*.pidb
-/*.pdb
-/*.booproj
+/[Bb]uild/
 
-/.vs
-/.vscode
-/.idea
+/*.csproj
+/*.sln
+
+/.vs/
+/.vscode/
+/.idea/
 
 /Assets/Plugins/Editor/JetBrains/
 /Assets/Plugins/Editor/JetBrains.meta
 
 /config.user.json
 
-/SAU_Plugins
+/SAU_Plugins/
