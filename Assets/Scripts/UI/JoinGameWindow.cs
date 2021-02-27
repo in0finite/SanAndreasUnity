@@ -13,8 +13,10 @@ namespace SanAndreasUnity.UI
 		[SerializeField] string m_ipStr = "127.0.0.1";
 		string m_portStr = NetManager.defaultListenPortNumber.ToString();
 
-		string[] m_tabNames = new string[]{"Direct", "LAN", "Internet" };
-		int m_currentTabIndex = 0;
+		string[] m_tabNames = new string[]{"Internet", "LAN", "Direct" };
+		private const int InternetTabIndex = 0, LanTabIndex = 1, DirectTabIndex = 2;
+
+		int m_currentTabIndex = InternetTabIndex;
 
 		Mirror.NetworkDiscoveryHUD m_netDiscoveryHUD;
 
@@ -60,7 +62,7 @@ namespace SanAndreasUnity.UI
 
 			GUILayout.Space(20);
 
-			if (0 == m_currentTabIndex)
+			if (DirectTabIndex == m_currentTabIndex)
 			{
 				GUILayout.Label ("IP:");
 				m_ipStr = GUILayout.TextField(m_ipStr, GUILayout.Width(200));
@@ -68,12 +70,12 @@ namespace SanAndreasUnity.UI
 				GUILayout.Label ("Port:");
 				m_portStr = GUILayout.TextField(m_portStr, GUILayout.Width(100));
 			}
-			else if (1 == m_currentTabIndex)
+			else if (LanTabIndex == m_currentTabIndex)
 			{
 				m_netDiscoveryHUD.width = (int) this.WindowSize.x - 30;
 				m_netDiscoveryHUD.DisplayServers();
 			}
-			else if (2 == m_currentTabIndex)
+			else if (InternetTabIndex == m_currentTabIndex)
             {
 	            int availableWidth = (int) this.WindowSize.x - 50;
                 float[] widthPercentages = new float[] { 0.35f, 0.25f, 0.4f };
@@ -127,7 +129,7 @@ namespace SanAndreasUnity.UI
 			}
 			GUILayout.Label("Status: " + strStatus);
 
-			// button for connecting/disconnecting/refreshing LAN
+			// button for connecting/disconnecting/refreshing
 
 			string buttonText = "Connect";
 			System.Action buttonAction = this.ConnectDirectly;
@@ -144,13 +146,13 @@ namespace SanAndreasUnity.UI
 			}
 			else
 			{
-				if (1 == m_currentTabIndex)
+				if (LanTabIndex == m_currentTabIndex)
 				{
 					GUI.enabled = ! m_netDiscoveryHUD.IsRefreshing;
 					buttonText = m_netDiscoveryHUD.IsRefreshing ? ( "Refreshing." + new string('.', (int) ((Time.time * 2) % 3)) ) : "Refresh LAN";
 					buttonAction = () => m_netDiscoveryHUD.Refresh();
 				}
-				if (2 == m_currentTabIndex)
+				else if (InternetTabIndex == m_currentTabIndex)
                 {
 					GUI.enabled = !_isRefreshingMasterServerList;
                     buttonText = _isRefreshingMasterServerList ? ( "Refreshing." + new string('.', (int) ((Time.time * 2) % 3)) ) : "Refresh servers";
