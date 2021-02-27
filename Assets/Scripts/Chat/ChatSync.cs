@@ -25,16 +25,9 @@ namespace SanAndreasUnity.Chat
 			
 			Player p = m_player;
 
-			msg = msg.Trim();
-
-			// Remove tags.
-			msg = msg.Replace ("<", "");	// the only easy way :D
-			msg = msg.Replace (">", "");
-			//	msg = msg.Replace ("<color", "color");
-			//	msg = msg.Replace ("<size", "size");
-			//	msg = msg.Replace ("<b>", "");
-			//	msg = msg.Replace ("<i>", "");
-			//	msg = msg.Replace (">", "\\>");
+			msg = ChatManager.RemoveInvalidCharacters(msg);
+			if (string.IsNullOrEmpty(msg))
+				return;
 
 			F.InvokeEventExceptionSafe(onChatMessageReceivedOnServer, p, msg);
 
@@ -52,7 +45,9 @@ namespace SanAndreasUnity.Chat
 				return;
 			}
 
-			msg = msg.Trim();
+			msg = ChatManager.RemoveInvalidCharacters(msg);
+			if (string.IsNullOrEmpty(msg))
+				return;
 
 			onChatMessageReceivedOnLocalPlayer (new ChatMessage (msg, sender));
 

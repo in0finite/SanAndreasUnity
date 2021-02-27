@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using SanAndreasUnity.Net;
 using SanAndreasUnity.Utilities;
@@ -78,6 +79,29 @@ namespace SanAndreasUnity.Chat
 			SendChatMessageToAllPlayers(msg, "player " + player.netId);
 		}
 
+		public static string RemoveInvalidCharacters(string chatMessage)
+		{
+			if (chatMessage == null)
+				return string.Empty;
+
+			StringBuilder sb = chatMessage.Length > 50 ? new StringBuilder(chatMessage, 0, 50, 50) : new StringBuilder(chatMessage);
+
+			// Remove tags.
+			sb.Replace ('<', ' ');	// the only easy way :D
+			sb.Replace ('>', ' ');
+			//	msg = msg.Replace ("<color", "color");
+			//	msg = msg.Replace ("<size", "size");
+			//	msg = msg.Replace ("<b>", "");
+			//	msg = msg.Replace ("<i>", "");
+			//	msg = msg.Replace (">", "\\>");
+
+			sb.Replace('\r', ' ');
+			sb.Replace('\n', ' ');
+			sb.Replace('\t', ' ');
+
+			return sb.ToString().Trim();
+		}
+
 		public	static	void	SendChatMessageToAllPlayersAsServer( string msg ) {
 
 			if (NetStatus.IsServerStarted) {
@@ -105,7 +129,9 @@ namespace SanAndreasUnity.Chat
 			if (!NetStatus.IsServerStarted)
 				return;
 
-			msg = msg.Trim();
+			msg = ChatManager.RemoveInvalidCharacters(msg);
+			if (string.IsNullOrEmpty(msg))
+				return;
 
 			foreach (var player in Player.AllPlayers) {
 				SendChatMessageToPlayer ( player, msg, sender );
@@ -123,6 +149,10 @@ namespace SanAndreasUnity.Chat
 		public	static	void	SendChatMessageToPlayer( Player player, string msg ) {
 
 			if (!NetStatus.IsServerStarted)
+				return;
+
+			msg = ChatManager.RemoveInvalidCharacters(msg);
+			if (string.IsNullOrEmpty(msg))
 				return;
 
 			SendChatMessageToPlayer (player, msg, singleton.serverChatNick);
