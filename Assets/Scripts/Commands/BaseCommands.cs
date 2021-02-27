@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Vehicles;
@@ -143,11 +144,11 @@ namespace SanAndreasUnity.Commands
                     position = CommandManager.ParseVector3(arguments, 1);
                     rotation = player.OwnedPed.transform.rotation;
                     if (numArguments > 4)
-                        rotation = Quaternion.Euler(CommandManager.ParseVector3(arguments, 4));
+                        rotation = Quaternion.Euler(0f, float.Parse(arguments[4], CultureInfo.InvariantCulture), 0f);
                 }
                 catch
                 {
-                    return CommandManager.ProcessCommandResult.Error("Invalid syntax. Example: teleport 2000 10.2 -1000.5 or teleport 2000 10.2 -1000.5 0 45 0");
+                    return CommandManager.ProcessCommandResult.Error("Invalid syntax. Example: teleport 2000 10.2 -1234.5 or teleport 2000 10.2 -1234.5 28.3");
                 }
 
                 player.OwnedPed.Teleport(position, rotation);

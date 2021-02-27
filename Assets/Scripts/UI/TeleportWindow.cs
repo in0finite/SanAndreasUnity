@@ -112,7 +112,7 @@ namespace SanAndreasUnity.UI {
 				{
 					Vector3 pos = spawnLocation.position;
 					Vector3 eulers = spawnLocation.rotation.eulerAngles;
-					SendCommand($"/teleport {pos.x} {pos.y} {pos.z} {eulers.x} {eulers.y} {eulers.z}");
+					SendCommand($"/teleport {pos.x} {pos.y} {pos.z} {eulers.y}");
 				}
 			}
 
