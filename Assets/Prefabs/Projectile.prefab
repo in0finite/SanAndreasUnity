@@ -4633,7 +4633,7 @@ MonoBehaviour:
   explosionDamageAmount: 1500
   explosionDamageRadius: 7
   particleSystemMultiplier: 1
-  speed: 12
+  speed: 18
   acceleration: 2.5
   maxSpeed: 30
   rotationSpeed: 720
