@@ -50,7 +50,7 @@ namespace SanAndreasUnity.Chat
 			onChatMessage += (ChatMessage chatMsg) => Debug.Log ("<color=blue>" + chatMsg.sender + "</color> : " + chatMsg.msg);
 			
 			ChatSync.onChatMessageReceivedOnServer += OnChatMessageReceivedOnServer;
-			ChatSync.onChatMessageReceivedOnLocalPlayer += (ChatMessage chatMsg) => onChatMessage (chatMsg);
+			ChatSync.onChatMessageReceivedOnLocalPlayer += (ChatMessage chatMsg) => F.InvokeEventExceptionSafe(onChatMessage, chatMsg);
 
 		}
 
@@ -140,7 +140,7 @@ namespace SanAndreasUnity.Chat
 			if (!NetStatus.IsHost ()) {
 				// running as dedicated server
 				// we should invoke the event here, because there is no local player to receive the chat message
-				onChatMessage( new ChatMessage(msg, sender) );
+				F.InvokeEventExceptionSafe(onChatMessage, new ChatMessage(msg, sender));
 			}
 
 		}

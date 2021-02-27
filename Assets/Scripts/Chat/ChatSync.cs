@@ -49,7 +49,7 @@ namespace SanAndreasUnity.Chat
 			if (string.IsNullOrEmpty(msg))
 				return;
 
-			onChatMessageReceivedOnLocalPlayer (new ChatMessage (msg, sender));
+			F.InvokeEventExceptionSafe(onChatMessageReceivedOnLocalPlayer, new ChatMessage (msg, sender));
 
 		}
 
