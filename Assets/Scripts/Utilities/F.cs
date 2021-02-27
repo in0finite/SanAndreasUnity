@@ -931,6 +931,8 @@ namespace SanAndreasUnity.Utilities
         }
 
 
+	    public static bool IsInHeadlessMode => SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
+
         public static bool ScreenHasHighDensity => Application.isMobilePlatform;
 
 

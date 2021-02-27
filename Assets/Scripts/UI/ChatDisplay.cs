@@ -19,7 +19,8 @@ namespace SanAndreasUnity.UI
 
         void Start()
         {
-            Chat.ChatManager.onChatMessage += OnChatMsg;
+            if (!F.IsInHeadlessMode)
+                Chat.ChatManager.onChatMessage += OnChatMsg;
         }
 
         void OnChatMsg(Chat.ChatMessage chatMsg)
