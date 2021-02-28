@@ -3,6 +3,7 @@ using UnityEngine;
 using SanAndreasUnity.Utilities;
 using UnityEngine.UI;
 using System.Linq;
+using System.Text;
 
 namespace SanAndreasUnity.UI
 {
@@ -15,6 +16,9 @@ namespace SanAndreasUnity.UI
         public int maxNumChatMessages = 5;
         public float timeToRemoveMessage = 3f;
 
+        public Text chatText;
+
+        StringBuilder _stringBuilder = new StringBuilder();
 
 
         void Start()
@@ -50,22 +54,19 @@ namespace SanAndreasUnity.UI
 
         void UpdateUI()
         {
-            Text[] texts = this.gameObject.GetFirstLevelChildrenComponents<Text>().ToArray();
-            Chat.ChatMessage[] chatMessages = m_chatMessages.ToArray();
-
-            for (int i = 0; i < texts.Length; i++)
+            _stringBuilder.Clear();
+            _stringBuilder.EnsureCapacity(m_chatMessages.Count * 100);
+            foreach (var chatMessage in m_chatMessages)
             {
-                if (i < chatMessages.Length)
-                    texts[i].text = GetDisplayTextForChatMessage(chatMessages[i]);
-                else
-                    texts[i].text = "";
+                GetDisplayTextForChatMessage(chatMessage, _stringBuilder);
             }
 
+            this.chatText.text = _stringBuilder.ToString();
         }
 
-        string GetDisplayTextForChatMessage(Chat.ChatMessage chatMessage)
+        void GetDisplayTextForChatMessage(Chat.ChatMessage chatMessage, StringBuilder stringBuilder)
         {
-            return "<color=blue>" + chatMessage.sender + "</color> : " + chatMessage.msg;
+            stringBuilder.AppendFormat("<color=blue>{0}</color> : {1}\n", chatMessage.sender, chatMessage.msg);
         }
 
     }
