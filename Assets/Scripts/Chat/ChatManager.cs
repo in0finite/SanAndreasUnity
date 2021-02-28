@@ -65,18 +65,29 @@ namespace SanAndreasUnity.Chat
 
 		private void OnChatMessageReceivedOnServer(Player player, string msg)
 		{
+			if (!FilterWithPreprocessors(player, ref msg))
+				return;
+
+			SendChatMessageToAllPlayers(msg, "player " + player.netId);
+		}
+
+		private bool FilterWithPreprocessors(Player player, ref string chatMessageToFilter)
+		{
+			string finalMsg = chatMessageToFilter;
+
 			foreach (var chatPreprocessor in m_chatPreprocessors)
 			{
 				ChatPreprocessorResult result = null;
-				F.RunExceptionSafe(() => result = chatPreprocessor.processCallback(player, msg));
+				F.RunExceptionSafe(() => result = chatPreprocessor.processCallback(player, finalMsg));
 
 				if (null == result || result.shouldBeDiscarded || null == result.finalChatMessage)
-					return;
+					return false;
 
-				msg = result.finalChatMessage;
+				finalMsg = result.finalChatMessage;
 			}
 
-			SendChatMessageToAllPlayers(msg, "player " + player.netId);
+			chatMessageToFilter = finalMsg;
+			return true;
 		}
 
 		public static string RemoveInvalidCharacters(string chatMessage)
