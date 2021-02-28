@@ -41,11 +41,11 @@ namespace SanAndreasUnity.Chat
             }
 
             // send command back to player
-            ChatManager.SendChatMessageToPlayer(player, chatMessage, false);
+            ChatManager.SendChatMessageToPlayerAsServer(player, chatMessage, false);
 
             // send response back to player
             if (!string.IsNullOrWhiteSpace(response))
-                ChatManager.SendChatMessageToPlayer(player, response, true);
+                ChatManager.SendChatMessageToPlayerAsServer(player, response, true);
 
             // discard chat message
             return new ChatPreprocessorResult {shouldBeDiscarded = true};

@@ -72,7 +72,7 @@ namespace SanAndreasUnity.Chat
 			if (!FilterWithPreprocessors(player, ref msg))
 				return;
 
-			SendChatMessageToAllPlayers(msg, "player " + player.netId);
+			SendChatMessageToAllPlayersAsServer(msg, "player " + player.netId);
 		}
 
 		internal void OnChatMessageReceivedOnLocalPlayer(ChatMessage chatMsg)
@@ -138,7 +138,7 @@ namespace SanAndreasUnity.Chat
 		{
 			NetStatus.ThrowIfNotOnServer();
 
-			SendChatMessageToAllPlayers (msg, singleton.serverChatNick);
+			SendChatMessageToAllPlayersAsServer (msg, singleton.serverChatNick);
 
 		}
 
@@ -155,8 +155,7 @@ namespace SanAndreasUnity.Chat
 
 		}
 
-		/// <summary> Use only on server. </summary>
-		public	static	void	SendChatMessageToAllPlayers( string msg, string sender ) {
+		public	static	void	SendChatMessageToAllPlayersAsServer( string msg, string sender ) {
 
 			NetStatus.ThrowIfNotOnServer();
 
@@ -165,7 +164,7 @@ namespace SanAndreasUnity.Chat
 				return;
 
 			foreach (var player in Player.AllPlayers) {
-				SendChatMessageToPlayer ( player, msg, sender );
+				SendChatMessageToPlayerAsServer ( player, msg, sender );
 			}
 
 			if (!NetStatus.IsHost ()) {
@@ -176,8 +175,7 @@ namespace SanAndreasUnity.Chat
 
 		}
 
-		/// <summary> Use only on server. </summary>
-		public	static	void	SendChatMessageToPlayer( Player player, string msg, bool useServerNick ) {
+		public	static	void	SendChatMessageToPlayerAsServer( Player player, string msg, bool useServerNick ) {
 
 			NetStatus.ThrowIfNotOnServer();
 
@@ -185,11 +183,11 @@ namespace SanAndreasUnity.Chat
 			if (string.IsNullOrEmpty(msg))
 				return;
 
-			SendChatMessageToPlayer (player, msg, useServerNick ? singleton.serverChatNick : "");
+			SendChatMessageToPlayerAsServer (player, msg, useServerNick ? singleton.serverChatNick : "");
 
 		}
 
-		private	static	void	SendChatMessageToPlayer( Player player, string msg, string sender ) {
+		private	static	void	SendChatMessageToPlayerAsServer( Player player, string msg, string sender ) {
 
 			NetStatus.ThrowIfNotOnServer();
 
