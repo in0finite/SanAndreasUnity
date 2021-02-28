@@ -90,7 +90,7 @@ namespace SanAndreasUnity.Behaviours
 				new LoadingStep ( StepLoadSplashScreen, "Loading splash screen", 0.06f ),
 				new LoadingStep ( StepSetSplash1, "Set splash 1" ),
 				new LoadingStep ( StepLoadAudio, "Loading audio" ),
-				new LoadingStep ( StepLoadFonts,"Loading fonts"),
+				//new LoadingStep ( StepLoadFonts,"Loading fonts"),
 				new LoadingStep ( StepLoadCollision, "Loading collision files", 0.9f ),
 				new LoadingStep ( StepLoadItemInfo, "Loading item info", 2.4f ),
 				new LoadingStep ( StepLoadHandling, "Loading handling", 0.01f ),
