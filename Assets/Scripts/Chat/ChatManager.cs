@@ -41,6 +41,8 @@ namespace SanAndreasUnity.Chat
 
 		List<ChatPreprocessor> m_chatPreprocessors = new List<ChatPreprocessor>();
 
+		static StringBuilder _stringBuilderForMessageProcessing = new StringBuilder();
+
 
 		void Awake ()
 		{
@@ -95,7 +97,12 @@ namespace SanAndreasUnity.Chat
 			if (chatMessage == null)
 				return string.Empty;
 
-			StringBuilder sb = chatMessage.Length > 50 ? new StringBuilder(chatMessage, 0, 50, 50) : new StringBuilder(chatMessage);
+			if (chatMessage.Length > 2000)
+				return string.Empty;
+
+			var sb = _stringBuilderForMessageProcessing;
+			sb.Clear();
+			sb.Append(chatMessage);
 
 			// Remove tags.
 			sb.Replace ('<', ' ');	// the only easy way :D
