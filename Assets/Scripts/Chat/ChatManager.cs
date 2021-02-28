@@ -126,11 +126,11 @@ namespace SanAndreasUnity.Chat
 			return sb.ToString().Trim();
 		}
 
-		public	static	void	SendChatMessageToAllPlayersAsServer( string msg ) {
+		public	static	void	SendChatMessageToAllPlayersAsServer( string msg )
+		{
+			NetStatus.ThrowIfNotOnServer();
 
-			if (NetStatus.IsServerStarted) {
-				SendChatMessageToAllPlayers (msg, singleton.serverChatNick);
-			}
+			SendChatMessageToAllPlayers (msg, singleton.serverChatNick);
 
 		}
 
@@ -150,8 +150,7 @@ namespace SanAndreasUnity.Chat
 		/// <summary> Use only on server. </summary>
 		public	static	void	SendChatMessageToAllPlayers( string msg, string sender ) {
 
-			if (!NetStatus.IsServerStarted)
-				return;
+			NetStatus.ThrowIfNotOnServer();
 
 			msg = ChatManager.ProcessChatMessage(msg, true);
 			if (string.IsNullOrEmpty(msg))
@@ -172,8 +171,7 @@ namespace SanAndreasUnity.Chat
 		/// <summary> Use only on server. </summary>
 		public	static	void	SendChatMessageToPlayer( Player player, string msg ) {
 
-			if (!NetStatus.IsServerStarted)
-				return;
+			NetStatus.ThrowIfNotOnServer();
 
 			msg = ChatManager.ProcessChatMessage(msg, true);
 			if (string.IsNullOrEmpty(msg))
@@ -185,8 +183,7 @@ namespace SanAndreasUnity.Chat
 
 		private	static	void	SendChatMessageToPlayer( Player player, string msg, string sender ) {
 
-			if (!NetStatus.IsServerStarted)
-				return;
+			NetStatus.ThrowIfNotOnServer();
 
 			var chatSync = player.GetComponent<ChatSync> ();
 			if (chatSync != null) {

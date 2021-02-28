@@ -55,6 +55,8 @@ namespace SanAndreasUnity.Chat
 
 		public	void	SendChatMsgToClient( NetworkConnection conn, string msg, string sender )
 		{
+			NetStatus.ThrowIfNotOnServer();
+
 			this.TargetChatMsg(conn, msg, sender);
 		}
 
