@@ -177,7 +177,7 @@ namespace SanAndreasUnity.Chat
 		}
 
 		/// <summary> Use only on server. </summary>
-		public	static	void	SendChatMessageToPlayer( Player player, string msg ) {
+		public	static	void	SendChatMessageToPlayer( Player player, string msg, bool useServerNick ) {
 
 			NetStatus.ThrowIfNotOnServer();
 
@@ -185,7 +185,7 @@ namespace SanAndreasUnity.Chat
 			if (string.IsNullOrEmpty(msg))
 				return;
 
-			SendChatMessageToPlayer (player, msg, singleton.serverChatNick);
+			SendChatMessageToPlayer (player, msg, useServerNick ? singleton.serverChatNick : "");
 
 		}
 
