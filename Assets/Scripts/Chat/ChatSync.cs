@@ -8,7 +8,6 @@ namespace SanAndreasUnity.Chat
 	
 	public class ChatSync : NetworkBehaviour
 	{
-
 		Player m_player;
 
 
@@ -18,16 +17,9 @@ namespace SanAndreasUnity.Chat
 		}
 
 		[Command]
-		void	CmdChatMsg( string msg ) {
-			
-			Player p = m_player;
-
-			msg = ChatManager.ProcessChatMessage(msg, false);
-			if (string.IsNullOrEmpty(msg))
-				return;
-
-			F.RunExceptionSafe(() => ChatManager.singleton.OnChatMessageReceivedOnServer(p, msg));
-
+		void	CmdChatMsg( string msg )
+		{
+			F.RunExceptionSafe(() => ChatManager.singleton.OnChatMessageReceivedOnServer(m_player, msg));
 		}
 
 		internal	void	SendChatMsgToServer( string msg )
@@ -36,18 +28,12 @@ namespace SanAndreasUnity.Chat
 		}
 
 		[TargetRpc]
-		void	TargetChatMsg( NetworkConnection conn, string msg, string sender ) {
-
-			if (!this.isLocalPlayer) {
-				return;
-			}
-
-			msg = ChatManager.ProcessChatMessage(msg, true);
-			if (string.IsNullOrEmpty(msg))
+		void	TargetChatMsg( NetworkConnection conn, string msg, string sender )
+		{
+			if (!this.isLocalPlayer)
 				return;
 
 			F.RunExceptionSafe(() => ChatManager.singleton.OnChatMessageReceivedOnLocalPlayer(new ChatMessage (msg, sender)));
-
 		}
 
 		internal	void	SendChatMsgToClient( NetworkConnection conn, string msg, string sender )

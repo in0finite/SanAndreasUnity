@@ -65,6 +65,10 @@ namespace SanAndreasUnity.Chat
 
 		internal void OnChatMessageReceivedOnServer(Player player, string msg)
 		{
+			msg = ChatManager.ProcessChatMessage(msg, false);
+			if (string.IsNullOrEmpty(msg))
+				return;
+
 			if (!FilterWithPreprocessors(player, ref msg))
 				return;
 
@@ -73,6 +77,10 @@ namespace SanAndreasUnity.Chat
 
 		internal void OnChatMessageReceivedOnLocalPlayer(ChatMessage chatMsg)
 		{
+			chatMsg.msg = ChatManager.ProcessChatMessage(chatMsg.msg, true);
+			if (string.IsNullOrEmpty(chatMsg.msg))
+				return;
+
 			F.InvokeEventExceptionSafe(onChatMessage, chatMsg);
 		}
 
