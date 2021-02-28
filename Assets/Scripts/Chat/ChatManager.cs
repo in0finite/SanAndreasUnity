@@ -36,7 +36,10 @@ namespace SanAndreasUnity.Chat
 	{
 		
 		public	static	ChatManager singleton { get ; private set ; }
+
 		public	string	serverChatNick = "<color=green>Server</color>";
+		public int maxChatMessageLength = 50;
+
 		public	static	event System.Action<ChatMessage>	onChatMessage = delegate {};
 
 		List<ChatPreprocessor> m_chatPreprocessors = new List<ChatPreprocessor>();
@@ -92,7 +95,7 @@ namespace SanAndreasUnity.Chat
 			return true;
 		}
 
-		public static string RemoveInvalidCharacters(string chatMessage)
+		public static string RemoveInvalidCharacters(string chatMessage, bool allowTags)
 		{
 			if (chatMessage == null)
 				return string.Empty;
@@ -102,16 +105,19 @@ namespace SanAndreasUnity.Chat
 
 			var sb = _stringBuilderForMessageProcessing;
 			sb.Clear();
-			sb.Append(chatMessage);
+			sb.Append(allowTags ? chatMessage : (chatMessage.Length > singleton.maxChatMessageLength ? chatMessage.Substring(0, singleton.maxChatMessageLength) : chatMessage));
 
 			// Remove tags.
-			sb.Replace ('<', ' ');	// the only easy way :D
-			sb.Replace ('>', ' ');
-			//	msg = msg.Replace ("<color", "color");
-			//	msg = msg.Replace ("<size", "size");
-			//	msg = msg.Replace ("<b>", "");
-			//	msg = msg.Replace ("<i>", "");
-			//	msg = msg.Replace (">", "\\>");
+			if (!allowTags)
+			{
+				sb.Replace('<', ' '); // the only easy way :D
+				sb.Replace('>', ' ');
+				//	msg = msg.Replace ("<color", "color");
+				//	msg = msg.Replace ("<size", "size");
+				//	msg = msg.Replace ("<b>", "");
+				//	msg = msg.Replace ("<i>", "");
+				//	msg = msg.Replace (">", "\\>");
+			}
 
 			sb.Replace('\r', ' ');
 			sb.Replace('\n', ' ');
@@ -147,7 +153,7 @@ namespace SanAndreasUnity.Chat
 			if (!NetStatus.IsServerStarted)
 				return;
 
-			msg = ChatManager.RemoveInvalidCharacters(msg);
+			msg = ChatManager.RemoveInvalidCharacters(msg, true);
 			if (string.IsNullOrEmpty(msg))
 				return;
 
@@ -169,7 +175,7 @@ namespace SanAndreasUnity.Chat
 			if (!NetStatus.IsServerStarted)
 				return;
 
-			msg = ChatManager.RemoveInvalidCharacters(msg);
+			msg = ChatManager.RemoveInvalidCharacters(msg, true);
 			if (string.IsNullOrEmpty(msg))
 				return;
 
