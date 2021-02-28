@@ -95,7 +95,7 @@ namespace SanAndreasUnity.Chat
 			return true;
 		}
 
-		public static string RemoveInvalidCharacters(string chatMessage, bool allowTags)
+		public static string ProcessChatMessage(string chatMessage, bool allowTags)
 		{
 			if (chatMessage == null)
 				return string.Empty;
@@ -153,7 +153,7 @@ namespace SanAndreasUnity.Chat
 			if (!NetStatus.IsServerStarted)
 				return;
 
-			msg = ChatManager.RemoveInvalidCharacters(msg, true);
+			msg = ChatManager.ProcessChatMessage(msg, true);
 			if (string.IsNullOrEmpty(msg))
 				return;
 
@@ -175,7 +175,7 @@ namespace SanAndreasUnity.Chat
 			if (!NetStatus.IsServerStarted)
 				return;
 
-			msg = ChatManager.RemoveInvalidCharacters(msg, true);
+			msg = ChatManager.ProcessChatMessage(msg, true);
 			if (string.IsNullOrEmpty(msg))
 				return;
 

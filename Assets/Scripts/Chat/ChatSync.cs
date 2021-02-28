@@ -25,7 +25,7 @@ namespace SanAndreasUnity.Chat
 			
 			Player p = m_player;
 
-			msg = ChatManager.RemoveInvalidCharacters(msg, false);
+			msg = ChatManager.ProcessChatMessage(msg, false);
 			if (string.IsNullOrEmpty(msg))
 				return;
 
@@ -45,7 +45,7 @@ namespace SanAndreasUnity.Chat
 				return;
 			}
 
-			msg = ChatManager.RemoveInvalidCharacters(msg, true);
+			msg = ChatManager.ProcessChatMessage(msg, true);
 			if (string.IsNullOrEmpty(msg))
 				return;
 
