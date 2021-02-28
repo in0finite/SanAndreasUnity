@@ -11,9 +11,6 @@ namespace SanAndreasUnity.Chat
 
 		Player m_player;
 
-		public	static	event System.Action<Player, string>	onChatMessageReceivedOnServer = delegate {};
-		public	static	event System.Action<ChatMessage>	onChatMessageReceivedOnLocalPlayer = delegate {};
-
 
 		void Awake()
 		{
@@ -29,11 +26,11 @@ namespace SanAndreasUnity.Chat
 			if (string.IsNullOrEmpty(msg))
 				return;
 
-			F.InvokeEventExceptionSafe(onChatMessageReceivedOnServer, p, msg);
+			F.RunExceptionSafe(() => ChatManager.singleton.OnChatMessageReceivedOnServer(p, msg));
 
 		}
 
-		public	void	SendChatMsgToServer( string msg )
+		internal	void	SendChatMsgToServer( string msg )
 		{
 			this.CmdChatMsg(msg);
 		}
@@ -49,11 +46,11 @@ namespace SanAndreasUnity.Chat
 			if (string.IsNullOrEmpty(msg))
 				return;
 
-			F.InvokeEventExceptionSafe(onChatMessageReceivedOnLocalPlayer, new ChatMessage (msg, sender));
+			F.RunExceptionSafe(() => ChatManager.singleton.OnChatMessageReceivedOnLocalPlayer(new ChatMessage (msg, sender)));
 
 		}
 
-		public	void	SendChatMsgToClient( NetworkConnection conn, string msg, string sender )
+		internal	void	SendChatMsgToClient( NetworkConnection conn, string msg, string sender )
 		{
 			NetStatus.ThrowIfNotOnServer();
 

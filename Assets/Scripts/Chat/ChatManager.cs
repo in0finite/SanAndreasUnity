@@ -49,14 +49,9 @@ namespace SanAndreasUnity.Chat
 
 		void Awake ()
 		{
-			
 			singleton = this;
 
 			onChatMessage += (ChatMessage chatMsg) => Debug.Log ("<color=blue>" + chatMsg.sender + "</color> : " + chatMsg.msg);
-			
-			ChatSync.onChatMessageReceivedOnServer += OnChatMessageReceivedOnServer;
-			ChatSync.onChatMessageReceivedOnLocalPlayer += (ChatMessage chatMsg) => F.InvokeEventExceptionSafe(onChatMessage, chatMsg);
-
 		}
 
 		void OnSceneChanged( SanAndreasUnity.Behaviours.SceneChangedMessage info ) {
@@ -68,12 +63,17 @@ namespace SanAndreasUnity.Chat
 		}
 
 
-		private void OnChatMessageReceivedOnServer(Player player, string msg)
+		internal void OnChatMessageReceivedOnServer(Player player, string msg)
 		{
 			if (!FilterWithPreprocessors(player, ref msg))
 				return;
 
 			SendChatMessageToAllPlayers(msg, "player " + player.netId);
+		}
+
+		internal void OnChatMessageReceivedOnLocalPlayer(ChatMessage chatMsg)
+		{
+			F.InvokeEventExceptionSafe(onChatMessage, chatMsg);
 		}
 
 		private bool FilterWithPreprocessors(Player player, ref string chatMessageToFilter)
