@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
 using UnityEngine.UI;
@@ -150,15 +148,28 @@ namespace SanAndreasUnity.UI {
 				return;
 			}
 
-			var ped = Ped.Instance;
+			this.canvas.enabled = true;
 
-			if (null == ped)
+			var ped = Ped.Instance;
+			bool showPedUi = ped != null;
+
+			this.UpdateWeaponUi(ped, showPedUi);
+
+			this.UpdateOtherUi(ped, showPedUi);
+
+			this.UpdateRadioStationUi(ped, showPedUi);
+
+		}
+
+		void UpdateWeaponUi(Ped ped, bool enableUi)
+		{
+			if (!enableUi)
 			{
-				this.canvas.enabled = false;
+				this.crosshairImage.enabled = false;
+				this.weaponImage.enabled = false;
+				this.weaponAmmoText.enabled = false;
 				return;
 			}
-
-			this.canvas.enabled = true;
 
 			var weapon = ped.CurrentWeapon;
 
@@ -185,17 +196,63 @@ namespace SanAndreasUnity.UI {
 				}
 			}
 
+			this.weaponImage.enabled = true;
 			Texture2D weaponTextureToDisplay = weapon != null ? weapon.HudTexture : Weapon.FistTexture;
 			if (this.weaponImage.texture != weaponTextureToDisplay)
 				this.weaponImage.texture = weaponTextureToDisplay;
 
+			this.weaponAmmoText.enabled = true;
 			string ammoText = weapon != null ? weapon.AmmoOutsideOfClip + "-" + weapon.AmmoInClip : string.Empty;
 			if (this.weaponAmmoText.text != ammoText)
 				this.weaponAmmoText.text = ammoText;
 
+		}
+
+		void UpdateRadioStationUi(Ped ped, bool enableUi)
+		{
+			if (!enableUi)
+			{
+				this.radioStationText.enabled = false;
+				return;
+			}
+
+			string textForRadioStation = "";
+			var vehicle = ped.CurrentVehicle;
+			if (vehicle != null)
+			{
+				var seat = ped.CurrentVehicleSeat;
+
+				if (vehicle.TimeSinceRadioStationChanged < m_radioStationLabelDuration
+				    || (seat != null && seat.TimeSincePedChanged < m_radioStationLabelDuration))
+				{
+					textForRadioStation = vehicle.CurrentRadioStationIndex >= 0 ?
+						RadioStation.StationNames[vehicle.CurrentRadioStationIndex] : "Radio Off";
+				}
+			}
+
+			this.radioStationText.enabled = true;
+
+			if (this.radioStationText.text != textForRadioStation)
+				this.radioStationText.text = textForRadioStation;
+		}
+
+		void UpdateOtherUi(Ped ped, bool enableUi)
+		{
+			if (!enableUi)
+			{
+				this.healthBackgroundImage.enabled = false;
+				this.healthForegroundImage.enabled = false;
+				this.pedStateText.enabled = false;
+				this.pedVelocityText.enabled = false;
+				return;
+			}
+
+			this.healthForegroundImage.enabled = true;
+			this.healthBackgroundImage.enabled = true;
 			float healthPerc = Mathf.Clamp01( ped.Health / ped.MaxHealth );
 			this.healthForegroundImage.rectTransform.sizeDelta = new Vector2(this.healthBackgroundImage.rectTransform.sizeDelta.x * healthPerc, this.healthForegroundImage.rectTransform.sizeDelta.y);
 
+			this.pedStateText.enabled = true;
 			string pedStateDisplayText = "Current ped state: " + (ped.CurrentState != null ? ped.CurrentState.GetType().Name : "none");
 			if (pedStateDisplayText != this.pedStateText.text)
 				this.pedStateText.text = pedStateDisplayText;
@@ -207,23 +264,6 @@ namespace SanAndreasUnity.UI {
 				if (pedVelocityDisplayText != this.pedVelocityText.text)
 					this.pedVelocityText.text = pedVelocityDisplayText;
 			}
-
-			string textForRadioStation = "";
-			var vehicle = ped.CurrentVehicle;
-			if (vehicle != null)
-			{
-				var seat = ped.CurrentVehicleSeat;
-
-				if (vehicle.TimeSinceRadioStationChanged < m_radioStationLabelDuration 
-					|| (seat != null && seat.TimeSincePedChanged < m_radioStationLabelDuration))
-				{
-					textForRadioStation = vehicle.CurrentRadioStationIndex >= 0 ? 
-						RadioStation.StationNames[vehicle.CurrentRadioStationIndex] : "Radio Off";
-				}
-			}
-
-			if (this.radioStationText.text != textForRadioStation)
-				this.radioStationText.text = textForRadioStation;
 
 		}
 
