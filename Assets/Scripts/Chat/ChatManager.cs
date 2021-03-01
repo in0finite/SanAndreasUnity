@@ -115,16 +115,10 @@ namespace SanAndreasUnity.Chat
 			sb.Clear();
 			sb.Append(allowTags ? chatMessage : (chatMessage.Length > singleton.maxChatMessageLength ? chatMessage.Substring(0, singleton.maxChatMessageLength) : chatMessage));
 
-			// Remove tags.
+			// remove tags
 			if (!allowTags)
 			{
-				sb.Replace('<', ' '); // the only easy way :D
-				sb.Replace('>', ' ');
-				//	msg = msg.Replace ("<color", "color");
-				//	msg = msg.Replace ("<size", "size");
-				//	msg = msg.Replace ("<b>", "");
-				//	msg = msg.Replace ("<i>", "");
-				//	msg = msg.Replace (">", "\\>");
+				sb.Replace("<", "< "); // the easiest way
 			}
 
 			sb.Replace('\r', ' ');
