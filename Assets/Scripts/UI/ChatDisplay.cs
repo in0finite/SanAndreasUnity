@@ -66,7 +66,10 @@ namespace SanAndreasUnity.UI
 
         void GetDisplayTextForChatMessage(Chat.ChatMessage chatMessage, StringBuilder stringBuilder)
         {
-            stringBuilder.AppendFormat("<color=blue>{0}</color> : {1}\n", chatMessage.sender, chatMessage.msg);
+            if (string.IsNullOrEmpty(chatMessage.sender))
+                stringBuilder.AppendFormat("{0}\n", chatMessage.msg);
+            else
+                stringBuilder.AppendFormat("<color=blue>{0}</color> : {1}\n", chatMessage.sender, chatMessage.msg);
         }
 
     }

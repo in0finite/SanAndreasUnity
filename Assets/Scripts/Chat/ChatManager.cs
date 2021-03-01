@@ -51,7 +51,7 @@ namespace SanAndreasUnity.Chat
 		{
 			singleton = this;
 
-			onChatMessage += (ChatMessage chatMsg) => Debug.Log ("<color=blue>" + chatMsg.sender + "</color> : " + chatMsg.msg);
+			onChatMessage += LogChatMessage;
 		}
 
 		void OnSceneChanged( SanAndreasUnity.Behaviours.SceneChangedMessage info ) {
@@ -62,6 +62,11 @@ namespace SanAndreasUnity.Chat
 
 		}
 
+		void LogChatMessage(ChatMessage chatMessage)
+		{
+			string senderText = string.IsNullOrEmpty(chatMessage.sender) ? "" : "<color=blue>" + chatMessage.sender + "</color> : ";
+			Debug.Log(senderText + chatMessage.msg);
+		}
 
 		internal void OnChatMessageReceivedOnServer(Player player, string msg)
 		{
