@@ -69,6 +69,24 @@ namespace SanAndreasUnity.UI
 			this.useScrollView = false;
 		}
 
+		internal static void OnEventSubscriberAwake()
+		{
+			var console = FindObjectOfType<Console>();
+
+			if (null == console)
+			{
+				Debug.LogError("Failed to find console object");
+				return;
+			}
+
+			console.OnEventSubscriberAwakeNonStatic();
+		}
+
+		void OnEventSubscriberAwakeNonStatic()
+		{
+			Application.logMessageReceivedThreaded += HandleLogThreaded;
+		}
+
 
 		#region MonoBehaviour Messages
 
@@ -76,12 +94,6 @@ namespace SanAndreasUnity.UI
 		{
 			Application.logMessageReceivedThreaded -= HandleLogThreaded;
 			base.OnDisable();
-		}
-
-		protected override void OnEnable()
-		{
-			base.OnEnable();
-			Application.logMessageReceivedThreaded += HandleLogThreaded;
 		}
 
 		void Start ()

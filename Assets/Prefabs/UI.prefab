@@ -518,6 +518,7 @@ GameObject:
   - component: {fileID: 114473132252556806}
   - component: {fileID: 821925318372548346}
   - component: {fileID: 5292052593724244546}
+  - component: {fileID: 4052078131376788595}
   m_Layer: 0
   m_Name: UI
   m_TagString: UI
@@ -591,6 +592,18 @@ MonoBehaviour:
   m_changeFontSizeInEditor: 0
   m_scrollbarSizeMultiplierOnMobile: 2
   m_changeScrollbarSizeInEditor: 0
+--- !u!114 &4052078131376788595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611271869868126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d95990750fbd4b9478e6b04bb976af8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1627404700688260
 GameObject:
   m_ObjectHideFlags: 0
