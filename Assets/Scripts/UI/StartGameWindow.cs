@@ -99,17 +99,14 @@ namespace SanAndreasUnity.UI
 
 				MasterServerClient.Instance.IsServerRegistrationEnabled = m_registerAtMasterServer;
 
-				NetManager.StartServer(port, scene, maxNumPlayers, m_dedicatedServer, m_dontListen);
-
-				// activate game mode if it is selected
+				// select game mode if it is selected in UI
 				if (m_selectedModeIndex >= m_availableScenes.Length)
 				{
 					var gm = GameModeManager.Instance.GameModes[m_availableScenes.Length - m_selectedModeIndex];
-					F.RunExceptionSafe(
-						() => GameModeManager.Instance.ActivateGameMode(gm),
-						$"Error while activating game mode '{gm.Name}': ");
+					GameModeManager.Instance.SelectGameMode(gm);
 				}
 
+				NetManager.StartServer(port, scene, maxNumPlayers, m_dedicatedServer, m_dontListen);
 			}
 			catch (System.Exception ex)
 			{

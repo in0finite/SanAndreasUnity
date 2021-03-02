@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SanAndreasUnity.Net;
 using UnityEngine;
 
 namespace SanAndreasUnity.GameModes
@@ -27,10 +28,28 @@ namespace SanAndreasUnity.GameModes
 
         private GameModeInfo m_activeGameMode;
 
+        private GameModeInfo m_selectedGameMode;
+
 
         void Awake()
         {
             Instance = this;
+        }
+
+        private void Start()
+        {
+            NetManager.Instance.onServerStatusChanged += OnServerStatusChanged;
+        }
+
+        private void OnServerStatusChanged()
+        {
+            if (!NetStatus.IsServer)
+                return;
+
+            if (null == m_selectedGameMode)
+                return;
+
+            ActivateGameMode(m_selectedGameMode);
         }
 
         public void RegisterGameMode(GameModeInfo gameModeInfo)
@@ -38,7 +57,20 @@ namespace SanAndreasUnity.GameModes
             m_gameModes.Add(gameModeInfo);
         }
 
-        public void ActivateGameMode(GameModeInfo gameModeInfo)
+        /// <summary>
+        /// Select game mode which should be activated when the server starts.
+        /// </summary>
+        public void SelectGameMode(GameModeInfo gameModeInfo)
+        {
+            if (m_activeGameMode != null)
+            {
+                throw new Exception("Can not select game mode if there is an active game mode");
+            }
+
+            m_selectedGameMode = gameModeInfo;
+        }
+
+        private void ActivateGameMode(GameModeInfo gameModeInfo)
         {
             if (m_activeGameMode != null)
             {
