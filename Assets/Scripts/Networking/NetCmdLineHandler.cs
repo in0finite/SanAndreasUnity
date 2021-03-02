@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Linq;
+using SanAndreasUnity.GameModes;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 
@@ -29,6 +31,17 @@ namespace SanAndreasUnity.Net
 
             string serverIp = "127.0.0.1";
             CmdLineUtils.GetArgument("serverIp", ref serverIp);
+
+            string gameModeName = null;
+            CmdLineUtils.GetArgument("gameMode", ref gameModeName);
+            if (!string.IsNullOrWhiteSpace(gameModeName))
+            {
+                var gameModeInfo = GameModeManager.Instance.GameModes.FirstOrDefault(gm => gm.Name == gameModeName);
+                if (gameModeInfo != null)
+                    GameModeManager.Instance.SelectGameMode(gameModeInfo);
+                else
+                    Debug.LogError($"Game mode with name '{gameModeName}' not found");
+            }
 
             if (CmdLineUtils.HasArgument("startServer"))
             {
