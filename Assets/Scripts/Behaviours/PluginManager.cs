@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Behaviours
             #if UNITY_EDITOR
             Path.Combine(Application.dataPath, $"..{Path.DirectorySeparatorChar}SAU_Plugins"),
             #else
-            Path.Combine(Application.dataPath, "Plugins"),
+            Path.Combine(Application.dataPath, "SAU_Plugins"),
             #endif
         };
 
