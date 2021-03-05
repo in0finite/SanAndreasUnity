@@ -23,7 +23,7 @@ namespace SanAndreasUnity.Behaviours
             #endif
         };
 
-        void Awake()
+        void Start()
         {
             F.RunExceptionSafe(LoadPlugins, $"Error while loading plugins: ");
         }
