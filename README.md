@@ -81,14 +81,13 @@ Issues that are in focus right now are those with [high priority](https://github
 
 ###
 
-[![](http://img.youtube.com/vi/XLCMqjHFZPI/0.jpg)](https://www.youtube.com/watch?v=XLCMqjHFZPI)
+[![](http://img.youtube.com/vi/hnInLUbobI8/0.jpg)](https://www.youtube.com/watch?v=hnInLUbobI8)
 
 ###
 
-[![](http://img.youtube.com/vi/-3GAjTSLUUg/0.jpg)](https://www.youtube.com/watch?v=-3GAjTSLUUg)
+[![](http://img.youtube.com/vi/VDfSE3nc3oM/0.jpg)](https://www.youtube.com/watch?v=VDfSE3nc3oM)
 
 ###
 
-[![](http://img.youtube.com/vi/GMxJ6u3Jbak/0.jpg)](https://www.youtube.com/watch?v=GMxJ6u3Jbak)
-
+[![](http://img.youtube.com/vi/NPCiUZ-MZGM/0.jpg)](https://www.youtube.com/watch?v=NPCiUZ-MZGM)
 
