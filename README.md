@@ -35,8 +35,6 @@ The game is tested on Linux, Windows, Mac, and Android. It supports both Mono an
 
 Game fully works in multiplayer. You can start the game as dedicated server, as a host (server & client at the same time), or you can connect to a server. This works on all supported platforms, which means you can start a host even on Android device.
 
-Currently, the game doesn't have things like client-side prediction.
-
 If you want to run a dedicated server, take a look at these [instructions](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Command-line).
 
 
@@ -55,9 +53,9 @@ Press Escape while in game to open pause menu. You'll see there a lot of utiliti
 
 ## Contributing
 
-Can help us to develop this ? In that case, join us on [discord](https://discord.gg/p6jjud5) so we can discuss about it.
+Join us on [discord](https://discord.gg/p6jjud5) to discuss about development.
 
-Or you can check out issues for [newcomers](https://github.com/GTA-ASM/SanAndreasUnity/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22), issues related to [importing assets](https://github.com/GTA-ASM/SanAndreasUnity/issues?q=is%3Aissue+is%3Aopen+label%3Aimporting) from original game, or the [whole list](https://github.com/GTA-ASM/SanAndreasUnity/issues) of issues.
+You can check out issues for [newcomers](https://github.com/GTA-ASM/SanAndreasUnity/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22), issues related to [importing assets](https://github.com/GTA-ASM/SanAndreasUnity/issues?q=is%3Aissue+is%3Aopen+label%3Aimporting) from original game, or the [whole list](https://github.com/GTA-ASM/SanAndreasUnity/issues) of issues.
 
 Issues that are in focus right now are those with [high priority](https://github.com/GTA-ASM/SanAndreasUnity/issues?q=is%3Aissue+is%3Aopen+label%3Apriority%3Ahigh) label and those found in [milestones](https://github.com/GTA-ASM/SanAndreasUnity/milestones).
 
