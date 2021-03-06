@@ -51,6 +51,11 @@ If you want to run a dedicated server, take a look at these [instructions](https
 Press Escape while in game to open pause menu. You'll see there a lot of utilities, and among them, there is a window which shows all controls.
 
 
+## Game modes
+
+Game can be extended through plugins/game modes in the form of C# DLLs. More info on [wiki](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Plugins-(Game-modes)).
+
+
 ## Contributing
 
 Join us on [discord](https://discord.gg/p6jjud5) to discuss about development.
