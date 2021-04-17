@@ -30,6 +30,14 @@ namespace SanAndreasUnity.Editor
                     else
                         EditorGUILayout.EnumPopup(labelText, value as System.Enum);
                 }
+                else if (type == typeof(Color))
+                {
+                    EditorGUILayout.ColorField(labelText, (Color) value);
+                }
+                else if (type == typeof(Color32))
+                {
+                    EditorGUILayout.ColorField(labelText, (Color32) value);
+                }
                 else
                 {
                     EditorGUILayout.LabelField($"{labelText} {value}");
