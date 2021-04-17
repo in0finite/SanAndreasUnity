@@ -45,7 +45,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
         public readonly struct Light
         {
             public readonly UnityEngine.Vector3 Position;
-            public readonly Color4 Color;
+            public readonly UnityEngine.Color Color;
             public readonly float CoronaFarClip;
             public readonly float PointlightRange;
             public readonly float CoronaSize;
@@ -112,7 +112,7 @@ namespace SanAndreasUnity.Importing.RenderWareStream
                     throw new System.Exception($"Size of data for light 2d effect must be 76 or 80, found {dataSize}");
 
                 Position = Types.Convert(position);
-                Color = new Color4(reader);
+                Color = Types.Convert(new Color4(reader));
                 CoronaFarClip = reader.ReadSingle();
                 PointlightRange = reader.ReadSingle();
                 CoronaSize = reader.ReadSingle();
