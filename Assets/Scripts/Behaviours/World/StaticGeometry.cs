@@ -167,6 +167,8 @@ namespace SanAndreasUnity.Behaviours.World
 
 			Profiler.EndSample ();
 
+			CreateLights(this.transform, geoms);
+
 			geoms.AttachCollisionModel(transform);
 
 			Profiler.BeginSample ("Set layer", this);
@@ -186,6 +188,28 @@ namespace SanAndreasUnity.Behaviours.World
 		{
 
 
+		}
+
+		public static void CreateLights(
+			Transform tr,
+			Geometry.GeometryParts geometryParts)
+		{
+			Profiler.BeginSample("CreateLights()", tr);
+
+			foreach (var geometry in geometryParts.Geometry)
+			{
+				if (geometry.TwoDEffect != null && geometry.TwoDEffect.Lights != null)
+				{
+					foreach (var lightInfo in geometry.TwoDEffect.Lights)
+					{
+						var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+						go.transform.SetParent(tr);
+						go.transform.localPosition = lightInfo.Position;
+					}
+				}
+			}
+
+			Profiler.EndSample();
 		}
 
         protected override void OnShow()

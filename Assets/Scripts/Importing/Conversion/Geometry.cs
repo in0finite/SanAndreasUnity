@@ -604,6 +604,7 @@ namespace SanAndreasUnity.Importing.Conversion
         public readonly Mesh Mesh;
 
         private readonly RenderWareStream.Geometry _geom;
+        public readonly TwoDEffect TwoDEffect;
         public readonly TextureDictionary[] _textureDictionaries;
         private readonly Dictionary<MaterialFlags, UnityEngine.Material[]> _materials;
 
@@ -620,6 +621,7 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             _geom = geom;
+            TwoDEffect = geom.TwoDEffect;
             _textureDictionaries = textureDictionaries;
             _materials = new Dictionary<MaterialFlags, UnityEngine.Material[]>();
         }
