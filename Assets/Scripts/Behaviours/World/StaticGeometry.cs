@@ -202,9 +202,7 @@ namespace SanAndreasUnity.Behaviours.World
 				{
 					foreach (var lightInfo in geometry.TwoDEffect.Lights)
 					{
-						var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-						go.transform.SetParent(tr);
-						go.transform.localPosition = lightInfo.Position;
+						LightSource.Create(tr, lightInfo);
 					}
 				}
 			}
