@@ -171,8 +171,8 @@ namespace SanAndreasUnity.Behaviours.World
 				mat =>
 				{
 					mat.SetTexture(NoiseTexId, NoiseTex);
-					if (hasNightColors)
-						mat.SetColorArray(Geometry.NightColorsPropertyId, nightColors.Colors);
+					// if (hasNightColors)
+					// 	mat.SetColorArray(Geometry.NightColorsPropertyId, nightColors.Colors);
 				});
 
 			Profiler.EndSample ();

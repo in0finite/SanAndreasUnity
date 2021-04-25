@@ -28,6 +28,10 @@ struct Input
     float4 color : COLOR;
 };
 
+void vert (inout appdata_full v) {
+
+}
+
 void surf(Input IN, inout SurfaceOutputStandard o)
 {
 #ifdef FADE

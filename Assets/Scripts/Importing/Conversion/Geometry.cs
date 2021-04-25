@@ -294,9 +294,20 @@ namespace SanAndreasUnity.Importing.Conversion
                 mesh.normals = src.Normals;
             }
 
+            bool hasNightColors = src.ExtraVertColor != null && src.ExtraVertColor.Colors != null;
+
             if (src.Colours != null)
             {
                 mesh.colors32 = src.Colours;
+            }
+            else if (hasNightColors)
+            {
+                mesh.colors = src.ExtraVertColor.Colors;
+            }
+
+            if (src.Colours != null && hasNightColors)
+            {
+                Debug.LogError("Geometry has both prelit colors and night colors - this is not supported");
             }
 
             if (src.TexCoords != null && src.TexCoords.Length > 0)
