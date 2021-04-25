@@ -309,7 +309,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (src.Colours != null && hasNightColors)
             {
-                Debug.LogError("Geometry has both prelit colors and night colors - this is not supported");
+                //Debug.LogError("Geometry has both prelit colors and night colors - this is not supported");
             }
 
             if (src.TexCoords != null && src.TexCoords.Length > 0)
