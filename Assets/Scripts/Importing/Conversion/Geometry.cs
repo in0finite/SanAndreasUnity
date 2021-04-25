@@ -634,13 +634,6 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public UnityEngine.Material[] GetMaterials(
             ObjectFlag flags,
-            bool hasNightColors)
-        {
-            return GetMaterials(flags, hasNightColors, x => { });
-        }
-
-        public UnityEngine.Material[] GetMaterials(
-            ObjectFlag flags,
             bool hasNightColors,
             Action<UnityEngine.Material> setupMaterial)
         {
