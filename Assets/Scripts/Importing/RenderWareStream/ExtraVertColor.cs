@@ -6,7 +6,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
     [SectionType(0x0253F2F9)]
     public class ExtraVertColor : SectionData
     {
-        public readonly UnityEngine.Color[] Colors;
+        public readonly UnityEngine.Vector2[] Colors;
+        public readonly UnityEngine.Vector2[] Colors2;
 
         public ExtraVertColor(SectionHeader header, Stream stream)
             : base(header, stream)
@@ -20,11 +21,14 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             var geometry = header.GetParent<Geometry>();
 
-            Colors = new UnityEngine.Color[geometry.VertexCount];
+            Colors = new UnityEngine.Vector2[geometry.VertexCount];
+            Colors2 = new UnityEngine.Vector2[geometry.VertexCount];
 
             for (int i = 0; i < geometry.VertexCount; i++)
             {
-                Colors[i] = Types.Convert(new Color4(reader));
+                var color = Types.Convert(new Color4(reader));
+                Colors[i] = new UnityEngine.Vector2(color.r, color.g);
+                Colors2[i] = new UnityEngine.Vector2(color.b, color.a);
             }
         }
     }

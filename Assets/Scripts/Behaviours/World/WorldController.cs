@@ -1,5 +1,7 @@
 ﻿using SanAndreasUnity.Utilities;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
@@ -20,6 +22,10 @@ namespace SanAndreasUnity.Behaviours.World
         public TimeState startTimeState;
 
         private Light light;
+
+        public float maxTime = 1f;
+
+        public float timeSpeed = 0.2f;
 
         public static float TimeFactor
         {
@@ -53,11 +59,28 @@ namespace SanAndreasUnity.Behaviours.World
         // Use this for initialization
         private void Start()
         {
-            SetTime(startTimeState);
+            //SetTime(startTimeState);
+
+            StartCoroutine(ChangeTimeCoroutine());
+        }
+
+        private IEnumerator ChangeTimeCoroutine()
+        {
+            float time = 0f;
+            while (true)
+            {
+                yield return null;
+
+                time += timeSpeed * Time.deltaTime;
+                if (time > maxTime)
+                    time = 0;
+
+                Shader.SetGlobalFloat("_NightMultiplier", time);
+            }
         }
 
         // Update is called once per frame
-        private void FixedUpdate()
+        private void FixedUpdate_Renamed()
         {
             //360 = 24 minutos
             //x = Time.deltaTime

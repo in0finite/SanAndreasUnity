@@ -300,9 +300,11 @@ namespace SanAndreasUnity.Importing.Conversion
             {
                 mesh.colors32 = src.Colours;
             }
-            else if (hasNightColors)
+
+            if (hasNightColors)
             {
-                mesh.colors = src.ExtraVertColor.Colors;
+                mesh.uv2 = src.ExtraVertColor.Colors;
+                mesh.uv3 = src.ExtraVertColor.Colors2;
             }
 
             if (src.Colours != null && hasNightColors)

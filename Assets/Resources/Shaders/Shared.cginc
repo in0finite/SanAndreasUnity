@@ -19,6 +19,8 @@ sampler2D _NoiseTex;
 fixed _Fade;
 #endif
 
+half _NightMultiplier = 0.5;
+
 struct Input
 {
     float2 uv_MainTex;
@@ -29,7 +31,17 @@ struct Input
 };
 
 void vert (inout appdata_full v) {
+    float4 c;
+    c.rg = v.texcoord1.xy;
+    c.ba = v.texcoord2.xy;
 
+    c.a = _NightMultiplier;
+
+    /*v.color = v.color * (1 - _NightMultiplier) + c * _NightMultiplier;*/
+
+    v.color = lerp(v.color, c, _NightMultiplier);
+
+    /*v.color = v.color * (c * _NightMultiplier);*/
 }
 
 void surf(Input IN, inout SurfaceOutputStandard o)
