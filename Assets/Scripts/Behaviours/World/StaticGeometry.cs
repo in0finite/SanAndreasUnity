@@ -158,12 +158,22 @@ namespace SanAndreasUnity.Behaviours.World
 
 			Profiler.BeginSample ("Add mesh", this);
 
+			var nightColors = geoms.Geometry[0].RwGeometry.ExtraVertColor;
+			bool hasNightColors = nightColors != null && nightColors.Colors != null;
+
 			var mf = gameObject.AddComponent<MeshFilter>();
 			var mr = gameObject.AddComponent<MeshRenderer>();
 
 			mf.sharedMesh = geoms.Geometry[0].Mesh;
-			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(Instance.Object.Flags,
-				mat => mat.SetTexture(NoiseTexId, NoiseTex));
+			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(
+				Instance.Object.Flags,
+				hasNightColors,
+				mat =>
+				{
+					mat.SetTexture(NoiseTexId, NoiseTex);
+					if (hasNightColors)
+						mat.SetColorArray(Geometry.NightColorsPropertyId, nightColors.Colors);
+				});
 
 			Profiler.EndSample ();
 
@@ -198,9 +208,10 @@ namespace SanAndreasUnity.Behaviours.World
 
 			foreach (var geometry in geometryParts.Geometry)
 			{
-				if (geometry.TwoDEffect != null && geometry.TwoDEffect.Lights != null)
+				var twoDEffect = geometry.RwGeometry.TwoDEffect;
+				if (twoDEffect != null && twoDEffect.Lights != null)
 				{
-					foreach (var lightInfo in geometry.TwoDEffect.Lights)
+					foreach (var lightInfo in twoDEffect.Lights)
 					{
 						LightSource.Create(tr, lightInfo);
 					}

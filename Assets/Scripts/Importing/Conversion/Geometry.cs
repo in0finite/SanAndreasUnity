@@ -18,7 +18,8 @@ namespace SanAndreasUnity.Importing.Conversion
         NoBackCull = 1,
         Alpha = 2,
         Vehicle = 4,
-        OverrideAlpha = 8
+        OverrideAlpha = 8,
+        NightColors = 16,
     }
 
     public class Geometry
@@ -57,6 +58,10 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             get { return _sCarColorIndexId == -1 ? _sCarColorIndexId = Shader.PropertyToID("_CarColorIndex") : _sCarColorIndexId; }
         }
+
+        private static int _sNightColorsPropertyId = -1;
+
+        public static int NightColorsPropertyId => _sNightColorsPropertyId == -1 ? _sNightColorsPropertyId = Shader.PropertyToID("_NightColors") : _sNightColorsPropertyId;
 
         private static int[] FromTriangleStrip(IList<int> indices)
         {
@@ -604,8 +609,10 @@ namespace SanAndreasUnity.Importing.Conversion
         public readonly Mesh Mesh;
 
         private readonly RenderWareStream.Geometry _geom;
-        public readonly TwoDEffect TwoDEffect;
+        public RenderWareStream.Geometry RwGeometry => _geom;
+
         public readonly TextureDictionary[] _textureDictionaries;
+
         private readonly Dictionary<MaterialFlags, UnityEngine.Material[]> _materials;
 
         public readonly UnityEngine.Matrix4x4[] SkinToBoneMatrices;
@@ -621,17 +628,20 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             _geom = geom;
-            TwoDEffect = geom.TwoDEffect;
             _textureDictionaries = textureDictionaries;
             _materials = new Dictionary<MaterialFlags, UnityEngine.Material[]>();
         }
 
-        public UnityEngine.Material[] GetMaterials(ObjectFlag flags)
+        public UnityEngine.Material[] GetMaterials(
+            ObjectFlag flags,
+            bool hasNightColors)
         {
-            return GetMaterials(flags, x => { });
+            return GetMaterials(flags, hasNightColors, x => { });
         }
 
-        public UnityEngine.Material[] GetMaterials(ObjectFlag flags,
+        public UnityEngine.Material[] GetMaterials(
+            ObjectFlag flags,
+            bool hasNightColors,
             Action<UnityEngine.Material> setupMaterial)
         {
             var matFlags = MaterialFlags.Default | MaterialFlags.OverrideAlpha;
@@ -645,6 +655,11 @@ namespace SanAndreasUnity.Importing.Conversion
                 && (flags & ObjectFlag.DisableShadowMesh) == ObjectFlag.DisableShadowMesh)
             {
                 matFlags |= MaterialFlags.Alpha;
+            }
+
+            if (hasNightColors)
+            {
+                matFlags |= MaterialFlags.NightColors;
             }
 
             return GetMaterials(matFlags, setupMaterial);
