@@ -87,11 +87,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				// }
 			}
 
-			if (!vehicle.IsNightToggled && WorldController.IsNight)
-				vehicle.IsNightToggled = true;
-			else if (vehicle.IsNightToggled && !WorldController.IsNight)
-				vehicle.IsNightToggled = false;
-
 
 			m_coroutine = StartCoroutine (EnterVehicleAnimation (seat, immediate));
 
