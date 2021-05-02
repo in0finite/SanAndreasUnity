@@ -18,6 +18,8 @@ namespace SanAndreasUnity.Behaviours.World
         public byte CurrentTimeHours { get; private set; }
         public byte CurrentTimeMinutes { get; private set; }
 
+        public float CurrentCurveTime => (this.CurrentTimeHours + this.CurrentTimeMinutes / 60f) / 24f;
+
         private float m_timeSinceTimeAdvanced = 0;
 
         public float timeScale = 1;
@@ -69,6 +71,11 @@ namespace SanAndreasUnity.Behaviours.World
                 m_timeSinceTimeAdvanced = 0;
                 this.AdvanceTime();
             }
+            else
+            {
+                // light angle should be updated every frame
+                this.UpdateLightAngle(this.CurrentCurveTime + m_timeSinceTimeAdvanced / 60f / 24f);
+            }
         }
 
         void AdvanceTime()
@@ -95,7 +102,7 @@ namespace SanAndreasUnity.Behaviours.World
             this.CurrentTimeHours = hours;
             this.CurrentTimeMinutes = minutes;
 
-            float curveTime = (hours + minutes / 60f) / 24f;
+            float curveTime = this.CurrentCurveTime;
 
             float lightIntensity = this.lightIntensityCurve.Evaluate(curveTime);
             bool isNight = lightIntensity <= 0;
@@ -112,8 +119,7 @@ namespace SanAndreasUnity.Behaviours.World
             float skyboxExposure = isNight ? 0f : m_originalSkyboxExposure * lightIntensity;
             RenderSettings.skybox.SetFloat(ExposurePropertyId, skyboxExposure);
 
-            float lightAngle = this.lightAngleCurve.Evaluate(curveTime) * 180f;
-            this.directionalLight.transform.rotation = Quaternion.AngleAxis(lightAngle, Vector3.right);
+            float lightAngle = this.UpdateLightAngle(curveTime);
 
             float nightMultiplier = this.nightColorsIntensityCurve.Evaluate(curveTime) * this.nightColorsMultiplier;
             Shader.SetGlobalFloat(NightMultiplierPropertyId, nightMultiplier);
@@ -122,6 +128,13 @@ namespace SanAndreasUnity.Behaviours.World
             {
                 Debug.Log($"Time set to {hours}:{minutes}, curveTime {curveTime}, lightIntensity {lightIntensity}, lightAngle {lightAngle}, nightMultiplier {nightMultiplier}");
             }
+        }
+
+        float UpdateLightAngle(float curveTime)
+        {
+            float lightAngle = this.lightAngleCurve.Evaluate(curveTime) * 180f;
+            this.directionalLight.transform.rotation = Quaternion.AngleAxis(lightAngle, Vector3.right);
+            return lightAngle;
         }
     }
 }
