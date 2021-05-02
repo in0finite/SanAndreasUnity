@@ -32,8 +32,8 @@ namespace SanAndreasUnity.UI {
 		protected override void OnWindowGUI ()
 		{
 
-			GUILayout.Label($"Current time: {WorldController.Singleton.CurrentTimeHours}:{WorldController.Singleton.CurrentTimeMinutes}");
-			GUILayout.Label($"Time scale: {WorldController.Singleton.timeScale}");
+			GUILayout.Label($"Current time: {DayTimeManager.Singleton.CurrentTimeHours}:{DayTimeManager.Singleton.CurrentTimeMinutes}");
+			GUILayout.Label($"Time scale: {DayTimeManager.Singleton.timeScale}");
 
 			GUILayout.Space(15);
 
@@ -44,7 +44,7 @@ namespace SanAndreasUnity.UI {
 			foreach (byte hour in this.availableHours)
 			{
 				if (GUILayout.Button(hour.ToString()))
-					WorldController.Singleton.SetTime(hour, 0, true);
+					DayTimeManager.Singleton.SetTime(hour, 0, true);
 			}
 
 			GUILayout.EndHorizontal();
@@ -62,15 +62,15 @@ namespace SanAndreasUnity.UI {
 			{
 				if (byte.TryParse(m_hoursText, out byte hours) && byte.TryParse(m_minutesText, out byte minutes))
 				{
-					WorldController.Singleton.SetTime(hours, minutes, true);
+					DayTimeManager.Singleton.SetTime(hours, minutes, true);
 				}
 			}
 
 			GUILayout.BeginHorizontal();
 			if (GUILayout.Button("Previous hour"))
-				WorldController.Singleton.SetTime((byte) (WorldController.Singleton.CurrentTimeHours == 0 ? 23 : WorldController.Singleton.CurrentTimeHours - 1), WorldController.Singleton.CurrentTimeMinutes, true);
+				DayTimeManager.Singleton.SetTime((byte) (DayTimeManager.Singleton.CurrentTimeHours == 0 ? 23 : DayTimeManager.Singleton.CurrentTimeHours - 1), DayTimeManager.Singleton.CurrentTimeMinutes, true);
 			if (GUILayout.Button("Next hour"))
-				WorldController.Singleton.SetTime((byte) ((WorldController.Singleton.CurrentTimeHours + 1) % 24), WorldController.Singleton.CurrentTimeMinutes, true);
+				DayTimeManager.Singleton.SetTime((byte) ((DayTimeManager.Singleton.CurrentTimeHours + 1) % 24), DayTimeManager.Singleton.CurrentTimeMinutes, true);
 			GUILayout.EndHorizontal();
 
 			GUILayout.Space(15);
@@ -81,7 +81,7 @@ namespace SanAndreasUnity.UI {
 			if (GUILayout.Button("Set scale"))
 			{
 				if (float.TryParse(m_timeScaleText, out float value))
-					WorldController.Singleton.timeScale = value;
+					DayTimeManager.Singleton.timeScale = value;
 			}
 			GUILayout.EndHorizontal();
 

@@ -2,9 +2,9 @@
 
 namespace SanAndreasUnity.Behaviours.World
 {
-    public class WorldController : MonoBehaviour
+    public class DayTimeManager : MonoBehaviour
     {
-        public static WorldController Singleton { get; private set; }
+        public static DayTimeManager Singleton { get; private set; }
 
         public AnimationCurve lightAngleCurve;
         public AnimationCurve lightIntensityCurve;
