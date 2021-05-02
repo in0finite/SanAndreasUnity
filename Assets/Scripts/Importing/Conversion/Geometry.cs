@@ -19,7 +19,6 @@ namespace SanAndreasUnity.Importing.Conversion
         Alpha = 2,
         Vehicle = 4,
         OverrideAlpha = 8,
-        NightColors = 16,
     }
 
     public class Geometry
@@ -656,7 +655,6 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public UnityEngine.Material[] GetMaterials(
             ObjectFlag flags,
-            bool hasNightColors,
             Action<UnityEngine.Material> setupMaterial)
         {
             var matFlags = MaterialFlags.Default | MaterialFlags.OverrideAlpha;
@@ -670,11 +668,6 @@ namespace SanAndreasUnity.Importing.Conversion
                 && (flags & ObjectFlag.DisableShadowMesh) == ObjectFlag.DisableShadowMesh)
             {
                 matFlags |= MaterialFlags.Alpha;
-            }
-
-            if (hasNightColors)
-            {
-                matFlags |= MaterialFlags.NightColors;
             }
 
             return GetMaterials(matFlags, setupMaterial);
