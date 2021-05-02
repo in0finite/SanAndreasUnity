@@ -408,7 +408,7 @@ MonoBehaviour:
   directionalLight: {fileID: 10808534}
   startTimeHours: 12
   startTimeMinutes: 0
-  timeScale: 1
+  timeScale: 0.5
   nightColorsMultiplier: 0.0075
   controlLightIntensity: 1
   disableLightDuringNight: 0
