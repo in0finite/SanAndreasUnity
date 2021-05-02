@@ -37,13 +37,7 @@ void vert (inout appdata_full v) {
     c.rg = v.texcoord1.xy;
     c.ba = v.texcoord2.xy;
 
-    /*c.a = _NightMultiplier;*/
-
-    /*v.color = v.color * (1 - _NightMultiplier) + c * _NightMultiplier;*/
-
     v.color = lerp(v.color, c, _NightMultiplier * _HasNightColors);
-
-    /*v.color = v.color * (c * _NightMultiplier);*/
 }
 
 void surf(Input IN, inout SurfaceOutputStandard o)
