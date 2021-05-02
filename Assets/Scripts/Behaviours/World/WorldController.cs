@@ -1,140 +1,125 @@
-﻿using SanAndreasUnity.Utilities;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
 {
-    public enum TimeState { Dawn, Noon, Dusk, Midnight }
-
-    // TODO: TimeFactor -> AngleFactor
     public class WorldController : MonoBehaviour
     {
-        public const float dayCycleMins = 24,
-                           relMinSecs = 1; // That means that one second in real life in one minute in game
+        public static WorldController Singleton { get; private set; }
 
-        private static float dayTimeCounter, dayCount;
+        public AnimationCurve lightAngleCurve;
+        public AnimationCurve lightIntensityCurve;
+        public AnimationCurve nightColorsIntensityCurve;
 
-        public AnimationCurve lightCurve;
-        public Transform dirLight;
+        public Light directionalLight;
 
-        public TimeState startTimeState;
+        public byte startTimeHours = 12;
+        public byte startTimeMinutes = 0;
 
-        private Light light;
+        public byte CurrentTimeHours { get; private set; }
+        public byte CurrentTimeMinutes { get; private set; }
 
-        public float maxTime = 1f;
+        private float m_timeSinceTimeAdvanced = 0;
 
-        public float timeSpeed = 0.2f;
+        public float timeScale = 1;
 
-        public static float TimeFactor
-        {
-            get
-            {
-                return (1f / Time.deltaTime) * (dayCycleMins * 60) / 360;
-            }
-        }
+        public float nightColorsMultiplier = 0.1f;
 
-        public static float AngleFactor
-        {
-            get
-            {
-                return 360 / ((1f / Time.deltaTime) * (dayCycleMins * 60));
-            }
-        }
+        private float m_originalSkyboxExposure;
 
-        public static bool IsNight
-        {
-            get
-            {
-                return ((dayTimeCounter * AngleFactor) % 360).BetweenInclusive(180, 360);
-            }
-        }
+        public bool controlLightIntensity = true;
+        public bool disableLightDuringNight = true;
+
+        public Color moonColor = Color.blue;
+
+        private Color m_originalLightColor;
+
 
         private void Awake()
         {
-            light = dirLight.GetComponent<Light>();
+            Singleton = this;
+
+            m_originalLightColor = this.directionalLight.color;
+            m_originalSkyboxExposure = RenderSettings.skybox.GetFloat("_Exposure");
         }
 
-        // Use this for initialization
+        private void OnDisable()
+        {
+            // restore material settings
+            if (Application.isEditor)
+                RenderSettings.skybox.SetFloat("_Exposure", m_originalSkyboxExposure);
+        }
+
         private void Start()
         {
-            //SetTime(startTimeState);
-
-            StartCoroutine(ChangeTimeCoroutine());
+            this.SetTime(this.startTimeHours, this.startTimeMinutes, false);
         }
 
-        private IEnumerator ChangeTimeCoroutine()
+        private void Update()
         {
-            float time = 0f;
-            while (true)
+            m_timeSinceTimeAdvanced += Time.deltaTime * this.timeScale;
+
+            if (m_timeSinceTimeAdvanced >= 1)
             {
-                yield return null;
-
-                time += timeSpeed * Time.deltaTime;
-                if (time > maxTime)
-                    time = 0;
-
-                Shader.SetGlobalFloat("_NightMultiplier", time);
+                m_timeSinceTimeAdvanced = 0;
+                this.AdvanceTime();
             }
         }
 
-        // Update is called once per frame
-        private void FixedUpdate_Renamed()
+        void AdvanceTime()
         {
-            //360 = 24 minutos
-            //x = Time.deltaTime
-
-            if (dirLight != null)
+            int newHours = this.CurrentTimeHours;
+            int newMinutes = this.CurrentTimeMinutes + 1;
+            if (newMinutes >= 60)
             {
-                float prod = dayTimeCounter * AngleFactor, 
-                      angle = prod % 360;
+                newMinutes = 0;
 
-                if (prod > 0 && prod % 360 == 0)
-                {
-                    ++dayCount;
-                    Debug.Log("Day "+dayCount);
-                }
-
-                dirLight.rotation = Quaternion.Euler(angle, -130, 0);
-                dayTimeCounter += AngleFactor;
-
-                // Range: Dusk .. Dawn
-                if (IsNight) light.intensity = lightCurve.Evaluate(Mathf.InverseLerp(180, 360, angle));
-            }
-        }
-
-        // Must review
-        public static void SetTime(TimeState time)
-        {
-            switch (time)
-            {
-                case TimeState.Dawn:
-                    dayTimeCounter = dayCount > 0 ? GetRoundedTime(TimeFactor) : 0;
-                    break;
-
-                case TimeState.Noon:
-                    dayTimeCounter = dayCount > 0 ? GetRoundedTime(90 * TimeFactor) : TimeFactor * 90;
-                    break;
-
-                case TimeState.Dusk:
-                    dayTimeCounter = dayCount > 0 ? GetRoundedTime(180 * TimeFactor) : TimeFactor * 180;
-                    break;
-
-                case TimeState.Midnight:
-                    dayTimeCounter = dayCount > 0 ? GetRoundedTime(270 * TimeFactor) : TimeFactor * 270;
-                    break;
+                newHours++;
+                if (newHours >= 24)
+                    newHours = 0;
             }
 
-            Debug.LogFormat("Time set to {0}! ({1})", time.ToString(), dayTimeCounter);
+            this.SetTime((byte) newHours, (byte) newMinutes, false);
         }
 
-        private static float GetRoundedTime(float X)
+        public void SetTime(byte hours, byte minutes, bool log)
         {
-            float completeDay = 360 * TimeFactor;
-            //Debug.LogWarning("Days: "+dayCount);
+            hours = (byte) Mathf.Clamp(hours, 0, 23);
+            minutes = (byte) Mathf.Clamp(minutes, 0, 59);
 
-            return completeDay * dayCount + X;
+            this.CurrentTimeHours = hours;
+            this.CurrentTimeMinutes = minutes;
+
+            float curveTime = (hours + minutes / 60f) / 24f;
+
+            float lightIntensity = this.lightIntensityCurve.Evaluate(curveTime);
+            bool isNight = lightIntensity <= 0;
+            if (this.controlLightIntensity)
+                this.directionalLight.intensity = Mathf.Abs(lightIntensity);
+            if (this.disableLightDuringNight)
+                this.directionalLight.enabled = !isNight;
+            else
+            {
+                this.directionalLight.enabled = true;
+                this.directionalLight.color = isNight ? this.moonColor : m_originalLightColor;
+            }
+
+            float skyboxExposure = isNight ? 0f : m_originalSkyboxExposure * lightIntensity;
+            RenderSettings.skybox.SetFloat("_Exposure", skyboxExposure);
+
+            float lightAngle = this.lightAngleCurve.Evaluate(curveTime) * 180f;
+            //Vector3 eulers = this.directionalLight.transform.eulerAngles;
+            //eulers.x = lightAngle;
+            //this.directionalLight.transform.eulerAngles = eulers;
+            this.directionalLight.transform.rotation = Quaternion.AngleAxis(lightAngle, Vector3.right);
+
+            float nightMultiplier = this.nightColorsIntensityCurve.Evaluate(curveTime) * this.nightColorsMultiplier;
+            Shader.SetGlobalFloat("_NightMultiplier", nightMultiplier);
+
+            if (log)
+            {
+                Debug.Log($"Time set to {hours}:{minutes}, curveTime {curveTime}, lightIntensity {lightIntensity}, lightAngle {lightAngle}, nightMultiplier {nightMultiplier}");
+            }
         }
     }
 }

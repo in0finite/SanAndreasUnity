@@ -252,50 +252,167 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f448a6ce85e59e943974de56271f3ce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightCurve:
+  lightAngleCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.000001270324
-      value: 1.0000031
-      inSlope: -2.9000547
-      outSlope: -2.9000547
+      time: 0.033
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.24999273
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
-      time: 0.5000107
-      value: 0.009750675
-      inSlope: -0.0068289125
-      outSlope: -0.0068289125
+      time: 0.2
+      value: 0
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.8998677
-      value: 0.50498855
-      inSlope: 4.620677
-      outSlope: 4.620677
-      tangentMode: 0
-      weightedMode: 0
+      time: 0.25
+      value: 0
+      inSlope: -0
+      outSlope: 1.5948071
+      tangentMode: 69
+      weightedMode: 2
       inWeight: 0.33333334
-      outWeight: 0.70871896
+      outWeight: 0.5217121
     - serializedVersion: 3
-      time: 1
+      time: 0.8770351
       value: 1
-      inSlope: 2.85
-      outSlope: 2.85
+      inSlope: 1.5948071
+      outSlope: -10.886181
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.10886526
+      outWeight: 0.45958257
+    - serializedVersion: 3
+      time: 0.9
+      value: 0.75
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33334053
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  dirLight: {fileID: 406580}
-  startTimeState: 1
+  lightIntensityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.1
+      value: -0.25
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.16
+      value: 0
+      inSlope: -0.2907557
+      outSlope: Infinity
+      tangentMode: 97
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.25
+      value: 0
+      inSlope: 1.1302359
+      outSlope: 1.1302359
+      tangentMode: 0
+      weightedMode: 2
+      inWeight: 0
+      outWeight: 0.7243914
+    - serializedVersion: 3
+      time: 0.6
+      value: 1
+      inSlope: -0.0000901046
+      outSlope: -0.0000901046
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.26662746
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.87
+      value: 0
+      inSlope: -1.4766108
+      outSlope: -1.4766108
+      tangentMode: 0
+      weightedMode: 1
+      inWeight: 0.6078358
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  nightColorsIntensityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.15247615
+      value: 1.0023584
+      inSlope: -2.1605222
+      outSlope: -2.1605222
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.14246942
+    - serializedVersion: 3
+      time: 0.33
+      value: 0
+      inSlope: -0
+      outSlope: -0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33648348
+      outWeight: 0.1485123
+    - serializedVersion: 3
+      time: 0.7
+      value: 0
+      inSlope: -0
+      outSlope: -0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.5617976
+    - serializedVersion: 3
+      time: 0.90161526
+      value: 0.9999999
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  directionalLight: {fileID: 10808534}
+  startTimeHours: 12
+  startTimeMinutes: 0
+  timeScale: 1
+  nightColorsMultiplier: 0.0075
+  controlLightIntensity: 1
+  disableLightDuringNight: 0
+  moonColor: {r: 0.41006586, g: 0.71558595, b: 0.9150943, a: 1}
 --- !u!1 &149528
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,7 +457,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df6efcfa667fce549bcc3deb68a7e8d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CellIds: 000000000d000000
   PreviewCamera: {fileID: 0}
   focusPoints: []
   Water: {fileID: 11455068}
