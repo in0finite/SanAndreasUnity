@@ -58,9 +58,9 @@ namespace SanAndreasUnity.Importing.Conversion
             get { return _sCarColorIndexId == -1 ? _sCarColorIndexId = Shader.PropertyToID("_CarColorIndex") : _sCarColorIndexId; }
         }
 
-        private static int _sNightColorsPropertyId = -1;
+        private static int _sHasNightColorsPropertyId = -1;
 
-        public static int NightColorsPropertyId => _sNightColorsPropertyId == -1 ? _sNightColorsPropertyId = Shader.PropertyToID("_NightColors") : _sNightColorsPropertyId;
+        public static int HasNightColorsPropertyId => _sHasNightColorsPropertyId == -1 ? _sHasNightColorsPropertyId = Shader.PropertyToID("_HasNightColors") : _sHasNightColorsPropertyId;
 
         private static int[] FromTriangleStrip(IList<int> indices)
         {
@@ -283,7 +283,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (geometry.ExtraVertColor != null && geometry.ExtraVertColor.Colors != null)
             {
-                mat.SetFloat("_HasNightColors", 1);
+                mat.SetFloat(HasNightColorsPropertyId, 1);
             }
 
             return mat;
