@@ -293,8 +293,7 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             var mesh = new Mesh();
 
-            // ReSharper disable ConvertClosureToMethodGroup
-            var meshVertices = src.Vertices;//Utilities.F.ConvertArray( src.Vertices, x => Types.Convert(x));
+            var meshVertices = src.Vertices;
             mesh.vertices = meshVertices;
 
             if (src.Normals != null)
@@ -302,29 +301,22 @@ namespace SanAndreasUnity.Importing.Conversion
                 mesh.normals = src.Normals;
             }
 
-            bool hasNightColors = src.ExtraVertColor != null && src.ExtraVertColor.Colors != null;
-
             if (src.Colours != null)
             {
                 mesh.colors32 = src.Colours;
             }
 
-            if (hasNightColors)
+            if (src.ExtraVertColor != null && src.ExtraVertColor.Colors != null)
             {
+                // store night colors in UV coordinates, because Unity mesh can not hold multiple colors per vertex
                 mesh.uv2 = src.ExtraVertColor.Colors;
                 mesh.uv3 = src.ExtraVertColor.Colors2;
-            }
-
-            if (src.Colours != null && hasNightColors)
-            {
-                //Debug.LogError("Geometry has both prelit colors and night colors - this is not supported");
             }
 
             if (src.TexCoords != null && src.TexCoords.Length > 0)
             {
                 mesh.uv = src.TexCoords[0];
             }
-            // ReSharper restore ConvertClosureToMethodGroup
 
             if (src.Normals == null)
             {
