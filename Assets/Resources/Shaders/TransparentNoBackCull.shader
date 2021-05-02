@@ -25,6 +25,7 @@
                 
         CGPROGRAM
 
+        #pragma vertex vert
         #pragma surface surf Standard alpha:fade noshadow
         #pragma target 3.0
         
