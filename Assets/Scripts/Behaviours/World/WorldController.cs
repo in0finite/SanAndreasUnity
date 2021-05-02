@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -34,20 +33,26 @@ namespace SanAndreasUnity.Behaviours.World
 
         private Color m_originalLightColor;
 
+        private static int s_exposurePropertyId = -1;
+        public static int ExposurePropertyId => s_exposurePropertyId == -1 ? s_exposurePropertyId = Shader.PropertyToID("_Exposure") : s_exposurePropertyId;
+
+        private static int s_nightMultiplierPropertyId = -1;
+        public static int NightMultiplierPropertyId => s_nightMultiplierPropertyId == -1 ? s_nightMultiplierPropertyId = Shader.PropertyToID("_NightMultiplier") : s_nightMultiplierPropertyId;
+
 
         private void Awake()
         {
             Singleton = this;
 
             m_originalLightColor = this.directionalLight.color;
-            m_originalSkyboxExposure = RenderSettings.skybox.GetFloat("_Exposure");
+            m_originalSkyboxExposure = RenderSettings.skybox.GetFloat(ExposurePropertyId);
         }
 
         private void OnDisable()
         {
             // restore material settings
             if (Application.isEditor)
-                RenderSettings.skybox.SetFloat("_Exposure", m_originalSkyboxExposure);
+                RenderSettings.skybox.SetFloat(ExposurePropertyId, m_originalSkyboxExposure);
         }
 
         private void Start()
@@ -105,16 +110,13 @@ namespace SanAndreasUnity.Behaviours.World
             }
 
             float skyboxExposure = isNight ? 0f : m_originalSkyboxExposure * lightIntensity;
-            RenderSettings.skybox.SetFloat("_Exposure", skyboxExposure);
+            RenderSettings.skybox.SetFloat(ExposurePropertyId, skyboxExposure);
 
             float lightAngle = this.lightAngleCurve.Evaluate(curveTime) * 180f;
-            //Vector3 eulers = this.directionalLight.transform.eulerAngles;
-            //eulers.x = lightAngle;
-            //this.directionalLight.transform.eulerAngles = eulers;
             this.directionalLight.transform.rotation = Quaternion.AngleAxis(lightAngle, Vector3.right);
 
             float nightMultiplier = this.nightColorsIntensityCurve.Evaluate(curveTime) * this.nightColorsMultiplier;
-            Shader.SetGlobalFloat("_NightMultiplier", nightMultiplier);
+            Shader.SetGlobalFloat(NightMultiplierPropertyId, nightMultiplier);
 
             if (log)
             {
