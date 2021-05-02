@@ -194,7 +194,11 @@ namespace SanAndreasUnity.Importing.Conversion
             get { return _sWhiteTex ?? (_sWhiteTex = new LoadedTexture(Texture2D.whiteTexture, false)); }
         }
 
-        private static UnityEngine.Material Convert(RenderWareStream.Material src, TextureDictionary[] txds, MaterialFlags flags)
+        private static UnityEngine.Material Convert(
+            RenderWareStream.Material src,
+            RenderWareStream.Geometry geometry,
+            TextureDictionary[] txds,
+            MaterialFlags flags)
         {
             LoadedTexture diffuse;
             LoadedTexture mask = null;
@@ -277,6 +281,11 @@ namespace SanAndreasUnity.Importing.Conversion
 
             mat.SetFloat(MetallicId, src.Specular);
             mat.SetFloat(SmoothnessId, src.Smoothness);
+
+            if (geometry.ExtraVertColor != null && geometry.ExtraVertColor.Colors != null)
+            {
+                mat.SetFloat("_HasNightColors", 1);
+            }
 
             return mat;
         }
@@ -686,7 +695,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             var mats = _geom.Materials.Select(x =>
             {
-                var mat = Convert(x, _textureDictionaries, flags);
+                var mat = Convert(x, _geom, _textureDictionaries, flags);
                 setupMaterial(mat);
                 return mat;
             }).ToArray();

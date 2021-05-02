@@ -20,6 +20,7 @@ fixed _Fade;
 #endif
 
 float _NightMultiplier = 0.5;
+float _HasNightColors = 0;
 
 struct Input
 {
@@ -40,7 +41,7 @@ void vert (inout appdata_full v) {
 
     /*v.color = v.color * (1 - _NightMultiplier) + c * _NightMultiplier;*/
 
-    v.color = lerp(v.color, c, _NightMultiplier);
+    v.color = lerp(v.color, c, _NightMultiplier * _HasNightColors);
 
     /*v.color = v.color * (c * _NightMultiplier);*/
 }
