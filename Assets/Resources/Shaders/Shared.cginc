@@ -19,7 +19,7 @@ sampler2D _NoiseTex;
 fixed _Fade;
 #endif
 
-half _NightMultiplier = 0.5;
+float _NightMultiplier = 0.5;
 
 struct Input
 {
@@ -31,11 +31,12 @@ struct Input
 };
 
 void vert (inout appdata_full v) {
+
     float4 c;
     c.rg = v.texcoord1.xy;
     c.ba = v.texcoord2.xy;
 
-    c.a = _NightMultiplier;
+    /*c.a = _NightMultiplier;*/
 
     /*v.color = v.color * (1 - _NightMultiplier) + c * _NightMultiplier;*/
 
