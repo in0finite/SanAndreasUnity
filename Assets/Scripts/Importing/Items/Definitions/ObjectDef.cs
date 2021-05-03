@@ -25,21 +25,22 @@ namespace SanAndreasUnity.Importing.Items.Definitions
         NoBackCull = 2097152
     }
 
-    [Section("objs")]
-    public class ObjectDef : Definition, IObjectDefinition
+    public interface ISimpleObjectDefinition : IObjectDefinition
     {
-        public readonly int Id;
+        string ModelName { get; }
+        string TextureDictionaryName { get; }
+        float DrawDist { get; }
+        ObjectFlag Flags { get; }
+    }
 
-        int IObjectDefinition.Id
-        {
-            get { return Id; }
-        }
-
-        public readonly string ModelName;
-        public readonly string TextureDictionaryName;
-
-        public readonly float DrawDist;
-        public readonly ObjectFlag Flags;
+    [Section("objs")]
+    public class ObjectDef : Definition, ISimpleObjectDefinition
+    {
+        public int Id { get; }
+        public string ModelName { get; }
+        public string TextureDictionaryName { get; }
+        public float DrawDist { get; }
+        public ObjectFlag Flags { get; }
 
         public ObjectDef(string line) : base(line)
         {

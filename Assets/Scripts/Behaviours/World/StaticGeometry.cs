@@ -20,6 +20,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         protected Instance Instance { get; private set; }
 
+        public ISimpleObjectDefinition ObjectDefinition { get; private set; }
+
         private bool _canLoad;
 		private bool _isGeometryLoaded = false;
         private bool _isVisible;
@@ -50,13 +52,13 @@ namespace SanAndreasUnity.Behaviours.World
         public void Initialize(Instance inst, Dictionary<Instance, StaticGeometry> dict)
         {
             Instance = inst;
-            Instance.Object = Instance.Object ?? Item.GetDefinition<Importing.Items.Definitions.ObjectDef>(inst.ObjectId);
+            ObjectDefinition = Item.GetDefinition<Importing.Items.Definitions.ISimpleObjectDefinition>(inst.ObjectId);
 
             Initialize(inst.Position, inst.Rotation);
 
-            _canLoad = Instance.Object != null;
+            _canLoad = ObjectDefinition != null;
 
-            name = _canLoad ? Instance.Object.ModelName : string.Format("Unknown ({0})", Instance.ObjectId);
+            name = _canLoad ? ObjectDefinition.ModelName : string.Format("Unknown ({0})", Instance.ObjectId);
 
             if (_canLoad && Instance.LodInstance != null)
             {
@@ -76,7 +78,7 @@ namespace SanAndreasUnity.Behaviours.World
         {
             if (!_canLoad) return false;
 
-            var obj = Instance.Object;
+            var obj = ObjectDefinition;
 
             //	if (obj.HasFlag (ObjectFlag.DisableDrawDist))
             //		return true;
@@ -127,7 +129,7 @@ namespace SanAndreasUnity.Behaviours.World
 			// this was previously placed after loading geometry
 			Flags = Enum.GetValues(typeof(ObjectFlag))
 				.Cast<ObjectFlag>()
-				.Where(x => (Instance.Object.Flags & x) == x)
+				.Where(x => (ObjectDefinition.Flags & x) == x)
 				.Select(x => x.ToString())
 				.ToList();
 
@@ -137,7 +139,7 @@ namespace SanAndreasUnity.Behaviours.World
 			// we could start loading collision model here
 			// - we can't, because we don't know the name of collision file until clump is loaded
 
-			Geometry.LoadAsync( Instance.Object.ModelName, new string[] {Instance.Object.TextureDictionaryName}, (geoms) => {
+			Geometry.LoadAsync( ObjectDefinition.ModelName, new string[] {ObjectDefinition.TextureDictionaryName}, (geoms) => {
 				if(geoms != null)
 				{
 					// we can't load collision model asyncly, because it requires a transform to attach to
@@ -162,7 +164,7 @@ namespace SanAndreasUnity.Behaviours.World
 			var mr = gameObject.AddComponent<MeshRenderer>();
 
 			mf.sharedMesh = geoms.Geometry[0].Mesh;
-			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(Instance.Object.Flags, mat => mat.SetTexture(NoiseTexId, NoiseTex));
+			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(ObjectDefinition.Flags, mat => mat.SetTexture(NoiseTexId, NoiseTex));
 
 			Profiler.EndSample ();
 
@@ -172,7 +174,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 			Profiler.BeginSample ("Set layer", this);
 
-			if (Instance.Object.HasFlag(ObjectFlag.Breakable))
+			if (ObjectDefinition.Flags.HasFlag(ObjectFlag.Breakable))
 			{
 				gameObject.SetLayerRecursive(BreakableLayer);
 			}
