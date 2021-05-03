@@ -31,6 +31,11 @@ namespace SanAndreasUnity.UI {
 
 		protected override void OnWindowGUI ()
 		{
+			if (null == DayTimeManager.Singleton)
+			{
+				GUILayout.Label($"{nameof(DayTimeManager)} not available");
+				return;
+			}
 
 			GUILayout.Label($"Current time: {DayTimeManager.Singleton.CurrentTimeHours}:{DayTimeManager.Singleton.CurrentTimeMinutes}");
 			GUILayout.Label($"Time scale: {DayTimeManager.Singleton.timeScale}");
