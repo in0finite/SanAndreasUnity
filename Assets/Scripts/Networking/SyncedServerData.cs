@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Net
@@ -10,6 +11,8 @@ namespace SanAndreasUnity.Net
         SyncedBag.StringSyncDictionary _syncDictionary = new SyncedBag.StringSyncDictionary();
 
         public static SyncedBag Data { get; private set; } = new SyncedBag(new SyncedBag.StringSyncDictionary());
+
+        public static event System.Action onInitialSyncDataAvailable = delegate {};
 
 
 
@@ -47,6 +50,14 @@ namespace SanAndreasUnity.Net
         {
             // clear data for next server start
             Data = new SyncedBag(new SyncedBag.StringSyncDictionary());
+        }
+
+        public override void OnStartClient()
+        {
+            if (NetStatus.IsServer)
+                return;
+
+            F.InvokeEventExceptionSafe(onInitialSyncDataAvailable);
         }
     }
 }

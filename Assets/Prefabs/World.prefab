@@ -213,6 +213,7 @@ GameObject:
   m_Component:
   - component: {fileID: 499186}
   - component: {fileID: 114077829182571006}
+  - component: {fileID: 3252431705490264232}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -413,6 +414,18 @@ MonoBehaviour:
   controlLightIntensity: 1
   disableLightDuringNight: 0
   moonColor: {r: 0.41006586, g: 0.71558595, b: 0.9150943, a: 1}
+--- !u!114 &3252431705490264232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3defb462a2823b347b81b01a5a3e5dd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &149528
 GameObject:
   m_ObjectHideFlags: 0

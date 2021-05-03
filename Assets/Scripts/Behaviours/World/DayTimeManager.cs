@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SanAndreasUnity.Utilities;
+using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -40,6 +41,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         private static int s_nightMultiplierPropertyId = -1;
         public static int NightMultiplierPropertyId => s_nightMultiplierPropertyId == -1 ? s_nightMultiplierPropertyId = Shader.PropertyToID("_NightMultiplier") : s_nightMultiplierPropertyId;
+
+        public event System.Action onTimeChanged = delegate {};
 
 
         private void Awake()
@@ -128,6 +131,8 @@ namespace SanAndreasUnity.Behaviours.World
             {
                 Debug.Log($"Time set to {hours}:{minutes}, curveTime {curveTime}, lightIntensity {lightIntensity}, lightAngle {lightAngle}, nightMultiplier {nightMultiplier}");
             }
+
+            F.InvokeEventExceptionSafe(this.onTimeChanged);
         }
 
         float UpdateLightAngle(float curveTime)
@@ -135,6 +140,13 @@ namespace SanAndreasUnity.Behaviours.World
             float lightAngle = this.lightAngleCurve.Evaluate(curveTime) * 180f;
             this.directionalLight.transform.rotation = Quaternion.AngleAxis(lightAngle, Vector3.right);
             return lightAngle;
+        }
+
+        public static void CurveTimeToHoursAndMinutes(float curveTime, out byte hours, out byte minutes)
+        {
+            hours = (byte) Mathf.FloorToInt(curveTime);
+            float hourPerc = curveTime - Mathf.Floor(curveTime);
+            minutes = (byte) Mathf.FloorToInt(60 * hourPerc);
         }
     }
 }
