@@ -62,14 +62,15 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void Start()
         {
-            this.SetTime(this.startTimeHours, this.startTimeMinutes, false);
+            if (NetUtils.IsServer)
+                this.SetTime(this.startTimeHours, this.startTimeMinutes, false);
         }
 
         private void Update()
         {
             m_timeSinceTimeAdvanced += Time.deltaTime * this.timeScale;
 
-            if (m_timeSinceTimeAdvanced >= 1)
+            if (m_timeSinceTimeAdvanced >= 1 && NetUtils.IsServer)
             {
                 m_timeSinceTimeAdvanced = 0;
                 this.AdvanceTime();
@@ -104,6 +105,8 @@ namespace SanAndreasUnity.Behaviours.World
 
             this.CurrentTimeHours = hours;
             this.CurrentTimeMinutes = minutes;
+
+            m_timeSinceTimeAdvanced = 0;
 
             float curveTime = this.CurrentCurveTime;
 
@@ -144,9 +147,10 @@ namespace SanAndreasUnity.Behaviours.World
 
         public static void CurveTimeToHoursAndMinutes(float curveTime, out byte hours, out byte minutes)
         {
-            hours = (byte) Mathf.FloorToInt(curveTime);
-            float hourPerc = curveTime - Mathf.Floor(curveTime);
-            minutes = (byte) Mathf.FloorToInt(60 * hourPerc);
+            float hoursWithMinutes = curveTime * 24f;
+            hours = (byte) Mathf.FloorToInt(hoursWithMinutes);
+            float hourPerc = hoursWithMinutes - Mathf.Floor(hoursWithMinutes);
+            minutes = (byte) Mathf.RoundToInt(60 * hourPerc);
         }
     }
 }
