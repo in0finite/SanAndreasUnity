@@ -11,14 +11,7 @@ namespace SanAndreasUnity.Behaviours.World
             Transform parent,
             TwoDEffect.Light lightInfo)
         {
-            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            go.transform.SetParent(parent);
-            go.transform.localPosition = lightInfo.Position;
-
-            var lightSource = go.AddComponent<LightSource>();
-            lightSource.LightInfo = lightInfo;
-
-            return lightSource;
+            return null;
         }
     }
 }
