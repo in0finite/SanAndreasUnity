@@ -138,9 +138,11 @@ namespace SanAndreasUnity.Importing.Items
         }
 
         public static TDefinition GetDefinition<TDefinition>(int id)
-            where TDefinition : Definition, IObjectDefinition
+            where TDefinition : class, IObjectDefinition
         {
-            return !_definitions.ContainsKey(id) ? null : (TDefinition)_definitions[id];
+            return _definitions.TryGetValue(id, out IObjectDefinition objectDefinition)
+                ? (TDefinition) objectDefinition
+                : null;
         }
 
         public static TDefinition GetDefinitionOrThrow<TDefinition>(int id)

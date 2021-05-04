@@ -4,6 +4,7 @@ using SanAndreasUnity.Utilities;
 using UnityEngine.UI;
 using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Behaviours.Vehicles;
+using SanAndreasUnity.Behaviours.World;
 
 namespace SanAndreasUnity.UI {
 	
@@ -20,6 +21,7 @@ namespace SanAndreasUnity.UI {
 		public Text pedStateText;
 		public Text pedVelocityText;
 		public Text radioStationText;
+		public Text dayTimeText;
 
 		[SerializeField] [Range(0.3f, 10f)] float m_radioStationLabelDuration = 3f;
 
@@ -157,6 +159,8 @@ namespace SanAndreasUnity.UI {
 
 			this.UpdateOtherUi(ped, showPedUi);
 
+			this.UpdateDayTimeUi();
+
 			this.UpdateRadioStationUi(ped, showPedUi);
 
 		}
@@ -265,6 +269,17 @@ namespace SanAndreasUnity.UI {
 					this.pedVelocityText.text = pedVelocityDisplayText;
 			}
 
+		}
+
+		void UpdateDayTimeUi()
+		{
+			this.dayTimeText.enabled = DayTimeManager.Singleton != null;
+			if (this.dayTimeText.enabled)
+			{
+				string dayTimeDisplayText = DayTimeManager.Singleton.CurrentTimeAsString;
+				if (this.dayTimeText.text != dayTimeDisplayText)
+					this.dayTimeText.text = dayTimeDisplayText;
+			}
 		}
 
 	}

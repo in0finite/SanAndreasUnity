@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Importing.Conversion
         NoBackCull = 1,
         Alpha = 2,
         Vehicle = 4,
-        OverrideAlpha = 8
+        OverrideAlpha = 8,
     }
 
     public class Geometry
@@ -57,6 +57,10 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             get { return _sCarColorIndexId == -1 ? _sCarColorIndexId = Shader.PropertyToID("_CarColorIndex") : _sCarColorIndexId; }
         }
+
+        private static int _sHasNightColorsPropertyId = -1;
+
+        public static int HasNightColorsPropertyId => _sHasNightColorsPropertyId == -1 ? _sHasNightColorsPropertyId = Shader.PropertyToID("_HasNightColors") : _sHasNightColorsPropertyId;
 
         private static int[] FromTriangleStrip(IList<int> indices)
         {
@@ -189,7 +193,11 @@ namespace SanAndreasUnity.Importing.Conversion
             get { return _sWhiteTex ?? (_sWhiteTex = new LoadedTexture(Texture2D.whiteTexture, false)); }
         }
 
-        private static UnityEngine.Material Convert(RenderWareStream.Material src, TextureDictionary[] txds, MaterialFlags flags)
+        private static UnityEngine.Material Convert(
+            RenderWareStream.Material src,
+            RenderWareStream.Geometry geometry,
+            TextureDictionary[] txds,
+            MaterialFlags flags)
         {
             LoadedTexture diffuse;
             LoadedTexture mask = null;
@@ -273,6 +281,11 @@ namespace SanAndreasUnity.Importing.Conversion
             mat.SetFloat(MetallicId, src.Specular);
             mat.SetFloat(SmoothnessId, src.Smoothness);
 
+            if (geometry.ExtraVertColor != null && geometry.ExtraVertColor.Colors != null)
+            {
+                mat.SetFloat(HasNightColorsPropertyId, 1);
+            }
+
             return mat;
         }
 
@@ -280,8 +293,7 @@ namespace SanAndreasUnity.Importing.Conversion
         {
             var mesh = new Mesh();
 
-            // ReSharper disable ConvertClosureToMethodGroup
-            var meshVertices = src.Vertices;//Utilities.F.ConvertArray( src.Vertices, x => Types.Convert(x));
+            var meshVertices = src.Vertices;
             mesh.vertices = meshVertices;
 
             if (src.Normals != null)
@@ -294,11 +306,17 @@ namespace SanAndreasUnity.Importing.Conversion
                 mesh.colors32 = src.Colours;
             }
 
+            if (src.ExtraVertColor != null && src.ExtraVertColor.Colors != null)
+            {
+                // store night colors in UV coordinates, because Unity mesh can not hold multiple colors per vertex
+                mesh.uv2 = src.ExtraVertColor.Colors;
+                mesh.uv3 = src.ExtraVertColor.Colors2;
+            }
+
             if (src.TexCoords != null && src.TexCoords.Length > 0)
             {
                 mesh.uv = src.TexCoords[0];
             }
-            // ReSharper restore ConvertClosureToMethodGroup
 
             if (src.Normals == null)
             {
@@ -604,7 +622,10 @@ namespace SanAndreasUnity.Importing.Conversion
         public readonly Mesh Mesh;
 
         private readonly RenderWareStream.Geometry _geom;
+        public RenderWareStream.Geometry RwGeometry => _geom;
+
         public readonly TextureDictionary[] _textureDictionaries;
+
         private readonly Dictionary<MaterialFlags, UnityEngine.Material[]> _materials;
 
         public readonly UnityEngine.Matrix4x4[] SkinToBoneMatrices;
@@ -624,12 +645,8 @@ namespace SanAndreasUnity.Importing.Conversion
             _materials = new Dictionary<MaterialFlags, UnityEngine.Material[]>();
         }
 
-        public UnityEngine.Material[] GetMaterials(ObjectFlag flags)
-        {
-            return GetMaterials(flags, x => { });
-        }
-
-        public UnityEngine.Material[] GetMaterials(ObjectFlag flags,
+        public UnityEngine.Material[] GetMaterials(
+            ObjectFlag flags,
             Action<UnityEngine.Material> setupMaterial)
         {
             var matFlags = MaterialFlags.Default | MaterialFlags.OverrideAlpha;
@@ -663,7 +680,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
             var mats = _geom.Materials.Select(x =>
             {
-                var mat = Convert(x, _textureDictionaries, flags);
+                var mat = Convert(x, _geom, _textureDictionaries, flags);
                 setupMaterial(mat);
                 return mat;
             }).ToArray();

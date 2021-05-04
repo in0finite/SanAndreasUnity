@@ -25,6 +25,7 @@
 
         CGPROGRAM
 
+        #pragma vertex vert
         #pragma surface surf Standard addshadow alphatest:_AlphaCutoff
         #pragma target 3.0
 

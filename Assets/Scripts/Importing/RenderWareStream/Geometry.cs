@@ -74,6 +74,10 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
         public readonly Skin Skinning;
 
+        public readonly TwoDEffect TwoDEffect;
+
+        public readonly ExtraVertColor ExtraVertColor;
+
         public Geometry(SectionHeader header, Stream stream)
             : base(header, stream)
         {
@@ -156,6 +160,8 @@ namespace SanAndreasUnity.Importing.RenderWareStream
 
             MaterialSplits = extensions.FirstOrDefault<MaterialSplitList>().MaterialSplits;
             Skinning = extensions.FirstOrDefault<Skin>();
+            TwoDEffect = extensions.FirstOrDefault<TwoDEffect>();
+            ExtraVertColor = extensions.FirstOrDefault<ExtraVertColor>();
         }
     }
 }
