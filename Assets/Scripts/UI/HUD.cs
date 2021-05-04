@@ -159,6 +159,8 @@ namespace SanAndreasUnity.UI {
 
 			this.UpdateOtherUi(ped, showPedUi);
 
+			this.UpdateDayTimeUi();
+
 			this.UpdateRadioStationUi(ped, showPedUi);
 
 		}
@@ -246,7 +248,6 @@ namespace SanAndreasUnity.UI {
 				this.healthForegroundImage.enabled = false;
 				this.pedStateText.enabled = false;
 				this.pedVelocityText.enabled = false;
-				this.dayTimeText.enabled = false;
 				return;
 			}
 
@@ -268,6 +269,10 @@ namespace SanAndreasUnity.UI {
 					this.pedVelocityText.text = pedVelocityDisplayText;
 			}
 
+		}
+
+		void UpdateDayTimeUi()
+		{
 			this.dayTimeText.enabled = DayTimeManager.Singleton != null;
 			if (this.dayTimeText.enabled)
 			{
@@ -275,7 +280,6 @@ namespace SanAndreasUnity.UI {
 				if (this.dayTimeText.text != dayTimeDisplayText)
 					this.dayTimeText.text = dayTimeDisplayText;
 			}
-
 		}
 
 	}
