@@ -21,6 +21,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public float CurrentCurveTime => (this.CurrentTimeHours + this.CurrentTimeMinutes / 60f) / 24f;
 
+        public string CurrentTimeAsString => FormatTime(this.CurrentTimeHours, this.CurrentTimeMinutes);
+
         private float m_timeSinceTimeAdvanced = 0;
 
         public float timeScale = 1;
@@ -156,6 +158,11 @@ namespace SanAndreasUnity.Behaviours.World
             hours = (byte) Mathf.FloorToInt(hoursWithMinutes);
             float hourPerc = hoursWithMinutes - Mathf.Floor(hoursWithMinutes);
             minutes = (byte) Mathf.RoundToInt(60 * hourPerc);
+        }
+
+        public static string FormatTime(byte hours, byte minutes)
+        {
+            return $"{hours:00}:{minutes:00}";
         }
     }
 }
