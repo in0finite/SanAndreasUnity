@@ -43,6 +43,7 @@ namespace SanAndreasUnity.Behaviours.World
         public static int NightMultiplierPropertyId => s_nightMultiplierPropertyId == -1 ? s_nightMultiplierPropertyId = Shader.PropertyToID("_NightMultiplier") : s_nightMultiplierPropertyId;
 
         public event System.Action onTimeChanged = delegate {};
+        public event System.Action onHourChanged = delegate {};
 
 
         private void Awake()
@@ -103,6 +104,8 @@ namespace SanAndreasUnity.Behaviours.World
             hours = (byte) Mathf.Clamp(hours, 0, 23);
             minutes = (byte) Mathf.Clamp(minutes, 0, 59);
 
+            byte oldHour = this.CurrentTimeHours;
+
             this.CurrentTimeHours = hours;
             this.CurrentTimeMinutes = minutes;
 
@@ -136,6 +139,8 @@ namespace SanAndreasUnity.Behaviours.World
             }
 
             F.InvokeEventExceptionSafe(this.onTimeChanged);
+            if (oldHour != this.CurrentTimeHours)
+                F.InvokeEventExceptionSafe(this.onHourChanged);
         }
 
         float UpdateLightAngle(float curveTime)

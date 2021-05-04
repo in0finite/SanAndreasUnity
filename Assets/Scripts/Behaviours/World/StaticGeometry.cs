@@ -15,8 +15,17 @@ namespace SanAndreasUnity.Behaviours.World
     {
         public static StaticGeometry Create()
         {
+	        if (!s_registeredTimeChangeCallback)
+	        {
+		        s_registeredTimeChangeCallback = true;
+		        DayTimeManager.Singleton.onHourChanged += OnHourChanged;
+	        }
+
             return new GameObject().AddComponent<StaticGeometry>();
         }
+
+        private static List<StaticGeometry> s_timedObjects = new List<StaticGeometry>();
+        public static IReadOnlyList<StaticGeometry> TimedObjects => s_timedObjects;
 
         protected Instance Instance { get; private set; }
 
@@ -49,10 +58,20 @@ namespace SanAndreasUnity.Behaviours.World
         public StaticGeometry LodParent { get; private set; }
         public StaticGeometry LodChild { get; private set; }
 
+        private static bool s_registeredTimeChangeCallback = false;
+
+        public bool IsVisibleBasedOnCurrentDayTime => this.ObjectDefinition is TimeObjectDef timeObjectDef ? IsObjectVisibleBasedOnCurrentDayTime(timeObjectDef) : true;
+
+
         public void Initialize(Instance inst, Dictionary<Instance, StaticGeometry> dict)
         {
             Instance = inst;
             ObjectDefinition = Item.GetDefinition<Importing.Items.Definitions.ISimpleObjectDefinition>(inst.ObjectId);
+
+            if (ObjectDefinition is TimeObjectDef)
+            {
+	            s_timedObjects.Add(this);
+            }
 
             Initialize(inst.Position, inst.Rotation);
 
@@ -259,7 +278,7 @@ namespace SanAndreasUnity.Behaviours.World
 
             mr.SetPropertyBlock(null);
 
-            if (!IsVisible)
+            if (!IsVisible || !IsVisibleBasedOnCurrentDayTime)
             {
                 gameObject.SetActive(false);
             }
@@ -270,6 +289,30 @@ namespace SanAndreasUnity.Behaviours.World
         public void Hide()
         {
             IsVisible = false;
+        }
+
+        private static void OnHourChanged()
+        {
+	        foreach (var timedObject in s_timedObjects)
+	        {
+		        if (timedObject.IsVisible)
+		        {
+			        timedObject.gameObject.SetActive(timedObject.IsVisibleBasedOnCurrentDayTime);
+		        }
+	        }
+        }
+
+        private static bool IsObjectVisibleBasedOnCurrentDayTime(TimeObjectDef timeObjectDef)
+        {
+	        byte currentHour = DayTimeManager.Singleton.CurrentTimeHours;
+	        if (timeObjectDef.TimeOnHours < timeObjectDef.TimeOffHours)
+	        {
+		        return currentHour >= timeObjectDef.TimeOnHours && currentHour < timeObjectDef.TimeOffHours;
+	        }
+	        else
+	        {
+		        return currentHour >= timeObjectDef.TimeOnHours || currentHour < timeObjectDef.TimeOffHours;
+	        }
         }
     }
 }
