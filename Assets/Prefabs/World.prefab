@@ -480,6 +480,9 @@ MonoBehaviour:
   loadParkedVehicles: 0
   enexPrefab: {fileID: 2538922681126103069, guid: 1858efe8eaf422544a4651b2fba2937a,
     type: 3}
+  lightSourcePrefab: {fileID: 5315691503008682268, guid: be3276cb0ed03dc4cb44bd04cde4bcfb,
+    type: 3}
+  lightScaleMultiplier: 0.5
 --- !u!114 &11450014
 MonoBehaviour:
   m_ObjectHideFlags: 0

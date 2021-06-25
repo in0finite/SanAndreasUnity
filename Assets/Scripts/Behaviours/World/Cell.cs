@@ -57,6 +57,10 @@ namespace SanAndreasUnity.Behaviours.World
         
         public GameObject enexPrefab;
 
+        public GameObject lightSourcePrefab;
+
+        public float lightScaleMultiplier = 1f;
+
 
 
         private void Awake()
