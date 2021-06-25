@@ -65,8 +65,6 @@ namespace SanAndreasUnity.Behaviours.World
         public float yellowTrafficLightDuration = 2;
         public float greenTrafficLightDuration = 7;
 
-        public bool rotateLightsToFaceCamera = true;
-
 
 
         private void Awake()

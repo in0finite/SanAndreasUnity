@@ -369,6 +369,8 @@ namespace SanAndreasUnity.Behaviours.World
 
 	        this.UpdateLightsBasedOnDayTime();
 
+	        this.gameObject.AddComponent<FaceTowardsCamera>().transformsToFace = m_lightSources.Select(l => l.transform).ToArray();
+
 	        this.InvokeRepeating(nameof(this.UpdateLights), 0f, 0.2f);
         }
 
@@ -432,24 +434,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void UpdateLights()
         {
-	        FaceLightsTowardCamera();
-
 	        UpdateTrafficLights();
-        }
-
-        private void FaceLightsTowardCamera()
-        {
-	        if (Cell.Instance.rotateLightsToFaceCamera)
-	        {
-		        var cam = Camera.current;
-		        if (cam != null)
-		        {
-			        for (int i = 0; i < m_lightSources.Length; i++)
-			        {
-				        m_lightSources[i].transform.forward = -cam.transform.forward;
-			        }
-		        }
-	        }
         }
 
         private void UpdateTrafficLights()
