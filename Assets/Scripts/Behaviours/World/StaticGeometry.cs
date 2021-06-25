@@ -64,10 +64,11 @@ namespace SanAndreasUnity.Behaviours.World
 
         public bool IsVisibleBasedOnCurrentDayTime => this.ObjectDefinition is TimeObjectDef timeObjectDef ? IsObjectVisibleBasedOnCurrentDayTime(timeObjectDef) : true;
 
-        private List<LightSource> m_lightSources = null;
-        private List<LightSource> m_trafficLightSources = null;
+        // use arrays to save memory
+        // set them to null to save memory
+        private LightSource[] m_lightSources = null;
+        private LightSource[] m_trafficLightSources = null;
         private int m_activeTrafficLightIndex = -1;
-        //private float m_timeSinceUpdatedTrafficLights = 0;
 
 
         public void Initialize(Instance inst, Dictionary<Instance, StaticGeometry> dict)
@@ -308,14 +309,14 @@ namespace SanAndreasUnity.Behaviours.World
 	        if (lights.Count == 0)
 		        return;
 
-	        m_lightSources = lights;
+	        m_lightSources = lights.ToArray();
 
 	        m_trafficLightSources = lights
 		        .Where(l => l.LightInfo.CoronaShowModeFlags == TwoDEffect.Light.CoronaShowMode.TRAFFICLIGHT)
-		        .ToList();
+		        .ToArray();
 
-	        if (m_trafficLightSources.Count % 3 != 0)
-		        Debug.LogError($"Traffic lights count must be multiple of 3, found {m_trafficLightSources.Count}");
+	        if (m_trafficLightSources.Length % 3 != 0)
+		        Debug.LogError($"Traffic lights count must be multiple of 3, found {m_trafficLightSources.Length}");
 
 	        this.InvokeRepeating(nameof(this.UpdateLights), 0f, 0.2f);
         }
@@ -384,13 +385,13 @@ namespace SanAndreasUnity.Behaviours.World
 
 	        if (cam != null)
 	        {
-		        for (int i = 0; i < m_lightSources.Count; i++)
+		        for (int i = 0; i < m_lightSources.Length; i++)
 		        {
 			        m_lightSources[i].transform.forward = -cam.transform.forward;
 		        }
 	        }
 
-	        if (m_trafficLightSources.Count % 3 == 0)
+	        if (m_trafficLightSources.Length % 3 == 0)
 	        {
 		        // update active traffic light
 		        m_activeTrafficLightIndex = this.CalculateActiveTrafficLightIndex();
@@ -401,7 +402,7 @@ namespace SanAndreasUnity.Behaviours.World
 		        var yellowLights = m_trafficLightSources.Where(l => IsColorInRange(l.LightInfo.Color, new Color32(255, 255, 0, 0), 50, 150, 80)).ToList();
 		        var greenLights = m_trafficLightSources.Where(l => IsColorInRange(l.LightInfo.Color, Color.green, 50, 50, 50)).ToList();
 
-		        if (redLights.Count + yellowLights.Count + greenLights.Count != m_trafficLightSources.Count)
+		        if (redLights.Count + yellowLights.Count + greenLights.Count != m_trafficLightSources.Length)
 		        {
 			        Debug.LogError("Failed to identify some light colors");
 		        }
