@@ -60,9 +60,12 @@ namespace SanAndreasUnity.Behaviours.World
         public GameObject lightSourcePrefab;
 
         public float lightScaleMultiplier = 1f;
+
         public float redTrafficLightDuration = 7;
         public float yellowTrafficLightDuration = 2;
         public float greenTrafficLightDuration = 7;
+
+        public bool rotateLightsToFaceCamera = true;
 
 
 

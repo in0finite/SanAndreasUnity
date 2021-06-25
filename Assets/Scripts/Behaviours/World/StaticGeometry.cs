@@ -381,13 +381,15 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void UpdateLights()
         {
-	        var cam = Camera.current;
-
-	        if (cam != null)
+	        if (Cell.Instance.rotateLightsToFaceCamera)
 	        {
-		        for (int i = 0; i < m_lightSources.Length; i++)
+		        var cam = Camera.current;
+		        if (cam != null)
 		        {
-			        m_lightSources[i].transform.forward = -cam.transform.forward;
+			        for (int i = 0; i < m_lightSources.Length; i++)
+			        {
+				        m_lightSources[i].transform.forward = -cam.transform.forward;
+			        }
 		        }
 	        }
 
