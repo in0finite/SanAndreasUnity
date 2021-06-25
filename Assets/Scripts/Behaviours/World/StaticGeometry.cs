@@ -64,6 +64,9 @@ namespace SanAndreasUnity.Behaviours.World
 
         public bool IsVisibleBasedOnCurrentDayTime => this.ObjectDefinition is TimeObjectDef timeObjectDef ? IsObjectVisibleBasedOnCurrentDayTime(timeObjectDef) : true;
 
+        // hashset is better because we do lookup/remove often, while iteration is done rarely
+        private static HashSet<StaticGeometry> s_activeObjectsWithLights = new HashSet<StaticGeometry>();
+
         // use arrays to save memory
         // set them to null to save memory
         private LightSource[] m_lightSources = null;
@@ -73,6 +76,25 @@ namespace SanAndreasUnity.Behaviours.World
         private bool m_hasTrafficLights = false;
         private int m_activeTrafficLightIndex = -1;
 
+
+        private void OnEnable()
+        {
+	        if (m_lightSources != null)
+		        s_activeObjectsWithLights.Add(this);
+
+	        this.UpdateLightsBasedOnDayTime();
+	        this.UpdateTrafficLights();
+        }
+
+        private void OnDisable()
+        {
+	        s_activeObjectsWithLights.Remove(this);
+        }
+
+        private void OnDestroy()
+        {
+	        s_timedObjects.Remove(this);
+        }
 
         public void Initialize(Instance inst, Dictionary<Instance, StaticGeometry> dict)
         {
@@ -291,6 +313,11 @@ namespace SanAndreasUnity.Behaviours.World
 			        timedObject.gameObject.SetActive(timedObject.IsVisibleBasedOnCurrentDayTime);
 		        }
 	        }
+
+	        foreach (var activeObjectWithLight in s_activeObjectsWithLights)
+	        {
+		        activeObjectWithLight.UpdateLightsBasedOnDayTime();
+	        }
         }
 
         private static bool IsObjectVisibleBasedOnCurrentDayTime(TimeObjectDef timeObjectDef)
@@ -314,6 +341,9 @@ namespace SanAndreasUnity.Behaviours.World
 		        return;
 
 	        m_lightSources = lights.ToArray();
+
+	        if (this.gameObject.activeInHierarchy)
+				s_activeObjectsWithLights.Add(this);
 
 	        var trafficLightSources = lights
 		        .Where(l => l.LightInfo.CoronaShowModeFlags == TwoDEffect.Light.CoronaShowMode.TRAFFICLIGHT)
@@ -436,6 +466,21 @@ namespace SanAndreasUnity.Behaviours.World
 		        EnableLights(m_yellowTrafficLights, m_activeTrafficLightIndex == 1);
 	        if (m_greenTrafficLights != null)
 		        EnableLights(m_greenTrafficLights, m_activeTrafficLightIndex == 2);
+        }
+
+        private void UpdateLightsBasedOnDayTime()
+        {
+	        if (null == m_lightSources)
+		        return;
+
+	        bool isDay = DayTimeManager.Singleton.CurrentTimeHours >= 6 && DayTimeManager.Singleton.CurrentTimeHours <= 20;
+	        var flag = isDay ? TwoDEffect.Light.Flags1.AT_DAY : TwoDEffect.Light.Flags1.AT_NIGHT;
+
+	        for (int i = 0; i < m_lightSources.Length; i++)
+	        {
+		        bool b = (m_lightSources[i].LightInfo.Flags_1 & flag) == flag;
+		        m_lightSources[i].gameObject.SetActive(b);
+	        }
         }
 
         private static void EnableLights(LightSource[] lights, bool enable)
