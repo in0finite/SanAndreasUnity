@@ -334,6 +334,8 @@ namespace SanAndreasUnity.Behaviours.World
             GUILayout.Label("total num divisions " + (null == _leaves ? 0 : _leaves.Count));
             GUILayout.Label("total num objects " + totalNumObjects);
             GUILayout.Label("geometry parts loaded " + SanAndreasUnity.Importing.Conversion.Geometry.NumGeometryPartsLoaded);
+            GUILayout.Label("num TOBJ objects " + StaticGeometry.TimedObjects.Count);
+            GUILayout.Label("num active objects with lights " + StaticGeometry.ActiveObjectsWithLights.Count);
             GUILayout.Label("num objects in current division " + (containingDivision != null ? containingDivision.NumObjects : 0));
             GUILayout.Label("num divisions updated " + numDivisionsUpdatedLoadOrder);
             GUILayout.Label("num objects updated " + numMapObjectsUpdatedLoadOrder);

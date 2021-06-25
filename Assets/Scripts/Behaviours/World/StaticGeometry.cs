@@ -66,6 +66,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         // hashset is better because we do lookup/remove often, while iteration is done rarely
         private static HashSet<StaticGeometry> s_activeObjectsWithLights = new HashSet<StaticGeometry>();
+        public static IReadOnlyCollection<StaticGeometry> ActiveObjectsWithLights => s_activeObjectsWithLights;
 
         // use arrays to save memory
         // set them to null to save memory
