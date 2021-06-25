@@ -217,65 +217,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 		}
 
-		private void CreateLights(
-			Geometry.GeometryParts geometryParts)
-		{
-			var lights = CreateLights(this.transform, geometryParts);
-			if (lights.Count == 0)
-				return;
-
-			m_lightSources = lights;
-
-			m_trafficLightSources = lights
-				.Where(l => l.LightInfo.CoronaShowModeFlags == TwoDEffect.Light.CoronaShowMode.TRAFFICLIGHT)
-				.ToList();
-
-			if (m_trafficLightSources.Count % 3 != 0)
-				Debug.LogError($"Traffic lights count must be multiple of 3, found {m_trafficLightSources.Count}");
-
-			this.InvokeRepeating(nameof(this.UpdateLights), 0f, 0.2f);
-		}
-
-		public static List<LightSource> CreateLights(
-			Transform tr,
-			Geometry.GeometryParts geometryParts)
-		{
-			Profiler.BeginSample("CreateLights()", tr);
-
-			var lights = new List<LightSource>();
-
-			foreach (var geometry in geometryParts.Geometry)
-			{
-				var twoDEffect = geometry.RwGeometry.TwoDEffect;
-				if (twoDEffect != null && twoDEffect.Lights != null)
-				{
-					foreach (var lightInfo in twoDEffect.Lights)
-					{
-						lights.Add(LightSource.Create(tr, lightInfo));
-					}
-				}
-			}
-
-			Profiler.EndSample();
-
-			return lights;
-		}
-
-		private float GetTrafficLightTimeOffset()
-		{
-			// determine time offset based on rotation of object
-			float angle = Vector3.Angle(this.transform.forward.WithXAndZ(), Vector3.forward);
-			float perc = angle / 180f;
-			return perc * GetTrafficLightCycleDuration();
-		}
-
-		private static float GetTrafficLightCycleDuration()
-		{
-			var cell = Cell.Instance;
-			return cell.redTrafficLightDuration + cell.yellowTrafficLightDuration + cell.greenTrafficLightDuration;
-		}
-
-        protected override void OnShow()
+		protected override void OnShow()
         {
 			Profiler.BeginSample ("StaticGeometry.OnShow");
             IsVisible = LodParent == null || !LodParent.IsVisible;
@@ -359,6 +301,64 @@ namespace SanAndreasUnity.Behaviours.World
 	        }
         }
 
+        private void CreateLights(
+	        Geometry.GeometryParts geometryParts)
+        {
+	        var lights = CreateLights(this.transform, geometryParts);
+	        if (lights.Count == 0)
+		        return;
+
+	        m_lightSources = lights;
+
+	        m_trafficLightSources = lights
+		        .Where(l => l.LightInfo.CoronaShowModeFlags == TwoDEffect.Light.CoronaShowMode.TRAFFICLIGHT)
+		        .ToList();
+
+	        if (m_trafficLightSources.Count % 3 != 0)
+		        Debug.LogError($"Traffic lights count must be multiple of 3, found {m_trafficLightSources.Count}");
+
+	        this.InvokeRepeating(nameof(this.UpdateLights), 0f, 0.2f);
+        }
+
+        public static List<LightSource> CreateLights(
+	        Transform tr,
+	        Geometry.GeometryParts geometryParts)
+        {
+	        Profiler.BeginSample("CreateLights()", tr);
+
+	        var lights = new List<LightSource>();
+
+	        foreach (var geometry in geometryParts.Geometry)
+	        {
+		        var twoDEffect = geometry.RwGeometry.TwoDEffect;
+		        if (twoDEffect != null && twoDEffect.Lights != null)
+		        {
+			        foreach (var lightInfo in twoDEffect.Lights)
+			        {
+				        lights.Add(LightSource.Create(tr, lightInfo));
+			        }
+		        }
+	        }
+
+	        Profiler.EndSample();
+
+	        return lights;
+        }
+
+        private float GetTrafficLightTimeOffset()
+        {
+	        // determine time offset based on rotation of object
+	        float angle = Vector3.Angle(this.transform.forward.WithXAndZ(), Vector3.forward);
+	        float perc = angle / 180f;
+	        return perc * GetTrafficLightCycleDuration();
+        }
+
+        private static float GetTrafficLightCycleDuration()
+        {
+	        var cell = Cell.Instance;
+	        return cell.redTrafficLightDuration + cell.yellowTrafficLightDuration + cell.greenTrafficLightDuration;
+        }
+
         private int CalculateActiveTrafficLightIndex()
         {
 	        int index = -1;
@@ -417,17 +417,6 @@ namespace SanAndreasUnity.Behaviours.World
 		        {
 			        lists[i].ForEach(l => l.gameObject.SetActive(i == m_activeTrafficLightIndex));
 		        }
-
-
-
-		        /*int trafficLightIndex = 0;
-		        for (int i = 0; i < m_trafficLightSources.Count; i++)
-		        {
-			        bool isActive = trafficLightIndex == m_activeTrafficLightIndex;
-			        m_trafficLightSources[i].gameObject.SetActive(isActive);
-
-			        trafficLightIndex = (trafficLightIndex + 1) % 3;
-		        }*/
 	        }
         }
 
