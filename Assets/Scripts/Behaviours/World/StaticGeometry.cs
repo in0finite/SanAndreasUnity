@@ -232,7 +232,7 @@ namespace SanAndreasUnity.Behaviours.World
 			if (m_trafficLightSources.Count % 3 != 0)
 				Debug.LogError($"Traffic lights count must be multiple of 3, found {m_trafficLightSources.Count}");
 
-			this.StartCoroutine(this.UpdateLightsCoroutine());
+			this.InvokeRepeating(nameof(this.UpdateLights), 0f, 0.2f);
 		}
 
 		public static List<LightSource> CreateLights(
@@ -377,36 +377,31 @@ namespace SanAndreasUnity.Behaviours.World
 	        return index;
         }
 
-        private IEnumerator UpdateLightsCoroutine()
+        private void UpdateLights()
         {
-	        while (true)
+	        var cam = Camera.current;
+
+	        if (cam != null)
 	        {
-		        yield return null;
-
-		        var cam = Camera.current;
-
-		        if (cam != null)
+		        for (int i = 0; i < m_lightSources.Count; i++)
 		        {
-			        for (int i = 0; i < m_lightSources.Count; i++)
-			        {
-				        m_lightSources[i].transform.forward = - cam.transform.forward;
-			        }
+			        m_lightSources[i].transform.forward = -cam.transform.forward;
 		        }
+	        }
 
-		        if (m_trafficLightSources.Count % 3 == 0)
+	        if (m_trafficLightSources.Count % 3 == 0)
+	        {
+		        // update active traffic light
+		        m_activeTrafficLightIndex = this.CalculateActiveTrafficLightIndex();
+
+		        // disable/enable traffic lights based on which one is active
+		        int trafficLightIndex = 0;
+		        for (int i = 0; i < m_trafficLightSources.Count; i++)
 		        {
-			        // update active traffic light
-			        m_activeTrafficLightIndex = this.CalculateActiveTrafficLightIndex();
+			        bool isActive = trafficLightIndex == m_activeTrafficLightIndex;
+			        m_trafficLightSources[i].gameObject.SetActive(isActive);
 
-			        // disable/enable traffic lights based on which one is active
-			        int trafficLightIndex = 0;
-			        for (int i = 0; i < m_trafficLightSources.Count; i++)
-			        {
-				        bool isActive = trafficLightIndex == m_activeTrafficLightIndex;
-				        m_trafficLightSources[i].gameObject.SetActive(isActive);
-
-				        trafficLightIndex = (trafficLightIndex + 1) % 3;
-			        }
+			        trafficLightIndex = (trafficLightIndex + 1) % 3;
 		        }
 	        }
         }
