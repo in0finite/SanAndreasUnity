@@ -6,9 +6,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Importing.RenderWareStream;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
-using UnityEngine.Profiling;
 using Geometry = SanAndreasUnity.Importing.Conversion.Geometry;
+using Profiler = UnityEngine.Profiling.Profiler;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -262,9 +263,9 @@ namespace SanAndreasUnity.Behaviours.World
 
 		private float GetTrafficLightTimeOffset()
 		{
-			// determine time offset based on position of object
-			float perc = this.transform.position.GetHashCode() / (float)int.MaxValue;
-
+			// determine time offset based on rotation of object
+			float angle = Vector3.Angle(this.transform.forward.WithXAndZ(), Vector3.forward);
+			float perc = angle / 180f;
 			return perc * GetTrafficLightCycleDuration();
 		}
 
