@@ -67,7 +67,10 @@ namespace SanAndreasUnity.Behaviours.World
         // use arrays to save memory
         // set them to null to save memory
         private LightSource[] m_lightSources = null;
-        private LightSource[] m_trafficLightSources = null;
+        private LightSource[] m_redTrafficLights = null;
+        private LightSource[] m_yellowTrafficLights = null;
+        private LightSource[] m_greenTrafficLights = null;
+        private bool m_hasTrafficLights = false;
         private int m_activeTrafficLightIndex = -1;
 
 
@@ -311,12 +314,27 @@ namespace SanAndreasUnity.Behaviours.World
 
 	        m_lightSources = lights.ToArray();
 
-	        m_trafficLightSources = lights
+	        var trafficLightSources = lights
 		        .Where(l => l.LightInfo.CoronaShowModeFlags == TwoDEffect.Light.CoronaShowMode.TRAFFICLIGHT)
 		        .ToArray();
 
-	        if (m_trafficLightSources.Length % 3 != 0)
-		        Debug.LogError($"Traffic lights count must be multiple of 3, found {m_trafficLightSources.Length}");
+	        if (trafficLightSources.Length % 3 != 0)
+		        Debug.LogError($"Traffic lights count should be multiple of 3, found {trafficLightSources.Length}");
+
+	        var redLights = trafficLightSources.Where(l => IsColorInRange(l.LightInfo.Color, Color.red, 50, 30, 30)).ToArray();
+	        var yellowLights = trafficLightSources.Where(l => IsColorInRange(l.LightInfo.Color, new Color32(255, 255, 0, 0), 50, 150, 80)).ToArray();
+	        var greenLights = trafficLightSources.Where(l => IsColorInRange(l.LightInfo.Color, Color.green, 50, 50, 50)).ToArray();
+
+	        if (redLights.Length + yellowLights.Length + greenLights.Length != trafficLightSources.Length)
+	        {
+		        Debug.LogError("Failed to identify some traffic light colors");
+	        }
+
+	        m_redTrafficLights = redLights.Length > 0 ? redLights : null;
+	        m_yellowTrafficLights = yellowLights.Length > 0 ? yellowLights : null;
+	        m_greenTrafficLights = greenLights.Length > 0 ? greenLights : null;
+
+	        m_hasTrafficLights = m_redTrafficLights != null || m_yellowTrafficLights != null || m_greenTrafficLights != null;
 
 	        this.InvokeRepeating(nameof(this.UpdateLights), 0f, 0.2f);
         }
@@ -381,6 +399,13 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void UpdateLights()
         {
+	        FaceLightsTowardCamera();
+
+	        UpdateTrafficLights();
+        }
+
+        private void FaceLightsTowardCamera()
+        {
 	        if (Cell.Instance.rotateLightsToFaceCamera)
 	        {
 		        var cam = Camera.current;
@@ -392,34 +417,31 @@ namespace SanAndreasUnity.Behaviours.World
 			        }
 		        }
 	        }
+        }
 
-	        if (m_trafficLightSources.Length % 3 == 0)
+        private void UpdateTrafficLights()
+        {
+	        if (!m_hasTrafficLights)
+		        return;
+
+	        // update active traffic light
+	        m_activeTrafficLightIndex = this.CalculateActiveTrafficLightIndex();
+
+	        // disable/enable traffic lights based on which one is active
+
+	        if (m_redTrafficLights != null)
+		        EnableLights(m_redTrafficLights, m_activeTrafficLightIndex == 0);
+	        if (m_yellowTrafficLights != null)
+		        EnableLights(m_yellowTrafficLights, m_activeTrafficLightIndex == 1);
+	        if (m_greenTrafficLights != null)
+		        EnableLights(m_greenTrafficLights, m_activeTrafficLightIndex == 2);
+        }
+
+        private static void EnableLights(LightSource[] lights, bool enable)
+        {
+	        for (int i = 0; i < lights.Length; i++)
 	        {
-		        // update active traffic light
-		        m_activeTrafficLightIndex = this.CalculateActiveTrafficLightIndex();
-
-		        // disable/enable traffic lights based on which one is active
-
-		        var redLights = m_trafficLightSources.Where(l => IsColorInRange(l.LightInfo.Color, Color.red, 50, 30, 30)).ToList();
-		        var yellowLights = m_trafficLightSources.Where(l => IsColorInRange(l.LightInfo.Color, new Color32(255, 255, 0, 0), 50, 150, 80)).ToList();
-		        var greenLights = m_trafficLightSources.Where(l => IsColorInRange(l.LightInfo.Color, Color.green, 50, 50, 50)).ToList();
-
-		        if (redLights.Count + yellowLights.Count + greenLights.Count != m_trafficLightSources.Length)
-		        {
-			        Debug.LogError("Failed to identify some light colors");
-		        }
-
-		        var lists = new[]
-		        {
-			        redLights,
-			        yellowLights,
-			        greenLights,
-		        };
-
-		        for (int i = 0; i < lists.Length; i++)
-		        {
-			        lists[i].ForEach(l => l.gameObject.SetActive(i == m_activeTrafficLightIndex));
-		        }
+		        lights[i].gameObject.SetActive(enable);
 	        }
         }
 
