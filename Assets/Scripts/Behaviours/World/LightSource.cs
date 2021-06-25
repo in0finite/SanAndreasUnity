@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using SanAndreasUnity.Importing.RenderWareStream;
 using SanAndreasUnity.Utilities;
 using UnityEngine;

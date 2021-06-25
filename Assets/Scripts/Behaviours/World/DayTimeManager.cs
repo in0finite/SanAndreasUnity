@@ -25,6 +25,9 @@ namespace SanAndreasUnity.Behaviours.World
 
         private float m_timeSinceTimeAdvanced = 0;
 
+        public float TimeWhenTimeWasSet { get; private set; } = 0;
+        public float TimeSinceTimeWasSet => Time.time - this.TimeWhenTimeWasSet;
+
         public float timeScale = 1;
 
         public float nightColorsMultiplier = 0.1f;
@@ -112,6 +115,7 @@ namespace SanAndreasUnity.Behaviours.World
             this.CurrentTimeMinutes = minutes;
 
             m_timeSinceTimeAdvanced = 0;
+            this.TimeWhenTimeWasSet = Time.time;
 
             float curveTime = this.CurrentCurveTime;
 

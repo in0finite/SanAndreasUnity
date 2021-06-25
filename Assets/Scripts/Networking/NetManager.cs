@@ -39,6 +39,8 @@ namespace SanAndreasUnity.Net
 
 		public static int NumSpawnedNetworkObjects => NetworkIdentity.spawned.Count;
 
+		public static double NetworkTime => Mirror.NetworkTime.time;
+
 
 
 		NetManager ()
