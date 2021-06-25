@@ -381,13 +381,16 @@ namespace SanAndreasUnity.Behaviours.World
         {
 	        while (true)
 	        {
-		        var cam = Camera.current;
-		        if (null == cam)
-			        yield return null;
+		        yield return null;
 
-		        for (int i = 0; i < m_lightSources.Count; i++)
+		        var cam = Camera.current;
+
+		        if (cam != null)
 		        {
-			        m_lightSources[i].transform.forward = - cam.transform.forward;
+			        for (int i = 0; i < m_lightSources.Count; i++)
+			        {
+				        m_lightSources[i].transform.forward = - cam.transform.forward;
+			        }
 		        }
 
 		        if (m_trafficLightSources.Count % 3 == 0)
