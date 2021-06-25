@@ -395,15 +395,48 @@ namespace SanAndreasUnity.Behaviours.World
 		        m_activeTrafficLightIndex = this.CalculateActiveTrafficLightIndex();
 
 		        // disable/enable traffic lights based on which one is active
-		        int trafficLightIndex = 0;
+
+		        var redLights = m_trafficLightSources.Where(l => IsColorInRange(l.LightInfo.Color, Color.red, 50, 30, 30)).ToList();
+		        var yellowLights = m_trafficLightSources.Where(l => IsColorInRange(l.LightInfo.Color, new Color32(255, 255, 0, 0), 50, 150, 80)).ToList();
+		        var greenLights = m_trafficLightSources.Where(l => IsColorInRange(l.LightInfo.Color, Color.green, 50, 50, 50)).ToList();
+
+		        if (redLights.Count + yellowLights.Count + greenLights.Count != m_trafficLightSources.Count)
+		        {
+			        Debug.LogError("Failed to identify some light colors");
+		        }
+
+		        var lists = new[]
+		        {
+			        redLights,
+			        yellowLights,
+			        greenLights,
+		        };
+
+		        for (int i = 0; i < lists.Length; i++)
+		        {
+			        lists[i].ForEach(l => l.gameObject.SetActive(i == m_activeTrafficLightIndex));
+		        }
+
+
+
+		        /*int trafficLightIndex = 0;
 		        for (int i = 0; i < m_trafficLightSources.Count; i++)
 		        {
 			        bool isActive = trafficLightIndex == m_activeTrafficLightIndex;
 			        m_trafficLightSources[i].gameObject.SetActive(isActive);
 
 			        trafficLightIndex = (trafficLightIndex + 1) % 3;
-		        }
+		        }*/
 	        }
+        }
+
+        private static bool IsColorInRange(Color32 targetColor, Color32 colorToCheck, int redVar, int greenVar, int blueVar)
+        {
+	        var diffR = targetColor.r - colorToCheck.r;
+	        var diffG = targetColor.g - colorToCheck.g;
+	        var diffB = targetColor.b - colorToCheck.b;
+
+	        return Mathf.Abs(diffR) <= redVar && Mathf.Abs(diffG) <= greenVar && Mathf.Abs(diffB) <= blueVar;
         }
     }
 }
