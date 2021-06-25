@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
-using SanAndreasUnity.Importing.RenderWareStream;
+﻿using SanAndreasUnity.Importing.RenderWareStream;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
-using TextureDictionary = SanAndreasUnity.Importing.Conversion.TextureDictionary;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -23,14 +20,6 @@ namespace SanAndreasUnity.Behaviours.World
             lightSource.LightInfo = lightInfo;
 
             var spriteRenderer = go.GetComponentOrThrow<SpriteRenderer>();
-            // var texture = TextureDictionary.Load("particle")
-            //     .GetDiffuse(lightInfo.CoronaTexName)
-            //     .Texture;
-            // var sprite = Sprite.Create(
-            //     texture,
-            //     new Rect(0, 0, texture.width, texture.height),
-            //     new Vector2(0.5f, 0.5f));
-            // spriteRenderer.sprite = sprite;
             spriteRenderer.color = lightInfo.Color;
 
             return lightSource;
