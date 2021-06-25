@@ -34,10 +34,5 @@ namespace SanAndreasUnity.Behaviours.World
 
             return lightSource;
         }
-
-        private void Update()
-        {
-            this.transform.forward = - Camera.main.transform.forward;
-        }
     }
 }

@@ -1,13 +1,14 @@
-﻿using SanAndreasUnity.Importing.Conversion;
-using SanAndreasUnity.Importing.Items;
+﻿using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Items.Placements;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using SanAndreasUnity.Importing.RenderWareStream;
 using UnityEngine;
 using UnityEngine.Profiling;
+using Geometry = SanAndreasUnity.Importing.Conversion.Geometry;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -61,6 +62,11 @@ namespace SanAndreasUnity.Behaviours.World
         private static bool s_registeredTimeChangeCallback = false;
 
         public bool IsVisibleBasedOnCurrentDayTime => this.ObjectDefinition is TimeObjectDef timeObjectDef ? IsObjectVisibleBasedOnCurrentDayTime(timeObjectDef) : true;
+
+        private List<LightSource> m_lightSources = null;
+        private List<LightSource> m_trafficLightSources = null;
+        private int m_activeTrafficLightIndex = -1;
+        //private float m_timeSinceUpdatedTrafficLights = 0;
 
 
         public void Initialize(Instance inst, Dictionary<Instance, StaticGeometry> dict)
@@ -187,7 +193,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 			Profiler.EndSample ();
 
-			CreateLights(this.transform, geoms);
+			this.CreateLights(geoms);
 
 			geoms.AttachCollisionModel(transform);
 
@@ -210,11 +216,32 @@ namespace SanAndreasUnity.Behaviours.World
 
 		}
 
-		public static void CreateLights(
+		private void CreateLights(
+			Geometry.GeometryParts geometryParts)
+		{
+			var lights = CreateLights(this.transform, geometryParts);
+			if (lights.Count == 0)
+				return;
+
+			m_lightSources = lights;
+
+			m_trafficLightSources = lights
+				.Where(l => l.LightInfo.CoronaShowModeFlags == TwoDEffect.Light.CoronaShowMode.TRAFFICLIGHT)
+				.ToList();
+
+			if (m_trafficLightSources.Count % 3 != 0)
+				Debug.LogError($"Traffic lights count must be in multiple of 3");
+
+			this.StartCoroutine(this.UpdateLightsCoroutine());
+		}
+
+		public static List<LightSource> CreateLights(
 			Transform tr,
 			Geometry.GeometryParts geometryParts)
 		{
 			Profiler.BeginSample("CreateLights()", tr);
+
+			var lights = new List<LightSource>();
 
 			foreach (var geometry in geometryParts.Geometry)
 			{
@@ -223,12 +250,14 @@ namespace SanAndreasUnity.Behaviours.World
 				{
 					foreach (var lightInfo in twoDEffect.Lights)
 					{
-						LightSource.Create(tr, lightInfo);
+						lights.Add(LightSource.Create(tr, lightInfo));
 					}
 				}
 			}
 
 			Profiler.EndSample();
+
+			return lights;
 		}
 
         protected override void OnShow()
@@ -312,6 +341,37 @@ namespace SanAndreasUnity.Behaviours.World
 	        else
 	        {
 		        return currentHour >= timeObjectDef.TimeOnHours || currentHour < timeObjectDef.TimeOffHours;
+	        }
+        }
+
+        private IEnumerator UpdateLightsCoroutine()
+        {
+	        while (true)
+	        {
+		        var cam = Camera.current;
+		        if (null == cam)
+			        yield return null;
+
+		        for (int i = 0; i < m_lightSources.Count; i++)
+		        {
+			        m_lightSources[i].transform.forward = - cam.transform.forward;
+		        }
+
+		        if (m_trafficLightSources.Count % 3 == 0)
+		        {
+			        // update active traffic light
+
+
+			        // disable/enable traffic lights
+			        int trafficIndex = 0;
+			        for (int i = 0; i < m_trafficLightSources.Count; i++)
+			        {
+				        bool isActive = trafficIndex == m_activeTrafficLightIndex;
+				        m_trafficLightSources[i].gameObject.SetActive(isActive);
+
+				        trafficIndex = (trafficIndex + 1) % 3;
+			        }
+		        }
 	        }
         }
     }
