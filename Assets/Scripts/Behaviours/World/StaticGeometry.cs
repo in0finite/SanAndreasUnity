@@ -367,6 +367,8 @@ namespace SanAndreasUnity.Behaviours.World
 
 	        m_hasTrafficLights = m_redTrafficLights != null || m_yellowTrafficLights != null || m_greenTrafficLights != null;
 
+	        this.UpdateLightsBasedOnDayTime();
+
 	        this.InvokeRepeating(nameof(this.UpdateLights), 0f, 0.2f);
         }
 
