@@ -22,7 +22,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public static EntranceExitMapObject Create(EntranceExit info)
         {
-            var obj = Object.Instantiate(Cell.Instance.enexPrefab).GetComponent<EntranceExitMapObject>();
+            var obj = Create<EntranceExitMapObject>(Cell.Instance.enexPrefab);
             obj.Initialize(info);
             return obj;
         }
@@ -52,6 +52,8 @@ namespace SanAndreasUnity.Behaviours.World
             rb.mass = 0f;
             rb.isKinematic = true;
 
+            this.SetDrawDistance(100f);
+
         }
 
         void OnEnable()
@@ -73,19 +75,6 @@ namespace SanAndreasUnity.Behaviours.World
         void OnDrawGizmosSelected()
         {
             Utilities.F.HandlesDrawText(this.transform.position, this.name, Color.yellow);
-        }
-
-        protected override float OnRefreshLoadOrder(Vector3 from)
-        {
-            
-            float dist = Vector3.Distance(from, this.transform.position);
-            if (dist > 100f)
-            {
-                this.gameObject.SetActive(false);
-                return float.PositiveInfinity;
-            }
-
-            return dist * dist;
         }
 
         protected override void OnLoad()

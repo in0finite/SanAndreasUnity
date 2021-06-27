@@ -23,7 +23,7 @@ namespace SanAndreasUnity.Behaviours.World
 		        DayTimeManager.Singleton.onHourChanged += OnHourChanged;
 	        }
 
-            return new GameObject().AddComponent<StaticGeometry>();
+	        return Create<StaticGeometry>(Cell.Instance.staticGeometryPrefab);
         }
 
         private static List<StaticGeometry> s_timedObjects = new List<StaticGeometry>();
@@ -122,53 +122,11 @@ namespace SanAndreasUnity.Behaviours.World
                 }
             }
 
+            this.SetDrawDistance(ObjectDefinition?.DrawDist ?? 0);
+
             _isVisible = false;
             gameObject.SetActive(false);
             gameObject.isStatic = true;
-        }
-
-        public bool ShouldBeVisible(Vector3 from)
-        {
-            if (!_canLoad) return false;
-
-            var obj = ObjectDefinition;
-
-            //	if (obj.HasFlag (ObjectFlag.DisableDrawDist))
-            //		return true;
-
-            //    var dist = Vector3.Distance(from, transform.position);
-            var distSquared = Vector3.SqrMagnitude(from - transform.position);
-
-            if (distSquared > Cell.Instance.maxDrawDistance * Cell.Instance.maxDrawDistance)
-                return false;
-
-            if (distSquared > obj.DrawDist * obj.DrawDist)
-                return false;
-
-            if (!HasLoaded || LodParent == null || !LodParent.IsVisible)
-                return true;
-
-            if (!LodParent.ShouldBeVisible(from))
-                return true;
-
-            return false;
-
-            //	return (distSquared <= obj.DrawDist * obj.DrawDist || (obj.DrawDist >= 300 && distSquared < 2560*2560))
-            //        && (!HasLoaded || LodParent == null || !LodParent.IsVisible || !LodParent.ShouldBeVisible(from));
-        }
-
-        protected override float OnRefreshLoadOrder(Vector3 from)
-        {
-            var visible = ShouldBeVisible(from);
-
-            if (!IsVisible)
-            {
-                return visible ? Vector3.SqrMagnitude(from - transform.position) : float.PositiveInfinity;
-            }
-
-            if (!visible) Hide();
-
-            return float.PositiveInfinity;
         }
 
         protected override void OnLoad()
@@ -252,7 +210,12 @@ namespace SanAndreasUnity.Behaviours.World
 			Profiler.EndSample ();
         }
 
-        private IEnumerator Fade()
+		protected override void OnUnShow()
+		{
+			this.Hide();
+		}
+
+		private IEnumerator Fade()
         {
             if (_isFading) yield break;
 

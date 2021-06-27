@@ -1,5 +1,6 @@
 ﻿//using Facepunch.Networking;
 using SanAndreasUnity.Importing.Items.Placements;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
@@ -9,6 +10,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public static VehicleSpawner Create(ParkedVehicle info)
         {
             //Debug.Log("-333");
+            // TODO: this doesn't work - we need MapObjectActivator with collider
             var vs = new GameObject().AddComponent<VehicleSpawner>();
             vs.Initialize(info);
             return vs;
@@ -24,6 +26,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             Initialize(info.Position, Quaternion.AngleAxis(info.Angle, Vector3.up));
 
+            this.SetDrawDistance(100f);
+
             gameObject.SetActive(false);
             gameObject.isStatic = true;
         }
@@ -32,18 +36,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             Gizmos.color = Color.red;
             Gizmos.DrawCube(transform.position + Vector3.up * 128f, new Vector3(1f, 256f, 1f));
-        }
-
-        protected override float OnRefreshLoadOrder(Vector3 from)
-        {
-            if (HasLoaded) return float.PositiveInfinity;
-            var dist = Vector3.Distance(from, transform.position);
-            if (dist > 100f) return float.PositiveInfinity;
-
-            var ray = new Ray(transform.position, Vector3.down);
-            if (!Physics.Raycast(ray, 2f)) return float.PositiveInfinity;
-
-            return dist;
         }
 
         protected override void OnLoad()

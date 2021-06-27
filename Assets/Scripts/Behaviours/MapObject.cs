@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using SanAndreasUnity.Behaviours.World;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
-using UnityEngine.Profiling;
+using Profiler = UnityEngine.Profiling.Profiler;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -88,10 +90,17 @@ namespace SanAndreasUnity.Behaviours
 
         internal float LoadOrder { get; private set; }
 
+        protected static T Create<T>(GameObject prefab)
+            where T : MapObject
+        {
+            GameObject go = Instantiate(prefab, Cell.Instance.transform);
+            return go.transform.GetChild(0).GetComponentOrThrow<T>();
+        }
+
         protected void Initialize(Vector3 pos, Quaternion rot)
         {
-            transform.position = pos;
-            transform.localRotation = rot;
+            this.transform.parent.position = pos;
+            this.transform.parent.localRotation = rot;
 
             CellPos = new Vector2(pos.x, pos.z);
 
@@ -100,15 +109,10 @@ namespace SanAndreasUnity.Behaviours
             _loaded = false;
         }
 
-        public bool RefreshLoadOrder(Vector3 from)
+        public void SetDrawDistance(float f)
         {
-			Profiler.BeginSample ("MapObject.RefreshLoadOrder", this);
-            LoadOrder = OnRefreshLoadOrder(from);
-			Profiler.EndSample ();
-            return !float.IsPositiveInfinity(LoadOrder);
+            this.transform.parent.GetComponentOrThrow<SphereCollider>().radius = f;
         }
-
-        protected abstract float OnRefreshLoadOrder(Vector3 from);
 
         public void Show()
         {
@@ -128,12 +132,23 @@ namespace SanAndreasUnity.Behaviours
             LoadOrder = float.PositiveInfinity;
         }
 
+        public void UnShow()
+        {
+            this.OnUnShow();
+        }
+
         protected virtual void OnLoad()
         {
         }
 
         protected virtual void OnShow()
         {
+            this.gameObject.SetActive(true);
+        }
+
+        protected virtual void OnUnShow()
+        {
+            this.gameObject.SetActive(false);
         }
 
         public int CompareTo(MapObject other)

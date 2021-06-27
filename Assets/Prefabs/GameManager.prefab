@@ -161,7 +161,7 @@ MonoBehaviour:
   maxCameraDistanceFromPed: 30
   cameraRaycastIgnoredLayerMask:
     serializedVersion: 2
-    m_Bits: 31542
+    m_Bits: 64310
   legAndArmDamageMultiplier: 0.8
   stomachAndChestDamageMultiplier: 1
   headDamageMultiplier: 4
@@ -294,6 +294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serverChatNick: <color=green>Server</color>
+  maxChatMessageLength: 50
 --- !u!114 &7442340376164908290
 MonoBehaviour:
   m_ObjectHideFlags: 0

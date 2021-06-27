@@ -14,13 +14,10 @@ namespace SanAndreasUnity.Behaviours.World
     public class Cell : MonoBehaviour
     {
         private Stopwatch _timer;
-        private List<Division> _leaves;
 
-		private Dictionary<Instance, StaticGeometry> m_insts;
+        private Dictionary<Instance, StaticGeometry> m_insts;
 		private MapObject[] m_cars;
         private List<EntranceExitMapObject> m_enexes;
-
-        public Division RootDivision { get; private set; }
 
         private List<int> CellIds = Enumerable.Range(0, 19).ToList();
 
@@ -42,7 +39,6 @@ namespace SanAndreasUnity.Behaviours.World
         private float[] measuredTimes = new float[3];
         private int numDivisionsUpdatedLoadOrder = 0;
         private int numMapObjectsUpdatedLoadOrder = 0;
-        private Division containingDivision = null;
 
         public float divisionLoadOrderDistanceFactor = 16;
 
@@ -54,7 +50,9 @@ namespace SanAndreasUnity.Behaviours.World
         public float maxDrawDistance = 500;
 
         public bool loadParkedVehicles = true;
-        
+
+        public GameObject staticGeometryPrefab;
+
         public GameObject enexPrefab;
 
         public GameObject lightSourcePrefab;
@@ -83,14 +81,6 @@ namespace SanAndreasUnity.Behaviours.World
 
 		internal void CreateStaticGeometry ()
 		{
-			if (RootDivision == null)
-			{
-				RootDivision = Division.Create(transform);
-				RootDivision.SetBounds(
-					new Vector2(-3000f, -3000f),
-					new Vector2(+3000f, +3000f));
-			}
-
 			var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
 
 			m_insts = new Dictionary<Instance,StaticGeometry> (48 * 1024);
@@ -134,21 +124,7 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
-		internal void AddMapObjectsToDivisions ()
-		{
-			var enumerable = m_insts.Values.Cast<MapObject> ();
-
-			if (m_cars != null)
-				enumerable = enumerable.Concat (m_cars);
-
-            if (m_enexes != null)
-                enumerable = enumerable.Concat(m_enexes);
-
-			RootDivision.AddRange (enumerable);
-
-		}
-
-		internal void LoadWater ()
+        internal void LoadWater ()
 		{
 			if (Water != null)
 			{
@@ -162,7 +138,6 @@ namespace SanAndreasUnity.Behaviours.World
 			//	this.gameObject.SetLayerRecursive( this.gameObject.layer );
 
 			_timer = new Stopwatch();
-			_leaves = RootDivision.ToList();
 
 		}
 
@@ -195,10 +170,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 			//this.Setup ();
 
-            if (null == _leaves)
-                return;
-
-            _timer.Reset();
+			_timer.Reset();
             _timer.Start();
             numLeavesLoadedThisFrame = 0;
             numObjectsLoadedThisFrame = 0;
@@ -208,34 +180,14 @@ namespace SanAndreasUnity.Behaviours.World
             {
                 // only update divisions loading if there are focus points - because otherwise, 
                 // load order of divisions is not updated
-                this.UpdateDivisionsLoading();
+
             }
 
             measuredTimes[2] = (float)_timer.Elapsed.TotalMilliseconds;
 
         }
 
-        void UpdateDivisionsLoading()
-        {
-            foreach (var div in _leaves)
-            {
-                if (float.IsPositiveInfinity(div.LoadOrder))
-                    break;
-
-                numObjectsLoadedThisFrame += div.LoadWhile(() => _timer.Elapsed.TotalSeconds < 1d / 60d);
-
-                if (_timer.Elapsed.TotalSeconds >= 1d / 60d)
-                {
-                    //	break;
-                }
-                else
-                {
-                    numLeavesLoadedThisFrame++;
-                }
-            }
-        }
-
-		System.Collections.IEnumerator UpdateDivisionsCoroutine ()
+        System.Collections.IEnumerator UpdateDivisionsCoroutine ()
 		{
 
 			while (true)
@@ -258,8 +210,6 @@ namespace SanAndreasUnity.Behaviours.World
         {
 			if (!Loader.HasLoaded)
 				return;
-			
-            if (_leaves == null) return;
 
 			this.focusPoints.RemoveAll (t => null == t);
 
@@ -268,7 +218,6 @@ namespace SanAndreasUnity.Behaviours.World
 
             numDivisionsUpdatedLoadOrder = 0;
             numMapObjectsUpdatedLoadOrder = 0;
-            containingDivision = null;
 
             _timer.Reset();
             _timer.Start();
@@ -279,36 +228,11 @@ namespace SanAndreasUnity.Behaviours.World
             
 			UnityEngine.Profiling.Profiler.BeginSample ("Update divisions", this);
 
-			foreach (Division leaf in _leaves)
-            {
-				Vector3 pos = leaf.GetClosestPosition (positions);
-
-                int count = 0;
-                toLoad |= leaf.RefreshLoadOrder(pos, out count);
-                if (count > 0)
-                {
-                    numDivisionsUpdatedLoadOrder++;
-                    numMapObjectsUpdatedLoadOrder += count;
-                }
-
-                if (null == containingDivision && leaf.Contains(pos))
-                {
-                    containingDivision = leaf;
-                }
-            }
-
 			UnityEngine.Profiling.Profiler.EndSample ();
 
             measuredTimes[0] = (float)_timer.Elapsed.TotalMilliseconds;
 
             if (!toLoad) return;
-
-            _timer.Reset();
-            _timer.Start();
-			UnityEngine.Profiling.Profiler.BeginSample ("Sort leaves", this);
-            _leaves.Sort();
-			UnityEngine.Profiling.Profiler.EndSample ();
-            measuredTimes[1] = (float)_timer.Elapsed.TotalMilliseconds;
         }
 
         /*
@@ -331,12 +255,10 @@ namespace SanAndreasUnity.Behaviours.World
         {
             GUILayout.Label("draw distance " + this.maxDrawDistance);
             GUILayout.Label("num focus points " + this.focusPoints.Count);
-            GUILayout.Label("total num divisions " + (null == _leaves ? 0 : _leaves.Count));
             GUILayout.Label("total num objects " + totalNumObjects);
             GUILayout.Label("geometry parts loaded " + SanAndreasUnity.Importing.Conversion.Geometry.NumGeometryPartsLoaded);
             GUILayout.Label("num TOBJ objects " + StaticGeometry.TimedObjects.Count);
             GUILayout.Label("num active objects with lights " + StaticGeometry.ActiveObjectsWithLights.Count);
-            GUILayout.Label("num objects in current division " + (containingDivision != null ? containingDivision.NumObjects : 0));
             GUILayout.Label("num divisions updated " + numDivisionsUpdatedLoadOrder);
             GUILayout.Label("num objects updated " + numMapObjectsUpdatedLoadOrder);
             GUILayout.Label("num divisions loading this frame " + numLeavesLoadedThisFrame);
