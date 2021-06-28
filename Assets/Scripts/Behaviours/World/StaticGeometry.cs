@@ -47,13 +47,8 @@ namespace SanAndreasUnity.Behaviours.World
 
                 _isVisible = value;
 
-                gameObject.SetActive(true);
-                StartCoroutine(Fade());
-
-                if (value && LodChild != null)
-                {
-                    LodChild.Hide();
-                }
+                gameObject.SetActive(value && IsVisibleBasedOnCurrentDayTime);
+                //StartCoroutine(Fade());
             }
         }
 
@@ -206,7 +201,7 @@ namespace SanAndreasUnity.Behaviours.World
 		protected override void OnShow()
         {
 			Profiler.BeginSample ("StaticGeometry.OnShow");
-            IsVisible = LodParent == null || !LodParent.IsVisible;
+            IsVisible = true;
 			Profiler.EndSample ();
         }
 
