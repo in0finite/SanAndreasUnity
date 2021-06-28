@@ -49,6 +49,9 @@ namespace SanAndreasUnity.Behaviours.World
 
         public float maxDrawDistance = 500;
 
+        public float[] drawDistancesPerLayers = new float[] { 301, 1501 };
+        public float drawDistanceWithoutLayer = 5000f;
+
         public bool loadParkedVehicles = true;
 
         public GameObject mapObjectActivatorPrefab;
@@ -161,6 +164,19 @@ namespace SanAndreasUnity.Behaviours.World
         public static TransformDataStruct GetEnexEntranceTransform(EntranceExit enex)
         {
             return new TransformDataStruct(enex.EntrancePos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.EntranceAngle, 0f));
+        }
+
+
+        public float GetDrawDistanceBasedOnLayer(float drawDistance)
+        {
+	        if (drawDistance <= 0)
+		        return 0;
+
+	        int index = System.Array.FindIndex(this.drawDistancesPerLayers, f => f > drawDistance);
+	        if (index >= 0)
+		        return this.drawDistancesPerLayers[index];
+
+	        return this.drawDistanceWithoutLayer;
         }
 
 

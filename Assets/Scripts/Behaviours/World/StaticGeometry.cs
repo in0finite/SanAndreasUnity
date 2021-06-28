@@ -123,7 +123,7 @@ namespace SanAndreasUnity.Behaviours.World
                 }
             }
 
-            this.SetDrawDistance(ObjectDefinition?.DrawDist ?? 0);
+            this.SetDrawDistance(Cell.Instance.GetDrawDistanceBasedOnLayer(ObjectDefinition?.DrawDist ?? 0));
 
             _isVisibleInMapSystem = false;
             gameObject.SetActive(false);
