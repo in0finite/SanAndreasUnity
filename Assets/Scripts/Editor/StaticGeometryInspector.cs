@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Editor
 
             var staticGeometry = (StaticGeometry) this.target;
 
-            _scrollViewPos = EditorGUILayout.BeginScrollView(_scrollViewPos, GUILayout.MinHeight(300));
+            _scrollViewPos = EditorGUILayout.BeginScrollView(_scrollViewPos, GUILayout.MinHeight(350));
 
             EditorUtils.DrawPropertiesInInspector(staticGeometry, 1);
 
