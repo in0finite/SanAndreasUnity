@@ -47,10 +47,16 @@ namespace SanAndreasUnity.Behaviours.World
 
                 _isVisibleInMapSystem = value;
 
-                gameObject.SetActive(value && IsVisibleBasedOnCurrentDayTime);
-                //StartCoroutine(Fade());
+                this.gameObject.SetActive(this.ShouldBeVisibleNow);
+                if (LodChild != null)
+	                LodChild.gameObject.SetActive(LodChild.ShouldBeVisibleNow);
             }
         }
+
+        public bool ShouldBeVisibleNow =>
+	        this.IsVisibleInMapSystem
+	        && this.IsVisibleBasedOnCurrentDayTime
+			&& (LodParent == null || !LodParent.ShouldBeVisibleNow);
 
         public StaticGeometry LodParent { get; private set; }
         public StaticGeometry LodChild { get; private set; }
