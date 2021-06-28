@@ -35,17 +35,17 @@ namespace SanAndreasUnity.Behaviours.World
 
         private bool _canLoad;
 		private bool _isGeometryLoaded = false;
-        private bool _isVisible;
+        private bool _isVisibleInMapSystem;
         private bool _isFading;
 
-        public bool IsVisible
+        public bool IsVisibleInMapSystem
         {
-            get { return _isVisible; }
+            get { return _isVisibleInMapSystem; }
             private set
             {
-                if (_isVisible == value) return;
+                if (_isVisibleInMapSystem == value) return;
 
-                _isVisible = value;
+                _isVisibleInMapSystem = value;
 
                 gameObject.SetActive(value && IsVisibleBasedOnCurrentDayTime);
                 //StartCoroutine(Fade());
@@ -119,7 +119,7 @@ namespace SanAndreasUnity.Behaviours.World
 
             this.SetDrawDistance(ObjectDefinition?.DrawDist ?? 0);
 
-            _isVisible = false;
+            _isVisibleInMapSystem = false;
             gameObject.SetActive(false);
             gameObject.isStatic = true;
         }
@@ -201,7 +201,7 @@ namespace SanAndreasUnity.Behaviours.World
 		protected override void OnShow()
         {
 			Profiler.BeginSample ("StaticGeometry.OnShow");
-            IsVisible = true;
+            IsVisibleInMapSystem = true;
 			Profiler.EndSample ();
         }
 
@@ -233,11 +233,11 @@ namespace SanAndreasUnity.Behaviours.World
 
 			// continuously change transparency until object becomes fully opaque or fully transparent
 
-            var val = IsVisible ? 0f : -1f;
+            var val = IsVisibleInMapSystem ? 0f : -1f;
 
             for (; ; )
             {
-                var dest = IsVisible ? 1f : 0f;
+                var dest = IsVisibleInMapSystem ? 1f : 0f;
                 var sign = Math.Sign(dest - val);
                 val += sign * fadeRate * Time.deltaTime;
 
@@ -250,7 +250,7 @@ namespace SanAndreasUnity.Behaviours.World
 
             mr.SetPropertyBlock(null);
 
-            if (!IsVisible || !IsVisibleBasedOnCurrentDayTime)
+            if (!IsVisibleInMapSystem || !IsVisibleBasedOnCurrentDayTime)
             {
                 gameObject.SetActive(false);
             }
@@ -260,14 +260,14 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void Hide()
         {
-            IsVisible = false;
+            IsVisibleInMapSystem = false;
         }
 
         private static void OnHourChanged()
         {
 	        foreach (var timedObject in s_timedObjects)
 	        {
-		        if (timedObject.IsVisible)
+		        if (timedObject.IsVisibleInMapSystem)
 		        {
 			        timedObject.gameObject.SetActive(timedObject.IsVisibleBasedOnCurrentDayTime);
 		        }
