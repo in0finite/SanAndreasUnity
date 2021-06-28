@@ -51,6 +51,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public bool loadParkedVehicles = true;
 
+        public GameObject mapObjectActivatorPrefab;
+
         public GameObject staticGeometryPrefab;
 
         public GameObject enexPrefab;

@@ -90,28 +90,34 @@ namespace SanAndreasUnity.Behaviours
 
         internal float LoadOrder { get; private set; }
 
+        public MapObjectActivator MapObjectActivator { get; private set; }
+
         protected static T Create<T>(GameObject prefab)
             where T : MapObject
         {
             GameObject go = Instantiate(prefab, Cell.Instance.transform);
-            return go.transform.GetChild(0).GetComponentOrThrow<T>();
+            return go.GetComponent<T>();
         }
 
         protected void Initialize(Vector3 pos, Quaternion rot)
         {
-            this.transform.parent.position = pos;
-            this.transform.parent.localRotation = rot;
+            this.transform.position = pos;
+            this.transform.localRotation = rot;
 
             CellPos = new Vector2(pos.x, pos.z);
 
             RandomInt = _sRandom.Next();
 
             _loaded = false;
+
+            var mapActivatorGo = Instantiate(Cell.Instance.mapObjectActivatorPrefab, pos, rot, Cell.Instance.transform);
+            this.MapObjectActivator = mapActivatorGo.GetComponent<MapObjectActivator>();
+            this.MapObjectActivator.MapObject = this;
         }
 
         public void SetDrawDistance(float f)
         {
-            this.transform.parent.GetComponentOrThrow<SphereCollider>().radius = f;
+            this.MapObjectActivator.GetComponent<SphereCollider>().radius = f;
         }
 
         public void Show()

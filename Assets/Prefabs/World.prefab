@@ -478,9 +478,11 @@ MonoBehaviour:
   divisionsUpdateInterval: 0.3
   maxDrawDistance: 500
   loadParkedVehicles: 0
+  mapObjectActivatorPrefab: {fileID: 1450017544071322502, guid: 136804ed85ed64546a9f516463106810,
+    type: 3}
   staticGeometryPrefab: {fileID: 5341989147525447730, guid: f6207237b8bbdaa49b948fa374797093,
     type: 3}
-  enexPrefab: {fileID: 2538922681126103069, guid: 1858efe8eaf422544a4651b2fba2937a,
+  enexPrefab: {fileID: 5154345777629047764, guid: 1858efe8eaf422544a4651b2fba2937a,
     type: 3}
   lightSourcePrefab: {fileID: 5315691503008682268, guid: be3276cb0ed03dc4cb44bd04cde4bcfb,
     type: 3}
