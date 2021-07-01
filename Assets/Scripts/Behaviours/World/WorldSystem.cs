@@ -95,7 +95,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         private bool _isInUpdate = false;
 
-        public readonly System.Action<T, bool> onObjectChangedVisibility = (component, isVisible) => { };
+        public readonly System.Action<Area, bool> onAreaChangedVisibility = (area, isVisible) => { };
 
         public WorldSystem(
             uint worldSize,
@@ -196,8 +196,6 @@ namespace SanAndreasUnity.Behaviours.World
             if (null == area.objectsInside)
                 area.objectsInside = new List<T>();
             area.objectsInside.Add(obj);
-
-            this.NotifyObjectChangedVisibility(obj, IsAreaVisible(area));
         }
 
         public void RemoveObjectFromArea(Vector3 pos, T obj)
@@ -236,14 +234,7 @@ namespace SanAndreasUnity.Behaviours.World
                 if (!area.isMarkedForUpdate) // should not happen, but just in case
                     continue;
 
-                if (area.objectsInside != null)
-                {
-                    bool isVisible = IsAreaVisible(area);
-                    for (int j = 0; j < area.objectsInside.Count; j++)
-                    {
-                        this.NotifyObjectChangedVisibility(area.objectsInside[j], isVisible);
-                    }
-                }
+                this.NotifyAreaChangedVisibility(area, IsAreaVisible(area));
 
                 area.isMarkedForUpdate = false;
             }
@@ -466,9 +457,9 @@ namespace SanAndreasUnity.Behaviours.World
                 throw new ConcurrentModificationException();
         }
 
-        private void NotifyObjectChangedVisibility(T obj, bool visible)
+        private void NotifyAreaChangedVisibility(Area area, bool visible)
         {
-            F.RunExceptionSafe(() => this.onObjectChangedVisibility(obj, visible));
+            F.RunExceptionSafe(() => this.onAreaChangedVisibility(area, visible));
         }
     }
 }
