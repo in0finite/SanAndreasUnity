@@ -248,7 +248,7 @@ namespace SanAndreasUnity.Behaviours.World
             _areasForUpdate.Clear();
         }
 
-        private void ForEachAreaInRadius(Vector3 pos, float radius, System.Action<Area> action)
+        public void ForEachAreaInRadius(Vector3 pos, float radius, System.Action<Area> action)
         {
             AreaIndexes areaIndexesInRadius = GetAreaIndexesInRadius(pos, radius);
             this.ForEachArea(areaIndexesInRadius, action);
