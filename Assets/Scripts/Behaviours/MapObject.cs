@@ -78,6 +78,8 @@ namespace SanAndreasUnity.Behaviours
 
         private static readonly System.Random _sRandom = new System.Random(0x54e03b19);
 
+        public bool IsVisibleInMapSystem { get; private set; } = false;
+
         private bool _loaded;
 
         public bool HasLoaded { get { return _loaded; } }
@@ -89,8 +91,6 @@ namespace SanAndreasUnity.Behaviours
         public int RandomInt { get; private set; }
 
         internal float LoadOrder { get; private set; }
-
-        public MapObjectActivator MapObjectActivator { get; private set; }
 
         protected static T Create<T>(GameObject prefab)
             where T : MapObject
@@ -109,19 +109,20 @@ namespace SanAndreasUnity.Behaviours
             RandomInt = _sRandom.Next();
 
             _loaded = false;
-
-            var mapActivatorGo = Instantiate(Cell.Instance.mapObjectActivatorPrefab, pos, rot, Cell.Instance.transform);
-            this.MapObjectActivator = mapActivatorGo.GetComponent<MapObjectActivator>();
-            this.MapObjectActivator.MapObject = this;
         }
 
         public void SetDrawDistance(float f)
         {
-            this.MapObjectActivator.GetComponent<SphereCollider>().radius = f;
+
         }
 
         public void Show()
         {
+            if (this.IsVisibleInMapSystem)
+                return;
+
+            this.IsVisibleInMapSystem = true;
+
             if (!_loaded)
             {
 				_loaded = true;
@@ -140,6 +141,11 @@ namespace SanAndreasUnity.Behaviours
 
         public void UnShow()
         {
+            if (!this.IsVisibleInMapSystem)
+                return;
+
+            this.IsVisibleInMapSystem = false;
+
             this.OnUnShow();
         }
 

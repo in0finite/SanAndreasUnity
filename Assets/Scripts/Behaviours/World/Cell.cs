@@ -52,6 +52,13 @@ namespace SanAndreasUnity.Behaviours.World
         public float[] drawDistancesPerLayers = new float[] { 301, 1501 };
         public float drawDistanceWithoutLayer = 5000f;
 
+        private WorldSystem<MapObject> _worldSystem;
+
+        public uint worldSize;
+        public ushort numAreasPerAxis;
+        public uint worldSizeY;
+        public ushort yNumAreasPerAxis;
+
         public bool loadParkedVehicles = true;
 
         public GameObject mapObjectActivatorPrefab;
@@ -97,13 +104,18 @@ namespace SanAndreasUnity.Behaviours.World
 			UnityEngine.Debug.Log("Num static geometries " + m_insts.Count);
 
 			totalNumObjects = m_insts.Count;
+
+			_worldSystem = new WorldSystem<MapObject>(this.worldSize, this.numAreasPerAxis, this.worldSizeY, this.yNumAreasPerAxis);
+			_worldSystem.onAreaChangedVisibility = OnAreaChangedVisibility;
 		}
 
 		internal void InitStaticGeometry ()
 		{
 			foreach (var inst in m_insts)
 			{
-				inst.Value.Initialize(inst.Key, m_insts);
+				var staticGeometry = inst.Value;
+				staticGeometry.Initialize(inst.Key, m_insts);
+				_worldSystem.AddObjectToArea(staticGeometry.transform.position, staticGeometry);
 			}
 		}
 
@@ -125,7 +137,9 @@ namespace SanAndreasUnity.Behaviours.World
             m_enexes = new List<EntranceExitMapObject>(256);
             foreach(var enex in Item.Enexes.Where(enex => this.CellIds.Contains(enex.TargetInterior)))
             {
-                m_enexes.Add(EntranceExitMapObject.Create(enex));
+	            var enexComponent = EntranceExitMapObject.Create(enex);
+	            m_enexes.Add(enexComponent);
+	            _worldSystem.AddObjectToArea(enexComponent.transform.position, enexComponent);
             }
         }
 
@@ -143,6 +157,26 @@ namespace SanAndreasUnity.Behaviours.World
 			//	this.gameObject.SetLayerRecursive( this.gameObject.layer );
 
 			_timer = new Stopwatch();
+
+		}
+
+
+		private void OnAreaChangedVisibility(WorldSystem<MapObject>.Area area, bool visible)
+		{
+			if (null == area.ObjectsInside)
+				return;
+
+			for (int i = 0; i < area.ObjectsInside.Count; i++)
+			{
+				var obj = area.ObjectsInside[i];
+				F.RunExceptionSafe(() =>
+				{
+					if (visible)
+						obj.Show();
+					else
+						obj.UnShow();
+				});
+			}
 
 		}
 
