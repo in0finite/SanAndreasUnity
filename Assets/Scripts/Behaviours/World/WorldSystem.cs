@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
@@ -196,7 +197,7 @@ namespace SanAndreasUnity.Behaviours.World
                 area.objectsInside = new List<T>();
             area.objectsInside.Add(obj);
 
-            this.onObjectChangedVisibility(obj, IsAreaVisible(area));
+            this.NotifyObjectChangedVisibility(obj, IsAreaVisible(area));
         }
 
         public void RemoveObjectFromArea(Vector3 pos, T obj)
@@ -237,7 +238,7 @@ namespace SanAndreasUnity.Behaviours.World
                     bool isVisible = IsAreaVisible(area);
                     for (int j = 0; j < area.objectsInside.Count; j++)
                     {
-                        this.onObjectChangedVisibility(area.objectsInside[j], isVisible);
+                        this.NotifyObjectChangedVisibility(area.objectsInside[j], isVisible);
                     }
                 }
 
@@ -460,6 +461,11 @@ namespace SanAndreasUnity.Behaviours.World
         {
             if (_isInUpdate)
                 throw new ConcurrentModificationException();
+        }
+
+        private void NotifyObjectChangedVisibility(T obj, bool visible)
+        {
+            F.RunExceptionSafe(() => this.onObjectChangedVisibility(obj, visible));
         }
     }
 }
