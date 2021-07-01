@@ -254,6 +254,13 @@ namespace SanAndreasUnity.Behaviours.World
             this.ForEachArea(areaIndexesInRadius, action);
         }
 
+        public List<Area> GetAreasInRadius(Vector3 pos, float radius)
+        {
+            var areas = new List<Area>();
+            this.ForEachAreaInRadius(pos, radius, a => areas.Add(a));
+            return areas;
+        }
+
         private void ForEachArea(AreaIndexes areaIndexes, System.Action<Area> action)
         {
             for (int x = areaIndexes.x.lower; x < areaIndexes.x.higher; x++)
