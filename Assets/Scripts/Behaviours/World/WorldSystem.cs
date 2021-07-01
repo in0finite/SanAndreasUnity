@@ -423,6 +423,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void MarkAreaForUpdate(Area area)
         {
+            this.ThrowIfConcurrentModification(); // just in case
             if (area.isMarkedForUpdate)
                 return;
             _areasForUpdate.Add(area);
