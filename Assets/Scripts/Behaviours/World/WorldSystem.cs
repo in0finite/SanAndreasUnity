@@ -10,9 +10,13 @@ namespace SanAndreasUnity.Behaviours.World
     {
         public class Area
         {
-            public List<T> objectsInside;
-            public HashSet<long> focusPointsThatSeeMe;
-            public bool isMarkedForUpdate;
+            internal List<T> objectsInside;
+            public IReadOnlyList<T> ObjectsInside => this.objectsInside;
+
+            internal HashSet<long> focusPointsThatSeeMe;
+            public IReadOnlyCollection<long> FocusPointsThatSeeMe => this.focusPointsThatSeeMe;
+
+            internal bool isMarkedForUpdate;
         }
 
         public class FocusPoint
