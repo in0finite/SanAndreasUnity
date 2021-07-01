@@ -297,15 +297,15 @@ namespace SanAndreasUnity.Behaviours.World
 
         private NewAreasResult GetNewAreas(AreaIndexes oldIndexes, AreaIndexes newIndexes)
         {
-            var xResult = GetAffectedAreasForAxis(0, oldIndexes.x, newIndexes.x);
+            var xResult = GetAffectedAreasForAxis(oldIndexes.x, newIndexes.x);
             if (!xResult.hasIntersection)
                 return NewAreasResult.WithOne(newIndexes);
 
-            var yResult = GetAffectedAreasForAxis(1, oldIndexes.y, newIndexes.y);
+            var yResult = GetAffectedAreasForAxis(oldIndexes.y, newIndexes.y);
             if (!yResult.hasIntersection)
                 return NewAreasResult.WithOne(newIndexes);
 
-            var zResult = GetAffectedAreasForAxis(2, oldIndexes.z, newIndexes.z);
+            var zResult = GetAffectedAreasForAxis(oldIndexes.z, newIndexes.z);
             if (!zResult.hasIntersection)
                 return NewAreasResult.WithOne(newIndexes);
 
@@ -330,7 +330,6 @@ namespace SanAndreasUnity.Behaviours.World
         }
 
         private (Range affectedRange, bool hasResult, bool hasIntersection) GetAffectedAreasForAxis(
-            int axisIndex,
             Range oldRange,
             Range newRange)
         {
