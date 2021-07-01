@@ -105,8 +105,12 @@ namespace SanAndreasUnity.Behaviours.World
 
 			totalNumObjects = m_insts.Count;
 
-			_worldSystem = new WorldSystem<MapObject>(this.worldSize, this.numAreasPerAxis, this.worldSizeY, this.yNumAreasPerAxis);
-			_worldSystem.onAreaChangedVisibility = OnAreaChangedVisibility;
+			_worldSystem = new WorldSystem<MapObject>(
+				this.worldSize,
+				this.numAreasPerAxis,
+				this.worldSizeY,
+				this.yNumAreasPerAxis,
+				this.OnAreaChangedVisibility);
 		}
 
 		internal void InitStaticGeometry ()

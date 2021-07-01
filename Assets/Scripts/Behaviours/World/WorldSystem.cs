@@ -99,13 +99,14 @@ namespace SanAndreasUnity.Behaviours.World
 
         private bool _isInUpdate = false;
 
-        public readonly System.Action<Area, bool> onAreaChangedVisibility = (area, isVisible) => { };
+        private readonly System.Action<Area, bool> _onAreaChangedVisibility = null;
 
         public WorldSystem(
             uint worldSize,
             ushort numAreasPerAxis,
             uint worldSizeY,
-            ushort yNumAreasPerAxis)
+            ushort yNumAreasPerAxis,
+            System.Action<Area, bool> onAreaChangedVisibility)
         {
             _worldMin = - worldSize / 2f;
             _worldMax = worldSize / 2f;
@@ -120,6 +121,8 @@ namespace SanAndreasUnity.Behaviours.World
             _yNumAreasPerAxis = (ushort) (yNumAreasPerAxis + 2); // additional 2 for positions out of bounds
 
             _areas = new Area[_numAreasPerAxis, _yNumAreasPerAxis, _numAreasPerAxis];
+
+            _onAreaChangedVisibility = onAreaChangedVisibility;
         }
 
         public FocusPoint RegisterFocusPoint(float radius, Vector3 pos)
@@ -473,7 +476,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void NotifyAreaChangedVisibility(Area area, bool visible)
         {
-            F.RunExceptionSafe(() => this.onAreaChangedVisibility(area, visible));
+            F.RunExceptionSafe(() => this._onAreaChangedVisibility(area, visible));
         }
     }
 }
