@@ -171,6 +171,7 @@ namespace SanAndreasUnity.Behaviours.World
                 this.ForEachArea(newlyVisibleAreasResult, area =>
                 {
                     // this can happen multiple times per single area, but since we use hashset it should be no problem
+                    // actually, it should not happen
                     AddToFocusPointsThatSeeMe(area, focusPoint.Id);
                     this.MarkAreaForUpdate(area);
                 });
@@ -187,6 +188,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void AddObjectToArea(Vector3 pos, T obj)
         {
+            this.ThrowIfConcurrentModification();
+
             var area = GetAreaAt(pos);
 
             if (null == area.objectsInside)
@@ -198,6 +201,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void RemoveObjectFromArea(Vector3 pos, T obj)
         {
+            this.ThrowIfConcurrentModification();
+
             var area = GetAreaAt(pos);
 
             if (area.objectsInside != null)
