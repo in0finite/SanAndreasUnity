@@ -216,6 +216,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void Update()
         {
+            this.ThrowIfConcurrentModification();
+
             _isInUpdate = true;
 
             try
