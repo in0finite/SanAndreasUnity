@@ -191,10 +191,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void ForEachAreaInRadius(Vector3 pos, float radius, System.Action<Area> action)
         {
-            int aasfef = ;
-
-
-
+            AreaIndexes areaIndexesInRadius = GetAreaIndexesInRadius(pos, radius);
+            this.ForEachArea(areaIndexesInRadius, action);
         }
 
         private void ForEachArea(AreaIndexes areaIndexes, System.Action<Area> action)
@@ -297,7 +295,7 @@ namespace SanAndreasUnity.Behaviours.World
             {
                 intersection = oldRange.higher;
                 return (
-                    new Range {lower = intersection + 1, higher = newRange.higher},
+                    new Range {lower = (short) (intersection + 1), higher = newRange.higher},
                     true,
                     true);
             }
@@ -305,7 +303,7 @@ namespace SanAndreasUnity.Behaviours.World
             {
                 intersection = oldRange.lower;
                 return (
-                    new Range {lower = newRange.lower, higher = intersection - 1},
+                    new Range {lower = newRange.lower, higher = (short) (intersection - 1)},
                     true,
                     true);
             }
