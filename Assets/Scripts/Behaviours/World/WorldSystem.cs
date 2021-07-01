@@ -233,6 +233,9 @@ namespace SanAndreasUnity.Behaviours.World
             {
                 var area = _areasForUpdate[i];
 
+                if (!area.isMarkedForUpdate) // should not happen, but just in case
+                    continue;
+
                 if (area.objectsInside != null)
                 {
                     bool isVisible = IsAreaVisible(area);
