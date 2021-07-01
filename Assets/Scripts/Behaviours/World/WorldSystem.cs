@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
@@ -66,6 +67,14 @@ namespace SanAndreasUnity.Behaviours.World
             public static NewAreasResult WithOne(AreaIndexes areaIndexes) => new NewAreasResult { x = (areaIndexes, true) };
         }
 
+        public class ConcurrentModificationException : System.Exception
+        {
+            public ConcurrentModificationException()
+                : base("Can not perform the operation because it would result in concurrent modification of collections")
+            {
+            }
+        }
+
         private readonly Area[,,] _areas;
         private readonly List<FocusPoint> _focusPoints = new List<FocusPoint>(32);
 
@@ -82,6 +91,8 @@ namespace SanAndreasUnity.Behaviours.World
         private readonly float _yWorldHalfSize;
         private readonly float _yAreaSize;
         private readonly ushort _yNumAreasPerAxis;
+
+        private bool _isInUpdate = false;
 
         public readonly System.Action<T, bool> onObjectChangedVisibility = (component, isVisible) => { };
 
@@ -108,6 +119,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public FocusPoint RegisterFocusPoint(float radius, Vector3 pos)
         {
+            this.ThrowIfConcurrentModification();
+
             var focusPoint = new FocusPoint();
             focusPoint.Radius = radius;
             focusPoint.Position = pos;
@@ -125,6 +138,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void UnRegisterFocusPoint(long id)
         {
+            this.ThrowIfConcurrentModification();
+
             int index = _focusPoints.FindIndex(f => f.Id == id);
             if (index < 0)
                 return;
@@ -141,6 +156,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void FocusPointChangedPosition(FocusPoint focusPoint, Vector3 newPos)
         {
+            this.ThrowIfConcurrentModification();
+
             AreaIndexes oldIndexes = GetAreaIndexesInRadius(focusPoint.Position, focusPoint.Radius);
             AreaIndexes newIndexes = GetAreaIndexesInRadius(newPos, focusPoint.Radius);
 
@@ -191,26 +208,38 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void Update()
         {
-            // TODO: prevent concurrent modification of collections
+            _isInUpdate = true;
 
+            try
+            {
+                this.UpdateInternal();
+            }
+            finally
+            {
+                _isInUpdate = false;
+            }
+        }
+
+        private void UpdateInternal()
+        {
             // check areas that are marked for update
             for (int i = 0; i < _areasForUpdate.Count; i++)
             {
                 var area = _areasForUpdate[i];
-                area.isMarkedForUpdate = false;
-                bool isVisible = IsAreaVisible(area);
 
                 if (area.objectsInside != null)
                 {
+                    bool isVisible = IsAreaVisible(area);
                     for (int j = 0; j < area.objectsInside.Count; j++)
                     {
                         this.onObjectChangedVisibility(area.objectsInside[j], isVisible);
                     }
                 }
+
+                area.isMarkedForUpdate = false;
             }
 
             _areasForUpdate.Clear();
-
         }
 
         private void ForEachAreaInRadius(Vector3 pos, float radius, System.Action<Area> action)
@@ -420,6 +449,12 @@ namespace SanAndreasUnity.Behaviours.World
         private static bool RangesEqual(Range a, Range b)
         {
             return a.lower == b.lower && a.higher == b.higher;
+        }
+
+        private void ThrowIfConcurrentModification()
+        {
+            if (_isInUpdate)
+                throw new ConcurrentModificationException();
         }
     }
 }
