@@ -234,7 +234,7 @@ namespace SanAndreasUnity.Behaviours.World
             AreaIndexes oldIndexes = GetAreaIndexesInRadius(focusPoint.Position, focusPoint.Radius);
             AreaIndexes newIndexes = GetAreaIndexesInRadius(newPos, focusPoint.Radius);
 
-            if (!AreasEqual(oldIndexes, newIndexes))
+            if (!oldIndexes.EqualsToOther(newIndexes))
             {
                 // areas changed
 
@@ -639,11 +639,6 @@ namespace SanAndreasUnity.Behaviours.World
 
             if (!success)
                 throw new Exception($"Failed to remove focus point with id {id} - it doesn't exist");
-        }
-
-        private static bool AreasEqual(AreaIndexes a, AreaIndexes b)
-        {
-            return RangesEqual(a.x, b.x) && RangesEqual(a.y, b.y) && RangesEqual(a.z, b.z);
         }
 
         private static bool RangesEqual(Range a, Range b)
