@@ -200,7 +200,7 @@ namespace SanAndreasUnity.Behaviours.World
 
             _focusPoints.Add(focusPoint);
 
-            this.ForEachAreaInRadius(pos, radius, area =>
+            this.ForEachAreaInRadius(pos, radius, true, area =>
             {
                 AddToFocusPointsThatSeeMe(area, focusPoint.Id);
                 this.MarkAreaForUpdate(area);
@@ -220,8 +220,10 @@ namespace SanAndreasUnity.Behaviours.World
             var focusPoint = _focusPoints[index];
             _focusPoints.RemoveAt(index);
 
-            this.ForEachAreaInRadius(focusPoint.Position, focusPoint.Radius, area =>
+            this.ForEachAreaInRadius(focusPoint.Position, focusPoint.Radius, false, area =>
             {
+                if (null == area)
+                    return;
                 RemoveFromFocusPointsThatSeeMe(area, focusPoint.Id);
                 this.MarkAreaForUpdate(area);
             });
@@ -245,7 +247,7 @@ namespace SanAndreasUnity.Behaviours.World
                 {
                     var areaIndexes = _bufferForGettingNewAreas[i];
 
-                    this.ForEachArea(areaIndexes, area =>
+                    this.ForEachArea(areaIndexes, true, area =>
                     {
                         // this can happen multiple times per single area, but since we use hashset it should be no problem
                         // actually, it should not happen anymore with new implementation
@@ -258,8 +260,10 @@ namespace SanAndreasUnity.Behaviours.World
                 {
                     var areaIndexes = _bufferForGettingOldAreas[i];
 
-                    this.ForEachArea(areaIndexes, area =>
+                    this.ForEachArea(areaIndexes, false, area =>
                     {
+                        if (null == area)
+                            return;
                         RemoveFromFocusPointsThatSeeMe(area, focusPoint.Id);
                         this.MarkAreaForUpdate(area);
                     });
@@ -274,7 +278,7 @@ namespace SanAndreasUnity.Behaviours.World
         {
             this.ThrowIfConcurrentModification();
 
-            var area = GetAreaAt(pos);
+            var area = GetAreaAt(pos, true);
 
             if (null == area.objectsInside)
                 area.objectsInside = new List<T>();
@@ -285,9 +289,9 @@ namespace SanAndreasUnity.Behaviours.World
         {
             this.ThrowIfConcurrentModification();
 
-            var area = GetAreaAt(pos);
+            var area = GetAreaAt(pos, false);
 
-            if (area.objectsInside != null)
+            if (area != null && area.objectsInside != null)
             {
                 area.objectsInside.Remove(obj);
             }
@@ -327,20 +331,25 @@ namespace SanAndreasUnity.Behaviours.World
             _areasForUpdate.Clear();
         }
 
-        public void ForEachAreaInRadius(Vector3 pos, float radius, System.Action<Area> action)
+        // public void ForEachAreaInRadius(Vector3 pos, float radius, System.Action<Area> action)
+        // {
+        //     this.ForEachAreaInRadius(pos, radius, false, action);
+        // }
+
+        private void ForEachAreaInRadius(Vector3 pos, float radius, bool createIfNotExists, System.Action<Area> action)
         {
             AreaIndexes areaIndexesInRadius = GetAreaIndexesInRadius(pos, radius);
-            this.ForEachArea(areaIndexesInRadius, action);
+            this.ForEachArea(areaIndexesInRadius, createIfNotExists, action);
         }
 
         public List<Area> GetAreasInRadius(Vector3 pos, float radius)
         {
             var areas = new List<Area>();
-            this.ForEachAreaInRadius(pos, radius, a => areas.Add(a));
+            this.ForEachAreaInRadius(pos, radius, false, a => areas.Add(a));
             return areas;
         }
 
-        private void ForEachArea(AreaIndexes areaIndexes, System.Action<Area> action)
+        private void ForEachArea(AreaIndexes areaIndexes, bool createIfNotExists, System.Action<Area> action)
         {
             for (int x = areaIndexes.x.lower; x <= areaIndexes.x.higher; x++)
             {
@@ -348,7 +357,17 @@ namespace SanAndreasUnity.Behaviours.World
                 {
                     for (int z = areaIndexes.z.lower; z <= areaIndexes.z.higher; z++)
                     {
-                        action(_areas[x, y, z]);
+                        if (!createIfNotExists)
+                        {
+                            action(_areas[x, y, z]);
+                        }
+                        else
+                        {
+                            var area = _areas[x, y, z];
+                            if (null == area)
+                                _areas[x, y, z] = area = new Area();
+                            action(area);
+                        }
                     }
                 }
             }
@@ -394,11 +413,11 @@ namespace SanAndreasUnity.Behaviours.World
             return (GetAreaIndex(pos.x), GetAreaIndexForYAxis(pos.y), GetAreaIndex(pos.z));
         }
 
-        private Area GetAreaAt(Vector3 pos)
+        private Area GetAreaAt(Vector3 pos, bool createIfNotExists)
         {
             var index = this.GetAreaIndex(pos);
             var area = _areas[index.x, index.y, index.z];
-            if (null == area)
+            if (null == area && createIfNotExists)
             {
                 area = new Area();
                 _areas[index.x, index.y, index.z] = area;
