@@ -338,8 +338,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void ForEachAreaInRadius(Vector3 pos, float radius, bool createIfNotExists, System.Action<Area> action)
         {
-            AreaIndexes areaIndexesInRadius = GetAreaIndexesInRadius(pos, radius);
-            this.ForEachArea(areaIndexesInRadius, createIfNotExists, action);
+            this.ForEachArea(GetAreaIndexesInRadius(pos, radius), createIfNotExists, action);
         }
 
         public List<Area> GetAreasInRadius(Vector3 pos, float radius)
