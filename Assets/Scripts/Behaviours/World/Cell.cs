@@ -25,7 +25,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public Camera PreviewCamera;
 
-		public List<Transform> focusPoints = new List<Transform> ();
+		private List<(WorldSystem<MapObject>.FocusPoint focusPoint, Transform transform)> _focusPoints = new List<(WorldSystem<MapObject>.FocusPoint, Transform)>();
 
         public Water Water;
 
@@ -184,6 +184,15 @@ namespace SanAndreasUnity.Behaviours.World
 
 		}
 
+		public void RegisterFocusPoint(Transform tr)
+		{
+			if (!_focusPoints.Exists(f => f.transform == tr))
+			{
+				var registeredFocusPoint = _worldSystem.RegisterFocusPoint(this.maxDrawDistance, tr.position);
+				_focusPoints.Add((registeredFocusPoint, tr));
+			}
+		}
+
 
         public IEnumerable<EntranceExit> GetEnexesFromLoadedInteriors()
         {
@@ -231,13 +240,27 @@ namespace SanAndreasUnity.Behaviours.World
             numLeavesLoadedThisFrame = 0;
             numObjectsLoadedThisFrame = 0;
 
-            this.focusPoints.RemoveDeadObjects();
-            if (this.focusPoints.Count > 0)
+            this._focusPoints.RemoveAll(f =>
+            {
+	            if (null == f.transform)
+	            {
+		            _worldSystem.UnRegisterFocusPoint(f.focusPoint.Id);
+		            return true;
+	            }
+
+	            _worldSystem.FocusPointChangedPosition(f.focusPoint, f.transform.position);
+
+	            return false;
+            });
+
+            if (this._focusPoints.Count > 0)
             {
                 // only update divisions loading if there are focus points - because otherwise, 
                 // load order of divisions is not updated
 
             }
+
+            _worldSystem.Update();
 
             measuredTimes[2] = (float)_timer.Elapsed.TotalMilliseconds;
 
@@ -267,28 +290,13 @@ namespace SanAndreasUnity.Behaviours.World
 			if (!Loader.HasLoaded)
 				return;
 
-			this.focusPoints.RemoveAll (t => null == t);
-
-			if (this.focusPoints.Count < 1)
-				return;
-
-            numDivisionsUpdatedLoadOrder = 0;
+			numDivisionsUpdatedLoadOrder = 0;
             numMapObjectsUpdatedLoadOrder = 0;
 
             _timer.Reset();
             _timer.Start();
 
-			List<Vector3> positions = this.focusPoints.Select (f => f.position).ToList ();
 
-			bool toLoad = false; // _leaves.Aggregate(false, (current, leaf) => current | leaf.RefreshLoadOrder(pos));
-            
-			UnityEngine.Profiling.Profiler.BeginSample ("Update divisions", this);
-
-			UnityEngine.Profiling.Profiler.EndSample ();
-
-            measuredTimes[0] = (float)_timer.Elapsed.TotalMilliseconds;
-
-            if (!toLoad) return;
         }
 
         /*
@@ -310,7 +318,7 @@ namespace SanAndreasUnity.Behaviours.World
         public void showWindow(int windowID)
         {
             GUILayout.Label("draw distance " + this.maxDrawDistance);
-            GUILayout.Label("num focus points " + this.focusPoints.Count);
+            GUILayout.Label("num focus points " + this._focusPoints.Count);
             GUILayout.Label("total num objects " + totalNumObjects);
             GUILayout.Label("geometry parts loaded " + SanAndreasUnity.Importing.Conversion.Geometry.NumGeometryPartsLoaded);
             GUILayout.Label("num TOBJ objects " + StaticGeometry.TimedObjects.Count);

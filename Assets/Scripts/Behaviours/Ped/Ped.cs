@@ -175,7 +175,7 @@ namespace SanAndreasUnity.Behaviours
 				{
 					// only register if this ped is owned by some player
 					if (Player.GetOwningPlayer(this) != null)
-						this.Cell.focusPoints.AddIfNotPresent(this.transform);
+						this.Cell.RegisterFocusPoint(this.transform);
 				}
 				else if (NetStatus.IsClientActive())
 				{
@@ -183,7 +183,7 @@ namespace SanAndreasUnity.Behaviours
 					// TODO: IsControlledByLocalPlayer may not return true, because syncvar in Player script may
 					// not be updated yet
 					if (this.IsControlledByLocalPlayer)
-						this.Cell.focusPoints.AddIfNotPresent(this.transform);
+						this.Cell.RegisterFocusPoint(this.transform);
 				}
 			}
 
