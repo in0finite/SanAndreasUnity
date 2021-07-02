@@ -51,9 +51,14 @@ namespace SanAndreasUnity.Behaviours.World
                 this.higher = higher;
             }
 
+            public bool EqualsToOther(Range other) => this.lower == other.lower && this.higher == other.higher;
+
             public bool Overlaps(Range other) => !(this.higher < other.lower || this.lower > other.higher);
 
-            public bool IsInsideOf(Range other) => this.lower > other.lower && this.higher < other.higher;
+            public bool IsInsideOf(Range other) => (this.lower >= other.lower && this.higher < other.higher)
+                                                   || (this.lower > other.lower && this.higher <= other.higher);
+
+            public bool IsEqualOrInsideOf(Range other) => this.EqualsToOther(other) || this.IsInsideOf(other);
         }
 
         private struct AreaIndexes
@@ -80,9 +85,12 @@ namespace SanAndreasUnity.Behaviours.World
 
             public int Volume => (this.x.Length + 1) * (this.y.Length + 1) * (this.z.Length + 1);
 
+            public bool EqualsToOther(AreaIndexes other) => this.x.EqualsToOther(other.x) && this.y.EqualsToOther(other.y) && this.z.EqualsToOther(other.z);
+
             public bool Overlaps(AreaIndexes other) => this.x.Overlaps(other.x) && this.y.Overlaps(other.y) && this.z.Overlaps(other.z);
 
-            public bool IsInsideOf(AreaIndexes other) => this.x.IsInsideOf(other.x) && this.y.IsInsideOf(other.y) && this.z.IsInsideOf(other.z);
+            public bool IsInsideOf(AreaIndexes other) => !this.EqualsToOther(other)
+                                                         && (this.x.IsEqualOrInsideOf(other.x) && this.y.IsEqualOrInsideOf(other.y) && this.z.IsEqualOrInsideOf(other.z));
         }
 
         // private struct NewAreasResult
