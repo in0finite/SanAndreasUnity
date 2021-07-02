@@ -342,11 +342,11 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void ForEachArea(AreaIndexes areaIndexes, System.Action<Area> action)
         {
-            for (int x = areaIndexes.x.lower; x < areaIndexes.x.higher; x++)
+            for (int x = areaIndexes.x.lower; x <= areaIndexes.x.higher; x++)
             {
-                for (int y = areaIndexes.y.lower; y < areaIndexes.y.higher; y++)
+                for (int y = areaIndexes.y.lower; y <= areaIndexes.y.higher; y++)
                 {
-                    for (int z = areaIndexes.z.lower; z < areaIndexes.z.higher; z++)
+                    for (int z = areaIndexes.z.lower; z <= areaIndexes.z.higher; z++)
                     {
                         action(_areas[x, y, z]);
                     }
