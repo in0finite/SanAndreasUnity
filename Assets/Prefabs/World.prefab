@@ -471,15 +471,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PreviewCamera: {fileID: 0}
-  focusPoints: []
   Water: {fileID: 11455068}
   divisionLoadOrderDistanceFactor: 16
   divisionRefreshDistanceDelta: 1
   divisionsUpdateInterval: 0.3
   maxDrawDistance: 500
+  drawDistancesPerLayers:
+  - 301
+  - 1501
+  drawDistanceWithoutLayer: 5000
+  worldSize: 6000
+  numAreasPerAxis: 100
+  worldSizeY: 25000
+  yNumAreasPerAxis: 3
   loadParkedVehicles: 0
-  mapObjectActivatorPrefab: {fileID: 1450017544071322502, guid: 136804ed85ed64546a9f516463106810,
-    type: 3}
+  mapObjectActivatorPrefab: {fileID: 0}
   staticGeometryPrefab: {fileID: 5341989147525447730, guid: f6207237b8bbdaa49b948fa374797093,
     type: 3}
   enexPrefab: {fileID: 5154345777629047764, guid: 1858efe8eaf422544a4651b2fba2937a,
