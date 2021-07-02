@@ -331,10 +331,10 @@ namespace SanAndreasUnity.Behaviours.World
             _areasForUpdate.Clear();
         }
 
-        // public void ForEachAreaInRadius(Vector3 pos, float radius, System.Action<Area> action)
-        // {
-        //     this.ForEachAreaInRadius(pos, radius, false, action);
-        // }
+        public void ForEachAreaInRadius(Vector3 pos, float radius, System.Action<Area> action)
+        {
+            this.ForEachAreaInRadius(pos, radius, false, action);
+        }
 
         private void ForEachAreaInRadius(Vector3 pos, float radius, bool createIfNotExists, System.Action<Area> action)
         {
