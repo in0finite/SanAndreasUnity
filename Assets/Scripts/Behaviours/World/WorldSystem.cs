@@ -309,7 +309,7 @@ namespace SanAndreasUnity.Behaviours.World
                 return (short) (_numAreasPerAxis - 1);
 
             // skip 1st
-            return (short) (1 + Mathf.FloorToInt((pos + _worldHalfSize) % _areaSize));
+            return (short) (1 + Mathf.FloorToInt((pos + _worldHalfSize) / _areaSize));
         }
 
         private short GetAreaIndexForYAxis(float pos)
@@ -320,7 +320,7 @@ namespace SanAndreasUnity.Behaviours.World
                 return (short) (_yNumAreasPerAxis - 1);
 
             // skip 1st
-            return (short) (1 + Mathf.FloorToInt((pos + _yWorldHalfSize) % _yAreaSize));
+            return (short) (1 + Mathf.FloorToInt((pos + _yWorldHalfSize) / _yAreaSize));
         }
 
         private (short x, short y, short z) GetAreaIndex(Vector3 pos)
