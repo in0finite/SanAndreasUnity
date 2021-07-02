@@ -387,16 +387,10 @@ namespace SanAndreasUnity.Behaviours.World
             }
 
             // check if there is intersection
-            if (oldRange.lower < newRange.lower)
-            {
-                if (oldRange.higher < newRange.lower) // no intersection
-                    return default;
-            }
-            else
-            {
-                if (oldRange.lower > newRange.higher) // no intersection
-                    return default;
-            }
+            if (oldRange.lower > newRange.higher)
+                return default;
+            if (newRange.lower > oldRange.higher)
+                return default;
 
             // find intersection which is edge of old range (old cube)
 
