@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
 
@@ -40,6 +41,19 @@ namespace SanAndreasUnity.Behaviours.World
         private struct Range
         {
             public short lower, higher;
+            public short Length => (short) (this.higher - this.lower);
+
+            public Range(short lower, short higher)
+            {
+                if (lower > higher)
+                    throw new ArgumentException($"lower {lower} is > than higher {higher}");
+                this.lower = lower;
+                this.higher = higher;
+            }
+
+            public bool Overlaps(Range other) => !(this.higher < other.lower || this.lower > other.higher);
+
+            public bool IsInsideOf(Range other) => this.lower > other.lower && this.higher < other.higher;
         }
 
         private struct AreaIndexes
@@ -63,13 +77,52 @@ namespace SanAndreasUnity.Behaviours.World
                     }
                 }
             }
+
+            public int Volume => (this.x.Length + 1) * (this.y.Length + 1) * (this.z.Length + 1);
+
+            public bool Overlaps(AreaIndexes other) => this.x.Overlaps(other.x) && this.y.Overlaps(other.y) && this.z.Overlaps(other.z);
+
+            public bool IsInsideOf(AreaIndexes other) => this.x.IsInsideOf(other.x) && this.y.IsInsideOf(other.y) && this.z.IsInsideOf(other.z);
         }
 
-        private struct NewAreasResult
-        {
-            public (AreaIndexes areaIndexes, bool hasResult) x, y, z;
+        // private struct NewAreasResult
+        // {
+        //     public (AreaIndexes areaIndexes, bool hasResult) x, y, z;
+        //
+        //     public static NewAreasResult WithOne(AreaIndexes areaIndexes) => new NewAreasResult { x = (areaIndexes, true) };
+        // }
 
-            public static NewAreasResult WithOne(AreaIndexes areaIndexes) => new NewAreasResult { x = (areaIndexes, true) };
+        private struct AffectedRangesForAxis
+        {
+            // there can be max 3 ranges
+            // each range can be intersection, or free
+            // there can be max 2 free parts and max 1 intersection part
+            public (Range range, bool isIntersectionPart, bool hasValues) range1, range2, range3;
+
+            // is there intersection on this axis ? if not, cubes do not intersect, and other results from this struct should be ignored
+            public bool hasIntersectionOnAxis;
+
+            public IEnumerable<(Range range, bool isIntersectionPart, bool hasValues)> Ranges => new [] {range1, range2, range3};
+
+            public void ForEachWithValue(Action<(Range range, bool isIntersectionPart)> action)
+            {
+                if (range1.hasValues)
+                    action((range1.range, range1.isIntersectionPart));
+                if (range2.hasValues)
+                    action((range2.range, range2.isIntersectionPart));
+                if (range3.hasValues)
+                    action((range3.range, range3.isIntersectionPart));
+            }
+
+            public void ForEachFree(Action<Range> action)
+            {
+                if (range1.hasValues && !range1.isIntersectionPart)
+                    action(range1.range);
+                if (range2.hasValues && !range2.isIntersectionPart)
+                    action(range2.range);
+                if (range3.hasValues && !range3.isIntersectionPart)
+                    action(range3.range);
+            }
         }
 
         public class ConcurrentModificationException : System.Exception
@@ -98,6 +151,10 @@ namespace SanAndreasUnity.Behaviours.World
         private readonly ushort _yNumAreasPerAxis;
 
         private bool _isInUpdate = false;
+
+        // these buffers are reused every time to avoid memory allocations, but that makes this class non thread safe
+        private AreaIndexes[] _bufferForGettingNewAreas = new AreaIndexes[27]; // 3^3
+        private AreaIndexes[] _bufferForGettingOldAreas = new AreaIndexes[27]; // 3^3
 
         private readonly System.Action<Area, bool> _onAreaChangedVisibility = null;
 
@@ -173,22 +230,33 @@ namespace SanAndreasUnity.Behaviours.World
             {
                 // areas changed
 
-                NewAreasResult newlyVisibleAreasResult = GetNewAreas(oldIndexes, newIndexes);
-                NewAreasResult noLongerVisibleAreasResult = GetNewAreas(newIndexes, oldIndexes);
+                byte numNewAreaIndexes = GetNewAreas(oldIndexes, newIndexes, _bufferForGettingNewAreas);
+                byte numOldAreaIndexes = GetNewAreas(newIndexes, oldIndexes, _bufferForGettingOldAreas);
 
-                this.ForEachArea(newlyVisibleAreasResult, area =>
+                for (byte i = 0; i < numNewAreaIndexes; i++)
                 {
-                    // this can happen multiple times per single area, but since we use hashset it should be no problem
-                    // actually, it should not happen
-                    AddToFocusPointsThatSeeMe(area, focusPoint.Id);
-                    this.MarkAreaForUpdate(area);
-                });
+                    var areaIndexes = _bufferForGettingNewAreas[i];
 
-                this.ForEachArea(noLongerVisibleAreasResult, area =>
+                    this.ForEachArea(areaIndexes, area =>
+                    {
+                        // this can happen multiple times per single area, but since we use hashset it should be no problem
+                        // actually, it should not happen anymore with new implementation
+                        AddToFocusPointsThatSeeMe(area, focusPoint.Id);
+                        this.MarkAreaForUpdate(area);
+                    });
+                }
+
+                for (byte i = 0; i < numOldAreaIndexes; i++)
                 {
-                    RemoveFromFocusPointsThatSeeMe(area, focusPoint.Id);
-                    this.MarkAreaForUpdate(area);
-                });
+                    var areaIndexes = _bufferForGettingOldAreas[i];
+
+                    this.ForEachArea(areaIndexes, area =>
+                    {
+                        RemoveFromFocusPointsThatSeeMe(area, focusPoint.Id);
+                        this.MarkAreaForUpdate(area);
+                    });
+                }
+
             }
 
             focusPoint.Position = newPos;
@@ -278,16 +346,6 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
-        private void ForEachArea(NewAreasResult newAreasResult, System.Action<Area> action)
-        {
-            if (newAreasResult.x.hasResult)
-                this.ForEachArea(newAreasResult.x.areaIndexes, action);
-            if (newAreasResult.y.hasResult)
-                this.ForEachArea(newAreasResult.y.areaIndexes, action);
-            if (newAreasResult.z.hasResult)
-                this.ForEachArea(newAreasResult.z.areaIndexes, action);
-        }
-
         private AreaIndexes GetAreaIndexesInRadius(Vector3 pos, float radius)
         {
             // Vector3 min = new Vector3(pos.x - radius, pos.y - radius, pos.z - radius);
@@ -340,50 +398,84 @@ namespace SanAndreasUnity.Behaviours.World
             return area;
         }
 
-        private NewAreasResult GetNewAreas(AreaIndexes oldIndexes, AreaIndexes newIndexes)
+        private byte GetNewAreas(AreaIndexes oldIndexes, AreaIndexes newIndexes, AreaIndexes[] resultBuffer)
         {
-            var xResult = GetAffectedAreasForAxis(oldIndexes.x, newIndexes.x);
-            if (!xResult.hasIntersection)
-                return NewAreasResult.WithOne(newIndexes);
-
-            var yResult = GetAffectedAreasForAxis(oldIndexes.y, newIndexes.y);
-            if (!yResult.hasIntersection)
-                return NewAreasResult.WithOne(newIndexes);
-
-            var zResult = GetAffectedAreasForAxis(oldIndexes.z, newIndexes.z);
-            if (!zResult.hasIntersection)
-                return NewAreasResult.WithOne(newIndexes);
-
-            if (!xResult.hasResult && !yResult.hasResult && !zResult.hasResult) // cubes are equal
-                throw new System.Exception("Cubes appear to be the same, this should not happen");
-
-            var toReturn = new NewAreasResult
+            var xResult = GetAffectedRangesForAxis(oldIndexes.x, newIndexes.x);
+            ValidateAffectedRangesForAxis(xResult);
+            if (!xResult.hasIntersectionOnAxis)
             {
-                x = (newIndexes, xResult.hasResult),
-                y = (newIndexes, yResult.hasResult),
-                z = (newIndexes, zResult.hasResult),
-            };
+                resultBuffer[0] = newIndexes;
+                return 1;
+            }
 
-            if (xResult.hasResult)
-                toReturn.x.areaIndexes.x = xResult.affectedRange;
-            if (yResult.hasResult)
-                toReturn.y.areaIndexes.y = yResult.affectedRange;
-            if (zResult.hasResult)
-                toReturn.z.areaIndexes.z = zResult.affectedRange;
+            var yResult = GetAffectedRangesForAxis(oldIndexes.y, newIndexes.y);
+            ValidateAffectedRangesForAxis(yResult);
+            if (!yResult.hasIntersectionOnAxis)
+            {
+                resultBuffer[0] = newIndexes;
+                return 1;
+            }
 
-            return toReturn;
+            var zResult = GetAffectedRangesForAxis(oldIndexes.z, newIndexes.z);
+            ValidateAffectedRangesForAxis(zResult);
+            if (!zResult.hasIntersectionOnAxis)
+            {
+                resultBuffer[0] = newIndexes;
+                return 1;
+            }
+
+            // for all combinations, if at least 1 range is free
+
+            byte count = 0;
+
+            xResult.ForEachWithValue(tupleX =>
+            {
+                yResult.ForEachWithValue(tupleY =>
+                {
+                    zResult.ForEachWithValue(tupleZ =>
+                    {
+                        if (!tupleX.isIntersectionPart || !tupleY.isIntersectionPart || !tupleZ.isIntersectionPart)
+                        {
+                            // at least 1 range is free
+
+                            resultBuffer[count] = new AreaIndexes
+                            {
+                                x = tupleX.range,
+                                y = tupleY.range,
+                                z = tupleZ.range,
+                            };
+
+                            count++;
+                        }
+                    });
+                });
+            });
+
+            if (count == 0)
+            {
+                // there are no free ranges - new cube is inside of old cube (or equal) - there are no new areas - return 0
+
+                if (newIndexes.Volume > oldIndexes.Volume)
+                    throw new Exception("New cube should be <= than old cube");
+                if (!newIndexes.IsInsideOf(oldIndexes))
+                    throw new Exception("New cube should be inside of old cube");
+            }
+
+            return count;
         }
 
-        private (Range affectedRange, bool hasResult, bool hasIntersection) GetAffectedAreasForAxis(
+        private AffectedRangesForAxis GetAffectedRangesForAxis(
             Range oldRange,
             Range newRange)
         {
-            // returns parts of new range (new cube)
-
-            if (oldRange.lower == newRange.lower)
+            if (RangesEqual(oldRange, newRange))
             {
-                // same position along this axis
-                return (default, false, true);
+                // same position and size along this axis
+                return new AffectedRangesForAxis
+                {
+                    hasIntersectionOnAxis = true,
+                    range1 = (oldRange, true, true),
+                };
             }
 
             // check if there is intersection
@@ -392,24 +484,110 @@ namespace SanAndreasUnity.Behaviours.World
             if (newRange.lower > oldRange.higher)
                 return default;
 
-            // find intersection which is edge of old range (old cube)
+            // first find intersection part (max 1)
 
-            short intersection;
+            var toReturn = new AffectedRangesForAxis { hasIntersectionOnAxis = true };
+            Range totalRange = new Range(
+                Min(oldRange.lower, newRange.lower),
+                Max(oldRange.higher, newRange.higher));
+            short minOfHighers = Min(oldRange.higher, newRange.higher);
+            Range intersectionRange;
+
             if (oldRange.lower < newRange.lower)
             {
-                intersection = oldRange.higher;
-                return (
-                    new Range {lower = (short) (intersection + 1), higher = newRange.higher},
-                    true,
-                    true);
+                // he is left
+                intersectionRange = new Range(newRange.lower, minOfHighers);
+            }
+            else if (oldRange.lower == newRange.lower)
+            {
+                // they share left edge
+                intersectionRange = new Range(newRange.lower, minOfHighers);
             }
             else
             {
-                intersection = oldRange.lower;
-                return (
-                    new Range {lower = newRange.lower, higher = (short) (intersection - 1)},
-                    true,
-                    true);
+                // his left edge is more to the right
+                intersectionRange = new Range(oldRange.lower, minOfHighers);
+            }
+
+            // now find free range(s) based on total range and intersection range
+
+            if (intersectionRange.Length >= totalRange.Length) // should not happen
+                throw new Exception($"Intersection range length {intersectionRange.Length} is >= than total range length {totalRange.Length}");
+
+            toReturn.range1 = (intersectionRange, true, true);
+
+            if (RangesEqual(newRange, intersectionRange))
+            {
+                // new range is inside of old range
+                // there are no free ranges
+                return toReturn;
+            }
+
+            if (newRange.lower >= intersectionRange.lower)
+            {
+                Range freeRange = new Range((short) (intersectionRange.higher + 1), newRange.higher);
+                toReturn.range2 = (freeRange, false, true);
+                return toReturn;
+            }
+
+            // newRange.lower < intersectionRange.lower
+
+            Range freeRange1 = new Range(newRange.lower, (short) (intersectionRange.lower - 1));
+            toReturn.range2 = (freeRange1, false, true);
+
+            if (newRange.higher > intersectionRange.higher)
+            {
+                Range freeRange2 = new Range((short) (intersectionRange.higher + 1), newRange.higher);
+                toReturn.range3 = (freeRange2, false, true);
+            }
+
+            return toReturn;
+        }
+
+        private static void ValidateAffectedRangesForAxis(AffectedRangesForAxis affectedRangesForAxis)
+        {
+            int count = affectedRangesForAxis.Ranges.Count(r => r.hasValues);
+
+            if (!affectedRangesForAxis.hasIntersectionOnAxis && count > 0)
+                throw new Exception("Count > 0 and has no intersection");
+
+            if (!affectedRangesForAxis.hasIntersectionOnAxis)
+                return;
+
+            var intersectionRanges = affectedRangesForAxis.Ranges
+                .Where(r => r.hasValues && r.isIntersectionPart)
+                .ToList();
+
+            var freeRanges = affectedRangesForAxis.Ranges
+                .Where(r => r.hasValues && !r.isIntersectionPart)
+                .ToList();
+
+            if (intersectionRanges.Count != 1)
+                throw new Exception($"Num intersection ranges must be 1, found {intersectionRanges.Count}");
+
+            if (freeRanges.Count > 2)
+                throw new Exception($"Num free ranges is {freeRanges.Count}");
+
+            var allRanges = intersectionRanges.Concat(freeRanges).ToList();
+            for (int i = 0; i < allRanges.Count; i++)
+            {
+                for (int j = i + 1; j < allRanges.Count; j++)
+                {
+                    var r1 = allRanges[i].range;
+                    var r2 = allRanges[j].range;
+                    if (r1.Overlaps(r2))
+                        throw new Exception($"Ranges overlap, {r1} and {r2}");
+                }
+            }
+
+            // there must be no space between ranges
+            var orderedRanges = allRanges.OrderBy(r => r.range.lower).ToList();
+            for (int i = 0; i < orderedRanges.Count - 1; i++)
+            {
+                var r1 = orderedRanges[i].range;
+                var r2 = orderedRanges[i+1].range;
+                if (r1.higher + 1 != r2.lower)
+                    throw new Exception($"There is space between ranges, higher is {r1.higher}, lower is {r2.lower}");
             }
 
         }
@@ -437,10 +615,11 @@ namespace SanAndreasUnity.Behaviours.World
         private static void AddToFocusPointsThatSeeMe(Area area, long id)
         {
             EnsureFocusPointsCollectionInitialized(area);
-            area.focusPointsThatSeeMe.Add(id);
+            if (!area.focusPointsThatSeeMe.Add(id))
+                throw new Exception($"Failed to add focus point with id {id} - it already exists");
         }
 
-        private static bool RemoveFromFocusPointsThatSeeMe(Area area, long id)
+        private static void RemoveFromFocusPointsThatSeeMe(Area area, long id)
         {
             bool success = false;
             if (area.focusPointsThatSeeMe != null)
@@ -449,7 +628,9 @@ namespace SanAndreasUnity.Behaviours.World
                 if (area.focusPointsThatSeeMe.Count == 0)
                     area.focusPointsThatSeeMe = null;
             }
-            return success;
+
+            if (!success)
+                throw new Exception($"Failed to remove focus point with id {id} - it doesn't exist");
         }
 
         private static bool AreasEqual(AreaIndexes a, AreaIndexes b)
@@ -460,6 +641,16 @@ namespace SanAndreasUnity.Behaviours.World
         private static bool RangesEqual(Range a, Range b)
         {
             return a.lower == b.lower && a.higher == b.higher;
+        }
+
+        private static short Min(short a, short b)
+        {
+            return a <= b ? a : b;
+        }
+
+        private static short Max(short a, short b)
+        {
+            return a >= b ? a : b;
         }
 
         private void ThrowIfConcurrentModification()
