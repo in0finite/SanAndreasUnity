@@ -476,7 +476,7 @@ namespace SanAndreasUnity.Behaviours.World
             Range oldRange,
             Range newRange)
         {
-            if (RangesEqual(oldRange, newRange))
+            if (oldRange.EqualsToOther(newRange))
             {
                 // same position and size along this axis
                 return new AffectedRangesForAxis
@@ -524,7 +524,7 @@ namespace SanAndreasUnity.Behaviours.World
 
             toReturn.range1 = (intersectionRange, true, true);
 
-            if (RangesEqual(newRange, intersectionRange))
+            if (newRange.EqualsToOther(intersectionRange))
             {
                 // new range is inside of old range
                 // there are no free ranges
@@ -639,11 +639,6 @@ namespace SanAndreasUnity.Behaviours.World
 
             if (!success)
                 throw new Exception($"Failed to remove focus point with id {id} - it doesn't exist");
-        }
-
-        private static bool RangesEqual(Range a, Range b)
-        {
-            return a.lower == b.lower && a.higher == b.higher;
         }
 
         private static short Min(short a, short b)
