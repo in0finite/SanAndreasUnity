@@ -230,11 +230,14 @@ namespace SanAndreasUnity.Behaviours.World
             numLeavesLoadedThisFrame = 0;
             numObjectsLoadedThisFrame = 0;
 
+            UnityEngine.Profiling.Profiler.BeginSample("Update focus points");
             this._focusPoints.RemoveAll(f =>
             {
 	            if (null == f.transform)
 	            {
+		            UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.UnRegisterFocusPoint()");
 		            _worldSystem.UnRegisterFocusPoint(f.id);
+		            UnityEngine.Profiling.Profiler.EndSample();
 		            return true;
 	            }
 
@@ -242,6 +245,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 	            return false;
             });
+            UnityEngine.Profiling.Profiler.EndSample();
 
             if (this._focusPoints.Count > 0)
             {
@@ -250,7 +254,9 @@ namespace SanAndreasUnity.Behaviours.World
 
             }
 
+            UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.Update()");
             _worldSystem.Update();
+            UnityEngine.Profiling.Profiler.EndSample();
 
             measuredTimes[2] = (float)_timer.Elapsed.TotalMilliseconds;
 
