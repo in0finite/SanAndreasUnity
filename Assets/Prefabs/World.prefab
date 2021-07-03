@@ -475,14 +475,15 @@ MonoBehaviour:
   divisionLoadOrderDistanceFactor: 16
   divisionRefreshDistanceDelta: 1
   divisionsUpdateInterval: 0.3
-  maxDrawDistance: 500
+  maxDrawDistance: 800
   drawDistancesPerLayers:
+  - 101
   - 301
   - 801
   - 1501
   yWorldSystemSize: 25000
   yWorldSystemNumAreas: 3
-  xzWorldSystemNumAreasPerDrawDistanceLevel: 640064006400
+  xzWorldSystemNumAreasPerDrawDistanceLevel: 6400640064006400
   loadParkedVehicles: 0
   mapObjectActivatorPrefab: {fileID: 0}
   staticGeometryPrefab: {fileID: 5341989147525447730, guid: f6207237b8bbdaa49b948fa374797093,
