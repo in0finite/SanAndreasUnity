@@ -13,7 +13,6 @@ namespace SanAndreasUnity.Behaviours.World
     }
 
     public class WorldSystemWithDistanceLevels<T>
-        where T : Component
     {
         private readonly WorldSystem<T>[] _worldSystems;
         private readonly float[] _distanceLevels;
@@ -105,7 +104,6 @@ namespace SanAndreasUnity.Behaviours.World
     }
 
     public class WorldSystem<T>
-        where T : Component
     {
         public class Area
         {
