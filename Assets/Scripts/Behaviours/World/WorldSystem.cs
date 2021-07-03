@@ -120,6 +120,8 @@ namespace SanAndreasUnity.Behaviours.World
             public IReadOnlyCollection<long> FocusPointsThatSeeMe => this.focusPointsThatSeeMe;
 
             internal bool isMarkedForUpdate;
+
+            public bool WasVisibleInLastUpdate { get; internal set; } = false;
         }
 
         public sealed class FocusPoint
@@ -429,8 +431,11 @@ namespace SanAndreasUnity.Behaviours.World
                 if (!area.isMarkedForUpdate) // should not happen, but just in case
                     continue;
 
-                this.NotifyAreaChangedVisibility(area, IsAreaVisible(area));
+                bool isVisible = ShouldAreaBeVisible(area);
 
+                this.NotifyAreaChangedVisibility(area, isVisible);
+
+                area.WasVisibleInLastUpdate = isVisible;
                 area.isMarkedForUpdate = false;
             }
 
@@ -730,7 +735,7 @@ namespace SanAndreasUnity.Behaviours.World
                 area.focusPointsThatSeeMe = new HashSet<long>();
         }
 
-        private bool IsAreaVisible(Area area)
+        private static bool ShouldAreaBeVisible(Area area)
         {
             return area.focusPointsThatSeeMe != null && area.focusPointsThatSeeMe.Count > 0;
         }
@@ -738,8 +743,13 @@ namespace SanAndreasUnity.Behaviours.World
         private void MarkAreaForUpdate(Area area)
         {
             this.ThrowIfConcurrentModification(); // just in case
+
             if (area.isMarkedForUpdate)
                 return;
+
+            if (ShouldAreaBeVisible(area) == area.WasVisibleInLastUpdate) // visibility does not change
+                return;
+
             _areasForUpdate.Add(area);
             area.isMarkedForUpdate = true;
         }
