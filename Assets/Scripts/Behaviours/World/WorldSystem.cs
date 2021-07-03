@@ -78,7 +78,7 @@ namespace SanAndreasUnity.Behaviours.World
                 return;
 
             for (int i = 0; i < _worldSystems.Length; i++)
-                _worldSystems[i].UnRegisterFocusPoint(focusPoints[i].Id);
+                _worldSystems[i].UnRegisterFocusPoint(focusPoints[i]);
         }
 
         public void FocusPointChangedPosition(long id, Vector3 newPos)
@@ -318,16 +318,12 @@ namespace SanAndreasUnity.Behaviours.World
             return focusPoint;
         }
 
-        public void UnRegisterFocusPoint(long id)
+        public void UnRegisterFocusPoint(FocusPoint focusPoint)
         {
             this.ThrowIfConcurrentModification();
 
-            int index = _focusPoints.FindIndex(f => f.Id == id);
-            if (index < 0)
+            if (!_focusPoints.Remove(focusPoint))
                 return;
-
-            var focusPoint = _focusPoints[index];
-            _focusPoints.RemoveAt(index);
 
             this.ForEachAreaInRadius(focusPoint.Position, focusPoint.Radius, false, area =>
             {
