@@ -425,7 +425,7 @@ namespace SanAndreasUnity.Behaviours.World
 	        if (null == m_lightSources)
 		        return;
 
-	        bool isDay = DayTimeManager.Singleton.CurrentTimeHours >= 6 && DayTimeManager.Singleton.CurrentTimeHours <= 20;
+	        bool isDay = DayTimeManager.Singleton.CurrentTimeHours > 6 && DayTimeManager.Singleton.CurrentTimeHours < 18;
 	        var flag = isDay ? TwoDEffect.Light.Flags1.AT_DAY : TwoDEffect.Light.Flags1.AT_NIGHT;
 
 	        for (int i = 0; i < m_lightSources.Length; i++)
