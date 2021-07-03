@@ -133,6 +133,21 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
+        public struct WorldSystemParams
+        {
+            public uint worldSize;
+            public ushort numAreasPerAxis;
+        }
+
+        private struct AxisInfo
+        {
+            public float worldMin;
+            public float worldMax;
+            public float worldHalfSize;
+            public float areaSize;
+            public ushort numAreasPerAxis;
+        }
+
         public class ConcurrentModificationException : System.Exception
         {
             public ConcurrentModificationException()
@@ -146,17 +161,9 @@ namespace SanAndreasUnity.Behaviours.World
 
         private readonly List<Area> _areasForUpdate = new List<Area>(128);
 
-        private readonly float _worldMin;
-        private readonly float _worldMax;
-        private readonly float _worldHalfSize;
-        private readonly float _areaSize;
-        private readonly ushort _numAreasPerAxis;
+        private readonly AxisInfo _xzAxisInfo;
 
-        private readonly float _yWorldMin;
-        private readonly float _yWorldMax;
-        private readonly float _yWorldHalfSize;
-        private readonly float _yAreaSize;
-        private readonly ushort _yNumAreasPerAxis;
+        private readonly AxisInfo _yAxisInfo;
 
         private bool _isInUpdate = false;
 
@@ -167,27 +174,27 @@ namespace SanAndreasUnity.Behaviours.World
         private readonly System.Action<Area, bool> _onAreaChangedVisibility = null;
 
         public WorldSystem(
-            uint worldSize,
-            ushort numAreasPerAxis,
-            uint worldSizeY,
-            ushort yNumAreasPerAxis,
+            WorldSystemParams worldSystemParamsXZ,
+            WorldSystemParams worldSystemParamsY,
             System.Action<Area, bool> onAreaChangedVisibility)
         {
-            _worldMin = - worldSize / 2f;
-            _worldMax = worldSize / 2f;
-            _worldHalfSize = worldSize / 2f;
-            _areaSize = worldSize / (float)numAreasPerAxis;
-            _numAreasPerAxis = (ushort) (numAreasPerAxis + 2); // additional 2 for positions out of bounds
+            _xzAxisInfo = CalculateAxisInfo(worldSystemParamsXZ);
+            _yAxisInfo = CalculateAxisInfo(worldSystemParamsY);
 
-            _yWorldMin = - worldSizeY / 2f;
-            _yWorldMax = worldSizeY / 2f;
-            _yWorldHalfSize = worldSizeY / 2f;
-            _yAreaSize = worldSizeY / (float)yNumAreasPerAxis;
-            _yNumAreasPerAxis = (ushort) (yNumAreasPerAxis + 2); // additional 2 for positions out of bounds
-
-            _areas = new Area[_numAreasPerAxis, _yNumAreasPerAxis, _numAreasPerAxis];
+            _areas = new Area[_xzAxisInfo.numAreasPerAxis, _yAxisInfo.numAreasPerAxis, _xzAxisInfo.numAreasPerAxis];
 
             _onAreaChangedVisibility = onAreaChangedVisibility;
+        }
+
+        private static AxisInfo CalculateAxisInfo(WorldSystemParams worldSystemParams)
+        {
+            AxisInfo axisInfo = new AxisInfo();
+            axisInfo.worldMin = - worldSystemParams.worldSize / 2f;
+            axisInfo.worldMax = worldSystemParams.worldSize / 2f;
+            axisInfo.worldHalfSize = worldSystemParams.worldSize / 2f;
+            axisInfo.areaSize = worldSystemParams.worldSize / (float)worldSystemParams.numAreasPerAxis;
+            axisInfo.numAreasPerAxis = (ushort) (worldSystemParams.numAreasPerAxis + 2); // additional 2 for positions out of bounds
+            return axisInfo;
         }
 
         public FocusPoint RegisterFocusPoint(float radius, Vector3 pos)
@@ -387,24 +394,24 @@ namespace SanAndreasUnity.Behaviours.World
 
         private short GetAreaIndex(float pos)
         {
-            if (pos < _worldMin)
+            if (pos < _xzAxisInfo.worldMin)
                 return 0;
-            if (pos > _worldMax)
-                return (short) (_numAreasPerAxis - 1);
+            if (pos > _xzAxisInfo.worldMax)
+                return (short) (_xzAxisInfo.numAreasPerAxis - 1);
 
             // skip 1st
-            return (short) (1 + Mathf.FloorToInt((pos + _worldHalfSize) / _areaSize));
+            return (short) (1 + Mathf.FloorToInt((pos + _xzAxisInfo.worldHalfSize) / _xzAxisInfo.areaSize));
         }
 
         private short GetAreaIndexForYAxis(float pos)
         {
-            if (pos < _yWorldMin)
+            if (pos < _yAxisInfo.worldMin)
                 return 0;
-            if (pos > _yWorldMax)
-                return (short) (_yNumAreasPerAxis - 1);
+            if (pos > _yAxisInfo.worldMax)
+                return (short) (_yAxisInfo.numAreasPerAxis - 1);
 
             // skip 1st
-            return (short) (1 + Mathf.FloorToInt((pos + _yWorldHalfSize) / _yAreaSize));
+            return (short) (1 + Mathf.FloorToInt((pos + _yAxisInfo.worldHalfSize) / _yAxisInfo.areaSize));
         }
 
         private (short x, short y, short z) GetAreaIndex(Vector3 pos)
