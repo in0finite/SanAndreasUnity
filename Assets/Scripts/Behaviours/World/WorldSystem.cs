@@ -253,7 +253,7 @@ namespace SanAndreasUnity.Behaviours.World
         }
 
         private readonly Area[,,] _areas;
-        private readonly List<FocusPoint> _focusPoints = new List<FocusPoint>(32);
+        private readonly HashSet<FocusPoint> _focusPoints = new HashSet<FocusPoint>();
 
         private readonly List<Area> _areasForUpdate = new List<Area>(128);
 
@@ -307,7 +307,8 @@ namespace SanAndreasUnity.Behaviours.World
             focusPoint.Radius = radius;
             focusPoint.Position = pos;
 
-            _focusPoints.Add(focusPoint);
+            if (!_focusPoints.Add(focusPoint))
+                throw new Exception("Failed to add focus point to the collection");
 
             this.ForEachAreaInRadius(pos, radius, true, area =>
             {
