@@ -65,7 +65,7 @@ namespace SanAndreasUnity.Behaviours.World
         {
             var focusPoints = new WorldSystem<T>.FocusPoint[_worldSystems.Length];
             for (int i = 0; i < _worldSystems.Length; i++)
-                focusPoints[i] = _worldSystems[i].RegisterFocusPoint(radius, pos);
+                focusPoints[i] = _worldSystems[i].RegisterFocusPoint(Mathf.Min(radius, _distanceLevels[i]), pos);
 
             long id = _lastFocusPointId++;
             _focusPointsPerLevel[id] = focusPoints;
