@@ -478,12 +478,11 @@ MonoBehaviour:
   maxDrawDistance: 500
   drawDistancesPerLayers:
   - 301
+  - 801
   - 1501
-  drawDistanceWithoutLayer: 5000
-  worldSize: 6000
-  numAreasPerAxis: 100
-  worldSizeY: 25000
-  yNumAreasPerAxis: 3
+  yWorldSystemSize: 25000
+  yWorldSystemNumAreas: 3
+  xzWorldSystemNumAreasPerDrawDistanceLevel: 640064006400
   loadParkedVehicles: 0
   mapObjectActivatorPrefab: {fileID: 0}
   staticGeometryPrefab: {fileID: 5341989147525447730, guid: f6207237b8bbdaa49b948fa374797093,

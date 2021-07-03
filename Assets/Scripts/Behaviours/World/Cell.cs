@@ -25,7 +25,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public Camera PreviewCamera;
 
-		private List<(WorldSystem<MapObject>.FocusPoint focusPoint, Transform transform)> _focusPoints = new List<(WorldSystem<MapObject>.FocusPoint, Transform)>();
+		private List<(long id, Transform transform)> _focusPoints = new List<(long id, Transform transform)>();
 
         public Water Water;
 
@@ -49,15 +49,14 @@ namespace SanAndreasUnity.Behaviours.World
 
         public float maxDrawDistance = 500;
 
-        public float[] drawDistancesPerLayers = new float[] { 301, 1501 };
-        public float drawDistanceWithoutLayer = 5000f;
+        public float[] drawDistancesPerLayers = new float[] { 301, 801, 1501 };
 
-        private WorldSystem<MapObject> _worldSystem;
+        private WorldSystemWithDistanceLevels<MapObject> _worldSystem;
 
-        public uint worldSize;
-        public ushort numAreasPerAxis;
-        public uint worldSizeY;
-        public ushort yNumAreasPerAxis;
+        public uint yWorldSystemSize = 25000;
+        public ushort yWorldSystemNumAreas = 3;
+
+        public ushort[] xzWorldSystemNumAreasPerDrawDistanceLevel = { 100, 100, 100 };
 
         public bool loadParkedVehicles = true;
 
@@ -105,11 +104,12 @@ namespace SanAndreasUnity.Behaviours.World
 
 			totalNumObjects = m_insts.Count;
 
-			_worldSystem = new WorldSystem<MapObject>(
-				this.worldSize,
-				this.numAreasPerAxis,
-				this.worldSizeY,
-				this.yNumAreasPerAxis,
+			uint worldSize = 6000;
+
+			_worldSystem = new WorldSystemWithDistanceLevels<MapObject>(
+				this.drawDistancesPerLayers,
+				this.xzWorldSystemNumAreasPerDrawDistanceLevel.Select(_ => new WorldSystemParams { worldSize = worldSize, numAreasPerAxis = _ }).ToArray(),
+				Enumerable.Range(0, this.drawDistancesPerLayers.Length).Select(_ => new WorldSystemParams { worldSize = this.yWorldSystemSize, numAreasPerAxis = this.yWorldSystemNumAreas }).ToArray(),
 				this.OnAreaChangedVisibility);
 		}
 
@@ -119,7 +119,10 @@ namespace SanAndreasUnity.Behaviours.World
 			{
 				var staticGeometry = inst.Value;
 				staticGeometry.Initialize(inst.Key, m_insts);
-				_worldSystem.AddObjectToArea(staticGeometry.transform.position, staticGeometry);
+				_worldSystem.AddObjectToArea(
+					staticGeometry.transform.position,
+					staticGeometry.ObjectDefinition?.DrawDist ?? 0,
+					staticGeometry);
 			}
 		}
 
@@ -143,7 +146,7 @@ namespace SanAndreasUnity.Behaviours.World
             {
 	            var enexComponent = EntranceExitMapObject.Create(enex);
 	            m_enexes.Add(enexComponent);
-	            _worldSystem.AddObjectToArea(enexComponent.transform.position, enexComponent);
+	            _worldSystem.AddObjectToArea(enexComponent.transform.position, 100f, enexComponent);
             }
         }
 
@@ -214,19 +217,6 @@ namespace SanAndreasUnity.Behaviours.World
         }
 
 
-        public float GetDrawDistanceBasedOnLayer(float drawDistance)
-        {
-	        if (drawDistance <= 0)
-		        return 0;
-
-	        int index = System.Array.FindIndex(this.drawDistancesPerLayers, f => f > drawDistance);
-	        if (index >= 0)
-		        return this.drawDistancesPerLayers[index];
-
-	        return this.drawDistanceWithoutLayer;
-        }
-
-
         private void Update()
         {
 
@@ -244,11 +234,11 @@ namespace SanAndreasUnity.Behaviours.World
             {
 	            if (null == f.transform)
 	            {
-		            _worldSystem.UnRegisterFocusPoint(f.focusPoint.Id);
+		            _worldSystem.UnRegisterFocusPoint(f.id);
 		            return true;
 	            }
 
-	            _worldSystem.FocusPointChangedPosition(f.focusPoint, f.transform.position);
+	            _worldSystem.FocusPointChangedPosition(f.id, f.transform.position);
 
 	            return false;
             });

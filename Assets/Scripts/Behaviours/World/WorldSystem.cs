@@ -6,6 +6,104 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
 {
+    public struct WorldSystemParams
+    {
+        public uint worldSize;
+        public ushort numAreasPerAxis;
+    }
+
+    public class WorldSystemWithDistanceLevels<T>
+        where T : Component
+    {
+        private readonly WorldSystem<T>[] _worldSystems;
+        private readonly float[] _distanceLevels;
+        private readonly Dictionary<long, WorldSystem<T>.FocusPoint[]> _focusPointsPerLevel = new Dictionary<long, WorldSystem<T>.FocusPoint[]>();
+        private long _lastFocusPointId = 1;
+
+        public WorldSystemWithDistanceLevels(
+            float[] distanceLevels,
+            WorldSystemParams[] worldSystemParamsXZ,
+            WorldSystemParams[] worldSystemParamsY,
+            System.Action<WorldSystem<T>.Area, bool> onAreaChangedVisibility)
+        {
+            int num = distanceLevels.Length;
+            if (num != worldSystemParamsXZ.Length || num != worldSystemParamsY.Length)
+                throw new ArgumentException("Input arrays must be of same size");
+
+            if (num == 0)
+                throw new ArgumentException("You must specify distance levels");
+
+            _distanceLevels = distanceLevels.ToArray();
+
+            _worldSystems = new WorldSystem<T>[num];
+            for (int i = 0; i < num; i++)
+            {
+                _worldSystems[i] = new WorldSystem<T>(worldSystemParamsXZ[i], worldSystemParamsY[i], onAreaChangedVisibility);
+            }
+        }
+
+        public int GetLevelIndexFromDrawDistance(float drawDistance)
+        {
+            if (drawDistance <= 0)
+                return 0;
+
+            int index = System.Array.FindIndex(_distanceLevels, f => f > drawDistance);
+            if (index >= 0)
+                return index;
+
+            // draw distance is higher than all levels
+            // these object should go into last level
+            return _distanceLevels.Length - 1;
+        }
+
+        public long RegisterFocusPoint(float radius, Vector3 pos)
+        {
+            var focusPoints = new WorldSystem<T>.FocusPoint[_worldSystems.Length];
+            for (int i = 0; i < _worldSystems.Length; i++)
+                focusPoints[i] = _worldSystems[i].RegisterFocusPoint(radius, pos);
+
+            long id = _lastFocusPointId++;
+            _focusPointsPerLevel[id] = focusPoints;
+            return id;
+        }
+
+        public void UnRegisterFocusPoint(long id)
+        {
+            if (!_focusPointsPerLevel.TryGetValue(id, out var focusPoints))
+                return;
+
+            for (int i = 0; i < _worldSystems.Length; i++)
+                _worldSystems[i].UnRegisterFocusPoint(focusPoints[i].Id);
+        }
+
+        public void FocusPointChangedPosition(long id, Vector3 newPos)
+        {
+            if (!_focusPointsPerLevel.TryGetValue(id, out var focusPoints))
+                return;
+
+            for (int i = 0; i < _worldSystems.Length; i++)
+                _worldSystems[i].FocusPointChangedPosition(focusPoints[i], newPos);
+        }
+
+        public void AddObjectToArea(Vector3 pos, float drawDistance, T obj)
+        {
+            int levelIndex = this.GetLevelIndexFromDrawDistance(drawDistance);
+            _worldSystems[levelIndex].AddObjectToArea(pos, obj);
+        }
+
+        public void RemoveObjectFromArea(Vector3 pos, float drawDistance, T obj)
+        {
+            int levelIndex = this.GetLevelIndexFromDrawDistance(drawDistance);
+            _worldSystems[levelIndex].RemoveObjectFromArea(pos, obj);
+        }
+
+        public void Update()
+        {
+            for (int i = 0; i < _worldSystems.Length; i++)
+                _worldSystems[i].Update();
+        }
+    }
+
     public class WorldSystem<T>
         where T : Component
     {
@@ -20,7 +118,7 @@ namespace SanAndreasUnity.Behaviours.World
             internal bool isMarkedForUpdate;
         }
 
-        public class FocusPoint
+        public sealed class FocusPoint
         {
             private static long _lastId = 1;
 
@@ -131,12 +229,6 @@ namespace SanAndreasUnity.Behaviours.World
                 if (range3.hasValues && !range3.isIntersectionPart)
                     action(range3.range);
             }
-        }
-
-        public struct WorldSystemParams
-        {
-            public uint worldSize;
-            public ushort numAreasPerAxis;
         }
 
         private struct AxisInfo
