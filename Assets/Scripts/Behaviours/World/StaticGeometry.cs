@@ -184,8 +184,10 @@ namespace SanAndreasUnity.Behaviours.World
 
 			Profiler.EndSample ();
 
+			Profiler.BeginSample("CreateLights()", this);
 			if (!F.IsInHeadlessMode)
 				this.CreateLights(geoms);
+			Profiler.EndSample();
 
 			geoms.AttachCollisionModel(transform);
 

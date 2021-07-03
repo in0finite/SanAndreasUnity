@@ -398,6 +398,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
             public GeometryParts(string name, Clump clump, TextureDictionary[] txds)
             {
+                Profiler.BeginSample("GeometryParts()");
+
                 Name = name;
 
                 Geometry = clump.GeometryList.Geometry
@@ -409,6 +411,8 @@ namespace SanAndreasUnity.Importing.Conversion
                     .ToArray();
 
                 _collisions = clump.Collision;
+
+                Profiler.EndSample();
             }
 
             public void AttachCollisionModel(Transform destParent, bool forceConvex = false)

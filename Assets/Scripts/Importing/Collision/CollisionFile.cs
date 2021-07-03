@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Profiler = UnityEngine.Profiling.Profiler;
 
 namespace SanAndreasUnity.Importing.Collision
 {
@@ -185,6 +186,8 @@ namespace SanAndreasUnity.Importing.Collision
 
         private CollisionFile(CollisionFileInfo info, Stream stream)
         {
+            Profiler.BeginSample("CollisionFile()");
+
             Name = info.Name;
             ModelId = info.ModelId;
 
@@ -316,6 +319,8 @@ namespace SanAndreasUnity.Importing.Collision
             {
                 Vertices = new Vertex[0];
             }
+
+            Profiler.EndSample();
         }
     }
 }
