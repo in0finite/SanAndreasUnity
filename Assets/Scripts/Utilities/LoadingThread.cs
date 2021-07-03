@@ -22,7 +22,7 @@ namespace SanAndreasUnity.Behaviours
 
 		static System.Collections.Concurrent.BlockingCollection<Job<object>> s_jobs = new System.Collections.Concurrent.BlockingCollection<Job<object>> ();
 		static Thread s_thread;
-		static System.Collections.Concurrent.BlockingCollection<Job<object>> s_processedJobs = new System.Collections.Concurrent.BlockingCollection<Job<object>> ();
+		static readonly ConcurrentQueue<Job<object>> s_processedJobs = new ConcurrentQueue<Job<object>>();
 
 		static bool s_shouldThreadExit = false;
 
@@ -66,7 +66,7 @@ namespace SanAndreasUnity.Behaviours
 				if (this.maxTimePerFrameMs != 0 && _stopwatch.ElapsedMilliseconds >= this.maxTimePerFrameMs)
 					break;
 
-				if (!s_processedJobs.TryTake(out job, 0))
+				if (!s_processedJobs.TryDequeue(out job))
 					break;
 
 				if (job.exception != null)
@@ -142,7 +142,7 @@ namespace SanAndreasUnity.Behaviours
 					job.exception = ex;
 				}
 
-				s_processedJobs.Add (job);
+				s_processedJobs.Enqueue(job);
 			}
 
 		}

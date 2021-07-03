@@ -49,6 +49,20 @@ namespace SanAndreasUnity.Utilities
 			}
 		}
 
+		public int DequeueToCollection(ICollection<T> collection, int maxNumItems)
+		{
+			lock (queueLock)
+			{
+				int numAdded = 0;
+				while (queue.Count > 0 && numAdded < maxNumItems)
+				{
+					collection.Add(queue.Dequeue());
+					numAdded++;
+				}
+				return numAdded;
+			}
+		}
+
 		public int Count
 		{
 			get
