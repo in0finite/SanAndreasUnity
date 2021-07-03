@@ -32,7 +32,7 @@ namespace SanAndreasUnity.Behaviours.World
             if (num == 0)
                 throw new ArgumentException("You must specify distance levels");
 
-            if (!distanceLevels.OrderBy(l => l).Equals(distanceLevels))
+            if (!distanceLevels.OrderBy(l => l).SequenceEqual(distanceLevels))
                 throw new ArgumentException("Input arrays must be sorted ascending by distance level");
 
             if (distanceLevels.Distinct().Count() != distanceLevels.Length)
