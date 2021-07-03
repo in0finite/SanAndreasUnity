@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Diagnostics;
+using UnityEngine;
 using SanAndreasUnity.Utilities;
 using System.Threading;
 using System.Runtime.CompilerServices;
+using Debug = UnityEngine.Debug;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -23,6 +25,10 @@ namespace SanAndreasUnity.Behaviours
 		static System.Collections.Concurrent.BlockingCollection<Job<object>> s_processedJobs = new System.Collections.Concurrent.BlockingCollection<Job<object>> ();
 
 		static bool s_shouldThreadExit = false;
+
+		private readonly Stopwatch _stopwatch = new Stopwatch();
+
+		public ushort maxTimePerFrameMs = 0;
 
 
 
@@ -51,9 +57,18 @@ namespace SanAndreasUnity.Behaviours
 
 			// get all processed jobs
 
+			_stopwatch.Restart();
+
 			Job<object> job;
-			while (s_processedJobs.TryTake (out job, 0))
+
+			while (true)
 			{
+				if (this.maxTimePerFrameMs != 0 && _stopwatch.ElapsedMilliseconds >= this.maxTimePerFrameMs)
+					break;
+
+				if (!s_processedJobs.TryTake(out job, 0))
+					break;
+
 				if (job.exception != null)
 				{
 					// error happened
