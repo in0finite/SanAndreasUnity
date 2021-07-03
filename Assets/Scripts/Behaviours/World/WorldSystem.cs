@@ -32,6 +32,12 @@ namespace SanAndreasUnity.Behaviours.World
             if (num == 0)
                 throw new ArgumentException("You must specify distance levels");
 
+            if (!distanceLevels.OrderBy(l => l).Equals(distanceLevels))
+                throw new ArgumentException("Input arrays must be sorted ascending by distance level");
+
+            if (distanceLevels.Distinct().Count() != distanceLevels.Length)
+                throw new ArgumentException("Distance levels must be distinct");
+
             _distanceLevels = distanceLevels.ToArray();
 
             _worldSystems = new WorldSystem<T>[num];
@@ -278,6 +284,12 @@ namespace SanAndreasUnity.Behaviours.World
 
         private static AxisInfo CalculateAxisInfo(WorldSystemParams worldSystemParams)
         {
+            if (worldSystemParams.worldSize <= 0)
+                throw new ArgumentException("World size must be higher than 0");
+            ushort maxNumAreasPerAxis = ushort.MaxValue - 10;
+            if (worldSystemParams.numAreasPerAxis > maxNumAreasPerAxis)
+                throw new ArgumentException($"Num areas per axis can not be higher than {maxNumAreasPerAxis}");
+
             AxisInfo axisInfo = new AxisInfo();
             axisInfo.worldMin = - worldSystemParams.worldSize / 2f;
             axisInfo.worldMax = worldSystemParams.worldSize / 2f;
