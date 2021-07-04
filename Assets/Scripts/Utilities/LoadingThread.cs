@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using System.Threading;
@@ -23,6 +24,7 @@ namespace SanAndreasUnity.Behaviours
 		static System.Collections.Concurrent.BlockingCollection<Job<object>> s_jobs = new System.Collections.Concurrent.BlockingCollection<Job<object>> ();
 		static Thread s_thread;
 		static readonly ConcurrentQueue<Job<object>> s_processedJobs = new ConcurrentQueue<Job<object>>();
+		private readonly Queue<Job<object>> _processedJobsBuffer = new Queue<Job<object>>(256);
 
 		static bool s_shouldThreadExit = false;
 
@@ -66,8 +68,16 @@ namespace SanAndreasUnity.Behaviours
 				if (this.maxTimePerFrameMs != 0 && _stopwatch.ElapsedMilliseconds >= this.maxTimePerFrameMs)
 					break;
 
-				if (!s_processedJobs.TryDequeue(out job))
-					break;
+				if (_processedJobsBuffer.Count > 0)
+					job = _processedJobsBuffer.Dequeue();
+				else
+				{
+					int numCopied = s_processedJobs.DequeueToQueue(_processedJobsBuffer, 256);
+					if (numCopied == 0)
+						break;
+
+					job = _processedJobsBuffer.Dequeue();
+				}
 
 				if (job.exception != null)
 				{
