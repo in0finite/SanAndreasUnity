@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Settings {
 		OptionsWindow.FloatInput m_maxDrawDistanceInput = new OptionsWindow.FloatInput() {
 			description = "Max draw distance",
 			minValue = 50,
-			maxValue = 1000,
+			maxValue = 1500,
 			getValue = () => Cell.Instance != null ? Cell.Instance.maxDrawDistance : s_maxDrawDistance,
 			setValue = (value) => { s_maxDrawDistance = value; if (Cell.Instance != null) Cell.Instance.maxDrawDistance = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
