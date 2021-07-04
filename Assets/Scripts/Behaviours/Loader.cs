@@ -148,7 +148,12 @@ namespace SanAndreasUnity.Behaviours
 
 			var stopwatchForSteps = new System.Diagnostics.Stopwatch ();
 
-			foreach (var step in m_loadingSteps) {
+			foreach (var step in m_loadingSteps)
+			{
+
+				// wait some more time before going to next step, because sometimes Unity does something
+				// in the background at the end of a frame, eg. it updates Collider positions if you changed them
+				yield return null;
 
 				// update description
 				LoadingStatus = step.Description;
