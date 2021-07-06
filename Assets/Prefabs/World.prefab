@@ -480,8 +480,8 @@ MonoBehaviour:
   - 101
   - 301
   - 1501
-  yWorldSystemSize: 25000
-  yWorldSystemNumAreas: 3
+  yWorldSystemSize: 3000
+  yWorldSystemNumAreas: 4
   xzWorldSystemNumAreasPerDrawDistanceLevel: 640064006400
   loadParkedVehicles: 0
   mapObjectActivatorPrefab: {fileID: 0}
