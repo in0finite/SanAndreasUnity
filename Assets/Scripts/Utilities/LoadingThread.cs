@@ -143,6 +143,7 @@ namespace SanAndreasUnity.Behaviours
 
 			var j = new Job<object> () {
 				id = GetNextJobId(),
+				priority = job.priority,
 				action = () => job.action(),
 				callbackError = job.callbackError,
 			};
