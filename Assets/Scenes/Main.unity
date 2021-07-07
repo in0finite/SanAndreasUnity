@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 1117230322}
   - component: {fileID: 1117230321}
   - component: {fileID: 1117230325}
+  - component: {fileID: 1117230326}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -221,6 +222,20 @@ MonoBehaviour:
   displayGizmos: 0
   zOnShader: {fileID: 4800000, guid: 6602491fb85d04f7facf2932f1831720, type: 3}
   zOffShader: {fileID: 4800000, guid: 12cb60961770c4d7e8cc1662ca101fec, type: 3}
+--- !u!114 &1117230326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117230320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f261590297a9b11459cc24b5b949c608, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasRevealRadius: 0
+  revealRadius: 50
 --- !u!108 &1430544495 stripped
 Light:
   m_CorrespondingSourceObject: {fileID: 10808534, guid: b6900baf9f552ba46ad27d4ada4d5489,
@@ -297,18 +312,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 3}
-      propertyPath: focusPoints.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 3}
-      propertyPath: Focus
-      value: 
-      objectReference: {fileID: 1117230324}
-    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 3}
-      propertyPath: focusPoints.Array.data[0]
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 499186, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -340,6 +343,18 @@ PrefabInstance:
     - target: {fileID: 499186, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 3}
+      propertyPath: focusPoints.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 3}
+      propertyPath: Focus
+      value: 
+      objectReference: {fileID: 1117230324}
+    - target: {fileID: 11436500, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 3}
+      propertyPath: focusPoints.Array.data[0]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 11455068, guid: b6900baf9f552ba46ad27d4ada4d5489, type: 3}
       propertyPath: WaterPrefab

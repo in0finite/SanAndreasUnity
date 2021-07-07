@@ -187,13 +187,29 @@ namespace SanAndreasUnity.Behaviours.World
 
 		}
 
-		public void RegisterFocusPoint(Transform tr)
+		public void RegisterFocusPoint(Transform tr, float revealRadius)
 		{
 			if (!_focusPoints.Exists(f => f.transform == tr))
 			{
-				var registeredFocusPoint = _worldSystem.RegisterFocusPoint(this.maxDrawDistance, tr.position);
+				var registeredFocusPoint = _worldSystem.RegisterFocusPoint(revealRadius, tr.position);
 				_focusPoints.Add((registeredFocusPoint, tr));
 			}
+		}
+
+		public void RegisterFocusPoint(Transform tr) => this.RegisterFocusPoint(tr, this.maxDrawDistance);
+
+		public void UnRegisterFocusPoint(Transform tr)
+		{
+			int index = _focusPoints.FindIndex(f => f.transform == tr);
+			if (index < 0)
+				return;
+
+			// var temp = _focusPoints[index];
+			// temp.transform = null; // it will be removed in next Update()
+			// _focusPoints[index] = temp;
+
+			_worldSystem.UnRegisterFocusPoint(_focusPoints[index].id);
+			_focusPoints.RemoveAt(index);
 		}
 
 
