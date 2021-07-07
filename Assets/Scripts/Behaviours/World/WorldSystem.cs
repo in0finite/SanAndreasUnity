@@ -305,6 +305,9 @@ namespace SanAndreasUnity.Behaviours.World
         {
             this.ThrowIfConcurrentModification();
 
+            if (radius < 0)
+                throw new ArgumentException("Radius can not be < 0");
+
             var focusPoint = new FocusPoint();
             focusPoint.Radius = radius;
             focusPoint.Position = pos;
@@ -485,6 +488,9 @@ namespace SanAndreasUnity.Behaviours.World
 
         private AreaIndexes GetAreaIndexesInRadius(Vector3 pos, float radius)
         {
+            if (radius < 0)
+                throw new ArgumentException("Radius can not be < 0");
+
             // Vector3 min = new Vector3(pos.x - radius, pos.y - radius, pos.z - radius);
             // Vector3 max = new Vector3(pos.x + radius, pos.y + radius, pos.z + radius);
 
