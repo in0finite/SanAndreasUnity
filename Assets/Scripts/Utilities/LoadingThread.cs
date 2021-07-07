@@ -134,10 +134,10 @@ namespace SanAndreasUnity.Behaviours
 			// note: this function can be called from any thread
 
 			if (null == job.action)
-				return;
+				throw new ArgumentException("Job must have an action");
 
 			if (0f == job.priority)
-				throw new Exception("You forgot to assign job priority");
+				throw new ArgumentException("You forgot to assign job priority");
 
 			job.exception = null;
 
