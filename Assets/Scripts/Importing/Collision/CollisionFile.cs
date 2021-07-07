@@ -101,10 +101,10 @@ namespace SanAndreasUnity.Importing.Collision
             }
         }
 
-		private static void LoadAsync (string collFileName, CollisionFileInfo collFileInfo, System.Action<CollisionFile> onFinish)
+		private static void LoadAsync (string collFileName, CollisionFileInfo collFileInfo, float loadPriority, System.Action<CollisionFile> onFinish)
 		{
 
-			ArchiveManager.ReadFileAsync (collFileName, (stream) => {
+			ArchiveManager.ReadFileAsync (collFileName, loadPriority, (stream) => {
 				CollisionFile cf = null;
 				try {
 					using(stream)
@@ -141,7 +141,7 @@ namespace SanAndreasUnity.Importing.Collision
 			return cf;
         }
 
-		public static void FromNameAsync(String name, System.Action<CollisionFile> onFinish)
+		public static void FromNameAsync(String name, float loadPriority, System.Action<CollisionFile> onFinish)
 		{
 			if (!_sModelNameDict.ContainsKey (name))
 			{
@@ -159,7 +159,7 @@ namespace SanAndreasUnity.Importing.Collision
 			// get the actual name of collision file
 			string collFileName = _sModelNameDict [name].FileName;
 
-			LoadAsync( collFileName, _sModelNameDict[name], (result) => 
+			LoadAsync( collFileName, _sModelNameDict[name], loadPriority, (result) =>
 				{
 					// update _value variable in appropriate CollisionFileInfo object
 					_sModelNameDict[name].Value = result;

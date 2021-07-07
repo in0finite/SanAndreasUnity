@@ -80,6 +80,8 @@ namespace SanAndreasUnity.Behaviours
 
         public bool IsVisibleInMapSystem { get; private set; } = false;
 
+        public float LoadPriority { get; private set; }
+
         private bool _loaded;
 
         public bool HasLoaded { get { return _loaded; } }
@@ -87,6 +89,8 @@ namespace SanAndreasUnity.Behaviours
         public List<String> Flags;
 
         public Vector2 CellPos { get; private set; }
+
+        public Vector3 CachedPosition { get; private set; }
 
         public int RandomInt { get; private set; }
 
@@ -106,6 +110,8 @@ namespace SanAndreasUnity.Behaviours
 
             CellPos = new Vector2(pos.x, pos.z);
 
+            this.CachedPosition = pos;
+
             RandomInt = _sRandom.Next();
 
             _loaded = false;
@@ -116,12 +122,14 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-        public void Show()
+        public void Show(float loadPriority)
         {
             if (this.IsVisibleInMapSystem)
                 return;
 
             this.IsVisibleInMapSystem = true;
+
+            this.LoadPriority = loadPriority;
 
             if (!_loaded)
             {

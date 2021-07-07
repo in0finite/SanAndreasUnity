@@ -526,7 +526,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return Load(modelName, texDictNames.Select(x => TextureDictionary.Load(x)).ToArray());
         }
 
-		public static void LoadAsync(string modelName, string[] texDictNames, System.Action<GeometryParts> onFinish)
+		public static void LoadAsync(string modelName, string[] texDictNames, float loadPriority, System.Action<GeometryParts> onFinish)
 		{
 			// load each texture asyncly (or load them all at once ?)
 
@@ -535,7 +535,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
 			if (0 == texDictNames.Length)
 			{
-				LoadAsync( modelName, new TextureDictionary[0], onFinish );
+				LoadAsync( modelName, new TextureDictionary[0], loadPriority, onFinish );
 				return;
 			}
 
@@ -546,14 +546,14 @@ namespace SanAndreasUnity.Importing.Conversion
 			{
 			//	bool isLast = i == texDictNames.Length - 1;
 
-				TextureDictionary.LoadAsync (texDictNames [i], (texDict) => {
+				TextureDictionary.LoadAsync (texDictNames [i], loadPriority, (texDict) => {
 					
 					loadedTextDicts.Add (texDict);
 
 					if (loadedTextDicts.Count == texDictNames.Length)
 					{
 						// finished loading all tex dicts
-						LoadAsync (modelName, loadedTextDicts.ToArray (), onFinish);
+						LoadAsync (modelName, loadedTextDicts.ToArray (), loadPriority, onFinish);
 					}
 				});
 			}
@@ -587,7 +587,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return loaded;
         }
 
-		public static void LoadAsync(string modelName, TextureDictionary[] txds, System.Action<GeometryParts> onFinish)
+		public static void LoadAsync(string modelName, TextureDictionary[] txds, float loadPriority, System.Action<GeometryParts> onFinish)
 		{
 			modelName = modelName.ToLower();
 
@@ -601,6 +601,7 @@ namespace SanAndreasUnity.Importing.Conversion
 			GeometryParts loadedGeoms = null;
 
 			LoadingThread.RegisterJob (new LoadingThread.Job<Clump> () {
+                priority = loadPriority,
 				action = () => {
 					// read archive file in background thread
 					var clump = ArchiveManager.ReadFile<Clump>(modelName + ".dff");

@@ -108,7 +108,7 @@ namespace SanAndreasUnity.Importing.Conversion
             col.Spawn(destParent, forceConvex);
         }
 
-		public static void LoadAsync(string name, CollisionFile file, Transform destParent, bool forceConvex, System.Action onFinish)
+		public static void LoadAsync(string name, CollisionFile file, Transform destParent, bool forceConvex, float loadPriority, System.Action onFinish)
 		{
 			// load collision file asyncly, and when it's ready just call the other function
 
@@ -123,7 +123,7 @@ namespace SanAndreasUnity.Importing.Conversion
 			}
 
 			// load collision file asyncly
-			CollisionFile.FromNameAsync (name, (cf) => {
+			CollisionFile.FromNameAsync (name, loadPriority, (cf) => {
 				// loading finished
 				// call other function
 				if(cf != null)

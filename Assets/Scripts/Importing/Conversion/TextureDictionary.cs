@@ -268,7 +268,7 @@ namespace SanAndreasUnity.Importing.Conversion
             return txd;
         }
 
-		public static void LoadAsync(string name, System.Action<TextureDictionary> onFinish)
+		public static void LoadAsync(string name, float loadPriority, System.Action<TextureDictionary> onFinish)
 		{
 			name = name.ToLower();
 
@@ -282,6 +282,7 @@ namespace SanAndreasUnity.Importing.Conversion
             bool bDontLoad = DontLoadTextures;
 
 			Behaviours.LoadingThread.RegisterJob (new Behaviours.LoadingThread.Job<RenderWareStream.TextureDictionary> () {
+                priority = loadPriority,
 				action = () => {
 					return bDontLoad ? null : ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd");
 				},

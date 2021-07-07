@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using Profiler = UnityEngine.Profiling.Profiler;
 
 //using Facepunch.Networking;
 
@@ -173,18 +174,32 @@ namespace SanAndreasUnity.Behaviours.World
 			if (null == area.ObjectsInside)
 				return;
 
+			Profiler.BeginSample("OnAreaChangedVisibility");
+
+			WorldSystem<MapObject>.FocusPoint[] focusPointsThatSeeMe = null;
+			if (visible)
+				focusPointsThatSeeMe = area.FocusPointsThatSeeMe.ToArray();
+
 			for (int i = 0; i < area.ObjectsInside.Count; i++)
 			{
 				var obj = area.ObjectsInside[i];
+
+				if (visible == obj.IsVisibleInMapSystem)
+					continue;
+
 				F.RunExceptionSafe(() =>
 				{
 					if (visible)
-						obj.Show();
+					{
+						float minSqrDistance = focusPointsThatSeeMe.Min(f => (obj.CachedPosition - f.Position).sqrMagnitude);
+						obj.Show(minSqrDistance);
+					}
 					else
 						obj.UnShow();
 				});
 			}
 
+			Profiler.EndSample();
 		}
 
 		public void RegisterFocusPoint(Transform tr, float revealRadius)

@@ -116,8 +116,8 @@ namespace SanAndreasUnity.Behaviours.World
             internal List<T> objectsInside;
             public IReadOnlyList<T> ObjectsInside => this.objectsInside;
 
-            internal HashSet<long> focusPointsThatSeeMe;
-            public IReadOnlyCollection<long> FocusPointsThatSeeMe => this.focusPointsThatSeeMe;
+            internal HashSet<FocusPoint> focusPointsThatSeeMe;
+            public IReadOnlyCollection<FocusPoint> FocusPointsThatSeeMe => this.focusPointsThatSeeMe;
 
             internal bool isMarkedForUpdate;
 
@@ -317,7 +317,7 @@ namespace SanAndreasUnity.Behaviours.World
 
             this.ForEachAreaInRadius(pos, radius, true, area =>
             {
-                AddToFocusPointsThatSeeMe(area, focusPoint.Id);
+                AddToFocusPointsThatSeeMe(area, focusPoint);
                 this.MarkAreaForUpdate(area);
             });
 
@@ -335,7 +335,7 @@ namespace SanAndreasUnity.Behaviours.World
             {
                 if (null == area)
                     return;
-                RemoveFromFocusPointsThatSeeMe(area, focusPoint.Id);
+                RemoveFromFocusPointsThatSeeMe(area, focusPoint);
                 this.MarkAreaForUpdate(area);
             });
         }
@@ -362,7 +362,7 @@ namespace SanAndreasUnity.Behaviours.World
                     {
                         // this can happen multiple times per single area, but since we use hashset it should be no problem
                         // actually, it should not happen anymore with new implementation
-                        AddToFocusPointsThatSeeMe(area, focusPoint.Id);
+                        AddToFocusPointsThatSeeMe(area, focusPoint);
                         this.MarkAreaForUpdate(area);
                     });
                 }
@@ -375,7 +375,7 @@ namespace SanAndreasUnity.Behaviours.World
                     {
                         if (null == area)
                             return;
-                        RemoveFromFocusPointsThatSeeMe(area, focusPoint.Id);
+                        RemoveFromFocusPointsThatSeeMe(area, focusPoint);
                         this.MarkAreaForUpdate(area);
                     });
                 }
@@ -738,7 +738,7 @@ namespace SanAndreasUnity.Behaviours.World
         private static void EnsureFocusPointsCollectionInitialized(Area area)
         {
             if (null == area.focusPointsThatSeeMe)
-                area.focusPointsThatSeeMe = new HashSet<long>();
+                area.focusPointsThatSeeMe = new HashSet<FocusPoint>();
         }
 
         private static bool ShouldAreaBeVisible(Area area)
@@ -760,25 +760,25 @@ namespace SanAndreasUnity.Behaviours.World
             area.isMarkedForUpdate = true;
         }
 
-        private static void AddToFocusPointsThatSeeMe(Area area, long id)
+        private static void AddToFocusPointsThatSeeMe(Area area, FocusPoint focusPoint)
         {
             EnsureFocusPointsCollectionInitialized(area);
-            if (!area.focusPointsThatSeeMe.Add(id))
-                throw new Exception($"Failed to add focus point with id {id} - it already exists");
+            if (!area.focusPointsThatSeeMe.Add(focusPoint))
+                throw new Exception($"Failed to add focus point with id {focusPoint.Id} - it already exists");
         }
 
-        private static void RemoveFromFocusPointsThatSeeMe(Area area, long id)
+        private static void RemoveFromFocusPointsThatSeeMe(Area area, FocusPoint focusPoint)
         {
             bool success = false;
             if (area.focusPointsThatSeeMe != null)
             {
-                success = area.focusPointsThatSeeMe.Remove(id);
+                success = area.focusPointsThatSeeMe.Remove(focusPoint);
                 if (area.focusPointsThatSeeMe.Count == 0)
                     area.focusPointsThatSeeMe = null;
             }
 
             if (!success)
-                throw new Exception($"Failed to remove focus point with id {id} - it doesn't exist");
+                throw new Exception($"Failed to remove focus point with id {focusPoint.Id} - it doesn't exist");
         }
 
         private static short Min(short a, short b)

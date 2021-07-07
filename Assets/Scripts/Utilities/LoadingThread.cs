@@ -1,32 +1,58 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using System.Threading;
 using System.Runtime.CompilerServices;
+using System.Collections.Concurrent;
 using Debug = UnityEngine.Debug;
 
 namespace SanAndreasUnity.Behaviours
 {
 
 	public class LoadingThread : MonoBehaviour {
-		
+
+		// TODO: maybe convert to class, because it takes 36 bytes - it's too much for red-black tree operations
 		public struct Job<T>
 		{
 			public System.Func<T> action ;
 			public System.Action<T> callbackSuccess ;
 			public System.Action<System.Exception> callbackError ;
 			public System.Action<T> callbackFinish;
+			public float priority;
 			internal object result ;
 			internal System.Exception exception ;
+			internal long id;
 		}
 
-		static System.Collections.Concurrent.BlockingCollection<Job<object>> s_jobs = new System.Collections.Concurrent.BlockingCollection<Job<object>> ();
+		public class JobComparer : IComparer<Job<object>>
+		{
+			public int Compare(Job<object> a, Job<object> b)
+			{
+				if (a.id == b.id)
+					return 0;
+
+				if (a.priority != b.priority)
+					return a.priority <= b.priority ? -1 : 1;
+
+				// priorities are the same
+				// the advantage has the job which was created earlier
+
+				return a.id <= b.id ? -1 : 1;
+			}
+		}
+
+		static BlockingCollection<Job<object>> s_jobs =
+			new BlockingCollection<Job<object>> (new ConcurrentProducerConsumerSortedSet<Job<object>>(new JobComparer()));
 		static Thread s_thread;
-		static readonly ConcurrentQueue<Job<object>> s_processedJobs = new ConcurrentQueue<Job<object>>();
+		static readonly Utilities.ConcurrentQueue<Job<object>> s_processedJobs = new Utilities.ConcurrentQueue<Job<object>>();
 		private readonly Queue<Job<object>> _processedJobsBuffer = new Queue<Job<object>>(256);
 
 		static bool s_shouldThreadExit = false;
+
+		private static long s_lastJobId = 1;
+		private static object s_lastJobIdLockObject = new object();
 
 		private readonly Stopwatch _stopwatch = new Stopwatch();
 
@@ -105,12 +131,18 @@ namespace SanAndreasUnity.Behaviours
 
 		public static void RegisterJob<T> (Job<T> job)
 		{
+			// note: this function can be called from any thread
+
 			if (null == job.action)
 				return;
+
+			if (0f == job.priority)
+				throw new Exception("You forgot to assign job priority");
 
 			job.exception = null;
 
 			var j = new Job<object> () {
+				id = GetNextJobId(),
 				action = () => job.action(),
 				callbackError = job.callbackError,
 			};
@@ -120,6 +152,14 @@ namespace SanAndreasUnity.Behaviours
 				j.callbackFinish = (arg) => job.callbackFinish( (T) arg );
 
 			s_jobs.Add (j);
+		}
+
+		static long GetNextJobId()
+		{
+			lock (s_lastJobIdLockObject)
+			{
+				return s_lastJobId++;
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
