@@ -6,8 +6,9 @@ using SanAndreasUnity.Importing.RenderWareStream;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
-using UnityEngine.Profiling;
+using Profiler = UnityEngine.Profiling.Profiler;
 
 namespace SanAndreasUnity.Importing.Conversion
 {
@@ -528,14 +529,12 @@ namespace SanAndreasUnity.Importing.Conversion
 
 		public static void LoadAsync(string modelName, string[] texDictNames, float loadPriority, System.Action<GeometryParts> onFinish)
 		{
-			// load each texture asyncly (or load them all at once ?)
-
-			// copy array to local variable
-			texDictNames = texDictNames.ToArray ();
+            // copy array to local variable
+			texDictNames = texDictNames.Length > 0 ? texDictNames.ToArray() : Array.Empty<string>();
 
 			if (0 == texDictNames.Length)
 			{
-				LoadAsync( modelName, new TextureDictionary[0], loadPriority, onFinish );
+				LoadAsync( modelName, Array.Empty<TextureDictionary>(), loadPriority, onFinish );
 				return;
 			}
 
@@ -544,9 +543,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
 			for (int i = 0; i < texDictNames.Length; i++)
 			{
-			//	bool isLast = i == texDictNames.Length - 1;
-
-				TextureDictionary.LoadAsync (texDictNames [i], loadPriority, (texDict) => {
+                TextureDictionary.LoadAsync (texDictNames [i], loadPriority, (texDict) => {
 					
 					loadedTextDicts.Add (texDict);
 
@@ -562,11 +559,11 @@ namespace SanAndreasUnity.Importing.Conversion
 
         public static GeometryParts Load(string modelName, params TextureDictionary[] txds)
         {
-            modelName = modelName.ToLower();
+            modelName = modelName.ToLowerIfNotLower();
 
-			if (s_asyncLoader.IsObjectLoaded(modelName))
+			if (s_asyncLoader.TryGetLoadedObject(modelName, out GeometryParts alreadyLoadedObject))
             {
-				return s_asyncLoader.GetLoadedObject (modelName);
+                return alreadyLoadedObject;
             }
 
 			Profiler.BeginSample ("ReadClump");
@@ -589,7 +586,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
 		public static void LoadAsync(string modelName, TextureDictionary[] txds, float loadPriority, System.Action<GeometryParts> onFinish)
 		{
-			modelName = modelName.ToLower();
+			modelName = modelName.ToLowerIfNotLower();
 
 			if (!s_asyncLoader.TryLoadObject (modelName, onFinish))
 			{

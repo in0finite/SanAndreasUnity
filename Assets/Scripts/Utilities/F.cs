@@ -408,6 +408,16 @@ namespace SanAndreasUnity.Utilities
 	        return str[0].ToString().ToUpperInvariant() + str.Substring(1);
         }
 
+        public static string ToLowerIfNotLower(this string str)
+        {
+	        for (int i = 0; i < str.Length; i++)
+	        {
+		        if (!char.IsLower(str[i]))
+			        return str.ToLower();
+	        }
+	        return str;
+        }
+
         public static string GetGameObjectPath(this GameObject obj)
         {
             string path = obj.name;

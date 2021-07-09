@@ -93,6 +93,12 @@ namespace SanAndreasUnity.Utilities
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
+		public bool TryGetLoadedObject(TKey key, out TObj loadedObject)
+		{
+			return m_Loaded.TryGetValue(key, out loadedObject);
+		}
+
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void OnObjectFinishedLoading (TKey key, TObj obj, bool bSuccess)
 		{
 
