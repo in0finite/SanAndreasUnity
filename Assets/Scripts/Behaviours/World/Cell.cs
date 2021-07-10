@@ -59,6 +59,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public ushort[] xzWorldSystemNumAreasPerDrawDistanceLevel = { 100, 100, 100 };
 
+        public float interiorHeightOffset = 5000f;
+
         public float fadeRate = 2f;
 
         public bool loadParkedVehicles = true;
@@ -247,6 +249,11 @@ namespace SanAndreasUnity.Behaviours.World
         public static TransformDataStruct GetEnexEntranceTransform(EntranceExit enex)
         {
             return new TransformDataStruct(enex.EntrancePos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.EntranceAngle, 0f));
+        }
+
+        public static bool IsExteriorLevel(int interiorLevel)
+        {
+	        return interiorLevel == 0 || interiorLevel == 13;
         }
 
 

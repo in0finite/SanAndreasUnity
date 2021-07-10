@@ -119,7 +119,7 @@ namespace SanAndreasUnity.Importing.Items
             int lastCell = -1;
             foreach (var inst in list)
             {
-                int cell = inst.CellId & 0xff;
+                int cell = inst.InteriorLevel;
                 if (lastCell != cell && !_placements.ContainsKey(lastCell = cell))
                 {
                     _placements.Add(cell, new List<Placement>());

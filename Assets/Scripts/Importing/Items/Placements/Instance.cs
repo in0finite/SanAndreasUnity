@@ -24,6 +24,7 @@ namespace SanAndreasUnity.Importing.Items.Placements
         public readonly int ObjectId;
         public readonly string LodGeometry;
         public readonly int CellId;
+        public int InteriorLevel => this.CellId & 0xff;
         public readonly UnityEngine.Vector3 Position;
         public readonly UnityEngine.Quaternion Rotation;
         public readonly int LodIndex;
