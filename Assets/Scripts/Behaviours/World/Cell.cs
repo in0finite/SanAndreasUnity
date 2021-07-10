@@ -3,20 +3,16 @@ using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Placements;
 using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using Profiler = UnityEngine.Profiling.Profiler;
-
-//using Facepunch.Networking;
 
 namespace SanAndreasUnity.Behaviours.World
 {
     public class Cell : MonoBehaviour
     {
-        private Stopwatch _timer;
-
-        private Dictionary<Instance, StaticGeometry> m_insts;
+	    private Dictionary<Instance, StaticGeometry> m_insts;
+        public int NumStaticGeometries => m_insts.Count;
 		private MapObject[] m_cars;
         private List<EntranceExitMapObject> m_enexes;
 
@@ -27,32 +23,20 @@ namespace SanAndreasUnity.Behaviours.World
         public Camera PreviewCamera;
 
 		private List<(long id, Transform transform)> _focusPoints = new List<(long id, Transform transform)>();
+		public List<(long id, Transform transform)> FocusPoints => _focusPoints;
 
         public Water Water;
 
 		public static Cell Instance { get ; private set; }
 
-        // Statistics
+		public float divisionRefreshDistanceDelta = 20;
 
-        private int totalNumObjects = 0;
-        private int numLeavesLoadedThisFrame = 0;
-        private int numObjectsLoadedThisFrame = 0;
-        private float[] measuredTimes = new float[3];
-        private int numDivisionsUpdatedLoadOrder = 0;
-        private int numMapObjectsUpdatedLoadOrder = 0;
-
-        public float divisionLoadOrderDistanceFactor = 16;
-
-        public float divisionRefreshDistanceDelta = 20;
-
-		[Range(0.1f, 3f)]
-		public float divisionsUpdateInterval = 0.3f;
-
-        public float maxDrawDistance = 500;
+		public float maxDrawDistance = 500;
 
         public float[] drawDistancesPerLayers = new float[] { 301, 801, 1501 };
 
         private WorldSystemWithDistanceLevels<MapObject> _worldSystem;
+        public WorldSystemWithDistanceLevels<MapObject> WorldSystem => _worldSystem;
 
         public uint yWorldSystemSize = 25000;
         public ushort yWorldSystemNumAreas = 3;
@@ -88,14 +72,8 @@ namespace SanAndreasUnity.Behaviours.World
 			
         }
 
-        private void Start()
-        {
-            //InvokeRepeating("UpdateDivisions", 0f, 0.1f);
-			StartCoroutine( this.UpdateDivisionsCoroutine () );
-        }
 
-
-		internal void CreateStaticGeometry ()
+        internal void CreateStaticGeometry ()
 		{
 			var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
 
@@ -106,8 +84,6 @@ namespace SanAndreasUnity.Behaviours.World
 			//m_insts = placements.ToDictionary(x => x, x => StaticGeometry.Create());
 
 			UnityEngine.Debug.Log("Num static geometries " + m_insts.Count);
-
-			totalNumObjects = m_insts.Count;
 
 			uint worldSize = 6000;
 
@@ -167,8 +143,6 @@ namespace SanAndreasUnity.Behaviours.World
 		{
 			// set layer recursively for all game objects
 			//	this.gameObject.SetLayerRecursive( this.gameObject.layer );
-
-			_timer = new Stopwatch();
 
 		}
 
@@ -274,14 +248,7 @@ namespace SanAndreasUnity.Behaviours.World
 			if (!Loader.HasLoaded)
 				return;
 
-			//this.Setup ();
-
-			_timer.Reset();
-            _timer.Start();
-            numLeavesLoadedThisFrame = 0;
-            numObjectsLoadedThisFrame = 0;
-
-            UnityEngine.Profiling.Profiler.BeginSample("Update focus points");
+			UnityEngine.Profiling.Profiler.BeginSample("Update focus points");
             this._focusPoints.RemoveAll(f =>
             {
 	            if (null == f.transform)
@@ -309,83 +276,6 @@ namespace SanAndreasUnity.Behaviours.World
             _worldSystem.Update();
             UnityEngine.Profiling.Profiler.EndSample();
 
-            measuredTimes[2] = (float)_timer.Elapsed.TotalMilliseconds;
-
-        }
-
-        System.Collections.IEnumerator UpdateDivisionsCoroutine ()
-		{
-
-			while (true)
-			{
-				// wait 100 ms
-				float timePassed = 0;
-				while (timePassed < this.divisionsUpdateInterval)
-				{
-					yield return null;
-					timePassed += Time.unscaledDeltaTime;
-				}
-
-				F.RunExceptionSafe (() => this.UpdateDivisions ());
-
-			}
-
-		}
-
-        private void UpdateDivisions()
-        {
-			if (!Loader.HasLoaded)
-				return;
-
-			numDivisionsUpdatedLoadOrder = 0;
-            numMapObjectsUpdatedLoadOrder = 0;
-
-            _timer.Reset();
-            _timer.Start();
-
-
-        }
-
-        /*
-        private static Rect windowRect = new Rect(10, 10, 250, 330);
-        private const int windowID = 0;
-
-        private void OnGUI()
-        {
-            if (!Loader.HasLoaded)
-                return;
-
-            if (!PlayerController._showMenu)
-                return;
-
-            windowRect = GUILayout.Window(windowID, windowRect, showWindow, "World statistics");
-        }
-        */
-
-        public void showWindow(int windowID)
-        {
-            GUILayout.Label("draw distance " + this.maxDrawDistance);
-            GUILayout.Label("num focus points " + this._focusPoints.Count);
-            GUILayout.Label("total num objects " + totalNumObjects);
-            GUILayout.Label("geometry parts loaded " + SanAndreasUnity.Importing.Conversion.Geometry.NumGeometryPartsLoaded);
-            GUILayout.Label("num TOBJ objects " + StaticGeometry.TimedObjects.Count);
-            GUILayout.Label("num active objects with lights " + StaticGeometry.ActiveObjectsWithLights.Count);
-            GUILayout.Label("num divisions updated " + numDivisionsUpdatedLoadOrder);
-            GUILayout.Label("num objects updated " + numMapObjectsUpdatedLoadOrder);
-            GUILayout.Label("num divisions loading this frame " + numLeavesLoadedThisFrame);
-            GUILayout.Label("num objects loading this frame " + numObjectsLoadedThisFrame);
-
-            GUILayout.Space(10);
-
-            string[] timeNames = new string[] { "refresh load order ", "sort ", "load / update display " };
-            int i = 0;
-            foreach (float time in measuredTimes)
-            {
-                GUILayout.Label(timeNames[i] + Mathf.RoundToInt(time));
-                i++;
-            }
-
-            GUI.DragWindow();
         }
     }
 }

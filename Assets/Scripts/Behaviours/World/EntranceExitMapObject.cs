@@ -9,8 +9,8 @@ namespace SanAndreasUnity.Behaviours.World
 
     public class EntranceExitMapObject : MapObject
     {
-        static List<EntranceExitMapObject> s_allObjects = new List<EntranceExitMapObject>();
-        public static IEnumerable<EntranceExitMapObject> AllObjects => s_allObjects;
+        static List<EntranceExitMapObject> _sAllActiveObjects = new List<EntranceExitMapObject>();
+        public static IReadOnlyList<EntranceExitMapObject> AllActiveObjects => _sAllActiveObjects;
 
         Coroutine m_animateArrowCoroutine;
 
@@ -63,13 +63,13 @@ namespace SanAndreasUnity.Behaviours.World
 
         void OnEnable()
         {
-            s_allObjects.Add(this);
+            _sAllActiveObjects.Add(this);
             m_animateArrowCoroutine = this.StartCoroutine(this.AnimateArrow());
         }
 
         void OnDisable()
         {
-            s_allObjects.Remove(this);
+            _sAllActiveObjects.Remove(this);
             
             if (m_animateArrowCoroutine != null)
                 this.StopCoroutine(m_animateArrowCoroutine);

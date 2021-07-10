@@ -15,7 +15,9 @@ namespace SanAndreasUnity.Behaviours.World
     public class WorldSystemWithDistanceLevels<T>
     {
         private readonly WorldSystem<T>[] _worldSystems;
+        public IReadOnlyList<WorldSystem<T>> WorldSystems => _worldSystems;
         private readonly float[] _distanceLevels;
+        public IReadOnlyList<float> DistanceLevels => _distanceLevels;
         private readonly Dictionary<long, WorldSystem<T>.FocusPoint[]> _focusPointsPerLevel = new Dictionary<long, WorldSystem<T>.FocusPoint[]>();
         private long _lastFocusPointId = 1;
 
@@ -259,7 +261,10 @@ namespace SanAndreasUnity.Behaviours.World
         }
 
         private readonly Area[,,] _areas;
+        public int GetNumAreas(int axisIndex) => _areas.GetLength(axisIndex);
+
         private readonly HashSet<FocusPoint> _focusPoints = new HashSet<FocusPoint>();
+        public IReadOnlyCollection<FocusPoint> FocusPoints => _focusPoints;
 
         private readonly List<Area> _areasForUpdate = new List<Area>(128);
 

@@ -63,6 +63,8 @@ namespace SanAndreasUnity.Behaviours.World
         private bool m_hasTrafficLights = false;
         private int m_activeTrafficLightIndex = -1;
 
+        public int NumLightSources => m_lightSources?.Length ?? 0;
+
 
         private void OnEnable()
         {

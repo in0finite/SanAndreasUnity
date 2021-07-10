@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Importing.Items
         private static readonly List<Zone> _zones = new List<Zone>();
 
         private static readonly List<EntranceExit> _enexes = new List<EntranceExit>();
-        public static List<EntranceExit> Enexes => _enexes;
+        public static IReadOnlyList<EntranceExit> Enexes => _enexes;
 
         private static readonly Dictionary<int, IObjectDefinition> _definitions
             = new Dictionary<int, IObjectDefinition>();
