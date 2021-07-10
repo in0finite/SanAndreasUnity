@@ -86,6 +86,10 @@ namespace SanAndreasUnity.Behaviours.World
             if (!_focusPointsPerLevel.TryGetValue(id, out var focusPoints))
                 return;
 
+            Vector3 diff = focusPoints[0].Position - newPos;
+            if (diff.x == 0f && diff.y == 0f && diff.z == 0f) // faster than calling '==' operator
+                return;
+
             for (int i = 0; i < _worldSystems.Length; i++)
                 _worldSystems[i].FocusPointChangedPosition(focusPoints[i], newPos);
         }
