@@ -689,9 +689,7 @@ namespace SanAndreasUnity.Behaviours
 					}
 					else
 					{
-						var matchingEnexes = Importing.Items.Item.Enexes.Where(e => e.Name == enex.Info.Name && e != enex.Info);
-						Debug.LogFormat("Matching enexes:\n{0}", string.Join("\n", matchingEnexes.Select(e => e.TargetInterior + " - " + e.Flags)));
-						var counterPart = matchingEnexes.FirstOrDefault(e => e.TargetInterior != enex.Info.TargetInterior);
+						var counterPart = enex.FindMatchingEnex();
 						if (counterPart != null)
 						{
 							// found a counterpart where we can teleport

@@ -2,6 +2,7 @@
 using SanAndreasUnity.Importing.Items.Placements;
 using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -141,6 +142,14 @@ namespace SanAndreasUnity.Behaviours.World
                 yield return null;
             }
 
+        }
+
+        public EntranceExit FindMatchingEnex()
+        {
+            var matchingEnexes = Importing.Items.Item.Enexes
+                .Where(e => e.Name == this.Info.Name && e != this.Info);
+            var counterPart = matchingEnexes.FirstOrDefault(e => e.TargetInterior != this.Info.TargetInterior);
+            return counterPart;
         }
 
     }
