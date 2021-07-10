@@ -941,7 +941,17 @@ namespace SanAndreasUnity.Utilities
         }
 
 
-	    public static bool IsInHeadlessMode => SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
+        private static bool? _isInHeadlessModeCached;
+	    public static bool IsInHeadlessMode
+	    {
+		    get
+		    {
+			    if (_isInHeadlessModeCached.HasValue)
+				    return _isInHeadlessModeCached.Value;
+			    _isInHeadlessModeCached = SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
+			    return _isInHeadlessModeCached.Value;
+		    }
+	    }
 
         public static bool ScreenHasHighDensity => Application.isMobilePlatform;
 
