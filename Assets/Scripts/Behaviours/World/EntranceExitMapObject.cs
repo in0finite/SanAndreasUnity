@@ -146,10 +146,28 @@ namespace SanAndreasUnity.Behaviours.World
 
         public EntranceExit FindMatchingEnex()
         {
-            var matchingEnexes = Importing.Items.Item.Enexes
-                .Where(e => e.Name == this.Info.Name && e != this.Info);
-            var counterPart = matchingEnexes.FirstOrDefault(e => e.TargetInterior != this.Info.TargetInterior);
-            return counterPart;
+            EntranceExit firstMatchingWithDifferentInterior = null;
+            EntranceExit firstMatchingWithSameInterior = null;
+
+            foreach (var enex in Importing.Items.Item.Enexes)
+            {
+                if (firstMatchingWithDifferentInterior != null && firstMatchingWithSameInterior != null) // both are found
+                    continue;
+
+                if (enex.Name != this.Info.Name)
+                    continue;
+
+                if (enex == this.Info)
+                    continue;
+
+                if (null == firstMatchingWithDifferentInterior && enex.TargetInterior != this.Info.TargetInterior)
+                    firstMatchingWithDifferentInterior = enex;
+
+                if (null == firstMatchingWithSameInterior && enex.TargetInterior == this.Info.TargetInterior)
+                    firstMatchingWithSameInterior = enex;
+            }
+
+            return firstMatchingWithDifferentInterior ?? firstMatchingWithSameInterior;
         }
 
     }
