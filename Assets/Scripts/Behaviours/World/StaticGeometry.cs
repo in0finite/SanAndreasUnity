@@ -203,7 +203,7 @@ namespace SanAndreasUnity.Behaviours.World
 			this.UpdateVisibility();
 		}
 
-		private IEnumerator Fade()
+		private IEnumerator FadeCoroutine()
         {
             if (_isFading) yield break;
 
@@ -226,36 +226,39 @@ namespace SanAndreasUnity.Behaviours.World
 
 			// continuously change transparency until object becomes fully opaque or fully transparent
 
-            var val = IsVisibleInMapSystem ? 0f : -1f;
+            float val = this.ShouldBeVisibleNow ? 0f : -1f;
 
             for (; ; )
             {
-                var dest = IsVisibleInMapSystem ? 1f : 0f;
+                float dest = this.ShouldBeVisibleNow ? 1f : 0f;
                 var sign = Math.Sign(dest - val);
                 val += sign * fadeRate * Time.deltaTime;
 
-                if (sign == 0 || sign == 1 && val >= dest || sign == -1 && val <= dest) break;
+                if (sign == 0 || sign == 1 && val >= dest || sign == -1 && val <= dest)
+	                break;
 
-                pb.SetFloat(FadeId, (float)val);
+                pb.SetFloat(FadeId, val);
                 mr.SetPropertyBlock(pb);
-                yield return new WaitForEndOfFrame();
-            }
-
-            mr.SetPropertyBlock(null);
-
-            if (!IsVisibleInMapSystem || !IsVisibleBasedOnCurrentDayTime)
-            {
-                gameObject.SetActive(false);
+                yield return null;
             }
 
             _isFading = false;
+
+            mr.SetPropertyBlock(null);
+
+            this.gameObject.SetActive(this.ShouldBeVisibleNow);
         }
 
         private void UpdateVisibility()
         {
-	        this.gameObject.SetActive(this.ShouldBeVisibleNow);
+	        this.gameObject.SetActive(true); // always true because we need coroutine to run
+
+	        _isFading = false;
+	        this.StopCoroutine(nameof(FadeCoroutine));
+	        this.StartCoroutine(nameof(FadeCoroutine));
+
 	        if (LodChild != null)
-		        LodChild.gameObject.SetActive(LodChild.ShouldBeVisibleNow);
+		        LodChild.UpdateVisibility();
         }
 
         private static void OnHourChanged()
