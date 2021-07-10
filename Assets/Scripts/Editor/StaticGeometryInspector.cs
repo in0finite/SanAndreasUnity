@@ -30,6 +30,13 @@ namespace SanAndreasUnity.Editor
             if (staticGeometry.ObjectDefinition != null)
                 EditorUtils.DrawFieldsAndPropertiesInInspector(staticGeometry.ObjectDefinition, 0);
 
+            GUILayout.Space (10);
+            GUILayout.Label("Placement info:");
+            GUILayout.Space (10);
+
+            if (staticGeometry.Instance != null)
+                EditorUtils.DrawFieldsAndPropertiesInInspector(staticGeometry.Instance, 0);
+
             EditorGUILayout.EndScrollView();
         }
 

@@ -29,7 +29,7 @@ namespace SanAndreasUnity.Behaviours.World
         private static List<StaticGeometry> s_timedObjects = new List<StaticGeometry>();
         public static IReadOnlyList<StaticGeometry> TimedObjects => s_timedObjects;
 
-        protected Instance Instance { get; private set; }
+        public Instance Instance { get; private set; }
 
         public ISimpleObjectDefinition ObjectDefinition { get; private set; }
 
