@@ -47,13 +47,9 @@ namespace SanAndreasUnity.Behaviours.World
 
                 _isVisibleInMapSystem = value;
 
-                // TODO: take into account if geometry is loaded
-
                 this.gameObject.SetActive(this.ShouldBeVisibleNow);
                 if (LodChild != null)
 	                LodChild.gameObject.SetActive(LodChild.ShouldBeVisibleNow);
-
-                // TODO: add fading
             }
         }
 
