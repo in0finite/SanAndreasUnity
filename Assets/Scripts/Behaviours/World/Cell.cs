@@ -59,6 +59,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public ushort[] xzWorldSystemNumAreasPerDrawDistanceLevel = { 100, 100, 100 };
 
+        public float fadeRate = 2f;
+
         public bool loadParkedVehicles = true;
 
         public GameObject mapObjectActivatorPrefab;

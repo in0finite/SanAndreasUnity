@@ -220,7 +220,7 @@ namespace SanAndreasUnity.Behaviours.World
 				yield break;
 			}
 
-            const float fadeRate = 2f;
+	        float fadeRate = Cell.Instance.fadeRate;
 
             var pb = new MaterialPropertyBlock();
 
