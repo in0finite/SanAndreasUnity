@@ -251,11 +251,16 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void UpdateVisibility()
         {
-	        this.gameObject.SetActive(true); // always true because we need coroutine to run
+	        bool needsFading = !F.IsInHeadlessMode;
 
-	        _isFading = false;
-	        this.StopCoroutine(nameof(FadeCoroutine));
-	        this.StartCoroutine(nameof(FadeCoroutine));
+	        this.gameObject.SetActive(needsFading || this.ShouldBeVisibleNow);
+
+	        if (needsFading)
+	        {
+		        _isFading = false;
+		        this.StopCoroutine(nameof(FadeCoroutine));
+		        this.StartCoroutine(nameof(FadeCoroutine));
+	        }
 
 	        if (LodChild != null)
 		        LodChild.UpdateVisibility();
