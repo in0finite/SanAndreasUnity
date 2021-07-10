@@ -22,7 +22,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         private List<int> CellIds = Enumerable.Range(0, 19).ToList();
 
-        public bool HasExterior => this.CellIds.Contains(0);
+        public bool HasMainExterior => this.CellIds.Contains(0);
 
         public Camera PreviewCamera;
 

@@ -115,7 +115,7 @@ namespace SanAndreasUnity.Behaviours
 				this.raycastDistance = raycastDistance;
 			}
 
-			public static FindGroundParams DefaultBasedOnLoadedWorld => new FindGroundParams((null == Cell.Instance || Cell.Instance.HasExterior));
+			public static FindGroundParams DefaultBasedOnLoadedWorld => new FindGroundParams((null == Cell.Instance || Cell.Instance.HasMainExterior));
 
 		}
 
