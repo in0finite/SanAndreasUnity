@@ -538,6 +538,8 @@ namespace SanAndreasUnity.Importing.Conversion
 				return;
 			}
 
+            // requesting a load for both clump and TXD on the same frame will not give much better performance (probably),
+            // so no need to do it
 
 			var loadedTextDicts = new List<TextureDictionary> ();
 
