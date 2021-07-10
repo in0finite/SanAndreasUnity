@@ -40,6 +40,7 @@ namespace SanAndreasUnity.Behaviours.World
 		public bool ShouldBeVisibleNow =>
 	        this.IsVisibleInMapSystem
 	        && this.IsVisibleBasedOnCurrentDayTime
+	        && _isGeometryLoaded
 			&& (LodParent == null || !LodParent.ShouldBeVisibleNow);
 
         public StaticGeometry LodParent { get; private set; }
@@ -181,6 +182,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 			_isGeometryLoaded = true;
 
+			this.UpdateVisibility();
 		}
 
 		private void OnCollisionModelAttached ()
@@ -251,7 +253,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void UpdateVisibility()
         {
-	        bool needsFading = !F.IsInHeadlessMode;
+	        bool needsFading = this.NeedsFading();
 
 	        this.gameObject.SetActive(needsFading || this.ShouldBeVisibleNow);
 
@@ -264,6 +266,22 @@ namespace SanAndreasUnity.Behaviours.World
 
 	        if (LodChild != null)
 		        LodChild.UpdateVisibility();
+        }
+
+        private bool NeedsFading()
+        {
+	        if (F.IsInHeadlessMode)
+		        return false;
+
+	        // always fade, except when parent should be visible, but he is still loading
+
+	        if (LodParent == null)
+		        return true;
+
+	        if (LodParent.IsVisibleInMapSystem && !LodParent._isGeometryLoaded)
+		        return false;
+
+	        return true;
         }
 
         private static void OnHourChanged()
