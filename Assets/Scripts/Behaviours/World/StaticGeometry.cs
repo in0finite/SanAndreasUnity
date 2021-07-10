@@ -35,25 +35,9 @@ namespace SanAndreasUnity.Behaviours.World
 
         private bool _canLoad;
 		private bool _isGeometryLoaded = false;
-        private bool _isVisibleInMapSystem;
-        private bool _isFading;
+		private bool _isFading;
 
-        public bool IsVisibleInMapSystem
-        {
-            get { return _isVisibleInMapSystem; }
-            private set
-            {
-                if (_isVisibleInMapSystem == value) return;
-
-                _isVisibleInMapSystem = value;
-
-                this.gameObject.SetActive(this.ShouldBeVisibleNow);
-                if (LodChild != null)
-	                LodChild.gameObject.SetActive(LodChild.ShouldBeVisibleNow);
-            }
-        }
-
-        public bool ShouldBeVisibleNow =>
+		public bool ShouldBeVisibleNow =>
 	        this.IsVisibleInMapSystem
 	        && this.IsVisibleBasedOnCurrentDayTime
 			&& (LodParent == null || !LodParent.ShouldBeVisibleNow);
@@ -125,7 +109,6 @@ namespace SanAndreasUnity.Behaviours.World
 
             this.SetDrawDistance(ObjectDefinition?.DrawDist ?? 0);
 
-            _isVisibleInMapSystem = false;
             gameObject.SetActive(false);
             gameObject.isStatic = true;
         }
@@ -209,13 +192,15 @@ namespace SanAndreasUnity.Behaviours.World
 		protected override void OnShow()
         {
 			Profiler.BeginSample ("StaticGeometry.OnShow");
-            IsVisibleInMapSystem = true;
+
+			this.UpdateVisibility();
+
 			Profiler.EndSample ();
         }
 
 		protected override void OnUnShow()
 		{
-			this.Hide();
+			this.UpdateVisibility();
 		}
 
 		private IEnumerator Fade()
@@ -266,9 +251,11 @@ namespace SanAndreasUnity.Behaviours.World
             _isFading = false;
         }
 
-        public void Hide()
+        private void UpdateVisibility()
         {
-            IsVisibleInMapSystem = false;
+	        this.gameObject.SetActive(this.ShouldBeVisibleNow);
+	        if (LodChild != null)
+		        LodChild.gameObject.SetActive(LodChild.ShouldBeVisibleNow);
         }
 
         private static void OnHourChanged()
