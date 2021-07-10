@@ -67,7 +67,7 @@ namespace SanAndreasUnity.UI {
 			{
 				foreach(var enex in Cell.Instance.GetEnexesFromLoadedInteriors())
 				{
-					_spawns.Add(Cell.GetEnexExitTransform(enex));
+					_spawns.Add(Cell.Instance.GetEnexExitTransform(enex));
 					_spawnNames.Add(enex.Name);
 				}
 			}

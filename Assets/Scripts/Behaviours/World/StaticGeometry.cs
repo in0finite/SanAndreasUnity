@@ -93,11 +93,9 @@ namespace SanAndreasUnity.Behaviours.World
 	            s_timedObjects.Add(this);
             }
 
-            Vector3 pos = inst.Position;
-            if (!Cell.IsExteriorLevel(inst.InteriorLevel))
-	            pos.y += Cell.Instance.interiorHeightOffset;
-
-            Initialize(pos, inst.Rotation);
+            this.Initialize(
+	            Cell.Instance.GetPositionBasedOnInteriorLevel(inst.Position, inst.InteriorLevel),
+	            inst.Rotation);
 
             _canLoad = ObjectDefinition != null;
 

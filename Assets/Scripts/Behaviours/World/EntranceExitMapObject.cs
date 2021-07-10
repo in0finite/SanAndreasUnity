@@ -37,7 +37,11 @@ namespace SanAndreasUnity.Behaviours.World
 
             float height = 2f;
 
-            Initialize(info.EntrancePos + Vector3.up * height * 0.5f, Quaternion.identity);
+            this.Initialize(
+                Cell.Instance.GetPositionBasedOnInteriorLevel(
+                    info.EntrancePos + Vector3.up * height * 0.5f,
+                    info.TargetInterior),
+                Quaternion.identity);
 
             gameObject.SetActive(false);
             gameObject.isStatic = true;

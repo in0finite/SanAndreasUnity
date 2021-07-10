@@ -234,26 +234,37 @@ namespace SanAndreasUnity.Behaviours.World
 
         public IEnumerable<EntranceExit> GetEnexesFromLoadedInteriors()
         {
-            int[] loadedInteriors = this.CellIds.Where(id => id != 0 && id != 13).ToArray();
+            int[] loadedInteriors = this.CellIds.Where(id => !IsExteriorLevel(id)).ToArray();
             foreach(var enex in Importing.Items.Item.Enexes.Where(enex => loadedInteriors.Contains(enex.TargetInterior)))
             {
                 yield return enex;
             }
         }
 
-        public static TransformDataStruct GetEnexExitTransform(EntranceExit enex)
+        public TransformDataStruct GetEnexExitTransform(EntranceExit enex)
         {
-            return new TransformDataStruct(enex.ExitPos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.ExitAngle, 0f));
+            return new TransformDataStruct(
+	            this.GetPositionBasedOnInteriorLevel(enex.ExitPos + Vector3.up * 0.2f, enex.TargetInterior),
+	            Quaternion.Euler(0f, enex.ExitAngle, 0f));
         }
 
-        public static TransformDataStruct GetEnexEntranceTransform(EntranceExit enex)
+        public TransformDataStruct GetEnexEntranceTransform(EntranceExit enex)
         {
-            return new TransformDataStruct(enex.EntrancePos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.EntranceAngle, 0f));
+            return new TransformDataStruct(
+	            this.GetPositionBasedOnInteriorLevel(enex.EntrancePos + Vector3.up * 0.2f, enex.TargetInterior),
+	            Quaternion.Euler(0f, enex.EntranceAngle, 0f));
         }
 
         public static bool IsExteriorLevel(int interiorLevel)
         {
 	        return interiorLevel == 0 || interiorLevel == 13;
+        }
+
+        public Vector3 GetPositionBasedOnInteriorLevel(Vector3 originalPos, int interiorLevel)
+        {
+	        if (!IsExteriorLevel(interiorLevel))
+		        originalPos.y += this.interiorHeightOffset;
+	        return originalPos;
         }
 
 

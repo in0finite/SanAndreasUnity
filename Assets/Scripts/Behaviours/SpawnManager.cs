@@ -108,7 +108,7 @@ namespace SanAndreasUnity.Behaviours
 
         public static bool GetSpawnPositionFromInteriors(out TransformDataStruct transformData)
         {
-            transformData = World.Cell.GetEnexExitTransform(
+            transformData = World.Cell.Instance.GetEnexExitTransform(
                 World.Cell.Instance.GetEnexesFromLoadedInteriors()
                 .ToList()
                 .RandomElement());
