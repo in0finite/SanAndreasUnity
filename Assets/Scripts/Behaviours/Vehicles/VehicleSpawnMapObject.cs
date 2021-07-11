@@ -7,7 +7,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         public static VehicleSpawnMapObject Create(ParkedVehicle info)
         {
-            // TODO: this doesn't work - we need MapObjectActivator with collider
             var vs = new GameObject().AddComponent<VehicleSpawnMapObject>();
             vs.Initialize(info);
             return vs;
