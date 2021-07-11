@@ -1,6 +1,4 @@
-﻿//using Facepunch.Networking;
-using SanAndreasUnity.Importing.Items.Placements;
-using SanAndreasUnity.Utilities;
+﻿using SanAndreasUnity.Importing.Items.Placements;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
@@ -9,7 +7,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
     {
         public static VehicleSpawnMapObject Create(ParkedVehicle info)
         {
-            //Debug.Log("-333");
             // TODO: this doesn't work - we need MapObjectActivator with collider
             var vs = new GameObject().AddComponent<VehicleSpawnMapObject>();
             vs.Initialize(info);
@@ -22,7 +19,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             Info = info;
 
-            name = string.Format("Vehicle Spawner ({0})", info.CarId);
+            name = string.Format("Vehicle Spawn ({0})", info.CarId);
 
             Initialize(info.Position, Quaternion.AngleAxis(info.Angle, Vector3.up));
 
@@ -40,7 +37,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         protected override void OnLoad()
         {
-            //Debug.Log("-222");
             Vehicle.Create(this);
         }
     }
