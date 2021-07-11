@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Mirror;
+using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Net;
@@ -16,6 +17,8 @@ namespace SanAndreasUnity.Behaviours.Peds
         private static List<DeadBody> _deadBodies = new List<DeadBody>();
         public static IEnumerable<DeadBody> DeadBodies => _deadBodies;
         public static int NumDeadBodies => _deadBodies.Count;
+
+        public FocusPoint.Parameters focusPointParameters = FocusPoint.Parameters.Default;
 
         public PushableByDamage PushableByDamage { get; private set; }
 
@@ -232,6 +235,8 @@ namespace SanAndreasUnity.Behaviours.Peds
                 if (rb != null)
                     deadBody.m_rigidBodiesDict.Add(pair.Key, new BoneInfo(rb.transform));
             }
+
+            FocusPoint.Create(ragdollTransform.gameObject, deadBody.focusPointParameters);
 
             deadBody.InitSyncVarsOnServer(ped);
 

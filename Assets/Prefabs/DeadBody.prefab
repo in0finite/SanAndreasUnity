@@ -48,8 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverOnly: 0
   localPlayerAuthority: 0
-  m_AssetId: 
-  m_SceneId: 3719402579
+  m_AssetId: 14d22e60f4926f64cbd36f393fe11b9a
+  m_SceneId: 0
 --- !u!114 &3458215582039164093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,6 +62,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52246fc08ef54f047800aa1a2be91fd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncInterval: 0.1
+  focusPointParameters:
+    hasRevealRadius: 1
+    revealRadius: 150
 --- !u!114 &3928823046603185135
 MonoBehaviour:
   m_ObjectHideFlags: 0
