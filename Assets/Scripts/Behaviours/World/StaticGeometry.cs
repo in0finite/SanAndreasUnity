@@ -126,13 +126,6 @@ namespace SanAndreasUnity.Behaviours.World
 			Profiler.BeginSample ("StaticGeometry.OnLoad", this);
 
 
-			// this was previously placed after loading geometry
-			Flags = Enum.GetValues(typeof(ObjectFlag))
-				.Cast<ObjectFlag>()
-				.Where(x => (ObjectDefinition.Flags & x) == x)
-				.Select(x => x.ToString())
-				.ToList();
-
             //var geoms = Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName);
 			//OnGeometryLoaded (geoms);
 
@@ -164,7 +157,7 @@ namespace SanAndreasUnity.Behaviours.World
 			var mr = gameObject.AddComponent<MeshRenderer>();
 
 			mf.sharedMesh = geoms.Geometry[0].Mesh;
-			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(ObjectDefinition.Flags, mat => mat.SetTexture(NoiseTexId, NoiseTex));
+			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(ObjectDefinition.Flags, mat => mat.SetTexture(NoiseTexPropertyId, NoiseTex));
 
 			Profiler.EndSample ();
 
@@ -243,7 +236,7 @@ namespace SanAndreasUnity.Behaviours.World
                 if (sign == 0 || sign == 1 && val >= dest || sign == -1 && val <= dest)
 	                break;
 
-                pb.SetFloat(FadeId, val);
+                pb.SetFloat(FadePropertyId, val);
                 mr.SetPropertyBlock(pb);
                 yield return null;
             }
