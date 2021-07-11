@@ -586,6 +586,16 @@ namespace SanAndreasUnity.Utilities
 			return enumerable.FindIndex (elem => elem.Equals (value));
 		}
 
+		public static bool AnyInList<T>(this IList<T> list, System.Predicate<T> predicate)
+		{
+			for (int i = 0; i < list.Count; i++)
+			{
+				if (predicate(list[i]))
+					return true;
+			}
+			return false;
+		}
+
 		public static bool AddIfNotPresent<T> (this List<T> list, T item)
 		{
 			if (!list.Contains (item)) {

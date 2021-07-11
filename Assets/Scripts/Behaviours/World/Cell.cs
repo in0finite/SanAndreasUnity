@@ -22,8 +22,18 @@ namespace SanAndreasUnity.Behaviours.World
 
         public Camera PreviewCamera;
 
-		private List<(long id, Transform transform)> _focusPoints = new List<(long id, Transform transform)>();
-		public List<(long id, Transform transform)> FocusPoints => _focusPoints;
+        public struct FocusPointInfo
+        {
+	        public long id;
+	        public Transform transform;
+	        public float timeToKeepRevealingAfterDestroyed;
+	        public float timeWhenDestroyed;
+        }
+
+		private List<FocusPointInfo> _focusPoints = new List<FocusPointInfo>();
+		public IReadOnlyList<FocusPointInfo> FocusPoints => _focusPoints;
+
+		private List<FocusPointInfo> _focusPointsToRemoveAfterTimeout = new List<FocusPointInfo>();
 
         public Water Water;
 
@@ -180,14 +190,21 @@ namespace SanAndreasUnity.Behaviours.World
 			Profiler.EndSample();
 		}
 
-		public void RegisterFocusPoint(Transform tr, float revealRadius)
+		private void RegisterFocusPoint(Transform tr, float revealRadius, float timeToKeepRevealingAfterDestroyed)
 		{
 			if (!_focusPoints.Exists(f => f.transform == tr))
 			{
-				var registeredFocusPoint = _worldSystem.RegisterFocusPoint(revealRadius, tr.position);
-				_focusPoints.Add((registeredFocusPoint, tr));
+				long registeredFocusPointId = _worldSystem.RegisterFocusPoint(revealRadius, tr.position);
+				_focusPoints.Add(new FocusPointInfo
+				{
+					id = registeredFocusPointId,
+					transform = tr,
+					timeToKeepRevealingAfterDestroyed = timeToKeepRevealingAfterDestroyed,
+				});
 			}
 		}
+
+		public void RegisterFocusPoint(Transform tr, float revealRadius) => this.RegisterFocusPoint(tr, revealRadius, 0f);
 
 		public void RegisterFocusPoint(Transform tr) => this.RegisterFocusPoint(tr, this.maxDrawDistance);
 
@@ -256,11 +273,20 @@ namespace SanAndreasUnity.Behaviours.World
 			if (!Loader.HasLoaded)
 				return;
 
+			float timeNow = Time.time;
+
 			UnityEngine.Profiling.Profiler.BeginSample("Update focus points");
             this._focusPoints.RemoveAll(f =>
             {
 	            if (null == f.transform)
 	            {
+		            if (f.timeToKeepRevealingAfterDestroyed > 0f)
+		            {
+			            f.timeWhenDestroyed = timeNow;
+			            _focusPointsToRemoveAfterTimeout.Add(f);
+			            return true;
+		            }
+
 		            UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.UnRegisterFocusPoint()");
 		            _worldSystem.UnRegisterFocusPoint(f.id);
 		            UnityEngine.Profiling.Profiler.EndSample();
@@ -272,6 +298,21 @@ namespace SanAndreasUnity.Behaviours.World
 	            return false;
             });
             UnityEngine.Profiling.Profiler.EndSample();
+
+            bool hasElementToRemove = false;
+            _focusPointsToRemoveAfterTimeout.ForEach(_ =>
+            {
+	            if (timeNow - _.timeWhenDestroyed > _.timeToKeepRevealingAfterDestroyed)
+	            {
+		            hasElementToRemove = true;
+		            UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.UnRegisterFocusPoint()");
+		            _worldSystem.UnRegisterFocusPoint(_.id);
+		            UnityEngine.Profiling.Profiler.EndSample();
+	            }
+            });
+
+            if (hasElementToRemove)
+	            _focusPointsToRemoveAfterTimeout.RemoveAll(_ => timeNow - _.timeWhenDestroyed > _.timeToKeepRevealingAfterDestroyed);
 
             if (this._focusPoints.Count > 0)
             {
