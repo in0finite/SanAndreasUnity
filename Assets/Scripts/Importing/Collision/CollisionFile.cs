@@ -129,8 +129,8 @@ namespace SanAndreasUnity.Importing.Collision
 
         public static CollisionFile FromName(String name)
         {
-			if (s_asyncLoader.IsObjectLoaded (name))
-				return s_asyncLoader.GetLoadedObject (name);
+			if (s_asyncLoader.TryGetLoadedObject(name, out CollisionFile alreadyLoadedCollisionFile))
+				return alreadyLoadedCollisionFile;
 			
 			UnityEngine.Profiling.Profiler.BeginSample ("CollisionFile.FromName()");
 			var cf = _sModelNameDict.ContainsKey(name) ? _sModelNameDict[name].Value : null;
