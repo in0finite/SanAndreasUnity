@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 9183683351129218624}
   - component: {fileID: 575085982327711637}
   - component: {fileID: 6891581410426086992}
+  - component: {fileID: 1742792654273641741}
   m_Layer: 0
   m_Name: Vehicle
   m_TagString: Untagged
@@ -186,3 +187,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1742792654273641741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5841438317718401360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8643b1a14caafa547beb3c2e2780085f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parameters:
+    hasRevealRadius: 1
+    revealRadius: 150
