@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3359912204732796237}
   - component: {fileID: 7107055912798612425}
   - component: {fileID: 1658066758197886442}
+  - component: {fileID: 9051170896248035060}
   m_Layer: 13
   m_Name: VehicleExplosionLeftoverPart
   m_TagString: Untagged
@@ -93,3 +94,17 @@ MonoBehaviour:
   parameters:
     hasRevealRadius: 1
     revealRadius: 150
+--- !u!114 &9051170896248035060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5998353205578393877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d68c88ae66cbc64c997da0c710b080c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  componentsToDestroy:
+  - {fileID: 1658066758197886442}
