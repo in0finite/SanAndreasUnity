@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SanAndreasUnity.Behaviours.World;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
@@ -15,6 +16,9 @@ namespace SanAndreasUnity.Behaviours
 		public bool showPedSpeedometer = true;
 
 		public LayerMask groundFindingIgnoredLayerMask = 0;
+
+		public FocusPoint.Parameters playerPedFocusPointParameters = new FocusPoint.Parameters { hasRevealRadius = false };
+		public FocusPoint.Parameters npcPedFocusPointParameters = FocusPoint.Parameters.Default;
 
 		[Header("Camera")]
 
@@ -48,8 +52,6 @@ namespace SanAndreasUnity.Behaviours
 
 		public float AIStoppingDistance = 3f;
 		public float AIVehicleEnterDistance = 1.25f;
-		public float AIOutOfRangeTimeout = 5f;
-		public float AIOutOfRangeDistance = 250f;
 
 		[Header("Net")]
 

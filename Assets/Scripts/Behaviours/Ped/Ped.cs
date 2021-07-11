@@ -173,17 +173,14 @@ namespace SanAndreasUnity.Behaviours
 			{
 				if (NetStatus.IsServer)
 				{
-					// only register if this ped is owned by some player
-					if (Player.GetOwningPlayer(this) != null)
-						this.Cell.RegisterFocusPoint(this.transform);
+					if (this.PlayerOwner != null)
+						this.Cell.RegisterFocusPoint(this.transform, PedManager.Instance.playerPedFocusPointParameters);
+					else
+						this.Cell.RegisterFocusPoint(this.transform, PedManager.Instance.npcPedFocusPointParameters);
 				}
 				else if (NetStatus.IsClientActive())
 				{
-					// only register if this ped is owned by local player
-					// TODO: IsControlledByLocalPlayer may not return true, because syncvar in Player script may
-					// not be updated yet
-					if (this.IsControlledByLocalPlayer)
-						this.Cell.RegisterFocusPoint(this.transform);
+					// no need to register on client, because camera will be used as a focus point
 				}
 			}
 

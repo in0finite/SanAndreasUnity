@@ -191,6 +191,14 @@ namespace SanAndreasUnity.Behaviours.World
 
 		public void RegisterFocusPoint(Transform tr) => this.RegisterFocusPoint(tr, this.maxDrawDistance);
 
+		public void RegisterFocusPoint(Transform tr, FocusPoint.Parameters parameters)
+		{
+			if (parameters.hasRevealRadius)
+				this.RegisterFocusPoint(tr, parameters.revealRadius);
+			else
+				this.RegisterFocusPoint(tr);
+		}
+
 		public void UnRegisterFocusPoint(Transform tr)
 		{
 			int index = _focusPoints.FindIndex(f => f.transform == tr);
