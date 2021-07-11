@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Behaviours.World
         {
 	        public long id;
 	        public Transform transform;
-	        public float timeToKeepRevealingAfterDestroyed;
+	        public float timeToKeepRevealingAfterRemoved;
 	        public float timeWhenRemoved;
         }
 
@@ -199,7 +199,7 @@ namespace SanAndreasUnity.Behaviours.World
 				{
 					id = registeredFocusPointId,
 					transform = tr,
-					timeToKeepRevealingAfterDestroyed = timeToKeepRevealingAfterDestroyed,
+					timeToKeepRevealingAfterRemoved = timeToKeepRevealingAfterDestroyed,
 				});
 			}
 		}
@@ -226,7 +226,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 			var focusPoint = _focusPoints[index];
 
-			if (focusPoint.timeToKeepRevealingAfterDestroyed > 0)
+			if (focusPoint.timeToKeepRevealingAfterRemoved > 0)
 			{
 				focusPoint.timeWhenRemoved = Time.time;
 				_focusPointsToRemoveAfterTimeout.Add(focusPoint);
@@ -288,7 +288,7 @@ namespace SanAndreasUnity.Behaviours.World
             {
 	            if (null == f.transform)
 	            {
-		            if (f.timeToKeepRevealingAfterDestroyed > 0f)
+		            if (f.timeToKeepRevealingAfterRemoved > 0f)
 		            {
 			            f.timeWhenRemoved = timeNow;
 			            _focusPointsToRemoveAfterTimeout.Add(f);
@@ -310,7 +310,7 @@ namespace SanAndreasUnity.Behaviours.World
             bool hasElementToRemove = false;
             _focusPointsToRemoveAfterTimeout.ForEach(_ =>
             {
-	            if (timeNow - _.timeWhenRemoved > _.timeToKeepRevealingAfterDestroyed)
+	            if (timeNow - _.timeWhenRemoved > _.timeToKeepRevealingAfterRemoved)
 	            {
 		            hasElementToRemove = true;
 		            UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.UnRegisterFocusPoint()");
@@ -320,7 +320,7 @@ namespace SanAndreasUnity.Behaviours.World
             });
 
             if (hasElementToRemove)
-	            _focusPointsToRemoveAfterTimeout.RemoveAll(_ => timeNow - _.timeWhenRemoved > _.timeToKeepRevealingAfterDestroyed);
+	            _focusPointsToRemoveAfterTimeout.RemoveAll(_ => timeNow - _.timeWhenRemoved > _.timeToKeepRevealingAfterRemoved);
 
             if (this._focusPoints.Count > 0)
             {
