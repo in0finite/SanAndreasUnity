@@ -190,30 +190,19 @@ namespace SanAndreasUnity.Behaviours.World
 			Profiler.EndSample();
 		}
 
-		private void RegisterFocusPoint(Transform tr, float revealRadius, float timeToKeepRevealingAfterDestroyed)
+		public void RegisterFocusPoint(Transform tr, FocusPoint.Parameters parameters)
 		{
 			if (!_focusPoints.Exists(f => f.transform == tr))
 			{
+				float revealRadius = parameters.hasRevealRadius ? parameters.revealRadius : this.maxDrawDistance;
 				long registeredFocusPointId = _worldSystem.RegisterFocusPoint(revealRadius, tr.position);
 				_focusPoints.Add(new FocusPointInfo
 				{
 					id = registeredFocusPointId,
 					transform = tr,
-					timeToKeepRevealingAfterRemoved = timeToKeepRevealingAfterDestroyed,
+					timeToKeepRevealingAfterRemoved = parameters.timeToKeepRevealingAfterRemoved,
 				});
 			}
-		}
-
-		public void RegisterFocusPoint(Transform tr, float revealRadius) => this.RegisterFocusPoint(tr, revealRadius, 0f);
-
-		public void RegisterFocusPoint(Transform tr) => this.RegisterFocusPoint(tr, this.maxDrawDistance);
-
-		public void RegisterFocusPoint(Transform tr, FocusPoint.Parameters parameters)
-		{
-			if (parameters.hasRevealRadius)
-				this.RegisterFocusPoint(tr, parameters.revealRadius);
-			else
-				this.RegisterFocusPoint(tr);
 		}
 
 		public void UnRegisterFocusPoint(Transform tr)

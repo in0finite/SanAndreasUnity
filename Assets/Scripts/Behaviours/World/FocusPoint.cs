@@ -11,8 +11,16 @@ namespace SanAndreasUnity.Behaviours.World
         {
             public bool hasRevealRadius;
             public float revealRadius;
+            public float timeToKeepRevealingAfterRemoved;
 
-            public static Parameters Default => new Parameters() { hasRevealRadius = true, revealRadius = 150f };
+            public Parameters(bool hasRevealRadius, float revealRadius, float timeToKeepRevealingAfterRemoved)
+            {
+                this.hasRevealRadius = hasRevealRadius;
+                this.revealRadius = revealRadius;
+                this.timeToKeepRevealingAfterRemoved = timeToKeepRevealingAfterRemoved;
+            }
+
+            public static Parameters Default => new Parameters(true, 150f, 3f);
         }
 
         public Parameters parameters = Parameters.Default;
@@ -28,12 +36,7 @@ namespace SanAndreasUnity.Behaviours.World
         private void Start()
         {
             if (Cell.Instance != null)
-            {
-                if (this.parameters.hasRevealRadius)
-                    Cell.Instance.RegisterFocusPoint(this.transform, this.parameters.revealRadius);
-                else
-                    Cell.Instance.RegisterFocusPoint(this.transform);
-            }
+                Cell.Instance.RegisterFocusPoint(this.transform, this.parameters);
         }
 
         private void OnDisable()
