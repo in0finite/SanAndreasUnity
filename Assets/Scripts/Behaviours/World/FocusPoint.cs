@@ -9,6 +9,14 @@ namespace SanAndreasUnity.Behaviours.World
         public float revealRadius = 50f;
 
 
+        public static FocusPoint Create(GameObject targetGameObject, bool hasRevealRadius, float revealRadius)
+        {
+            var focusPoint = targetGameObject.AddComponent<FocusPoint>();
+            focusPoint.hasRevealRadius = hasRevealRadius;
+            focusPoint.revealRadius = revealRadius;
+            return focusPoint;
+        }
+
         private void Start()
         {
             if (Cell.Instance != null)

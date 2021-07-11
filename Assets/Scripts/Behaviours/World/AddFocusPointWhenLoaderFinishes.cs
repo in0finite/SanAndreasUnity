@@ -10,9 +10,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void OnLoaderFinished()
         {
-            var focusPoint = this.gameObject.AddComponent<FocusPoint>();
-            focusPoint.hasRevealRadius = this.hasRevealRadius;
-            focusPoint.revealRadius = this.revealRadius;
+            FocusPoint.Create(this.gameObject, this.hasRevealRadius, this.revealRadius);
         }
     }
 }
