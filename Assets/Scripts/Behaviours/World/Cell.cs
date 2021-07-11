@@ -27,7 +27,7 @@ namespace SanAndreasUnity.Behaviours.World
 	        public long id;
 	        public Transform transform;
 	        public float timeToKeepRevealingAfterDestroyed;
-	        public float timeWhenDestroyed;
+	        public float timeWhenRemoved;
         }
 
 		private List<FocusPointInfo> _focusPoints = new List<FocusPointInfo>();
@@ -222,11 +222,19 @@ namespace SanAndreasUnity.Behaviours.World
 			if (index < 0)
 				return;
 
-			// var temp = _focusPoints[index];
-			// temp.transform = null; // it will be removed in next Update()
-			// _focusPoints[index] = temp;
+			// maybe we could just set transform to null, so it gets removed during next update ?
 
-			_worldSystem.UnRegisterFocusPoint(_focusPoints[index].id);
+			var focusPoint = _focusPoints[index];
+
+			if (focusPoint.timeToKeepRevealingAfterDestroyed > 0)
+			{
+				focusPoint.timeWhenRemoved = Time.time;
+				_focusPointsToRemoveAfterTimeout.Add(focusPoint);
+				_focusPoints.RemoveAt(index);
+				return;
+			}
+
+			_worldSystem.UnRegisterFocusPoint(focusPoint.id);
 			_focusPoints.RemoveAt(index);
 		}
 
@@ -282,7 +290,7 @@ namespace SanAndreasUnity.Behaviours.World
 	            {
 		            if (f.timeToKeepRevealingAfterDestroyed > 0f)
 		            {
-			            f.timeWhenDestroyed = timeNow;
+			            f.timeWhenRemoved = timeNow;
 			            _focusPointsToRemoveAfterTimeout.Add(f);
 			            return true;
 		            }
@@ -302,7 +310,7 @@ namespace SanAndreasUnity.Behaviours.World
             bool hasElementToRemove = false;
             _focusPointsToRemoveAfterTimeout.ForEach(_ =>
             {
-	            if (timeNow - _.timeWhenDestroyed > _.timeToKeepRevealingAfterDestroyed)
+	            if (timeNow - _.timeWhenRemoved > _.timeToKeepRevealingAfterDestroyed)
 	            {
 		            hasElementToRemove = true;
 		            UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.UnRegisterFocusPoint()");
@@ -312,7 +320,7 @@ namespace SanAndreasUnity.Behaviours.World
             });
 
             if (hasElementToRemove)
-	            _focusPointsToRemoveAfterTimeout.RemoveAll(_ => timeNow - _.timeWhenDestroyed > _.timeToKeepRevealingAfterDestroyed);
+	            _focusPointsToRemoveAfterTimeout.RemoveAll(_ => timeNow - _.timeWhenRemoved > _.timeToKeepRevealingAfterDestroyed);
 
             if (this._focusPoints.Count > 0)
             {
