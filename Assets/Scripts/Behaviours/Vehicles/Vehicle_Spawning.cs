@@ -111,7 +111,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
 		}
 
-        public static Vehicle Create(VehicleSpawner spawner)
+        public static Vehicle Create(VehicleSpawnMapObject spawner)
         {
             return Create(spawner.Info.CarId, spawner.Info.Colors, spawner.transform.position,
                 spawner.transform.rotation);

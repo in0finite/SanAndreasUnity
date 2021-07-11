@@ -112,7 +112,7 @@ namespace SanAndreasUnity.Behaviours.World
 			if (loadParkedVehicles)
 			{
 				var parkedVehicles = Item.GetPlacements<ParkedVehicle> (CellIds.ToArray ());
-				m_cars = parkedVehicles.Select (x => VehicleSpawner.Create (x))
+				m_cars = parkedVehicles.Select (x => VehicleSpawnMapObject.Create (x))
 					.Cast<MapObject> ()
 					.ToArray ();
 

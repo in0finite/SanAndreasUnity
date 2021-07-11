@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
-    public class VehicleSpawner : MapObject
+    public class VehicleSpawnMapObject : MapObject
     {
-        public static VehicleSpawner Create(ParkedVehicle info)
+        public static VehicleSpawnMapObject Create(ParkedVehicle info)
         {
             //Debug.Log("-333");
             // TODO: this doesn't work - we need MapObjectActivator with collider
-            var vs = new GameObject().AddComponent<VehicleSpawner>();
+            var vs = new GameObject().AddComponent<VehicleSpawnMapObject>();
             vs.Initialize(info);
             return vs;
         }
