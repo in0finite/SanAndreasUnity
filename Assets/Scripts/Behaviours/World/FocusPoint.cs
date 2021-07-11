@@ -1,19 +1,27 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
 {
     [DisallowMultipleComponent]
     public class FocusPoint : MonoBehaviour
     {
-        public bool hasRevealRadius = true;
-        public float revealRadius = 50f;
+        [Serializable]
+        public struct Parameters
+        {
+            public bool hasRevealRadius;
+            public float revealRadius;
+
+            public static Parameters Default => new Parameters() { hasRevealRadius = true, revealRadius = 150f };
+        }
+
+        public Parameters parameters = Parameters.Default;
 
 
-        public static FocusPoint Create(GameObject targetGameObject, bool hasRevealRadius, float revealRadius)
+        public static FocusPoint Create(GameObject targetGameObject, Parameters parameters)
         {
             var focusPoint = targetGameObject.AddComponent<FocusPoint>();
-            focusPoint.hasRevealRadius = hasRevealRadius;
-            focusPoint.revealRadius = revealRadius;
+            focusPoint.parameters = parameters;
             return focusPoint;
         }
 
@@ -21,8 +29,8 @@ namespace SanAndreasUnity.Behaviours.World
         {
             if (Cell.Instance != null)
             {
-                if (this.hasRevealRadius)
-                    Cell.Instance.RegisterFocusPoint(this.transform, this.revealRadius);
+                if (this.parameters.hasRevealRadius)
+                    Cell.Instance.RegisterFocusPoint(this.transform, this.parameters.revealRadius);
                 else
                     Cell.Instance.RegisterFocusPoint(this.transform);
             }
