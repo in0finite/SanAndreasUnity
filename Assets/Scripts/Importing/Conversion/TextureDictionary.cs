@@ -255,8 +255,9 @@ namespace SanAndreasUnity.Importing.Conversion
         public static TextureDictionary Load(string name)
         {
             name = name.ToLower();
-			if (s_asyncLoader.IsObjectLoaded (name))
-				return s_asyncLoader.GetLoadedObject (name);
+
+			if (s_asyncLoader.TryGetLoadedObject(name, out var alreadyLoadedTxd))
+				return alreadyLoadedTxd;
 
 			UnityEngine.Profiling.Profiler.BeginSample ("TextureDictionary.Load");
 
