@@ -57,6 +57,8 @@ namespace SanAndreasUnity.Utilities
 
 		public bool TryLoadObject (TKey key, System.Action<TObj> onFinish)
 		{
+			ThreadHelper.ThrowIfNotOnMainThread(); // not needed, but to make sure
+
 			lock (_lockObject)
 			{
 				if (m_Loaded.ContainsKey(key))
@@ -82,12 +84,16 @@ namespace SanAndreasUnity.Utilities
 
 		public bool TryGetLoadedObject(TKey key, out TObj loadedObject)
 		{
+			ThreadHelper.ThrowIfNotOnMainThread(); // not needed, but to make sure
+
 			lock (_lockObject)
 				return m_Loaded.TryGetValue(key, out loadedObject);
 		}
 
 		public void OnObjectFinishedLoading (TKey key, TObj obj, bool bSuccess)
 		{
+			ThreadHelper.ThrowIfNotOnMainThread(); // not needed, but to make sure
+
 			lock (_lockObject)
 			{
 				if (bSuccess)
