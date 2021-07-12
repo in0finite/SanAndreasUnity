@@ -4,7 +4,6 @@ using System.Diagnostics;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using System.Threading;
-using System.Runtime.CompilerServices;
 using System.Collections.Concurrent;
 using Debug = UnityEngine.Debug;
 
@@ -43,38 +42,61 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		static BlockingCollection<Job<object>> s_jobs =
-			new BlockingCollection<Job<object>> (new ConcurrentProducerConsumerSortedSet<Job<object>>(new JobComparer()));
-		static Thread s_thread;
-		static readonly Utilities.ConcurrentQueue<Job<object>> s_processedJobs = new Utilities.ConcurrentQueue<Job<object>>();
+		private class ThreadParameters
+		{
+			public readonly BlockingCollection<Job<object>> jobs =
+				new BlockingCollection<Job<object>> (new ConcurrentProducerConsumerSortedSet<Job<object>>(new JobComparer()));
+			public readonly Utilities.ConcurrentQueue<Job<object>> processedJobs = new Utilities.ConcurrentQueue<Job<object>>();
+			private bool _shouldThreadExit = false;
+			private readonly object _shouldThreadExitLockObject = new object();
+
+			public bool ShouldThreadExit()
+			{
+				lock (_shouldThreadExitLockObject)
+					return _shouldThreadExit;
+			}
+
+			public void TellThreadToExit()
+			{
+				lock (_shouldThreadExitLockObject)
+					_shouldThreadExit = true;
+			}
+		}
+
+		public static LoadingThread Singleton { get; private set; }
+
+		private Thread _thread;
+		private readonly ThreadParameters _threadParameters = new ThreadParameters();
 		private readonly Queue<Job<object>> _processedJobsBuffer = new Queue<Job<object>>(256);
 
-		static bool s_shouldThreadExit = false;
-
 		private static long s_lastJobId = 1;
-		private static object s_lastJobIdLockObject = new object();
+		private static readonly object s_lastJobIdLockObject = new object();
 
 		private readonly Stopwatch _stopwatch = new Stopwatch();
 
 		public ushort maxTimePerFrameMs = 0;
 
 
+		private void Awake()
+		{
+			Singleton = this;
+		}
 
 		void Start () {
 
-			s_thread = new Thread (ThreadFunction);
-			s_thread.Start ();
+			_thread = new Thread (ThreadFunction);
+			_thread.Start ();
 
 		}
 
 		void OnDisable ()
 		{
-			if (s_thread != null)
+			if (_thread != null)
 			{
 				var sw = System.Diagnostics.Stopwatch.StartNew ();
-			//	s_thread.Interrupt ();
-				TellThreadToExit ();
-				if (s_thread.Join (7000))
+			//	_thread.Interrupt ();
+				_threadParameters.TellThreadToExit ();
+				if (_thread.Join (7000))
 					Debug.LogFormat ("Stopped loading thread in {0} ms", sw.Elapsed.TotalMilliseconds);
 				else
 					Debug.LogError ("Failed to stop loading thread");
@@ -98,7 +120,7 @@ namespace SanAndreasUnity.Behaviours
 					job = _processedJobsBuffer.Dequeue();
 				else
 				{
-					int numCopied = s_processedJobs.DequeueToQueue(_processedJobsBuffer, 256);
+					int numCopied = _threadParameters.processedJobs.DequeueToQueue(_processedJobsBuffer, 256);
 					if (numCopied == 0)
 						break;
 
@@ -152,7 +174,7 @@ namespace SanAndreasUnity.Behaviours
 			if(job.callbackFinish != null)
 				j.callbackFinish = (arg) => job.callbackFinish( (T) arg );
 
-			s_jobs.Add (j);
+			Singleton._threadParameters.jobs.Add (j);
 		}
 
 		static long GetNextJobId()
@@ -163,25 +185,14 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		static bool ShouldThreadExit()
+		static void ThreadFunction (object objectParameter)
 		{
-			return s_shouldThreadExit;
-		}
+			ThreadParameters threadParameters = (ThreadParameters) objectParameter;
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		static void TellThreadToExit()
-		{
-			s_shouldThreadExit = true;
-		}
-
-		static void ThreadFunction ()
-		{
-
-			while (!ShouldThreadExit ())
+			while (!threadParameters.ShouldThreadExit())
 			{
 				Job<object> job;
-				if (!s_jobs.TryTake (out job, 200))
+				if (!threadParameters.jobs.TryTake (out job, 200))
 					continue;
 
 				try
@@ -193,7 +204,7 @@ namespace SanAndreasUnity.Behaviours
 					job.exception = ex;
 				}
 
-				s_processedJobs.Enqueue(job);
+				threadParameters.processedJobs.Enqueue(job);
 			}
 
 		}
