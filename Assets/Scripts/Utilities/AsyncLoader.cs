@@ -55,47 +55,29 @@ namespace SanAndreasUnity.Utilities
 				return m_Loaded [key];
 		}
 
-		public bool CheckIsObjectLoaded (TKey key, System.Action<TObj> onFinish)
+		public bool TryLoadObject (TKey key, System.Action<TObj> onFinish)
 		{
 			lock (_lockObject)
 			{
 				if (m_Loaded.ContainsKey(key))
 				{
 					onFinish (m_Loaded [key]);
-					return true;
+					return false;
 				}
-				return false;
-			}
-		}
 
-		public bool CheckIsObjectLoading (TKey key, System.Action<TObj> onFinish)
-		{
-			lock (_lockObject)
-			{
 				if (m_Loading.ContainsKey (key))
 				{
 					// this object is loading
 					// subscribe to finish event
 					m_Loading[key].Add( onFinish );
-					return true;
+					return false;
 				}
-				return false;
+
+				// insert it into loading dict
+				m_Loading [key] = new List<System.Action<TObj>>(){onFinish};
+
+				return true;
 			}
-		}
-
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		public bool TryLoadObject (TKey key, System.Action<TObj> onFinish)
-		{
-			if (CheckIsObjectLoaded (key, onFinish))
-				return false;
-
-			if (CheckIsObjectLoading (key, onFinish))
-				return false;
-
-			// insert it into loading dict
-			m_Loading [key] = new List<System.Action<TObj>>(){onFinish};
-
-			return true;
 		}
 
 		public bool TryGetLoadedObject(TKey key, out TObj loadedObject)
