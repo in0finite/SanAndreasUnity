@@ -85,7 +85,7 @@ namespace SanAndreasUnity.Behaviours
 		void Start () {
 
 			_thread = new Thread (ThreadFunction);
-			_thread.Start ();
+			_thread.Start(_threadParameters);
 
 		}
 
