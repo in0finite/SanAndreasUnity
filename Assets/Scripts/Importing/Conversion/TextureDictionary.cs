@@ -261,7 +261,7 @@ namespace SanAndreasUnity.Importing.Conversion
 			UnityEngine.Profiling.Profiler.BeginSample ("TextureDictionary.Load");
 
             var txd = new TextureDictionary(DontLoadTextures ? null : ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd"));
-			s_asyncLoader.AddToLoadedObjects(name, txd);
+			s_asyncLoader.OnObjectFinishedLoading(name, txd, true);
 
 			UnityEngine.Profiling.Profiler.EndSample ();
 

@@ -104,22 +104,16 @@ namespace SanAndreasUnity.Utilities
 					}
 				}
 
+				if (m_Loading.TryGetValue(key, out var subscribersList))
+				{
+					// remove from loading dict
+					m_Loading.Remove( key );
 
-				var list = m_Loading[key];
-
-				// remove from loading dict
-				m_Loading.Remove( key );
-
-				// invoke subscribers
-				foreach(var item in list)
-					Utilities.F.RunExceptionSafe( () => item(obj));
+					// invoke subscribers
+					foreach(var action in subscribersList)
+						Utilities.F.RunExceptionSafe( () => action(obj));
+				}
 			}
-		}
-
-		public void AddToLoadedObjects (TKey key, TObj obj)
-		{
-			lock (_lockObject)
-				m_Loaded [key] = obj;
 		}
 
 	}

@@ -581,7 +581,7 @@ namespace SanAndreasUnity.Importing.Conversion
             var loaded = new GeometryParts(modelName, clump, txds);
 			Profiler.EndSample ();
 
-			s_asyncLoader.AddToLoadedObjects (modelName, loaded);
+			s_asyncLoader.OnObjectFinishedLoading(modelName, loaded, true);
 
             return loaded;
         }

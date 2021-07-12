@@ -136,7 +136,7 @@ namespace SanAndreasUnity.Importing.Collision
 			var cf = _sModelNameDict.ContainsKey(name) ? _sModelNameDict[name].Value : null;
 			UnityEngine.Profiling.Profiler.EndSample ();
 
-			s_asyncLoader.AddToLoadedObjects (name, cf);
+			s_asyncLoader.OnObjectFinishedLoading(name, cf, true);
 
 			return cf;
         }
