@@ -8,6 +8,8 @@ namespace SanAndreasUnity.Utilities
 	public class AsyncLoader<TKey, TObj>
 	{
 
+		private readonly object _lockObject = new object();
+
 		/// <summary>
 		/// All successfully loaded objects.
 		/// </summary>
@@ -29,52 +31,56 @@ namespace SanAndreasUnity.Utilities
 			m_Loading = new Dictionary<TKey, List<System.Action<TObj>>> (comparer);
 		}
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
 		public int GetNumObjectsLoaded ()
 		{
-			return m_Loaded.Count;
+			lock (_lockObject)
+				return m_Loaded.Count;
 		}
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
 		public int GetNumObjectsLoading ()
 		{
-			return m_Loading.Count;
+			lock (_lockObject)
+				return m_Loading.Count;
 		}
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
 		public bool IsObjectLoaded (TKey key)
 		{
-			return m_Loaded.ContainsKey (key);
+			lock (_lockObject)
+				return m_Loaded.ContainsKey (key);
 		}
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
 		public TObj GetLoadedObject (TKey key)
 		{
-			return m_Loaded [key];
+			lock (_lockObject)
+				return m_Loaded [key];
 		}
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
 		public bool CheckIsObjectLoaded (TKey key, System.Action<TObj> onFinish)
 		{
-			if (m_Loaded.ContainsKey(key))
+			lock (_lockObject)
 			{
-				onFinish (m_Loaded [key]);
-				return true;
+				if (m_Loaded.ContainsKey(key))
+				{
+					onFinish (m_Loaded [key]);
+					return true;
+				}
+				return false;
 			}
-			return false;
 		}
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
 		public bool CheckIsObjectLoading (TKey key, System.Action<TObj> onFinish)
 		{
-			if (m_Loading.ContainsKey (key))
+			lock (_lockObject)
 			{
-				// this object is loading
-				// subscribe to finish event
-				m_Loading[key].Add( onFinish );
-				return true;
+				if (m_Loading.ContainsKey (key))
+				{
+					// this object is loading
+					// subscribe to finish event
+					m_Loading[key].Add( onFinish );
+					return true;
+				}
+				return false;
 			}
-			return false;
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
@@ -92,46 +98,46 @@ namespace SanAndreasUnity.Utilities
 			return true;
 		}
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
 		public bool TryGetLoadedObject(TKey key, out TObj loadedObject)
 		{
-			return m_Loaded.TryGetValue(key, out loadedObject);
+			lock (_lockObject)
+				return m_Loaded.TryGetValue(key, out loadedObject);
 		}
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void OnObjectFinishedLoading (TKey key, TObj obj, bool bSuccess)
 		{
-
-			if (bSuccess)
+			lock (_lockObject)
 			{
-				if (m_Loaded.ContainsKey (key))
+				if (bSuccess)
 				{
-					// this object was loaded in the meantime
-					// this can happen if someone else is loading objects synchronously
-					Debug.LogErrorFormat ("Redundant load of object ({0}): {1}", typeof(TObj), key);
+					if (m_Loaded.ContainsKey (key))
+					{
+						// this object was loaded in the meantime
+						// this can happen if someone else is loading objects synchronously
+						Debug.LogErrorFormat ("Redundant load of object ({0}): {1}", typeof(TObj), key);
+					}
+					else
+					{
+						m_Loaded.Add (key, obj);
+					}
 				}
-				else
-				{
-					m_Loaded.Add (key, obj);
-				}
+
+
+				var list = m_Loading[key];
+
+				// remove from loading dict
+				m_Loading.Remove( key );
+
+				// invoke subscribers
+				foreach(var item in list)
+					Utilities.F.RunExceptionSafe( () => item(obj));
 			}
-
-
-			var list = m_Loading[key];
-
-			// remove from loading dict
-			m_Loading.Remove( key );
-
-			// invoke subscribers
-			foreach(var item in list)
-				Utilities.F.RunExceptionSafe( () => item(obj));
-			
 		}
 
-		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void AddToLoadedObjects (TKey key, TObj obj)
 		{
-			m_Loaded [key] = obj;
+			lock (_lockObject)
+				m_Loaded [key] = obj;
 		}
 
 	}
