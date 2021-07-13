@@ -159,14 +159,14 @@ namespace SanAndreasUnity.Behaviours.World
 
 		private void OnAreaChangedVisibility(WorldSystem<MapObject>.Area area, bool visible)
 		{
-			if (null == area.ObjectsInside)
+			if (null == area.ObjectsInside || area.ObjectsInside.Count == 0)
 				return;
 
 			Profiler.BeginSample("OnAreaChangedVisibility");
 
 			WorldSystem<MapObject>.FocusPoint[] focusPointsThatSeeMe = null;
 			if (visible)
-				focusPointsThatSeeMe = area.FocusPointsThatSeeMe.ToArray();
+				focusPointsThatSeeMe = area.FocusPointsThatSeeMe.ToArray(); // TODO: preallocate buffer for this
 
 			for (int i = 0; i < area.ObjectsInside.Count; i++)
 			{
