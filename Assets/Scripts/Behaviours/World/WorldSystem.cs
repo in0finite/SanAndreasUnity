@@ -117,8 +117,22 @@ namespace SanAndreasUnity.Behaviours.World
 
     public class WorldSystem<T>
     {
+        public struct AreaIndex
+        {
+            public short x, y, z;
+
+            public AreaIndex(short x, short y, short z)
+            {
+                this.x = x;
+                this.y = y;
+                this.z = z;
+            }
+        }
+
         public class Area
         {
+            public AreaIndex AreaIndex { get; internal set; }
+
             internal List<T> objectsInside;
             public IReadOnlyList<T> ObjectsInside => this.objectsInside;
 
@@ -128,6 +142,11 @@ namespace SanAndreasUnity.Behaviours.World
             internal bool isMarkedForUpdate;
 
             public bool WasVisibleInLastUpdate { get; internal set; } = false;
+
+            internal Area(AreaIndex areaIndex)
+            {
+                this.AreaIndex = areaIndex;
+            }
         }
 
         public sealed class FocusPoint
@@ -473,11 +492,11 @@ namespace SanAndreasUnity.Behaviours.World
 
         private void ForEachArea(AreaIndexes areaIndexes, bool createIfNotExists, System.Action<Area> action)
         {
-            for (int x = areaIndexes.x.lower; x <= areaIndexes.x.higher; x++)
+            for (short x = areaIndexes.x.lower; x <= areaIndexes.x.higher; x++)
             {
-                for (int y = areaIndexes.y.lower; y <= areaIndexes.y.higher; y++)
+                for (short y = areaIndexes.y.lower; y <= areaIndexes.y.higher; y++)
                 {
-                    for (int z = areaIndexes.z.lower; z <= areaIndexes.z.higher; z++)
+                    for (short z = areaIndexes.z.lower; z <= areaIndexes.z.higher; z++)
                     {
                         if (!createIfNotExists)
                         {
@@ -487,7 +506,7 @@ namespace SanAndreasUnity.Behaviours.World
                         {
                             var area = _areas[x, y, z];
                             if (null == area)
-                                _areas[x, y, z] = area = new Area();
+                                _areas[x, y, z] = area = new Area(new AreaIndex(x, y, z));
                             action(area);
                         }
                     }
@@ -533,9 +552,9 @@ namespace SanAndreasUnity.Behaviours.World
             return (short) (1 + Mathf.FloorToInt((pos + _yAxisInfo.worldHalfSize) / _yAxisInfo.areaSize));
         }
 
-        private (short x, short y, short z) GetAreaIndex(Vector3 pos)
+        private AreaIndex GetAreaIndex(Vector3 pos)
         {
-            return (GetAreaIndex(pos.x), GetAreaIndexForYAxis(pos.y), GetAreaIndex(pos.z));
+            return new AreaIndex(GetAreaIndex(pos.x), GetAreaIndexForYAxis(pos.y), GetAreaIndex(pos.z));
         }
 
         private Area GetAreaAt(Vector3 pos, bool createIfNotExists)
@@ -544,7 +563,7 @@ namespace SanAndreasUnity.Behaviours.World
             var area = _areas[index.x, index.y, index.z];
             if (null == area && createIfNotExists)
             {
-                area = new Area();
+                area = new Area(index);
                 _areas[index.x, index.y, index.z] = area;
             }
             return area;
