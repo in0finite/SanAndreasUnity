@@ -127,6 +127,10 @@ namespace SanAndreasUnity.Behaviours.World
                 this.y = y;
                 this.z = z;
             }
+
+            public bool IsEqualTo(AreaIndex other) => this.x == other.x && this.y == other.y && this.z == other.z;
+
+            public override string ToString() => $"({this.x}, {this.y}, {this.z})";
         }
 
         public class Area
@@ -555,6 +559,42 @@ namespace SanAndreasUnity.Behaviours.World
         private AreaIndex GetAreaIndex(Vector3 pos)
         {
             return new AreaIndex(GetAreaIndex(pos.x), GetAreaIndexForYAxis(pos.y), GetAreaIndex(pos.z));
+        }
+
+        public Vector3 GetAreaCenter(Area area)
+        {
+            Vector3 center = new Vector3(
+                GetAreaCenterForXZAxis(area.AreaIndex.x),
+                GetAreaCenterForYAxis(area.AreaIndex.y),
+                GetAreaCenterForXZAxis(area.AreaIndex.z));
+
+            AreaIndex indexOfCenter = GetAreaIndex(center);
+            if (!indexOfCenter.IsEqualTo(area.AreaIndex)) // just to be sure
+                throw new Exception($"Index of area center {indexOfCenter} does not match original area index {area.AreaIndex}");
+
+            return center;
+        }
+
+        private float GetAreaCenterForXZAxis(short indexForAxis)
+        {
+            if (indexForAxis <= 0) // left infinity
+                return float.NegativeInfinity;
+
+            if (indexForAxis >= _xzAxisInfo.numAreasPerAxis - 1) // right infinity
+                return float.PositiveInfinity;
+
+            return _xzAxisInfo.areaSize * (indexForAxis - 1) - _xzAxisInfo.worldHalfSize + _xzAxisInfo.areaSize * 0.5f;
+        }
+
+        private float GetAreaCenterForYAxis(short indexForAxis)
+        {
+            if (indexForAxis <= 0) // left infinity
+                return float.NegativeInfinity;
+
+            if (indexForAxis >= _yAxisInfo.numAreasPerAxis - 1) // right infinity
+                return float.PositiveInfinity;
+
+            return _yAxisInfo.areaSize * (indexForAxis - 1) - _yAxisInfo.worldHalfSize + _yAxisInfo.areaSize * 0.5f;
         }
 
         private Area GetAreaAt(Vector3 pos, bool createIfNotExists)
