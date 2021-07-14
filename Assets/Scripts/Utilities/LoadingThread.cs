@@ -45,7 +45,7 @@ namespace SanAndreasUnity.Behaviours
 		private class ThreadParameters
 		{
 			public readonly BlockingCollection<Job<object>> jobs =
-				new BlockingCollection<Job<object>> (new ConcurrentProducerConsumerSortedSet<Job<object>>(new JobComparer()));
+				new BlockingCollection<Job<object>> (new System.Collections.Concurrent.ConcurrentQueue<Job<object>>());
 			public readonly Utilities.ConcurrentQueue<Job<object>> processedJobs = new Utilities.ConcurrentQueue<Job<object>>();
 			private bool _shouldThreadExit = false;
 			private readonly object _shouldThreadExitLockObject = new object();

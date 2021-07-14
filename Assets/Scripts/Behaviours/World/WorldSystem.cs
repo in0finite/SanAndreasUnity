@@ -135,7 +135,12 @@ namespace SanAndreasUnity.Behaviours.World
 
         public class Area
         {
-            public AreaIndex AreaIndex { get; internal set; }
+            private static long s_lastId = 0;
+            public long Id { get; } = ++s_lastId;
+
+            public AreaIndex AreaIndex { get; }
+
+            public WorldSystem<T> WorldSystem { get; }
 
             internal List<T> objectsInside;
             public IReadOnlyList<T> ObjectsInside => this.objectsInside;
@@ -147,8 +152,9 @@ namespace SanAndreasUnity.Behaviours.World
 
             public bool WasVisibleInLastUpdate { get; internal set; } = false;
 
-            internal Area(AreaIndex areaIndex)
+            internal Area(WorldSystem<T> worldSystem, AreaIndex areaIndex)
             {
+                this.WorldSystem = worldSystem;
                 this.AreaIndex = areaIndex;
             }
         }
@@ -510,7 +516,7 @@ namespace SanAndreasUnity.Behaviours.World
                         {
                             var area = _areas[x, y, z];
                             if (null == area)
-                                _areas[x, y, z] = area = new Area(new AreaIndex(x, y, z));
+                                _areas[x, y, z] = area = new Area(this, new AreaIndex(x, y, z));
                             action(area);
                         }
                     }
@@ -603,7 +609,7 @@ namespace SanAndreasUnity.Behaviours.World
             var area = _areas[index.x, index.y, index.z];
             if (null == area && createIfNotExists)
             {
-                area = new Area(index);
+                area = new Area(this, index);
                 _areas[index.x, index.y, index.z] = area;
             }
             return area;

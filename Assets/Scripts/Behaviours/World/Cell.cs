@@ -1,4 +1,5 @@
-﻿using SanAndreasUnity.Behaviours.Vehicles;
+﻿using System;
+using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Placements;
 using SanAndreasUnity.Utilities;
@@ -34,6 +35,39 @@ namespace SanAndreasUnity.Behaviours.World
 		public IReadOnlyList<FocusPointInfo> FocusPoints => _focusPoints;
 
 		private List<FocusPointInfo> _focusPointsToRemoveAfterTimeout = new List<FocusPointInfo>();
+
+		private struct AreaWithDistance
+		{
+			public WorldSystem<MapObject>.Area area;
+			public float distance;
+		}
+
+		private class AreaWithDistanceComparer : IComparer<AreaWithDistance>
+		{
+			public int Compare(AreaWithDistance a, AreaWithDistance b)
+			{
+				if (a.distance < b.distance)
+					return -1;
+
+				if (a.distance > b.distance)
+					return 1;
+
+				// solve potential problem that 2 areas have same distance
+				// - these areas may not be equal, they may belong to different world systems and have same index,
+				// therefore their distances will be equal
+				// - by comparing their ids, we are sure that comparer is always deterministic
+				return a.area.Id.CompareTo(b.area.Id);
+			}
+		}
+
+		private readonly SortedSet<AreaWithDistance> _areasToUpdate = new SortedSet<AreaWithDistance>(new AreaWithDistanceComparer());
+		private readonly AreaWithDistance[] _bufferOfAreasToUpdate = new AreaWithDistance[64];
+		private int _indexOfBufferOfAreasToUpdate = 0;
+		private int _numElementsInBufferOfAreasToUpdate = 0;
+
+		public ushort maxTimeToUpdatePerFrameMs = 10;
+
+		private System.Diagnostics.Stopwatch _updateTimeLimitStopwatch = new System.Diagnostics.Stopwatch();
 
         public Water Water;
 
@@ -164,28 +198,15 @@ namespace SanAndreasUnity.Behaviours.World
 
 			Profiler.BeginSample("OnAreaChangedVisibility");
 
-			WorldSystem<MapObject>.FocusPoint[] focusPointsThatSeeMe = null;
-			if (visible)
-				focusPointsThatSeeMe = area.FocusPointsThatSeeMe.ToArray(); // TODO: preallocate buffer for this
+			Vector3 areaCenter = area.WorldSystem.GetAreaCenter(area);
 
-			for (int i = 0; i < area.ObjectsInside.Count; i++)
+			float minSqrDistance = area.FocusPointsThatSeeMe?.Min(f => (areaCenter - f.Position).sqrMagnitude) ?? float.PositiveInfinity;
+
+			_areasToUpdate.Add(new AreaWithDistance
 			{
-				var obj = area.ObjectsInside[i];
-
-				if (visible == obj.IsVisibleInMapSystem)
-					continue;
-
-				F.RunExceptionSafe(() =>
-				{
-					if (visible)
-					{
-						float minSqrDistance = focusPointsThatSeeMe.Min(f => (obj.CachedPosition - f.Position).sqrMagnitude);
-						obj.Show(minSqrDistance);
-					}
-					else
-						obj.UnShow();
-				});
-			}
+				area = area,
+				distance = minSqrDistance,
+			});
 
 			Profiler.EndSample();
 		}
@@ -270,6 +291,8 @@ namespace SanAndreasUnity.Behaviours.World
 			if (!Loader.HasLoaded)
 				return;
 
+			_updateTimeLimitStopwatch.Restart();
+
 			float timeNow = Time.time;
 
 			UnityEngine.Profiling.Profiler.BeginSample("Update focus points");
@@ -321,6 +344,81 @@ namespace SanAndreasUnity.Behaviours.World
             UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.Update()");
             _worldSystem.Update();
             UnityEngine.Profiling.Profiler.EndSample();
+
+            Profiler.BeginSample("UpdateAreasLoop");
+
+            while (true)
+            {
+	            if (_areasToUpdate.Count == 0 && _numElementsInBufferOfAreasToUpdate == 0)
+		            break;
+
+	            if (_updateTimeLimitStopwatch.ElapsedMilliseconds >= this.maxTimeToUpdatePerFrameMs)
+		            break;
+
+	            /*_areasToUpdate.CopyTo();
+	            _areasToUpdate.Clear(); // very good
+	            _areasToUpdate.ExceptWith(); // seems good
+	            _areasToUpdate.UnionWith(); // catastrophic*/
+
+	            if (_numElementsInBufferOfAreasToUpdate == 0)
+	            {
+		            Profiler.BeginSample("TakeFromSortedSet");
+
+		            // we processed all areas from buffer
+		            // take some more from SortedSet
+		            int numToCopy = Mathf.Min(_bufferOfAreasToUpdate.Length, _areasToUpdate.Count);
+		            _areasToUpdate.CopyTo(_bufferOfAreasToUpdate, 0, numToCopy);
+
+		            for (int i = 0; i < numToCopy; i++)
+		            {
+			            if (!_areasToUpdate.Remove(_bufferOfAreasToUpdate[i]))
+				            throw new Exception($"Failed to remove area {_bufferOfAreasToUpdate[i].area.Id} from SortedSet");
+		            }
+
+		            //_areasToUpdate.ExceptWith(new System.ArraySegment<AreaWithDistance>(_bufferOfAreasToUpdate, 0, numToCopy));
+
+		            _indexOfBufferOfAreasToUpdate = 0;
+		            _numElementsInBufferOfAreasToUpdate = numToCopy;
+
+		            Profiler.EndSample();
+	            }
+
+	            // process 1 area from buffer
+
+	            var areaWithDistance = _bufferOfAreasToUpdate[_indexOfBufferOfAreasToUpdate];
+	            _indexOfBufferOfAreasToUpdate++;
+	            _numElementsInBufferOfAreasToUpdate--;
+
+	            this.UpdateArea(areaWithDistance);
+
+            }
+
+            Profiler.EndSample();
+
+        }
+
+        void UpdateArea(AreaWithDistance areaWithDistance)
+        {
+	        var area = areaWithDistance.area;
+	        bool visible = area.WasVisibleInLastUpdate;
+
+	        for (int i = 0; i < area.ObjectsInside.Count; i++)
+	        {
+		        var obj = area.ObjectsInside[i];
+
+		        if (visible == obj.IsVisibleInMapSystem)
+			        continue;
+
+		        F.RunExceptionSafe(() =>
+		        {
+			        if (visible)
+			        {
+				        obj.Show(areaWithDistance.distance);
+			        }
+			        else
+				        obj.UnShow();
+		        });
+	        }
 
         }
     }
