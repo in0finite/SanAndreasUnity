@@ -96,6 +96,15 @@ namespace SanAndreasUnity.Behaviours.World
                 _worldSystems[i].FocusPointChangedPosition(focusPoints[i], newPos);
         }
 
+        public void FocusPointChangedRadius(long id, float newRadius)
+        {
+            if (!_focusPointsPerLevel.TryGetValue(id, out var focusPoints))
+                return;
+
+            for (int i = 0; i < _worldSystems.Length; i++)
+                _worldSystems[i].FocusPointChangedRadius(focusPoints[i], Mathf.Min(newRadius, _distanceLevels[i]));
+        }
+
         public void AddObjectToArea(Vector3 pos, float drawDistance, T obj)
         {
             int levelIndex = this.GetLevelIndexFromDrawDistance(drawDistance);
@@ -379,11 +388,14 @@ namespace SanAndreasUnity.Behaviours.World
         }
 
         public void FocusPointChangedPosition(FocusPoint focusPoint, Vector3 newPos)
+            => this.FocusPointChangedParameters(focusPoint, newPos, focusPoint.Radius);
+
+        private void FocusPointChangedParameters(FocusPoint focusPoint, Vector3 newPos, float newRadius)
         {
             this.ThrowIfConcurrentModification();
 
             AreaIndexes oldIndexes = GetAreaIndexesInRadius(focusPoint.Position, focusPoint.Radius);
-            AreaIndexes newIndexes = GetAreaIndexesInRadius(newPos, focusPoint.Radius);
+            AreaIndexes newIndexes = GetAreaIndexesInRadius(newPos, newRadius);
 
             if (!oldIndexes.EqualsToOther(newIndexes))
             {
@@ -421,7 +433,11 @@ namespace SanAndreasUnity.Behaviours.World
             }
 
             focusPoint.Position = newPos;
+            focusPoint.Radius = newRadius;
         }
+
+        public void FocusPointChangedRadius(FocusPoint focusPoint, float newRadius)
+            => this.FocusPointChangedParameters(focusPoint, focusPoint.Position, newRadius);
 
         public void AddObjectToArea(Vector3 pos, T obj)
         {

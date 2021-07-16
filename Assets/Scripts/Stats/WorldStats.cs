@@ -24,7 +24,7 @@ namespace SanAndreasUnity.Stats
 
             if (cell != null)
             {
-				sb.Append($"max draw distance {cell.maxDrawDistance}\n");
+				sb.Append($"max draw distance {cell.MaxDrawDistance}\n");
                 sb.Append($"num focus points {cell.FocusPoints.Count}\n");
                 sb.Append($"num static objects {cell.NumStaticGeometries}\n");
                 sb.Append($"num TOBJ objects {StaticGeometry.TimedObjects.Count}\n");
@@ -49,7 +49,7 @@ namespace SanAndreasUnity.Stats
 
                         worldSystem.ForEachAreaInRadius(
                             Ped.Instance.transform.position,
-                            Mathf.Min(cell.WorldSystem.DistanceLevels[i], cell.maxDrawDistance),
+                            Mathf.Min(cell.WorldSystem.DistanceLevels[i], cell.MaxDrawDistance),
                             area =>
                             {
                                 numAreasVisible++;

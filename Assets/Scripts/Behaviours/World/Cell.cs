@@ -29,6 +29,7 @@ namespace SanAndreasUnity.Behaviours.World
 	        public Transform transform;
 	        public float timeToKeepRevealingAfterRemoved;
 	        public float timeWhenRemoved;
+	        public bool hasRevealRadius;
         }
 
 		private List<FocusPointInfo> _focusPoints = new List<FocusPointInfo>();
@@ -75,7 +76,20 @@ namespace SanAndreasUnity.Behaviours.World
 
 		public float divisionRefreshDistanceDelta = 20;
 
-		public float maxDrawDistance = 500;
+		private float _maxDrawDistance = 0;
+		public float MaxDrawDistance
+		{
+			get => _maxDrawDistance;
+			set
+			{
+				if (_maxDrawDistance == value)
+					return;
+
+				_maxDrawDistance = value;
+
+				this.OnMaxDrawDistanceChanged();
+			}
+		}
 
         public float[] drawDistancesPerLayers = new float[] { 301, 801, 1501 };
 
@@ -215,13 +229,14 @@ namespace SanAndreasUnity.Behaviours.World
 		{
 			if (!_focusPoints.Exists(f => f.transform == tr))
 			{
-				float revealRadius = parameters.hasRevealRadius ? parameters.revealRadius : this.maxDrawDistance;
+				float revealRadius = parameters.hasRevealRadius ? parameters.revealRadius : this.MaxDrawDistance;
 				long registeredFocusPointId = _worldSystem.RegisterFocusPoint(revealRadius, tr.position);
 				_focusPoints.Add(new FocusPointInfo
 				{
 					id = registeredFocusPointId,
 					transform = tr,
 					timeToKeepRevealingAfterRemoved = parameters.timeToKeepRevealingAfterRemoved,
+					hasRevealRadius = parameters.hasRevealRadius,
 				});
 			}
 		}
@@ -246,6 +261,21 @@ namespace SanAndreasUnity.Behaviours.World
 
 			_worldSystem.UnRegisterFocusPoint(focusPoint.id);
 			_focusPoints.RemoveAt(index);
+		}
+
+		private void OnMaxDrawDistanceChanged()
+		{
+			if (null == _worldSystem)
+				return;
+
+			for (int i = 0; i < _focusPoints.Count; i++)
+			{
+				var focusPoint = _focusPoints[i];
+				if (!focusPoint.hasRevealRadius)
+				{
+					_worldSystem.FocusPointChangedRadius(focusPoint.id, this.MaxDrawDistance);
+				}
+			}
 		}
 
 
