@@ -660,7 +660,7 @@ namespace SanAndreasUnity.Importing.Conversion
                 matFlags |= MaterialFlags.NoBackCull;
             }
 
-            if ((flags & (ObjectFlag.Alpha1 | ObjectFlag.Alpha2)) != 0
+            if ((flags & (ObjectFlag.DrawLast | ObjectFlag.Additive)) != 0
                 && (flags & ObjectFlag.NoZBufferWrite) == ObjectFlag.NoZBufferWrite)
             {
                 matFlags |= MaterialFlags.Alpha;
