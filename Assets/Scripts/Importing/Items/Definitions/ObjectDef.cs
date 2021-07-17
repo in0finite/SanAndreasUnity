@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
         Alpha2 = 8,
         RenderAtDay = 16,
         Interior = 32,
-        DisableShadowMesh = 64,
+        NoZBufferWrite = 64,
         NoCull = 128,
         DisableDrawDist = 256,
         Breakable = 512,

@@ -661,7 +661,7 @@ namespace SanAndreasUnity.Importing.Conversion
             }
 
             if ((flags & (ObjectFlag.Alpha1 | ObjectFlag.Alpha2)) != 0
-                && (flags & ObjectFlag.DisableShadowMesh) == ObjectFlag.DisableShadowMesh)
+                && (flags & ObjectFlag.NoZBufferWrite) == ObjectFlag.NoZBufferWrite)
             {
                 matFlags |= MaterialFlags.Alpha;
             }
