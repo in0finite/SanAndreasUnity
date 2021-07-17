@@ -2,23 +2,42 @@
 using UnityEngine;
 using SanAndreasUnity.UI;
 
-namespace SanAndreasUnity.Settings {
+namespace SanAndreasUnity.Settings
+{
+	public class WorldSettings : MonoBehaviour
+	{
+		private static WorldSettings Singleton { get; set; }
 
-	public class WorldSettings : MonoBehaviour {
+		private float _drawDistanceToApply = 0f;
 
-		private OptionsWindow.FloatInput m_maxDrawDistanceInput = new OptionsWindow.FloatInput() {
+		private OptionsWindow.FloatInput m_maxDrawDistanceInput = new OptionsWindow.FloatInput
+		{
 			description = "Max draw distance",
 			minValue = WorldManager.MinMaxDrawDistance,
 			maxValue = WorldManager.MaxMaxDrawDistance,
 			getValue = () => WorldManager.Singleton.MaxDrawDistance,
-			setValue = (value) => { WorldManager.Singleton.MaxDrawDistance = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
+			setValue = value => { Singleton.OnDrawDistanceChanged(value); },
+			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 
 
 		void Awake ()
 		{
+			Singleton = this;
+
 			OptionsWindow.RegisterInputs ("WORLD", m_maxDrawDistanceInput);
+		}
+
+		void OnDrawDistanceChanged(float newValue)
+		{
+			this.CancelInvoke(nameof(ChangeDrawDistanceDelayed));
+			_drawDistanceToApply = newValue;
+			this.Invoke(nameof(ChangeDrawDistanceDelayed), 0.2f);
+		}
+
+		void ChangeDrawDistanceDelayed()
+		{
+			WorldManager.Singleton.MaxDrawDistance = _drawDistanceToApply;
 		}
 	}
 
