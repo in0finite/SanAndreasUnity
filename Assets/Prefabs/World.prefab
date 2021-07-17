@@ -471,18 +471,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PreviewCamera: {fileID: 0}
+  maxTimeToUpdatePerFrameMs: 10
   Water: {fileID: 11455068}
-  divisionLoadOrderDistanceFactor: 16
   divisionRefreshDistanceDelta: 1
-  divisionsUpdateInterval: 0.3
-  maxDrawDistance: 800
   drawDistancesPerLayers:
   - 101
   - 301
   - 1501
-  yWorldSystemSize: 3000
-  yWorldSystemNumAreas: 4
+  yWorldSystemSize: 7000
+  yWorldSystemNumAreas: 1
   xzWorldSystemNumAreasPerDrawDistanceLevel: 640064006400
+  interiorHeightOffset: 5000
   fadeRate: 4
   loadParkedVehicles: 0
   mapObjectActivatorPrefab: {fileID: 0}
