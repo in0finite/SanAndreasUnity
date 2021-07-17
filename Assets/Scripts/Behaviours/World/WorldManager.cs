@@ -14,6 +14,10 @@ namespace SanAndreasUnity.Behaviours.World
         [Range(MinMaxDrawDistance, MaxMaxDrawDistance)]
         private float _defaultMaxDrawDistance = 1500f;
 
+        [SerializeField]
+        [Range(MinMaxDrawDistance, MaxMaxDrawDistance)]
+        private float _defaultMaxDrawDistanceOnMobile = 1000f;
+
         private float _maxDrawDistance = 0f;
         public float MaxDrawDistance
         {
@@ -34,7 +38,7 @@ namespace SanAndreasUnity.Behaviours.World
         {
             Singleton = this;
 
-            _maxDrawDistance = this._defaultMaxDrawDistance;
+            _maxDrawDistance = Application.isMobilePlatform ? _defaultMaxDrawDistanceOnMobile : _defaultMaxDrawDistance;
 
             UnityEngine.SceneManagement.SceneManager.activeSceneChanged += (s1, s2) => OnActiveSceneChanged();
         }

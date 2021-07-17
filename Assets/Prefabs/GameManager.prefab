@@ -474,3 +474,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _defaultMaxDrawDistance: 1500
+  _defaultMaxDrawDistanceOnMobile: 1000
