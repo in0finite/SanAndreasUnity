@@ -162,7 +162,7 @@ namespace SanAndreasUnity.Chat
 			if (string.IsNullOrEmpty(msg))
 				return;
 
-			foreach (var player in Player.AllPlayers) {
+			foreach (var player in Player.AllPlayersCopy) {
 				SendChatMessageToPlayerAsServer ( player, msg, sender );
 			}
 

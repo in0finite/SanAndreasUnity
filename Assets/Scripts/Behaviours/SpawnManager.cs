@@ -139,7 +139,7 @@ namespace SanAndreasUnity.Behaviours
 
             TransformDataStruct transformData;
 
-            foreach (var player in Player.AllPlayers)
+            foreach (var player in Player.AllPlayersCopy)
             {
                 if (this.GetSpawnPositionFromHandler(player, out transformData))
                     SpawnPlayer(player, transformData);
