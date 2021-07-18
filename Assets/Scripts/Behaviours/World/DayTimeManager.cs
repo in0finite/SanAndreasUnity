@@ -13,6 +13,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public Light directionalLight;
 
+        public float lightYAngle = 45f;
+
         public byte startTimeHours = 12;
         public byte startTimeMinutes = 0;
 
@@ -152,7 +154,8 @@ namespace SanAndreasUnity.Behaviours.World
         float UpdateLightAngle(float curveTime)
         {
             float lightAngle = this.lightAngleCurve.Evaluate(curveTime) * 180f;
-            this.directionalLight.transform.rotation = Quaternion.AngleAxis(lightAngle, Vector3.right);
+            this.directionalLight.transform.rotation =
+                Quaternion.AngleAxis(lightAngle, Vector3.right) * Quaternion.AngleAxis(this.lightYAngle, Vector3.up);
             return lightAngle;
         }
 
