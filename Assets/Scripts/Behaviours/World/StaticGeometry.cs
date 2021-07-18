@@ -8,6 +8,7 @@ using System.Linq;
 using SanAndreasUnity.Importing.RenderWareStream;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Geometry = SanAndreasUnity.Importing.Conversion.Geometry;
 using Profiler = UnityEngine.Profiling.Profiler;
 
@@ -156,6 +157,9 @@ namespace SanAndreasUnity.Behaviours.World
 			var mf = gameObject.AddComponent<MeshFilter>();
 			var mr = gameObject.AddComponent<MeshRenderer>();
 
+			mr.receiveShadows = this.ShouldReceiveShadows();
+			mr.shadowCastingMode = this.ShouldCastShadows() ? ShadowCastingMode.On : ShadowCastingMode.Off;
+
 			mf.sharedMesh = geoms.Geometry[0].Mesh;
 			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(ObjectDefinition.Flags, mat => mat.SetTexture(NoiseTexPropertyId, NoiseTex));
 
@@ -276,6 +280,41 @@ namespace SanAndreasUnity.Behaviours.World
 		        return true;
 
 	        if (LodParent.IsVisibleInMapSystem && !LodParent._isGeometryLoaded)
+		        return false;
+
+	        return true;
+        }
+
+        private bool ShouldReceiveShadows()
+        {
+	        if (null == this.ObjectDefinition)
+		        return false;
+
+	        var flags = ObjectFlag.Additive // transparent
+	                    | ObjectFlag.NoZBufferWrite // transparent
+	                    | ObjectFlag.DontReceiveShadows;
+
+	        if ((this.ObjectDefinition.Flags & flags) != 0)
+		        return false;
+
+	        if (LodParent != null) // LOD models should not receive shadows
+		        return false;
+
+	        return true;
+        }
+
+        private bool ShouldCastShadows()
+        {
+	        if (null == this.ObjectDefinition)
+		        return false;
+
+	        var flags = ObjectFlag.Additive // transparent
+	                    | ObjectFlag.NoZBufferWrite; // transparent
+
+	        if ((this.ObjectDefinition.Flags & flags) != 0)
+		        return false;
+
+	        if (LodParent != null) // LOD models should not cast shadows
 		        return false;
 
 	        return true;
