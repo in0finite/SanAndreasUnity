@@ -12,6 +12,7 @@ namespace SanAndreasUnity.Settings
 
 		private OptionsWindow.FloatInput m_maxDrawDistanceInput = new OptionsWindow.FloatInput
 		{
+			serializationName = "max_draw_distance_v2",
 			description = "Max draw distance",
 			minValue = WorldManager.MinMaxDrawDistance,
 			maxValue = WorldManager.MaxMaxDrawDistance,
