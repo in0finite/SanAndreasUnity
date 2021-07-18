@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using SanAndreasUnity.Utilities;
@@ -22,10 +23,17 @@ namespace SanAndreasUnity.UI {
 
 		public abstract class Input
 		{
+			public string serializationName = "";
 			public string description = "";
 			public InputPersistType persistType = InputPersistType.None;
 			public string category = "";
 			public System.Func<bool> isAvailable = () => true;
+
+			public string FinalSerializationName => string.IsNullOrWhiteSpace(this.serializationName)
+				? (string.IsNullOrWhiteSpace(this.description)
+					? throw new ArgumentException("You must specify serialization name or description")
+					: this.description)
+				: this.serializationName;
 
 			public abstract void Load ();
 			public abstract void Save ();
@@ -73,9 +81,9 @@ namespace SanAndreasUnity.UI {
 			public override void Load () {
 				if (!this.isAvailable ())
 					return;
-				if (!PlayerPrefs.HasKey (this.description))
+				if (!PlayerPrefs.HasKey (this.FinalSerializationName))
 					return;
-				string str = PlayerPrefs.GetString (this.description, null);
+				string str = PlayerPrefs.GetString (this.FinalSerializationName, null);
 				if (str != null)
 				{
 					this.setValue (this.Load (str));
@@ -88,7 +96,7 @@ namespace SanAndreasUnity.UI {
 					return;
 				string str = this.SaveAsString (this.getValue ());
 				if (str != null)
-					PlayerPrefs.SetString (this.description, str);
+					PlayerPrefs.SetString (this.FinalSerializationName, str);
 			}
 
 			public virtual string SaveAsString (T value) {
