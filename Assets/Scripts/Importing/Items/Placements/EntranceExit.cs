@@ -11,12 +11,12 @@ namespace SanAndreasUnity.Importing.Items.Placements
     public class EntranceExit : Placement
     {
         
-        public readonly UnityEngine.Vector3 EntrancePos;
-        public readonly float EntranceAngle;
+        public readonly UnityEngine.Vector3 EntrancePos; // position where enex is located
+        public readonly float EntranceAngle; // rotation of ped when entering enex
         public readonly UnityEngine.Vector3 Size;
-        public readonly UnityEngine.Vector3 ExitPos;
-        public readonly float ExitAngle;
-        public readonly int TargetInterior;
+        public readonly UnityEngine.Vector3 ExitPos; // position of ped after teleporting to this enex
+        public readonly float ExitAngle; // rotation of ped after teleporting to this enex
+        public readonly int TargetInterior; // interior level where enex is located
         public readonly int Flags;
         public readonly string Name;
         public readonly int SkyColorType;

@@ -471,18 +471,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PreviewCamera: {fileID: 0}
-  focusPoints: []
+  maxTimeToUpdatePerFrameMs: 10
   Water: {fileID: 11455068}
-  divisionLoadOrderDistanceFactor: 16
   divisionRefreshDistanceDelta: 1
-  divisionsUpdateInterval: 0.3
-  maxDrawDistance: 500
+  drawDistancesPerLayers:
+  - 101
+  - 301
+  - 1501
+  yWorldSystemSize: 7000
+  yWorldSystemNumAreas: 1
+  xzWorldSystemNumAreasPerDrawDistanceLevel: 640064006400
+  interiorHeightOffset: 5000
+  fadeRate: 4
   loadParkedVehicles: 0
-  enexPrefab: {fileID: 2538922681126103069, guid: 1858efe8eaf422544a4651b2fba2937a,
+  mapObjectActivatorPrefab: {fileID: 0}
+  staticGeometryPrefab: {fileID: 5341989147525447730, guid: f6207237b8bbdaa49b948fa374797093,
+    type: 3}
+  enexPrefab: {fileID: 5154345777629047764, guid: 1858efe8eaf422544a4651b2fba2937a,
     type: 3}
   lightSourcePrefab: {fileID: 5315691503008682268, guid: be3276cb0ed03dc4cb44bd04cde4bcfb,
     type: 3}
   lightScaleMultiplier: 0.5
+  redTrafficLightDuration: 7
+  yellowTrafficLightDuration: 2
+  greenTrafficLightDuration: 7
 --- !u!114 &11450014
 MonoBehaviour:
   m_ObjectHideFlags: 0

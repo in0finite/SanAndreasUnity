@@ -151,9 +151,10 @@ namespace SanAndreasUnity.Importing.Archive
 		// this method should not be synchronized, because thread would block while 
 		// archive is being read, but the thread only wants to register a job and continue
 	//	[MethodImpl(MethodImplOptions.Synchronized)]
-		public static void ReadFileAsync(string name, System.Action<Stream> onFinish)
+		public static void ReadFileAsync(string name, float loadPriority, System.Action<Stream> onFinish)
 		{
 			Behaviours.LoadingThread.RegisterJob (new Behaviours.LoadingThread.Job<Stream> () {
+                priority = loadPriority,
 				action = () => ReadFile( name ),
 				callbackFinish = (stream) => { onFinish(stream); },
 			});

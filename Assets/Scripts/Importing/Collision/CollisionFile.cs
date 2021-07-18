@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Profiler = UnityEngine.Profiling.Profiler;
 
 namespace SanAndreasUnity.Importing.Collision
 {
@@ -100,10 +101,10 @@ namespace SanAndreasUnity.Importing.Collision
             }
         }
 
-		private static void LoadAsync (string collFileName, CollisionFileInfo collFileInfo, System.Action<CollisionFile> onFinish)
+		private static void LoadAsync (string collFileName, CollisionFileInfo collFileInfo, float loadPriority, System.Action<CollisionFile> onFinish)
 		{
 
-			ArchiveManager.ReadFileAsync (collFileName, (stream) => {
+			ArchiveManager.ReadFileAsync (collFileName, loadPriority, (stream) => {
 				CollisionFile cf = null;
 				try {
 					using(stream)
@@ -128,19 +129,19 @@ namespace SanAndreasUnity.Importing.Collision
 
         public static CollisionFile FromName(String name)
         {
-			if (s_asyncLoader.IsObjectLoaded (name))
-				return s_asyncLoader.GetLoadedObject (name);
+			if (s_asyncLoader.TryGetLoadedObject(name, out CollisionFile alreadyLoadedCollisionFile))
+				return alreadyLoadedCollisionFile;
 			
 			UnityEngine.Profiling.Profiler.BeginSample ("CollisionFile.FromName()");
 			var cf = _sModelNameDict.ContainsKey(name) ? _sModelNameDict[name].Value : null;
 			UnityEngine.Profiling.Profiler.EndSample ();
 
-			s_asyncLoader.AddToLoadedObjects (name, cf);
+			s_asyncLoader.OnObjectFinishedLoading(name, cf, true);
 
 			return cf;
         }
 
-		public static void FromNameAsync(String name, System.Action<CollisionFile> onFinish)
+		public static void FromNameAsync(String name, float loadPriority, System.Action<CollisionFile> onFinish)
 		{
 			if (!_sModelNameDict.ContainsKey (name))
 			{
@@ -158,7 +159,7 @@ namespace SanAndreasUnity.Importing.Collision
 			// get the actual name of collision file
 			string collFileName = _sModelNameDict [name].FileName;
 
-			LoadAsync( collFileName, _sModelNameDict[name], (result) => 
+			LoadAsync( collFileName, _sModelNameDict[name], loadPriority, (result) =>
 				{
 					// update _value variable in appropriate CollisionFileInfo object
 					_sModelNameDict[name].Value = result;
@@ -185,6 +186,8 @@ namespace SanAndreasUnity.Importing.Collision
 
         private CollisionFile(CollisionFileInfo info, Stream stream)
         {
+            Profiler.BeginSample("CollisionFile()");
+
             Name = info.Name;
             ModelId = info.ModelId;
 
@@ -316,6 +319,8 @@ namespace SanAndreasUnity.Importing.Collision
             {
                 Vertices = new Vertex[0];
             }
+
+            Profiler.EndSample();
         }
     }
 }

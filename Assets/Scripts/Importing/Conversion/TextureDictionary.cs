@@ -255,20 +255,21 @@ namespace SanAndreasUnity.Importing.Conversion
         public static TextureDictionary Load(string name)
         {
             name = name.ToLower();
-			if (s_asyncLoader.IsObjectLoaded (name))
-				return s_asyncLoader.GetLoadedObject (name);
+
+			if (s_asyncLoader.TryGetLoadedObject(name, out var alreadyLoadedTxd))
+				return alreadyLoadedTxd;
 
 			UnityEngine.Profiling.Profiler.BeginSample ("TextureDictionary.Load");
 
             var txd = new TextureDictionary(DontLoadTextures ? null : ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd"));
-			s_asyncLoader.AddToLoadedObjects(name, txd);
+			s_asyncLoader.OnObjectFinishedLoading(name, txd, true);
 
 			UnityEngine.Profiling.Profiler.EndSample ();
 
             return txd;
         }
 
-		public static void LoadAsync(string name, System.Action<TextureDictionary> onFinish)
+		public static void LoadAsync(string name, float loadPriority, System.Action<TextureDictionary> onFinish)
 		{
 			name = name.ToLower();
 
@@ -282,6 +283,7 @@ namespace SanAndreasUnity.Importing.Conversion
             bool bDontLoad = DontLoadTextures;
 
 			Behaviours.LoadingThread.RegisterJob (new Behaviours.LoadingThread.Job<RenderWareStream.TextureDictionary> () {
+                priority = loadPriority,
 				action = () => {
 					return bDontLoad ? null : ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd");
 				},

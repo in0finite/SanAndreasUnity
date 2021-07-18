@@ -605,9 +605,12 @@ namespace SanAndreasUnity.UI {
 			// draw enexes
 			if (m_drawEnexes)
 			{
-				foreach (var enex in Importing.Items.Item.Enexes.Where(enex => enex.TargetInterior == 0))
+				foreach (var enex in Importing.Items.Item.Enexes.Where(enex => Behaviours.World.Cell.IsExteriorLevel(enex.TargetInterior)))
 				{
-					this.DrawItemOnMap(MiniMap.Instance.GreenHouseTexture, enex.EntrancePos, 10);
+					this.DrawItemOnMap(
+						MiniMap.Instance.GreenHouseTexture,
+						Behaviours.World.Cell.Instance.GetPositionBasedOnInteriorLevel(enex.EntrancePos, enex.TargetInterior),
+						10);
 				}
 			}
 

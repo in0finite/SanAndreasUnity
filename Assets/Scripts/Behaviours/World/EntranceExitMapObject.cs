@@ -2,14 +2,15 @@
 using SanAndreasUnity.Importing.Items.Placements;
 using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SanAndreasUnity.Behaviours.World
 {
 
     public class EntranceExitMapObject : MapObject
     {
-        static List<EntranceExitMapObject> s_allObjects = new List<EntranceExitMapObject>();
-        public static IEnumerable<EntranceExitMapObject> AllObjects => s_allObjects;
+        static List<EntranceExitMapObject> _sAllActiveObjects = new List<EntranceExitMapObject>();
+        public static IReadOnlyList<EntranceExitMapObject> AllActiveObjects => _sAllActiveObjects;
 
         Coroutine m_animateArrowCoroutine;
 
@@ -22,7 +23,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public static EntranceExitMapObject Create(EntranceExit info)
         {
-            var obj = Object.Instantiate(Cell.Instance.enexPrefab).GetComponent<EntranceExitMapObject>();
+            var obj = Create<EntranceExitMapObject>(Cell.Instance.enexPrefab);
             obj.Initialize(info);
             return obj;
         }
@@ -37,7 +38,11 @@ namespace SanAndreasUnity.Behaviours.World
 
             float height = 2f;
 
-            Initialize(info.EntrancePos + Vector3.up * height * 0.5f, Quaternion.identity);
+            this.Initialize(
+                Cell.Instance.GetPositionBasedOnInteriorLevel(
+                    info.EntrancePos + Vector3.up * height * 0.5f,
+                    info.TargetInterior),
+                Quaternion.identity);
 
             gameObject.SetActive(false);
             gameObject.isStatic = true;
@@ -52,17 +57,19 @@ namespace SanAndreasUnity.Behaviours.World
             rb.mass = 0f;
             rb.isKinematic = true;
 
+            this.SetDrawDistance(100f);
+
         }
 
         void OnEnable()
         {
-            s_allObjects.Add(this);
+            _sAllActiveObjects.Add(this);
             m_animateArrowCoroutine = this.StartCoroutine(this.AnimateArrow());
         }
 
         void OnDisable()
         {
-            s_allObjects.Remove(this);
+            _sAllActiveObjects.Remove(this);
             
             if (m_animateArrowCoroutine != null)
                 this.StopCoroutine(m_animateArrowCoroutine);
@@ -73,19 +80,6 @@ namespace SanAndreasUnity.Behaviours.World
         void OnDrawGizmosSelected()
         {
             Utilities.F.HandlesDrawText(this.transform.position, this.name, Color.yellow);
-        }
-
-        protected override float OnRefreshLoadOrder(Vector3 from)
-        {
-            
-            float dist = Vector3.Distance(from, this.transform.position);
-            if (dist > 100f)
-            {
-                this.gameObject.SetActive(false);
-                return float.PositiveInfinity;
-            }
-
-            return dist * dist;
         }
 
         protected override void OnLoad()
@@ -148,6 +142,32 @@ namespace SanAndreasUnity.Behaviours.World
                 yield return null;
             }
 
+        }
+
+        public EntranceExit FindMatchingEnex()
+        {
+            EntranceExit firstMatchingWithDifferentInterior = null;
+            EntranceExit firstMatchingWithSameInterior = null;
+
+            foreach (var enex in Importing.Items.Item.Enexes)
+            {
+                if (firstMatchingWithDifferentInterior != null && firstMatchingWithSameInterior != null) // both are found
+                    continue;
+
+                if (enex.Name != this.Info.Name)
+                    continue;
+
+                if (enex == this.Info)
+                    continue;
+
+                if (null == firstMatchingWithDifferentInterior && enex.TargetInterior != this.Info.TargetInterior)
+                    firstMatchingWithDifferentInterior = enex;
+
+                if (null == firstMatchingWithSameInterior && enex.TargetInterior == this.Info.TargetInterior)
+                    firstMatchingWithSameInterior = enex;
+            }
+
+            return firstMatchingWithDifferentInterior ?? firstMatchingWithSameInterior;
         }
 
     }

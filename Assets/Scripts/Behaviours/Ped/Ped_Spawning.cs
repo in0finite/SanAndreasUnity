@@ -32,10 +32,6 @@ namespace SanAndreasUnity.Behaviours
 			ped.PlayerModel.StartingPedId = def.Id;
 			ped.EnterVehicleRadius = PedManager.Instance.AIVehicleEnterDistance;
 
-			var destroyer = ped.gameObject.GetOrAddComponent<OutOfRangeDestroyer> ();
-			destroyer.timeUntilDestroyed = PedManager.Instance.AIOutOfRangeTimeout;
-			destroyer.range = PedManager.Instance.AIOutOfRangeDistance;
-
 			if (spawnOnNetwork)
 				Net.NetManager.Spawn(go);
 

@@ -408,6 +408,16 @@ namespace SanAndreasUnity.Utilities
 	        return str[0].ToString().ToUpperInvariant() + str.Substring(1);
         }
 
+        public static string ToLowerIfNotLower(this string str)
+        {
+	        for (int i = 0; i < str.Length; i++)
+	        {
+		        if (!char.IsLower(str[i]))
+			        return str.ToLower();
+	        }
+	        return str;
+        }
+
         public static string GetGameObjectPath(this GameObject obj)
         {
             string path = obj.name;
@@ -574,6 +584,16 @@ namespace SanAndreasUnity.Utilities
 		public static int IndexOf<T> (this IEnumerable<T> enumerable, T value)
 		{
 			return enumerable.FindIndex (elem => elem.Equals (value));
+		}
+
+		public static bool AnyInList<T>(this IList<T> list, System.Predicate<T> predicate)
+		{
+			for (int i = 0; i < list.Count; i++)
+			{
+				if (predicate(list[i]))
+					return true;
+			}
+			return false;
 		}
 
 		public static bool AddIfNotPresent<T> (this List<T> list, T item)
@@ -931,7 +951,17 @@ namespace SanAndreasUnity.Utilities
         }
 
 
-	    public static bool IsInHeadlessMode => SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
+        private static bool? _isInHeadlessModeCached;
+	    public static bool IsInHeadlessMode
+	    {
+		    get
+		    {
+			    if (_isInHeadlessModeCached.HasValue)
+				    return _isInHeadlessModeCached.Value;
+			    _isInHeadlessModeCached = SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null;
+			    return _isInHeadlessModeCached.Value;
+		    }
+	    }
 
         public static bool ScreenHasHighDensity => Application.isMobilePlatform;
 

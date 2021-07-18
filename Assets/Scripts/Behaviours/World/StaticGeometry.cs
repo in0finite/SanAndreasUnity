@@ -8,6 +8,7 @@ using System.Linq;
 using SanAndreasUnity.Importing.RenderWareStream;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Geometry = SanAndreasUnity.Importing.Conversion.Geometry;
 using Profiler = UnityEngine.Profiling.Profiler;
 
@@ -23,39 +24,25 @@ namespace SanAndreasUnity.Behaviours.World
 		        DayTimeManager.Singleton.onHourChanged += OnHourChanged;
 	        }
 
-            return new GameObject().AddComponent<StaticGeometry>();
+	        return Create<StaticGeometry>(Cell.Instance.staticGeometryPrefab);
         }
 
         private static List<StaticGeometry> s_timedObjects = new List<StaticGeometry>();
         public static IReadOnlyList<StaticGeometry> TimedObjects => s_timedObjects;
 
-        protected Instance Instance { get; private set; }
+        public Instance Instance { get; private set; }
 
         public ISimpleObjectDefinition ObjectDefinition { get; private set; }
 
         private bool _canLoad;
 		private bool _isGeometryLoaded = false;
-        private bool _isVisible;
-        private bool _isFading;
+		private bool _isFading;
 
-        public bool IsVisible
-        {
-            get { return _isVisible; }
-            private set
-            {
-                if (_isVisible == value) return;
-
-                _isVisible = value;
-
-                gameObject.SetActive(true);
-                StartCoroutine(Fade());
-
-                if (value && LodChild != null)
-                {
-                    LodChild.Hide();
-                }
-            }
-        }
+		public bool ShouldBeVisibleNow =>
+	        this.IsVisibleInMapSystem
+	        && this.IsVisibleBasedOnCurrentDayTime
+	        && _isGeometryLoaded
+			&& (LodParent == null || !LodParent.ShouldBeVisibleNow);
 
         public StaticGeometry LodParent { get; private set; }
         public StaticGeometry LodChild { get; private set; }
@@ -76,6 +63,8 @@ namespace SanAndreasUnity.Behaviours.World
         private LightSource[] m_greenTrafficLights = null;
         private bool m_hasTrafficLights = false;
         private int m_activeTrafficLightIndex = -1;
+
+        public int NumLightSources => m_lightSources?.Length ?? 0;
 
 
         private void OnEnable()
@@ -107,7 +96,9 @@ namespace SanAndreasUnity.Behaviours.World
 	            s_timedObjects.Add(this);
             }
 
-            Initialize(inst.Position, inst.Rotation);
+            this.Initialize(
+	            Cell.Instance.GetPositionBasedOnInteriorLevel(inst.Position, inst.InteriorLevel),
+	            inst.Rotation);
 
             _canLoad = ObjectDefinition != null;
 
@@ -122,53 +113,10 @@ namespace SanAndreasUnity.Behaviours.World
                 }
             }
 
-            _isVisible = false;
+            this.SetDrawDistance(ObjectDefinition?.DrawDist ?? 0);
+
             gameObject.SetActive(false);
             gameObject.isStatic = true;
-        }
-
-        public bool ShouldBeVisible(Vector3 from)
-        {
-            if (!_canLoad) return false;
-
-            var obj = ObjectDefinition;
-
-            //	if (obj.HasFlag (ObjectFlag.DisableDrawDist))
-            //		return true;
-
-            //    var dist = Vector3.Distance(from, transform.position);
-            var distSquared = Vector3.SqrMagnitude(from - transform.position);
-
-            if (distSquared > Cell.Instance.maxDrawDistance * Cell.Instance.maxDrawDistance)
-                return false;
-
-            if (distSquared > obj.DrawDist * obj.DrawDist)
-                return false;
-
-            if (!HasLoaded || LodParent == null || !LodParent.IsVisible)
-                return true;
-
-            if (!LodParent.ShouldBeVisible(from))
-                return true;
-
-            return false;
-
-            //	return (distSquared <= obj.DrawDist * obj.DrawDist || (obj.DrawDist >= 300 && distSquared < 2560*2560))
-            //        && (!HasLoaded || LodParent == null || !LodParent.IsVisible || !LodParent.ShouldBeVisible(from));
-        }
-
-        protected override float OnRefreshLoadOrder(Vector3 from)
-        {
-            var visible = ShouldBeVisible(from);
-
-            if (!IsVisible)
-            {
-                return visible ? Vector3.SqrMagnitude(from - transform.position) : float.PositiveInfinity;
-            }
-
-            if (!visible) Hide();
-
-            return float.PositiveInfinity;
         }
 
         protected override void OnLoad()
@@ -179,25 +127,18 @@ namespace SanAndreasUnity.Behaviours.World
 			Profiler.BeginSample ("StaticGeometry.OnLoad", this);
 
 
-			// this was previously placed after loading geometry
-			Flags = Enum.GetValues(typeof(ObjectFlag))
-				.Cast<ObjectFlag>()
-				.Where(x => (ObjectDefinition.Flags & x) == x)
-				.Select(x => x.ToString())
-				.ToList();
-
             //var geoms = Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName);
 			//OnGeometryLoaded (geoms);
 
 			// we could start loading collision model here
 			// - we can't, because we don't know the name of collision file until clump is loaded
 
-			Geometry.LoadAsync( ObjectDefinition.ModelName, new string[] {ObjectDefinition.TextureDictionaryName}, (geoms) => {
+			Geometry.LoadAsync( ObjectDefinition.ModelName, new string[] {ObjectDefinition.TextureDictionaryName}, this.LoadPriority, (geoms) => {
 				if(geoms != null)
 				{
 					// we can't load collision model asyncly, because it requires a transform to attach to
 					// but, we can load collision file asyncly
-					Importing.Collision.CollisionFile.FromNameAsync( geoms.Collisions != null ? geoms.Collisions.Name : geoms.Name, (cf) => {
+					Importing.Collision.CollisionFile.FromNameAsync( geoms.Collisions != null ? geoms.Collisions.Name : geoms.Name, this.LoadPriority, (cf) => {
 						OnGeometryLoaded (geoms);
 					});
 				}
@@ -216,13 +157,18 @@ namespace SanAndreasUnity.Behaviours.World
 			var mf = gameObject.AddComponent<MeshFilter>();
 			var mr = gameObject.AddComponent<MeshRenderer>();
 
+			mr.receiveShadows = this.ShouldReceiveShadows();
+			mr.shadowCastingMode = this.ShouldCastShadows() ? ShadowCastingMode.On : ShadowCastingMode.Off;
+
 			mf.sharedMesh = geoms.Geometry[0].Mesh;
-			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(ObjectDefinition.Flags, mat => mat.SetTexture(NoiseTexId, NoiseTex));
+			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(ObjectDefinition.Flags, mat => mat.SetTexture(NoiseTexPropertyId, NoiseTex));
 
 			Profiler.EndSample ();
 
+			Profiler.BeginSample("CreateLights()", this);
 			if (!F.IsInHeadlessMode)
 				this.CreateLights(geoms);
+			Profiler.EndSample();
 
 			geoms.AttachCollisionModel(transform);
 
@@ -237,6 +183,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 			_isGeometryLoaded = true;
 
+			this.UpdateVisibility();
 		}
 
 		private void OnCollisionModelAttached ()
@@ -248,11 +195,18 @@ namespace SanAndreasUnity.Behaviours.World
 		protected override void OnShow()
         {
 			Profiler.BeginSample ("StaticGeometry.OnShow");
-            IsVisible = LodParent == null || !LodParent.IsVisible;
+
+			this.UpdateVisibility();
+
 			Profiler.EndSample ();
         }
 
-        private IEnumerator Fade()
+		protected override void OnUnShow()
+		{
+			this.UpdateVisibility();
+		}
+
+		private IEnumerator FadeCoroutine()
         {
             if (_isFading) yield break;
 
@@ -269,47 +223,110 @@ namespace SanAndreasUnity.Behaviours.World
 				yield break;
 			}
 
-            const float fadeRate = 2f;
+	        float fadeRate = Cell.Instance.fadeRate;
 
             var pb = new MaterialPropertyBlock();
 
 			// continuously change transparency until object becomes fully opaque or fully transparent
 
-            var val = IsVisible ? 0f : -1f;
+            float val = this.ShouldBeVisibleNow ? 0f : -1f;
 
             for (; ; )
             {
-                var dest = IsVisible ? 1f : 0f;
+                float dest = this.ShouldBeVisibleNow ? 1f : 0f;
                 var sign = Math.Sign(dest - val);
                 val += sign * fadeRate * Time.deltaTime;
 
-                if (sign == 0 || sign == 1 && val >= dest || sign == -1 && val <= dest) break;
+                if (sign == 0 || sign == 1 && val >= dest || sign == -1 && val <= dest)
+	                break;
 
-                pb.SetFloat(FadeId, (float)val);
+                pb.SetFloat(FadePropertyId, val);
                 mr.SetPropertyBlock(pb);
-                yield return new WaitForEndOfFrame();
-            }
-
-            mr.SetPropertyBlock(null);
-
-            if (!IsVisible || !IsVisibleBasedOnCurrentDayTime)
-            {
-                gameObject.SetActive(false);
+                yield return null;
             }
 
             _isFading = false;
+
+            mr.SetPropertyBlock(null);
+
+            this.gameObject.SetActive(this.ShouldBeVisibleNow);
         }
 
-        public void Hide()
+        private void UpdateVisibility()
         {
-            IsVisible = false;
+	        bool needsFading = this.NeedsFading();
+
+	        this.gameObject.SetActive(needsFading || this.ShouldBeVisibleNow);
+
+	        if (needsFading)
+	        {
+		        _isFading = false;
+		        this.StopCoroutine(nameof(FadeCoroutine));
+		        this.StartCoroutine(nameof(FadeCoroutine));
+	        }
+
+	        if (LodChild != null)
+		        LodChild.UpdateVisibility();
+        }
+
+        private bool NeedsFading()
+        {
+	        if (F.IsInHeadlessMode)
+		        return false;
+
+	        // always fade, except when parent should be visible, but he is still loading
+
+	        if (LodParent == null)
+		        return true;
+
+	        if (LodParent.IsVisibleInMapSystem && !LodParent._isGeometryLoaded)
+		        return false;
+
+	        return true;
+        }
+
+        private bool ShouldReceiveShadows()
+        {
+	        if (null == this.ObjectDefinition)
+		        return false;
+
+	        var flags = ObjectFlag.Additive // transparent
+	                    | ObjectFlag.NoZBufferWrite // transparent
+	                    | ObjectFlag.DontReceiveShadows;
+
+	        if ((this.ObjectDefinition.Flags & flags) != 0)
+		        return false;
+
+	        if (LodParent != null) // LOD models should not receive shadows
+		        return false;
+
+	        return true;
+        }
+
+        private bool ShouldCastShadows()
+        {
+	        if (null == this.ObjectDefinition)
+		        return false;
+
+	        var flags = ObjectFlag.Additive // transparent
+	                    | ObjectFlag.NoZBufferWrite; // transparent
+
+	        if ((this.ObjectDefinition.Flags & flags) != 0)
+		        return false;
+
+	        // if object is LOD, only cast shadows if it has large draw distance
+	        // - that's because his shadow may be visible from long distance
+	        if (LodParent != null && this.ObjectDefinition.DrawDist < 1000f)
+		        return false;
+
+	        return true;
         }
 
         private static void OnHourChanged()
         {
 	        foreach (var timedObject in s_timedObjects)
 	        {
-		        if (timedObject.IsVisible)
+		        if (timedObject.IsVisibleInMapSystem)
 		        {
 			        timedObject.gameObject.SetActive(timedObject.IsVisibleBasedOnCurrentDayTime);
 		        }
@@ -461,7 +478,7 @@ namespace SanAndreasUnity.Behaviours.World
 	        if (null == m_lightSources)
 		        return;
 
-	        bool isDay = DayTimeManager.Singleton.CurrentTimeHours >= 6 && DayTimeManager.Singleton.CurrentTimeHours <= 20;
+	        bool isDay = DayTimeManager.Singleton.CurrentTimeHours > 6 && DayTimeManager.Singleton.CurrentTimeHours < 18;
 	        var flag = isDay ? TwoDEffect.Light.Flags1.AT_DAY : TwoDEffect.Light.Flags1.AT_NIGHT;
 
 	        for (int i = 0; i < m_lightSources.Length; i++)

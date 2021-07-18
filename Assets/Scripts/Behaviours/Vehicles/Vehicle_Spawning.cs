@@ -111,7 +111,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
 		}
 
-        public static Vehicle Create(VehicleSpawner spawner)
+        public static Vehicle Create(VehicleSpawnMapObject spawner)
         {
             return Create(spawner.Info.CarId, spawner.Info.Colors, spawner.transform.position,
                 spawner.transform.rotation);
@@ -178,10 +178,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             inst.transform.position = position - Vector3.up * inst.AverageWheelHeight;
             inst.transform.localRotation = rotation;
-
-            OutOfRangeDestroyer destroyer = Utilities.F.GetOrAddComponent<OutOfRangeDestroyer>(inst.gameObject);
-            destroyer.timeUntilDestroyed = 5;
-            destroyer.range = 300;
 
             return inst;
         }

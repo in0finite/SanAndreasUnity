@@ -13,39 +13,53 @@ namespace SanAndreasUnity.Utilities
 	/// </remarks>
 	public class ConcurrentQueue<T>
 	{
-		private readonly System.Object queueLock = new System.Object();
-		private readonly Queue<T> queue = new Queue<T>();
+		private readonly System.Object _queueLock = new System.Object();
+		private readonly Queue<T> _queue = new Queue<T>();
 
 		public void Enqueue(T item)
 		{
-			lock (queueLock)
+			lock (_queueLock)
 			{
-				queue.Enqueue(item);
+				_queue.Enqueue(item);
 			}
 		}
 
 		public bool TryDequeue(out T result)
 		{
-			lock (queueLock)
+			lock (_queueLock)
 			{
-				if (queue.Count == 0)
+				if (_queue.Count == 0)
 				{
 					result = default(T);
 					return false;
 				}
 
-				result = queue.Dequeue();
+				result = _queue.Dequeue();
 				return true;
 			}
 		}
 
 		public T[] DequeueAll()
 		{
-			lock (queueLock)
+			lock (_queueLock)
 			{
-				T[] copy = queue.ToArray();
-				queue.Clear();
+				T[] copy = _queue.ToArray();
+				_queue.Clear();
 				return copy;
+			}
+		}
+
+		public int DequeueToQueue(Queue<T> collection, int maxNumItems)
+		{
+			lock (_queueLock)
+			{
+				int numAdded = 0;
+				while (_queue.Count > 0 && numAdded < maxNumItems)
+				{
+					collection.Enqueue(_queue.Dequeue());
+					numAdded++;
+				}
+				return numAdded;
 			}
 		}
 
@@ -53,9 +67,9 @@ namespace SanAndreasUnity.Utilities
 		{
 			get
 			{
-				lock (queueLock)
+				lock (_queueLock)
 				{
-					return queue.Count;
+					return _queue.Count;
 				}
 			}
 		}

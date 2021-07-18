@@ -1,41 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using SanAndreasUnity.Behaviours.World;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
-using UnityEngine.Profiling;
+using Object = UnityEngine.Object;
+using Profiler = UnityEngine.Profiling.Profiler;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public abstract class MapObject : MonoBehaviour, IComparable<MapObject>
+    public abstract class MapObject : MonoBehaviour
     {
         private static Texture2D _sNoiseTex;
 
-        private static bool ShouldGenerateNoiseTex
-        {
-            get { return _sNoiseTex == null || _sNoiseTex.width != Screen.width || _sNoiseTex.height != Screen.height; }
-        }
+        private static bool ShouldGenerateNoiseTex => _sNoiseTex == null || _sNoiseTex.width != Screen.width || _sNoiseTex.height != Screen.height;
 
         private static int _sBreakableLayer = -1;
+        public static int BreakableLayer => _sBreakableLayer == -1 ? _sBreakableLayer = LayerMask.NameToLayer("Breakable") : _sBreakableLayer;
 
-        public static int BreakableLayer
-        {
-            get { return _sBreakableLayer == -1 ? _sBreakableLayer = LayerMask.NameToLayer("Breakable") : _sBreakableLayer; }
-        }
+        private static int _sNoiseTexPropertyId = -1;
+        protected static int NoiseTexPropertyId => _sNoiseTexPropertyId == -1 ? _sNoiseTexPropertyId = Shader.PropertyToID("_NoiseTex") : _sNoiseTexPropertyId;
 
-        private static int _sNoiseTexId = -1;
-
-        protected static int NoiseTexId
-        {
-            get { return _sNoiseTexId == -1 ? _sNoiseTexId = Shader.PropertyToID("_NoiseTex") : _sNoiseTexId; }
-        }
-
-        private static int _sFadeId = -1;
-
-        protected static int FadeId
-        {
-            get { return _sFadeId == -1 ? _sFadeId = Shader.PropertyToID("_Fade") : _sFadeId; }
-        }
+        private static int _sFadePropertyId = -1;
+        protected static int FadePropertyId => _sFadePropertyId == -1 ? _sFadePropertyId = Shader.PropertyToID("_Fade") : _sFadePropertyId;
 
         private static void GenerateNoiseTex()
         {
@@ -74,58 +58,68 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        private static readonly System.Random _sRandom = new System.Random(0x54e03b19);
+        public bool IsVisibleInMapSystem { get; private set; } = false;
+
+        public float LoadPriority { get; private set; } = float.PositiveInfinity;
 
         private bool _loaded;
+        public bool HasLoaded => _loaded;
 
-        public bool HasLoaded { get { return _loaded; } }
+        public Vector3 CachedPosition { get; private set; }
 
-        public List<String> Flags;
-
-        public Vector2 CellPos { get; private set; }
-
-        public int RandomInt { get; private set; }
-
-        internal float LoadOrder { get; private set; }
+        protected static T Create<T>(GameObject prefab)
+            where T : MapObject
+        {
+            GameObject go = Object.Instantiate(prefab, Cell.Instance.transform);
+            return go.GetComponent<T>();
+        }
 
         protected void Initialize(Vector3 pos, Quaternion rot)
         {
-            transform.position = pos;
-            transform.localRotation = rot;
+            this.transform.position = pos;
+            this.transform.localRotation = rot;
 
-            CellPos = new Vector2(pos.x, pos.z);
-
-            RandomInt = _sRandom.Next();
+            this.CachedPosition = pos;
 
             _loaded = false;
         }
 
-        public bool RefreshLoadOrder(Vector3 from)
+        public void SetDrawDistance(float f)
         {
-			Profiler.BeginSample ("MapObject.RefreshLoadOrder", this);
-            LoadOrder = OnRefreshLoadOrder(from);
-			Profiler.EndSample ();
-            return !float.IsPositiveInfinity(LoadOrder);
+
         }
 
-        protected abstract float OnRefreshLoadOrder(Vector3 from);
-
-        public void Show()
+        public void Show(float loadPriority)
         {
+            if (this.IsVisibleInMapSystem)
+                return;
+
+            this.IsVisibleInMapSystem = true;
+
+            this.LoadPriority = loadPriority;
+
             if (!_loaded)
             {
 				_loaded = true;
                 
 				Profiler.BeginSample ("OnLoad", this);
-				OnLoad();
+				this.OnLoad();
 				Profiler.EndSample ();
             }
 
 			Profiler.BeginSample ("OnShow", this);
-            OnShow();
+            this.OnShow();
 			Profiler.EndSample ();
+        }
 
-            LoadOrder = float.PositiveInfinity;
+        public void UnShow()
+        {
+            if (!this.IsVisibleInMapSystem)
+                return;
+
+            this.IsVisibleInMapSystem = false;
+
+            this.OnUnShow();
         }
 
         protected virtual void OnLoad()
@@ -134,11 +128,12 @@ namespace SanAndreasUnity.Behaviours
 
         protected virtual void OnShow()
         {
+            this.gameObject.SetActive(true);
         }
 
-        public int CompareTo(MapObject other)
+        protected virtual void OnUnShow()
         {
-            return LoadOrder > other.LoadOrder ? 1 : LoadOrder == other.LoadOrder ? 0 : -1;
+            this.gameObject.SetActive(false);
         }
     }
 }

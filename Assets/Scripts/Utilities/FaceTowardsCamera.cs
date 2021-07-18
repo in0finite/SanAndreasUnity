@@ -11,10 +11,10 @@ namespace SanAndreasUnity.Utilities
             var cam = Camera.current;
             if (cam != null)
             {
-                Vector3 f = -cam.transform.forward;
+                Quaternion quaternion = Quaternion.LookRotation(-cam.transform.forward, cam.transform.up);
                 for (int i = 0; i < this.transformsToFace.Length; i++)
                 {
-                    this.transformsToFace[i].forward = f;
+                    this.transformsToFace[i].rotation = quaternion;
                 }
             }
         }

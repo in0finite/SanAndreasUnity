@@ -34,6 +34,7 @@ GameObject:
   - component: {fileID: 4992771638147279046}
   - component: {fileID: 2664216849870465946}
   - component: {fileID: 3560199336842227889}
+  - component: {fileID: 7933397811870977063}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -156,12 +157,20 @@ MonoBehaviour:
   groundFindingIgnoredLayerMask:
     serializedVersion: 2
     m_Bits: 31286
+  playerPedFocusPointParameters:
+    hasRevealRadius: 0
+    revealRadius: 0
+    timeToKeepRevealingAfterRemoved: 3
+  npcPedFocusPointParameters:
+    hasRevealRadius: 1
+    revealRadius: 150
+    timeToKeepRevealingAfterRemoved: 3
   cameraDistanceFromPed: 4
   minCameraDistanceFromPed: 2
   maxCameraDistanceFromPed: 30
   cameraRaycastIgnoredLayerMask:
     serializedVersion: 2
-    m_Bits: 31542
+    m_Bits: 64310
   legAndArmDamageMultiplier: 0.8
   stomachAndChestDamageMultiplier: 1
   headDamageMultiplier: 4
@@ -177,8 +186,6 @@ MonoBehaviour:
   healthBackgroundColor: {r: 0.5, g: 0, b: 0, a: 1}
   AIStoppingDistance: 3
   AIVehicleEnterDistance: 1.25
-  AIOutOfRangeTimeout: 5
-  AIOutOfRangeDistance: 250
   pedSyncRate: 20
   ragdollPrefab: {fileID: 2141754834917738923, guid: 14d22e60f4926f64cbd36f393fe11b9a,
     type: 3}
@@ -215,6 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be87ebc3b426867448164f659f750671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxTimePerFrameMs: 10
 --- !u!114 &114463745687567314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,6 +302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serverChatNick: <color=green>Server</color>
+  maxChatMessageLength: 50
 --- !u!114 &7442340376164908290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -452,3 +461,17 @@ MonoBehaviour:
   pedLimitInterval: 2
   weaponLimitInterval: 1
   maxVehiclesPerPlayer: 3
+--- !u!114 &7933397811870977063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297494511425690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dd4217c14fd11f4e8b46fe4a95f7aa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _defaultMaxDrawDistance: 1500
+  _defaultMaxDrawDistanceOnMobile: 1000

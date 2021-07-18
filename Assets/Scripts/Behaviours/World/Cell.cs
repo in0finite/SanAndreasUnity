@@ -1,60 +1,116 @@
-﻿using SanAndreasUnity.Behaviours.Vehicles;
+﻿using System;
+using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Placements;
 using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
-
-//using Facepunch.Networking;
+using Profiler = UnityEngine.Profiling.Profiler;
 
 namespace SanAndreasUnity.Behaviours.World
 {
     public class Cell : MonoBehaviour
     {
-        private Stopwatch _timer;
-        private List<Division> _leaves;
-
-		private Dictionary<Instance, StaticGeometry> m_insts;
+	    private Dictionary<Instance, StaticGeometry> m_insts;
+        public int NumStaticGeometries => m_insts.Count;
 		private MapObject[] m_cars;
         private List<EntranceExitMapObject> m_enexes;
 
-        public Division RootDivision { get; private set; }
-
         private List<int> CellIds = Enumerable.Range(0, 19).ToList();
 
-        public bool HasExterior => this.CellIds.Contains(0);
+        public bool HasMainExterior => this.CellIds.Contains(0);
 
         public Camera PreviewCamera;
 
-		public List<Transform> focusPoints = new List<Transform> ();
+        public struct FocusPointInfo
+        {
+	        public long id;
+	        public Transform transform;
+	        public float timeToKeepRevealingAfterRemoved;
+	        public float timeWhenRemoved;
+	        public bool hasRevealRadius;
+        }
+
+		private List<FocusPointInfo> _focusPoints = new List<FocusPointInfo>();
+		public IReadOnlyList<FocusPointInfo> FocusPoints => _focusPoints;
+
+		private List<FocusPointInfo> _focusPointsToRemoveAfterTimeout = new List<FocusPointInfo>();
+
+		private struct AreaWithDistance
+		{
+			public WorldSystem<MapObject>.Area area;
+			public float distance;
+		}
+
+		private class AreaWithDistanceComparer : IComparer<AreaWithDistance>
+		{
+			public int Compare(AreaWithDistance a, AreaWithDistance b)
+			{
+				if (a.distance < b.distance)
+					return -1;
+
+				if (a.distance > b.distance)
+					return 1;
+
+				// solve potential problem that 2 areas have same distance
+				// - these areas may not be equal, they may belong to different world systems and have same index,
+				// therefore their distances will be equal
+				// - by comparing their ids, we are sure that comparer is always deterministic
+				return a.area.Id.CompareTo(b.area.Id);
+			}
+		}
+
+		private readonly SortedSet<AreaWithDistance> _areasToUpdate = new SortedSet<AreaWithDistance>(new AreaWithDistanceComparer());
+		private readonly AreaWithDistance[] _bufferOfAreasToUpdate = new AreaWithDistance[64];
+		private int _indexOfBufferOfAreasToUpdate = 0;
+		private int _numElementsInBufferOfAreasToUpdate = 0;
+
+		public ushort maxTimeToUpdatePerFrameMs = 10;
+
+		private System.Diagnostics.Stopwatch _updateTimeLimitStopwatch = new System.Diagnostics.Stopwatch();
 
         public Water Water;
 
 		public static Cell Instance { get ; private set; }
 
-        // Statistics
+		public float divisionRefreshDistanceDelta = 20;
 
-        private int totalNumObjects = 0;
-        private int numLeavesLoadedThisFrame = 0;
-        private int numObjectsLoadedThisFrame = 0;
-        private float[] measuredTimes = new float[3];
-        private int numDivisionsUpdatedLoadOrder = 0;
-        private int numMapObjectsUpdatedLoadOrder = 0;
-        private Division containingDivision = null;
+		private float _maxDrawDistance = 0;
+		public float MaxDrawDistance
+		{
+			get => _maxDrawDistance;
+			set
+			{
+				if (_maxDrawDistance == value)
+					return;
 
-        public float divisionLoadOrderDistanceFactor = 16;
+				_maxDrawDistance = value;
 
-        public float divisionRefreshDistanceDelta = 20;
+				this.OnMaxDrawDistanceChanged();
+			}
+		}
 
-		[Range(0.1f, 3f)]
-		public float divisionsUpdateInterval = 0.3f;
+        public float[] drawDistancesPerLayers = new float[] { 301, 801, 1501 };
 
-        public float maxDrawDistance = 500;
+        private WorldSystemWithDistanceLevels<MapObject> _worldSystem;
+        public WorldSystemWithDistanceLevels<MapObject> WorldSystem => _worldSystem;
+
+        public uint yWorldSystemSize = 25000;
+        public ushort yWorldSystemNumAreas = 3;
+
+        public ushort[] xzWorldSystemNumAreasPerDrawDistanceLevel = { 100, 100, 100 };
+
+        public float interiorHeightOffset = 5000f;
+
+        public float fadeRate = 2f;
 
         public bool loadParkedVehicles = true;
-        
+
+        public GameObject mapObjectActivatorPrefab;
+
+        public GameObject staticGeometryPrefab;
+
         public GameObject enexPrefab;
 
         public GameObject lightSourcePrefab;
@@ -74,23 +130,9 @@ namespace SanAndreasUnity.Behaviours.World
 			
         }
 
-        private void Start()
-        {
-            //InvokeRepeating("UpdateDivisions", 0f, 0.1f);
-			StartCoroutine( this.UpdateDivisionsCoroutine () );
-        }
 
-
-		internal void CreateStaticGeometry ()
+        internal void CreateStaticGeometry ()
 		{
-			if (RootDivision == null)
-			{
-				RootDivision = Division.Create(transform);
-				RootDivision.SetBounds(
-					new Vector2(-3000f, -3000f),
-					new Vector2(+3000f, +3000f));
-			}
-
 			var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
 
 			m_insts = new Dictionary<Instance,StaticGeometry> (48 * 1024);
@@ -101,14 +143,25 @@ namespace SanAndreasUnity.Behaviours.World
 
 			UnityEngine.Debug.Log("Num static geometries " + m_insts.Count);
 
-			totalNumObjects = m_insts.Count;
+			uint worldSize = 6000;
+
+			_worldSystem = new WorldSystemWithDistanceLevels<MapObject>(
+				this.drawDistancesPerLayers,
+				this.xzWorldSystemNumAreasPerDrawDistanceLevel.Select(_ => new WorldSystemParams { worldSize = worldSize, numAreasPerAxis = _ }).ToArray(),
+				Enumerable.Range(0, this.drawDistancesPerLayers.Length).Select(_ => new WorldSystemParams { worldSize = this.yWorldSystemSize, numAreasPerAxis = this.yWorldSystemNumAreas }).ToArray(),
+				this.OnAreaChangedVisibility);
 		}
 
 		internal void InitStaticGeometry ()
 		{
 			foreach (var inst in m_insts)
 			{
-				inst.Value.Initialize(inst.Key, m_insts);
+				var staticGeometry = inst.Value;
+				staticGeometry.Initialize(inst.Key, m_insts);
+				_worldSystem.AddObjectToArea(
+					staticGeometry.transform.position,
+					staticGeometry.ObjectDefinition?.DrawDist ?? 0,
+					staticGeometry);
 			}
 		}
 
@@ -117,7 +170,7 @@ namespace SanAndreasUnity.Behaviours.World
 			if (loadParkedVehicles)
 			{
 				var parkedVehicles = Item.GetPlacements<ParkedVehicle> (CellIds.ToArray ());
-				m_cars = parkedVehicles.Select (x => VehicleSpawner.Create (x))
+				m_cars = parkedVehicles.Select (x => VehicleSpawnMapObject.Create (x))
 					.Cast<MapObject> ()
 					.ToArray ();
 
@@ -130,25 +183,13 @@ namespace SanAndreasUnity.Behaviours.World
             m_enexes = new List<EntranceExitMapObject>(256);
             foreach(var enex in Item.Enexes.Where(enex => this.CellIds.Contains(enex.TargetInterior)))
             {
-                m_enexes.Add(EntranceExitMapObject.Create(enex));
+	            var enexComponent = EntranceExitMapObject.Create(enex);
+	            m_enexes.Add(enexComponent);
+	            _worldSystem.AddObjectToArea(enexComponent.transform.position, 100f, enexComponent);
             }
         }
 
-		internal void AddMapObjectsToDivisions ()
-		{
-			var enumerable = m_insts.Values.Cast<MapObject> ();
-
-			if (m_cars != null)
-				enumerable = enumerable.Concat (m_cars);
-
-            if (m_enexes != null)
-                enumerable = enumerable.Concat(m_enexes);
-
-			RootDivision.AddRange (enumerable);
-
-		}
-
-		internal void LoadWater ()
+        internal void LoadWater ()
 		{
 			if (Water != null)
 			{
@@ -161,29 +202,116 @@ namespace SanAndreasUnity.Behaviours.World
 			// set layer recursively for all game objects
 			//	this.gameObject.SetLayerRecursive( this.gameObject.layer );
 
-			_timer = new Stopwatch();
-			_leaves = RootDivision.ToList();
+		}
 
+
+		private void OnAreaChangedVisibility(WorldSystem<MapObject>.Area area, bool visible)
+		{
+			if (null == area.ObjectsInside || area.ObjectsInside.Count == 0)
+				return;
+
+			Profiler.BeginSample("OnAreaChangedVisibility");
+
+			Vector3 areaCenter = area.WorldSystem.GetAreaCenter(area);
+
+			float minSqrDistance = area.FocusPointsThatSeeMe?.Min(f => (areaCenter - f.Position).sqrMagnitude) ?? float.PositiveInfinity;
+
+			_areasToUpdate.Add(new AreaWithDistance
+			{
+				area = area,
+				distance = minSqrDistance,
+			});
+
+			Profiler.EndSample();
+		}
+
+		public void RegisterFocusPoint(Transform tr, FocusPoint.Parameters parameters)
+		{
+			if (!_focusPoints.Exists(f => f.transform == tr))
+			{
+				float revealRadius = parameters.hasRevealRadius ? parameters.revealRadius : this.MaxDrawDistance;
+				long registeredFocusPointId = _worldSystem.RegisterFocusPoint(revealRadius, tr.position);
+				_focusPoints.Add(new FocusPointInfo
+				{
+					id = registeredFocusPointId,
+					transform = tr,
+					timeToKeepRevealingAfterRemoved = parameters.timeToKeepRevealingAfterRemoved,
+					hasRevealRadius = parameters.hasRevealRadius,
+				});
+			}
+		}
+
+		public void UnRegisterFocusPoint(Transform tr)
+		{
+			int index = _focusPoints.FindIndex(f => f.transform == tr);
+			if (index < 0)
+				return;
+
+			// maybe we could just set transform to null, so it gets removed during next update ?
+
+			var focusPoint = _focusPoints[index];
+
+			if (focusPoint.timeToKeepRevealingAfterRemoved > 0)
+			{
+				focusPoint.timeWhenRemoved = Time.time;
+				_focusPointsToRemoveAfterTimeout.Add(focusPoint);
+				_focusPoints.RemoveAt(index);
+				return;
+			}
+
+			_worldSystem.UnRegisterFocusPoint(focusPoint.id);
+			_focusPoints.RemoveAt(index);
+		}
+
+		private void OnMaxDrawDistanceChanged()
+		{
+			if (null == _worldSystem)
+				return;
+
+			for (int i = 0; i < _focusPoints.Count; i++)
+			{
+				var focusPoint = _focusPoints[i];
+				if (!focusPoint.hasRevealRadius)
+				{
+					_worldSystem.FocusPointChangedRadius(focusPoint.id, this.MaxDrawDistance);
+				}
+			}
 		}
 
 
         public IEnumerable<EntranceExit> GetEnexesFromLoadedInteriors()
         {
-            int[] loadedInteriors = this.CellIds.Where(id => id != 0 && id != 13).ToArray();
+            int[] loadedInteriors = this.CellIds.Where(id => !IsExteriorLevel(id)).ToArray();
             foreach(var enex in Importing.Items.Item.Enexes.Where(enex => loadedInteriors.Contains(enex.TargetInterior)))
             {
                 yield return enex;
             }
         }
 
-        public static TransformDataStruct GetEnexExitTransform(EntranceExit enex)
+        public TransformDataStruct GetEnexExitTransform(EntranceExit enex)
         {
-            return new TransformDataStruct(enex.ExitPos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.ExitAngle, 0f));
+            return new TransformDataStruct(
+	            this.GetPositionBasedOnInteriorLevel(enex.ExitPos + Vector3.up * 0.2f, enex.TargetInterior),
+	            Quaternion.Euler(0f, enex.ExitAngle, 0f));
         }
 
-        public static TransformDataStruct GetEnexEntranceTransform(EntranceExit enex)
+        public TransformDataStruct GetEnexEntranceTransform(EntranceExit enex)
         {
-            return new TransformDataStruct(enex.EntrancePos + Vector3.up * 0.2f, Quaternion.Euler(0f, enex.EntranceAngle, 0f));
+            return new TransformDataStruct(
+	            this.GetPositionBasedOnInteriorLevel(enex.EntrancePos + Vector3.up * 0.2f, enex.TargetInterior),
+	            Quaternion.Euler(0f, enex.EntranceAngle, 0f));
+        }
+
+        public static bool IsExteriorLevel(int interiorLevel)
+        {
+	        return interiorLevel == 0 || interiorLevel == 13;
+        }
+
+        public Vector3 GetPositionBasedOnInteriorLevel(Vector3 originalPos, int interiorLevel)
+        {
+	        if (!IsExteriorLevel(interiorLevel))
+		        originalPos.y += this.interiorHeightOffset;
+	        return originalPos;
         }
 
 
@@ -193,166 +321,135 @@ namespace SanAndreasUnity.Behaviours.World
 			if (!Loader.HasLoaded)
 				return;
 
-			//this.Setup ();
+			_updateTimeLimitStopwatch.Restart();
 
-            if (null == _leaves)
-                return;
+			float timeNow = Time.time;
 
-            _timer.Reset();
-            _timer.Start();
-            numLeavesLoadedThisFrame = 0;
-            numObjectsLoadedThisFrame = 0;
+			UnityEngine.Profiling.Profiler.BeginSample("Update focus points");
+            this._focusPoints.RemoveAll(f =>
+            {
+	            if (null == f.transform)
+	            {
+		            if (f.timeToKeepRevealingAfterRemoved > 0f)
+		            {
+			            f.timeWhenRemoved = timeNow;
+			            _focusPointsToRemoveAfterTimeout.Add(f);
+			            return true;
+		            }
 
-            this.focusPoints.RemoveDeadObjects();
-            if (this.focusPoints.Count > 0)
+		            UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.UnRegisterFocusPoint()");
+		            _worldSystem.UnRegisterFocusPoint(f.id);
+		            UnityEngine.Profiling.Profiler.EndSample();
+		            return true;
+	            }
+
+	            _worldSystem.FocusPointChangedPosition(f.id, f.transform.position);
+
+	            return false;
+            });
+            UnityEngine.Profiling.Profiler.EndSample();
+
+            bool hasElementToRemove = false;
+            _focusPointsToRemoveAfterTimeout.ForEach(_ =>
+            {
+	            if (timeNow - _.timeWhenRemoved > _.timeToKeepRevealingAfterRemoved)
+	            {
+		            hasElementToRemove = true;
+		            UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.UnRegisterFocusPoint()");
+		            _worldSystem.UnRegisterFocusPoint(_.id);
+		            UnityEngine.Profiling.Profiler.EndSample();
+	            }
+            });
+
+            if (hasElementToRemove)
+	            _focusPointsToRemoveAfterTimeout.RemoveAll(_ => timeNow - _.timeWhenRemoved > _.timeToKeepRevealingAfterRemoved);
+
+            if (this._focusPoints.Count > 0)
             {
                 // only update divisions loading if there are focus points - because otherwise, 
                 // load order of divisions is not updated
-                this.UpdateDivisionsLoading();
+
             }
 
-            measuredTimes[2] = (float)_timer.Elapsed.TotalMilliseconds;
+            UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.Update()");
+            _worldSystem.Update();
+            UnityEngine.Profiling.Profiler.EndSample();
 
-        }
+            Profiler.BeginSample("UpdateAreasLoop");
 
-        void UpdateDivisionsLoading()
-        {
-            foreach (var div in _leaves)
+            while (true)
             {
-                if (float.IsPositiveInfinity(div.LoadOrder))
-                    break;
+	            if (_areasToUpdate.Count == 0 && _numElementsInBufferOfAreasToUpdate == 0)
+		            break;
 
-                numObjectsLoadedThisFrame += div.LoadWhile(() => _timer.Elapsed.TotalSeconds < 1d / 60d);
+	            if (_updateTimeLimitStopwatch.ElapsedMilliseconds >= this.maxTimeToUpdatePerFrameMs)
+		            break;
 
-                if (_timer.Elapsed.TotalSeconds >= 1d / 60d)
-                {
-                    //	break;
-                }
-                else
-                {
-                    numLeavesLoadedThisFrame++;
-                }
-            }
-        }
+	            /*_areasToUpdate.CopyTo();
+	            _areasToUpdate.Clear(); // very good
+	            _areasToUpdate.ExceptWith(); // seems good
+	            _areasToUpdate.UnionWith(); // catastrophic*/
 
-		System.Collections.IEnumerator UpdateDivisionsCoroutine ()
-		{
+	            if (_numElementsInBufferOfAreasToUpdate == 0)
+	            {
+		            Profiler.BeginSample("TakeFromSortedSet");
 
-			while (true)
-			{
-				// wait 100 ms
-				float timePassed = 0;
-				while (timePassed < this.divisionsUpdateInterval)
-				{
-					yield return null;
-					timePassed += Time.unscaledDeltaTime;
-				}
+		            // we processed all areas from buffer
+		            // take some more from SortedSet
+		            int numToCopy = Mathf.Min(_bufferOfAreasToUpdate.Length, _areasToUpdate.Count);
+		            _areasToUpdate.CopyTo(_bufferOfAreasToUpdate, 0, numToCopy);
 
-				F.RunExceptionSafe (() => this.UpdateDivisions ());
+		            for (int i = 0; i < numToCopy; i++)
+		            {
+			            if (!_areasToUpdate.Remove(_bufferOfAreasToUpdate[i]))
+				            throw new Exception($"Failed to remove area {_bufferOfAreasToUpdate[i].area.Id} from SortedSet");
+		            }
 
-			}
+		            //_areasToUpdate.ExceptWith(new System.ArraySegment<AreaWithDistance>(_bufferOfAreasToUpdate, 0, numToCopy));
 
-		}
+		            _indexOfBufferOfAreasToUpdate = 0;
+		            _numElementsInBufferOfAreasToUpdate = numToCopy;
 
-        private void UpdateDivisions()
-        {
-			if (!Loader.HasLoaded)
-				return;
-			
-            if (_leaves == null) return;
+		            Profiler.EndSample();
+	            }
 
-			this.focusPoints.RemoveAll (t => null == t);
+	            // process 1 area from buffer
 
-			if (this.focusPoints.Count < 1)
-				return;
+	            var areaWithDistance = _bufferOfAreasToUpdate[_indexOfBufferOfAreasToUpdate];
+	            _indexOfBufferOfAreasToUpdate++;
+	            _numElementsInBufferOfAreasToUpdate--;
 
-            numDivisionsUpdatedLoadOrder = 0;
-            numMapObjectsUpdatedLoadOrder = 0;
-            containingDivision = null;
+	            this.UpdateArea(areaWithDistance);
 
-            _timer.Reset();
-            _timer.Start();
-
-			List<Vector3> positions = this.focusPoints.Select (f => f.position).ToList ();
-
-			bool toLoad = false; // _leaves.Aggregate(false, (current, leaf) => current | leaf.RefreshLoadOrder(pos));
-            
-			UnityEngine.Profiling.Profiler.BeginSample ("Update divisions", this);
-
-			foreach (Division leaf in _leaves)
-            {
-				Vector3 pos = leaf.GetClosestPosition (positions);
-
-                int count = 0;
-                toLoad |= leaf.RefreshLoadOrder(pos, out count);
-                if (count > 0)
-                {
-                    numDivisionsUpdatedLoadOrder++;
-                    numMapObjectsUpdatedLoadOrder += count;
-                }
-
-                if (null == containingDivision && leaf.Contains(pos))
-                {
-                    containingDivision = leaf;
-                }
             }
 
-			UnityEngine.Profiling.Profiler.EndSample ();
+            Profiler.EndSample();
 
-            measuredTimes[0] = (float)_timer.Elapsed.TotalMilliseconds;
-
-            if (!toLoad) return;
-
-            _timer.Reset();
-            _timer.Start();
-			UnityEngine.Profiling.Profiler.BeginSample ("Sort leaves", this);
-            _leaves.Sort();
-			UnityEngine.Profiling.Profiler.EndSample ();
-            measuredTimes[1] = (float)_timer.Elapsed.TotalMilliseconds;
         }
 
-        /*
-        private static Rect windowRect = new Rect(10, 10, 250, 330);
-        private const int windowID = 0;
-
-        private void OnGUI()
+        void UpdateArea(AreaWithDistance areaWithDistance)
         {
-            if (!Loader.HasLoaded)
-                return;
+	        var area = areaWithDistance.area;
+	        bool visible = area.WasVisibleInLastUpdate;
 
-            if (!PlayerController._showMenu)
-                return;
+	        for (int i = 0; i < area.ObjectsInside.Count; i++)
+	        {
+		        var obj = area.ObjectsInside[i];
 
-            windowRect = GUILayout.Window(windowID, windowRect, showWindow, "World statistics");
-        }
-        */
+		        if (visible == obj.IsVisibleInMapSystem)
+			        continue;
 
-        public void showWindow(int windowID)
-        {
-            GUILayout.Label("draw distance " + this.maxDrawDistance);
-            GUILayout.Label("num focus points " + this.focusPoints.Count);
-            GUILayout.Label("total num divisions " + (null == _leaves ? 0 : _leaves.Count));
-            GUILayout.Label("total num objects " + totalNumObjects);
-            GUILayout.Label("geometry parts loaded " + SanAndreasUnity.Importing.Conversion.Geometry.NumGeometryPartsLoaded);
-            GUILayout.Label("num TOBJ objects " + StaticGeometry.TimedObjects.Count);
-            GUILayout.Label("num active objects with lights " + StaticGeometry.ActiveObjectsWithLights.Count);
-            GUILayout.Label("num objects in current division " + (containingDivision != null ? containingDivision.NumObjects : 0));
-            GUILayout.Label("num divisions updated " + numDivisionsUpdatedLoadOrder);
-            GUILayout.Label("num objects updated " + numMapObjectsUpdatedLoadOrder);
-            GUILayout.Label("num divisions loading this frame " + numLeavesLoadedThisFrame);
-            GUILayout.Label("num objects loading this frame " + numObjectsLoadedThisFrame);
+		        F.RunExceptionSafe(() =>
+		        {
+			        if (visible)
+			        {
+				        obj.Show(areaWithDistance.distance);
+			        }
+			        else
+				        obj.UnShow();
+		        });
+	        }
 
-            GUILayout.Space(10);
-
-            string[] timeNames = new string[] { "refresh load order ", "sort ", "load / update display " };
-            int i = 0;
-            foreach (float time in measuredTimes)
-            {
-                GUILayout.Label(timeNames[i] + Mathf.RoundToInt(time));
-                i++;
-            }
-
-            GUI.DragWindow();
         }
     }
 }

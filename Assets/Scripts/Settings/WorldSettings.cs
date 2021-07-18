@@ -1,41 +1,44 @@
-﻿using System.Collections.Generic;
+﻿using SanAndreasUnity.Behaviours.World;
 using UnityEngine;
-using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.UI;
 
-namespace SanAndreasUnity.Settings {
+namespace SanAndreasUnity.Settings
+{
+	public class WorldSettings : MonoBehaviour
+	{
+		private static WorldSettings Singleton { get; set; }
 
-	public class WorldSettings : MonoBehaviour {
+		private float _drawDistanceToApply = 0f;
 
-		static float s_maxDrawDistance = 500f;
-
-		OptionsWindow.FloatInput m_maxDrawDistanceInput = new OptionsWindow.FloatInput() {
+		private OptionsWindow.FloatInput m_maxDrawDistanceInput = new OptionsWindow.FloatInput
+		{
 			description = "Max draw distance",
-			minValue = 50,
-			maxValue = 1000,
-			getValue = () => Cell.Instance != null ? Cell.Instance.maxDrawDistance : s_maxDrawDistance,
-			setValue = (value) => { s_maxDrawDistance = value; if (Cell.Instance != null) Cell.Instance.maxDrawDistance = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
+			minValue = WorldManager.MinMaxDrawDistance,
+			maxValue = WorldManager.MaxMaxDrawDistance,
+			getValue = () => WorldManager.Singleton.MaxDrawDistance,
+			setValue = value => { Singleton.OnDrawDistanceChanged(value); },
+			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 
 
 		void Awake ()
 		{
+			Singleton = this;
+
 			OptionsWindow.RegisterInputs ("WORLD", m_maxDrawDistanceInput);
-			UnityEngine.SceneManagement.SceneManager.activeSceneChanged += (s1, s2) => OnActiveSceneChanged();
 		}
 
-		void OnActiveSceneChanged()
+		void OnDrawDistanceChanged(float newValue)
 		{
-			// apply settings
-
-			// we need to find Cell with FindObjectOfType(), because it's Awake() method may have not been called yet
-			Cell cell = Object.FindObjectOfType<Cell>();
-			if (cell != null)
-				cell.maxDrawDistance = s_maxDrawDistance;
-			
+			this.CancelInvoke(nameof(ChangeDrawDistanceDelayed));
+			_drawDistanceToApply = newValue;
+			this.Invoke(nameof(ChangeDrawDistanceDelayed), 0.2f);
 		}
 
+		void ChangeDrawDistanceDelayed()
+		{
+			WorldManager.Singleton.MaxDrawDistance = _drawDistanceToApply;
+		}
 	}
 
 }

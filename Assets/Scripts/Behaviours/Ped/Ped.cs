@@ -115,7 +115,7 @@ namespace SanAndreasUnity.Behaviours
 				this.raycastDistance = raycastDistance;
 			}
 
-			public static FindGroundParams DefaultBasedOnLoadedWorld => new FindGroundParams((null == Cell.Instance || Cell.Instance.HasExterior));
+			public static FindGroundParams DefaultBasedOnLoadedWorld => new FindGroundParams((null == Cell.Instance || Cell.Instance.HasMainExterior));
 
 		}
 
@@ -173,17 +173,14 @@ namespace SanAndreasUnity.Behaviours
 			{
 				if (NetStatus.IsServer)
 				{
-					// only register if this ped is owned by some player
-					if (Player.GetOwningPlayer(this) != null)
-						this.Cell.focusPoints.AddIfNotPresent(this.transform);
+					if (this.PlayerOwner != null)
+						this.Cell.RegisterFocusPoint(this.transform, PedManager.Instance.playerPedFocusPointParameters);
+					else
+						this.Cell.RegisterFocusPoint(this.transform, PedManager.Instance.npcPedFocusPointParameters);
 				}
 				else if (NetStatus.IsClientActive())
 				{
-					// only register if this ped is owned by local player
-					// TODO: IsControlledByLocalPlayer may not return true, because syncvar in Player script may
-					// not be updated yet
-					if (this.IsControlledByLocalPlayer)
-						this.Cell.focusPoints.AddIfNotPresent(this.transform);
+					// no need to register on client, because camera will be used as a focus point
 				}
 			}
 
@@ -689,9 +686,7 @@ namespace SanAndreasUnity.Behaviours
 					}
 					else
 					{
-						var matchingEnexes = Importing.Items.Item.Enexes.Where(e => e.Name == enex.Info.Name && e != enex.Info);
-						Debug.LogFormat("Matching enexes:\n{0}", string.Join("\n", matchingEnexes.Select(e => e.TargetInterior + " - " + e.Flags)));
-						var counterPart = matchingEnexes.FirstOrDefault(e => e.TargetInterior != enex.Info.TargetInterior);
+						var counterPart = enex.FindMatchingEnex();
 						if (counterPart != null)
 						{
 							// found a counterpart where we can teleport

@@ -116,7 +116,6 @@ namespace SanAndreasUnity.Behaviours
 				AddLoadingStep( new LoadingStep( () => Cell.Instance.InitStaticGeometry (), "Init static geometry", 0.35f ) );
 				AddLoadingStep( new LoadingStep( () => Cell.Instance.LoadParkedVehicles (), "Loading parked vehicles", 0.2f ) );
 				AddLoadingStep( new LoadingStep( () => Cell.Instance.CreateEnexes (), "Creating enexes", 0.1f ) );
-				AddLoadingStep( new LoadingStep( () => Cell.Instance.AddMapObjectsToDivisions (), "Adding map objects to divisions", 0.85f ) );
 				AddLoadingStep( new LoadingStep( () => Cell.Instance.LoadWater (), "Loading water", 0.08f ) );
 				AddLoadingStep( new LoadingStep( () => Cell.Instance.FinalizeLoad (), "Finalize world loading", 0.01f ) );
 
@@ -149,7 +148,12 @@ namespace SanAndreasUnity.Behaviours
 
 			var stopwatchForSteps = new System.Diagnostics.Stopwatch ();
 
-			foreach (var step in m_loadingSteps) {
+			foreach (var step in m_loadingSteps)
+			{
+
+				// wait some more time before going to next step, because sometimes Unity does something
+				// in the background at the end of a frame, eg. it updates Collider positions if you changed them
+				yield return null;
 
 				// update description
 				LoadingStatus = step.Description;

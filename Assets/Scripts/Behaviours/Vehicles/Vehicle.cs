@@ -532,6 +532,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             this.UpdateHighDetailMeshes();
 
+            if (Net.NetStatus.IsServer && this.transform.position.y < -2000f)
+            {
+                Object.Destroy(this.gameObject);
+            }
+
         }
 
         private void FixedUpdate()

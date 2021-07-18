@@ -63,11 +63,11 @@ namespace SanAndreasUnity.UI {
 			_spawnNames.Clear();
 
 			// if exterior is not loaded, then use enexes from loaded interiors
-			if (Cell.Instance != null && ! Cell.Instance.HasExterior)
+			if (Cell.Instance != null && ! Cell.Instance.HasMainExterior)
 			{
 				foreach(var enex in Cell.Instance.GetEnexesFromLoadedInteriors())
 				{
-					_spawns.Add(Cell.GetEnexExitTransform(enex));
+					_spawns.Add(Cell.Instance.GetEnexExitTransform(enex));
 					_spawnNames.Add(enex.Name);
 				}
 			}
