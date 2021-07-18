@@ -91,10 +91,16 @@ namespace SanAndreasUnity.UI {
 			}
 			public abstract T Load (string str);
 
-			public override void Save () {
+			public override void Save ()
+			{
 				if (!this.isAvailable ())
 					return;
-				string str = this.SaveAsString (this.getValue ());
+
+				T currentValue = this.getValue();
+				if (currentValue.Equals(this.defaultValue) && !PlayerPrefs.HasKey(this.FinalSerializationName))
+					return;
+
+				string str = this.SaveAsString (currentValue);
 				if (str != null)
 					PlayerPrefs.SetString (this.FinalSerializationName, str);
 			}
