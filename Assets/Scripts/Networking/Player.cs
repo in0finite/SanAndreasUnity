@@ -12,8 +12,9 @@ namespace SanAndreasUnity.Net
     {
 
         static List<Player> s_allPlayers = new List<Player>();
-        public static Player[] AllPlayersCopy { get { return s_allPlayers.ToArray(); } }
-        public static IEnumerable<Player> AllPlayersEnumerable { get { return s_allPlayers; } }
+        public static Player[] AllPlayersCopy => s_allPlayers.ToArray();
+        public static IEnumerable<Player> AllPlayersEnumerable => s_allPlayers;
+        public static IReadOnlyList<Player> AllPlayersList => s_allPlayers;
 
         /// <summary>Local player.</summary>
         public static Player Local { get; private set; }
