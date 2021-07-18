@@ -235,8 +235,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f261590297a9b11459cc24b5b949c608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasRevealRadius: 0
-  revealRadius: 50
+  parameters:
+    hasRevealRadius: 0
+    revealRadius: 0
+    timeToKeepRevealingAfterRemoved: 3
 --- !u!114 &1117230327
 MonoBehaviour:
   m_ObjectHideFlags: 0
