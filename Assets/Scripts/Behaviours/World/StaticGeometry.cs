@@ -314,7 +314,9 @@ namespace SanAndreasUnity.Behaviours.World
 	        if ((this.ObjectDefinition.Flags & flags) != 0)
 		        return false;
 
-	        if (LodParent != null) // LOD models should not cast shadows
+	        // if object is LOD, only cast shadows if it has large draw distance
+	        // - that's because his shadow may be visible from long distance
+	        if (LodParent != null && this.ObjectDefinition.DrawDist < 1000f)
 		        return false;
 
 	        return true;
