@@ -87,9 +87,13 @@ namespace SanAndreasUnity.Behaviours
 
         public static bool GetSpawnPositionFromFocus(Transform focusPos, out TransformDataStruct transformData)
         {
-            transformData = new TransformDataStruct(
-                focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f,
-                Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
+            if (Player.AllPlayersList.Count <= 1)
+                // if there is only 1 player, always spawn him on the same place - no randomization
+                transformData = new TransformDataStruct(focusPos);
+            else
+                transformData = new TransformDataStruct(
+                    focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f,
+                    Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
 
             return true;
         }
