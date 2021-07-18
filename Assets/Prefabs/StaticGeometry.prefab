@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1810686241933207467}
   - component: {fileID: 7540295739339550804}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: StaticGeometry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,4 +43,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2400fe08bb4191409f1e53b32fedcc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Flags: []
