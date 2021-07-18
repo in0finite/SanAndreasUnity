@@ -53,9 +53,9 @@ namespace SanAndreasUnity.Stats
                             area =>
                             {
                                 numAreasVisible++;
-                                numObjectsInVisibleAreas += area.ObjectsInside?.Count ?? 0;
-                                maxNumFocusPointsThatSeeMe = Mathf.Max(maxNumFocusPointsThatSeeMe, area.FocusPointsThatSeeMe?.Count ?? 0);
-                                minNumFocusPointsThatSeeMe = Mathf.Min(minNumFocusPointsThatSeeMe, area.FocusPointsThatSeeMe?.Count ?? 0);
+                                numObjectsInVisibleAreas += area?.ObjectsInside?.Count ?? 0;
+                                maxNumFocusPointsThatSeeMe = Mathf.Max(maxNumFocusPointsThatSeeMe, area?.FocusPointsThatSeeMe?.Count ?? 0);
+                                minNumFocusPointsThatSeeMe = Mathf.Min(minNumFocusPointsThatSeeMe, area?.FocusPointsThatSeeMe?.Count ?? 0);
                             }
                         );
 
