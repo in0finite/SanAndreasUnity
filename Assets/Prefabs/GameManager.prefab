@@ -165,7 +165,7 @@ MonoBehaviour:
     hasRevealRadius: 1
     revealRadius: 150
     timeToKeepRevealingAfterRemoved: 3
-  cameraDistanceFromPed: 4
+  cameraDistanceFromPed: 5
   minCameraDistanceFromPed: 2
   maxCameraDistanceFromPed: 30
   cameraRaycastIgnoredLayerMask:

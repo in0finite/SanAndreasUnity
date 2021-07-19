@@ -18,6 +18,7 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 		OptionsWindow.FloatInput m_cameraDistanceFromPed = new OptionsWindow.FloatInput() {
+			serializationName = "camera_distance_from_ped",
 			description = "Camera distance from ped",
 			minValue = 0.1f,
 			maxValue = 100f,
@@ -26,6 +27,7 @@ namespace SanAndreasUnity.Settings {
 			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 		OptionsWindow.FloatInput m_cameraDistanceFromVehicle = new OptionsWindow.FloatInput() {
+			serializationName = "camera_distance_from_vehicle",
 			description = "Camera distance from vehicle",
 			minValue = 0.1f,
 			maxValue = 100f,
