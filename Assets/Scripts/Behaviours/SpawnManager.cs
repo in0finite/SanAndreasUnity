@@ -58,11 +58,13 @@ namespace SanAndreasUnity.Behaviours
 
         public static Transform GetSpawnFocusPos()
         {
-            if (Ped.Instance)
-                return Ped.Instance.transform;
+            var ped = Ped.Instance;
+            if (ped != null)
+                return ped.transform;
 
-            if (Camera.main)
-                return Camera.main.transform;
+            var cam = Camera.main;
+            if (cam != null)
+                return cam.transform;
 
             return null;
         }
