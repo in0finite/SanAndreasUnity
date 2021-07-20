@@ -23,6 +23,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         public float CurrentCurveTime => (this.CurrentTimeHours + this.CurrentTimeMinutes / 60f) / 24f;
 
+        public float CurrentCurveTimeStepped => this.CurrentTimeHours / 24f;
+
         public string CurrentTimeAsString => FormatTime(this.CurrentTimeHours, this.CurrentTimeMinutes);
 
         private float m_timeSinceTimeAdvanced = 0;
@@ -83,11 +85,6 @@ namespace SanAndreasUnity.Behaviours.World
                 m_timeSinceTimeAdvanced = 0;
                 this.AdvanceTime();
             }
-            else
-            {
-                // light angle should be updated every frame
-                this.UpdateLightAngle(this.CurrentCurveTime + m_timeSinceTimeAdvanced / 60f / 24f);
-            }
         }
 
         void AdvanceTime()
@@ -119,7 +116,7 @@ namespace SanAndreasUnity.Behaviours.World
             m_timeSinceTimeAdvanced = 0;
             this.TimeWhenTimeWasSet = Time.time;
 
-            float curveTime = this.CurrentCurveTime;
+            float curveTime = this.CurrentCurveTimeStepped;
 
             float lightIntensity = this.lightIntensityCurve.Evaluate(curveTime);
             bool isNight = lightIntensity <= 0;
