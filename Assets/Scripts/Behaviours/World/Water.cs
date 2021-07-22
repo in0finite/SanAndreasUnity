@@ -1,7 +1,6 @@
 ﻿using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Placements;
 using System.Linq;
-using SanAndreasUnity.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
@@ -13,9 +12,6 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void Initialize(WaterFile file)
         {
-            if (F.IsInHeadlessMode)
-                return;
-
             if (this.WaterPrefab == null)
             {
                 Debug.LogError("No water prefab set, skipping load!");

@@ -191,6 +191,9 @@ namespace SanAndreasUnity.Behaviours.World
 
         internal void LoadWater ()
 		{
+			if (F.IsInHeadlessMode)
+				return;
+
 			if (Water != null)
 			{
 				Water.Initialize(new WaterFile(Importing.Archive.ArchiveManager.PathToCaseSensitivePath(Config.GetPath("water_path"))));
