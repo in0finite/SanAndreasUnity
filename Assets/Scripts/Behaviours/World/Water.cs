@@ -9,49 +9,62 @@ namespace SanAndreasUnity.Behaviours.World
     {
         public GameObject WaterPrefab;
 
-        private void AddFace(WaterFace face)
-        {
-            // TODO
-            if ((face.Flags & WaterFlags.Visible) != WaterFlags.Visible) return;
-
-            var obj = Instantiate(WaterPrefab);
-            obj.transform.SetParent(transform);
-            var mid = obj.transform.position = face.Vertices.Aggregate(Vector3.zero,
-                (s, x) => s + x.Position) / face.Vertices.Length;
-
-            obj.name = string.Format("WaterFace ({0})", mid);
-
-            var mesh = new Mesh();
-
-            mesh.vertices = face.Vertices.Select(x => x.Position - mid).ToArray();
-            mesh.normals = face.Vertices.Select(x => Vector3.up).ToArray();
-
-            var indices = new int[(face.Vertices.Length - 2) * 3];
-            for (var i = 0; i < face.Vertices.Length - 2; ++i)
-            {
-                var flip = i & 1;
-                indices[i * 3 + 0] = i + 1 - flip;
-                indices[i * 3 + 1] = i + 0 + flip;
-                indices[i * 3 + 2] = i + 2;
-            }
-
-            mesh.SetIndices(indices, MeshTopology.Triangles, 0);
-
-            obj.GetComponent<MeshFilter>().sharedMesh = mesh;
-        }
 
         public void Initialize(WaterFile file)
         {
-            if (WaterPrefab == null)
+            if (this.WaterPrefab == null)
             {
-                Debug.LogWarning("No water prefab set, skipping load!");
+                Debug.LogError("No water prefab set, skipping load!");
                 return;
             }
 
-            foreach (var face in file.Faces)
+            // TODO: what to do with faces that don't have WaterFlags.Visible flag ?
+
+            var faces = file.Faces.Where(f => (f.Flags & WaterFlags.Visible) == WaterFlags.Visible);
+
+            int totalNumVertexes = faces.Sum(f => f.Vertices.Length);
+            int totalNumIndexes = faces.Sum(f => (f.Vertices.Length - 2) * 3);
+
+            Vector3[] vertices = new Vector3[totalNumVertexes];
+            Vector3[] normals = new Vector3[totalNumVertexes];
+            int[] indices = new int[totalNumIndexes];
+
+            int verticesIndex = 0;
+            int indicesIndex = 0;
+
+            foreach (var face in faces)
             {
-                AddFace(face);
+                for (int j = 0; j < face.Vertices.Length; j++)
+                {
+                    vertices[verticesIndex + j] = face.Vertices[j].Position;
+                    normals[verticesIndex + j] = Vector3.up;
+                }
+
+                for (var j = 0; j < face.Vertices.Length - 2; ++j)
+                {
+                    var flip = j & 1;
+                    indices[indicesIndex + j * 3 + 0] = verticesIndex + j + 1 - flip;
+                    indices[indicesIndex + j * 3 + 1] = verticesIndex + j + 0 + flip;
+                    indices[indicesIndex + j * 3 + 2] = verticesIndex + j + 2;
+                }
+
+                verticesIndex += face.Vertices.Length;
+                indicesIndex += (face.Vertices.Length - 2) * 3;
             }
+
+            var obj = Instantiate(this.WaterPrefab);
+            obj.transform.SetParent(this.transform);
+            var mid = obj.transform.position = Vector3.zero;
+
+            obj.name = $"WaterFace ({mid})";
+
+            var mesh = new Mesh();
+
+            mesh.vertices = vertices;
+            mesh.normals = normals;
+            mesh.SetIndices(indices, MeshTopology.Triangles, 0);
+
+            obj.GetComponent<MeshFilter>().sharedMesh = mesh;
         }
     }
 }
