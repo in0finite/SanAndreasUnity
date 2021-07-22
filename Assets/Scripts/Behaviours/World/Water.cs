@@ -52,19 +52,19 @@ namespace SanAndreasUnity.Behaviours.World
                 indicesIndex += (face.Vertices.Length - 2) * 3;
             }
 
-            var obj = Instantiate(this.WaterPrefab);
-            obj.transform.SetParent(this.transform);
-            var mid = obj.transform.position = Vector3.zero;
-
-            obj.name = $"WaterFace ({mid})";
-
             var mesh = new Mesh();
 
             mesh.vertices = vertices;
             mesh.normals = normals;
             mesh.SetIndices(indices, MeshTopology.Triangles, 0);
 
-            obj.GetComponent<MeshFilter>().sharedMesh = mesh;
+            var go = Instantiate(this.WaterPrefab, this.transform);
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localRotation = Quaternion.identity;
+
+            go.name = "Water mesh";
+
+            go.GetComponent<MeshFilter>().sharedMesh = mesh;
         }
     }
 }
