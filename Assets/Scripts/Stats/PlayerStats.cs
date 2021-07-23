@@ -62,7 +62,7 @@ namespace SanAndreasUnity.Stats
 
                 foreach (string dataKey in dataKeys)
                 {
-                    string data = p.ExtraData.GetString(dataKey);
+                    string data = p.ExtraData.GetString(dataKey) ?? string.Empty;
                     GUILayout.Label(data, GUILayout.Width(GetWidth()));
                 }
 
