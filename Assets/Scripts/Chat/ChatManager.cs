@@ -77,7 +77,7 @@ namespace SanAndreasUnity.Chat
 			if (!FilterWithPreprocessors(player, ref msg))
 				return;
 
-			SendChatMessageToAllPlayersAsServer(msg, "player " + player.netId);
+			SendChatMessageToAllPlayersAsServer(msg, player.PlayerName);
 		}
 
 		internal void OnChatMessageReceivedOnLocalPlayer(ChatMessage chatMsg)
