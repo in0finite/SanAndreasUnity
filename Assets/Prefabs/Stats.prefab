@@ -72,6 +72,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_widths:
+  - 150
   - 110
   - 50
   - 80
@@ -80,6 +81,7 @@ MonoBehaviour:
   - 50
   - 80
   m_columnNames:
+  - Name
   - Address
   - Net id
   - Ped net id

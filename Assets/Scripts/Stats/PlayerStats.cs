@@ -6,8 +6,8 @@ namespace SanAndreasUnity.Stats
 {
     public class PlayerStats : MonoBehaviour
     {
-        [SerializeField] float[] m_widths = new float[]{110, 50, 70, 80, 150, 50, 80};
-        [SerializeField] string[] m_columnNames = new string[]{"Address", "Net id", "Ped net id", "Ped model", "Ped state", "Health", "Weapon"};
+        [SerializeField] float[] m_widths = new float[]{150, 110, 50, 70, 80, 150, 50, 80};
+        [SerializeField] string[] m_columnNames = new string[]{"Name", "Address", "Net id", "Ped net id", "Ped model", "Ped state", "Health", "Weapon"};
         int m_currentIndex = 0;
 
         float[] m_currentWidths = new float[0];
@@ -51,6 +51,7 @@ namespace SanAndreasUnity.Stats
                 GUILayout.BeginHorizontal();
 
                 m_currentIndex = 0;
+                GUILayout.Label(p.PlayerName, GUILayout.Width(GetWidth()));
                 GUILayout.Label(isServer ? p.connectionToClient.address : "", GUILayout.Width(GetWidth()));
                 GUILayout.Label(p.netId.ToString(), GUILayout.Width(GetWidth()));
                 GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.netId.ToString() : "", GUILayout.Width(GetWidth()));
