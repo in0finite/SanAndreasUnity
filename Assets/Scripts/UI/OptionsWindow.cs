@@ -214,6 +214,28 @@ namespace SanAndreasUnity.UI {
 			}
 		}
 
+		public class StringInput : Input<string>
+		{
+			public int displayWidth = 200;
+			public int maxNumCharacters = 0;
+
+			public override string Display(string currentValue)
+			{
+				GUILayout.BeginHorizontal();
+				GUILayout.Label(this.description + ":");
+				GUILayout.Space(5);
+				currentValue = GUILayout.TextField(currentValue, this.maxNumCharacters, GUILayout.Width(this.displayWidth));
+				GUILayout.FlexibleSpace();
+				GUILayout.EndHorizontal();
+				return currentValue;
+			}
+
+			public override string Load(string str)
+			{
+				return str;
+			}
+		}
+
 		public class EnumInput<T> : Input<T> where T : struct
 		{
 			

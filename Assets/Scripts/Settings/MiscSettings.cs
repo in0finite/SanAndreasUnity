@@ -6,11 +6,23 @@ using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Weapons;
 using SanAndreasUnity.Behaviours.Vehicles;
+using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Settings {
 
-	public class MiscSettings : MonoBehaviour {
-		
+	public class MiscSettings : MonoBehaviour
+	{
+		static string s_playerName = Player.DefaultPlayerName;
+
+		OptionsWindow.StringInput m_playerNameInput = new OptionsWindow.StringInput
+		{
+			description = "Player name",
+			displayWidth = 200,
+			maxNumCharacters = Player.MaxPlayerNameLength,
+			getValue = () => s_playerName,
+			setValue = ApplyPlayerName,
+			persistType = OptionsWindow.InputPersistType.OnStart,
+		};
 		OptionsWindow.FloatInput m_timeScaleInput = new OptionsWindow.FloatInput( "Time scale", 0f, 4f ) {
 			getValue = () => Time.timeScale,
 			setValue = (value) => { Time.timeScale = value; },
@@ -123,9 +135,21 @@ namespace SanAndreasUnity.Settings {
 
 		void Awake ()
 		{
-			var inputs = new OptionsWindow.Input[] { m_timeScaleInput, m_physicsUpdateRate, m_gravityInput, m_showSpeedometerInput, m_displayHealthBarsInput, m_displayMinimapInput,
-				m_runInBackgroundInput, m_drawLineFromGunInput, m_enableCamera, m_displayFpsInput,
-				m_pausePlayerSpawning, m_playerSpawnInterval,
+			var inputs = new OptionsWindow.Input[]
+			{
+				m_playerNameInput,
+				m_timeScaleInput,
+				m_physicsUpdateRate,
+				m_gravityInput,
+				m_showSpeedometerInput,
+				m_displayHealthBarsInput,
+				m_displayMinimapInput,
+				m_runInBackgroundInput,
+				m_drawLineFromGunInput,
+				m_enableCamera,
+				m_displayFpsInput,
+				m_pausePlayerSpawning,
+				m_playerSpawnInterval,
 				m_vehicleDetachedPartLifetime,
 				m_deadBodyLifetime,
 				m_projectileReloadTime,
@@ -138,6 +162,8 @@ namespace SanAndreasUnity.Settings {
 				OptionsWindow.RegisterInput (input);
 			}
 
+			Player.onStart += OnPlayerStart;
+
 		}
 
 		static void DisplayFPS(bool bDisplay)
@@ -145,6 +171,20 @@ namespace SanAndreasUnity.Settings {
 			FPSDisplay.Instance.fpsImage.enabled = bDisplay;
 			FPSDisplay.Instance.fpsText.enabled = bDisplay;
 			FPSDisplay.Instance.updateFPS = bDisplay;
+		}
+
+		void OnPlayerStart(Player player)
+		{
+			if (player == Player.Local)
+				ApplyPlayerName(s_playerName);
+		}
+
+		static void ApplyPlayerName(string newPlayerName)
+		{
+			s_playerName = newPlayerName;
+
+			if (Player.Local != null)
+				Player.Local.RequestNameChange(newPlayerName);
 		}
 
 	}
