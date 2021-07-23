@@ -61,7 +61,7 @@ namespace SanAndreasUnity.UI {
 				this.description = description;
 			}
 
-			public override void Display ()
+			public sealed override void Display ()
 			{
 				if (!this.isAvailable ())
 					return;
@@ -78,7 +78,7 @@ namespace SanAndreasUnity.UI {
 
 			public abstract T Display (T currentValue);
 
-			public override void Load () {
+			public sealed override void Load () {
 				if (!this.isAvailable ())
 					return;
 				if (!PlayerPrefs.HasKey (this.FinalSerializationName))
@@ -91,7 +91,7 @@ namespace SanAndreasUnity.UI {
 			}
 			public abstract T Load (string str);
 
-			public override void Save ()
+			public sealed override void Save ()
 			{
 				if (!this.isAvailable ())
 					return;
@@ -109,22 +109,22 @@ namespace SanAndreasUnity.UI {
 				return value.ToString ();
 			}
 
-			public override void SetValueNonGeneric(object value)
+			public sealed override void SetValueNonGeneric(object value)
 			{
 				this.setValue((T)value);
 			}
 
-			public override object GetValueNonGeneric()
+			public sealed override object GetValueNonGeneric()
 			{
 				return this.getValue();
 			}
 
-			public override void SetDefaultValueNonGeneric(object value)
+			public sealed override void SetDefaultValueNonGeneric(object value)
 			{
 				this.defaultValue = (T) value;
 			}
 
-			public override object GetDefaultValueNonGeneric()
+			public sealed override object GetDefaultValueNonGeneric()
 			{
 				return this.defaultValue;
 			}
