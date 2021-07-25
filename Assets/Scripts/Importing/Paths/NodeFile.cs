@@ -9,6 +9,27 @@ using UnityEngine;
 
 namespace Assets.Scripts.Importing.Paths
 {
+    public enum PathNodeTrafficLevel
+    {
+        Full = 0,
+        High = 1,
+        Medium = 2,
+        Low = 3
+    }
+    public struct PathNodeFlag
+    {
+        public PathNodeTrafficLevel TrafficLevel;
+        public bool RoadBlocks;
+        public bool IsWater;
+        public bool EmergencyOnly;
+        public bool IsHighway;
+        public int SpawnProbability;
+        public override string ToString()
+        {
+            return "TrafficLevel=" + TrafficLevel + ",Roadblocks=" + RoadBlocks + ",IsWater=" + IsWater + "\r\n" +
+                 "EmergencyOnly=" + EmergencyOnly + ",IsHighway=" + IsHighway + ",SpawnProbability=" + SpawnProbability;
+        }
+    }
     public class PathNode
     {
         public Vector3 Position { get; set; }
@@ -18,20 +39,7 @@ namespace Assets.Scripts.Importing.Paths
         public float PathWidth { get; set; }
         public int NodeType { get; set; } // enum
         public int LinkCount { get; set; }
-        public bool IsDeadEnd { get; set; }
-        public bool IsIgnoredNode { get; set; }
-        public bool IsRoadBlock { get; set; }
-        public bool IsWaterNode { get; set; }
-        public bool IsEmergencyVehicleOnly { get; set; }
-        public bool IsRestrictedAccess { get; set; }
-        public bool IsDontWander { get; set; }
-        public bool Unknown2 { get; set; }
-        public int Speedlimit { get; set; }
-        public bool Unknown3 { get; set; }
-        public bool Unknown4 { get; set; }
-        public int SpawnProbability { get; set; }
-        public int BehaviorType { get; set; }
-        public bool IsPed { get; set; }
+        public PathNodeFlag Flags;
     }
     public class NavNode
     {
@@ -128,7 +136,6 @@ namespace Assets.Scripts.Importing.Paths
             for (int i = 0; i < NumOfNodes; i++)
             {
                 PathNode node = new PathNode();
-                if (i > NumOfVehNodes) node.IsPed = true;
                 reader.ReadUInt32();
                 reader.ReadUInt32();
                 float x = (float)reader.ReadInt16() / 8;
@@ -143,26 +150,14 @@ namespace Assets.Scripts.Importing.Paths
                 node.PathWidth = (float)reader.ReadByte() / 8;
                 node.NodeType = reader.ReadByte();
 
-                byte flag = reader.ReadByte();
+                int flag = reader.ReadInt32();
                 node.LinkCount = flag & 15;
-                if (((flag >> 4) & 1) == 1) node.IsDeadEnd = true;
-                if (((flag >> 5) & 1) == 1) node.IsIgnoredNode = true;
-                if (((flag >> 6) & 1) == 1) node.IsRoadBlock = true;
-                if (((flag >> 7) & 1) == 1) node.IsWaterNode = true;
+                node.Flags.RoadBlocks = Convert.ToBoolean(flag & 0xF);
+                node.Flags.IsWater = Convert.ToBoolean(flag & 0x80);
+                node.Flags.EmergencyOnly = Convert.ToBoolean(flag & 0x100);
+                node.Flags.IsHighway = !Convert.ToBoolean(flag & 0x1000);
+                node.Flags.SpawnProbability = (flag & 0xF0000) >> 16;
 
-                flag = reader.ReadByte();
-                if ((flag & 1) == 1) node.IsEmergencyVehicleOnly = true;
-                if ((flag >> 1) == 1) node.IsRestrictedAccess = true;
-                if ((flag >> 2) == 1) node.IsDontWander = true;
-                if ((flag >> 3) == 1) node.Unknown2 = true;
-                node.Speedlimit = (flag >> 4) & 3;
-                if ((flag >> 6) == 1) node.Unknown3 = true;
-                if ((flag >> 7) == 1) node.Unknown4 = true;
-
-                flag = reader.ReadByte();
-                node.SpawnProbability = flag & 15;
-                node.BehaviorType = (flag >> 4) & 15;
-                flag = reader.ReadByte();
                 PathNodes.Add(node);
                 //UnityEngine.Debug.Log($"Node {i}: POS [{node.Position.x} {node.Position.y} {node.Position.z}] LinkID {node.LinkID} LinkCount {node.LinkCount} AreaID {node.AreaID} NodeID {node.NodeID} PathWidth {node.PathWidth} NodeType {node.NodeType} Flags {node.Flags}");
             }
@@ -254,7 +249,7 @@ namespace Assets.Scripts.Importing.Paths
         /**
          * Returns all the areas ID around the given areaID
          */
-        private static List<int> GetAreaNeighborhood(int areaID)
+        public static List<int> GetAreaNeighborhood(int areaID)
         {
             List<int> result = new List<int>();
             int indexX = (areaID + 1) % 8;

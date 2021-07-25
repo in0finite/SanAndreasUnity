@@ -25,14 +25,14 @@ namespace SanAndreasUnity.Behaviours
 
 			CheckPedPrefab ();
 
-			var go = Instantiate (PedManager.Instance.pedPrefab, pos, rot);
+			GameObject go = Instantiate (PedManager.Instance.pedPrefab, pos, rot);
 			go.name = "Ped " + def.ModelName + " " + def.Id;
 
-			var ped = go.GetComponentOrThrow<Ped> ();
+			Ped ped = go.GetComponentOrThrow<Ped> ();
 			ped.PlayerModel.StartingPedId = def.Id;
 			ped.EnterVehicleRadius = PedManager.Instance.AIVehicleEnterDistance;
 
-			if (spawnOnNetwork)
+            if (spawnOnNetwork)
 				Net.NetManager.Spawn(go);
 
 			return ped;

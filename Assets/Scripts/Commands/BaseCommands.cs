@@ -253,10 +253,12 @@ namespace SanAndreasUnity.Commands
                 int number = 20;
                 if (numArguments > 1)
                     number = int.Parse(arguments[1]);
-                if (PathsManager.SpawnPedWithAI(number, new Vector2(player.OwnedPed.transform.position.x, player.OwnedPed.transform.position.z), 25.0f))
+                /*
+                if (PathsManager.SpawnPedWithAI(number, new Vector2(player.OwnedPed.transform.position.x, player.OwnedPed.transform.position.z)))
                     return CommandManager.ProcessCommandResult.Success;
                 else
                     return CommandManager.ProcessCommandResult.Error("Unable to spawn peds AI in this range");
+                    */
             }
 
             return CommandManager.ProcessCommandResult.UnknownCommand;

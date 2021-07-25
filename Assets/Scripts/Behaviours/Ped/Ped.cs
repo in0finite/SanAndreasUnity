@@ -199,8 +199,11 @@ namespace SanAndreasUnity.Behaviours
 				}
 			}
 
-			F.InvokeEventExceptionSafe(onStart, this);
+            if(this.PlayerOwner != null)
+                StartCoroutine(PathsManager.SpawnPedWithAI(this.transform.position));
 
+			F.InvokeEventExceptionSafe(onStart, this);
+            
         }
 
 		void OnEnable ()
@@ -369,8 +372,8 @@ namespace SanAndreasUnity.Behaviours
 			this.transform.position = hit.point + Vector3.up * (characterController.height + 0.1f);
 			this.Velocity = Vector3.zero;
 
-			Debug.LogFormat ("Found ground at {0}, distance {1}, object name {2}, num attempts {3}, {4}, ped {5}", hit.point, hit.distance, 
-				hit.transform.name, numAttempts, customMessage, this.DescriptionForLogging);
+			//Debug.LogFormat ("Found ground at {0}, distance {1}, object name {2}, num attempts {3}, {4}, ped {5}", hit.point, hit.distance, 
+			//	hit.transform.name, numAttempts, customMessage, this.DescriptionForLogging);
 
 		}
 

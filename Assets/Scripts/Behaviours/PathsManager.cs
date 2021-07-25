@@ -8,95 +8,146 @@ namespace SanAndreasUnity.Behaviours
 {
     public class PathsManager : MonoBehaviour
     {
-        private bool pedSpawned;
-        private int nbr;
+        [SerializeField] public static float MaxNPCDistance = 100.0f; // Max distance from each players before delete
+        [SerializeField] public static float MinNPCCreateDistance = 50.0f; // Min distance from each players
+        [SerializeField] public static float RefreshRate = 5f; // Number of refresh per seconds
+        [SerializeField] public static int MaxNumberOfNPCAtSpawnPoint = 25;
+
+        private float lastUpdateTime;
+        /*
         private GameObject pedPathNodesGO;
+        private GameObject vehPathNodesGO;
+        */
         void Awake()
         {
-            pedSpawned = false;
-            nbr = 0;
+            lastUpdateTime = Time.time;
         }
 
         private void Update()
         {
+            if(Time.time > lastUpdateTime + RefreshRate)
+            {
+                List<Ped> npcs = Ped.AllPeds.Where(ped => ped.PlayerOwner == null).ToList();
+                List<Ped> players = Ped.AllPeds.Where(ped => ped.PlayerOwner != null).ToList();
+
+                List<Vector3> playersPos = new List<Vector3>();
+
+                foreach (Ped player in players)
+                {
+                    playersPos.Add(player.transform.position);
+                }
+
+                foreach (Ped npc in npcs)
+                {
+                    foreach (Ped player in players)
+                    {
+                        if (Vector3.Distance(npc.transform.position, player.transform.position) > MaxNPCDistance)
+                            Destroy(npc.gameObject);
+                    }
+                }
+                int nbrOfNPCInZone;
+                foreach (Ped player in players)
+                {
+                    nbrOfNPCInZone = 0;
+                    foreach (Ped npc in npcs)
+                    {
+                        if (Vector3.Distance(npc.transform.position, player.transform.position) < MaxNPCDistance)
+                            nbrOfNPCInZone++;
+                    }
+                    if (nbrOfNPCInZone < 15)
+                    {
+                        Vector3 targetZone = player.transform.position + player.Heading * MinNPCCreateDistance;
+                        StartCoroutine(SpawnPedWithAI(new Vector2(targetZone.x, targetZone.z)));
+                    }
+                }
+                lastUpdateTime = Time.time;
+            }
+
+            /*
             if(!pedSpawned && Loader.HasLoaded)
             {
-                if (NodeReader.Nodes != null)
+                if (NodeReader.Nodes != null && Ped.AllPeds.Length > 0)
                 {
+                    Ped player = Ped.AllPeds.First();
                     Debug.Log("Spawning peds");
                     if (pedPathNodesGO == null)
                     {
                         Debug.LogError("PedPathNodes not yet created, creating one ...");
                         pedPathNodesGO = new GameObject("PedPathNodes");
+                        vehPathNodesGO = new GameObject("VehPathNodes");
                     }
-                    foreach (NodeFile file in NodeReader.Nodes.Where(f => f.Id == 53 || f.Id == 52))
+                    foreach (NodeFile file in NodeReader.Nodes.Where(f => f.Id == 40))
                     {
-                        foreach (PathNode node in file.PathNodes.Where(pn => pn.IsPed))
+                        foreach (PathNode node in file.PathNodes.Where(pn => pn.NodeType > 2 && Vector3.Distance(pn.Position, player.transform.position) < 100f))
                         {
                             GameObject tmp = pedPathNodesGO.CreateChild($"Path_{node.AreaID}_{node.NodeID}");
                             tmp.transform.position = node.Position;
                             tmp.AddComponent<MeshRenderer>();
                             TextMesh tm = tmp.AddComponent<TextMesh>();
                             tm.text = $"Path_{node.AreaID}_{node.NodeID}\r\n" +
-                                $"AreaID = {node.AreaID}\r\n" +
-                                $"NodeID = {node.NodeID}\r\n" +
-                                $"Link count = {node.LinkCount}\r\n";
+                                $"Link count = {node.LinkCount}\r\n" +
+                                $"flags = {node.Flags}\r\n";
                             tm.characterSize = 0.3f;
-                                
-                            for (int i = 0; i < node.LinkCount-1; i++)
-                            {
-                                int linkArrayIndex = node.BaseLinkID + i;
-                                NodeFile nf = NodeReader.Nodes.Single(nf2 => nf2.Id == file.NodeLinks[linkArrayIndex].AreaID);
-                                PathNode targetNode = nf.PathNodes.ElementAt(file.NodeLinks[linkArrayIndex].NodeID);
-                                    
-                                GameObject line = tmp.CreateChild("link_" + i);
-                                LineRenderer lr = line.AddComponent<LineRenderer>();
-                                lr.positionCount = 2;
-                                lr.SetPositions(new Vector3[] { node.Position, targetNode.Position });
-                            }
+                            tm.color = Color.blue;
+                        }
+                        foreach (PathNode node in file.PathNodes.Where(pn => pn.NodeType == 1 && Vector3.Distance(pn.Position, player.transform.position) < 100f))
+                        {
+                            GameObject tmp = vehPathNodesGO.CreateChild($"Path_{node.AreaID}_{node.NodeID}");
+                            tmp.transform.position = node.Position;
+                            tmp.AddComponent<MeshRenderer>();
+                            TextMesh tm = tmp.AddComponent<TextMesh>();
+                            tm.text = $"Path_{node.AreaID}_{node.NodeID}\r\n" +
+                                $"Link count = {node.LinkCount}\r\n" +
+                                $"flags = {node.Flags}\r\n";
+                            tm.characterSize = 0.3f;
+                            tm.color = Color.red;
                         }
                     }
                     pedSpawned = true;
                 }
-            }
+            }*/
         }
 
-        public static bool SpawnPedWithAI(int nbr, Vector2 targetZone, float radius)
+        public static System.Collections.IEnumerator SpawnPedWithAI(Vector2 targetZone)
         {
             List<PathNode> nearNodes = new List<PathNode>();
-
+            int nbrOfSpawnedPed = 0;
             foreach (NodeFile file in NodeReader.Nodes)
             {
-                foreach (PathNode node in file.PathNodes.Where(pn => pn.IsPed && Vector2.Distance(new Vector2(pn.Position.x, pn.Position.z), targetZone) < radius))
+                foreach (PathNode node in file.PathNodes.Where(pn => pn.NodeType > 2
+                        && Vector2.Distance(new Vector2(pn.Position.x, pn.Position.z), targetZone) < MaxNPCDistance
+                        && Vector2.Distance(new Vector2(pn.Position.x, pn.Position.z), targetZone) > MinNPCCreateDistance))
                 {
                     nearNodes.Add(node);
                 }
             }
 
-            if(nearNodes.Count == 0)
+            if(nearNodes.Count > 0)
             {
-                Debug.LogError("Unable to find near nodes in the radius at position " + targetZone);
-                return false;
-            }
-            else
-            {
-                for (int i = 0; i < nbr; i++)
+                foreach(PathNode node in nearNodes)
                 {
-                    PathNode pedNode = nearNodes.ElementAt(UnityEngine.Random.Range(0, nearNodes.Count - 1));
-                    Ped newPed = Ped.SpawnPed(Ped.RandomPedId, pedNode.Position, Quaternion.identity, false);
-                    Ped_AI ai = newPed.gameObject.AddComponent<Ped_AI>();
-                    ai.CurrentNode = pedNode;
-                    ai.TargetNode = pedNode;
-                    nearNodes.Remove(pedNode);
-                    //Debug.Log($"Ped spawned at node {pedNode.AreaID}_{pedNode.NodeID} position {pedNode.Position}");
+                    if (UnityEngine.Random.Range(0, 255) > node.Flags.SpawnProbability)
+                    {
+                        PathNode pedNode = node;
+                        Vector3 spawnPos = new Vector3(pedNode.Position.x + UnityEngine.Random.Range(-3, 3), pedNode.Position.y, pedNode.Position.z + UnityEngine.Random.Range(-3, 3));
+                        Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos, Quaternion.identity, false);
+                        Ped_AI ai = newPed.gameObject.AddComponent<Ped_AI>();
+                        ai.CurrentNode = pedNode;
+                        ai.TargetNode = pedNode;
+
+                        nbrOfSpawnedPed ++;
+                        yield return new WaitForEndOfFrame();
+                    }
+                    if (nbrOfSpawnedPed > MaxNumberOfNPCAtSpawnPoint) break;
                 }
-                return true;
+                Debug.Log(nbrOfSpawnedPed + " peds spawned");
             }
         }
         
         public static PathNode GetNextPathNode(PathNode origin, PathNode current)
         {
-            NodeFile file = NodeReader.Nodes.Where(f => f.Id == 53).First();
+            List<int> areas = NodeFile.GetAreaNeighborhood(origin.AreaID);
+            NodeFile file = NodeReader.Nodes.Where(f => f.Id == origin.AreaID).First();
             List<PathNode> possibilities = new List<PathNode>();
             for (int i = 0; i < current.LinkCount; i++)
             {
