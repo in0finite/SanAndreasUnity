@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Importing.Paths;
+using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Net;
 using System;
 using System.Collections.Generic;
@@ -80,7 +81,7 @@ namespace SanAndreasUnity.Behaviours
                         nearNodes.Add(node);
                     }
                 }
-
+                Ped previousPed = null;
                 if (nearNodes.Count > 0)
                 {
                     foreach (PathNode node in nearNodes)
@@ -90,11 +91,41 @@ namespace SanAndreasUnity.Behaviours
                             PathNode pedNode = node;
                             Vector3 spawnPos = new Vector3(pedNode.Position.x + UnityEngine.Random.Range(-3, 3), pedNode.Position.y, pedNode.Position.z + UnityEngine.Random.Range(-3, 3));
                             Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos, Quaternion.identity, true);
+                            // Waiting for ped to be fully created
+                            yield return new WaitForEndOfFrame();
+                            yield return new WaitForEndOfFrame();
+
                             Ped_AI ai = newPed.gameObject.AddComponent<Ped_AI>();
                             ai.CurrentNode = pedNode;
                             ai.TargetNode = pedNode;
 
+                            Weapon weapon = null;
+                            switch (newPed.PedDef.DefaultType)
+                            {
+                                case PedestrianType.Cop:
+                                    weapon = newPed.WeaponHolder.SetWeaponAtSlot(346, 0);
+                                    if(previousPed != null)
+                                    {
+                                        // Make cops chasing peds (test)
+                                        ai.TargetPed = previousPed;
+                                        ai.Action = PedAction.Chasing;
+                                    }
+                                    break;
+                                case PedestrianType.Criminal:
+                                    weapon = newPed.WeaponHolder.SetWeaponAtSlot(347, 0);
+                                    break;
+                                case PedestrianType.GangMember:
+                                    weapon = newPed.WeaponHolder.SetWeaponAtSlot(352, 0);
+                                    break;
+                            }
+                            if(weapon != null)
+                            {
+                                newPed.WeaponHolder.SwitchWeapon(weapon.SlotIndex);
+                                WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
+                            }
+
                             nbrOfSpawnedPed++;
+                            previousPed = newPed;
                             yield return new WaitForEndOfFrame();
                         }
                         if (nbrOfSpawnedPed > MaxNumberOfNPCAtSpawnPoint) break;
@@ -124,7 +155,7 @@ namespace SanAndreasUnity.Behaviours
             }
             else
             {
-                Debug.Log("No possibilites found, returning to origin");
+                //No possibilites found, returning to origin
                 return origin;
             }
 
