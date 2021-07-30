@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Behaviours
     {
         [SerializeField] public static float MaxNPCDistance = 100.0f; // Max distance from each players before delete
         [SerializeField] public static float MinNPCCreateDistance = 50.0f; // Min distance from each players
-        [SerializeField] public static float RefreshRate = 5f; // Number of refresh per seconds
+        [SerializeField] public static float RefreshRate = 5f; // Number of seconds before next refresh
         [SerializeField] public static int MaxNumberOfNPCAtSpawnPoint = 25;
 
         private float lastUpdateTime;
@@ -64,73 +64,63 @@ namespace SanAndreasUnity.Behaviours
                     lastUpdateTime = Time.time;
                 }
             }
+            else UnityEngine.Debug.Log("Cannot spawn: not on server");
         }
 
         public static System.Collections.IEnumerator SpawnPedWithAI(Vector2 targetZone)
         {
-            if(NetStatus.IsServer)
+            if (NetStatus.IsServer)
             {
-                List<PathNode> nearNodes = new List<PathNode>();
-                int nbrOfSpawnedPed = 0;
-                foreach (NodeFile file in NodeReader.Nodes)
+                int currentArea = NodeFile.GetAreaFromPosition(targetZone);
+                List<int> nearAreas = NodeFile.GetAreaNeighborhood(currentArea);
+                List<Ped> pedList = new List<Ped>();
+
+                foreach (NodeFile file in NodeReader.Nodes.Where(f => nearAreas.Contains(f.Id) || f.Id == currentArea))
                 {
                     foreach (PathNode node in file.PathNodes.Where(pn => pn.NodeType > 2
                             && Vector2.Distance(new Vector2(pn.Position.x, pn.Position.z), targetZone) < MaxNPCDistance
                             && Vector2.Distance(new Vector2(pn.Position.x, pn.Position.z), targetZone) > MinNPCCreateDistance))
-                    {
-                        nearNodes.Add(node);
-                    }
-                }
-                Ped previousPed = null;
-                if (nearNodes.Count > 0)
-                {
-                    foreach (PathNode node in nearNodes)
                     {
                         if (UnityEngine.Random.Range(0, 255) > node.Flags.SpawnProbability)
                         {
                             PathNode pedNode = node;
                             Vector3 spawnPos = new Vector3(pedNode.Position.x + UnityEngine.Random.Range(-3, 3), pedNode.Position.y, pedNode.Position.z + UnityEngine.Random.Range(-3, 3));
                             Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos, Quaternion.identity, true);
-                            // Waiting for ped to be fully created
-                            yield return new WaitForEndOfFrame();
-                            yield return new WaitForEndOfFrame();
+                            newPed.tag = "Ped";
 
                             Ped_AI ai = newPed.gameObject.AddComponent<Ped_AI>();
                             ai.CurrentNode = pedNode;
                             ai.TargetNode = pedNode;
-
-                            Weapon weapon = null;
-                            switch (newPed.PedDef.DefaultType)
-                            {
-                                case PedestrianType.Cop:
-                                    weapon = newPed.WeaponHolder.SetWeaponAtSlot(346, 0);
-                                    if(previousPed != null)
-                                    {
-                                        // Make cops chasing peds (test)
-                                        ai.TargetPed = previousPed;
-                                        ai.Action = PedAction.Chasing;
-                                    }
-                                    break;
-                                case PedestrianType.Criminal:
-                                    weapon = newPed.WeaponHolder.SetWeaponAtSlot(347, 0);
-                                    break;
-                                case PedestrianType.GangMember:
-                                    weapon = newPed.WeaponHolder.SetWeaponAtSlot(352, 0);
-                                    break;
-                            }
-                            if(weapon != null)
-                            {
-                                newPed.WeaponHolder.SwitchWeapon(weapon.SlotIndex);
-                                WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
-                            }
-
-                            nbrOfSpawnedPed++;
-                            previousPed = newPed;
+                            
+                            pedList.Add(newPed);
                             yield return new WaitForEndOfFrame();
                         }
-                        if (nbrOfSpawnedPed > MaxNumberOfNPCAtSpawnPoint) break;
+                        if (GameObject.FindGameObjectsWithTag("Ped").Where(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) > MaxNPCDistance).Count() > MaxNumberOfNPCAtSpawnPoint)
+                            break;
                     }
-                    Debug.Log(nbrOfSpawnedPed + " peds spawned");
+                }
+                yield return new WaitForEndOfFrame();
+                
+                foreach (Ped ped in pedList)
+                {
+                    Weapon weapon = null;
+                    switch (ped.PedDef.DefaultType)
+                    {
+                        case PedestrianType.Cop:
+                            weapon = ped.WeaponHolder.SetWeaponAtSlot(346, 0);
+                            break;
+                        case PedestrianType.Criminal:
+                            weapon = ped.WeaponHolder.SetWeaponAtSlot(347, 0);
+                            break;
+                        case PedestrianType.GangMember:
+                            weapon = ped.WeaponHolder.SetWeaponAtSlot(352, 0);
+                            break;
+                    }
+                    if (weapon != null)
+                    {
+                        ped.WeaponHolder.SwitchWeapon(weapon.SlotIndex);
+                        WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
+                    }
                 }
             }
         }

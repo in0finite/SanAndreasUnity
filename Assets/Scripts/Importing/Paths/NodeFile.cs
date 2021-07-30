@@ -74,8 +74,12 @@ namespace Assets.Scripts.Importing.Paths
     public class NodeReader
     {
         public static List<NodeFile> Nodes { get; set; }
+        public static float[][] Borders { get; private set; }
         public static void StepLoadPaths()
         {
+            int row;
+            int col;
+            Borders = new float[64][];
             //TODO: according to https://gtamods.com/wiki/Paths_%28GTA_SA%29  only the active area and those surrounding it should be loaded at a time
             for (int i = 0; i < 64; i++)
             {
@@ -84,6 +88,9 @@ namespace Assets.Scripts.Importing.Paths
                     NodeFile nf = new NodeFile(i, node);
                     AddNode(nf);
                 }
+                row = (int)(i % 8);
+                col = (int)(i / 8);
+                Borders[i] = new float[] { -3000 + (750 * row), -3000 + (750 * col) };
             }
         }
         public static void AddNode(NodeFile node)
@@ -276,6 +283,31 @@ namespace Assets.Scripts.Importing.Paths
             result.Add(aSW);
 
             return result;
+        }
+
+        public static int GetAreaFromPosition(Vector3 position)
+        {
+            for (int i = 0; i < 64; i++)
+            {
+                try
+                {
+                    if (position.x > NodeReader.Borders[i][0] && position.x < (NodeReader.Borders[i][0] + 750)
+                        && position.z > NodeReader.Borders[i][1] && position.z < (NodeReader.Borders[i][1] + 750))
+                    {
+                        return i;
+                    }
+                }
+                catch (Exception)
+                {
+                    Debug.Log("NodeReader.Borders is null");
+                }
+            }
+            return -1;
+        }
+
+        public static int GetAreaFromPosition(Vector2 position)
+        {
+            return GetAreaFromPosition(new Vector3(position.x, 0.0f, position.y));
         }
     }
 }
