@@ -53,7 +53,6 @@ namespace SanAndreasUnity.Commands
                 new CommandManager.CommandInfo("rem_w", "remove all weapons", true, true, this.weaponLimitInterval),
                 new CommandManager.CommandInfo("rem_current_w", "remove current weapon", true, true, this.weaponLimitInterval),
                 new CommandManager.CommandInfo("ammo", "give ammo", true, true, this.weaponLimitInterval),
-                new CommandManager.CommandInfo("peds", "spawn peds near to the player", true, true, this.pedLimitInterval),
             };
 
             foreach (var immutableCmd in commands)
@@ -244,21 +243,6 @@ namespace SanAndreasUnity.Commands
                     WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
 
                 return CommandManager.ProcessCommandResult.Success;
-            }
-            else if (arguments[0] == "peds")
-            {
-                if (null == player.OwnedPed)
-                    return pedNotAliveResult;
-
-                int number = 20;
-                if (numArguments > 1)
-                    number = int.Parse(arguments[1]);
-                /*
-                if (PathsManager.SpawnPedWithAI(number, new Vector2(player.OwnedPed.transform.position.x, player.OwnedPed.transform.position.z)))
-                    return CommandManager.ProcessCommandResult.Success;
-                else
-                    return CommandManager.ProcessCommandResult.Error("Unable to spawn peds AI in this range");
-                    */
             }
 
             return CommandManager.ProcessCommandResult.UnknownCommand;
