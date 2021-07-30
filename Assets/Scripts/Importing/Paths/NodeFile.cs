@@ -30,7 +30,7 @@ namespace Assets.Scripts.Importing.Paths
                  "EmergencyOnly=" + EmergencyOnly + ",IsHighway=" + IsHighway + ",SpawnProbability=" + SpawnProbability;
         }
     }
-    public class PathNode
+    public struct PathNode
     {
         public Vector3 Position { get; set; }
         public int BaseLinkID { get; set; }
@@ -41,7 +41,7 @@ namespace Assets.Scripts.Importing.Paths
         public int LinkCount { get; set; }
         public PathNodeFlag Flags;
     }
-    public class NavNode
+    public struct NavNode
     {
         public Vector2 Position { get; set; }
         public int TargetAreaID { get; set; }
@@ -55,18 +55,18 @@ namespace Assets.Scripts.Importing.Paths
         public int IsTrainCrossing { get; set; }
         public byte Flags { get; set; }
     }
-    public class NodeLink
+    public struct NodeLink
     {
         public int AreaID { get; set; }
         public int NodeID { get; set; }
         public int Length { get; set; }
     }
-    public class PathIntersectionFlags
+    public struct PathIntersectionFlags
     {
         public bool IsRoadCross { get; set; }
         public bool IsTrafficLight { get; set; }
     }
-    public class NavNodeLink
+    public struct NavNodeLink
     {
         public int NodeLink { get; set; }
         public int AreaID { get; set; }
@@ -223,7 +223,9 @@ namespace Assets.Scripts.Importing.Paths
             for (int i = 0; i < NumOfLinks; i++)
             {
                 ushort length = reader.ReadByte();
-                NodeLinks[i].Length = length;
+                NodeLink tmp = NodeLinks[i];
+                tmp.Length = length;
+                NodeLinks[i] = tmp;
                 //UnityEngine.Debug.Log($"Link length {i}: {length}");
             }
         }
