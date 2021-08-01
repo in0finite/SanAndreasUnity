@@ -91,6 +91,8 @@ namespace SanAndreasUnity.Behaviours.World
 			}
 		}
 
+		public int WorldSize { get; } = 6000;
+
         public float[] drawDistancesPerLayers = new float[] { 301, 801, 1501 };
 
         private WorldSystemWithDistanceLevels<MapObject> _worldSystem;
@@ -143,11 +145,9 @@ namespace SanAndreasUnity.Behaviours.World
 
 			UnityEngine.Debug.Log("Num static geometries " + m_insts.Count);
 
-			uint worldSize = 6000;
-
 			_worldSystem = new WorldSystemWithDistanceLevels<MapObject>(
 				this.drawDistancesPerLayers,
-				this.xzWorldSystemNumAreasPerDrawDistanceLevel.Select(_ => new WorldSystemParams { worldSize = worldSize, numAreasPerAxis = _ }).ToArray(),
+				this.xzWorldSystemNumAreasPerDrawDistanceLevel.Select(_ => new WorldSystemParams { worldSize = (uint) this.WorldSize, numAreasPerAxis = _ }).ToArray(),
 				Enumerable.Range(0, this.drawDistancesPerLayers.Length).Select(_ => new WorldSystemParams { worldSize = this.yWorldSystemSize, numAreasPerAxis = this.yWorldSystemNumAreas }).ToArray(),
 				this.OnAreaChangedVisibility);
 		}
@@ -196,7 +196,9 @@ namespace SanAndreasUnity.Behaviours.World
 
 			if (Water != null)
 			{
-				Water.Initialize(new WaterFile(Importing.Archive.ArchiveManager.PathToCaseSensitivePath(Config.GetPath("water_path"))));
+				Water.Initialize(
+					new WaterFile(Importing.Archive.ArchiveManager.PathToCaseSensitivePath(Config.GetPath("water_path"))),
+					Vector2.one * this.WorldSize);
 			}
 		}
 
