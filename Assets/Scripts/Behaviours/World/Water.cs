@@ -127,20 +127,17 @@ namespace SanAndreasUnity.Behaviours.World
             normals[vertexIndex - 2] = Vector3.up;
             normals[vertexIndex - 1] = Vector3.up;
 
-            // triangle 1: low left, low right, up right
-            // triangle 2: low left, up right, up left
-
             int lowLeft = vertexIndex - 4;
             int lowRight = vertexIndex - 3;
             int upLeft = vertexIndex - 2;
             int upRight = vertexIndex - 1;
 
-            indexes[indexesIndex++] = lowLeft;
+            indexes[indexesIndex++] = upRight;
             indexes[indexesIndex++] = lowRight;
+            indexes[indexesIndex++] = lowLeft;
+            indexes[indexesIndex++] = upLeft;
             indexes[indexesIndex++] = upRight;
             indexes[indexesIndex++] = lowLeft;
-            indexes[indexesIndex++] = upRight;
-            indexes[indexesIndex++] = upLeft;
         }
 
         int GetNumVertexesForQuad() => 4;
