@@ -38,13 +38,17 @@ namespace SanAndreasUnity.Behaviours
                         playersPos.Add(player.transform.position);
                     }
 
+                    bool isNearPlayer; // If false, delete NPC
                     foreach (Ped npc in npcs)
                     {
+                        isNearPlayer = false;
                         foreach (Ped player in players)
                         {
-                            if (Vector3.Distance(npc.transform.position, player.transform.position) > MaxNPCDistance)
-                                Destroy(npc.gameObject);
+                            if (Vector3.Distance(npc.transform.position, player.transform.position) < MaxNPCDistance)
+                                isNearPlayer = true;
                         }
+                        if(!isNearPlayer)
+                            Destroy(npc.gameObject);
                     }
                     int nbrOfNPCInZone;
                     foreach (Ped player in players)
