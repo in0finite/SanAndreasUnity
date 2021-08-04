@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Importing.Paths;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
+using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -14,6 +15,7 @@ namespace SanAndreasUnity.Behaviours
     {
         [SerializeField] private Vector3 currentNodePos;
         [SerializeField] private Vector3 targetNodePos;
+        [SerializeField] private Vector2 targetNodeOffset; // Adding random offset to prevent peds to have the exact destination
 
         public PedAction Action;
 
@@ -61,55 +63,60 @@ namespace SanAndreasUnity.Behaviours
         void Update()
         {
             this.MyPed.ResetInput();
-            switch(this.Action)
+            if (NetStatus.IsServer)
             {
-                case PedAction.WalkingAround:
-                    currentNodePos = CurrentNode.Position;
-                    targetNodePos = TargetNode.Position;
-                    if (Vector2.Distance(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.z), new Vector2(TargetNode.Position.x, TargetNode.Position.z)) < 1f)
-                    {
-                        PathNode previousNode = CurrentNode;
-                        CurrentNode = TargetNode;
-                        TargetNode = PathsManager.GetNextPathNode(previousNode, CurrentNode);
-                    }
-                    this.MyPed.IsWalkOn = true;
-                    this.MyPed.Movement = (TargetNode.Position - this.MyPed.transform.position).normalized;
-                    this.MyPed.Heading = this.MyPed.Movement;
-                    break;
-                case PedAction.Chasing:
-                    if (this.TargetPed != null)
-                    {
-                        if (Vector3.Distance(TargetPed.transform.position, this.MyPed.transform.position) < 10f)
+                switch (this.Action)
+                {
+                    case PedAction.WalkingAround:
+                        currentNodePos = CurrentNode.Position;
+                        targetNodePos = TargetNode.Position;
+                        if (Vector2.Distance(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.z), new Vector2(targetNodePos.x, targetNodePos.z)) < 3)
                         {
-                            this.MyPed.AimDirection = (TargetPed.transform.position - this.MyPed.transform.position).normalized;
-                            this.MyPed.IsAimOn = true;
-                            this.MyPed.IsFireOn = true;
+                            PathNode previousNode = CurrentNode;
+                            CurrentNode = TargetNode;
+                            TargetNode = PathsManager.GetNextPathNode(previousNode, CurrentNode);
+                            targetNodeOffset = new Vector2(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2));
                         }
-                        else
+                        this.MyPed.IsWalkOn = true;
+                        Vector3 dest = targetNodePos + new Vector3(targetNodeOffset.x, 0, targetNodeOffset.y);
+                        this.MyPed.Movement = (dest - this.MyPed.transform.position).normalized;
+                        this.MyPed.Heading = this.MyPed.Movement;
+                        break;
+                    case PedAction.Chasing:
+                        if (this.TargetPed != null)
                         {
-                            this.MyPed.IsRunOn = true;
-                            this.MyPed.Movement = (TargetPed.transform.position - this.MyPed.transform.position).normalized;
-                            this.MyPed.Heading = this.MyPed.Movement;
+                            if (Vector3.Distance(TargetPed.transform.position, this.MyPed.transform.position) < 10f)
+                            {
+                                this.MyPed.AimDirection = (TargetPed.transform.position - this.MyPed.transform.position).normalized;
+                                this.MyPed.IsAimOn = true;
+                                this.MyPed.IsFireOn = true;
+                            }
+                            else
+                            {
+                                this.MyPed.IsRunOn = true;
+                                this.MyPed.Movement = (TargetPed.transform.position - this.MyPed.transform.position).normalized;
+                                this.MyPed.Heading = this.MyPed.Movement;
+                            }
                         }
-                    }
-                    else // The target is dead/disconnected
-                    {
-                        this.Action = PedAction.WalkingAround;
-                    }
-                    break;
-                case PedAction.Escaping:
-                    currentNodePos = CurrentNode.Position;
-                    targetNodePos = TargetNode.Position;
-                    if (Vector2.Distance(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.z), new Vector2(TargetNode.Position.x, TargetNode.Position.z)) < 1f)
-                    {
-                        PathNode previousNode = CurrentNode;
-                        CurrentNode = TargetNode;
-                        TargetNode = PathsManager.GetNextPathNode(CurrentNode, previousNode);
-                    }
-                    this.MyPed.IsRunOn = true;
-                    this.MyPed.Movement = (TargetNode.Position - this.MyPed.transform.position).normalized;
-                    this.MyPed.Heading = this.MyPed.Movement;
-                    break;
+                        else // The target is dead/disconnected
+                        {
+                            this.Action = PedAction.WalkingAround;
+                        }
+                        break;
+                    case PedAction.Escaping:
+                        currentNodePos = CurrentNode.Position;
+                        targetNodePos = TargetNode.Position;
+                        if (Vector2.Distance(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.z), new Vector2(TargetNode.Position.x, TargetNode.Position.z)) < 1f)
+                        {
+                            PathNode previousNode = CurrentNode;
+                            CurrentNode = TargetNode;
+                            TargetNode = PathsManager.GetNextPathNode(CurrentNode, previousNode);
+                        }
+                        this.MyPed.IsRunOn = true;
+                        this.MyPed.Movement = (TargetNode.Position - this.MyPed.transform.position).normalized;
+                        this.MyPed.Heading = this.MyPed.Movement;
+                        break;
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Importing.Paths;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Net;
+using SanAndreasUnity.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace SanAndreasUnity.Behaviours
     {
         [SerializeField] public static float MaxNPCDistance = 100.0f; // Max distance from each players before delete
         [SerializeField] public static float MinNPCCreateDistance = 50.0f; // Min distance from each players
-        [SerializeField] public static float RefreshRate = 5f; // Number of seconds before next refresh
-        [SerializeField] public static int MaxNumberOfNPCAtSpawnPoint = 25;
+        [SerializeField] public static float RefreshRate = 2f; // Number of seconds between each refresh
+        [SerializeField] public static int MaxNumberOfNPCAtSpawnPoint = 10;
 
         private float lastUpdateTime;
 
@@ -59,7 +60,7 @@ namespace SanAndreasUnity.Behaviours
                             if (Vector3.Distance(npc.transform.position, player.transform.position) < MaxNPCDistance)
                                 nbrOfNPCInZone++;
                         }
-                        if (nbrOfNPCInZone < 15)
+                        if (nbrOfNPCInZone < 5)
                         {
                             Vector3 targetZone = player.transform.position + player.Heading * MinNPCCreateDistance;
                             StartCoroutine(SpawnPedWithAI(new Vector2(targetZone.x, targetZone.z)));
@@ -68,7 +69,6 @@ namespace SanAndreasUnity.Behaviours
                     lastUpdateTime = Time.time;
                 }
             }
-            else UnityEngine.Debug.Log("Cannot spawn: not on server");
         }
 
         public static System.Collections.IEnumerator SpawnPedWithAI(Vector2 targetZone)
@@ -78,6 +78,7 @@ namespace SanAndreasUnity.Behaviours
                 int currentArea = NodeFile.GetAreaFromPosition(targetZone);
                 List<int> nearAreas = NodeFile.GetAreaNeighborhood(currentArea);
                 List<Ped> pedList = new List<Ped>();
+				int spawnTries;
 
                 foreach (NodeFile file in NodeReader.Nodes.Where(f => nearAreas.Contains(f.Id) || f.Id == currentArea))
                 {
@@ -87,9 +88,19 @@ namespace SanAndreasUnity.Behaviours
                     {
                         if (UnityEngine.Random.Range(0, 255) > node.Flags.SpawnProbability)
                         {
-                            PathNode pedNode = node;
+							spawnTries = 0;
+
+							PathNode pedNode = node;
                             Vector3 spawnPos = new Vector3(pedNode.Position.x + UnityEngine.Random.Range(-3, 3), pedNode.Position.y, pedNode.Position.z + UnityEngine.Random.Range(-3, 3));
-                            Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos, Quaternion.identity, true);
+							float nodeYPos = 1000f;
+							float targetYPos = 0f;
+							while (spawnTries++ < 5 && Math.Abs(nodeYPos - targetYPos) > 2f)
+							{
+								nodeYPos = F.FindYCoordWithXZ(pedNode.Position.x, pedNode.Position.z);
+								targetYPos = F.FindYCoordWithXZ(spawnPos.x, spawnPos.z);
+							}
+
+							Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos, Quaternion.identity, true);
                             newPed.tag = "Ped";
 
                             Ped_AI ai = newPed.gameObject.AddComponent<Ped_AI>();
