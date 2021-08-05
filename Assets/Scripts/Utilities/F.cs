@@ -971,5 +971,20 @@ namespace SanAndreasUnity.Utilities
             return clip.samples * sizeof(float);
         }
 
+		/// <summary>
+		///		Returns the ground position using X and Z position
+		/// </summary>
+		/// <param name="x">The X position</param>
+		/// <param name="z">The Z position</param>
+		/// <returns>The ground level</returns>
+		public static float FindYCoordWithXZ(float x, float z)
+		{
+			if (Physics.Raycast(new Vector3(x, 3000, z), Vector3.down, out RaycastHit hit))
+			{
+				return hit.point.y;
+			}
+			return -1;
+		}
+
     }
 }
