@@ -3,6 +3,7 @@ using UnityEngine;
 using GTAAudioSharp;
 using System.IO;
 using SanAndreasUnity.Audio;
+using UnityEngine.Profiling;
 
 namespace SanAndreasUnity.Behaviours.Audio
 {
@@ -73,6 +74,8 @@ namespace SanAndreasUnity.Behaviours.Audio
 
 		public static AudioClip CreateAudioClipFromStream (string streamFileName, int bankIndex)
 		{
+			Profiler.BeginSample("CreateAudioClipFromStream()");
+
 			AudioStream audio_stream = null;
 			System.DateTime startTime = System.DateTime.Now;
 
@@ -85,10 +88,14 @@ namespace SanAndreasUnity.Behaviours.Audio
 			{
 				try
 				{
+					Profiler.BeginSample("Open audio stream");
 					Stream stream = s_gtaAudioFiles.OpenStreamsAudioStreamByName(streams_file_name, (uint)streams_bank_index);
+					Profiler.EndSample();
 					if (stream != null)
 					{
+						Profiler.BeginSample("AudioStream()");
 						audio_stream = new AudioStream(stream, key, true);
+						Profiler.EndSample();
 					}
 				}
 				catch (System.Exception e)
@@ -105,6 +112,8 @@ namespace SanAndreasUnity.Behaviours.Audio
 
 				return audio_stream.AudioClip;
 			}
+
+			Profiler.EndSample();
 
 			return null;
 		}
