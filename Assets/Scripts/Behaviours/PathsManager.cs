@@ -78,7 +78,6 @@ namespace SanAndreasUnity.Behaviours
                 int currentArea = NodeFile.GetAreaFromPosition(targetZone);
                 List<int> nearAreas = NodeFile.GetAreaNeighborhood(currentArea);
                 List<Ped> pedList = new List<Ped>();
-				int spawnTries;
 
                 foreach (NodeFile file in NodeReader.Nodes.Where(f => nearAreas.Contains(f.Id) || f.Id == currentArea))
                 {
@@ -88,13 +87,10 @@ namespace SanAndreasUnity.Behaviours
                     {
                         if (UnityEngine.Random.Range(0, 255) > node.Flags.SpawnProbability)
                         {
-							spawnTries = 0;
-
 							PathNode pedNode = node;
                             Vector3 spawnPos = new Vector3(pedNode.Position.x, pedNode.Position.y, pedNode.Position.z);
 
 							Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos + new Vector3(0, 1, 0), Quaternion.identity, true);
-                            newPed.tag = "Ped";
 
                             Ped_AI ai = newPed.gameObject.AddComponent<Ped_AI>();
                             ai.CurrentNode = pedNode;
@@ -103,7 +99,7 @@ namespace SanAndreasUnity.Behaviours
                             pedList.Add(newPed);
                             yield return new WaitForEndOfFrame();
                         }
-                        if (GameObject.FindGameObjectsWithTag("Ped").Where(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) > MaxNPCDistance).Count() > MaxNumberOfNPCAtSpawnPoint)
+                        if (GameObject.FindObjectsOfType<Ped_AI>().Where(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) > MaxNPCDistance).Count() > MaxNumberOfNPCAtSpawnPoint)
                             break;
                     }
                 }
