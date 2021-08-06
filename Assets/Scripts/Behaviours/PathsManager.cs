@@ -91,16 +91,9 @@ namespace SanAndreasUnity.Behaviours
 							spawnTries = 0;
 
 							PathNode pedNode = node;
-                            Vector3 spawnPos = new Vector3(pedNode.Position.x + UnityEngine.Random.Range(-3, 3), pedNode.Position.y, pedNode.Position.z + UnityEngine.Random.Range(-3, 3));
-							float nodeYPos = 1000f;
-							float targetYPos = 0f;
-							while (spawnTries++ < 5 && Math.Abs(nodeYPos - targetYPos) > 2f)
-							{
-								nodeYPos = F.FindYCoordWithXZ(pedNode.Position.x, pedNode.Position.z);
-								targetYPos = F.FindYCoordWithXZ(spawnPos.x, spawnPos.z);
-							}
+                            Vector3 spawnPos = new Vector3(pedNode.Position.x, pedNode.Position.y, pedNode.Position.z);
 
-							Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos, Quaternion.identity, true);
+							Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos + new Vector3(0, 1, 0), Quaternion.identity, true);
                             newPed.tag = "Ped";
 
                             Ped_AI ai = newPed.gameObject.AddComponent<Ped_AI>();
