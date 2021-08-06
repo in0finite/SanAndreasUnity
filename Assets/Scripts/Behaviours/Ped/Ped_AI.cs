@@ -112,7 +112,7 @@ namespace SanAndreasUnity.Behaviours
                             CurrentNode = TargetNode;
                             TargetNode = PathsManager.GetNextPathNode(CurrentNode, previousNode);
                         }
-                        this.MyPed.IsRunOn = true;
+                        this.MyPed.IsSprintOn = true;
                         this.MyPed.Movement = (TargetNode.Position - this.MyPed.transform.position).normalized;
                         this.MyPed.Heading = this.MyPed.Movement;
                         break;

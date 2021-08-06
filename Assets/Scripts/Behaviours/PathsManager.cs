@@ -11,10 +11,11 @@ namespace SanAndreasUnity.Behaviours
 {
     public class PathsManager : MonoBehaviour
     {
-        [SerializeField] public static float MaxNPCDistance = 100.0f; // Max distance from each players before delete
-        [SerializeField] public static float MinNPCCreateDistance = 50.0f; // Min distance from each players
-        [SerializeField] public static float RefreshRate = 2f; // Number of seconds between each refresh
-        [SerializeField] public static int MaxNumberOfNPCAtSpawnPoint = 10;
+        public const float MaxNPCDistance = 100.0f; // Max distance from each players before delete
+        public const float MinNPCCreateDistance = 50.0f; // Min distance from each players to spawn ped
+        public const float RefreshRate = 2f; // Number of seconds between each refresh
+        public const int MaxNumberOfNPCAtSpawnPoint = 25;
+		public int NumberOfPeds; // Debug data only
 
         private float lastUpdateTime;
 
@@ -63,15 +64,16 @@ namespace SanAndreasUnity.Behaviours
                         if (nbrOfNPCInZone < 5)
                         {
                             Vector3 targetZone = player.transform.position + player.Heading * MinNPCCreateDistance;
-                            StartCoroutine(SpawnPedWithAI(new Vector2(targetZone.x, targetZone.z)));
+                            StartCoroutine(SpawnPedWithAI(targetZone));
                         }
                     }
-                    lastUpdateTime = Time.time;
+					NumberOfPeds = GameObject.FindObjectsOfType<Ped_AI>().Count();
+					lastUpdateTime = Time.time;
                 }
             }
         }
 
-        public static System.Collections.IEnumerator SpawnPedWithAI(Vector2 targetZone)
+        public static System.Collections.IEnumerator SpawnPedWithAI(Vector3 targetZone)
         {
             if (NetStatus.IsServer)
             {
@@ -82,8 +84,8 @@ namespace SanAndreasUnity.Behaviours
                 foreach (NodeFile file in NodeReader.Nodes.Where(f => nearAreas.Contains(f.Id) || f.Id == currentArea))
                 {
                     foreach (PathNode node in file.PathNodes.Where(pn => pn.NodeType > 2
-                            && Vector2.Distance(new Vector2(pn.Position.x, pn.Position.z), targetZone) < MaxNPCDistance
-                            && Vector2.Distance(new Vector2(pn.Position.x, pn.Position.z), targetZone) > MinNPCCreateDistance))
+                            && Vector3.Distance(pn.Position, targetZone) < MaxNPCDistance
+                            && Vector3.Distance(pn.Position, targetZone) > MinNPCCreateDistance))
                     {
                         if (UnityEngine.Random.Range(0, 255) > node.Flags.SpawnProbability)
                         {
@@ -99,7 +101,7 @@ namespace SanAndreasUnity.Behaviours
                             pedList.Add(newPed);
                             yield return new WaitForEndOfFrame();
                         }
-                        if (GameObject.FindObjectsOfType<Ped_AI>().Where(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) > MaxNPCDistance).Count() > MaxNumberOfNPCAtSpawnPoint)
+                        if (GameObject.FindObjectsOfType<Ped_AI>().Where(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) < MaxNPCDistance).Count() > MaxNumberOfNPCAtSpawnPoint)
                             break;
                     }
                 }
