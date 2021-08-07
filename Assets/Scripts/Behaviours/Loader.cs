@@ -102,6 +102,7 @@ namespace SanAndreasUnity.Behaviours
 				new LoadingStep ( StepLoadMap, "Loading map", 2.1f ),
 				new LoadingStep ( StepLoadSpecialTextures, "Loading special textures", 0.01f ),
 			//	new LoadingStep ( StepLoadGXT, "Loading GXT", 0.15f),
+                new LoadingStep ( StepLoadPaths, "Loading paths"),
 			};
 
 
@@ -427,9 +428,13 @@ namespace SanAndreasUnity.Behaviours
 			GXT.Load();
 		}
 
+        private static void StepLoadPaths()
+        {
+            Assets.Scripts.Importing.Paths.NodeReader.StepLoadPaths();
+        }
 
 
-		public static float GetProgressPerc ()
+        public static float GetProgressPerc ()
 		{
 			if (m_currentStepIndex <= 0)
 				return 0f;
