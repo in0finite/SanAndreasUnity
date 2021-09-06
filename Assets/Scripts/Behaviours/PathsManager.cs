@@ -103,7 +103,7 @@ namespace SanAndreasUnity.Behaviours
 
                         Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos + new Vector3(0, 1, 0), Quaternion.identity, true);
 
-                        var ai = newPed.gameObject.GetOrAddComponent<Ped_AI>();
+                        var ai = newPed.gameObject.GetOrAddComponent<PedAI>();
                         ai.CurrentNode = pedNode;
                         ai.TargetNode = pedNode;
 
@@ -111,7 +111,7 @@ namespace SanAndreasUnity.Behaviours
                         yield return null;
                     }
 
-                    if (Ped_AI.AllPedAIs.Count(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) < MaxNPCDistance) > MaxNumberOfNPCAtSpawnPoint)
+                    if (PedAI.AllPedAIs.Count(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) < MaxNPCDistance) > MaxNumberOfNPCAtSpawnPoint)
                         break;
                 }
             }

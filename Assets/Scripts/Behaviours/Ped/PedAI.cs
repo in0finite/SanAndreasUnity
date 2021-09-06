@@ -13,10 +13,10 @@ namespace SanAndreasUnity.Behaviours
         Chasing,
         Escaping
     }
-    public class Ped_AI : MonoBehaviour
+    public class PedAI : MonoBehaviour
     {
-        private static readonly List<Ped_AI> s_allPedAIs = new List<Ped_AI>();
-        public static IReadOnlyList<Ped_AI> AllPedAIs => s_allPedAIs;
+        private static readonly List<PedAI> s_allPedAIs = new List<PedAI>();
+        public static IReadOnlyList<PedAI> AllPedAIs => s_allPedAIs;
 
         [SerializeField] private Vector3 currentNodePos;
         [SerializeField] private Vector3 targetNodePos;
