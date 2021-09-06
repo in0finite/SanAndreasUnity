@@ -199,9 +199,6 @@ namespace SanAndreasUnity.Behaviours
 				}
 			}
 
-            if(this.PlayerOwner != null)
-                StartCoroutine(PathsManager.SpawnPedWithAI(this.transform.position));
-
 			F.InvokeEventExceptionSafe(onStart, this);
             
         }

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public class PathsManager : MonoBehaviour
+    public class PathsManager : StartupSingleton<PathsManager>
     {
         public const float MaxNPCDistance = 100.0f; // Max distance from each players before delete
         public const float MinNPCCreateDistance = 50.0f; // Min distance from each players to spawn ped
@@ -19,9 +19,20 @@ namespace SanAndreasUnity.Behaviours
 
         private float lastUpdateTime;
 
-        void Awake()
+        protected override void OnSingletonAwake()
         {
             lastUpdateTime = Time.time;
+
+            Ped.onStart += PedOnStart;
+        }
+
+        private void PedOnStart(Ped ped)
+        {
+            if (!NetStatus.IsServer)
+                return;
+
+            if (ped.PlayerOwner != null)
+                this.StartCoroutine(SpawnPedWithAI(ped.transform.position));
         }
 
         private void Update()
@@ -73,7 +84,7 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        public static System.Collections.IEnumerator SpawnPedWithAI(Vector3 targetZone)
+        private static System.Collections.IEnumerator SpawnPedWithAI(Vector3 targetZone)
         {
             if (NetStatus.IsServer)
             {
@@ -94,22 +105,25 @@ namespace SanAndreasUnity.Behaviours
 
 							Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos + new Vector3(0, 1, 0), Quaternion.identity, true);
 
-                            Ped_AI ai = newPed.gameObject.AddComponent<Ped_AI>();
+                            var ai = newPed.gameObject.GetOrAddComponent<Ped_AI>();
                             ai.CurrentNode = pedNode;
                             ai.TargetNode = pedNode;
                             
                             pedList.Add(newPed);
-                            yield return new WaitForEndOfFrame();
+                            yield return null;
                         }
+
                         if (GameObject.FindObjectsOfType<Ped_AI>().Where(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) < MaxNPCDistance).Count() > MaxNumberOfNPCAtSpawnPoint)
                             break;
                     }
                 }
-                yield return new WaitForEndOfFrame();
+
+                yield return null;
                 
                 foreach (Ped ped in pedList)
                 {
                     Weapon weapon = null;
+
                     switch (ped.PedDef.DefaultType)
                     {
                         case PedestrianType.Cop:
@@ -122,6 +136,7 @@ namespace SanAndreasUnity.Behaviours
                             weapon = ped.WeaponHolder.SetWeaponAtSlot(352, 0);
                             break;
                     }
+
                     if (weapon != null)
                     {
                         ped.WeaponHolder.SwitchWeapon(weapon.SlotIndex);
@@ -134,7 +149,7 @@ namespace SanAndreasUnity.Behaviours
         public static PathNode GetNextPathNode(PathNode origin, PathNode current)
         {
             List<int> areas = NodeFile.GetAreaNeighborhood(origin.AreaID);
-            NodeFile file = NodeReader.Nodes.Where(f => f.Id == origin.AreaID).First();
+            NodeFile file = NodeReader.Nodes.First(f => f.Id == origin.AreaID);
             List<PathNode> possibilities = new List<PathNode>();
             for (int i = 0; i < current.LinkCount; i++)
             {
@@ -151,7 +166,7 @@ namespace SanAndreasUnity.Behaviours
             }
             else
             {
-                //No possibilites found, returning to origin
+                //No possibilities found, returning to origin
                 return origin;
             }
 
