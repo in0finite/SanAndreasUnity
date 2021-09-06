@@ -430,7 +430,7 @@ namespace SanAndreasUnity.Behaviours
 
         private static void StepLoadPaths()
         {
-            Assets.Scripts.Importing.Paths.NodeReader.StepLoadPaths();
+            Importing.Paths.NodeReader.StepLoadPaths();
         }
 
 

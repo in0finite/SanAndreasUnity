@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Importing.Paths;
+﻿using SanAndreasUnity.Importing.Paths;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Net;
 using SanAndreasUnity.Utilities;

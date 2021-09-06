@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Assets.Scripts.Importing.Paths;
+﻿using System.Collections.Generic;
+using SanAndreasUnity.Importing.Paths;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Net;

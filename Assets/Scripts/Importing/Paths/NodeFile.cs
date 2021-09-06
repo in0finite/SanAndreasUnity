@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-/// <summary>
-///     Script created by RobinS-S
-/// </summary>
-
-namespace Assets.Scripts.Importing.Paths
+namespace SanAndreasUnity.Importing.Paths
 {
     public enum PathNodeTrafficLevel
     {
@@ -32,7 +28,7 @@ namespace Assets.Scripts.Importing.Paths
     }
     public struct PathNode
     {
-        public Vector3 Position { get; set; }
+        public UnityEngine.Vector3 Position { get; set; }
         public int BaseLinkID { get; set; }
         public int AreaID { get; set; }
         public int NodeID { get; set; }
@@ -43,10 +39,10 @@ namespace Assets.Scripts.Importing.Paths
     }
     public struct NavNode
     {
-        public Vector2 Position { get; set; }
+        public UnityEngine.Vector2 Position { get; set; }
         public int TargetAreaID { get; set; }
         public int TargetNodeID { get; set; }
-        public Vector2 Direction { get; set; }
+        public UnityEngine.Vector2 Direction { get; set; }
         public int Width { get; set; }
         public int NumLeftLanes { get; set; }
         public int NumRightLanes { get; set; }
@@ -148,7 +144,7 @@ namespace Assets.Scripts.Importing.Paths
                 float x = (float)reader.ReadInt16() / 8;
                 float z = (float)reader.ReadInt16() / 8;
                 float y = (float)reader.ReadInt16() / 8;
-                node.Position = new Vector3(x, y, z);
+                node.Position = new UnityEngine.Vector3(x, y, z);
                 short heuristic = reader.ReadInt16();
                 if (heuristic != 0x7FFE) UnityEngine.Debug.Log("corrupted path node?");
                 node.BaseLinkID = reader.ReadUInt16();
@@ -174,10 +170,10 @@ namespace Assets.Scripts.Importing.Paths
             for (int i = 0; i < NumOfNavNodes; i++)
             {
                 NavNode node = new NavNode();
-                node.Position = new Vector2(reader.ReadInt16(), reader.ReadInt16());
+                node.Position = new UnityEngine.Vector2(reader.ReadInt16(), reader.ReadInt16());
                 node.TargetAreaID = reader.ReadUInt16();
                 node.TargetNodeID = reader.ReadUInt16();
-                node.Direction = new Vector2(reader.ReadSByte(), reader.ReadSByte());
+                node.Direction = new UnityEngine.Vector2(reader.ReadSByte(), reader.ReadSByte());
                 node.Width = reader.ReadByte() / 8;
 
                 byte flags = reader.ReadByte();
@@ -287,7 +283,7 @@ namespace Assets.Scripts.Importing.Paths
             return result;
         }
 
-        public static int GetAreaFromPosition(Vector3 position)
+        public static int GetAreaFromPosition(UnityEngine.Vector3 position)
         {
             for (int i = 0; i < 64; i++)
             {
@@ -307,9 +303,9 @@ namespace Assets.Scripts.Importing.Paths
             return -1;
         }
 
-        public static int GetAreaFromPosition(Vector2 position)
+        public static int GetAreaFromPosition(UnityEngine.Vector2 position)
         {
-            return GetAreaFromPosition(new Vector3(position.x, 0.0f, position.y));
+            return GetAreaFromPosition(new UnityEngine.Vector3(position.x, 0.0f, position.y));
         }
     }
 }
