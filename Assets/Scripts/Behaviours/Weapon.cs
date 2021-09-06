@@ -574,6 +574,18 @@ namespace SanAndreasUnity.Behaviours
 
 		public float ReloadTime { get; set; } = 0;
 
+		public void AddRandomAmmoAmount()
+		{
+			if (!NetStatus.IsServer)
+				return;
+
+			Weapon weapon = this;
+
+			weapon.AmmoInClip = weapon.AmmoClipSize;
+			weapon.AmmoOutsideOfClip += weapon.AmmoClipSize * Random.Range( 0, 11 );
+			weapon.AmmoOutsideOfClip += Random.Range (50, 200);
+		}
+
 
 		// TODO: this function should be removed, and new one should be created: OnAnimsUpdated
 		public virtual void UpdateAnimWhileHolding ()

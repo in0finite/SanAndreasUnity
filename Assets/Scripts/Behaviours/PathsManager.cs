@@ -133,7 +133,7 @@ namespace SanAndreasUnity.Behaviours
                 if (weapon != null)
                 {
                     ped.WeaponHolder.SwitchWeapon(weapon.SlotIndex);
-                    WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
+                    weapon.AddRandomAmmoAmount();
                 }
             }
         }

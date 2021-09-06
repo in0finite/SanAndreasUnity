@@ -448,19 +448,9 @@ namespace SanAndreasUnity.Behaviours {
 
 				// add some ammo
 				Weapon weapon = this.GetWeaponAtSlot( grp.Key );
-				AddRandomAmmoAmountToWeapon (weapon);
+				weapon.AddRandomAmmoAmount();
 			}
 
-		}
-
-		public static void AddRandomAmmoAmountToWeapon (Weapon weapon)
-		{
-			if (!NetStatus.IsServer)
-				return;
-			
-			weapon.AmmoInClip = weapon.AmmoClipSize;
-			weapon.AmmoOutsideOfClip += weapon.AmmoClipSize * Random.Range( 0, 11 );
-			weapon.AmmoOutsideOfClip += Random.Range (50, 200);
 		}
 
 

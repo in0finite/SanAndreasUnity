@@ -201,7 +201,7 @@ namespace SanAndreasUnity.Commands
 
                 var weapon = player.OwnedPed.WeaponHolder.AddWeapon(modelId);
                 player.OwnedPed.WeaponHolder.SwitchWeapon(weapon.SlotIndex);
-                WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
+                weapon.AddRandomAmmoAmount();
 
                 return CommandManager.ProcessCommandResult.Success;
             }
@@ -240,7 +240,7 @@ namespace SanAndreasUnity.Commands
                     return pedNotAliveResult;
 
                 foreach (var weapon in player.OwnedPed.WeaponHolder.AllWeapons)
-                    WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
+                    weapon.AddRandomAmmoAmount();
 
                 return CommandManager.ProcessCommandResult.Success;
             }
