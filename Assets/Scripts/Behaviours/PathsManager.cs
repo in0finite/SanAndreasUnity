@@ -126,9 +126,9 @@ namespace SanAndreasUnity.Behaviours
 
                 if (defaultType == PedestrianType.Cop
                     || defaultType == PedestrianType.Criminal)
-                    weapon = ped.WeaponHolder.SetWeaponAtSlot(WeaponId.Pistol);
+                    weapon = ped.WeaponHolder.AddWeapon(WeaponId.Pistol);
                 else if (defaultType.IsGangMember())
-                    weapon = ped.WeaponHolder.SetWeaponAtSlot(WeaponId.MicroUzi);
+                    weapon = ped.WeaponHolder.AddWeapon(WeaponId.MicroUzi);
 
                 if (weapon != null)
                 {
