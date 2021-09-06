@@ -13,10 +13,13 @@ namespace SanAndreasUnity.Behaviours
         Chasing,
         Escaping
     }
+
     public class PedAI : MonoBehaviour
     {
         private static readonly List<PedAI> s_allPedAIs = new List<PedAI>();
         public static IReadOnlyList<PedAI> AllPedAIs => s_allPedAIs;
+
+        private static bool s_subscribedToPedOnDamageEvent = false;
 
         [SerializeField] private Vector3 currentNodePos;
         [SerializeField] private Vector3 targetNodePos;
@@ -45,7 +48,12 @@ namespace SanAndreasUnity.Behaviours
         private void Awake()
         {
             this.MyPed = this.GetComponentOrThrow<Ped>();
-            Ped.onDamaged += Ped_onDamaged;
+
+            if (!s_subscribedToPedOnDamageEvent)
+            {
+                s_subscribedToPedOnDamageEvent = true;
+                Ped.onDamaged += OnPedDamaged;
+            }
         }
 
         private void OnEnable()
@@ -58,20 +66,22 @@ namespace SanAndreasUnity.Behaviours
             s_allPedAIs.Remove(this);
         }
 
-        private void Ped_onDamaged(Ped hitPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
+        private static void OnPedDamaged(Ped hitPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
         {
-            if(hitPed.Equals(this.MyPed))
+            var hitPedAi = hitPed.GetComponent<PedAI>();
+            if (null == hitPedAi)
+                return;
+
+            if (hitPed.PedDef != null &&
+                (hitPed.PedDef.DefaultType == Importing.Items.Definitions.PedestrianType.Criminal ||
+                hitPed.PedDef.DefaultType == Importing.Items.Definitions.PedestrianType.Cop ||
+                hitPed.PedDef.DefaultType == Importing.Items.Definitions.PedestrianType.GangMember))
             {
-                if (this.MyPed.PedDef.DefaultType == Importing.Items.Definitions.PedestrianType.Criminal ||
-                    this.MyPed.PedDef.DefaultType == Importing.Items.Definitions.PedestrianType.Cop ||
-                    this.MyPed.PedDef.DefaultType == Importing.Items.Definitions.PedestrianType.GangMember)
-                {
-                    TargetPed = (Ped)dmgInfo.attacker;
-                    this.Action = PedAction.Chasing;
-                }
-                else
-                    this.Action = PedAction.Escaping;
+                hitPedAi.TargetPed = dmgInfo.GetAttackerPed();
+                hitPedAi.Action = PedAction.Chasing;
             }
+            else
+                hitPedAi.Action = PedAction.Escaping;
         }
 
         // Update is called once per frame
