@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.Importing.Paths;
+﻿using System;
+using System.Collections.Generic;
+using Assets.Scripts.Importing.Paths;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Net;
@@ -13,6 +15,9 @@ namespace SanAndreasUnity.Behaviours
     }
     public class Ped_AI : MonoBehaviour
     {
+        private static readonly List<Ped_AI> s_allPedAIs = new List<Ped_AI>();
+        public static IReadOnlyList<Ped_AI> AllPedAIs => s_allPedAIs;
+
         [SerializeField] private Vector3 currentNodePos;
         [SerializeField] private Vector3 targetNodePos;
         [SerializeField] private Vector2 targetNodeOffset; // Adding random offset to prevent peds to have the exact destination
@@ -36,11 +41,21 @@ namespace SanAndreasUnity.Behaviours
 
         public Ped MyPed { get; private set; }
 
-        // Use this for initialization
-        void Start()
+
+        private void Awake()
         {
-            this.MyPed = this.GetComponentOrLogError<Ped>();
+            this.MyPed = this.GetComponentOrThrow<Ped>();
             Ped.onDamaged += Ped_onDamaged;
+        }
+
+        private void OnEnable()
+        {
+            s_allPedAIs.Add(this);
+        }
+
+        private void OnDisable()
+        {
+            s_allPedAIs.Remove(this);
         }
 
         private void Ped_onDamaged(Ped hitPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)

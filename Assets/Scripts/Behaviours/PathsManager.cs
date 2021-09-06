@@ -78,7 +78,7 @@ namespace SanAndreasUnity.Behaviours
                             StartCoroutine(SpawnPedWithAI(targetZone));
                         }
                     }
-					NumberOfPeds = GameObject.FindObjectsOfType<Ped_AI>().Count();
+					NumberOfPeds = Ped_AI.AllPedAIs.Count;
 					lastUpdateTime = Time.time;
                 }
             }
@@ -113,7 +113,7 @@ namespace SanAndreasUnity.Behaviours
                             yield return null;
                         }
 
-                        if (GameObject.FindObjectsOfType<Ped_AI>().Where(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) < MaxNPCDistance).Count() > MaxNumberOfNPCAtSpawnPoint)
+                        if (Ped_AI.AllPedAIs.Count(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) < MaxNPCDistance) > MaxNumberOfNPCAtSpawnPoint)
                             break;
                     }
                 }
