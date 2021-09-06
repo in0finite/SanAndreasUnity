@@ -71,7 +71,7 @@ namespace SanAndreasUnity.Importing.Paths
     {
         public static List<NodeFile> Nodes { get; set; }
         public static float[][] Borders { get; private set; }
-        public static void StepLoadPaths()
+        public static void Load()
         {
             int row;
             int col;
@@ -301,11 +301,6 @@ namespace SanAndreasUnity.Importing.Paths
                 }
             }
             return -1;
-        }
-
-        public static int GetAreaFromPosition(UnityEngine.Vector2 position)
-        {
-            return GetAreaFromPosition(new UnityEngine.Vector3(position.x, 0.0f, position.y));
         }
     }
 }
