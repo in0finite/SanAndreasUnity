@@ -15,7 +15,6 @@ namespace SanAndreasUnity.Behaviours
         public const float MinNPCCreateDistance = 50.0f; // Min distance from each players to spawn ped
         public const float RefreshRate = 2f; // Number of seconds between each refresh
         public const int MaxNumberOfNPCAtSpawnPoint = 25;
-		public int NumberOfPeds; // Debug data only
 
         private float lastUpdateTime;
 
@@ -78,8 +77,7 @@ namespace SanAndreasUnity.Behaviours
                             this.StartCoroutine(SpawnPedWithAI(targetZone));
                         }
                     }
-					NumberOfPeds = Ped_AI.AllPedAIs.Count;
-					lastUpdateTime = Time.time;
+                    lastUpdateTime = Time.time;
                 }
             }
         }
