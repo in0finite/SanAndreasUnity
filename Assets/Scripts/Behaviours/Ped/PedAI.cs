@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Paths;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
@@ -72,9 +73,9 @@ namespace SanAndreasUnity.Behaviours
                 return;
 
             if (hitPed.PedDef != null &&
-                (hitPed.PedDef.DefaultType == Importing.Items.Definitions.PedestrianType.Criminal ||
-                hitPed.PedDef.DefaultType == Importing.Items.Definitions.PedestrianType.Cop ||
-                hitPed.PedDef.DefaultType == Importing.Items.Definitions.PedestrianType.GangMember))
+                (hitPed.PedDef.DefaultType == PedestrianType.Criminal ||
+                hitPed.PedDef.DefaultType == PedestrianType.Cop ||
+                hitPed.PedDef.DefaultType.IsGangMember()))
             {
                 hitPedAi.TargetPed = dmgInfo.GetAttackerPed();
                 hitPedAi.Action = PedAction.Chasing;

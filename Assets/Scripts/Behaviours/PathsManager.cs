@@ -122,18 +122,13 @@ namespace SanAndreasUnity.Behaviours
             {
                 Weapon weapon = null;
 
-                switch (ped.PedDef.DefaultType)
-                {
-                    case PedestrianType.Cop:
-                        weapon = ped.WeaponHolder.SetWeaponAtSlot(346, 0);
-                        break;
-                    case PedestrianType.Criminal:
-                        weapon = ped.WeaponHolder.SetWeaponAtSlot(347, 0);
-                        break;
-                    case PedestrianType.GangMember:
-                        weapon = ped.WeaponHolder.SetWeaponAtSlot(352, 0);
-                        break;
-                }
+                var defaultType = ped.PedDef.DefaultType;
+
+                if (defaultType == PedestrianType.Cop
+                    || defaultType == PedestrianType.Criminal)
+                    weapon = ped.WeaponHolder.SetWeaponAtSlot(WeaponId.Pistol, 0);
+                else if (defaultType.IsGangMember())
+                    weapon = ped.WeaponHolder.SetWeaponAtSlot(WeaponId.MicroUzi, 0);
 
                 if (weapon != null)
                 {

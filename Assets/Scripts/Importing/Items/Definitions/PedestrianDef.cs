@@ -31,6 +31,14 @@ namespace SanAndreasUnity.Importing.Items.Definitions
         Gang8 = GangMember | 7
     }
 
+    public static class PedestrianTypeExtensions
+    {
+        public static bool IsGangMember(this PedestrianType pedestrianType)
+        {
+            return (pedestrianType & PedestrianType.GangMember) != 0;
+        }
+    }
+
     [Section("peds")]
     public class PedestrianDef : Definition, IObjectDefinition
     {
