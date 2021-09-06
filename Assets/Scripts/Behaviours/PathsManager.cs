@@ -75,7 +75,7 @@ namespace SanAndreasUnity.Behaviours
                         if (nbrOfNPCInZone < 5)
                         {
                             Vector3 targetZone = player.transform.position + player.Heading * MinNPCCreateDistance;
-                            StartCoroutine(SpawnPedWithAI(targetZone));
+                            this.StartCoroutine(SpawnPedWithAI(targetZone));
                         }
                     }
 					NumberOfPeds = Ped_AI.AllPedAIs.Count;
@@ -86,62 +86,59 @@ namespace SanAndreasUnity.Behaviours
 
         private static System.Collections.IEnumerator SpawnPedWithAI(Vector3 targetZone)
         {
-            if (NetStatus.IsServer)
+            int currentArea = NodeFile.GetAreaFromPosition(targetZone);
+            List<int> nearAreas = NodeFile.GetAreaNeighborhood(currentArea);
+            List<Ped> pedList = new List<Ped>();
+
+            foreach (NodeFile file in NodeReader.Nodes.Where(f => nearAreas.Contains(f.Id) || f.Id == currentArea))
             {
-                int currentArea = NodeFile.GetAreaFromPosition(targetZone);
-                List<int> nearAreas = NodeFile.GetAreaNeighborhood(currentArea);
-                List<Ped> pedList = new List<Ped>();
-
-                foreach (NodeFile file in NodeReader.Nodes.Where(f => nearAreas.Contains(f.Id) || f.Id == currentArea))
+                foreach (PathNode node in file.PathNodes.Where(pn => pn.NodeType > 2
+                                                                     && Vector3.Distance(pn.Position, targetZone) < MaxNPCDistance
+                                                                     && Vector3.Distance(pn.Position, targetZone) > MinNPCCreateDistance))
                 {
-                    foreach (PathNode node in file.PathNodes.Where(pn => pn.NodeType > 2
-                            && Vector3.Distance(pn.Position, targetZone) < MaxNPCDistance
-                            && Vector3.Distance(pn.Position, targetZone) > MinNPCCreateDistance))
+                    if (UnityEngine.Random.Range(0, 255) > node.Flags.SpawnProbability)
                     {
-                        if (UnityEngine.Random.Range(0, 255) > node.Flags.SpawnProbability)
-                        {
-							PathNode pedNode = node;
-                            Vector3 spawnPos = new Vector3(pedNode.Position.x, pedNode.Position.y, pedNode.Position.z);
+                        PathNode pedNode = node;
+                        Vector3 spawnPos = new Vector3(pedNode.Position.x, pedNode.Position.y, pedNode.Position.z);
 
-							Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos + new Vector3(0, 1, 0), Quaternion.identity, true);
+                        Ped newPed = Ped.SpawnPed(Ped.RandomPedId, spawnPos + new Vector3(0, 1, 0), Quaternion.identity, true);
 
-                            var ai = newPed.gameObject.GetOrAddComponent<Ped_AI>();
-                            ai.CurrentNode = pedNode;
-                            ai.TargetNode = pedNode;
-                            
-                            pedList.Add(newPed);
-                            yield return null;
-                        }
+                        var ai = newPed.gameObject.GetOrAddComponent<Ped_AI>();
+                        ai.CurrentNode = pedNode;
+                        ai.TargetNode = pedNode;
 
-                        if (Ped_AI.AllPedAIs.Count(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) < MaxNPCDistance) > MaxNumberOfNPCAtSpawnPoint)
-                            break;
+                        pedList.Add(newPed);
+                        yield return null;
                     }
+
+                    if (Ped_AI.AllPedAIs.Count(p => Math.Abs(Vector3.Distance(p.transform.position, targetZone)) < MaxNPCDistance) > MaxNumberOfNPCAtSpawnPoint)
+                        break;
+                }
+            }
+
+            yield return null;
+
+            foreach (Ped ped in pedList)
+            {
+                Weapon weapon = null;
+
+                switch (ped.PedDef.DefaultType)
+                {
+                    case PedestrianType.Cop:
+                        weapon = ped.WeaponHolder.SetWeaponAtSlot(346, 0);
+                        break;
+                    case PedestrianType.Criminal:
+                        weapon = ped.WeaponHolder.SetWeaponAtSlot(347, 0);
+                        break;
+                    case PedestrianType.GangMember:
+                        weapon = ped.WeaponHolder.SetWeaponAtSlot(352, 0);
+                        break;
                 }
 
-                yield return null;
-                
-                foreach (Ped ped in pedList)
+                if (weapon != null)
                 {
-                    Weapon weapon = null;
-
-                    switch (ped.PedDef.DefaultType)
-                    {
-                        case PedestrianType.Cop:
-                            weapon = ped.WeaponHolder.SetWeaponAtSlot(346, 0);
-                            break;
-                        case PedestrianType.Criminal:
-                            weapon = ped.WeaponHolder.SetWeaponAtSlot(347, 0);
-                            break;
-                        case PedestrianType.GangMember:
-                            weapon = ped.WeaponHolder.SetWeaponAtSlot(352, 0);
-                            break;
-                    }
-
-                    if (weapon != null)
-                    {
-                        ped.WeaponHolder.SwitchWeapon(weapon.SlotIndex);
-                        WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
-                    }
+                    ped.WeaponHolder.SwitchWeapon(weapon.SlotIndex);
+                    WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
                 }
             }
         }
