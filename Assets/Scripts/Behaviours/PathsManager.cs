@@ -62,6 +62,7 @@ namespace SanAndreasUnity.Behaviours
                         if(!isNearPlayer)
                             Destroy(npc.gameObject);
                     }
+
                     int nbrOfNPCInZone;
                     foreach (Ped player in players)
                     {
@@ -73,10 +74,11 @@ namespace SanAndreasUnity.Behaviours
                         }
                         if (nbrOfNPCInZone < 5)
                         {
-                            Vector3 targetZone = player.transform.position + player.Heading * MinNPCCreateDistance;
+                            Vector3 targetZone = player.transform.position + player.transform.forward * MinNPCCreateDistance;
                             this.StartCoroutine(SpawnPedWithAI(targetZone));
                         }
                     }
+
                     lastUpdateTime = Time.time;
                 }
             }
