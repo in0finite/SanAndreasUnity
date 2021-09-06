@@ -7,7 +7,6 @@ TagManager:
   - Minimap
   - UI
   - Fire
-  - Ped
   layers:
   - Default
   - TransparentFX
