@@ -5,7 +5,15 @@ using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours
 {
-	
+
+	public static class PedDamageInfoExtensions
+	{
+		public static Ped GetAttackerPed(this DamageInfo damageInfo)
+		{
+			return damageInfo.attacker as Ped;
+		}
+	}
+
 	public partial class Ped {
 
 		public Damageable Damageable { get; private set; }
@@ -128,7 +136,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public void SendDamagedEventToClients(DamageInfo damageInfo, float damageAmount)
 		{
-			Ped attackingPed = damageInfo.attacker as Ped;
+			Ped attackingPed = damageInfo.GetAttackerPed();
 
 			PedSync.SendDamagedEvent(this.gameObject, attackingPed != null ? attackingPed.gameObject : null, damageAmount);
 		}
