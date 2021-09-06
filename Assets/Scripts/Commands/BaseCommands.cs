@@ -199,7 +199,7 @@ namespace SanAndreasUnity.Commands
                 if (null == player.OwnedPed)
                     return pedNotAliveResult;
 
-                var weapon = player.OwnedPed.WeaponHolder.SetWeaponAtSlot(modelId, 0);
+                var weapon = player.OwnedPed.WeaponHolder.SetWeaponAtSlot(modelId);
                 player.OwnedPed.WeaponHolder.SwitchWeapon(weapon.SlotIndex);
                 WeaponHolder.AddRandomAmmoAmountToWeapon(weapon);
 

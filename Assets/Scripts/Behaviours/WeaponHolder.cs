@@ -388,12 +388,7 @@ namespace SanAndreasUnity.Behaviours {
 
 		}
 
-		public void SetWeaponAtSlot (Importing.Items.Definitions.WeaponDef weaponDef, int slot)
-		{
-			this.SetWeaponAtSlot (weaponDef.Id, slot);
-		}
-
-		public Weapon SetWeaponAtSlot (int weaponId, int slotIndex)
+		public Weapon SetWeaponAtSlot (int weaponId)
 		{
 			NetStatus.ThrowIfNotOnServer();
 
@@ -449,7 +444,7 @@ namespace SanAndreasUnity.Behaviours {
 				int index = Random.Range (0, count);
 				WeaponData chosenWeaponData = grp.ElementAt (index);
 
-				this.SetWeaponAtSlot (chosenWeaponData.modelId1, grp.Key);
+				this.SetWeaponAtSlot (chosenWeaponData.modelId1);
 
 				// add some ammo
 				Weapon weapon = this.GetWeaponAtSlot( grp.Key );
