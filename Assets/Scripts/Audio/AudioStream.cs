@@ -63,6 +63,50 @@ namespace SanAndreasUnity.Audio
 				});
 		}
 
+		public struct AudioClipCreationData
+		{
+			public int Channels, SampleRate, TotalSamples;
+		}
+
+		public static AudioClipCreationData ReadStreamIntoBuffer(
+			Stream stream,
+			bool closeStreamOnDispose,
+			Func<int, float[]> funcGetBuffer)
+		{
+			var reader = new VorbisReader(stream, closeStreamOnDispose);
+
+			var audioClipCreationData = new AudioClipCreationData
+			{
+				Channels = reader.Channels,
+				SampleRate = reader.SampleRate,
+				TotalSamples = (int) reader.TotalSamples,
+			};
+
+			var buffer = funcGetBuffer(audioClipCreationData.Channels * audioClipCreationData.TotalSamples);
+
+			// read entire stream
+			reader.ReadSamples(buffer, 0, buffer.Length);
+
+			return audioClipCreationData;
+		}
+
+		public static AudioClip CreateAudioClip(
+			string audioClipName,
+			AudioClipCreationData audioClipCreationData,
+			float[] audioData)
+		{
+			var clip = AudioClip.Create(
+				audioClipName,
+				audioClipCreationData.TotalSamples,
+				audioClipCreationData.Channels,
+				audioClipCreationData.SampleRate,
+				false);
+
+			clip.SetData(audioData, 0);
+
+			return clip;
+		}
+
 		/// <summary>
 		/// Dispose
 		/// </summary>

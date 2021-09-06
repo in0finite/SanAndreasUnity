@@ -72,7 +72,17 @@ namespace SanAndreasUnity.Behaviours.Audio
 		}
 
 
-		public static AudioClip CreateAudioClipFromStream (string streamFileName, int bankIndex)
+		public static void CreateAudioClipFromStreamAsync(
+			string streamFileName,
+			int bankIndex,
+			System.Action<AudioClip> onFinish)
+		{
+
+		}
+
+		private static void CreateAudioClipFromStreamInBackgroundThread(
+			string streamFileName,
+			int bankIndex)
 		{
 			Profiler.BeginSample("CreateAudioClipFromStream()");
 
