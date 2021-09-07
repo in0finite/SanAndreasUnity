@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Paths;
 using UnityEngine;
@@ -99,7 +100,7 @@ namespace SanAndreasUnity.Behaviours
                         {
                             PathNode previousNode = CurrentNode;
                             CurrentNode = TargetNode;
-                            TargetNode = NPCPedSpawner.GetNextPathNode(previousNode, CurrentNode);
+                            TargetNode = GetNextPathNode(previousNode, CurrentNode);
                             targetNodeOffset = new Vector2(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2));
                         }
                         this.MyPed.IsWalkOn = true;
@@ -135,7 +136,7 @@ namespace SanAndreasUnity.Behaviours
                         {
                             PathNode previousNode = CurrentNode;
                             CurrentNode = TargetNode;
-                            TargetNode = NPCPedSpawner.GetNextPathNode(CurrentNode, previousNode);
+                            TargetNode = GetNextPathNode(CurrentNode, previousNode);
                         }
                         this.MyPed.IsSprintOn = true;
                         this.MyPed.Movement = (TargetNode.Position - this.MyPed.transform.position).normalized;
@@ -143,6 +144,32 @@ namespace SanAndreasUnity.Behaviours
                         break;
                 }
             }
+        }
+
+        public static PathNode GetNextPathNode(PathNode origin, PathNode current)
+        {
+            List<int> areas = NodeFile.GetAreaNeighborhood(origin.AreaID);
+            NodeFile file = NodeReader.Nodes.First(f => f.Id == origin.AreaID);
+            List<PathNode> possibilities = new List<PathNode>();
+            for (int i = 0; i < current.LinkCount; i++)
+            {
+                int linkArrayIndex = current.BaseLinkID + i;
+                NodeFile nf = NodeReader.Nodes.Single(nf2 => nf2.Id == file.NodeLinks[linkArrayIndex].AreaID);
+                PathNode target = nf.PathNodes.ElementAt(file.NodeLinks[linkArrayIndex].NodeID);
+                if (!target.Equals(origin))
+                    possibilities.Add(target);
+            }
+
+            if (possibilities.Count > 0)
+            {
+                return possibilities.ElementAt(UnityEngine.Random.Range(0, possibilities.Count - 1));
+            }
+            else
+            {
+                //No possibilities found, returning to origin
+                return origin;
+            }
+
         }
     }
 
