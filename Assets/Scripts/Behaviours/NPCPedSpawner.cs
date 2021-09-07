@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public class PathsManager : StartupSingleton<PathsManager>
+    public class NPCPedSpawner : StartupSingleton<NPCPedSpawner>
     {
         public const float MaxNPCDistance = 100.0f; // Max distance from each players before delete
         public const float MinNPCCreateDistance = 50.0f; // Min distance from each players to spawn ped

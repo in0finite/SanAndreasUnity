@@ -99,7 +99,7 @@ namespace SanAndreasUnity.Behaviours
                         {
                             PathNode previousNode = CurrentNode;
                             CurrentNode = TargetNode;
-                            TargetNode = PathsManager.GetNextPathNode(previousNode, CurrentNode);
+                            TargetNode = NPCPedSpawner.GetNextPathNode(previousNode, CurrentNode);
                             targetNodeOffset = new Vector2(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2));
                         }
                         this.MyPed.IsWalkOn = true;
@@ -135,7 +135,7 @@ namespace SanAndreasUnity.Behaviours
                         {
                             PathNode previousNode = CurrentNode;
                             CurrentNode = TargetNode;
-                            TargetNode = PathsManager.GetNextPathNode(CurrentNode, previousNode);
+                            TargetNode = NPCPedSpawner.GetNextPathNode(CurrentNode, previousNode);
                         }
                         this.MyPed.IsSprintOn = true;
                         this.MyPed.Movement = (TargetNode.Position - this.MyPed.transform.position).normalized;
