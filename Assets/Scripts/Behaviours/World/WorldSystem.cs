@@ -439,15 +439,21 @@ namespace SanAndreasUnity.Behaviours.World
         public void FocusPointChangedRadius(FocusPoint focusPoint, float newRadius)
             => this.FocusPointChangedParameters(focusPoint, focusPoint.Position, newRadius);
 
-        public void AddObjectToArea(Vector3 pos, T obj)
+        public void AddObjectToArea(Area area, T obj)
         {
             this.ThrowIfConcurrentModification();
-
-            var area = GetAreaAt(pos, true);
 
             if (null == area.objectsInside)
                 area.objectsInside = new List<T>();
             area.objectsInside.Add(obj);
+        }
+
+        public void AddObjectToArea(Vector3 pos, T obj)
+        {
+            this.ThrowIfConcurrentModification();
+
+            var area = this.GetAreaAt(pos, true);
+            this.AddObjectToArea(area, obj);
         }
 
         public void RemoveObjectFromArea(Vector3 pos, T obj)
@@ -459,6 +465,8 @@ namespace SanAndreasUnity.Behaviours.World
             if (area != null && area.objectsInside != null)
             {
                 area.objectsInside.Remove(obj);
+                if (area.objectsInside.Count == 0)
+                    area.objectsInside = null;
             }
         }
 
