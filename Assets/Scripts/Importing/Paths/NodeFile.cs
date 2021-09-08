@@ -125,17 +125,14 @@ namespace SanAndreasUnity.Importing.Paths
             using (BinaryReader reader = new BinaryReader(stream))
             {
                 ReadHeader(reader);
-                Debug.Log(NumOfNodes);
                 ReadNodes(reader);
                 ReadNavNodes(reader);
-                Debug.Log(NumOfNavNodes);
                 ReadLinks(reader);
                 reader.ReadBytes(768);
                 ReadNavLinks(reader);
                 ReadLinkLengths(reader);
                 ReadPathIntersectionFlags(reader);
             }
-            //Debug.Log($"Read paths. Nodes {NumOfNodes} VehNodes {NumOfVehNodes} PedNodes {NumOfPedNodes} NavNodes {NumOfNavNodes} Links {NumOfLinks}");
         }
 
         private void ReadNodes(BinaryReader reader)
@@ -150,7 +147,7 @@ namespace SanAndreasUnity.Importing.Paths
                 float y = (float)reader.ReadInt16() / 8;
                 node.Position = new UnityEngine.Vector3(x, y, z);
                 short heuristic = reader.ReadInt16();
-                if (heuristic != 0x7FFE) UnityEngine.Debug.Log("corrupted path node?");
+                if (heuristic != 0x7FFE) UnityEngine.Debug.LogError("corrupted path node?");
                 node.BaseLinkID = reader.ReadUInt16();
                 node.AreaID = reader.ReadUInt16();
                 node.NodeID = reader.ReadUInt16();
@@ -166,7 +163,6 @@ namespace SanAndreasUnity.Importing.Paths
                 node.Flags.SpawnProbability = (flag & 0xF0000) >> 16;
 
                 PathNodes.Add(node);
-                //UnityEngine.Debug.Log($"Node {i}: POS [{node.Position.x} {node.Position.y} {node.Position.z}] LinkID {node.LinkID} LinkCount {node.LinkCount} AreaID {node.AreaID} NodeID {node.NodeID} PathWidth {node.PathWidth} NodeType {node.NodeType} Flags {node.Flags}");
             }
         }
         private void ReadNavNodes(BinaryReader reader)
@@ -191,7 +187,6 @@ namespace SanAndreasUnity.Importing.Paths
                 node.Flags = reader.ReadByte();
 
                 NavNodes.Add(node);
-                //UnityEngine.Debug.Log($"NavNode {i}: {node.Position.x} {node.Position.y} AreaID {node.AreaID} NodeID {node.NodeID} Direction {node.Direction.x} {node.Direction.y} Flags {node.Flags}");
             }
         }
         private void ReadLinks(BinaryReader reader)
@@ -202,7 +197,6 @@ namespace SanAndreasUnity.Importing.Paths
                 link.AreaID = reader.ReadUInt16();
                 link.NodeID = reader.ReadUInt16();
                 NodeLinks.Add(link);
-                //UnityEngine.Debug.Log($"NodeLink {i}: AreaID {link.AreaID} NodeID {link.NodeID}");
             }
         }
 
@@ -215,7 +209,6 @@ namespace SanAndreasUnity.Importing.Paths
                 link.NodeLink = bytes & 1023;
                 link.AreaID = bytes >> 10;
                 NavNodeLinks.Add(link);
-                //UnityEngine.Debug.Log($"NavLink {i} area ID {link.AreaID} NaviNodeID {link.NaviNodeID}");
             }
         }
         private void ReadLinkLengths(BinaryReader reader)
@@ -226,7 +219,6 @@ namespace SanAndreasUnity.Importing.Paths
                 NodeLink tmp = NodeLinks[i];
                 tmp.Length = length;
                 NodeLinks[i] = tmp;
-                //UnityEngine.Debug.Log($"Link length {i}: {length}");
             }
         }
 
@@ -242,7 +234,6 @@ namespace SanAndreasUnity.Importing.Paths
 					IsRoadCross = (roadCross & 1) ? true : false,
 					IsTrafficLight = (roadCross & 1) ? true : false
 				};*/
-                //UnityEngine.Debug.Log($"PathIntersectionFlags {i}: roadCross {roadCross} pedTrafficLight {pedTrafficLight}");
             }
         }
 
