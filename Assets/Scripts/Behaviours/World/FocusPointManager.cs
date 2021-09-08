@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SanAndreasUnity.Behaviours.WorldSystem;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
@@ -26,13 +27,13 @@ namespace SanAndreasUnity.Behaviours.World
     /// </summary>
     public class FocusPointManager<T>
     {
-        private WorldSystemWithDistanceLevels<T> _worldSystem;
+        private IWorldSystem<T> _worldSystem;
 
         private float _defaultRevealRadius;
 
         public struct FocusPointInfo
         {
-            public long id;
+            public WorldSystem.FocusPoint focusPoint;
             public Transform transform;
             public float timeToKeepRevealingAfterRemoved;
             public float timeWhenRemoved;
@@ -46,7 +47,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 
         public FocusPointManager(
-            WorldSystemWithDistanceLevels<T> worldSystem,
+            IWorldSystem<T> worldSystem,
             float defaultRevealRadius)
         {
             _worldSystem = worldSystem;
@@ -58,10 +59,10 @@ namespace SanAndreasUnity.Behaviours.World
             if (!_focusPoints.Exists(f => f.transform == tr))
             {
                 float revealRadius = parameters.hasRevealRadius ? parameters.revealRadius : _defaultRevealRadius;
-                long registeredFocusPointId = _worldSystem.RegisterFocusPoint(revealRadius, tr.position);
+                var registeredFocusPoint = _worldSystem.RegisterFocusPoint(revealRadius, tr.position);
                 _focusPoints.Add(new FocusPointInfo
                 {
-                    id = registeredFocusPointId,
+                    focusPoint = registeredFocusPoint,
                     transform = tr,
                     timeToKeepRevealingAfterRemoved = parameters.timeToKeepRevealingAfterRemoved,
                     hasRevealRadius = parameters.hasRevealRadius,
@@ -87,7 +88,7 @@ namespace SanAndreasUnity.Behaviours.World
                 return;
             }
 
-            _worldSystem.UnRegisterFocusPoint(focusPoint.id);
+            _worldSystem.UnRegisterFocusPoint(focusPoint.focusPoint);
             _focusPoints.RemoveAt(index);
         }
 
@@ -108,12 +109,12 @@ namespace SanAndreasUnity.Behaviours.World
             	    }
 
             	    UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.UnRegisterFocusPoint()");
-            	    _worldSystem.UnRegisterFocusPoint(f.id);
+            	    _worldSystem.UnRegisterFocusPoint(f.focusPoint);
             	    UnityEngine.Profiling.Profiler.EndSample();
             	    return true;
                 }
 
-                _worldSystem.FocusPointChangedPosition(f.id, f.transform.position);
+                _worldSystem.FocusPointChangedPosition(f.focusPoint, f.transform.position);
 
                 return false;
             });
@@ -126,7 +127,7 @@ namespace SanAndreasUnity.Behaviours.World
                 {
             	    hasElementToRemove = true;
             	    UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.UnRegisterFocusPoint()");
-            	    _worldSystem.UnRegisterFocusPoint(_.id);
+            	    _worldSystem.UnRegisterFocusPoint(_.focusPoint);
             	    UnityEngine.Profiling.Profiler.EndSample();
                 }
             });
@@ -145,7 +146,7 @@ namespace SanAndreasUnity.Behaviours.World
                 var focusPoint = _focusPoints[i];
                 if (!focusPoint.hasRevealRadius)
                 {
-                    _worldSystem.FocusPointChangedRadius(focusPoint.id, newDefaultRevealRadius);
+                    _worldSystem.FocusPointChangedRadius(focusPoint.focusPoint, newDefaultRevealRadius);
                 }
             }
         }

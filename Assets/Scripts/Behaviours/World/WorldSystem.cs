@@ -4,7 +4,7 @@ using System.Linq;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
 
-namespace SanAndreasUnity.Behaviours.World
+namespace SanAndreasUnity.Behaviours.WorldSystem
 {
     public struct WorldSystemParams
     {
@@ -12,14 +12,55 @@ namespace SanAndreasUnity.Behaviours.World
         public ushort numAreasPerAxis;
     }
 
-    public class WorldSystemWithDistanceLevels<T>
+    public interface IWorldSystem<T>
+    {
+        void Update();
+
+        FocusPoint RegisterFocusPoint(float radius, Vector3 pos);
+
+        void UnRegisterFocusPoint(FocusPoint focusPoint);
+
+        void FocusPointChangedParameters(FocusPoint focusPoint, Vector3 newPos, float newRadius);
+
+        void AddObjectToArea(Vector3 pos, T obj);
+
+        void RemoveObjectFromArea(Vector3 pos, T obj);
+    }
+
+    public static class WorldSystemExtensions
+    {
+        public static void FocusPointChangedPosition<T>(this IWorldSystem<T> worldSystem, FocusPoint focusPoint, Vector3 newPos)
+            => worldSystem.FocusPointChangedParameters(focusPoint, newPos, focusPoint.Radius);
+
+        public static void FocusPointChangedRadius<T>(this IWorldSystem<T> worldSystem, FocusPoint focusPoint, float newRadius)
+            => worldSystem.FocusPointChangedParameters(focusPoint, focusPoint.Position, newRadius);
+    }
+
+    public sealed class FocusPoint
+    {
+        public long Id { get; } = FocusPointIdGenerator.GetNextId();
+        public float Radius { get; internal set; }
+        public Vector3 Position { get; internal set; }
+
+        public FocusPoint(float radius, Vector3 position)
+        {
+            this.Radius = radius;
+            this.Position = position;
+        }
+
+        public sealed override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
+    }
+
+    public class WorldSystemWithDistanceLevels<T> : IWorldSystem<T>
     {
         private readonly WorldSystem<T>[] _worldSystems;
         public IReadOnlyList<WorldSystem<T>> WorldSystems => _worldSystems;
         private readonly float[] _distanceLevels;
         public IReadOnlyList<float> DistanceLevels => _distanceLevels;
-        private readonly Dictionary<long, WorldSystem<T>.FocusPoint[]> _focusPointsPerLevel = new Dictionary<long, WorldSystem<T>.FocusPoint[]>();
-        private long _lastFocusPointId = 1;
+        private readonly Dictionary<long, FocusPoint[]> _focusPointsPerLevel = new Dictionary<long, FocusPoint[]>();
 
         public WorldSystemWithDistanceLevels(
             float[] distanceLevels,
@@ -63,46 +104,56 @@ namespace SanAndreasUnity.Behaviours.World
             return _distanceLevels.Length - 1;
         }
 
-        public long RegisterFocusPoint(float radius, Vector3 pos)
+        public FocusPoint RegisterFocusPoint(float radius, Vector3 pos)
         {
-            var focusPoints = new WorldSystem<T>.FocusPoint[_worldSystems.Length];
+            var focusPoints = new FocusPoint[_worldSystems.Length];
             for (int i = 0; i < _worldSystems.Length; i++)
                 focusPoints[i] = _worldSystems[i].RegisterFocusPoint(Mathf.Min(radius, _distanceLevels[i]), pos);
 
-            long id = _lastFocusPointId++;
-            _focusPointsPerLevel[id] = focusPoints;
-            return id;
+            var focusPointToReturn = new FocusPoint(radius, pos);
+
+            _focusPointsPerLevel[focusPointToReturn.Id] = focusPoints;
+
+            return focusPointToReturn;
         }
 
-        public void UnRegisterFocusPoint(long id)
+        public void UnRegisterFocusPoint(FocusPoint focusPoint)
         {
-            if (!_focusPointsPerLevel.TryGetValue(id, out var focusPoints))
+            if (!_focusPointsPerLevel.TryGetValue(focusPoint.Id, out var focusPoints))
                 return;
 
             for (int i = 0; i < _worldSystems.Length; i++)
                 _worldSystems[i].UnRegisterFocusPoint(focusPoints[i]);
         }
 
-        public void FocusPointChangedPosition(long id, Vector3 newPos)
+        public void FocusPointChangedParameters(
+            FocusPoint focusPoint,
+            Vector3 newPos,
+            float newRadius)
         {
-            if (!_focusPointsPerLevel.TryGetValue(id, out var focusPoints))
+            if (!_focusPointsPerLevel.TryGetValue(focusPoint.Id, out var focusPoints))
                 return;
 
             Vector3 diff = focusPoints[0].Position - newPos;
-            if (diff.x == 0f && diff.y == 0f && diff.z == 0f) // faster than calling '==' operator
+            float radiusDiff = focusPoints[0].Radius - newRadius;
+            if (diff.x == 0f && diff.y == 0f && diff.z == 0f && radiusDiff == 0f) // faster than calling '==' Vector3 operator
                 return;
 
             for (int i = 0; i < _worldSystems.Length; i++)
-                _worldSystems[i].FocusPointChangedPosition(focusPoints[i], newPos);
+                _worldSystems[i].FocusPointChangedParameters(focusPoints[i], newPos, Mathf.Min(newRadius, _distanceLevels[i]));
+
+            focusPoint.Position = newPos;
+            focusPoint.Radius = newRadius;
         }
 
-        public void FocusPointChangedRadius(long id, float newRadius)
+        public void AddObjectToArea(Vector3 pos, T obj)
         {
-            if (!_focusPointsPerLevel.TryGetValue(id, out var focusPoints))
-                return;
+            throw new NotSupportedException($"You probably want to use {nameof(AddObjectToArea)}() with draw distance parameter");
+        }
 
-            for (int i = 0; i < _worldSystems.Length; i++)
-                _worldSystems[i].FocusPointChangedRadius(focusPoints[i], Mathf.Min(newRadius, _distanceLevels[i]));
+        public void RemoveObjectFromArea(Vector3 pos, T obj)
+        {
+            throw new NotSupportedException($"You probably want to use {nameof(RemoveObjectFromArea)}() with draw distance parameter");
         }
 
         public void AddObjectToArea(Vector3 pos, float drawDistance, T obj)
@@ -146,7 +197,7 @@ namespace SanAndreasUnity.Behaviours.World
         }
     }
 
-    public class WorldSystem<T>
+    public class WorldSystem<T> : IWorldSystem<T>
     {
         public struct AreaIndex
         {
@@ -186,22 +237,6 @@ namespace SanAndreasUnity.Behaviours.World
             {
                 this.WorldSystem = worldSystem;
                 this.AreaIndex = areaIndex;
-            }
-        }
-
-        public sealed class FocusPoint
-        {
-            public long Id { get; } = FocusPointIdGenerator.GetNextId();
-            public float Radius { get; internal set; }
-            public Vector3 Position { get; internal set; }
-
-            internal FocusPoint()
-            {
-            }
-
-            public override int GetHashCode()
-            {
-                return this.Id.GetHashCode();
             }
         }
 
@@ -374,9 +409,7 @@ namespace SanAndreasUnity.Behaviours.World
             if (radius < 0)
                 throw new ArgumentException("Radius can not be < 0");
 
-            var focusPoint = new FocusPoint();
-            focusPoint.Radius = radius;
-            focusPoint.Position = pos;
+            var focusPoint = new FocusPoint(radius, pos);
 
             if (!_focusPoints.Add(focusPoint))
                 throw new Exception("Failed to add focus point to the collection");
@@ -406,10 +439,7 @@ namespace SanAndreasUnity.Behaviours.World
             });
         }
 
-        public void FocusPointChangedPosition(FocusPoint focusPoint, Vector3 newPos)
-            => this.FocusPointChangedParameters(focusPoint, newPos, focusPoint.Radius);
-
-        private void FocusPointChangedParameters(FocusPoint focusPoint, Vector3 newPos, float newRadius)
+        public void FocusPointChangedParameters(FocusPoint focusPoint, Vector3 newPos, float newRadius)
         {
             this.ThrowIfConcurrentModification();
 
@@ -454,9 +484,6 @@ namespace SanAndreasUnity.Behaviours.World
             focusPoint.Position = newPos;
             focusPoint.Radius = newRadius;
         }
-
-        public void FocusPointChangedRadius(FocusPoint focusPoint, float newRadius)
-            => this.FocusPointChangedParameters(focusPoint, focusPoint.Position, newRadius);
 
         public void AddObjectToArea(Area area, T obj)
         {
