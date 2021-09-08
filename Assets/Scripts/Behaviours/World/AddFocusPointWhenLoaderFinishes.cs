@@ -4,7 +4,7 @@ namespace SanAndreasUnity.Behaviours.World
 {
     public class AddFocusPointWhenLoaderFinishes : MonoBehaviour
     {
-        public FocusPoint.Parameters parameters = FocusPoint.Parameters.Default;
+        public FocusPointParameters parameters = FocusPointParameters.Default;
 
 
         private void OnLoaderFinished()

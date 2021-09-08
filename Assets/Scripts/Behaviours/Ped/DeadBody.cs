@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Behaviours.Peds
         public static IEnumerable<DeadBody> DeadBodies => _deadBodies;
         public static int NumDeadBodies => _deadBodies.Count;
 
-        public FocusPoint.Parameters focusPointParameters = FocusPoint.Parameters.Default;
+        public FocusPointParameters focusPointParameters = FocusPointParameters.Default;
 
         public PushableByDamage PushableByDamage { get; private set; }
 

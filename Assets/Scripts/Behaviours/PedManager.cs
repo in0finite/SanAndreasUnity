@@ -17,8 +17,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public LayerMask groundFindingIgnoredLayerMask = 0;
 
-		public FocusPoint.Parameters playerPedFocusPointParameters = new FocusPoint.Parameters(false, 0f, 3f);
-		public FocusPoint.Parameters npcPedFocusPointParameters = FocusPoint.Parameters.Default;
+		public FocusPointParameters playerPedFocusPointParameters = new FocusPointParameters(false, 0f, 3f);
+		public FocusPointParameters npcPedFocusPointParameters = FocusPointParameters.Default;
 
 		[Header("Camera")]
 

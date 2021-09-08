@@ -23,19 +23,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public Camera PreviewCamera;
 
-        public struct FocusPointInfo
-        {
-	        public long id;
-	        public Transform transform;
-	        public float timeToKeepRevealingAfterRemoved;
-	        public float timeWhenRemoved;
-	        public bool hasRevealRadius;
-        }
-
-		private List<FocusPointInfo> _focusPoints = new List<FocusPointInfo>();
-		public IReadOnlyList<FocusPointInfo> FocusPoints => _focusPoints;
-
-		private List<FocusPointInfo> _focusPointsToRemoveAfterTimeout = new List<FocusPointInfo>();
+        public FocusPointManager<MapObject> FocusPointManager { get; private set; }
 
 		private struct AreaWithDistance
 		{
@@ -150,6 +138,8 @@ namespace SanAndreasUnity.Behaviours.World
 				this.xzWorldSystemNumAreasPerDrawDistanceLevel.Select(_ => new WorldSystemParams { worldSize = (uint) this.WorldSize, numAreasPerAxis = _ }).ToArray(),
 				Enumerable.Range(0, this.drawDistancesPerLayers.Length).Select(_ => new WorldSystemParams { worldSize = this.yWorldSystemSize, numAreasPerAxis = this.yWorldSystemNumAreas }).ToArray(),
 				this.OnAreaChangedVisibility);
+
+			this.FocusPointManager = new FocusPointManager<MapObject>(_worldSystem, this.MaxDrawDistance);
 		}
 
 		internal void InitStaticGeometry ()
@@ -230,57 +220,20 @@ namespace SanAndreasUnity.Behaviours.World
 			Profiler.EndSample();
 		}
 
-		public void RegisterFocusPoint(Transform tr, FocusPoint.Parameters parameters)
+		public void RegisterFocusPoint(Transform tr, FocusPointParameters parameters)
 		{
-			if (!_focusPoints.Exists(f => f.transform == tr))
-			{
-				float revealRadius = parameters.hasRevealRadius ? parameters.revealRadius : this.MaxDrawDistance;
-				long registeredFocusPointId = _worldSystem.RegisterFocusPoint(revealRadius, tr.position);
-				_focusPoints.Add(new FocusPointInfo
-				{
-					id = registeredFocusPointId,
-					transform = tr,
-					timeToKeepRevealingAfterRemoved = parameters.timeToKeepRevealingAfterRemoved,
-					hasRevealRadius = parameters.hasRevealRadius,
-				});
-			}
+			this.FocusPointManager.RegisterFocusPoint(tr, parameters);
 		}
 
 		public void UnRegisterFocusPoint(Transform tr)
 		{
-			int index = _focusPoints.FindIndex(f => f.transform == tr);
-			if (index < 0)
-				return;
-
-			// maybe we could just set transform to null, so it gets removed during next update ?
-
-			var focusPoint = _focusPoints[index];
-
-			if (focusPoint.timeToKeepRevealingAfterRemoved > 0)
-			{
-				focusPoint.timeWhenRemoved = Time.time;
-				_focusPointsToRemoveAfterTimeout.Add(focusPoint);
-				_focusPoints.RemoveAt(index);
-				return;
-			}
-
-			_worldSystem.UnRegisterFocusPoint(focusPoint.id);
-			_focusPoints.RemoveAt(index);
+			this.FocusPointManager.UnRegisterFocusPoint(tr);
 		}
 
 		private void OnMaxDrawDistanceChanged()
 		{
-			if (null == _worldSystem)
-				return;
-
-			for (int i = 0; i < _focusPoints.Count; i++)
-			{
-				var focusPoint = _focusPoints[i];
-				if (!focusPoint.hasRevealRadius)
-				{
-					_worldSystem.FocusPointChangedRadius(focusPoint.id, this.MaxDrawDistance);
-				}
-			}
+			if (this.FocusPointManager != null)
+				this.FocusPointManager.ChangeDefaultRevealRadius(this.MaxDrawDistance);
 		}
 
 
@@ -328,53 +281,14 @@ namespace SanAndreasUnity.Behaviours.World
 
 			_updateTimeLimitStopwatch.Restart();
 
-			float timeNow = Time.time;
+			this.FocusPointManager.Update();
 
-			UnityEngine.Profiling.Profiler.BeginSample("Update focus points");
-            this._focusPoints.RemoveAll(f =>
-            {
-	            if (null == f.transform)
-	            {
-		            if (f.timeToKeepRevealingAfterRemoved > 0f)
-		            {
-			            f.timeWhenRemoved = timeNow;
-			            _focusPointsToRemoveAfterTimeout.Add(f);
-			            return true;
-		            }
-
-		            UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.UnRegisterFocusPoint()");
-		            _worldSystem.UnRegisterFocusPoint(f.id);
-		            UnityEngine.Profiling.Profiler.EndSample();
-		            return true;
-	            }
-
-	            _worldSystem.FocusPointChangedPosition(f.id, f.transform.position);
-
-	            return false;
-            });
-            UnityEngine.Profiling.Profiler.EndSample();
-
-            bool hasElementToRemove = false;
-            _focusPointsToRemoveAfterTimeout.ForEach(_ =>
-            {
-	            if (timeNow - _.timeWhenRemoved > _.timeToKeepRevealingAfterRemoved)
-	            {
-		            hasElementToRemove = true;
-		            UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.UnRegisterFocusPoint()");
-		            _worldSystem.UnRegisterFocusPoint(_.id);
-		            UnityEngine.Profiling.Profiler.EndSample();
-	            }
-            });
-
-            if (hasElementToRemove)
-	            _focusPointsToRemoveAfterTimeout.RemoveAll(_ => timeNow - _.timeWhenRemoved > _.timeToKeepRevealingAfterRemoved);
-
-            if (this._focusPoints.Count > 0)
+            /*if (this._focusPoints.Count > 0)
             {
                 // only update divisions loading if there are focus points - because otherwise, 
                 // load order of divisions is not updated
 
-            }
+            }*/
 
             UnityEngine.Profiling.Profiler.BeginSample("WorldSystem.Update()");
             _worldSystem.Update();
