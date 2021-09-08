@@ -22,6 +22,8 @@ namespace SanAndreasUnity.Behaviours
         [SerializeField] private int _revealRadius = 100;
         public float timeToKeepRevealingAfterRemoved = 3f;
 
+        public float minSpawnDistanceFromFocusPoint = 40;
+
         private readonly List<WorldSystemArea> _areasWhichBecameInvisible = new List<WorldSystemArea>(32);
         private readonly List<WorldSystemArea> _visibleAreas = new List<WorldSystemArea>(32);
 
@@ -174,6 +176,7 @@ namespace SanAndreasUnity.Behaviours
             Vector3 worldSystemAreaCenter = _worldSystem.GetAreaCenter(worldSystemArea);
             Vector3 targetZone = worldSystemAreaCenter;
             float areaRadius = _areaSize * Mathf.Sqrt(2) / 2f; // radius of outer circle
+            bool hasFocusPointsThatSeeArea = worldSystemArea.FocusPointsThatSeeMe != null && worldSystemArea.FocusPointsThatSeeMe.Count > 0;
 
             int currentArea = NodeFile.GetAreaFromPosition(targetZone);
             List<int> areaIdsToSearch = NodeFile.GetAreaNeighborhood(currentArea);
@@ -193,7 +196,8 @@ namespace SanAndreasUnity.Behaviours
                 .SelectMany(_ => _.PathNodes
                     .Where(pn => pn.NodeType > 2 // ?
                                  && pn.Flags.SpawnProbability != 0
-                                 && Vector3.Distance(pn.Position, targetZone) < areaRadius))
+                                 && Vector3.Distance(pn.Position, targetZone) < areaRadius
+                                 && (!hasFocusPointsThatSeeArea || worldSystemArea.FocusPointsThatSeeMe.All(f => Vector3.Distance(pn.Position, f.Position) > this.minSpawnDistanceFromFocusPoint))))
                 .RandomElementOrDefault();
 
             if (EqualityComparer<PathNode>.Default.Equals(pathNode, default))
