@@ -488,3 +488,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d1123faa382c4a4798a13a6c6b7ec4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  totalMaxNumSpawnedPeds: 40
+  maxNumSpawnedPedsPerPlayer: 10
+  _areaSize: 100
+  _revealRadius: 90
+  timeToKeepRevealingAfterRemoved: 6
+  minSpawnDistanceFromFocusPoint: 30
+  timeIntervalToAttemptSpawn: 0.5
