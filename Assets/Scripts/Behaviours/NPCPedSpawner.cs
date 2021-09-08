@@ -152,7 +152,11 @@ namespace SanAndreasUnity.Behaviours
         {
             if (area.ObjectsInside != null && area.ObjectsInside.Count > 0)
             {
-                area.ObjectsInside.ForEach(_ => UnityEngine.Object.Destroy(_.MyPed.gameObject));
+                area.ObjectsInside.ForEach(pedAI =>
+                {
+                    if (pedAI != null)
+                        UnityEngine.Object.Destroy(pedAI.MyPed.gameObject);
+                });
                 _worldSystem.RemoveAllObjectsFromArea(area);
             }
         }
