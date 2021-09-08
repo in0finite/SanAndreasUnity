@@ -203,27 +203,6 @@ namespace SanAndreasUnity.Behaviours
             if (EqualityComparer<PathNode>.Default.Equals(pathNode, default))
                 yield break;
 
-            /*PathNode pathNode = default;
-            bool foundPathNode = false;
-
-            foreach (NodeFile file in areaIdsToSearch.Select(NodeReader.GetAreaById))
-            {
-                if (foundPathNode)
-                    break;
-
-                foreach (PathNode node in file.PathNodes
-                    .Where(pn => pn.NodeType > 2 && Vector3.Distance(pn.Position, targetZone) < areaRadius))
-                {
-                    pathNode = node;
-                    foundPathNode = true;
-                    break;
-                }
-            }
-
-            if (!foundPathNode)
-                yield break;
-                */
-
             var newPed = this.SpawnPed(worldSystemArea, pathNode);
 
             // TODO: initialize PedDefinition right after ped is created, so we don't have to wait 1 frame until it is available
