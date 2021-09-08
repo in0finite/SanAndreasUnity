@@ -624,6 +624,32 @@ namespace SanAndreasUnity.Utilities
             return list [UnityEngine.Random.Range(0, list.Count)];
         }
 
+        private static T RandomElement<T> (this IEnumerable<T> enumerable, bool returnDefaultIfEmpty)
+        {
+	        // ReSharper disable PossibleMultipleEnumeration
+	        int count = enumerable.Count();
+
+	        if (count < 1)
+	        {
+		        if (returnDefaultIfEmpty)
+			        return default(T);
+		        throw new System.InvalidOperationException("Enumerable has no elements");
+	        }
+
+	        return enumerable.ElementAt(UnityEngine.Random.Range(0, count));
+	        // ReSharper restore PossibleMultipleEnumeration
+        }
+
+        public static T RandomElement<T>(this IEnumerable<T> enumerable)
+        {
+	        return RandomElement(enumerable, false);
+        }
+
+        public static T RandomElementOrDefault<T>(this IEnumerable<T> enumerable)
+        {
+	        return RandomElement(enumerable, true);
+        }
+
         public static void ForEach<T>(this IEnumerable<T> enumerable, System.Action<T> action)
         {
 	        foreach (var element in enumerable)

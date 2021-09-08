@@ -94,6 +94,10 @@ namespace SanAndreasUnity.Importing.Paths
             if (Nodes == null) Nodes = new List<NodeFile>();
             Nodes.Add(node);
         }
+        public static NodeFile GetAreaById(int id)
+        {
+            return Nodes[id];
+        }
     }
     public class NodeFile
     {
