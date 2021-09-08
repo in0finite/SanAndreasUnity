@@ -470,6 +470,13 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
+        public void RemoveAllObjectsFromArea(Area area)
+        {
+            this.ThrowIfConcurrentModification();
+
+            area.objectsInside = null;
+        }
+
         public void Update()
         {
             this.ThrowIfConcurrentModification();
