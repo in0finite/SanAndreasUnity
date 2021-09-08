@@ -124,6 +124,28 @@ namespace SanAndreasUnity.Behaviours.World
         }
     }
 
+    internal static class FocusPointIdGenerator
+    {
+        // static fields should not be in generic classes, and therefore we need non-generic class for storing last id
+        private static long _sLastId = 0;
+
+        internal static long GetNextId()
+        {
+            return ++_sLastId;
+        }
+    }
+
+    internal static class AreaIdGenerator
+    {
+        // static fields should not be in generic classes, and therefore we need non-generic class for storing last id
+        private static long _sLastId = 0;
+
+        internal static long GetNextId()
+        {
+            return ++_sLastId;
+        }
+    }
+
     public class WorldSystem<T>
     {
         public struct AreaIndex
@@ -144,8 +166,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public class Area
         {
-            private static long s_lastId = 0;
-            public long Id { get; } = ++s_lastId;
+            public long Id { get; } = AreaIdGenerator.GetNextId();
 
             public AreaIndex AreaIndex { get; }
 
@@ -170,9 +191,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public sealed class FocusPoint
         {
-            private static long _lastId = 1;
-
-            public long Id { get; } = _lastId++;
+            public long Id { get; } = FocusPointIdGenerator.GetNextId();
             public float Radius { get; internal set; }
             public Vector3 Position { get; internal set; }
 
