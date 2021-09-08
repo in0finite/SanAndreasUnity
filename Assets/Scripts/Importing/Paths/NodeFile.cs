@@ -79,7 +79,7 @@ namespace SanAndreasUnity.Importing.Paths
             //TODO: according to https://gtamods.com/wiki/Paths_%28GTA_SA%29  only the active area and those surrounding it should be loaded at a time
             for (int i = 0; i < 64; i++)
             {
-                using (Stream node = SanAndreasUnity.Importing.Archive.ArchiveManager.ReadFile("nodes" + i + ".dat"))
+                using (Stream node = Archive.ArchiveManager.ReadFile("nodes" + i + ".dat"))
                 {
                     NodeFile nf = new NodeFile(i, node);
                     AddNode(nf);
@@ -297,7 +297,7 @@ namespace SanAndreasUnity.Importing.Paths
                 }
                 catch (Exception)
                 {
-                    Debug.Log("NodeReader.Borders is null");
+                    Debug.LogError("NodeReader.Borders is null");
                 }
             }
             return -1;
