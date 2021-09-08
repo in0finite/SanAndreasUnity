@@ -79,7 +79,8 @@ namespace SanAndreasUnity.Behaviours.World
 			}
 		}
 
-		public int WorldSize { get; } = 6000;
+		public int WorldSize => 6000; // current world size - in the future, this will be configurable
+		public static int DefaultWorldSize => 6000;
 
         public float[] drawDistancesPerLayers = new float[] { 301, 801, 1501 };
 
