@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Behaviours.WorldSystem
         public ushort numAreasPerAxis;
     }
 
-    public interface IWorldSystem<T>
+    public interface IWorldSystem
     {
         void Update();
 
@@ -21,7 +21,10 @@ namespace SanAndreasUnity.Behaviours.WorldSystem
         void UnRegisterFocusPoint(FocusPoint focusPoint);
 
         void FocusPointChangedParameters(FocusPoint focusPoint, Vector3 newPos, float newRadius);
+    }
 
+    public interface IWorldSystem<T> : IWorldSystem
+    {
         void AddObjectToArea(Vector3 pos, T obj);
 
         void RemoveObjectFromArea(Vector3 pos, T obj);
