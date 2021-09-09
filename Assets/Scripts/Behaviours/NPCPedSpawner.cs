@@ -23,6 +23,7 @@ namespace SanAndreasUnity.Behaviours
         public float timeToKeepRevealingAfterRemoved = 3f;
 
         public float minSpawnDistanceFromFocusPoint = 40;
+        public float maxSpawnDistanceFromFocusPoint = 100;
 
         private readonly List<WorldSystemArea> _visibleAreas = new List<WorldSystemArea>(32);
 
@@ -225,7 +226,7 @@ namespace SanAndreasUnity.Behaviours
                     .Where(pn => pn.NodeType > 2 // ?
                                  && pn.Flags.SpawnProbability != 0
                                  && Vector3.Distance(pn.Position, targetZone) < areaRadius
-                                 && (!hasFocusPointsThatSeeArea || worldSystemArea.FocusPointsThatSeeMe.All(f => Vector3.Distance(pn.Position, f.Position) > this.minSpawnDistanceFromFocusPoint))))
+                                 && (!hasFocusPointsThatSeeArea || worldSystemArea.FocusPointsThatSeeMe.All(f => Vector3.Distance(pn.Position, f.Position).BetweenExclusive(this.minSpawnDistanceFromFocusPoint, this.maxSpawnDistanceFromFocusPoint)))))
                 .RandomElementOrDefault();
 
             if (EqualityComparer<PathNode>.Default.Equals(pathNode, default))

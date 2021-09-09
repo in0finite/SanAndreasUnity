@@ -491,7 +491,9 @@ MonoBehaviour:
   totalMaxNumSpawnedPeds: 40
   maxNumSpawnedPedsPerPlayer: 10
   _areaSize: 100
-  _revealRadius: 90
+  _revealRadius: 190
   timeToKeepRevealingAfterRemoved: 6
   minSpawnDistanceFromFocusPoint: 30
+  maxSpawnDistanceFromFocusPoint: 100
   timeIntervalToAttemptSpawn: 0.5
+  timeIntervalToAttemptDestroy: 0.65
