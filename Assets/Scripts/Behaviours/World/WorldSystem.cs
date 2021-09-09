@@ -21,6 +21,8 @@ namespace SanAndreasUnity.Behaviours.WorldSystem
         void UnRegisterFocusPoint(FocusPoint focusPoint);
 
         void FocusPointChangedParameters(FocusPoint focusPoint, Vector3 newPos, float newRadius);
+
+        AreaIndex GetAreaIndex(Vector3 pos);
     }
 
     public interface IWorldSystem<T> : IWorldSystem
@@ -163,6 +165,12 @@ namespace SanAndreasUnity.Behaviours.WorldSystem
 
             focusPoint.Position = newPos;
             focusPoint.Radius = newRadius;
+        }
+
+        public AreaIndex GetAreaIndex(Vector3 pos)
+        {
+            int index = this.GetLevelIndexFromDrawDistance(float.PositiveInfinity);
+            return _worldSystems[index].GetAreaIndex(pos);
         }
 
         public void AddObjectToArea(Vector3 pos, T obj)
@@ -642,7 +650,7 @@ namespace SanAndreasUnity.Behaviours.WorldSystem
             return (short) (1 + Mathf.FloorToInt((pos + _yAxisInfo.worldHalfSize) / _yAxisInfo.areaSize));
         }
 
-        private AreaIndex GetAreaIndex(Vector3 pos)
+        public AreaIndex GetAreaIndex(Vector3 pos)
         {
             return new AreaIndex(GetAreaIndex(pos.x), GetAreaIndexForYAxis(pos.y), GetAreaIndex(pos.z));
         }
@@ -693,6 +701,16 @@ namespace SanAndreasUnity.Behaviours.WorldSystem
                 _areas[index.x, index.y, index.z] = area;
             }
             return area;
+        }
+
+        public Area GetAreaAt(Vector3 pos)
+        {
+            return this.GetAreaAt(pos, false);
+        }
+
+        public Area GetAreaAt(AreaIndex areaIndex)
+        {
+            return _areas[areaIndex.x, areaIndex.y, areaIndex.z];
         }
 
         private byte GetNewAreas(AreaIndexes oldIndexes, AreaIndexes newIndexes, AreaIndexes[] resultBuffer)

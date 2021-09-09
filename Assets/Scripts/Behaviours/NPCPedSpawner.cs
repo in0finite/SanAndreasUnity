@@ -24,13 +24,16 @@ namespace SanAndreasUnity.Behaviours
 
         public float minSpawnDistanceFromFocusPoint = 40;
 
-        private readonly List<WorldSystemArea> _areasWhichBecameInvisible = new List<WorldSystemArea>(32);
         private readonly List<WorldSystemArea> _visibleAreas = new List<WorldSystemArea>(32);
 
         private readonly List<(PedAI pedAI, WorldSystemArea area)> _spawnedPeds = new List<(PedAI, WorldSystemArea)>();
+        private readonly List<PedAI> _pedsToDestroy = new List<PedAI>();
 
         private float _timeUntilNewSpawn = 0f;
         public float timeIntervalToAttemptSpawn = 0.33f;
+
+        private float _timeUntilNewDestroy = 0f;
+        public float timeIntervalToAttemptDestroy = 0.65f;
 
         public FocusPointManager<PedAI> FocusPointManager { get; private set; }
 
@@ -38,6 +41,7 @@ namespace SanAndreasUnity.Behaviours
         protected override void OnSingletonAwake()
         {
             _timeUntilNewSpawn = this.timeIntervalToAttemptSpawn;
+            _timeUntilNewDestroy = this.timeIntervalToAttemptDestroy;
 
             Ped.onStart += PedOnStart;
         }
@@ -73,13 +77,17 @@ namespace SanAndreasUnity.Behaviours
 
         private void OnAreaChangedVisibility(WorldSystem<PedAI>.Area area, bool isVisible)
         {
-            if (!isVisible)
-                _areasWhichBecameInvisible.Add(area);
-
             if (isVisible)
                 _visibleAreas.Add(area);
             else
                 _visibleAreas.Remove(area);
+        }
+
+        void OnPedChangedArea(PedAI pedAI, AreaIndex oldAreaIndex, AreaIndex newAreaIndex)
+        {
+            var newArea = _worldSystem.GetAreaAt(newAreaIndex);
+            if (null == newArea || !newArea.WasVisibleInLastUpdate) // new area not visible
+                _pedsToDestroy.AddIfNotPresent(pedAI);
         }
 
         void UpdateAreas()
@@ -90,18 +98,51 @@ namespace SanAndreasUnity.Behaviours
             this.FocusPointManager.Update();
             _worldSystem.Update();
 
-            for (int i = 0; i < _areasWhichBecameInvisible.Count; i++)
+            this.UpdateDestroying();
+
+            this.UpdateSpawning();
+        }
+
+        void UpdateDestroying()
+        {
+            _timeUntilNewDestroy -= Time.deltaTime;
+            if (_timeUntilNewDestroy > 0)
+                return;
+
+            _timeUntilNewDestroy = this.timeIntervalToAttemptDestroy;
+
+            // destroy only 1 ped per attempt
+
+            // check if there are registered peds to destroy
+
+            _pedsToDestroy.RemoveDeadObjects();
+            if (_pedsToDestroy.Count > 0)
             {
-                var area = _areasWhichBecameInvisible[i];
+                Destroy(_pedsToDestroy[0].MyPed.gameObject);
+                _pedsToDestroy.RemoveAt(0);
 
-                // area no longer visible by any player
-                // destroy all NPCs from this area
-
-                this.DestroySpawnedPedsFromArea(area);
+                return;
             }
 
-            _areasWhichBecameInvisible.Clear();
+            // check if any of spawned peds is in invisible area - can happen if area became invisible
 
+            _spawnedPeds.RemoveAll(_ => null == _.pedAI);
+
+            int index = _spawnedPeds.FindIndex(_ =>
+            {
+                var area = _worldSystem.GetAreaAt(_.pedAI.MyPed.transform.position);
+                return null == area || !area.WasVisibleInLastUpdate;
+            });
+
+            if (index >= 0)
+            {
+                Destroy(_spawnedPeds[index].pedAI.MyPed.gameObject);
+                _spawnedPeds.RemoveAt(index);
+            }
+        }
+
+        void UpdateSpawning()
+        {
             // check if we should spawn new peds
 
             _timeUntilNewSpawn -= Time.deltaTime;
@@ -148,19 +189,6 @@ namespace SanAndreasUnity.Behaviours
             int numPlayers = Player.AllPlayersList.Count;
 
             return _spawnedPeds.Count >= this.totalMaxNumSpawnedPeds || _spawnedPeds.Count >= numPlayers * this.maxNumSpawnedPedsPerPlayer;
-        }
-
-        private void DestroySpawnedPedsFromArea(WorldSystemArea area)
-        {
-            if (area.ObjectsInside != null && area.ObjectsInside.Count > 0)
-            {
-                area.ObjectsInside.ForEach(pedAI =>
-                {
-                    if (pedAI != null)
-                        UnityEngine.Object.Destroy(pedAI.MyPed.gameObject);
-                });
-                _worldSystem.RemoveAllObjectsFromArea(area);
-            }
         }
 
         private void Update()
@@ -221,10 +249,13 @@ namespace SanAndreasUnity.Behaviours
             var ai = newPed.gameObject.GetOrAddComponent<PedAI>();
 
             _spawnedPeds.Add((ai, worldSystemArea));
-            _worldSystem.AddObjectToArea(worldSystemArea, ai);
 
             ai.CurrentNode = pathNode;
             ai.TargetNode = pathNode;
+
+            var areaChangeDetector = newPed.gameObject.AddComponent<AreaChangeDetector>();
+            areaChangeDetector.Init(_worldSystem);
+            areaChangeDetector.onAreaChanged += (oldIndex, newIndex) => OnPedChangedArea(ai, oldIndex, newIndex);
 
             return ai;
         }
