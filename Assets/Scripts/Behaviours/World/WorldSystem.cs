@@ -57,6 +57,22 @@ namespace SanAndreasUnity.Behaviours.WorldSystem
         }
     }
 
+    public struct AreaIndex
+    {
+        public short x, y, z;
+
+        public AreaIndex(short x, short y, short z)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public bool IsEqualTo(AreaIndex other) => this.x == other.x && this.y == other.y && this.z == other.z;
+
+        public override string ToString() => $"({this.x}, {this.y}, {this.z})";
+    }
+
     public class WorldSystemWithDistanceLevels<T> : IWorldSystem<T>
     {
         private readonly WorldSystem<T>[] _worldSystems;
@@ -202,22 +218,6 @@ namespace SanAndreasUnity.Behaviours.WorldSystem
 
     public class WorldSystem<T> : IWorldSystem<T>
     {
-        public struct AreaIndex
-        {
-            public short x, y, z;
-
-            public AreaIndex(short x, short y, short z)
-            {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-            }
-
-            public bool IsEqualTo(AreaIndex other) => this.x == other.x && this.y == other.y && this.z == other.z;
-
-            public override string ToString() => $"({this.x}, {this.y}, {this.z})";
-        }
-
         public class Area
         {
             public long Id { get; } = AreaIdGenerator.GetNextId();
