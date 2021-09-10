@@ -249,6 +249,7 @@ namespace SanAndreasUnity.Importing.Paths
         /**
          * Returns all the areas ID around the given areaID
          */
+        // TODO: this method doesn't work properly
         public static List<int> GetAreaNeighborhood(int areaID)
         {
             List<int> result = new List<int>();
@@ -278,6 +279,7 @@ namespace SanAndreasUnity.Importing.Paths
             return result;
         }
 
+        // TODO: this method doesn't work properly
         public static int GetAreaFromPosition(UnityEngine.Vector3 position)
         {
             for (int i = 0; i < 64; i++)
