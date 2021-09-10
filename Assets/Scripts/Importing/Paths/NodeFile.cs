@@ -115,12 +115,12 @@ namespace SanAndreasUnity.Importing.Paths
     public class NodeFile
     {
         public int Id { get; }
-        public int NumOfNodes { get; private set; }
         public int NumOfVehNodes { get; private set; }
         public int NumOfPedNodes { get; private set; }
         public int NumOfNavNodes { get; private set; }
         public int NumOfLinks { get; private set; }
-        public List<PathNode> PathNodes { get; } = new List<PathNode>();
+        public List<PathNode> VehicleNodes { get; } = new List<PathNode>();
+        public List<PathNode> PedNodes { get; } = new List<PathNode>();
         public List<NavNode> NavNodes { get; } = new List<NavNode>();
         public List<NodeLink> NodeLinks { get; } = new List<NodeLink>();
         public List<NavNodeLink> NavNodeLinks { get; } = new List<NavNodeLink>();
@@ -146,34 +146,45 @@ namespace SanAndreasUnity.Importing.Paths
 
         private void ReadNodes(BinaryReader reader)
         {
-            for (int i = 0; i < NumOfNodes; i++)
+            for (int i = 0; i < NumOfVehNodes; i++)
             {
-                PathNode node = new PathNode();
-                reader.ReadUInt32();
-                reader.ReadUInt32();
-                float x = (float)reader.ReadInt16() / 8;
-                float z = (float)reader.ReadInt16() / 8;
-                float y = (float)reader.ReadInt16() / 8;
-                node.Position = new UnityEngine.Vector3(x, y, z);
-                short heuristic = reader.ReadInt16();
-                if (heuristic != 0x7FFE) UnityEngine.Debug.LogError("corrupted path node?");
-                node.BaseLinkID = reader.ReadUInt16();
-                node.AreaID = reader.ReadUInt16();
-                node.NodeID = reader.ReadUInt16();
-                node.PathWidth = (float)reader.ReadByte() / 8;
-                node.NodeType = reader.ReadByte();
+                VehicleNodes.Add(ReadNode(reader));
+            }
 
-                int flag = reader.ReadInt32();
-                node.LinkCount = flag & 15;
-                node.Flags.RoadBlocks = Convert.ToBoolean(flag & 0xF);
-                node.Flags.IsWater = Convert.ToBoolean(flag & 0x80);
-                node.Flags.EmergencyOnly = Convert.ToBoolean(flag & 0x100);
-                node.Flags.IsHighway = !Convert.ToBoolean(flag & 0x1000);
-                node.Flags.SpawnProbability = (flag & 0xF0000) >> 16;
-
-                PathNodes.Add(node);
+            for (int i = 0; i < NumOfPedNodes; i++)
+            {
+                PedNodes.Add(ReadNode(reader));
             }
         }
+
+        private PathNode ReadNode(BinaryReader reader)
+        {
+            PathNode node = new PathNode();
+            reader.ReadUInt32();
+            reader.ReadUInt32();
+            float x = (float)reader.ReadInt16() / 8;
+            float z = (float)reader.ReadInt16() / 8;
+            float y = (float)reader.ReadInt16() / 8;
+            node.Position = new UnityEngine.Vector3(x, y, z);
+            short heuristic = reader.ReadInt16();
+            if (heuristic != 0x7FFE) UnityEngine.Debug.LogError("corrupted path node?");
+            node.BaseLinkID = reader.ReadUInt16();
+            node.AreaID = reader.ReadUInt16();
+            node.NodeID = reader.ReadUInt16();
+            node.PathWidth = (float)reader.ReadByte() / 8;
+            node.NodeType = reader.ReadByte();
+
+            int flag = reader.ReadInt32();
+            node.LinkCount = flag & 15;
+            node.Flags.RoadBlocks = Convert.ToBoolean(flag & 0xF);
+            node.Flags.IsWater = Convert.ToBoolean(flag & 0x80);
+            node.Flags.EmergencyOnly = Convert.ToBoolean(flag & 0x100);
+            node.Flags.IsHighway = !Convert.ToBoolean(flag & 0x1000);
+            node.Flags.SpawnProbability = (flag & 0xF0000) >> 16;
+
+            return node;
+        }
+
         private void ReadNavNodes(BinaryReader reader)
         {
             for (int i = 0; i < NumOfNavNodes; i++)
@@ -248,10 +259,10 @@ namespace SanAndreasUnity.Importing.Paths
 
         private void ReadHeader(BinaryReader reader)
         {
-            NumOfNodes = (int)reader.ReadUInt32();
+            int numOfNodes = (int)reader.ReadUInt32();
             NumOfVehNodes = (int)reader.ReadUInt32();
             NumOfPedNodes = (int)reader.ReadUInt32();
-            if (NumOfVehNodes + NumOfPedNodes != NumOfNodes)
+            if (NumOfVehNodes + NumOfPedNodes != numOfNodes)
                 throw new Exception($"Node file {Id} has invalid number of nodes");
             NumOfNavNodes = (int)reader.ReadUInt32();
             NumOfLinks = (int)reader.ReadUInt32();

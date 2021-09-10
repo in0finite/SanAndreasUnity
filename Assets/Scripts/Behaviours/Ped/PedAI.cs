@@ -155,7 +155,7 @@ namespace SanAndreasUnity.Behaviours
             {
                 int linkArrayIndex = current.BaseLinkID + i;
                 NodeFile nf = NodeReader.NodeFiles.Single(nf2 => nf2.Id == file.NodeLinks[linkArrayIndex].AreaID);
-                PathNode target = nf.PathNodes.ElementAt(file.NodeLinks[linkArrayIndex].NodeID);
+                PathNode target = nf.PedNodes.ElementAt(file.NodeLinks[linkArrayIndex].NodeID);
                 if (!target.Equals(origin))
                     possibilities.Add(target);
             }

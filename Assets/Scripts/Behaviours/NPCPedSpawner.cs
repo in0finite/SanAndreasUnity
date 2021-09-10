@@ -222,7 +222,7 @@ namespace SanAndreasUnity.Behaviours
 
             var pathNode = areaIdsToSearch
                 .Select(NodeReader.GetAreaById)
-                .SelectMany(_ => _.PathNodes
+                .SelectMany(_ => _.PedNodes
                     .Where(pn => pn.NodeType > 2 // ?
                                  && pn.Flags.SpawnProbability != 0
                                  && Vector3.Distance(pn.Position, targetZone) < areaRadius
