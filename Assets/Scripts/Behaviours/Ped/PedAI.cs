@@ -149,12 +149,12 @@ namespace SanAndreasUnity.Behaviours
         public static PathNode GetNextPathNode(PathNode origin, PathNode current)
         {
             List<int> areas = NodeFile.GetAreaNeighborhood(origin.AreaID);
-            NodeFile file = NodeReader.Nodes.First(f => f.Id == origin.AreaID);
+            NodeFile file = NodeReader.NodeFiles.First(f => f.Id == origin.AreaID);
             List<PathNode> possibilities = new List<PathNode>();
             for (int i = 0; i < current.LinkCount; i++)
             {
                 int linkArrayIndex = current.BaseLinkID + i;
-                NodeFile nf = NodeReader.Nodes.Single(nf2 => nf2.Id == file.NodeLinks[linkArrayIndex].AreaID);
+                NodeFile nf = NodeReader.NodeFiles.Single(nf2 => nf2.Id == file.NodeLinks[linkArrayIndex].AreaID);
                 PathNode target = nf.PathNodes.ElementAt(file.NodeLinks[linkArrayIndex].NodeID);
                 if (!target.Equals(origin))
                     possibilities.Add(target);

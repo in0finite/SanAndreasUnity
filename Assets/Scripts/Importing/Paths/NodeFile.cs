@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace SanAndreasUnity.Importing.Paths
         Medium = 2,
         Low = 3
     }
+
     public struct PathNodeFlag
     {
         public PathNodeTrafficLevel TrafficLevel;
@@ -20,12 +22,14 @@ namespace SanAndreasUnity.Importing.Paths
         public bool EmergencyOnly;
         public bool IsHighway;
         public int SpawnProbability;
+
         public override string ToString()
         {
             return "TrafficLevel=" + TrafficLevel + ",Roadblocks=" + RoadBlocks + ",IsWater=" + IsWater + "\r\n" +
                  "EmergencyOnly=" + EmergencyOnly + ",IsHighway=" + IsHighway + ",SpawnProbability=" + SpawnProbability;
         }
     }
+
     public struct PathNode
     {
         public UnityEngine.Vector3 Position { get; set; }
@@ -37,6 +41,7 @@ namespace SanAndreasUnity.Importing.Paths
         public int LinkCount { get; set; }
         public PathNodeFlag Flags;
     }
+
     public struct NavNode
     {
         public UnityEngine.Vector2 Position { get; set; }
@@ -51,77 +56,81 @@ namespace SanAndreasUnity.Importing.Paths
         public int IsTrainCrossing { get; set; }
         public byte Flags { get; set; }
     }
+
     public struct NodeLink
     {
         public int AreaID { get; set; }
         public int NodeID { get; set; }
         public int Length { get; set; }
     }
+
     public struct PathIntersectionFlags
     {
         public bool IsRoadCross { get; set; }
         public bool IsTrafficLight { get; set; }
     }
+
     public struct NavNodeLink
     {
         public int NodeLink { get; set; }
         public int AreaID { get; set; }
     }
-    public class NodeReader
+
+    public static class NodeReader
     {
-        public static List<NodeFile> Nodes { get; set; }
-        public static float[][] Borders { get; private set; }
+        private static readonly List<NodeFile> _nodeFiles = new List<NodeFile>();
+        public static IReadOnlyList<NodeFile> NodeFiles { get; } = new ReadOnlyCollection<NodeFile>(_nodeFiles);
+
+        internal static float[][] Borders { get; set; }
+
         public static void Load()
         {
             int row;
             int col;
+
+            _nodeFiles.Clear();
             Borders = new float[64][];
+
             //TODO: according to https://gtamods.com/wiki/Paths_%28GTA_SA%29  only the active area and those surrounding it should be loaded at a time
             for (int i = 0; i < 64; i++)
             {
                 using (Stream node = Archive.ArchiveManager.ReadFile("nodes" + i + ".dat"))
                 {
                     NodeFile nf = new NodeFile(i, node);
-                    AddNode(nf);
+                    _nodeFiles.Add(nf);
                 }
-                row = (int)(i % 8);
-                col = (int)(i / 8);
+
+                row = i % 8;
+                col = i / 8;
                 Borders[i] = new float[] { -3000 + (750 * row), -3000 + (750 * col) };
             }
         }
-        public static void AddNode(NodeFile node)
-        {
-            if (Nodes == null) Nodes = new List<NodeFile>();
-            Nodes.Add(node);
-        }
+
         public static NodeFile GetAreaById(int id)
         {
-            return Nodes[id];
+            return NodeFiles[id];
         }
     }
+
     public class NodeFile
     {
-        public int Id { get; set; }
-        public int NumOfNodes { get; set; }
-        public int NumOfVehNodes { get; set; }
-        public int NumOfPedNodes { get; set; }
-        public int NumOfNavNodes { get; set; }
-        public int NumOfLinks { get; set; }
-        public List<PathNode> PathNodes { get; set; }
-        public List<NavNode> NavNodes { get; set; }
-        public List<NodeLink> NodeLinks { get; set; }
-        public List<NavNodeLink> NavNodeLinks { get; set; }
-        public List<PathIntersectionFlags> PathIntersections { get; set; }
+        public int Id { get; }
+        public int NumOfNodes { get; private set; }
+        public int NumOfVehNodes { get; private set; }
+        public int NumOfPedNodes { get; private set; }
+        public int NumOfNavNodes { get; private set; }
+        public int NumOfLinks { get; private set; }
+        public List<PathNode> PathNodes { get; } = new List<PathNode>();
+        public List<NavNode> NavNodes { get; } = new List<NavNode>();
+        public List<NodeLink> NodeLinks { get; } = new List<NodeLink>();
+        public List<NavNodeLink> NavNodeLinks { get; } = new List<NavNodeLink>();
+        public List<PathIntersectionFlags> PathIntersections { get; } = new List<PathIntersectionFlags>();
 
 
         public NodeFile(int id, Stream stream)
         {
             Id = id;
-            PathNodes = new List<PathNode>();
-            NavNodes = new List<NavNode>();
-            NodeLinks = new List<NodeLink>();
-            NavNodeLinks = new List<NavNodeLink>();
-            PathIntersections = new List<PathIntersectionFlags>();
+
             using (BinaryReader reader = new BinaryReader(stream))
             {
                 ReadHeader(reader);
