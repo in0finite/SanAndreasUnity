@@ -251,6 +251,8 @@ namespace SanAndreasUnity.Importing.Paths
             NumOfNodes = (int)reader.ReadUInt32();
             NumOfVehNodes = (int)reader.ReadUInt32();
             NumOfPedNodes = (int)reader.ReadUInt32();
+            if (NumOfVehNodes + NumOfPedNodes != NumOfNodes)
+                throw new Exception($"Node file {Id} has invalid number of nodes");
             NumOfNavNodes = (int)reader.ReadUInt32();
             NumOfLinks = (int)reader.ReadUInt32();
         }
