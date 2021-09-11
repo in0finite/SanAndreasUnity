@@ -207,11 +207,9 @@ namespace SanAndreasUnity.Behaviours
             float areaRadius = _areaSize * Mathf.Sqrt(2) / 2f; // radius of outer circle
             bool hasFocusPointsThatSeeArea = worldSystemArea.FocusPointsThatSeeMe != null && worldSystemArea.FocusPointsThatSeeMe.Count > 0;
 
-            int currentArea = NodeFile.GetAreaFromPosition(targetZone);
-            List<int> areaIdsToSearch = NodeFile.GetAreaNeighborhood(currentArea);
-            areaIdsToSearch.Add(currentArea);
-            areaIdsToSearch.RemoveAll(_ => _ < 0);
-            areaIdsToSearch = areaIdsToSearch.Distinct().ToList(); // just in case above functions don't work properly
+            List<int> areaIdsToSearch = NodeReader.GetAreaIndexesInRadius(targetZone, areaRadius)
+                .Select(NodeReader.GetAreaIdFromIndexes)
+                .ToList();
 
             if (areaIdsToSearch.Count == 0)
                 yield break;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Paths
@@ -111,9 +112,90 @@ namespace SanAndreasUnity.Importing.Paths
             }
         }
 
+        public static Vector2Int GetAreaIndexes(int areaId)
+        {
+            return new Vector2Int(areaId % 8, areaId / 8);
+        }
+
+        public static int GetAreaIdFromIndexes(Vector2Int areaIndexes)
+        {
+            return areaIndexes.y * 8 + areaIndexes.x;
+        }
+
         public static NodeFile GetAreaById(int id)
         {
             return NodeFiles[id];
+        }
+
+        public static Vector2Int GetAreaIndexesFromPosition(UnityEngine.Vector3 position, bool clamp)
+        {
+            return new Vector2Int(
+                GetAreaIndexFromPosition(position.x, clamp),
+                GetAreaIndexFromPosition(position.z, clamp));
+        }
+
+        private static int GetAreaIndexFromPosition(float position, bool clamp)
+        {
+            if (position >= 3000f)
+            {
+                return clamp ? 7 : -1;
+            }
+
+            if (position <= -3000f)
+            {
+                return clamp ? 0 : -1;
+            }
+
+            int areaIndex = Mathf.FloorToInt((position - (-3000.0f)) / 750.0f);
+
+            // fix for potential floating point errors
+            areaIndex = Mathf.Clamp(areaIndex, 0, 7);
+
+            return areaIndex;
+        }
+
+        public static List<Vector2Int> GetAreaIndexesInRadius(UnityEngine.Vector3 pos, float radius)
+        {
+            // convert to outer bounding rect
+            // get area indexes of rect min and rect max
+            // all indexes in between match
+
+            UnityEngine.Vector3 min = pos;
+            min.x -= radius;
+            min.z -= radius;
+
+            UnityEngine.Vector3 max = pos;
+            max.x += radius;
+            max.z += radius;
+
+            var areasInRadius = new List<Vector2Int>();
+
+            // check for intersection with map
+            // if there is no intersection, we can't use clamping below, because it will always return
+            // some areas, even if they are outside of radius
+
+            if (min.x >= 3000f)
+                return areasInRadius;
+            if (min.z >= 3000f)
+                return areasInRadius;
+
+            if (max.x <= -3000f)
+                return areasInRadius;
+            if (max.z <= -3000f)
+                return areasInRadius;
+
+            Vector2Int minIndexes = GetAreaIndexesFromPosition(min, true);
+            Vector2Int maxIndexes = GetAreaIndexesFromPosition(max, true);
+
+            for (int x = minIndexes.x; x <= maxIndexes.x; x++)
+            {
+                for (int y = minIndexes.y; y <= maxIndexes.y; y++)
+                {
+                    areasInRadius.Add(new Vector2Int(x, y));
+                }
+            }
+
+            return areasInRadius;
         }
 
         public static IEnumerable<PathNode> GetAllLinkedNodes(PathNode pathNode)
@@ -298,60 +380,6 @@ namespace SanAndreasUnity.Importing.Paths
             if (nodeId < NumOfVehNodes)
                 return VehicleNodes[nodeId];
             return PedNodes[nodeId - NumOfVehNodes];
-        }
-
-        /**
-         * Returns all the areas ID around the given areaID
-         */
-        // TODO: this method doesn't work properly
-        public static List<int> GetAreaNeighborhood(int areaID)
-        {
-            List<int> result = new List<int>();
-            int indexX = (areaID + 1) % 8;
-            int indexY = Convert.ToInt32(Math.Truncate(Convert.ToDecimal((areaID + 1) / 8)));
-            if (indexY == 8) indexY = 7;
-
-            int aW, aNW, aN, aNE, aE, aSE, aS, aSW;
-            aW = (indexX == 1) ? -1 : (areaID - 1);
-            aNW = (indexX == 1) ? -1 : ((indexY == 7) ? -1 : (areaID + 7));
-            aN = (indexY == 7) ? -1 : (areaID + 8);
-            aNE = (indexX == 0) ? -1 : ((indexY == 7) ? -1 : (areaID + 9));
-            aE = (indexX == 0) ? -1 : (areaID + 1);
-            aSE = (indexX == 0) ? -1 : ((indexY == 0) ? -1 : (areaID - 7));
-            aS = (indexY == 0) ? -1 : (areaID - 8);
-            aSW = (indexX == 1) ? -1 : ((indexY == 0) ? -1 : (areaID - 9));
-
-            result.Add(aW);
-            result.Add(aNW);
-            result.Add(aN);
-            result.Add(aNE);
-            result.Add(aE);
-            result.Add(aSE);
-            result.Add(aS);
-            result.Add(aSW);
-
-            return result;
-        }
-
-        // TODO: this method doesn't work properly
-        public static int GetAreaFromPosition(UnityEngine.Vector3 position)
-        {
-            for (int i = 0; i < 64; i++)
-            {
-                try
-                {
-                    if (position.x > NodeReader.Borders[i][0] && position.x < (NodeReader.Borders[i][0] + 750)
-                        && position.z > NodeReader.Borders[i][1] && position.z < (NodeReader.Borders[i][1] + 750))
-                    {
-                        return i;
-                    }
-                }
-                catch (Exception)
-                {
-                    Debug.LogError("NodeReader.Borders is null");
-                }
-            }
-            return -1;
         }
     }
 }
