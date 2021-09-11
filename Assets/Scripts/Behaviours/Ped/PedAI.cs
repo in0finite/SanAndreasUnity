@@ -98,6 +98,7 @@ namespace SanAndreasUnity.Behaviours
                         targetNodePos = TargetNode.Position;
                         if (Vector2.Distance(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.z), new Vector2(targetNodePos.x, targetNodePos.z)) < 3)
                         {
+                            // arrived at target node
                             PathNode previousNode = CurrentNode;
                             CurrentNode = TargetNode;
                             TargetNode = GetNextPathNode(previousNode, CurrentNode);
@@ -134,6 +135,7 @@ namespace SanAndreasUnity.Behaviours
                         targetNodePos = TargetNode.Position;
                         if (Vector2.Distance(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.z), new Vector2(TargetNode.Position.x, TargetNode.Position.z)) < 1f)
                         {
+                            // arrived at target node
                             PathNode previousNode = CurrentNode;
                             CurrentNode = TargetNode;
                             TargetNode = GetNextPathNode(CurrentNode, previousNode);
@@ -146,28 +148,30 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        public static PathNode GetNextPathNode(PathNode origin, PathNode current)
+        private static PathNode GetNextPathNode(PathNode previousNode, PathNode currentNode)
         {
-            List<int> areas = NodeFile.GetAreaNeighborhood(origin.AreaID);
-            NodeFile file = NodeReader.NodeFiles.First(f => f.Id == origin.AreaID);
-            List<PathNode> possibilities = new List<PathNode>();
-            for (int i = 0; i < current.LinkCount; i++)
+            var possibilities = new List<PathNode>();
+            var currentNodeArea = NodeReader.GetAreaById(currentNode.AreaID);
+
+            for (int i = 0; i < currentNode.LinkCount; i++)
             {
-                int linkArrayIndex = current.BaseLinkID + i;
-                NodeFile nf = NodeReader.NodeFiles.Single(nf2 => nf2.Id == file.NodeLinks[linkArrayIndex].AreaID);
-                PathNode target = nf.PedNodes.ElementAt(file.NodeLinks[linkArrayIndex].NodeID);
-                if (!target.Equals(origin))
-                    possibilities.Add(target);
+                NodeLink link = currentNodeArea.NodeLinks[currentNode.BaseLinkID + i];
+
+                NodeFile targetArea = NodeReader.GetAreaById(link.AreaID);
+                PathNode targetNode = targetArea.GetPedNodeById(link.NodeID);
+
+                if (!targetNode.Equals(previousNode))
+                    possibilities.Add(targetNode);
             }
 
             if (possibilities.Count > 0)
             {
-                return possibilities.ElementAt(UnityEngine.Random.Range(0, possibilities.Count - 1));
+                return possibilities.RandomElement();
             }
             else
             {
-                //No possibilities found, returning to origin
-                return origin;
+                //No possibilities found, returning to previous node
+                return previousNode;
             }
 
         }

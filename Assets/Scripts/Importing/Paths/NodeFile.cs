@@ -30,7 +30,7 @@ namespace SanAndreasUnity.Importing.Paths
         }
     }
 
-    public struct PathNode
+    public struct PathNode : IEquatable<PathNode>
     {
         public UnityEngine.Vector3 Position { get; set; }
         public int BaseLinkID { get; set; }
@@ -40,6 +40,11 @@ namespace SanAndreasUnity.Importing.Paths
         public int NodeType { get; set; } // enum
         public int LinkCount { get; set; }
         public PathNodeFlag Flags;
+
+        public bool Equals(PathNode other)
+        {
+            return AreaID == other.AreaID && NodeID == other.NodeID;
+        }
     }
 
     public struct NavNode
@@ -266,6 +271,11 @@ namespace SanAndreasUnity.Importing.Paths
                 throw new Exception($"Node file {Id} has invalid number of nodes");
             NumOfNavNodes = (int)reader.ReadUInt32();
             NumOfLinks = (int)reader.ReadUInt32();
+        }
+
+        public PathNode GetPedNodeById(int nodeId)
+        {
+            return PedNodes[nodeId - NumOfVehNodes];
         }
 
         /**
