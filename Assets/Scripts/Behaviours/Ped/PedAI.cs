@@ -33,12 +33,12 @@ namespace SanAndreasUnity.Behaviours
         /// <summary>
         /// The node where the Ped starts
         /// </summary>
-        public PathNode CurrentNode;
+        public PathNode CurrentNode { get; private set; }
 
         /// <summary>
         /// The node the Ped is targeting
         /// </summary>
-        public PathNode TargetNode;
+        public PathNode TargetNode { get; private set; }
 
         /// <summary>
         /// The ped that this ped is chasing
@@ -216,6 +216,14 @@ namespace SanAndreasUnity.Behaviours
             {
                 this.Action = PedAction.Idle;
             }
+        }
+
+        public void StartWalkingAround(PathNode pathNode)
+        {
+            this.CurrentNode = pathNode;
+            this.TargetNode = pathNode;
+            this.Action = PedAction.WalkingAround;
+            this.TargetPed = null;
         }
 
         public void StartFollowing(Ped ped)

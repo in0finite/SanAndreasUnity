@@ -251,8 +251,7 @@ namespace SanAndreasUnity.Behaviours
 
             _spawnedPeds.Add((ai, worldSystemArea));
 
-            ai.CurrentNode = pathNode;
-            ai.TargetNode = pathNode;
+            ai.StartWalkingAround(pathNode);
 
             var areaChangeDetector = newPed.gameObject.AddComponent<AreaChangeDetector>();
             areaChangeDetector.Init(_worldSystem);
