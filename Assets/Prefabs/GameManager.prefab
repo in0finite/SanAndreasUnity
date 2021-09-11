@@ -493,7 +493,7 @@ MonoBehaviour:
   _areaSize: 100
   _revealRadius: 190
   timeToKeepRevealingAfterRemoved: 6
-  minSpawnDistanceFromFocusPoint: 30
-  maxSpawnDistanceFromFocusPoint: 100
+  minSpawnDistanceFromFocusPoint: 20
+  maxSpawnDistanceFromFocusPoint: 80
   timeIntervalToAttemptSpawn: 0.5
   timeIntervalToAttemptDestroy: 0.65
