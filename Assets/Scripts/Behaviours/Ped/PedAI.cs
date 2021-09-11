@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Paths;
@@ -11,9 +10,11 @@ namespace SanAndreasUnity.Behaviours
 {
     public enum PedAction
     {
+        Idle = 0,
         WalkingAround,
         Chasing,
-        Escaping
+        Escaping,
+        Following,
     }
 
     public class PedAI : MonoBehaviour
@@ -27,7 +28,7 @@ namespace SanAndreasUnity.Behaviours
         [SerializeField] private Vector3 targetNodePos;
         [SerializeField] private Vector2 targetNodeOffset; // Adding random offset to prevent peds to have the exact destination
 
-        public PedAction Action;
+        public PedAction Action { get; private set; }
 
         /// <summary>
         /// The node where the Ped starts
@@ -40,11 +41,13 @@ namespace SanAndreasUnity.Behaviours
         public PathNode TargetNode;
 
         /// <summary>
-        /// The ped the Ped is chasing
+        /// The ped that this ped is chasing
         /// </summary>
-        public Ped TargetPed;
+        public Ped TargetPed { get; private set; }
 
         public Ped MyPed { get; private set; }
+
+        public PedestrianType PedestrianType => this.MyPed.PedDef.DefaultType;
 
 
         private void Awake()
@@ -86,7 +89,6 @@ namespace SanAndreasUnity.Behaviours
                 hitPedAi.Action = PedAction.Escaping;
         }
 
-        // Update is called once per frame
         void Update()
         {
             this.MyPed.ResetInput();
@@ -148,7 +150,98 @@ namespace SanAndreasUnity.Behaviours
                         this.MyPed.Movement = (TargetNode.Position - this.MyPed.transform.position).normalized;
                         this.MyPed.Heading = this.MyPed.Movement;
                         break;
+                    case PedAction.Following:
+                        this.UpdateFollowing();
+                        break;
                 }
+            }
+        }
+
+        void UpdateFollowing()
+        {
+            // follow target ped
+
+            if (this.TargetPed != null) {
+
+                Vector3 targetPos = this.TargetPed.transform.position;
+                float currentStoppingDistance = 3f;
+
+                if (this.TargetPed.IsInVehicleSeat && !this.MyPed.IsInVehicle) {
+                    // find a free vehicle seat to enter vehicle
+
+                    var vehicle = this.TargetPed.CurrentVehicle;
+
+                    var closestfreeSeat = Ped.GetFreeSeats (vehicle).Select (sa => new { sa = sa, tr = vehicle.GetSeatTransform (sa) })
+                        .OrderBy (s => s.tr.Distance (this.transform.position))
+                        .FirstOrDefault ();
+
+                    if (closestfreeSeat != null) {
+                        // check if it is in range
+                        if (closestfreeSeat.tr.Distance (this.transform.position) < this.MyPed.EnterVehicleRadius) {
+                            // the seat is in range
+                            this.MyPed.EnterVehicle (vehicle, closestfreeSeat.sa);
+                        } else {
+                            // the seat is not in range
+                            // move towards this seat
+                            targetPos = closestfreeSeat.tr.position;
+                            currentStoppingDistance = 0.1f;
+                        }
+                    }
+
+                } else if (!this.TargetPed.IsInVehicle && this.MyPed.IsInVehicleSeat) {
+                    // target player is not in vehicle, and ours is
+                    // exit the vehicle
+
+                    this.MyPed.ExitVehicle ();
+                }
+
+
+                if (this.MyPed.IsInVehicle)
+                    return;
+
+                Vector3 diff = targetPos - this.transform.position;
+                float distance = diff.magnitude;
+
+                if (distance > currentStoppingDistance)
+                {
+                    Vector3 diffDir = diff.normalized;
+
+                    this.MyPed.IsRunOn = true;
+                    this.MyPed.Movement = diffDir;
+                    this.MyPed.Heading = diffDir;
+                }
+
+            }
+            else
+            {
+                this.Action = PedAction.Idle;
+            }
+        }
+
+        public void StartFollowing(Ped ped)
+        {
+            this.Action = PedAction.Following;
+            this.TargetPed = ped;
+        }
+
+        public void Recruit(Ped recruiterPed)
+        {
+            if (!this.PedestrianType.IsGangMember() && this.PedestrianType != PedestrianType.Criminal)
+                return;
+
+            if (this.Action == PedAction.Following)
+            {
+                if (this.TargetPed == recruiterPed)
+                {
+                    // unfollow
+                    this.TargetPed = null;
+                    return;
+                }
+            }
+            else if (this.Action == PedAction.Idle || this.Action == PedAction.WalkingAround)
+            {
+                // start following
+                this.StartFollowing(recruiterPed);
             }
         }
 

@@ -55,18 +55,17 @@ namespace SanAndreasUnity.Behaviours
 			return null;
 		}
 
-		public static PedStalker SpawnPedStalker (int pedId, Vector3 pos, Quaternion rot, Ped targetPed)
+		public static PedAI SpawnPedStalker (int pedId, Vector3 pos, Quaternion rot, Ped targetPed)
 		{
 			var ped = SpawnPed (pedId, pos, rot, true);
 
-			var stalker = ped.gameObject.GetOrAddComponent<PedStalker> ();
-			stalker.stoppingDistance = PedManager.Instance.AIStoppingDistance;
-			stalker.TargetPed = targetPed;
+			var pedAI = ped.gameObject.GetOrAddComponent<PedAI> ();
+			pedAI.StartFollowing(targetPed);
 
-			return stalker;
+			return pedAI;
 		}
 
-		public static PedStalker SpawnPedStalker (int pedId, Transform nearbyTransform, Ped targetPed)
+		public static PedAI SpawnPedStalker (int pedId, Transform nearbyTransform, Ped targetPed)
 		{
 			Vector3 pos;
 			Quaternion rot;
