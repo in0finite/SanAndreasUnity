@@ -8,7 +8,7 @@ using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public enum PedAction
+    public enum PedAIAction
     {
         Idle = 0,
         WalkingAround,
@@ -24,7 +24,7 @@ namespace SanAndreasUnity.Behaviours
 
         private static bool s_subscribedToPedOnDamageEvent = false;
 
-        public PedAction Action { get; private set; }
+        public PedAIAction Action { get; private set; }
 
         private Vector3 _moveDestination;
 
@@ -81,10 +81,10 @@ namespace SanAndreasUnity.Behaviours
                 hitPed.PedDef.DefaultType.IsGangMember()))
             {
                 hitPedAi.TargetPed = dmgInfo.GetAttackerPed();
-                hitPedAi.Action = PedAction.Chasing;
+                hitPedAi.Action = PedAIAction.Chasing;
             }
             else
-                hitPedAi.Action = PedAction.Escaping;
+                hitPedAi.Action = PedAIAction.Escaping;
         }
 
         void Update()
@@ -94,7 +94,7 @@ namespace SanAndreasUnity.Behaviours
             {
                 switch (this.Action)
                 {
-                    case PedAction.WalkingAround:
+                    case PedAIAction.WalkingAround:
                         if (this.ArrivedAtDestinationNode())
                         {
                             this.OnArrivedToDestinationNode();
@@ -103,7 +103,7 @@ namespace SanAndreasUnity.Behaviours
                         this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
                         this.MyPed.Heading = this.MyPed.Movement;
                         break;
-                    case PedAction.Chasing:
+                    case PedAIAction.Chasing:
                         if (this.TargetPed != null)
                         {
                             Vector3 diff = GetHeadOrTransform(this.TargetPed).position - GetHeadOrTransform(this.MyPed).position;
@@ -124,10 +124,10 @@ namespace SanAndreasUnity.Behaviours
                         }
                         else // The target is dead/disconnected
                         {
-                            this.Action = PedAction.WalkingAround;
+                            this.Action = PedAIAction.WalkingAround;
                         }
                         break;
-                    case PedAction.Escaping:
+                    case PedAIAction.Escaping:
                         if (this.ArrivedAtDestinationNode())
                         {
                             this.OnArrivedToDestinationNode();
@@ -136,7 +136,7 @@ namespace SanAndreasUnity.Behaviours
                         this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
                         this.MyPed.Heading = this.MyPed.Movement;
                         break;
-                    case PedAction.Following:
+                    case PedAIAction.Following:
                         this.UpdateFollowing();
                         break;
                 }
@@ -217,7 +217,7 @@ namespace SanAndreasUnity.Behaviours
             }
             else
             {
-                this.Action = PedAction.Idle;
+                this.Action = PedAIAction.Idle;
             }
         }
 
@@ -225,13 +225,13 @@ namespace SanAndreasUnity.Behaviours
         {
             this.CurrentNode = pathNode;
             this.TargetNode = pathNode;
-            this.Action = PedAction.WalkingAround;
+            this.Action = PedAIAction.WalkingAround;
             this.TargetPed = null;
         }
 
         public void StartFollowing(Ped ped)
         {
-            this.Action = PedAction.Following;
+            this.Action = PedAIAction.Following;
             this.TargetPed = ped;
         }
 
@@ -240,7 +240,7 @@ namespace SanAndreasUnity.Behaviours
             if (!this.PedestrianType.IsGangMember() && this.PedestrianType != PedestrianType.Criminal)
                 return;
 
-            if (this.Action == PedAction.Following)
+            if (this.Action == PedAIAction.Following)
             {
                 if (this.TargetPed == recruiterPed)
                 {
@@ -249,7 +249,7 @@ namespace SanAndreasUnity.Behaviours
                     return;
                 }
             }
-            else if (this.Action == PedAction.Idle || this.Action == PedAction.WalkingAround)
+            else if (this.Action == PedAIAction.Idle || this.Action == PedAIAction.WalkingAround)
             {
                 // start following
                 this.StartFollowing(recruiterPed);
