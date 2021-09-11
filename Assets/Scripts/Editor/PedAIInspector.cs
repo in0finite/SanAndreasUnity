@@ -12,8 +12,8 @@ namespace SanAndreasUnity.Editor
     {
         private static bool _foldoutCurrent = true;
         private static bool _foldoutTarget = true;
-        private static bool _foldoutAdjacentCurrent = true;
-        private static bool _foldoutAdjacentTarget = true;
+        private static bool _foldoutLinkedCurrent = true;
+        private static bool _foldoutLinkedTarget = true;
 
 
         public override void OnInspectorGUI()
@@ -24,11 +24,11 @@ namespace SanAndreasUnity.Editor
 
             GUILayout.Space (10);
 
-            DrawForNode(pedAI.CurrentNode, "Current node:", ref _foldoutCurrent, true, ref _foldoutAdjacentCurrent);
-            DrawForNode(pedAI.TargetNode, "Target node:", ref _foldoutTarget, true, ref _foldoutAdjacentTarget);
+            DrawForNode(pedAI.CurrentNode, "Current node", ref _foldoutCurrent, true, ref _foldoutLinkedCurrent);
+            DrawForNode(pedAI.TargetNode, "Target node", ref _foldoutTarget, true, ref _foldoutLinkedTarget);
         }
 
-        void DrawForNode(PathNode node, string labelText, ref bool foldout, bool showAdjacentNodes, ref bool foldoutAdjacent)
+        void DrawForNode(PathNode node, string labelText, ref bool foldout, bool showLinkedNodes, ref bool foldoutLinked)
         {
             if (!string.IsNullOrWhiteSpace(labelText))
                 foldout = EditorGUILayout.Foldout(foldout, labelText, true);
@@ -41,16 +41,16 @@ namespace SanAndreasUnity.Editor
 
             EditorUtils.DrawFieldsAndPropertiesInInspector(node, 0);
 
-            if (showAdjacentNodes)
+            if (showLinkedNodes)
             {
-                foldoutAdjacent = EditorGUILayout.Foldout(foldoutAdjacent, "Adjacent nodes:", true);
-                if (foldoutAdjacent)
+                foldoutLinked = EditorGUILayout.Foldout(foldoutLinked, "Linked nodes", true);
+                if (foldoutLinked)
                 {
-                    foreach (var adjacentNode in NodeReader.GetAllLinkedNodes(node))
+                    foreach (var linkedNode in NodeReader.GetAllLinkedNodes(node))
                     {
                         bool f = true;
-                        bool fAdjacent = false;
-                        DrawForNode(adjacentNode, "", ref f, false, ref fAdjacent);
+                        bool fLinked = false;
+                        DrawForNode(linkedNode, "", ref f, false, ref fLinked);
                     }
                 }
             }
