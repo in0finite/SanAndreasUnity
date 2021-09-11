@@ -541,13 +541,16 @@ namespace SanAndreasUnity.Behaviours
 			//Vector3 localMovement = this.transform.InverseTransformDirection (this.Movement);
 			//Vector3 globalMovement = this.transform.TransformDirection( Vector3.Scale( localMovement, modelVel ) );
 
-			Vector3 vDiff = this.Movement * modelVel - new Vector3(Velocity.x, 0f, Velocity.z);
-			Velocity += vDiff;
+			// override velocity along X and Z axis, accumulate it along Y axis
+			Vector3 newVelocity = this.Movement * modelVel;
+			newVelocity.y = Velocity.y + this.Movement.y * modelVel;
 
-			// apply gravity
-			Velocity = new Vector3(Velocity.x, characterController.isGrounded
-				? 0f : Velocity.y - (-Physics.gravity.y) * 2f * Time.fixedDeltaTime, Velocity.z);
+			if (characterController.isGrounded)
+				newVelocity.y = 0f;
+			else
+				newVelocity.y -= (-Physics.gravity.y) * 2f * Time.fixedDeltaTime;
 
+			Velocity = newVelocity;
 
 			// finally, move the character
 			characterController.Move(Velocity * Time.fixedDeltaTime);
