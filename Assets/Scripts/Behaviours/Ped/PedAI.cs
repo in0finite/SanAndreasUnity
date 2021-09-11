@@ -112,17 +112,20 @@ namespace SanAndreasUnity.Behaviours
                     case PedAction.Chasing:
                         if (this.TargetPed != null)
                         {
-                            if (Vector3.Distance(TargetPed.transform.position, this.MyPed.transform.position) < 10f)
+                            Vector3 diff = this.TargetPed.transform.position - this.MyPed.transform.position;
+                            Vector3 dir = diff.normalized;
+                            if (diff.magnitude < 10f)
                             {
-                                this.MyPed.AimDirection = (TargetPed.transform.position - this.MyPed.transform.position).normalized;
+                                this.MyPed.Heading = dir;
+                                this.MyPed.AimDirection = dir;
                                 this.MyPed.IsAimOn = true;
                                 this.MyPed.IsFireOn = true;
                             }
                             else
                             {
                                 this.MyPed.IsRunOn = true;
-                                this.MyPed.Movement = (TargetPed.transform.position - this.MyPed.transform.position).normalized;
-                                this.MyPed.Heading = this.MyPed.Movement;
+                                this.MyPed.Movement = dir;
+                                this.MyPed.Heading = dir;
                             }
                         }
                         else // The target is dead/disconnected
