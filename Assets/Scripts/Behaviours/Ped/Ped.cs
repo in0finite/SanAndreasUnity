@@ -548,12 +548,12 @@ namespace SanAndreasUnity.Behaviours
 			if (characterController.isGrounded)
 				newVelocity.y = 0f;
 			else
-				newVelocity.y -= (-Physics.gravity.y) * 2f * Time.fixedDeltaTime;
+				newVelocity.y -= (-Physics.gravity.y) * 2f * Time.deltaTime;
 
 			Velocity = newVelocity;
 
 			// finally, move the character
-			characterController.Move(Velocity * Time.fixedDeltaTime);
+			characterController.Move(Velocity * Time.deltaTime);
 		
 
 //			if(!IsLocalPlayer)
