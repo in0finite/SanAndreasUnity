@@ -112,7 +112,7 @@ namespace SanAndreasUnity.Behaviours
                     case PedAction.Chasing:
                         if (this.TargetPed != null)
                         {
-                            Vector3 diff = this.TargetPed.transform.position - this.MyPed.transform.position;
+                            Vector3 diff = GetHeadOrTransform(this.TargetPed).position - GetHeadOrTransform(this.MyPed).position;
                             Vector3 dir = diff.normalized;
                             if (diff.magnitude < 10f)
                             {
@@ -149,6 +149,11 @@ namespace SanAndreasUnity.Behaviours
                         break;
                 }
             }
+        }
+
+        private static Transform GetHeadOrTransform(Ped ped)
+        {
+            return ped.PlayerModel.Head != null ? ped.PlayerModel.Head : ped.transform;
         }
 
         private static PathNode GetNextPathNode(PathNode previousNode, PathNode currentNode)
