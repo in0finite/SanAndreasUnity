@@ -527,7 +527,7 @@ namespace SanAndreasUnity.Behaviours
 			
 
 			// movement can only be done on X and Z axis
-			this.Movement = this.Movement.WithXAndZ ();
+			this.Movement = this.Movement.WithXAndZ().normalized;
 
 			// change heading to match movement input
 			//if (Movement.sqrMagnitude > float.Epsilon)
