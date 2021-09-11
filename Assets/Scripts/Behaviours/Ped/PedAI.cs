@@ -138,7 +138,7 @@ namespace SanAndreasUnity.Behaviours
                             // arrived at target node
                             PathNode previousNode = CurrentNode;
                             CurrentNode = TargetNode;
-                            TargetNode = GetNextPathNode(CurrentNode, previousNode);
+                            TargetNode = GetNextPathNode(previousNode, CurrentNode);
                         }
                         this.MyPed.IsSprintOn = true;
                         this.MyPed.Movement = (TargetNode.Position - this.MyPed.transform.position).normalized;
