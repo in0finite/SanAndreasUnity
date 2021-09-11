@@ -115,6 +115,21 @@ namespace SanAndreasUnity.Importing.Paths
         {
             return NodeFiles[id];
         }
+
+        public static IEnumerable<PathNode> GetAllAdjacentNodes(PathNode pathNode)
+        {
+            var nodeArea = GetAreaById(pathNode.AreaID);
+
+            for (int i = 0; i < pathNode.LinkCount; i++)
+            {
+                NodeLink link = nodeArea.NodeLinks[pathNode.BaseLinkID + i];
+
+                NodeFile targetArea = GetAreaById(link.AreaID);
+                PathNode targetNode = targetArea.GetNodeById(link.NodeID);
+
+                yield return targetNode;
+            }
+        }
     }
 
     public class NodeFile
@@ -275,6 +290,13 @@ namespace SanAndreasUnity.Importing.Paths
 
         public PathNode GetPedNodeById(int nodeId)
         {
+            return PedNodes[nodeId - NumOfVehNodes];
+        }
+
+        public PathNode GetNodeById(int nodeId)
+        {
+            if (nodeId < NumOfVehNodes)
+                return VehicleNodes[nodeId];
             return PedNodes[nodeId - NumOfVehNodes];
         }
 

@@ -158,19 +158,9 @@ namespace SanAndreasUnity.Behaviours
 
         private static PathNode GetNextPathNode(PathNode previousNode, PathNode currentNode)
         {
-            var possibilities = new List<PathNode>();
-            var currentNodeArea = NodeReader.GetAreaById(currentNode.AreaID);
-
-            for (int i = 0; i < currentNode.LinkCount; i++)
-            {
-                NodeLink link = currentNodeArea.NodeLinks[currentNode.BaseLinkID + i];
-
-                NodeFile targetArea = NodeReader.GetAreaById(link.AreaID);
-                PathNode targetNode = targetArea.GetPedNodeById(link.NodeID);
-
-                if (!targetNode.Equals(previousNode))
-                    possibilities.Add(targetNode);
-            }
+            var possibilities = new List<PathNode>(
+                NodeReader.GetAllAdjacentNodes(currentNode)
+                    .Where(_ => !_.Equals(previousNode)));
 
             if (possibilities.Count > 0)
             {
@@ -181,7 +171,6 @@ namespace SanAndreasUnity.Behaviours
                 //No possibilities found, returning to previous node
                 return previousNode;
             }
-
         }
     }
 
