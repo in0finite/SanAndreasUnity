@@ -24,11 +24,9 @@ namespace SanAndreasUnity.Behaviours
 
         private static bool s_subscribedToPedOnDamageEvent = false;
 
-        [SerializeField] private Vector3 currentNodePos;
-        [SerializeField] private Vector3 targetNodePos;
-        [SerializeField] private Vector2 targetNodeOffset; // Adding random offset to prevent peds to have the exact destination
-
         public PedAction Action { get; private set; }
+
+        private Vector3 _moveDestination;
 
         /// <summary>
         /// The node where the Ped starts
@@ -97,19 +95,12 @@ namespace SanAndreasUnity.Behaviours
                 switch (this.Action)
                 {
                     case PedAction.WalkingAround:
-                        currentNodePos = CurrentNode.Position;
-                        targetNodePos = TargetNode.Position;
-                        if (Vector2.Distance(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.z), new Vector2(targetNodePos.x, targetNodePos.z)) < 3)
+                        if (this.ArrivedAtDestinationNode())
                         {
-                            // arrived at target node
-                            PathNode previousNode = CurrentNode;
-                            CurrentNode = TargetNode;
-                            TargetNode = GetNextPathNode(previousNode, CurrentNode);
-                            targetNodeOffset = new Vector2(UnityEngine.Random.Range(-2, 2), UnityEngine.Random.Range(-2, 2));
+                            this.OnArrivedToDestinationNode();
                         }
                         this.MyPed.IsWalkOn = true;
-                        Vector3 dest = targetNodePos + new Vector3(targetNodeOffset.x, 0, targetNodeOffset.y);
-                        this.MyPed.Movement = (dest - this.MyPed.transform.position).normalized;
+                        this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
                         this.MyPed.Heading = this.MyPed.Movement;
                         break;
                     case PedAction.Chasing:
@@ -137,17 +128,12 @@ namespace SanAndreasUnity.Behaviours
                         }
                         break;
                     case PedAction.Escaping:
-                        currentNodePos = CurrentNode.Position;
-                        targetNodePos = TargetNode.Position;
-                        if (Vector2.Distance(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.z), new Vector2(TargetNode.Position.x, TargetNode.Position.z)) < 1f)
+                        if (this.ArrivedAtDestinationNode())
                         {
-                            // arrived at target node
-                            PathNode previousNode = CurrentNode;
-                            CurrentNode = TargetNode;
-                            TargetNode = GetNextPathNode(previousNode, CurrentNode);
+                            this.OnArrivedToDestinationNode();
                         }
                         this.MyPed.IsSprintOn = true;
-                        this.MyPed.Movement = (TargetNode.Position - this.MyPed.transform.position).normalized;
+                        this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
                         this.MyPed.Heading = this.MyPed.Movement;
                         break;
                     case PedAction.Following:
@@ -155,6 +141,23 @@ namespace SanAndreasUnity.Behaviours
                         break;
                 }
             }
+        }
+
+        bool ArrivedAtDestinationNode()
+        {
+            if (Vector2.Distance(this.transform.position.ToVec2WithXAndZ(), this.TargetNode.Position.ToVec2WithXAndZ())
+                < this.TargetNode.PathWidth / 2f)
+                return true;
+            return false;
+        }
+
+        void OnArrivedToDestinationNode()
+        {
+            PathNode previousNode = CurrentNode;
+            CurrentNode = TargetNode;
+            TargetNode = GetNextPathNode(previousNode, CurrentNode);
+            Vector2 offset = Random.insideUnitCircle * TargetNode.PathWidth / 2f * 0.9f;
+            _moveDestination = TargetNode.Position + offset.ToVector3XZ();
         }
 
         void UpdateFollowing()
