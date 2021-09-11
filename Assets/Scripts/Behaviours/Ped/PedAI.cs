@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Paths;
@@ -171,6 +172,31 @@ namespace SanAndreasUnity.Behaviours
                 //No possibilities found, returning to previous node
                 return previousNode;
             }
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(CurrentNode.Position, TargetNode.Position);
+            Gizmos.DrawWireSphere(CurrentNode.Position, CurrentNode.PathWidth / 2f);
+            Gizmos.DrawWireSphere(TargetNode.Position, TargetNode.PathWidth / 2f);
+
+            Gizmos.color = Color.yellow;
+
+            NodeReader.GetAllAdjacentNodes(TargetNode)
+                .Except(new[] {CurrentNode})
+                .ForEach(node =>
+                {
+                    Gizmos.DrawLine(TargetNode.Position, node.Position);
+                    Gizmos.DrawWireSphere(node.Position, node.PathWidth / 2f);
+                });
+            NodeReader.GetAllAdjacentNodes(CurrentNode)
+                .Except(new[] {TargetNode})
+                .ForEach(node =>
+                {
+                    Gizmos.DrawLine(CurrentNode.Position, node.Position);
+                    Gizmos.DrawWireSphere(node.Position, node.PathWidth / 2f);
+                });
         }
     }
 
