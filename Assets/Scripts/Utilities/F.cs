@@ -850,6 +850,11 @@ namespace SanAndreasUnity.Utilities
 			return new Vector3 (1.0f / vec3.x, 1.0f / vec3.y, 1.0f / vec3.z);
 		}
 
+		public static Vector2 AsAbsolute(this Vector2 vec)
+		{
+			return new Vector2(Mathf.Abs(vec.x), Mathf.Abs(vec.y));
+		}
+
 		public static Color OrangeColor { get { return Color.Lerp (Color.yellow, Color.red, 0.5f); } }
 
 		/// <summary>

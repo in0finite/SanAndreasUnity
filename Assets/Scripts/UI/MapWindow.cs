@@ -3,6 +3,7 @@ using UnityEngine;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
 using System.Linq;
+using SanAndreasUnity.Importing.Paths;
 
 namespace SanAndreasUnity.UI {
 
@@ -22,6 +23,8 @@ namespace SanAndreasUnity.UI {
 		public float PlayerPointerSize { get => m_playerPointerSize; set { m_playerPointerSize = value; } }
 		private	bool	m_drawZones = false;
 		private bool m_drawEnexes = false;
+		private bool m_drawPedPathNodes = false;
+		private bool m_drawVehiclePathNodes = false;
 
 		private	bool	m_isWaypointPlaced = false;
 		private	Vector2	m_waypointMapPos = Vector2.zero;
@@ -549,6 +552,8 @@ namespace SanAndreasUnity.UI {
 			m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
 			m_drawZones = GUILayout.Toggle (m_drawZones, "Draw zones");
 			m_drawEnexes = GUILayout.Toggle(m_drawEnexes, "Draw enexes");
+			m_drawPedPathNodes = GUILayout.Toggle(m_drawPedPathNodes, "Draw ped path nodes");
+			m_drawVehiclePathNodes = GUILayout.Toggle(m_drawVehiclePathNodes, "Draw vehicle path nodes");
 
 			GUILayout.EndHorizontal ();
 
@@ -614,6 +619,8 @@ namespace SanAndreasUnity.UI {
 				}
 			}
 
+			this.DrawPathNodes();
+
 			// draw player pointer
 			if (Ped.Instance != null)
 			{
@@ -661,6 +668,51 @@ namespace SanAndreasUnity.UI {
 			}
 
 
+		}
+
+		private void DrawPathNodes()
+		{
+			if (!m_drawPedPathNodes && !m_drawVehiclePathNodes)
+				return;
+
+			Transform tr = Ped.Instance != null ? Ped.Instance.transform : (Camera.current != null ? Camera.current.transform : null);
+			if (null == tr)
+				return;
+
+			float radius = NPCPedSpawner.Singleton.maxSpawnDistanceFromFocusPoint;
+			Vector3 center = tr.position;
+			var areas = NodeReader.GetAreaIndexesInRadius(center, radius)
+				.Select(NodeReader.GetAreaIdFromIndexes)
+				.Select(NodeReader.GetAreaById);
+
+			foreach (var area in areas)
+			{
+				if (m_drawVehiclePathNodes)
+					this.DrawPathNodes(area.VehicleNodes, center, radius);
+				if (m_drawPedPathNodes)
+					this.DrawPathNodes(area.PedNodes, center, radius);
+			}
+		}
+
+		void DrawPathNodes(IEnumerable<PathNode> pathNodes, Vector3 pos, float radius)
+		{
+			foreach (var pathNode in pathNodes)
+			{
+				if (Vector3.Distance(pathNode.Position, pos) > radius)
+					continue;
+
+				foreach (var linkedNode in NodeReader.GetAllLinkedNodes(pathNode))
+				{
+					Vector2 firstPos = MiniMap.WorldPosToMapPos (pathNode.Position);
+					Vector2 secondPos = MiniMap.WorldPosToMapPos (linkedNode.Position);
+
+					if (this.GetMapItemRenderRect(F.CreateRect(firstPos, Vector2.one * 6f), out var renderRect1)
+					    && this.GetMapItemRenderRect(F.CreateRect(secondPos, Vector2.one * 6f), out var renderRect2))
+					{
+
+					}
+				}
+			}
 		}
 
 
