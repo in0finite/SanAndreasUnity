@@ -46,7 +46,7 @@ namespace SanAndreasUnity.Editor
                 foldoutAdjacent = EditorGUILayout.Foldout(foldoutAdjacent, "Adjacent nodes:", true);
                 if (foldoutAdjacent)
                 {
-                    foreach (var adjacentNode in NodeReader.GetAllAdjacentNodes(node))
+                    foreach (var adjacentNode in NodeReader.GetAllLinkedNodes(node))
                     {
                         bool f = true;
                         bool fAdjacent = false;

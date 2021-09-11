@@ -116,7 +116,7 @@ namespace SanAndreasUnity.Importing.Paths
             return NodeFiles[id];
         }
 
-        public static IEnumerable<PathNode> GetAllAdjacentNodes(PathNode pathNode)
+        public static IEnumerable<PathNode> GetAllLinkedNodes(PathNode pathNode)
         {
             var nodeArea = GetAreaById(pathNode.AreaID);
 

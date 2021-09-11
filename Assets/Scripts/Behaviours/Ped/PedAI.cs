@@ -160,7 +160,7 @@ namespace SanAndreasUnity.Behaviours
         private static PathNode GetNextPathNode(PathNode previousNode, PathNode currentNode)
         {
             var possibilities = new List<PathNode>(
-                NodeReader.GetAllAdjacentNodes(currentNode)
+                NodeReader.GetAllLinkedNodes(currentNode)
                     .Where(_ => !_.Equals(previousNode)));
 
             if (possibilities.Count > 0)
@@ -183,14 +183,14 @@ namespace SanAndreasUnity.Behaviours
 
             Gizmos.color = Color.yellow;
 
-            NodeReader.GetAllAdjacentNodes(TargetNode)
+            NodeReader.GetAllLinkedNodes(TargetNode)
                 .Except(new[] {CurrentNode})
                 .ForEach(node =>
                 {
                     Gizmos.DrawLine(TargetNode.Position, node.Position);
                     Gizmos.DrawWireSphere(node.Position, node.PathWidth / 2f);
                 });
-            NodeReader.GetAllAdjacentNodes(CurrentNode)
+            NodeReader.GetAllLinkedNodes(CurrentNode)
                 .Except(new[] {TargetNode})
                 .ForEach(node =>
                 {
