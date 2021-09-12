@@ -228,7 +228,7 @@ namespace SanAndreasUnity.Behaviours
         {
             if (null == this.TargetPed)
             {
-                this.Action = PedAIAction.Idle;
+                this.StartIdling();
                 return;
             }
 
@@ -260,7 +260,7 @@ namespace SanAndreasUnity.Behaviours
 
             if (null == this.TargetPed)
             {
-                this.Action = PedAIAction.Idle;
+                this.StartIdling();
                 return;
             }
 
@@ -359,6 +359,13 @@ namespace SanAndreasUnity.Behaviours
                     this.MyPed.Movement = dir;
                 }
             }
+        }
+
+        public void StartIdling()
+        {
+            this.Action = PedAIAction.Idle;
+            this.HasCurrentNode = false;
+            this.HasTargetNode = false;
         }
 
         public void StartWalkingAround(PathNode pathNode)
