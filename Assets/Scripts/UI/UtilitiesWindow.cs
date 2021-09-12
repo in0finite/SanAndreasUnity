@@ -70,7 +70,8 @@ namespace SanAndreasUnity.UI {
 			{
 				for (int i = 0; i < 5; i++)
 				{
-					Ped.SpawnPed (Ped.RandomPedId, nearbyTransform);
+					if (Ped.GetPositionForPedSpawn(out Vector3 pos, out Quaternion rot, nearbyTransform))
+						Ped.SpawnPedAI(Ped.RandomPedId, pos, rot);
 				}
 			}
 
