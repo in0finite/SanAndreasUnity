@@ -570,6 +570,39 @@ namespace SanAndreasUnity.Utilities
 			}
 		}
 
+		public static T MinBy<T, TComparable>(
+			this IEnumerable<T> enumerable,
+			System.Func<T, TComparable> selector,
+			T elementToReturnIfEmpty)
+			where TComparable : IComparable
+		{
+			var comparer = Comparer<TComparable>.Default;
+			T minElement = default;
+			TComparable minValue = default;
+			bool hasAnyValue = false;
+
+			foreach (var element in enumerable)
+			{
+				TComparable value = selector(element);
+				if (!hasAnyValue)
+				{
+					hasAnyValue = true;
+					minElement = element;
+					minValue = value;
+				}
+				else
+				{
+					if (comparer.Compare(value, minValue) < 0)
+					{
+						minElement = element;
+						minValue = value;
+					}
+				}
+			}
+
+			return !hasAnyValue ? elementToReturnIfEmpty : minElement;
+		}
+
 		public static int FindIndex<T> (this IEnumerable<T> enumerable, System.Predicate<T> predicate)
 		{
 			int i = 0;

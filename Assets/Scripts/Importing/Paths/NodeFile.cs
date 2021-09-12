@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
 
@@ -41,6 +42,8 @@ namespace SanAndreasUnity.Importing.Paths
         public int NodeType { get; set; } // enum
         public int LinkCount { get; set; }
         public PathNodeFlag Flags;
+
+        public bool CanPedWalkHere => this.NodeType > 2;
 
         public bool Equals(PathNode other)
         {
@@ -196,6 +199,13 @@ namespace SanAndreasUnity.Importing.Paths
             }
 
             return areasInRadius;
+        }
+
+        public static IEnumerable<NodeFile> GetAreasInRadius(UnityEngine.Vector3 pos, float radius)
+        {
+            return GetAreaIndexesInRadius(pos, radius)
+                .Select(GetAreaIdFromIndexes)
+                .Select(GetAreaById);
         }
 
         public static IEnumerable<PathNode> GetAllLinkedNodes(PathNode pathNode)

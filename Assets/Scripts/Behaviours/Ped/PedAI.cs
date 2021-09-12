@@ -54,6 +54,8 @@ namespace SanAndreasUnity.Behaviours
         private List<Ped> _enemyPeds = new List<Ped>();
         private Ped _currentlyEngagedPed;
 
+        private bool _isFindingPathNodeDelayed = false;
+
 
         private void Awake()
         {
@@ -155,6 +157,11 @@ namespace SanAndreasUnity.Behaviours
             PathNode previousNode = CurrentNode;
             CurrentNode = TargetNode;
             TargetNode = GetNextPathNode(previousNode, CurrentNode);
+            this.AssignMoveDestinationBasedOnTargetNode();
+        }
+
+        void AssignMoveDestinationBasedOnTargetNode()
+        {
             Vector2 offset = Random.insideUnitCircle * TargetNode.PathWidth / 2f * 0.9f;
             _moveDestination = TargetNode.Position + offset.ToVector3XZ();
         }
@@ -175,7 +182,10 @@ namespace SanAndreasUnity.Behaviours
                 this.OnArrivedToDestinationNode();
 
             if (!this.HasTargetNode)
+            {
+                this.FindNextNodeDelayed();
                 return;
+            }
 
             this.MyPed.IsWalkOn = true;
             this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
@@ -188,7 +198,10 @@ namespace SanAndreasUnity.Behaviours
                 this.OnArrivedToDestinationNode();
 
             if (!this.HasTargetNode)
+            {
+                this.FindNextNodeDelayed();
                 return;
+            }
 
             this.MyPed.IsSprintOn = true;
             this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
@@ -203,7 +216,7 @@ namespace SanAndreasUnity.Behaviours
                 return;
             }
 
-            // handle vehicle logic
+            // handle vehicle logic - follow ped in or out of vehicle
             if (this.MyPed.IsInVehicle || this.TargetPed.IsInVehicle)
                 this.UpdateFollowingMovementPart();
 
@@ -351,6 +364,7 @@ namespace SanAndreasUnity.Behaviours
             this.HasTargetNode = true;
             this.Action = PedAIAction.WalkingAround;
             this.TargetPed = null;
+            this.AssignMoveDestinationBasedOnTargetNode();
         }
 
         public void StartFollowing(Ped ped)
@@ -400,6 +414,49 @@ namespace SanAndreasUnity.Behaviours
                 //No possibilities found, returning to previous node
                 return previousNode;
             }
+        }
+
+        PathNode? GetClosestPathNodeToWalk()
+        {
+            Vector3 pos = this.MyPed.transform.position;
+            float radius = 200f;
+
+            var pathNodeInfo = NodeReader.GetAreasInRadius(pos, radius)
+                .SelectMany(area => area.PedNodes)
+                .Where(node => node.CanPedWalkHere)
+                .Select(node => (node, distance: Vector3.Distance(node.Position, pos)))
+                .Where(_ => _.distance < radius)
+                .MinBy(_ => _.distance, default);
+
+            if (EqualityComparer<PathNode>.Default.Equals(pathNodeInfo.node, default))
+                return null;
+
+            return pathNodeInfo.node;
+        }
+
+        private void FindNextNodeDelayed()
+        {
+            if (_isFindingPathNodeDelayed)
+                return;
+
+            _isFindingPathNodeDelayed = true;
+
+            this.CancelInvoke(nameof(this.FindNextNodeDelayedCallback));
+            this.Invoke(nameof(this.FindNextNodeDelayedCallback), 2f);
+        }
+
+        private void FindNextNodeDelayedCallback()
+        {
+            if (this.HasTargetNode) // already assigned ?
+                return;
+
+            var closestPathNodeToWalk = this.GetClosestPathNodeToWalk();
+            if (null == closestPathNodeToWalk)
+                return;
+
+            this.TargetNode = closestPathNodeToWalk.Value;
+            this.HasTargetNode = true;
+            this.AssignMoveDestinationBasedOnTargetNode();
         }
 
         private void OnDrawGizmosSelected()

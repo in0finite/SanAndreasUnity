@@ -207,21 +207,19 @@ namespace SanAndreasUnity.Behaviours
             float areaRadius = _areaSize * Mathf.Sqrt(2) / 2f; // radius of outer circle
             bool hasFocusPointsThatSeeArea = worldSystemArea.FocusPointsThatSeeMe != null && worldSystemArea.FocusPointsThatSeeMe.Count > 0;
 
-            List<int> areaIdsToSearch = NodeReader.GetAreaIndexesInRadius(targetZone, areaRadius)
-                .Select(NodeReader.GetAreaIdFromIndexes)
+            List<NodeFile> areasToSearch = NodeReader.GetAreasInRadius(targetZone, areaRadius)
                 .ToList();
 
-            if (areaIdsToSearch.Count == 0)
+            if (areasToSearch.Count == 0)
                 yield break;
 
             // choose random node among all nodes that satisfy conditions
 
             float randomValue = Random.Range(0f, 15f);
 
-            var pathNode = areaIdsToSearch
-                .Select(NodeReader.GetAreaById)
+            var pathNode = areasToSearch
                 .SelectMany(_ => _.PedNodes
-                    .Where(pn => pn.NodeType > 2 // ?
+                    .Where(pn => pn.CanPedWalkHere
                                  && pn.Flags.SpawnProbability != 0
                                  && Vector3.Distance(pn.Position, targetZone) < areaRadius
                                  && (!hasFocusPointsThatSeeArea || worldSystemArea.FocusPointsThatSeeMe.All(f => Vector3.Distance(pn.Position, f.Position).BetweenExclusive(this.minSpawnDistanceFromFocusPoint, this.maxSpawnDistanceFromFocusPoint)))))
