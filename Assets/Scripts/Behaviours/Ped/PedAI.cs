@@ -126,14 +126,7 @@ namespace SanAndreasUnity.Behaviours
                         this.UpdateWalkingAround();
                         break;
                     case PedAIAction.Chasing:
-                        if (this.TargetPed != null)
-                        {
-                            this.UpdateAttackOnPed(this.TargetPed);
-                        }
-                        else // The target is dead/disconnected
-                        {
-                            this.Action = PedAIAction.WalkingAround;
-                        }
+                        this.UpdateChasing();
                         break;
                     case PedAIAction.Escaping:
                         this.UpdateEscaping();
@@ -198,6 +191,18 @@ namespace SanAndreasUnity.Behaviours
             this.MyPed.IsWalkOn = true;
             this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
             this.MyPed.Heading = this.MyPed.Movement;
+        }
+
+        void UpdateChasing()
+        {
+            if (this.TargetPed != null)
+            {
+                this.UpdateAttackOnPed(this.TargetPed);
+            }
+            else // The target is dead/disconnected
+            {
+                this.StartWalkingAround();
+            }
         }
 
         void UpdateEscaping()
