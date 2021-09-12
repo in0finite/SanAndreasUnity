@@ -230,6 +230,14 @@ namespace SanAndreasUnity.Behaviours
             if (this.MyPed.IsInVehicle) // wait until we exit vehicle
                 return;
 
+            // check if we gained some enemies
+            _enemyPeds.RemoveDeadObjectsIfNotEmpty();
+            if (_enemyPeds.Count > 0)
+            {
+                this.Action = PedAIAction.Chasing;
+                return;
+            }
+
             if (this.ArrivedAtDestinationNode())
                 this.OnArrivedToDestinationNode();
 
