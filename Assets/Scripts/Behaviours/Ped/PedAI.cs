@@ -195,14 +195,17 @@ namespace SanAndreasUnity.Behaviours
 
         void UpdateChasing()
         {
-            if (this.TargetPed != null)
+            if (null == this.TargetPed)
+                this.TargetPed = this.GetNextPedToAttack();
+
+            if (null == this.TargetPed)
             {
-                this.UpdateAttackOnPed(this.TargetPed);
-            }
-            else // The target is dead/disconnected
-            {
+                // we finished attacking all enemies, now start walking
                 this.StartWalkingAround();
+                return;
             }
+
+            this.UpdateAttackOnPed(this.TargetPed);
         }
 
         void UpdateEscaping()
@@ -237,18 +240,7 @@ namespace SanAndreasUnity.Behaviours
                 return;
 
             if (null == _currentlyEngagedPed)
-            {
-                // see if we can attack any enemy ped
-                _enemyPeds.RemoveDeadObjects();
-                if (_enemyPeds.Count > 0)
-                {
-                    Vector3 myPosition = this.transform.position;
-                    var closestPed = _enemyPeds.Aggregate((p1, p2) =>
-                        Vector3.Distance(p1.transform.position, myPosition)
-                        < Vector3.Distance(p2.transform.position, myPosition) ? p1 : p2);
-                    _currentlyEngagedPed = closestPed;
-                }
-            }
+                _currentlyEngagedPed = this.GetNextPedToAttack();
 
             if (_currentlyEngagedPed != null)
             {
@@ -478,6 +470,23 @@ namespace SanAndreasUnity.Behaviours
             this.TargetNode = closestPathNodeToWalk.Value;
             this.HasTargetNode = true;
             this.AssignMoveDestinationBasedOnTargetNode();
+        }
+
+        private Ped GetNextPedToAttack()
+        {
+            _enemyPeds.RemoveDeadObjectsIfNotEmpty();
+            if (_enemyPeds.Count == 0)
+                return null;
+
+            Vector3 myPosition = this.transform.position;
+
+            var closestPed = _enemyPeds.Aggregate((p1, p2) =>
+                Vector3.Distance(p1.transform.position, myPosition)
+                < Vector3.Distance(p2.transform.position, myPosition)
+                    ? p1
+                    : p2);
+
+            return closestPed;
         }
 
         private void OnDrawGizmosSelected()

@@ -697,9 +697,18 @@ namespace SanAndreasUnity.Utilities
 	        return enumerable.Where(obj => obj != null);
         }
 
-        public static int RemoveDeadObjects<T> (this List<T> list) where T : UnityEngine.Object
+        public static int RemoveDeadObjects<T> (this List<T> list)
+	        where T : UnityEngine.Object
         {
             return list.RemoveAll(item => null == item);
+        }
+
+        public static int RemoveDeadObjectsIfNotEmpty<T>(this List<T> list)
+	        where T : UnityEngine.Object
+        {
+	        if (list.Count > 0)
+		        return list.RemoveDeadObjects();
+	        return 0;
         }
 
 
