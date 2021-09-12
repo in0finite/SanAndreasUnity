@@ -163,7 +163,14 @@ namespace SanAndreasUnity.Behaviours
         {
             // follow target ped
 
-            if (this.TargetPed != null) {
+            if (null == this.TargetPed)
+            {
+                this.Action = PedAIAction.Idle;
+                return;
+            }
+
+
+            {
 
                 Vector3 targetPos = this.TargetPed.transform.position;
                 float currentStoppingDistance = 3f;
@@ -218,10 +225,6 @@ namespace SanAndreasUnity.Behaviours
                     this.MyPed.Heading = diffDir;
                 }
 
-            }
-            else
-            {
-                this.Action = PedAIAction.Idle;
             }
         }
 
