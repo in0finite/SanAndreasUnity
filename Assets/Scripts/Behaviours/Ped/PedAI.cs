@@ -526,6 +526,8 @@ namespace SanAndreasUnity.Behaviours
 
         private void FindNextNodeDelayedCallback()
         {
+            _isFindingPathNodeDelayed = false;
+
             if (this.HasTargetNode) // already assigned ?
                 return;
 
