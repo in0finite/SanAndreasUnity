@@ -87,11 +87,11 @@ namespace SanAndreasUnity.Behaviours
         {
             Ped attackerPed = dmgInfo.GetAttackerPed();
 
-            if (attackerPed != null)
-                _enemyPeds.AddIfNotPresent(attackerPed);
-
             if (this.Action == PedAIAction.Following)
             {
+                if (null == attackerPed)
+                    return;
+
                 if (attackerPed == this.TargetPed)
                 {
                     // our leader attacked us
@@ -100,8 +100,17 @@ namespace SanAndreasUnity.Behaviours
                     return;
                 }
 
+                if (!this.IsMemberOfOurGroup(attackerPed))
+                {
+                    _enemyPeds.AddIfNotPresent(attackerPed);
+                    return;
+                }
+
                 return;
             }
+
+            if (attackerPed != null)
+                _enemyPeds.AddIfNotPresent(attackerPed);
 
             if (this.Action == PedAIAction.Idle || this.Action == PedAIAction.WalkingAround)
             {
@@ -131,15 +140,8 @@ namespace SanAndreasUnity.Behaviours
 
             if (this.Action == PedAIAction.Following)
             {
-                bool isAttackerPartOfOurGroup = true;
-                var attackerPedAi = attackerPed.GetComponent<PedAI>();
-                if (null == attackerPedAi || attackerPedAi.Action != PedAIAction.Following || attackerPedAi.TargetPed != this.TargetPed)
-                    isAttackerPartOfOurGroup = false;
-
-                if (isAttackerPartOfOurGroup)
-                {
+                if (this.IsMemberOfOurGroup(attackerPed))
                     return;
-                }
 
                 if (this.TargetPed == otherPed)
                 {
@@ -149,8 +151,7 @@ namespace SanAndreasUnity.Behaviours
                     return;
                 }
 
-                var otherPedAi = otherPed.GetComponent<PedAI>();
-                if (otherPedAi != null && otherPedAi.Action == PedAIAction.Following && otherPedAi.TargetPed == this.TargetPed)
+                if (this.IsMemberOfOurGroup(otherPed))
                 {
                     // attacked ped is member of our group
                     // his enemy will be also our enemy
@@ -161,6 +162,21 @@ namespace SanAndreasUnity.Behaviours
                 return;
             }
 
+        }
+
+        bool IsMemberOfOurGroup(Ped ped)
+        {
+            if (this.Action != PedAIAction.Following || this.TargetPed == null) // we are not part of any group
+                return false;
+
+            if (this.TargetPed == ped) // our leader
+                return true;
+
+            var pedAI = ped.GetComponent<PedAI>();
+            if (pedAI != null && pedAI.Action == PedAIAction.Following && pedAI.TargetPed == this.TargetPed)
+                return true;
+
+            return false;
         }
 
         void Update()
