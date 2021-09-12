@@ -33,10 +33,14 @@ namespace SanAndreasUnity.Behaviours
         /// </summary>
         public PathNode CurrentNode { get; private set; }
 
+        public bool HasCurrentNode { get; private set; } = false;
+
         /// <summary>
         /// The node the Ped is targeting
         /// </summary>
         public PathNode TargetNode { get; private set; }
+
+        public bool HasTargetNode { get; private set; } = false;
 
         /// <summary>
         /// The ped that this ped is chasing
@@ -127,13 +131,7 @@ namespace SanAndreasUnity.Behaviours
                         }
                         break;
                     case PedAIAction.Escaping:
-                        if (this.ArrivedAtDestinationNode())
-                        {
-                            this.OnArrivedToDestinationNode();
-                        }
-                        this.MyPed.IsSprintOn = true;
-                        this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
-                        this.MyPed.Heading = this.MyPed.Movement;
+                        this.UpdateEscaping();
                         break;
                     case PedAIAction.Following:
                         this.UpdateFollowing();
@@ -144,6 +142,8 @@ namespace SanAndreasUnity.Behaviours
 
         bool ArrivedAtDestinationNode()
         {
+            if (!this.HasTargetNode)
+                return false;
             if (Vector2.Distance(this.transform.position.ToVec2WithXAndZ(), this.TargetNode.Position.ToVec2WithXAndZ())
                 < this.TargetNode.PathWidth / 2f)
                 return true;
@@ -174,7 +174,23 @@ namespace SanAndreasUnity.Behaviours
             if (this.ArrivedAtDestinationNode())
                 this.OnArrivedToDestinationNode();
 
+            if (!this.HasTargetNode)
+                return;
+
             this.MyPed.IsWalkOn = true;
+            this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
+            this.MyPed.Heading = this.MyPed.Movement;
+        }
+
+        void UpdateEscaping()
+        {
+            if (this.ArrivedAtDestinationNode())
+                this.OnArrivedToDestinationNode();
+
+            if (!this.HasTargetNode)
+                return;
+
+            this.MyPed.IsSprintOn = true;
             this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
             this.MyPed.Heading = this.MyPed.Movement;
         }
@@ -330,7 +346,9 @@ namespace SanAndreasUnity.Behaviours
         public void StartWalkingAround(PathNode pathNode)
         {
             this.CurrentNode = pathNode;
+            this.HasCurrentNode = true;
             this.TargetNode = pathNode;
+            this.HasTargetNode = true;
             this.Action = PedAIAction.WalkingAround;
             this.TargetPed = null;
         }
