@@ -82,6 +82,11 @@ namespace SanAndreasUnity.UI {
 				}
 			}
 
+			if (GUILayout.Button("Spawn enemy ped"))
+			{
+				SendCommand("/enemy");
+			}
+
 			if (GUILayout.Button("Destroy all vehicles"))
 			{
 				var vehicles = Behaviours.Vehicles.Vehicle.AllVehicles.ToArray();
@@ -119,6 +124,11 @@ namespace SanAndreasUnity.UI {
 			if (GUILayout.Button("Request ped stalker"))
 			{
 				SendCommand("/stalker");
+			}
+
+			if (GUILayout.Button("Request enemy ped"))
+			{
+				SendCommand("/enemy");
 			}
 
 			if (GUILayout.Button("Request to destroy my vehicles"))
