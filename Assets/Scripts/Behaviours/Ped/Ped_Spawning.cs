@@ -52,6 +52,13 @@ namespace SanAndreasUnity.Behaviours
 			return ped.gameObject.GetOrAddComponent<PedAI>();
 		}
 
+		public static PedAI SpawnPedAI(int pedId, Transform nearbyTransform)
+		{
+			if (GetPositionForPedSpawn (out var pos, out var rot, nearbyTransform))
+				return SpawnPedAI(pedId, pos, rot);
+			return null;
+		}
+
 		public static PedAI SpawnPedStalker (int pedId, Vector3 pos, Quaternion rot, Ped targetPed)
 		{
 			var ped = SpawnPed (pedId, pos, rot, true);

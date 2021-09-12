@@ -468,6 +468,13 @@ namespace SanAndreasUnity.Behaviours
             this.TargetPed = ped;
         }
 
+        public void StartChasing(Ped ped)
+        {
+            this.Action = PedAIAction.Chasing;
+            this.TargetPed = ped;
+            _enemyPeds.AddIfNotPresent(ped);
+        }
+
         public void Recruit(Ped recruiterPed)
         {
             if (this.Action == PedAIAction.Following)
