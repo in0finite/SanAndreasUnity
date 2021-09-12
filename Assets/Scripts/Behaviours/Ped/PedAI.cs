@@ -108,18 +108,17 @@ namespace SanAndreasUnity.Behaviours
                         {
                             Vector3 diff = GetHeadOrTransform(this.TargetPed).position - GetHeadOrTransform(this.MyPed).position;
                             Vector3 dir = diff.normalized;
+                            this.MyPed.Heading = dir;
                             if (diff.magnitude < 10f)
                             {
-                                this.MyPed.Heading = dir;
                                 this.MyPed.AimDirection = dir;
                                 this.MyPed.IsAimOn = true;
                                 this.MyPed.IsFireOn = true;
                             }
-                            else
+                            else if (Vector2.Distance(this.TargetPed.transform.position.ToVec2WithXAndZ(), this.MyPed.transform.position.ToVec2WithXAndZ()) > 3f)
                             {
                                 this.MyPed.IsRunOn = true;
                                 this.MyPed.Movement = dir;
-                                this.MyPed.Heading = dir;
                             }
                         }
                         else // The target is dead/disconnected
@@ -203,7 +202,7 @@ namespace SanAndreasUnity.Behaviours
                     return;
 
                 Vector3 diff = targetPos - this.transform.position;
-                float distance = diff.magnitude;
+                float distance = diff.ToVec2WithXAndZ().magnitude;
 
                 if (distance > currentStoppingDistance)
                 {
