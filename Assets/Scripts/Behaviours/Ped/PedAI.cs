@@ -47,6 +47,9 @@ namespace SanAndreasUnity.Behaviours
 
         public PedestrianType PedestrianType => this.MyPed.PedDef.DefaultType;
 
+        private List<Ped> _enemyPeds = new List<Ped>();
+        private Ped _currentlyEngagedPed;
+
 
         private void Awake()
         {
@@ -71,16 +74,32 @@ namespace SanAndreasUnity.Behaviours
 
         private static void OnPedDamaged(Ped hitPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
         {
+            Ped attackerPed = dmgInfo.GetAttackerPed();
+
+            if (attackerPed != null)
+            {
+                foreach (var ai in AllPedAIs)
+                {
+                    if (ai.Action == PedAIAction.Following && ai.TargetPed == hitPed)
+                    {
+                        ai._enemyPeds.AddIfNotPresent(attackerPed);
+                    }
+                }
+            }
+
             var hitPedAi = hitPed.GetComponent<PedAI>();
             if (null == hitPedAi)
                 return;
 
+            if (attackerPed != null)
+                hitPedAi._enemyPeds.AddIfNotPresent(attackerPed);
+
             if (hitPed.PedDef != null &&
                 (hitPed.PedDef.DefaultType == PedestrianType.Criminal ||
-                hitPed.PedDef.DefaultType == PedestrianType.Cop ||
-                hitPed.PedDef.DefaultType.IsGangMember()))
+                 hitPed.PedDef.DefaultType == PedestrianType.Cop ||
+                 hitPed.PedDef.DefaultType.IsGangMember()))
             {
-                hitPedAi.TargetPed = dmgInfo.GetAttackerPed();
+                hitPedAi.TargetPed = attackerPed;
                 hitPedAi.Action = PedAIAction.Chasing;
             }
             else
@@ -106,20 +125,7 @@ namespace SanAndreasUnity.Behaviours
                     case PedAIAction.Chasing:
                         if (this.TargetPed != null)
                         {
-                            Vector3 diff = GetHeadOrTransform(this.TargetPed).position - GetHeadOrTransform(this.MyPed).position;
-                            Vector3 dir = diff.normalized;
-                            this.MyPed.Heading = dir;
-                            if (diff.magnitude < 10f)
-                            {
-                                this.MyPed.AimDirection = dir;
-                                this.MyPed.IsAimOn = true;
-                                this.MyPed.IsFireOn = true;
-                            }
-                            else if (Vector2.Distance(this.TargetPed.transform.position.ToVec2WithXAndZ(), this.MyPed.transform.position.ToVec2WithXAndZ()) > 3f)
-                            {
-                                this.MyPed.IsRunOn = true;
-                                this.MyPed.Movement = dir;
-                            }
+                            this.UpdateAttackOnPed(this.TargetPed);
                         }
                         else // The target is dead/disconnected
                         {
@@ -160,6 +166,47 @@ namespace SanAndreasUnity.Behaviours
         }
 
         void UpdateFollowing()
+        {
+            if (null == this.TargetPed)
+            {
+                this.Action = PedAIAction.Idle;
+                return;
+            }
+
+            // handle vehicle logic
+            if (this.MyPed.IsInVehicle || this.TargetPed.IsInVehicle)
+                this.UpdateFollowingMovementPart();
+
+            if (this.Action != PedAIAction.Following)
+                return;
+
+            if (null == _currentlyEngagedPed)
+            {
+                // see if we can attack any enemy ped
+                _enemyPeds.RemoveDeadObjects();
+                if (_enemyPeds.Count > 0)
+                {
+                    Vector3 myPosition = this.transform.position;
+                    var closestPed = _enemyPeds.Aggregate((p1, p2) =>
+                        Vector3.Distance(p1.transform.position, myPosition)
+                        < Vector3.Distance(p2.transform.position, myPosition) ? p1 : p2);
+                    _currentlyEngagedPed = closestPed;
+                }
+            }
+
+            if (_currentlyEngagedPed != null)
+            {
+                this.UpdateAttackOnPed(_currentlyEngagedPed);
+            }
+            else
+            {
+                // no peds to attack
+                // follow our leader
+                this.UpdateFollowingMovementPart();
+            }
+        }
+
+        void UpdateFollowingMovementPart()
         {
             // follow target ped
 
@@ -226,6 +273,43 @@ namespace SanAndreasUnity.Behaviours
                 this.MyPed.IsRunOn = true;
                 this.MyPed.Movement = diffDir;
                 this.MyPed.Heading = diffDir;
+            }
+        }
+
+        private void UpdateAttackOnPed(Ped ped)
+        {
+            Vector3 diff = GetHeadOrTransform(ped).position - GetHeadOrTransform(this.MyPed).position;
+            Vector3 dir = diff.normalized;
+            this.MyPed.Heading = dir;
+
+            if (this.MyPed.IsInVehicle)
+            {
+                if (diff.magnitude < 10f)
+                {
+                    this.MyPed.AimDirection = dir;
+                    if (!this.MyPed.IsAiming)
+                        this.MyPed.OnAimButtonPressed();
+                    this.MyPed.IsFireOn = true;
+                }
+                else
+                {
+                    if (this.MyPed.IsAiming)
+                        this.MyPed.OnAimButtonPressed();
+                }
+            }
+            else
+            {
+                if (diff.magnitude < 10f)
+                {
+                    this.MyPed.AimDirection = dir;
+                    this.MyPed.IsAimOn = true;
+                    this.MyPed.IsFireOn = true;
+                }
+                else if (Vector2.Distance(ped.transform.position.ToVec2WithXAndZ(), this.MyPed.transform.position.ToVec2WithXAndZ()) > 3f)
+                {
+                    this.MyPed.IsRunOn = true;
+                    this.MyPed.Movement = dir;
+                }
             }
         }
 
