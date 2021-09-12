@@ -55,15 +55,14 @@ namespace SanAndreasUnity.UI {
 		{
 			Transform nearbyTransform = Ped.Instance != null ? Ped.Instance.transform : null;
 
-			if (GUILayout.Button ("Spawn random vehicle")) {
+			if (GUILayout.Button ("Spawn vehicle")) {
 				if (Ped.Instance != null)
 					Vehicle.CreateRandomInFrontOf(nearbyTransform);
 			}
 
 			if (GUILayout.Button("Change player model"))
 			{
-				if (Ped.Instance != null)
-					SendCommand("/skin");
+				SendCommand("/skin");
 			}
 
 			if (GUILayout.Button("Spawn 5 peds"))
@@ -74,12 +73,9 @@ namespace SanAndreasUnity.UI {
 				}
 			}
 
-			if (GUILayout.Button("Spawn 5 stalker peds"))
+			if (GUILayout.Button("Spawn stalker ped"))
 			{
-				for (int i = 0; i < 5; i++)
-				{
-					Ped.SpawnPedStalker (Ped.RandomPedId, nearbyTransform, Ped.Instance);
-				}
+				SendCommand("/stalker");
 			}
 
 			if (GUILayout.Button("Spawn enemy ped"))
