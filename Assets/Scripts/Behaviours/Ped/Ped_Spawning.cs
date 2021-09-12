@@ -52,9 +52,9 @@ namespace SanAndreasUnity.Behaviours
 			return ped.gameObject.GetOrAddComponent<PedAI>();
 		}
 
-		public static PedAI SpawnPedAI(int pedId, Transform nearbyTransform)
+		public static PedAI SpawnPedAI(int pedId, Transform nearbyTransform, float minDistance = 5f, float maxDistance = 15f)
 		{
-			if (GetPositionForPedSpawn (out var pos, out var rot, nearbyTransform))
+			if (GetPositionForPedSpawn (out var pos, out var rot, nearbyTransform, minDistance, maxDistance))
 				return SpawnPedAI(pedId, pos, rot);
 			return null;
 		}
@@ -78,7 +78,12 @@ namespace SanAndreasUnity.Behaviours
 			return null;
 		}
 
-		public static bool GetPositionForPedSpawn (out Vector3 pos, out Quaternion rot, Transform nearbyTransform)
+		public static bool GetPositionForPedSpawn(
+			out Vector3 pos,
+			out Quaternion rot,
+			Transform nearbyTransform,
+			float minDistance = 5f,
+			float maxDistance = 15f)
 		{
 			pos = Vector3.zero;
 			rot = Quaternion.identity;
@@ -88,7 +93,7 @@ namespace SanAndreasUnity.Behaviours
 				Vector3 offset = Random.onUnitSphere;
 				offset.y = 0f;
 				offset.Normalize ();
-				offset *= Random.Range (5f, 15f);
+				offset *= Random.Range (minDistance, maxDistance);
 
 				pos = nearbyTransform.TransformPoint (offset);
 				rot = Random.rotation;

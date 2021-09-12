@@ -131,7 +131,7 @@ namespace SanAndreasUnity.Commands
                 if (!GetPedModelId(arguments, 1, out int modelId))
                     return pedModelIdDoesNotExist;
 
-                var pedAI = Ped.SpawnPedAI(modelId, player.OwnedPed.transform);
+                var pedAI = Ped.SpawnPedAI(modelId, player.OwnedPed.transform, 15f, 30f);
                 // add weapon ...
                 pedAI.StartChasing(player.OwnedPed);
 

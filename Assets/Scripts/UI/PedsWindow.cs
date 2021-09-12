@@ -140,8 +140,7 @@ namespace SanAndreasUnity.UI {
 						GUI.enabled = NetUtils.IsServer;
 						if (GUI.Button(itemRect, "Spawn"))
 						{
-							if (Ped.GetPositionForPedSpawn(out Vector3 pos, out Quaternion rot, Ped.Instance.transform))
-								Ped.SpawnPedAI(def.Id, pos, rot);
+							Ped.SpawnPedAI(def.Id, Ped.Instance.transform);
 						}
 						GUI.enabled = true;
 
