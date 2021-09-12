@@ -119,6 +119,9 @@ namespace SanAndreasUnity.Behaviours
             {
                 switch (this.Action)
                 {
+                    case PedAIAction.Idle:
+                        this.UpdateIdle();
+                        break;
                     case PedAIAction.WalkingAround:
                         this.UpdateWalkingAround();
                         break;
@@ -164,6 +167,11 @@ namespace SanAndreasUnity.Behaviours
         {
             Vector2 offset = Random.insideUnitCircle * TargetNode.PathWidth / 2f * 0.9f;
             _moveDestination = TargetNode.Position + offset.ToVector3XZ();
+        }
+
+        void UpdateIdle()
+        {
+            this.StartWalkingAround();
         }
 
         void UpdateWalkingAround()
@@ -365,6 +373,14 @@ namespace SanAndreasUnity.Behaviours
             this.Action = PedAIAction.WalkingAround;
             this.TargetPed = null;
             this.AssignMoveDestinationBasedOnTargetNode();
+        }
+
+        public void StartWalkingAround()
+        {
+            this.HasCurrentNode = false;
+            this.HasTargetNode = false;
+            this.Action = PedAIAction.WalkingAround;
+            this.TargetPed = null;
         }
 
         public void StartFollowing(Ped ped)
