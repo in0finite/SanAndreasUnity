@@ -117,8 +117,8 @@ namespace SanAndreasUnity.Behaviours
                 var hitPed = this.MyPed;
 
                 if (hitPed.PedDef != null &&
-                    (hitPed.PedDef.DefaultType == PedestrianType.Criminal ||
-                     hitPed.PedDef.DefaultType == PedestrianType.Cop ||
+                    (hitPed.PedDef.DefaultType.IsCriminal() ||
+                     hitPed.PedDef.DefaultType.IsCop() ||
                      hitPed.PedDef.DefaultType.IsGangMember()))
                 {
                     if (attackerPed != null)
@@ -488,7 +488,7 @@ namespace SanAndreasUnity.Behaviours
             }
             else if (this.Action == PedAIAction.Idle || this.Action == PedAIAction.WalkingAround)
             {
-                if (!this.PedestrianType.IsGangMember() && this.PedestrianType != PedestrianType.Criminal)
+                if (!this.PedestrianType.IsGangMember() && !this.PedestrianType.IsCriminal())
                     return;
 
                 this.StartFollowing(recruiterPed);
