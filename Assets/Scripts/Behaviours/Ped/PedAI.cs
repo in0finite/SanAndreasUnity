@@ -22,8 +22,6 @@ namespace SanAndreasUnity.Behaviours
         private static readonly List<PedAI> s_allPedAIs = new List<PedAI>();
         public static IReadOnlyList<PedAI> AllPedAIs => s_allPedAIs;
 
-        private static bool s_subscribedToPedOnDamageEvent = false;
-
         public PedAIAction Action { get; private set; }
 
         private Vector3 _moveDestination;
@@ -60,56 +58,109 @@ namespace SanAndreasUnity.Behaviours
         private void Awake()
         {
             this.MyPed = this.GetComponentOrThrow<Ped>();
-
-            if (!s_subscribedToPedOnDamageEvent)
-            {
-                s_subscribedToPedOnDamageEvent = true;
-                Ped.onDamaged += OnPedDamaged;
-            }
         }
 
         private void OnEnable()
         {
             s_allPedAIs.Add(this);
+            Ped.onDamaged += OnPedDamaged;
         }
 
         private void OnDisable()
         {
             s_allPedAIs.Remove(this);
+            Ped.onDamaged -= OnPedDamaged;
         }
 
-        private static void OnPedDamaged(Ped hitPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
+        private void OnPedDamaged(Ped hitPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
+        {
+            if (this.MyPed == hitPed)
+            {
+                this.OnMyPedDamaged(dmgInfo, dmgResult);
+                return;
+            }
+
+            this.OnOtherPedDamaged(hitPed, dmgInfo, dmgResult);
+        }
+
+        void OnMyPedDamaged(DamageInfo dmgInfo, Ped.DamageResult dmgResult)
         {
             Ped attackerPed = dmgInfo.GetAttackerPed();
 
             if (attackerPed != null)
+                _enemyPeds.AddIfNotPresent(attackerPed);
+
+            if (this.Action == PedAIAction.Following)
             {
-                foreach (var ai in AllPedAIs)
+                if (attackerPed == this.TargetPed)
                 {
-                    if (ai.Action == PedAIAction.Following && ai.TargetPed == hitPed)
-                    {
-                        ai._enemyPeds.AddIfNotPresent(attackerPed);
-                    }
+                    // our leader attacked us
+                    // stop following him
+                    this.TargetPed = null;
+                    return;
                 }
+
+                return;
             }
 
-            var hitPedAi = hitPed.GetComponent<PedAI>();
-            if (null == hitPedAi)
+            if (this.Action == PedAIAction.Idle || this.Action == PedAIAction.WalkingAround)
+            {
+                var hitPed = this.MyPed;
+
+                if (hitPed.PedDef != null &&
+                    (hitPed.PedDef.DefaultType == PedestrianType.Criminal ||
+                     hitPed.PedDef.DefaultType == PedestrianType.Cop ||
+                     hitPed.PedDef.DefaultType.IsGangMember()))
+                {
+                    if (attackerPed != null)
+                        this.Action = PedAIAction.Chasing;
+                }
+                else
+                    this.Action = PedAIAction.Escaping;
+
+                return;
+            }
+
+        }
+
+        void OnOtherPedDamaged(Ped otherPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
+        {
+            Ped attackerPed = dmgInfo.GetAttackerPed();
+            if (null == attackerPed)
                 return;
 
-            if (attackerPed != null)
-                hitPedAi._enemyPeds.AddIfNotPresent(attackerPed);
-
-            if (hitPed.PedDef != null &&
-                (hitPed.PedDef.DefaultType == PedestrianType.Criminal ||
-                 hitPed.PedDef.DefaultType == PedestrianType.Cop ||
-                 hitPed.PedDef.DefaultType.IsGangMember()))
+            if (this.Action == PedAIAction.Following)
             {
-                hitPedAi.TargetPed = attackerPed;
-                hitPedAi.Action = PedAIAction.Chasing;
+                bool isAttackerPartOfOurGroup = true;
+                var attackerPedAi = attackerPed.GetComponent<PedAI>();
+                if (null == attackerPedAi || attackerPedAi.Action != PedAIAction.Following || attackerPedAi.TargetPed != this.TargetPed)
+                    isAttackerPartOfOurGroup = false;
+
+                if (isAttackerPartOfOurGroup)
+                {
+                    return;
+                }
+
+                if (this.TargetPed == otherPed)
+                {
+                    // our leader was attacked
+                    // his enemies are also our enemies
+                    _enemyPeds.AddIfNotPresent(attackerPed);
+                    return;
+                }
+
+                var otherPedAi = otherPed.GetComponent<PedAI>();
+                if (otherPedAi != null && otherPedAi.Action == PedAIAction.Following && otherPedAi.TargetPed == this.TargetPed)
+                {
+                    // attacked ped is member of our group
+                    // his enemy will be also our enemy
+                    _enemyPeds.AddIfNotPresent(attackerPed);
+                    return;
+                }
+
+                return;
             }
-            else
-                hitPedAi.Action = PedAIAction.Escaping;
+
         }
 
         void Update()
