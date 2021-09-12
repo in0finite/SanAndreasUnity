@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -119,7 +119,8 @@ namespace SanAndreasUnity.Commands
                 if (!GetPedModelId(arguments, 1, out int modelId))
                     return pedModelIdDoesNotExist;
 
-                Ped.SpawnPedStalker(modelId, player.OwnedPed.transform, player.OwnedPed);
+                var pedAI = Ped.SpawnPedStalker(modelId, player.OwnedPed.transform, player.OwnedPed);
+                AddWeaponToSpawnedPed(pedAI.MyPed, false);
 
                 return CommandManager.ProcessCommandResult.Success;
             }
@@ -132,7 +133,7 @@ namespace SanAndreasUnity.Commands
                     return pedModelIdDoesNotExist;
 
                 var pedAI = Ped.SpawnPedAI(modelId, player.OwnedPed.transform, 15f, 30f);
-                // add weapon ...
+                AddWeaponToSpawnedPed(pedAI.MyPed, true);
                 pedAI.StartChasing(player.OwnedPed);
 
                 return CommandManager.ProcessCommandResult.Success;
@@ -261,6 +262,43 @@ namespace SanAndreasUnity.Commands
             }
 
             return CommandManager.ProcessCommandResult.UnknownCommand;
+        }
+
+        void AddWeaponToSpawnedPed(Ped ped, bool force)
+        {
+            this.StartCoroutine(this.AddWeaponToSpawnedPedCoroutine(ped, force));
+        }
+
+        IEnumerator AddWeaponToSpawnedPedCoroutine(Ped ped, bool force)
+        {
+            yield return null;
+            yield return null;
+
+            if (ped.PedDef == null)
+                yield break;
+
+            //int[] weaponIds = new[] {WeaponId.Pistol, WeaponId.DesertEagle, WeaponId.Shotgun, WeaponId.SPAS12, WeaponId.SawnOff};
+
+            int[] slots = new int[]
+            {
+                WeaponSlot.Pistol, WeaponSlot.Shotgun, WeaponSlot.Submachine, WeaponSlot.Machine,
+            };
+
+            if (force)
+            {
+                int chosenSlot = slots.RandomElement();
+                ped.WeaponHolder.AddRandomWeapons(new[] {chosenSlot});
+                ped.WeaponHolder.SwitchWeapon(chosenSlot);
+                yield break;
+            }
+
+            /*var type = ped.PedDef.DefaultType;
+            if (type.IsGangMember() || type.IsCriminal() || type.IsCop())
+            {
+                ped.WeaponHolder.AddWeapon(WeaponId.Pistol);
+            }*/
+
+            NPCPedSpawner.Singleton.AddWeaponToPed(ped);
         }
     }
 }

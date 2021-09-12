@@ -256,7 +256,7 @@ namespace SanAndreasUnity.Behaviours
             return ai;
         }
 
-        private void AddWeaponToPed(Ped ped)
+        public void AddWeaponToPed(Ped ped)
         {
             if (null == ped.PedDef)
                 return;
