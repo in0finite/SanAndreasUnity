@@ -178,15 +178,19 @@ namespace SanAndreasUnity.Behaviours
                         .FirstOrDefault ();
 
                     if (closestfreeSeat != null) {
-                        // check if it is in range
-                        if (closestfreeSeat.tr.Distance (this.transform.position) < this.MyPed.EnterVehicleRadius) {
-                            // the seat is in range
-                            this.MyPed.EnterVehicle (vehicle, closestfreeSeat.sa);
+                        // check if we would enter this seat on attempt
+                        var vehicleThatPedWouldEnter = this.MyPed.GetVehicleThatPedWouldEnterOnAttempt();
+                        if (vehicleThatPedWouldEnter.vehicle == vehicle && vehicleThatPedWouldEnter.seatAlignment == closestfreeSeat.sa)
+                        {
+                            // we would enter this seat
+                            // go ahead and enter it
+                            this.MyPed.OnSubmitPressed();
+                            return;
                         } else {
-                            // the seat is not in range
-                            // move towards this seat
+                            // we would not enter this seat - it's not close enough, or maybe some other seat (occupied one) is closer
+                            // move toward the seat
                             targetPos = closestfreeSeat.tr.position;
-                            currentStoppingDistance = 0.1f;
+                            currentStoppingDistance = 0.01f;
                         }
                     }
 
@@ -194,7 +198,8 @@ namespace SanAndreasUnity.Behaviours
                     // target player is not in vehicle, and ours is
                     // exit the vehicle
 
-                    this.MyPed.ExitVehicle ();
+                    this.MyPed.OnSubmitPressed();
+                    return;
                 }
 
 

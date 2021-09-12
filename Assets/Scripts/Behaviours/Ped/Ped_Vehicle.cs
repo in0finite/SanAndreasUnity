@@ -95,17 +95,28 @@ namespace SanAndreasUnity.Behaviours
 			
 		}
 
+		public (Vehicle vehicle, Vehicle.SeatAlignment seatAlignment) GetVehicleThatPedWouldEnterOnAttempt()
+		{
+			var vehicle = this.FindVehicleInRange();
+			if (null == vehicle)
+				return default;
+
+			var seatAlignment = vehicle.GetSeatAlignmentOfClosestSeat(this.transform.position);
+			if (seatAlignment == Vehicle.SeatAlignment.None)
+				return default;
+
+			return (vehicle, seatAlignment);
+		}
+
 		public Vehicle TryEnterVehicleInRange ()
 		{
-			var vehicle = this.FindVehicleInRange ();
-			if (null == vehicle)
+			var vehicleAndSeatAlignment = this.GetVehicleThatPedWouldEnterOnAttempt();
+			if (null == vehicleAndSeatAlignment.vehicle)
 				return null;
 
-			var seat = vehicle.GetSeatAlignmentOfClosestSeat(this.transform.position);
+			this.EnterVehicle(vehicleAndSeatAlignment.vehicle, vehicleAndSeatAlignment.seatAlignment);
 
-			this.EnterVehicle(vehicle, seat);
-
-			return vehicle;
+			return vehicleAndSeatAlignment.vehicle;
 		}
 
 	}
