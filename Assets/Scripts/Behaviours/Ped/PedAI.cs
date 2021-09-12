@@ -470,9 +470,6 @@ namespace SanAndreasUnity.Behaviours
 
         public void Recruit(Ped recruiterPed)
         {
-            if (!this.PedestrianType.IsGangMember() && this.PedestrianType != PedestrianType.Criminal)
-                return;
-
             if (this.Action == PedAIAction.Following)
             {
                 if (this.TargetPed == recruiterPed)
@@ -484,7 +481,9 @@ namespace SanAndreasUnity.Behaviours
             }
             else if (this.Action == PedAIAction.Idle || this.Action == PedAIAction.WalkingAround)
             {
-                // start following
+                if (!this.PedestrianType.IsGangMember() && this.PedestrianType != PedestrianType.Criminal)
+                    return;
+
                 this.StartFollowing(recruiterPed);
             }
         }
