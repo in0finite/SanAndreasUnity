@@ -140,6 +140,17 @@ namespace SanAndreasUnity.Behaviours
 
             if (this.Action == PedAIAction.Following)
             {
+                if (null == this.TargetPed) // we are not in a group
+                    return;
+
+                if (attackerPed == this.TargetPed && !this.IsMemberOfOurGroup(otherPed) && dmgInfo.damageType != DamageType.Explosion)
+                {
+                    // our leader attacked someone, not as part of explosion
+                    // make that someone our enemy
+                    _enemyPeds.AddIfNotPresent(otherPed);
+                    return;
+                }
+
                 if (this.IsMemberOfOurGroup(attackerPed))
                     return;
 
