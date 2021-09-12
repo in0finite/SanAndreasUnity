@@ -169,62 +169,63 @@ namespace SanAndreasUnity.Behaviours
                 return;
             }
 
+            Vector3 targetPos = this.TargetPed.transform.position;
+            float currentStoppingDistance = 3f;
 
+            if (this.TargetPed.IsInVehicleSeat && !this.MyPed.IsInVehicle)
             {
+                // find a free vehicle seat to enter vehicle
 
-                Vector3 targetPos = this.TargetPed.transform.position;
-                float currentStoppingDistance = 3f;
+                var vehicle = this.TargetPed.CurrentVehicle;
 
-                if (this.TargetPed.IsInVehicleSeat && !this.MyPed.IsInVehicle) {
-                    // find a free vehicle seat to enter vehicle
+                var closestfreeSeat = Ped.GetFreeSeats(vehicle).Select(sa => new {sa = sa, tr = vehicle.GetSeatTransform(sa)})
+                    .OrderBy(s => s.tr.Distance(this.transform.position))
+                    .FirstOrDefault();
 
-                    var vehicle = this.TargetPed.CurrentVehicle;
-
-                    var closestfreeSeat = Ped.GetFreeSeats (vehicle).Select (sa => new { sa = sa, tr = vehicle.GetSeatTransform (sa) })
-                        .OrderBy (s => s.tr.Distance (this.transform.position))
-                        .FirstOrDefault ();
-
-                    if (closestfreeSeat != null) {
-                        // check if we would enter this seat on attempt
-                        var vehicleThatPedWouldEnter = this.MyPed.GetVehicleThatPedWouldEnterOnAttempt();
-                        if (vehicleThatPedWouldEnter.vehicle == vehicle && vehicleThatPedWouldEnter.seatAlignment == closestfreeSeat.sa)
-                        {
-                            // we would enter this seat
-                            // go ahead and enter it
-                            this.MyPed.OnSubmitPressed();
-                            return;
-                        } else {
-                            // we would not enter this seat - it's not close enough, or maybe some other seat (occupied one) is closer
-                            // move toward the seat
-                            targetPos = closestfreeSeat.tr.position;
-                            currentStoppingDistance = 0.01f;
-                        }
-                    }
-
-                } else if (!this.TargetPed.IsInVehicle && this.MyPed.IsInVehicleSeat) {
-                    // target player is not in vehicle, and ours is
-                    // exit the vehicle
-
-                    this.MyPed.OnSubmitPressed();
-                    return;
-                }
-
-
-                if (this.MyPed.IsInVehicle)
-                    return;
-
-                Vector3 diff = targetPos - this.transform.position;
-                float distance = diff.ToVec2WithXAndZ().magnitude;
-
-                if (distance > currentStoppingDistance)
+                if (closestfreeSeat != null)
                 {
-                    Vector3 diffDir = diff.normalized;
-
-                    this.MyPed.IsRunOn = true;
-                    this.MyPed.Movement = diffDir;
-                    this.MyPed.Heading = diffDir;
+                    // check if we would enter this seat on attempt
+                    var vehicleThatPedWouldEnter = this.MyPed.GetVehicleThatPedWouldEnterOnAttempt();
+                    if (vehicleThatPedWouldEnter.vehicle == vehicle && vehicleThatPedWouldEnter.seatAlignment == closestfreeSeat.sa)
+                    {
+                        // we would enter this seat
+                        // go ahead and enter it
+                        this.MyPed.OnSubmitPressed();
+                        return;
+                    }
+                    else
+                    {
+                        // we would not enter this seat - it's not close enough, or maybe some other seat (occupied one) is closer
+                        // move toward the seat
+                        targetPos = closestfreeSeat.tr.position;
+                        currentStoppingDistance = 0.01f;
+                    }
                 }
 
+            }
+            else if (!this.TargetPed.IsInVehicle && this.MyPed.IsInVehicleSeat)
+            {
+                // target player is not in vehicle, and ours is
+                // exit the vehicle
+
+                this.MyPed.OnSubmitPressed();
+                return;
+            }
+
+
+            if (this.MyPed.IsInVehicle)
+                return;
+
+            Vector3 diff = targetPos - this.transform.position;
+            float distance = diff.ToVec2WithXAndZ().magnitude;
+
+            if (distance > currentStoppingDistance)
+            {
+                Vector3 diffDir = diff.normalized;
+
+                this.MyPed.IsRunOn = true;
+                this.MyPed.Movement = diffDir;
+                this.MyPed.Heading = diffDir;
             }
         }
 
