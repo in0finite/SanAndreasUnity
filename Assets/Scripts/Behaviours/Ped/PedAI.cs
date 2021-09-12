@@ -114,13 +114,7 @@ namespace SanAndreasUnity.Behaviours
                 switch (this.Action)
                 {
                     case PedAIAction.WalkingAround:
-                        if (this.ArrivedAtDestinationNode())
-                        {
-                            this.OnArrivedToDestinationNode();
-                        }
-                        this.MyPed.IsWalkOn = true;
-                        this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
-                        this.MyPed.Heading = this.MyPed.Movement;
+                        this.UpdateWalkingAround();
                         break;
                     case PedAIAction.Chasing:
                         if (this.TargetPed != null)
@@ -163,6 +157,26 @@ namespace SanAndreasUnity.Behaviours
             TargetNode = GetNextPathNode(previousNode, CurrentNode);
             Vector2 offset = Random.insideUnitCircle * TargetNode.PathWidth / 2f * 0.9f;
             _moveDestination = TargetNode.Position + offset.ToVector3XZ();
+        }
+
+        void UpdateWalkingAround()
+        {
+            if (this.MyPed.IsInVehicleSeat)
+            {
+                // exit vehicle
+                this.MyPed.OnSubmitPressed();
+                return;
+            }
+
+            if (this.MyPed.IsInVehicle) // wait until we exit vehicle
+                return;
+
+            if (this.ArrivedAtDestinationNode())
+                this.OnArrivedToDestinationNode();
+
+            this.MyPed.IsWalkOn = true;
+            this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
+            this.MyPed.Heading = this.MyPed.Movement;
         }
 
         void UpdateFollowing()
