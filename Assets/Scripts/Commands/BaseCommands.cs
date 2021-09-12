@@ -277,8 +277,6 @@ namespace SanAndreasUnity.Commands
             if (ped.PedDef == null)
                 yield break;
 
-            //int[] weaponIds = new[] {WeaponId.Pistol, WeaponId.DesertEagle, WeaponId.Shotgun, WeaponId.SPAS12, WeaponId.SawnOff};
-
             int[] slots = new int[]
             {
                 WeaponSlot.Pistol, WeaponSlot.Shotgun, WeaponSlot.Submachine, WeaponSlot.Machine,
@@ -291,12 +289,6 @@ namespace SanAndreasUnity.Commands
                 ped.WeaponHolder.SwitchWeapon(chosenSlot);
                 yield break;
             }
-
-            /*var type = ped.PedDef.DefaultType;
-            if (type.IsGangMember() || type.IsCriminal() || type.IsCop())
-            {
-                ped.WeaponHolder.AddWeapon(WeaponId.Pistol);
-            }*/
 
             NPCPedSpawner.Singleton.AddWeaponToPed(ped);
         }
