@@ -265,10 +265,12 @@ namespace SanAndreasUnity.Behaviours
 
             var defaultType = ped.PedDef.DefaultType;
 
-            if (defaultType.IsCop() || defaultType.IsCriminal())
+            if (defaultType.IsCop())
                 weapon = ped.WeaponHolder.AddWeapon(WeaponId.Pistol);
+            else if (defaultType.IsCriminal())
+                weapon = ped.WeaponHolder.AddWeapon(new int[]{WeaponId.Pistol, WeaponId.DesertEagle}.RandomElement());
             else if (defaultType.IsGangMember())
-                weapon = ped.WeaponHolder.AddWeapon(WeaponId.MicroUzi);
+                weapon = ped.WeaponHolder.AddWeapon(new int[]{WeaponId.MicroUzi, WeaponId.Tec9}.RandomElement());
 
             if (weapon != null)
             {
