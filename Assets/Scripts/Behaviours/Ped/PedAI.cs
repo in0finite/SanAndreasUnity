@@ -352,7 +352,7 @@ namespace SanAndreasUnity.Behaviours
 
             // handle vehicle logic - follow ped in or out of vehicle
             if (this.MyPed.IsInVehicle || this.TargetPed.IsInVehicle)
-                this.UpdateFollowingMovementPart();
+                this.UpdateFollowing_MovementPart();
 
             if (this.Action != PedAIAction.Following)
                 return;
@@ -368,11 +368,11 @@ namespace SanAndreasUnity.Behaviours
             {
                 // no peds to attack
                 // follow our leader
-                this.UpdateFollowingMovementPart();
+                this.UpdateFollowing_MovementPart();
             }
         }
 
-        void UpdateFollowingMovementPart()
+        void UpdateFollowing_MovementPart()
         {
             // follow target ped
 
