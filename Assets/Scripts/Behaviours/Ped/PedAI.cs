@@ -328,6 +328,8 @@ namespace SanAndreasUnity.Behaviours
 
         void UpdateEscaping()
         {
+            // TODO: exit vehicle
+
             if (this.ArrivedAtDestinationNode())
                 this.OnArrivedToDestinationNode();
 
@@ -449,15 +451,22 @@ namespace SanAndreasUnity.Behaviours
 
         private void UpdateAttackOnPed(Ped ped)
         {
-            Vector3 diff = GetHeadOrTransform(ped).position - GetHeadOrTransform(this.MyPed).position;
+            //var weapon = this.MyPed.CurrentWeapon;
+            Vector3 myHeadPos = GetHeadOrTransform(this.MyPed).position;
+            Vector3 targetHeadPos = GetHeadOrTransform(ped).position;
+            Vector3 firePos = this.MyPed.IsAiming ? this.MyPed.FirePosition : myHeadPos;
+
+            Vector3 diff = targetHeadPos - myHeadPos;
             Vector3 dir = diff.normalized;
             this.MyPed.Heading = dir;
+
+            Vector3 aimDir = (targetHeadPos - firePos).normalized;
 
             if (this.MyPed.IsInVehicle)
             {
                 if (diff.magnitude < 10f)
                 {
-                    this.MyPed.AimDirection = dir;
+                    this.MyPed.AimDirection = aimDir;
                     if (!this.MyPed.IsAiming)
                         this.MyPed.OnAimButtonPressed();
                     this.MyPed.IsFireOn = true;
@@ -472,7 +481,7 @@ namespace SanAndreasUnity.Behaviours
             {
                 if (diff.magnitude < 10f)
                 {
-                    this.MyPed.AimDirection = dir;
+                    this.MyPed.AimDirection = aimDir;
                     this.MyPed.IsAimOn = true;
                     this.MyPed.IsFireOn = true;
                 }
