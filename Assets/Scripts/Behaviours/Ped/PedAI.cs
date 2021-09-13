@@ -354,9 +354,6 @@ namespace SanAndreasUnity.Behaviours
             if (this.MyPed.IsInVehicle || this.TargetPed.IsInVehicle)
                 this.UpdateFollowing_MovementPart();
 
-            if (this.Action != PedAIAction.Following)
-                return;
-
             if (null == _currentlyEngagedPed)
                 _currentlyEngagedPed = this.GetNextPedToAttack();
 
@@ -368,7 +365,15 @@ namespace SanAndreasUnity.Behaviours
             {
                 // no peds to attack
                 // follow our leader
+
                 this.UpdateFollowing_MovementPart();
+
+                if (this.MyPed.IsInVehicle && this.MyPed.IsAiming)
+                {
+                    // stop aiming
+                    this.MyPed.OnAimButtonPressed();
+                    return;
+                }
             }
         }
 
