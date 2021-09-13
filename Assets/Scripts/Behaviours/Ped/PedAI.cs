@@ -132,7 +132,7 @@ namespace SanAndreasUnity.Behaviours
 
         }
 
-        void OnOtherPedDamaged(Ped otherPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
+        void OnOtherPedDamaged(Ped damagedPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
         {
             Ped attackerPed = dmgInfo.GetAttackerPed();
             if (null == attackerPed)
@@ -144,17 +144,17 @@ namespace SanAndreasUnity.Behaviours
                     return;
 
                 bool isAttackerPedMember = this.IsMemberOfOurGroup(attackerPed);
-                bool isDamagedPedMember = this.IsMemberOfOurGroup(otherPed);
+                bool isDamagedPedMember = this.IsMemberOfOurGroup(damagedPed);
 
                 if (attackerPed == this.TargetPed && !isDamagedPedMember && dmgInfo.damageType != DamageType.Explosion)
                 {
                     // our leader attacked someone, not as part of explosion
                     // make that someone our enemy
-                    _enemyPeds.AddIfNotPresent(otherPed);
+                    _enemyPeds.AddIfNotPresent(damagedPed);
                     return;
                 }
 
-                if (this.TargetPed == otherPed && !isAttackerPedMember)
+                if (this.TargetPed == damagedPed && !isAttackerPedMember)
                 {
                     // our leader was attacked
                     // his enemies are also our enemies
