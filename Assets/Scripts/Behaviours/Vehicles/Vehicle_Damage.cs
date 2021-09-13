@@ -30,6 +30,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static AudioClip ExplosionSound { get; private set; }
 
+        public static event System.Action<Vehicle, DamageInfo> onDamaged = delegate {};
+
 
 
         void Awake_Damage()
@@ -54,6 +56,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 return;
 
             this.Health -= damageInfo.amount;
+
+            F.InvokeEventExceptionSafe(onDamaged, this, damageInfo);
 
             if (this.Health <= 0)
             {

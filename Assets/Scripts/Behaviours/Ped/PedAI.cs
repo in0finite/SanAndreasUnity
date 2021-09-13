@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Paths;
 using UnityEngine;
@@ -64,12 +65,14 @@ namespace SanAndreasUnity.Behaviours
         {
             s_allPedAIs.Add(this);
             Ped.onDamaged += OnPedDamaged;
+            Vehicle.onDamaged += OnVehicleDamaged;
         }
 
         private void OnDisable()
         {
             s_allPedAIs.Remove(this);
             Ped.onDamaged -= OnPedDamaged;
+            Vehicle.onDamaged -= OnVehicleDamaged;
         }
 
         private void OnPedDamaged(Ped hitPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
@@ -173,6 +176,35 @@ namespace SanAndreasUnity.Behaviours
                 return;
             }
 
+        }
+
+        void OnVehicleDamaged(Vehicle vehicle, DamageInfo damageInfo)
+        {
+            Ped attackerPed = damageInfo.GetAttackerPed();
+            if (null == attackerPed)
+                return;
+
+            if (this.Action == PedAIAction.Following)
+            {
+                if (null == this.TargetPed) // not member of group
+                    return;
+
+                // ignore explosion damage, it can be "accidental"
+                if (damageInfo.damageType == DamageType.Explosion)
+                    return;
+
+                if (this.IsMemberOfOurGroup(attackerPed))
+                    return;
+
+                if (vehicle.Seats.Exists(s => s.OccupyingPed == this.MyPed || s.OccupyingPed == this.TargetPed))
+                {
+                    // either our leader or we are in the vehicle
+                    _enemyPeds.AddIfNotPresent(attackerPed);
+                    return;
+                }
+
+                return;
+            }
         }
 
         bool IsMemberOfOurGroup(Ped ped)
