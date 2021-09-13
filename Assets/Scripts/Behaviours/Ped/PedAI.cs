@@ -143,7 +143,10 @@ namespace SanAndreasUnity.Behaviours
                 if (null == this.TargetPed) // we are not in a group
                     return;
 
-                if (attackerPed == this.TargetPed && !this.IsMemberOfOurGroup(otherPed) && dmgInfo.damageType != DamageType.Explosion)
+                bool isAttackerPedMember = this.IsMemberOfOurGroup(attackerPed);
+                bool isDamagedPedMember = this.IsMemberOfOurGroup(otherPed);
+
+                if (attackerPed == this.TargetPed && !isDamagedPedMember && dmgInfo.damageType != DamageType.Explosion)
                 {
                     // our leader attacked someone, not as part of explosion
                     // make that someone our enemy
@@ -151,10 +154,7 @@ namespace SanAndreasUnity.Behaviours
                     return;
                 }
 
-                if (this.IsMemberOfOurGroup(attackerPed))
-                    return;
-
-                if (this.TargetPed == otherPed)
+                if (this.TargetPed == otherPed && !isAttackerPedMember)
                 {
                     // our leader was attacked
                     // his enemies are also our enemies
@@ -162,7 +162,7 @@ namespace SanAndreasUnity.Behaviours
                     return;
                 }
 
-                if (this.IsMemberOfOurGroup(otherPed))
+                if (isDamagedPedMember && !isAttackerPedMember)
                 {
                     // attacked ped is member of our group
                     // his enemy will be also our enemy
