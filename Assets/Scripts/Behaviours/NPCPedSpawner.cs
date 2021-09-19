@@ -4,10 +4,11 @@ using SanAndreasUnity.Net;
 using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using SanAndreasUnity.Behaviours.Peds.AI;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Behaviours.WorldSystem;
 using UnityEngine;
-using WorldSystemArea = SanAndreasUnity.Behaviours.WorldSystem.WorldSystem<SanAndreasUnity.Behaviours.PedAI>.Area;
+using WorldSystemArea = SanAndreasUnity.Behaviours.WorldSystem.WorldSystem<SanAndreasUnity.Behaviours.Peds.AI.PedAI>.Area;
 
 namespace SanAndreasUnity.Behaviours
 {

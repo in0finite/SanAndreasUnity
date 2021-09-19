@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Behaviours.Peds.AI;
 using SanAndreasUnity.Importing.Paths;
 using SanAndreasUnity.Utilities;
 using UnityEditor;

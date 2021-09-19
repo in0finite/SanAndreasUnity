@@ -7,7 +7,7 @@ using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Net;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.Behaviours.Peds.AI
 {
     public enum PedAIAction
     {

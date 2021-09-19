@@ -4,6 +4,7 @@ using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using System.Linq;
+using SanAndreasUnity.Behaviours.Peds.AI;
 
 namespace SanAndreasUnity.Behaviours
 {
