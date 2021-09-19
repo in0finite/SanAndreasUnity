@@ -5,6 +5,9 @@ using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours.Peds.AI
 {
+    /// <summary>
+    /// Base class for all ped AI states.
+    /// </summary>
     public abstract class BaseState : IState
     {
         protected PedAI _pedAI { get; private set; }
