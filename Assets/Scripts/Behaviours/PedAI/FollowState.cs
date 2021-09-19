@@ -17,7 +17,22 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
             base.OnAwake(pedAI);
 
-            _chaseState = ;
+            _chaseState = _pedAI.StateContainer.GetStateOrThrow<ChaseState>();
+        }
+
+        public override void OnBecameActive()
+        {
+            base.OnBecameActive();
+
+            this.TargetPed = this.ParameterForEnteringState as Ped;
+        }
+
+        public override void OnBecameInactive()
+        {
+            this.TargetPed = null;
+            _currentlyEngagedPed = null;
+
+            base.OnBecameInactive();
         }
 
         public override void UpdateState()

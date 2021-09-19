@@ -9,6 +9,15 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         public Ped TargetPed { get; private set; }
 
 
+        public override void OnBecameActive()
+        {
+            base.OnBecameActive();
+
+            this.TargetPed = this.ParameterForEnteringState as Ped;
+            if (this.TargetPed != null)
+                _enemyPeds.AddIfNotPresent(this.TargetPed);
+        }
+
         public override void UpdateState()
         {
             if (null == this.TargetPed)

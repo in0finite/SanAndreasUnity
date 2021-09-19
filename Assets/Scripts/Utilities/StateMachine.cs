@@ -12,7 +12,7 @@ namespace SanAndreasUnity.Utilities
 		public long FrameWhenSwitchedState { get; private set; }
 
 
-		public void SwitchState(IState newState) {
+		public void SwitchStateWithParameter(IState newState, object parameterForEnteringState) {
 
 			if(m_isSwitchingState)
 				throw new System.Exception("Already switching state");
@@ -35,9 +35,16 @@ namespace SanAndreasUnity.Utilities
 			this.TimeWhenSwitchedState = Time.time;
 			this.FrameWhenSwitchedState = Time.frameCount;
 
-			if(m_currentState != null)
+			if (m_currentState != null)
+			{
+				m_currentState.ParameterForEnteringState = parameterForEnteringState;
 				m_currentState.OnBecameActive();
+			}
+		}
 
+		public void SwitchState(IState newState)
+		{
+			this.SwitchStateWithParameter(newState, null);
 		}
 
 	}

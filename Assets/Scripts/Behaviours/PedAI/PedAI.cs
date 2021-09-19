@@ -9,21 +9,10 @@ using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours.Peds.AI
 {
-    public enum PedAIAction
-    {
-        Idle = 0,
-        WalkingAround,
-        Chasing,
-        Escaping,
-        Following,
-    }
-
     public class PedAI : MonoBehaviour
     {
         private static readonly List<PedAI> s_allPedAIs = new List<PedAI>();
         public static IReadOnlyList<PedAI> AllPedAIs => s_allPedAIs;
-
-        public PedAIAction Action { get; private set; }
 
         private Vector3 _moveDestination;
 
@@ -53,10 +42,31 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         private List<Ped> _enemyPeds = new List<Ped>();
         public List<Ped> EnemyPeds => _enemyPeds;
 
+        private readonly StateMachine _stateMachine = new StateMachine();
+        public BaseState CurrentState => (BaseState) _stateMachine.CurrentState;
+
+        public StateContainer<BaseState> StateContainer { get; } = new StateContainer<BaseState>();
+
 
         private void Awake()
         {
             this.MyPed = this.GetComponentOrThrow<Ped>();
+
+            BaseState[] states =
+            {
+                new IdleState(),
+                new WalkAroundState(),
+                new EscapeState(),
+                new ChaseState(),
+                new FollowState(),
+            };
+
+            this.StateContainer.AddStates(states);
+
+            foreach (var state in this.StateContainer.States)
+                F.RunExceptionSafe(() => state.OnAwake(this));
+
+            _stateMachine.SwitchState(this.StateContainer.GetState<IdleState>());
         }
 
         private void OnEnable()
@@ -205,30 +215,12 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             }
         }
 
-        bool IsMemberOfOurGroup(Ped ped)
-        {
-            if (this.Action != PedAIAction.Following || this.TargetPed == null) // we are not part of any group
-                return false;
-
-            if (this.TargetPed == ped) // our leader
-                return true;
-
-            var pedAI = ped.GetComponent<PedAI>();
-            if (pedAI != null && pedAI.Action == PedAIAction.Following && pedAI.TargetPed == this.TargetPed)
-                return true;
-
-            return false;
-        }
-
         void Update()
         {
             this.MyPed.ResetInput();
             if (NetStatus.IsServer)
             {
-                switch (this.Action)
-                {
-
-                }
+                this.CurrentState.UpdateState();
             }
         }
 
@@ -274,48 +266,46 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             pathMovementData.moveDestination = PedAI.GetMoveDestinationBasedOnTargetNode(closestPathNodeToWalk.Value);
         }
 
+        public void SwitchState<T>()
+            where T : BaseState
+        {
+            _stateMachine.SwitchState(this.StateContainer.GetStateOrThrow<T>());
+        }
+
+        public void SwitchStateWithParameter<T>(object parameter)
+            where T : BaseState
+        {
+            _stateMachine.SwitchStateWithParameter(this.StateContainer.GetStateOrThrow<T>(), parameter);
+        }
+
         public void StartIdling()
         {
-            this.Action = PedAIAction.Idle;
-            this.HasCurrentNode = false;
-            this.HasTargetNode = false;
+            this.SwitchState<IdleState>();
         }
 
         public void StartWalkingAround(PathNode pathNode)
         {
-            this.CurrentNode = pathNode;
-            this.HasCurrentNode = true;
-            this.TargetNode = pathNode;
-            this.HasTargetNode = true;
-            this.Action = PedAIAction.WalkingAround;
-            this.TargetPed = null;
-            this.AssignMoveDestinationBasedOnTargetNode();
+            this.SwitchStateWithParameter<WalkAroundState>(pathNode);
         }
 
         public void StartWalkingAround()
         {
-            this.HasCurrentNode = false;
-            this.HasTargetNode = false;
-            this.Action = PedAIAction.WalkingAround;
-            this.TargetPed = null;
+            this.SwitchState<WalkAroundState>();
         }
 
         public void StartFollowing(Ped ped)
         {
-            this.Action = PedAIAction.Following;
-            this.TargetPed = ped;
+            this.SwitchStateWithParameter<FollowState>(ped);
         }
 
         public void StartChasing(Ped ped)
         {
-            this.Action = PedAIAction.Chasing;
-            this.TargetPed = ped;
-            _enemyPeds.AddIfNotPresent(ped);
+            this.SwitchStateWithParameter<ChaseState>(ped);
         }
 
         public void StartChasing()
         {
-            this.Action = PedAIAction.Chasing;
+            this.SwitchState<ChaseState>();
         }
 
         public void Recruit(Ped recruiterPed)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ namespace SanAndreasUnity.Utilities
         {
             var state = this.GetState (type);
             if(null == state)
-                Debug.LogErrorFormat ("Failed to find state: {0}", type);
+                Debug.LogErrorFormat ("Failed to find state of type {0}", type);
             return state;
         }
 
@@ -37,6 +38,15 @@ namespace SanAndreasUnity.Utilities
             where T : TState
         {
             return (T) this.GetStateOrLogError(typeof(T));
+        }
+
+        public T GetStateOrThrow<T>()
+            where T : TState
+        {
+            var state = this.GetState<T>();
+            if (null == state)
+                throw new ArgumentException($"Failed to find state of type {typeof(T).Name}");
+            return state;
         }
 
         public void AddState(TState stateToAdd)

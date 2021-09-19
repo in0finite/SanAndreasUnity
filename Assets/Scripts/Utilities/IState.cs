@@ -13,6 +13,7 @@ namespace SanAndreasUnity.Utilities
 		void LateUpdateState();
 		void FixedUpdateState();
 
+		object ParameterForEnteringState { set; }
 	}
 
 }

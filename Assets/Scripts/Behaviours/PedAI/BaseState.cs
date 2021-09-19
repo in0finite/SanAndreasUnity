@@ -16,6 +16,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         protected Ped MyPed => _pedAI.MyPed;
         protected List<Ped> _enemyPeds => _pedAI.EnemyPeds;
 
+        public object ParameterForEnteringState { get; set; }
+
 
         protected internal virtual void OnAwake(PedAI pedAI)
         {

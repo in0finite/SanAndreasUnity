@@ -10,12 +10,33 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         public PathNode? destinationNode;
         public Vector3 moveDestination;
         public float timeWhenAttemptedToFindClosestNode = 0f;
+
+        public void Cleanup()
+        {
+            this.currentNode = null;
+            this.destinationNode = null;
+            this.moveDestination = Vector3.zero;
+            this.timeWhenAttemptedToFindClosestNode = 0f;
+        }
     }
 
     public class WalkAroundState : BaseState
     {
         private readonly PathMovementData _pathMovementData = new PathMovementData();
 
+
+        public override void OnBecameActive()
+        {
+            base.OnBecameActive();
+
+            if (this.ParameterForEnteringState is PathNode pathNode)
+            {
+                _pathMovementData.currentNode = _pathMovementData.destinationNode = pathNode;
+                _pathMovementData.moveDestination = PedAI.GetMoveDestinationBasedOnTargetNode(pathNode);
+            }
+            else
+                _pathMovementData.Cleanup();
+        }
 
         public override void UpdateState()
         {
