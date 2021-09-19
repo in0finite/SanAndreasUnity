@@ -227,28 +227,9 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             {
                 switch (this.Action)
                 {
-                    case PedAIAction.Idle:
-                        this.UpdateIdle();
-                        break;
-                    case PedAIAction.WalkingAround:
-                        this.UpdateWalkingAround();
-                        break;
-                    case PedAIAction.Chasing:
-                        this.UpdateChasing();
-                        break;
-                    case PedAIAction.Escaping:
-                        this.UpdateEscaping();
-                        break;
-                    case PedAIAction.Following:
-                        this.UpdateFollowing();
-                        break;
+
                 }
             }
-        }
-
-        bool ArrivedAtDestinationNode()
-        {
-            return ArrivedAtDestinationNode(this.HasTargetNode ? this.TargetNode : (PathNode?)null, this.transform);
         }
 
         public static bool ArrivedAtDestinationNode(PathMovementData pathMovementData, Transform tr)
@@ -259,16 +240,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 < pathMovementData.destinationNode.Value.PathWidth / 2f)
                 return true;
             return false;
-        }
-
-        private void OnArrivedToDestinationNode()
-        {
-            var c = CurrentNode;
-            var d = TargetNode;
-            OnArrivedToDestinationNode(ref c, ref d, out Vector3 m);
-            CurrentNode = c;
-            TargetNode = d;
-            _moveDestination = m;
         }
 
         public static void OnArrivedToDestinationNode(PathMovementData pathMovementData)
