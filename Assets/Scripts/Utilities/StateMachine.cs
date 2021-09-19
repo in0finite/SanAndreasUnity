@@ -27,8 +27,12 @@ namespace SanAndreasUnity.Utilities
 			m_currentState = newState;
 
 
-			if(oldState != null)
-				oldState.OnBecameInactive();
+			if (oldState != null)
+			{
+				// need to catch exception here, because otherwise it would freeze the state machine - it would
+				// no longer be possible to switch states, because 'm_isSwitchingState' is true
+				F.RunExceptionSafe(() => oldState.OnBecameInactive());
+			}
 
 			m_isSwitchingState = false;
 
