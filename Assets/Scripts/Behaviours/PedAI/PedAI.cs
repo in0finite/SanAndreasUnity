@@ -290,22 +290,19 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             return targetNode.Position + offset.ToVector3XZ();
         }
 
-        void UpdateEscaping()
+        public static void FindClosestWalkableNode(PathMovementData pathMovementData, Vector3 position)
         {
-            // TODO: exit vehicle
-
-            if (this.ArrivedAtDestinationNode())
-                this.OnArrivedToDestinationNode();
-
-            if (!this.HasTargetNode)
-            {
-                this.FindNextNodeDelayed();
+            if (Time.time - pathMovementData.timeWhenAttemptedToFindClosestNode < 2f) // don't attempt to find it every frame
                 return;
-            }
 
-            this.MyPed.IsSprintOn = true;
-            this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
-            this.MyPed.Heading = this.MyPed.Movement;
+            pathMovementData.timeWhenAttemptedToFindClosestNode = Time.time;
+
+            var closestPathNodeToWalk = PedAI.GetClosestPathNodeToWalk(position);
+            if (null == closestPathNodeToWalk)
+                return;
+
+            pathMovementData.destinationNode = closestPathNodeToWalk;
+            pathMovementData.moveDestination = PedAI.GetMoveDestinationBasedOnTargetNode(closestPathNodeToWalk.Value);
         }
 
         void UpdateFollowing()
