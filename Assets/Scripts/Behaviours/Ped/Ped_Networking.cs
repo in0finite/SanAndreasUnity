@@ -220,7 +220,7 @@ namespace SanAndreasUnity.Behaviours
             // forcefully change the state
 
             F.RunExceptionSafe( () => {
-                var newState = this.States.FirstOrDefault(state => state.GetType().Name == newStateData.state);
+                var newState = _stateContainer.States.FirstOrDefault(state => state.GetType().Name == newStateData.state);
                 if (null == newState)
                 {
                     Debug.LogErrorFormat("New ped state '{0}' could not be found", newStateData.state);

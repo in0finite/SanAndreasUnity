@@ -46,8 +46,8 @@ namespace SanAndreasUnity.Behaviours
 		[SerializeField] private Vector2 m_cameraClampValue = new Vector2(60, 60);
 		public Vector2 CameraClampValue { get { return m_cameraClampValue; } set { m_cameraClampValue = value; } }
 
-        
-		public Peds.States.BaseScriptState[] States { get; private set; }
+
+		private readonly StateContainer<Peds.States.BaseScriptState> _stateContainer = new StateContainer<Peds.States.BaseScriptState>();
 		public Peds.States.BaseScriptState CurrentState { get { return (Peds.States.BaseScriptState) m_stateMachine.CurrentState; } }
 
         public Cell Cell { get { return Cell.Instance; } }
@@ -144,7 +144,7 @@ namespace SanAndreasUnity.Behaviours
             this.characterController = this.GetComponent<CharacterController>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
 
-			this.States = this.GetComponentsInChildren<Peds.States.BaseScriptState> ();
+			_stateContainer.AddStates(this.GetComponentsInChildren<Peds.States.BaseScriptState> ());
 
 			this.AwakeForDamage ();
 
@@ -216,46 +216,37 @@ namespace SanAndreasUnity.Behaviours
 
 		public Peds.States.BaseScriptState GetState(System.Type type)
 		{
-			return this.States.FirstOrDefault (s => s.GetType ().Equals (type));
+			return _stateContainer.GetState(type);
 		}
 
-		public T GetState<T>() where T : Peds.States.BaseScriptState
+		public T GetState<T>()
+			where T : Peds.States.BaseScriptState
 		{
-			return (T) this.GetState(typeof(T));
+			return _stateContainer.GetState<T>();
 		}
 
 		public Peds.States.BaseScriptState GetStateOrLogError(System.Type type)
 		{
-			var state = this.GetState (type);
-			if(null == state)
-				Debug.LogErrorFormat ("Failed to find state: {0}", type);
-			return state;
+			return _stateContainer.GetStateOrLogError(type);
 		}
 
-		public T GetStateOrLogError<T>() where T : Peds.States.BaseScriptState
+		public T GetStateOrLogError<T>()
+			where T : Peds.States.BaseScriptState
 		{
-			return (T) this.GetStateOrLogError(typeof(T));
+			return _stateContainer.GetStateOrLogError<T>();
 		}
 
 		public void SwitchState(System.Type type)
 		{
-			
 			var state = this.GetStateOrLogError (type);
 			if (null == state)
 				return;
-			
-		//	IState oldState = this.CurrentState;
 
 			m_stateMachine.SwitchState (state);
-
-//			if (oldState != state)
-//			{
-//				Debug.LogFormat ("Switched to state: {0}", state.GetType ().Name);
-//			}
-			
 		}
 
-		public void SwitchState<T>() where T : Peds.States.BaseScriptState
+		public void SwitchState<T>()
+			where T : Peds.States.BaseScriptState
 		{
 			this.SwitchState(typeof(T));
 		}
