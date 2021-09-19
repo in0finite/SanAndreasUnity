@@ -56,6 +56,9 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         protected internal virtual void OnMyPedDamaged(DamageInfo dmgInfo, Ped.DamageResult dmgResult)
         {
+            Ped attackerPed = dmgInfo.GetAttackerPed();
+            if (attackerPed != null)
+                _enemyPeds.AddIfNotPresent(attackerPed);
         }
 
         protected internal virtual void OnOtherPedDamaged(Ped damagedPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)

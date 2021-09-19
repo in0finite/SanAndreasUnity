@@ -139,5 +139,43 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 this.MyPed.Heading = diffDir;
             }
         }
+
+        protected internal override void OnMyPedDamaged(DamageInfo dmgInfo, Ped.DamageResult dmgResult)
+        {
+            Ped attackerPed = dmgInfo.GetAttackerPed();
+
+            if (null == attackerPed)
+                return;
+
+            if (attackerPed == this.TargetPed)
+            {
+                // our leader attacked us
+                // stop following him
+                this.TargetPed = null;
+                return;
+            }
+
+            if (!this.IsMemberOfOurGroup(attackerPed))
+            {
+                _enemyPeds.AddIfNotPresent(attackerPed);
+                return;
+            }
+
+        }
+
+        bool IsMemberOfOurGroup(Ped ped)
+        {
+            if (this.Action != PedAIAction.Following || this.TargetPed == null) // we are not part of any group
+                return false;
+
+            if (this.TargetPed == ped) // our leader
+                return true;
+
+            var pedAI = ped.GetComponent<PedAI>();
+            if (pedAI != null && pedAI.Action == PedAIAction.Following && pedAI.TargetPed == this.TargetPed)
+                return true;
+
+            return false;
+        }
     }
 }

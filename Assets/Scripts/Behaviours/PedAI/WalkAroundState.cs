@@ -71,5 +71,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             this.MyPed.Movement = (_pathMovementData.moveDestination - this.MyPed.transform.position).normalized;
             this.MyPed.Heading = this.MyPed.Movement;
         }
+
+        protected internal override void OnMyPedDamaged(DamageInfo dmgInfo, Ped.DamageResult dmgResult)
+        {
+            _pedAI.StateContainer.GetStateOrThrow<IdleState>().HandleOnMyPedDamaged(dmgInfo, dmgResult);
+        }
     }
 }

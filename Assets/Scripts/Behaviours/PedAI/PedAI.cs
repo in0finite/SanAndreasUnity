@@ -87,60 +87,11 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
             if (this.MyPed == hitPed)
             {
-                this.OnMyPedDamaged(dmgInfo, dmgResult);
+                this.CurrentState.OnMyPedDamaged(dmgInfo, dmgResult);
                 return;
             }
 
             this.OnOtherPedDamaged(hitPed, dmgInfo, dmgResult);
-        }
-
-        void OnMyPedDamaged(DamageInfo dmgInfo, Ped.DamageResult dmgResult)
-        {
-            Ped attackerPed = dmgInfo.GetAttackerPed();
-
-            if (this.Action == PedAIAction.Following)
-            {
-                if (null == attackerPed)
-                    return;
-
-                if (attackerPed == this.TargetPed)
-                {
-                    // our leader attacked us
-                    // stop following him
-                    this.TargetPed = null;
-                    return;
-                }
-
-                if (!this.IsMemberOfOurGroup(attackerPed))
-                {
-                    _enemyPeds.AddIfNotPresent(attackerPed);
-                    return;
-                }
-
-                return;
-            }
-
-            if (attackerPed != null)
-                _enemyPeds.AddIfNotPresent(attackerPed);
-
-            if (this.Action == PedAIAction.Idle || this.Action == PedAIAction.WalkingAround)
-            {
-                var hitPed = this.MyPed;
-
-                if (hitPed.PedDef != null &&
-                    (hitPed.PedDef.DefaultType.IsCriminal() ||
-                     hitPed.PedDef.DefaultType.IsCop() ||
-                     hitPed.PedDef.DefaultType.IsGangMember()))
-                {
-                    if (attackerPed != null)
-                        this.Action = PedAIAction.Chasing;
-                }
-                else
-                    this.Action = PedAIAction.Escaping;
-
-                return;
-            }
-
         }
 
         void OnOtherPedDamaged(Ped damagedPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
@@ -306,6 +257,11 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         public void StartChasing()
         {
             this.SwitchState<ChaseState>();
+        }
+
+        public void StartEscaping()
+        {
+            this.SwitchState<EscapeState>();
         }
 
         public void Recruit(Ped recruiterPed)
