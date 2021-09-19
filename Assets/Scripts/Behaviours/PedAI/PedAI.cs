@@ -51,9 +51,9 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         public PedestrianType PedestrianType => this.MyPed.PedDef.DefaultType;
 
         private List<Ped> _enemyPeds = new List<Ped>();
-        private Ped _currentlyEngagedPed;
+        public List<Ped> EnemyPeds => _enemyPeds;
 
-        private bool _isFindingPathNodeDelayed = false;
+        private Ped _currentlyEngagedPed;
 
 
         private void Awake()
@@ -250,65 +250,44 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         bool ArrivedAtDestinationNode()
         {
-            if (!this.HasTargetNode)
+            return ArrivedAtDestinationNode(this.HasTargetNode ? this.TargetNode : (PathNode?)null, this.transform);
+        }
+
+        public static bool ArrivedAtDestinationNode(PathMovementData pathMovementData, Transform tr)
+        {
+            if (!pathMovementData.destinationNode.HasValue)
                 return false;
-            if (Vector2.Distance(this.transform.position.ToVec2WithXAndZ(), this.TargetNode.Position.ToVec2WithXAndZ())
-                < this.TargetNode.PathWidth / 2f)
+            if (Vector2.Distance(tr.position.ToVec2WithXAndZ(), pathMovementData.destinationNode.Value.Position.ToVec2WithXAndZ())
+                < pathMovementData.destinationNode.Value.PathWidth / 2f)
                 return true;
             return false;
         }
 
-        void OnArrivedToDestinationNode()
+        private void OnArrivedToDestinationNode()
         {
-            PathNode previousNode = CurrentNode;
-            CurrentNode = TargetNode;
-            TargetNode = GetNextPathNode(previousNode, CurrentNode);
-            this.AssignMoveDestinationBasedOnTargetNode();
+            var c = CurrentNode;
+            var d = TargetNode;
+            OnArrivedToDestinationNode(ref c, ref d, out Vector3 m);
+            CurrentNode = c;
+            TargetNode = d;
+            _moveDestination = m;
         }
 
-        void AssignMoveDestinationBasedOnTargetNode()
+        public static void OnArrivedToDestinationNode(PathMovementData pathMovementData)
         {
-            Vector2 offset = Random.insideUnitCircle * TargetNode.PathWidth / 2f * 0.9f;
-            _moveDestination = TargetNode.Position + offset.ToVector3XZ();
+            if (!pathMovementData.destinationNode.HasValue)
+                return;
+
+            PathNode previousNode = pathMovementData.currentNode.GetValueOrDefault();
+            pathMovementData.currentNode = pathMovementData.destinationNode;
+            pathMovementData.destinationNode = GetNextPathNode(previousNode, pathMovementData.currentNode.Value);
+            pathMovementData.moveDestination = GetMoveDestinationBasedOnTargetNode(pathMovementData.destinationNode.Value);
         }
 
-        void UpdateIdle()
+        public static Vector3 GetMoveDestinationBasedOnTargetNode(PathNode targetNode)
         {
-            this.StartWalkingAround();
-        }
-
-        void UpdateWalkingAround()
-        {
-            if (this.MyPed.IsInVehicleSeat)
-            {
-                // exit vehicle
-                this.MyPed.OnSubmitPressed();
-                return;
-            }
-
-            if (this.MyPed.IsInVehicle) // wait until we exit vehicle
-                return;
-
-            // check if we gained some enemies
-            _enemyPeds.RemoveDeadObjectsIfNotEmpty();
-            if (_enemyPeds.Count > 0)
-            {
-                this.Action = PedAIAction.Chasing;
-                return;
-            }
-
-            if (this.ArrivedAtDestinationNode())
-                this.OnArrivedToDestinationNode();
-
-            if (!this.HasTargetNode)
-            {
-                this.FindNextNodeDelayed();
-                return;
-            }
-
-            this.MyPed.IsWalkOn = true;
-            this.MyPed.Movement = (_moveDestination - this.MyPed.transform.position).normalized;
-            this.MyPed.Heading = this.MyPed.Movement;
+            Vector2 offset = Random.insideUnitCircle * targetNode.PathWidth / 2f * 0.9f;
+            return targetNode.Position + offset.ToVector3XZ();
         }
 
         void UpdateChasing()
@@ -532,6 +511,11 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             _enemyPeds.AddIfNotPresent(ped);
         }
 
+        public void StartChasing()
+        {
+            this.Action = PedAIAction.Chasing;
+        }
+
         public void Recruit(Ped recruiterPed)
         {
             if (this.Action == PedAIAction.Following)
@@ -574,9 +558,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             }
         }
 
-        PathNode? GetClosestPathNodeToWalk()
+        public static PathNode? GetClosestPathNodeToWalk(Vector3 pos)
         {
-            Vector3 pos = this.MyPed.transform.position;
             float radius = 200f;
 
             var pathNodeInfo = NodeReader.GetAreasInRadius(pos, radius)
@@ -590,33 +573,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return null;
 
             return pathNodeInfo.node;
-        }
-
-        private void FindNextNodeDelayed()
-        {
-            if (_isFindingPathNodeDelayed)
-                return;
-
-            _isFindingPathNodeDelayed = true;
-
-            this.CancelInvoke(nameof(this.FindNextNodeDelayedCallback));
-            this.Invoke(nameof(this.FindNextNodeDelayedCallback), 2f);
-        }
-
-        private void FindNextNodeDelayedCallback()
-        {
-            _isFindingPathNodeDelayed = false;
-
-            if (this.HasTargetNode) // already assigned ?
-                return;
-
-            var closestPathNodeToWalk = this.GetClosestPathNodeToWalk();
-            if (null == closestPathNodeToWalk)
-                return;
-
-            this.TargetNode = closestPathNodeToWalk.Value;
-            this.HasTargetNode = true;
-            this.AssignMoveDestinationBasedOnTargetNode();
         }
 
         private Ped GetNextPedToAttack()

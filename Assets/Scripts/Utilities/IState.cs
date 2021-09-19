@@ -7,8 +7,8 @@ namespace SanAndreasUnity.Utilities
 		
 		void OnBecameActive();
 		void OnBecameInactive();
-		bool RepresentsState(System.Type type);
-		bool RepresentsState<T>() where T : IState;
+		bool RepresentsState(System.Type type); // TODO: should be removed
+		bool RepresentsState<T>() where T : IState; // TODO: should be removed
 		void UpdateState();
 		void LateUpdateState();
 		void FixedUpdateState();
