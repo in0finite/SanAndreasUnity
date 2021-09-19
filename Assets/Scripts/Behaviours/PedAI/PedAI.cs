@@ -53,8 +53,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         private List<Ped> _enemyPeds = new List<Ped>();
         public List<Ped> EnemyPeds => _enemyPeds;
 
-        private Ped _currentlyEngagedPed;
-
 
         private void Awake()
         {
@@ -303,111 +301,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             pathMovementData.destinationNode = closestPathNodeToWalk;
             pathMovementData.moveDestination = PedAI.GetMoveDestinationBasedOnTargetNode(closestPathNodeToWalk.Value);
-        }
-
-        void UpdateFollowing()
-        {
-            if (null == this.TargetPed)
-            {
-                this.StartIdling();
-                return;
-            }
-
-            // handle vehicle logic - follow ped in or out of vehicle
-            if (this.MyPed.IsInVehicle || this.TargetPed.IsInVehicle)
-                this.UpdateFollowing_MovementPart();
-
-            if (null == _currentlyEngagedPed)
-                _currentlyEngagedPed = this.GetNextPedToAttack();
-
-            if (_currentlyEngagedPed != null)
-            {
-                this.UpdateAttackOnPed(_currentlyEngagedPed);
-            }
-            else
-            {
-                // no peds to attack
-                // follow our leader
-
-                this.UpdateFollowing_MovementPart();
-
-                if (this.MyPed.IsInVehicle && this.MyPed.IsAiming)
-                {
-                    // stop aiming
-                    this.MyPed.OnAimButtonPressed();
-                    return;
-                }
-            }
-        }
-
-        void UpdateFollowing_MovementPart()
-        {
-            // follow target ped
-
-            if (null == this.TargetPed)
-            {
-                this.StartIdling();
-                return;
-            }
-
-            Vector3 targetPos = this.TargetPed.transform.position;
-            float currentStoppingDistance = 3f;
-
-            if (this.TargetPed.IsInVehicleSeat && !this.MyPed.IsInVehicle)
-            {
-                // find a free vehicle seat to enter vehicle
-
-                var vehicle = this.TargetPed.CurrentVehicle;
-
-                var closestfreeSeat = Ped.GetFreeSeats(vehicle).Select(sa => new {sa = sa, tr = vehicle.GetSeatTransform(sa)})
-                    .OrderBy(s => s.tr.Distance(this.transform.position))
-                    .FirstOrDefault();
-
-                if (closestfreeSeat != null)
-                {
-                    // check if we would enter this seat on attempt
-                    var vehicleThatPedWouldEnter = this.MyPed.GetVehicleThatPedWouldEnterOnAttempt();
-                    if (vehicleThatPedWouldEnter.vehicle == vehicle && vehicleThatPedWouldEnter.seatAlignment == closestfreeSeat.sa)
-                    {
-                        // we would enter this seat
-                        // go ahead and enter it
-                        this.MyPed.OnSubmitPressed();
-                        return;
-                    }
-                    else
-                    {
-                        // we would not enter this seat - it's not close enough, or maybe some other seat (occupied one) is closer
-                        // move toward the seat
-                        targetPos = closestfreeSeat.tr.position;
-                        currentStoppingDistance = 0.01f;
-                    }
-                }
-
-            }
-            else if (!this.TargetPed.IsInVehicle && this.MyPed.IsInVehicleSeat)
-            {
-                // target player is not in vehicle, and ours is
-                // exit the vehicle
-
-                this.MyPed.OnSubmitPressed();
-                return;
-            }
-
-
-            if (this.MyPed.IsInVehicle)
-                return;
-
-            Vector3 diff = targetPos - this.transform.position;
-            float distance = diff.ToVec2WithXAndZ().magnitude;
-
-            if (distance > currentStoppingDistance)
-            {
-                Vector3 diffDir = diff.normalized;
-
-                this.MyPed.IsRunOn = true;
-                this.MyPed.Movement = diffDir;
-                this.MyPed.Heading = diffDir;
-            }
         }
 
         public void StartIdling()
