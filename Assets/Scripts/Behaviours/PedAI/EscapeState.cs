@@ -24,5 +24,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             this.MyPed.Movement = (_pathMovementData.moveDestination - this.MyPed.transform.position).normalized;
             this.MyPed.Heading = this.MyPed.Movement;
         }
+
+        protected internal override void OnDrawGizmosSelected()
+        {
+            PedAI.OnDrawGizmosSelected(_pathMovementData);
+        }
     }
 }

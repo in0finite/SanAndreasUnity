@@ -14,28 +14,11 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         private static readonly List<PedAI> s_allPedAIs = new List<PedAI>();
         public static IReadOnlyList<PedAI> AllPedAIs => s_allPedAIs;
 
-        private Vector3 _moveDestination;
-
-        /// <summary>
-        /// The node where the Ped starts
-        /// </summary>
-        public PathNode CurrentNode { get; private set; }
-
-        public bool HasCurrentNode { get; private set; } = false;
-
-        /// <summary>
-        /// The node the Ped is targeting
-        /// </summary>
-        public PathNode TargetNode { get; private set; }
-
-        public bool HasTargetNode { get; private set; } = false;
-
         public Ped MyPed { get; private set; }
 
         public PedestrianType PedestrianType => this.MyPed.PedDef.DefaultType;
 
-        private List<Ped> _enemyPeds = new List<Ped>();
-        public List<Ped> EnemyPeds => _enemyPeds;
+        public List<Ped> EnemyPeds { get; } = new List<Ped>();
 
         private readonly StateMachine _stateMachine = new StateMachine();
         public BaseState CurrentState => (BaseState) _stateMachine.CurrentState;
@@ -233,27 +216,43 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         private void OnDrawGizmosSelected()
         {
+            this.CurrentState.OnDrawGizmosSelected();
+        }
+
+        public static void OnDrawGizmosSelected(PathMovementData pathMovementData)
+        {
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(CurrentNode.Position, TargetNode.Position);
-            Gizmos.DrawWireSphere(CurrentNode.Position, CurrentNode.PathWidth / 2f);
-            Gizmos.DrawWireSphere(TargetNode.Position, TargetNode.PathWidth / 2f);
+
+            if (pathMovementData.currentNode.HasValue && pathMovementData.destinationNode.HasValue)
+                Gizmos.DrawLine(pathMovementData.currentNode.Value.Position, pathMovementData.destinationNode.Value.Position);
+            if (pathMovementData.currentNode.HasValue)
+                Gizmos.DrawWireSphere(pathMovementData.currentNode.Value.Position, pathMovementData.currentNode.Value.PathWidth / 2f);
+            if (pathMovementData.destinationNode.HasValue)
+                Gizmos.DrawWireSphere(pathMovementData.destinationNode.Value.Position, pathMovementData.destinationNode.Value.PathWidth / 2f);
 
             Gizmos.color = Color.yellow;
 
-            NodeReader.GetAllLinkedNodes(TargetNode)
-                .Except(new[] {CurrentNode})
-                .ForEach(node =>
-                {
-                    Gizmos.DrawLine(TargetNode.Position, node.Position);
-                    Gizmos.DrawWireSphere(node.Position, node.PathWidth / 2f);
-                });
-            NodeReader.GetAllLinkedNodes(CurrentNode)
-                .Except(new[] {TargetNode})
-                .ForEach(node =>
-                {
-                    Gizmos.DrawLine(CurrentNode.Position, node.Position);
-                    Gizmos.DrawWireSphere(node.Position, node.PathWidth / 2f);
-                });
+            if (pathMovementData.destinationNode.HasValue)
+            {
+                NodeReader.GetAllLinkedNodes(pathMovementData.destinationNode.Value)
+                    .Except(new[] {pathMovementData.currentNode.GetValueOrDefault()})
+                    .ForEach(node =>
+                    {
+                        Gizmos.DrawLine(pathMovementData.destinationNode.Value.Position, node.Position);
+                        Gizmos.DrawWireSphere(node.Position, node.PathWidth / 2f);
+                    });
+            }
+
+            if (pathMovementData.currentNode.HasValue)
+            {
+                NodeReader.GetAllLinkedNodes(pathMovementData.currentNode.Value)
+                    .Except(new[] {pathMovementData.destinationNode.GetValueOrDefault()})
+                    .ForEach(node =>
+                    {
+                        Gizmos.DrawLine(pathMovementData.currentNode.Value.Position, node.Position);
+                        Gizmos.DrawWireSphere(node.Position, node.PathWidth / 2f);
+                    });
+            }
         }
     }
 

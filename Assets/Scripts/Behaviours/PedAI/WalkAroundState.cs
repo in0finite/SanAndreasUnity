@@ -81,5 +81,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
             _pedAI.StateContainer.GetStateOrThrow<IdleState>().HandleOnRecruit(recruiterPed);
         }
+
+        protected internal override void OnDrawGizmosSelected()
+        {
+            PedAI.OnDrawGizmosSelected(_pathMovementData);
+        }
     }
 }
