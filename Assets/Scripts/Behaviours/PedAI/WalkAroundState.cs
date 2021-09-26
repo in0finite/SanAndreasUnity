@@ -20,9 +20,15 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         }
     }
 
-    public class WalkAroundState : BaseState
+    public interface IPathMovementState : IState
+    {
+        PathMovementData PathMovementData { get; }
+    }
+
+    public class WalkAroundState : BaseState, IPathMovementState
     {
         private readonly PathMovementData _pathMovementData = new PathMovementData();
+        public PathMovementData PathMovementData => _pathMovementData;
 
 
         public override void OnBecameActive()

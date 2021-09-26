@@ -2,9 +2,10 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Peds.AI
 {
-    public class EscapeState : BaseState
+    public class EscapeState : BaseState, IPathMovementState
     {
         private readonly PathMovementData _pathMovementData = new PathMovementData();
+        public PathMovementData PathMovementData => _pathMovementData;
 
 
         public override void UpdateState()
