@@ -30,11 +30,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public bool HasTargetNode { get; private set; } = false;
 
-        /// <summary>
-        /// The ped that this ped is chasing
-        /// </summary>
-        public Ped TargetPed { get; private set; }
-
         public Ped MyPed { get; private set; }
 
         public PedestrianType PedestrianType => this.MyPed.PedDef.DefaultType;

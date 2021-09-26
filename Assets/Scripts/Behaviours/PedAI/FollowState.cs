@@ -203,14 +203,14 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         bool IsMemberOfOurGroup(Ped ped)
         {
-            if (this.Action != PedAIAction.Following || this.TargetPed == null) // we are not part of any group
+            if (this.TargetPed == null) // we are not part of any group
                 return false;
 
             if (this.TargetPed == ped) // our leader
                 return true;
 
             var pedAI = ped.GetComponent<PedAI>();
-            if (pedAI != null && pedAI.Action == PedAIAction.Following && pedAI.TargetPed == this.TargetPed)
+            if (pedAI != null && pedAI.CurrentState is FollowState followState && followState.TargetPed == this.TargetPed)
                 return true;
 
             return false;
