@@ -163,6 +163,44 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         }
 
+        protected internal override void OnOtherPedDamaged(Ped damagedPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
+        {
+            Ped attackerPed = dmgInfo.GetAttackerPed();
+            if (null == attackerPed)
+                return;
+
+            if (null == this.TargetPed) // we are not in a group
+                return;
+
+            bool isAttackerPedMember = this.IsMemberOfOurGroup(attackerPed);
+            bool isDamagedPedMember = this.IsMemberOfOurGroup(damagedPed);
+
+            if (attackerPed == this.TargetPed && !isDamagedPedMember && dmgInfo.damageType != DamageType.Explosion)
+            {
+                // our leader attacked someone, not as part of explosion
+                // make that someone our enemy
+                _enemyPeds.AddIfNotPresent(damagedPed);
+                return;
+            }
+
+            if (this.TargetPed == damagedPed && !isAttackerPedMember)
+            {
+                // our leader was attacked
+                // his enemies are also our enemies
+                _enemyPeds.AddIfNotPresent(attackerPed);
+                return;
+            }
+
+            if (isDamagedPedMember && !isAttackerPedMember)
+            {
+                // attacked ped is member of our group
+                // his enemy will be also our enemy
+                _enemyPeds.AddIfNotPresent(attackerPed);
+                return;
+            }
+
+        }
+
         bool IsMemberOfOurGroup(Ped ped)
         {
             if (this.Action != PedAIAction.Following || this.TargetPed == null) // we are not part of any group
