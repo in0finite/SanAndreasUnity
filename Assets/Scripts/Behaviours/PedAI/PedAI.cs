@@ -194,22 +194,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public void Recruit(Ped recruiterPed)
         {
-            if (this.Action == PedAIAction.Following)
-            {
-                if (this.TargetPed == recruiterPed)
-                {
-                    // unfollow
-                    this.TargetPed = null;
-                    return;
-                }
-            }
-            else if (this.Action == PedAIAction.Idle || this.Action == PedAIAction.WalkingAround)
-            {
-                if (!this.PedestrianType.IsGangMember() && !this.PedestrianType.IsCriminal())
-                    return;
-
-                this.StartFollowing(recruiterPed);
-            }
+            this.CurrentState.OnRecruit(recruiterPed);
         }
 
         private static PathNode GetNextPathNode(PathNode previousNode, PathNode currentNode)

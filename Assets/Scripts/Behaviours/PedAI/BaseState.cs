@@ -69,6 +69,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
         }
 
+        protected internal virtual void OnRecruit(Ped recruiterPed)
+        {
+        }
+
         protected internal virtual void OnDrawGizmosSelected()
         {
         }

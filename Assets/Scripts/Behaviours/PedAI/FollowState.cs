@@ -227,6 +227,15 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         }
 
+        protected internal override void OnRecruit(Ped recruiterPed)
+        {
+            if (this.TargetPed == recruiterPed)
+            {
+                // unfollow
+                this.TargetPed = null;
+            }
+        }
+
         bool IsMemberOfOurGroup(Ped ped)
         {
             if (this.TargetPed == null) // we are not part of any group

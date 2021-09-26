@@ -35,5 +35,18 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 _pedAI.StartEscaping();
 
         }
+
+        protected internal override void OnRecruit(Ped recruiterPed)
+        {
+            this.HandleOnRecruit(recruiterPed);
+        }
+
+        public void HandleOnRecruit(Ped recruiterPed)
+        {
+            if (!_pedAI.PedestrianType.IsGangMember() && !_pedAI.PedestrianType.IsCriminal())
+                return;
+
+            _pedAI.StartFollowing(recruiterPed);
+        }
     }
 }
