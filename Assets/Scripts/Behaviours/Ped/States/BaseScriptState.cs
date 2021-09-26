@@ -11,6 +11,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	public abstract class BaseScriptState : MonoBehaviour, IPedState
 	{
 
+		public object ParameterForEnteringState { get; set; }
+
 		protected Ped m_ped;
 		protected PedModel m_model { get { return m_ped.PlayerModel; } }
 	//	protected StateMachine m_stateMachine;
