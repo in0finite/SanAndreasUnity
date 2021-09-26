@@ -11,9 +11,9 @@ namespace SanAndreasUnity.Editor
     public class PedAIInspector : UnityEditor.Editor
     {
         private static bool _foldoutCurrent = true;
-        private static bool _foldoutTarget = true;
+        private static bool _foldoutDestination = true;
         private static bool _foldoutLinkedCurrent = true;
-        private static bool _foldoutLinkedTarget = true;
+        private static bool _foldoutLinkedDestination = true;
 
 
         public override void OnInspectorGUI()
@@ -29,7 +29,7 @@ namespace SanAndreasUnity.Editor
                 if (pathMovementState.PathMovementData.currentNode.HasValue)
                     DrawForNode(pathMovementState.PathMovementData.currentNode.Value, "Current node", ref _foldoutCurrent, true, ref _foldoutLinkedCurrent);
                 if (pathMovementState.PathMovementData.destinationNode.HasValue)
-                    DrawForNode(pathMovementState.PathMovementData.destinationNode.Value, "Target node", ref _foldoutTarget, true, ref _foldoutLinkedTarget);
+                    DrawForNode(pathMovementState.PathMovementData.destinationNode.Value, "Destination node", ref _foldoutDestination, true, ref _foldoutLinkedDestination);
             }
         }
 
