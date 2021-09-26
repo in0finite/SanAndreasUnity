@@ -91,31 +91,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         void OnVehicleDamaged(Vehicle vehicle, DamageInfo damageInfo)
         {
-            Ped attackerPed = damageInfo.GetAttackerPed();
-            if (null == attackerPed)
-                return;
-
-            if (this.Action == PedAIAction.Following)
-            {
-                if (null == this.TargetPed) // not member of group
-                    return;
-
-                // ignore explosion damage, it can be "accidental"
-                if (damageInfo.damageType == DamageType.Explosion)
-                    return;
-
-                if (this.IsMemberOfOurGroup(attackerPed))
-                    return;
-
-                if (vehicle.Seats.Exists(s => s.OccupyingPed == this.MyPed || s.OccupyingPed == this.TargetPed))
-                {
-                    // either our leader or we are in the vehicle
-                    _enemyPeds.AddIfNotPresent(attackerPed);
-                    return;
-                }
-
-                return;
-            }
+            this.CurrentState.OnVehicleDamaged(vehicle, damageInfo);
         }
 
         void Update()

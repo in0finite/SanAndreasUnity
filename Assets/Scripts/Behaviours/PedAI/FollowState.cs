@@ -1,4 +1,5 @@
 using System.Linq;
+using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Utilities;
 using UnityEngine;
 
@@ -195,6 +196,31 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             {
                 // attacked ped is member of our group
                 // his enemy will be also our enemy
+                _enemyPeds.AddIfNotPresent(attackerPed);
+                return;
+            }
+
+        }
+
+        protected internal override void OnVehicleDamaged(Vehicle vehicle, DamageInfo damageInfo)
+        {
+            Ped attackerPed = damageInfo.GetAttackerPed();
+            if (null == attackerPed)
+                return;
+
+            if (null == this.TargetPed) // not member of group
+                return;
+
+            // ignore explosion damage, it can be "accidental"
+            if (damageInfo.damageType == DamageType.Explosion)
+                return;
+
+            if (this.IsMemberOfOurGroup(attackerPed))
+                return;
+
+            if (vehicle.Seats.Exists(s => s.OccupyingPed == this.MyPed || s.OccupyingPed == this.TargetPed))
+            {
+                // either our leader or we are in the vehicle
                 _enemyPeds.AddIfNotPresent(attackerPed);
                 return;
             }
