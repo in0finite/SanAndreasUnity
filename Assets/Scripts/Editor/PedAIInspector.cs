@@ -24,8 +24,13 @@ namespace SanAndreasUnity.Editor
 
             GUILayout.Space (10);
 
-            DrawForNode(pedAI.CurrentNode, "Current node", ref _foldoutCurrent, true, ref _foldoutLinkedCurrent);
-            DrawForNode(pedAI.TargetNode, "Target node", ref _foldoutTarget, true, ref _foldoutLinkedTarget);
+            if (pedAI.CurrentState is IPathMovementState pathMovementState)
+            {
+                if (pathMovementState.PathMovementData.currentNode.HasValue)
+                    DrawForNode(pathMovementState.PathMovementData.currentNode.Value, "Current node", ref _foldoutCurrent, true, ref _foldoutLinkedCurrent);
+                if (pathMovementState.PathMovementData.destinationNode.HasValue)
+                    DrawForNode(pathMovementState.PathMovementData.destinationNode.Value, "Target node", ref _foldoutTarget, true, ref _foldoutLinkedTarget);
+            }
         }
 
         void DrawForNode(PathNode node, string labelText, ref bool foldout, bool showLinkedNodes, ref bool foldoutLinked)
