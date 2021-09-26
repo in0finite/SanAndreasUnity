@@ -4,27 +4,6 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Peds.AI
 {
-    public class PathMovementData // don't change to struct, it would be large
-    {
-        public PathNode? currentNode;
-        public PathNode? destinationNode;
-        public Vector3 moveDestination;
-        public float timeWhenAttemptedToFindClosestNode = 0f;
-
-        public void Cleanup()
-        {
-            this.currentNode = null;
-            this.destinationNode = null;
-            this.moveDestination = Vector3.zero;
-            this.timeWhenAttemptedToFindClosestNode = 0f;
-        }
-    }
-
-    public interface IPathMovementState : IState
-    {
-        PathMovementData PathMovementData { get; }
-    }
-
     public class WalkAroundState : BaseState, IPathMovementState
     {
         private readonly PathMovementData _pathMovementData = new PathMovementData();
