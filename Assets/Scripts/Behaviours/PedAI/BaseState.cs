@@ -54,6 +54,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
         }
 
+        public virtual void UpdateState2Seconds()
+        {
+        }
+
         protected internal virtual void OnMyPedDamaged(DamageInfo dmgInfo, Ped.DamageResult dmgResult)
         {
             Ped attackerPed = dmgInfo.GetAttackerPed();

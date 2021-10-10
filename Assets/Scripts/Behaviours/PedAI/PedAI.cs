@@ -25,6 +25,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public StateContainer<BaseState> StateContainer { get; } = new StateContainer<BaseState>();
 
+        private float _timeSinceUpdatedStateOn2Seconds = 0f;
+
 
         private void Awake()
         {
@@ -82,6 +84,14 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (NetStatus.IsServer)
             {
                 this.MyPed.ResetInput();
+
+                _timeSinceUpdatedStateOn2Seconds += Time.deltaTime;
+                if (_timeSinceUpdatedStateOn2Seconds >= 2f)
+                {
+                    _timeSinceUpdatedStateOn2Seconds = 0f;
+                    this.CurrentState.UpdateState2Seconds();
+                }
+
                 this.CurrentState.UpdateState();
             }
         }
