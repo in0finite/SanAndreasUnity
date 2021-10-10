@@ -54,6 +54,11 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             return closestPed;
         }
 
+        public bool IsInRange(Ped ped)
+        {
+            return Vector3.Distance(ped.transform.position, _ped.transform.position) < 10f;
+        }
+
         public void UpdateAttackOnPed(Ped ped, ref bool wasInRange)
         {
             //var weapon = this.MyPed.CurrentWeapon;

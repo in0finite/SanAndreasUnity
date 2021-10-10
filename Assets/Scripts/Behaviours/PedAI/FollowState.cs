@@ -15,6 +15,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         private ChaseState _chaseState;
 
+        public float maxDistanceFromLeader = 30f;
+
 
         protected internal override void OnAwake(PedAI pedAI)
         {
@@ -39,6 +41,61 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             base.OnBecameInactive();
         }
 
+        public override void UpdateState2Seconds()
+        {
+            if (null == this.TargetPed)
+                return;
+
+            // try to find new target, or remove the current one if needed
+            if (this.IsFarAwayFromLeader())
+            {
+                bool isCurrentTargetInRange = _currentlyEngagedPed != null && _chaseState.IsInRange(_currentlyEngagedPed);
+                Ped nextPedToAttack = _chaseState.GetNextPedToAttack();
+                bool isNextTargetInRange = nextPedToAttack != null && _chaseState.IsInRange(nextPedToAttack);
+
+                if (isCurrentTargetInRange || isNextTargetInRange)
+                {
+                    // we have a target in range
+                    // attack this target
+                    if (!isCurrentTargetInRange)
+                        _currentlyEngagedPed = nextPedToAttack;
+                }
+                else
+                {
+                    // go back to leader - remove current target
+                    _currentlyEngagedPed = null;
+                }
+            }
+            else // we are close enough to leader
+            {
+                if (_currentlyEngagedPed != null && !_chaseState.IsInRange(_currentlyEngagedPed))
+                {
+                    // current target is not in range
+
+                    float currentDistance = Vector3.Distance(_currentlyEngagedPed.transform.position, _ped.transform.position);
+                    Ped nextPedToAttack = _chaseState.GetNextPedToAttack();
+
+                    if (nextPedToAttack != null && _chaseState.IsInRange(nextPedToAttack))
+                    {
+                        // next target is in range - switch to it
+                        _currentlyEngagedPed = nextPedToAttack;
+                        return;
+                    }
+
+                    // neither current target nor next target are in range
+
+                    float distanceToNextPed = Vector3.Distance(nextPedToAttack.transform.position, _ped.transform.position);
+                    if (currentDistance - distanceToNextPed > 12f)
+                    {
+                        // next target is closer by some delta value - switch to it
+                        _currentlyEngagedPed = nextPedToAttack;
+                        return;
+                    }
+                }
+            }
+
+        }
+
         public override void UpdateState()
         {
             if (null == this.TargetPed)
@@ -51,11 +108,13 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (this.MyPed.IsInVehicle || this.TargetPed.IsInVehicle)
                 this.UpdateFollowing_MovementPart();
 
-            if (null == _currentlyEngagedPed)
+            // this we do every frame: if we are close enough to leader and have no target, find one
+            if (!this.IsFarAwayFromLeader() && null == _currentlyEngagedPed)
             {
                 _currentlyEngagedPed = _chaseState.GetNextPedToAttack();
-                _wasInRange = false;
             }
+
+            // update attacking or following
 
             if (_currentlyEngagedPed != null)
             {
@@ -63,7 +122,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             }
             else
             {
-                // no peds to attack
+                // we don't have a target to attack
                 // follow our leader
 
                 this.UpdateFollowing_MovementPart();
@@ -255,6 +314,14 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return true;
 
             return false;
+        }
+
+        bool IsFarAwayFromLeader()
+        {
+            return Vector2.Distance(
+                _ped.transform.position.ToVec2WithXAndZ(),
+                this.TargetPed.transform.position.ToVec2WithXAndZ())
+                   > this.maxDistanceFromLeader;
         }
     }
 }
