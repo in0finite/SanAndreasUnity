@@ -8,10 +8,14 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
     {
         public Ped TargetPed { get; private set; }
 
+        private bool _wasInRange = false;
+
 
         public override void OnBecameActive()
         {
             base.OnBecameActive();
+
+            _wasInRange = false;
 
             this.TargetPed = this.ParameterForEnteringState as Ped;
             if (this.TargetPed != null)
@@ -30,7 +34,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return;
             }
 
-            this.UpdateAttackOnPed(this.TargetPed);
+            this.UpdateAttackOnPed(this.TargetPed, ref _wasInRange);
         }
 
         public Ped GetNextPedToAttack()
@@ -50,7 +54,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             return closestPed;
         }
 
-        public void UpdateAttackOnPed(Ped ped)
+        public void UpdateAttackOnPed(Ped ped, ref bool wasInRange)
         {
             //var weapon = this.MyPed.CurrentWeapon;
             Vector3 myHeadPos = GetHeadOrTransform(this.MyPed).position;
@@ -80,8 +84,13 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             }
             else
             {
-                if (diff.magnitude < 10f)
+                float rangeRequired = wasInRange ? 10f : 8f;
+
+                wasInRange = false;
+
+                if (diff.magnitude < rangeRequired)
                 {
+                    wasInRange = true;
                     this.MyPed.AimDirection = aimDir;
                     this.MyPed.IsAimOn = true;
                     this.MyPed.IsFireOn = true;

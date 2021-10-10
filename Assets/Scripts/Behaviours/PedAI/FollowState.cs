@@ -11,6 +11,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         private Ped _currentlyEngagedPed;
 
+        private bool _wasInRange = false;
+
         private ChaseState _chaseState;
 
 
@@ -25,6 +27,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
             base.OnBecameActive();
 
+            _wasInRange = false;
             this.TargetPed = this.ParameterForEnteringState as Ped;
         }
 
@@ -49,11 +52,14 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 this.UpdateFollowing_MovementPart();
 
             if (null == _currentlyEngagedPed)
+            {
                 _currentlyEngagedPed = _chaseState.GetNextPedToAttack();
+                _wasInRange = false;
+            }
 
             if (_currentlyEngagedPed != null)
             {
-                _chaseState.UpdateAttackOnPed(_currentlyEngagedPed);
+                _chaseState.UpdateAttackOnPed(_currentlyEngagedPed, ref _wasInRange);
             }
             else
             {
