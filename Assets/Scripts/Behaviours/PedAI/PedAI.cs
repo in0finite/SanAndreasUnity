@@ -79,9 +79,9 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         void Update()
         {
-            this.MyPed.ResetInput();
             if (NetStatus.IsServer)
             {
+                this.MyPed.ResetInput();
                 this.CurrentState.UpdateState();
             }
         }
