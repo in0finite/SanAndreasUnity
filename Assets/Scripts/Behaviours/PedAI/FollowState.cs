@@ -338,6 +338,11 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             return _chaseState.IsInRange(ped);
         }
 
+        public bool IsInRangeOfLeader(Ped ped)
+        {
+            return Vector3.Distance(ped.transform.position, this.TargetPed.transform.position) < this.maxDistanceFromLeader;
+        }
+
         public Ped GetNextPedToAttack()
         {
             if (null == this.TargetPed)
@@ -348,13 +353,9 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return null;
 
             Vector3 myPosition = _ped.transform.position;
-            Vector3 leaderPosition = this.TargetPed.transform.position;
-            float maxLeaderDistanceReduced = this.maxDistanceFromLeader - 2f;
 
             Ped closestPedInRange = _enemyPeds
-                .Where(p =>
-                    Vector3.Distance(p.transform.position, leaderPosition) < maxLeaderDistanceReduced
-                    || this.IsInRange(p))
+                .Where(p => this.IsInRangeOfLeader(p) || this.IsInRange(p))
                 .MinBy(p => Vector3.Distance(p.transform.position, myPosition), null);
 
             return closestPedInRange;
