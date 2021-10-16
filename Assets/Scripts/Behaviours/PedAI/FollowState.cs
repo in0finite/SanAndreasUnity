@@ -7,7 +7,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 {
     public class FollowState : BaseState
     {
-        public Ped TargetPed { get; private set; }
+        public Ped LeaderPed { get; private set; }
 
         private Ped _currentlyEngagedPed;
 
@@ -30,12 +30,12 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             base.OnBecameActive();
 
             _wasInRange = false;
-            this.TargetPed = this.ParameterForEnteringState as Ped;
+            this.LeaderPed = this.ParameterForEnteringState as Ped;
         }
 
         public override void OnBecameInactive()
         {
-            this.TargetPed = null;
+            this.LeaderPed = null;
             _currentlyEngagedPed = null;
 
             base.OnBecameInactive();
@@ -43,7 +43,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public override void UpdateState2Seconds()
         {
-            if (null == this.TargetPed)
+            if (null == this.LeaderPed)
                 return;
 
             // try to find new target, or remove the current one if needed
@@ -118,14 +118,14 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public override void UpdateState()
         {
-            if (null == this.TargetPed)
+            if (null == this.LeaderPed)
             {
                 _pedAI.StartIdling();
                 return;
             }
 
             // handle vehicle logic - follow ped in or out of vehicle
-            if (this.MyPed.IsInVehicle || this.TargetPed.IsInVehicle)
+            if (this.MyPed.IsInVehicle || this.LeaderPed.IsInVehicle)
                 this.UpdateFollowing_MovementPart();
 
             // this we do every frame: if we are close enough to leader and have no target, find one
@@ -160,20 +160,20 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
             // follow target ped
 
-            if (null == this.TargetPed)
+            if (null == this.LeaderPed)
             {
                 _pedAI.StartIdling();
                 return;
             }
 
-            Vector3 targetPos = this.TargetPed.transform.position;
+            Vector3 targetPos = this.LeaderPed.transform.position;
             float currentStoppingDistance = 3f;
 
-            if (this.TargetPed.IsInVehicleSeat && !this.MyPed.IsInVehicle)
+            if (this.LeaderPed.IsInVehicleSeat && !this.MyPed.IsInVehicle)
             {
                 // find a free vehicle seat to enter vehicle
 
-                var vehicle = this.TargetPed.CurrentVehicle;
+                var vehicle = this.LeaderPed.CurrentVehicle;
 
                 var closestfreeSeat = Ped.GetFreeSeats(vehicle).Select(sa => new {sa = sa, tr = vehicle.GetSeatTransform(sa)})
                     .OrderBy(s => s.tr.Distance(_ped.transform.position))
@@ -200,7 +200,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 }
 
             }
-            else if (!this.TargetPed.IsInVehicle && this.MyPed.IsInVehicleSeat)
+            else if (!this.LeaderPed.IsInVehicle && this.MyPed.IsInVehicleSeat)
             {
                 // target player is not in vehicle, and ours is
                 // exit the vehicle
@@ -233,11 +233,11 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (null == attackerPed)
                 return;
 
-            if (attackerPed == this.TargetPed)
+            if (attackerPed == this.LeaderPed)
             {
                 // our leader attacked us
                 // stop following him
-                this.TargetPed = null;
+                this.LeaderPed = null;
                 return;
             }
 
@@ -255,13 +255,13 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (null == attackerPed)
                 return;
 
-            if (null == this.TargetPed) // we are not in a group
+            if (null == this.LeaderPed) // we are not in a group
                 return;
 
             bool isAttackerPedMember = this.IsMemberOfOurGroup(attackerPed);
             bool isDamagedPedMember = this.IsMemberOfOurGroup(damagedPed);
 
-            if (attackerPed == this.TargetPed && !isDamagedPedMember && dmgInfo.damageType != DamageType.Explosion)
+            if (attackerPed == this.LeaderPed && !isDamagedPedMember && dmgInfo.damageType != DamageType.Explosion)
             {
                 // our leader attacked someone, not as part of explosion
                 // make that someone our enemy
@@ -269,7 +269,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return;
             }
 
-            if (this.TargetPed == damagedPed && !isAttackerPedMember)
+            if (this.LeaderPed == damagedPed && !isAttackerPedMember)
             {
                 // our leader was attacked
                 // his enemies are also our enemies
@@ -293,7 +293,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (null == attackerPed)
                 return;
 
-            if (null == this.TargetPed) // not member of group
+            if (null == this.LeaderPed) // not member of group
                 return;
 
             // ignore explosion damage, it can be "accidental"
@@ -303,7 +303,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (this.IsMemberOfOurGroup(attackerPed))
                 return;
 
-            if (vehicle.Seats.Exists(s => s.OccupyingPed == this.MyPed || s.OccupyingPed == this.TargetPed))
+            if (vehicle.Seats.Exists(s => s.OccupyingPed == this.MyPed || s.OccupyingPed == this.LeaderPed))
             {
                 // either our leader or we are in the vehicle
                 _enemyPeds.AddIfNotPresent(attackerPed);
@@ -314,23 +314,23 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         protected internal override void OnRecruit(Ped recruiterPed)
         {
-            if (this.TargetPed == recruiterPed)
+            if (this.LeaderPed == recruiterPed)
             {
                 // unfollow
-                this.TargetPed = null;
+                this.LeaderPed = null;
             }
         }
 
         public bool IsMemberOfOurGroup(Ped ped)
         {
-            if (this.TargetPed == null) // we are not part of any group
+            if (this.LeaderPed == null) // we are not part of any group
                 return false;
 
-            if (this.TargetPed == ped) // our leader
+            if (this.LeaderPed == ped) // our leader
                 return true;
 
             var pedAI = ped.GetComponent<PedAI>();
-            if (pedAI != null && pedAI.CurrentState is FollowState followState && followState.TargetPed == this.TargetPed)
+            if (pedAI != null && pedAI.CurrentState is FollowState followState && followState.LeaderPed == this.LeaderPed)
                 return true;
 
             return false;
@@ -340,7 +340,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
             return Vector2.Distance(
                 _ped.transform.position.ToVec2WithXAndZ(),
-                this.TargetPed.transform.position.ToVec2WithXAndZ())
+                this.LeaderPed.transform.position.ToVec2WithXAndZ())
                    > this.maxDistanceFromLeader;
         }
 
@@ -351,12 +351,12 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public bool IsInRangeOfLeader(Ped ped)
         {
-            return Vector3.Distance(ped.transform.position, this.TargetPed.transform.position) < this.maxDistanceFromLeader;
+            return Vector3.Distance(ped.transform.position, this.LeaderPed.transform.position) < this.maxDistanceFromLeader;
         }
 
         public Ped GetNextPedToAttack()
         {
-            if (null == this.TargetPed)
+            if (null == this.LeaderPed)
                 return _chaseState.GetNextPedToAttack();
 
             _enemyPeds.RemoveDeadObjectsIfNotEmpty();
