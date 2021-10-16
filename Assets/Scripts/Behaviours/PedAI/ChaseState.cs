@@ -18,7 +18,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             WeaponSlot.Heavy,
             WeaponSlot.Shotgun,
             WeaponSlot.Pistol,
-            WeaponSlot.Hand, // switch to Hand if there is no ammo in other weapons
         };
 
 
@@ -178,6 +177,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                     return;
                 }
             }
+
+            _ped.WeaponHolder.SwitchWeapon(WeaponSlot.Hand);
         }
     }
 }
