@@ -357,7 +357,7 @@ namespace SanAndreasUnity.Behaviours
 
 		private void OnFoundGround(RaycastHit hit, int numAttempts, string customMessage) {
 
-			this.transform.position = hit.point + Vector3.up * (characterController.height + 0.1f);
+			this.transform.position = hit.point + Vector3.up * (characterController.height * 0.5f + 0.1f);
 			this.Velocity = Vector3.zero;
 
 			//Debug.LogFormat ("Found ground at {0}, distance {1}, object name {2}, num attempts {3}, {4}, ped {5}", hit.point, hit.distance, 
