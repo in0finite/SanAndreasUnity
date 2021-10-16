@@ -10,6 +10,17 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         private bool _wasInRange = false;
 
+        private static int[] s_weaponSlotsOrdered = new[]
+        {
+            WeaponSlot.Machine,
+            WeaponSlot.Submachine,
+            WeaponSlot.Rifle,
+            WeaponSlot.Heavy,
+            WeaponSlot.Shotgun,
+            WeaponSlot.Pistol,
+            WeaponSlot.Hand, // switch to Hand if there is no ammo in other weapons
+        };
+
 
         public override void OnBecameActive()
         {
@@ -24,6 +35,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public override void UpdateState2Seconds()
         {
+            this.ChooseBestWeapon();
+
             if (null == this.TargetPed)
             {
                 this.TargetPed = this.GetNextPedToAttack();
@@ -144,6 +157,20 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         private static Transform GetHeadOrTransform(Ped ped)
         {
             return ped.PlayerModel.Head != null ? ped.PlayerModel.Head : ped.transform;
+        }
+
+        public void ChooseBestWeapon()
+        {
+            for (int i = 0; i < s_weaponSlotsOrdered.Length; i++)
+            {
+                int slot = s_weaponSlotsOrdered[i];
+                Weapon weapon = _ped.WeaponHolder.GetWeaponAtSlot(slot);
+                if (weapon != null && weapon.TotalAmmo > 0)
+                {
+                    _ped.WeaponHolder.SwitchWeapon(slot);
+                    return;
+                }
+            }
         }
     }
 }
