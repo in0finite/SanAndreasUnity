@@ -239,6 +239,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (!this.IsMemberOfOurGroup(attackerPed))
             {
                 _enemyPeds.AddIfNotPresent(attackerPed);
+                this.UpdateState2Seconds();
                 return;
             }
 
@@ -261,6 +262,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 // our leader attacked someone, not as part of explosion
                 // make that someone our enemy
                 _enemyPeds.AddIfNotPresent(damagedPed);
+                this.UpdateState2Seconds();
                 return;
             }
 
@@ -269,6 +271,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 // our leader was attacked
                 // his enemies are also our enemies
                 _enemyPeds.AddIfNotPresent(attackerPed);
+                this.UpdateState2Seconds();
                 return;
             }
 
@@ -277,6 +280,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 // attacked ped is member of our group
                 // his enemy will be also our enemy
                 _enemyPeds.AddIfNotPresent(attackerPed);
+                this.UpdateState2Seconds();
                 return;
             }
 
@@ -302,6 +306,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             {
                 // either our leader or we are in the vehicle
                 _enemyPeds.AddIfNotPresent(attackerPed);
+                this.UpdateState2Seconds();
                 return;
             }
 
