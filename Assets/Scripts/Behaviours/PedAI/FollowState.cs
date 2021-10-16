@@ -81,6 +81,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
                 float currentDistance = Vector3.Distance(_currentlyEngagedPed.transform.position, _ped.transform.position);
                 Ped nextPedToAttack = this.GetNextPedToAttack();
+                if (nextPedToAttack == _currentlyEngagedPed)
+                    nextPedToAttack = null;
 
                 if (nextPedToAttack != null && this.IsInRange(nextPedToAttack))
                 {
@@ -100,6 +102,15 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                         _currentlyEngagedPed = nextPedToAttack;
                         return;
                     }
+                }
+
+                // current target is not in range and we failed to switch to next target
+
+                // if current target is also not in leader range, forget about it
+                if (!this.IsInRangeOfLeader(_currentlyEngagedPed))
+                {
+                    _currentlyEngagedPed = null;
+                    return;
                 }
             }
 
