@@ -37,6 +37,13 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
             this.ChooseBestWeapon();
 
+            if (null == _ped.CurrentWeapon)
+            {
+                // we have no weapon to attack with, or no ammo
+                _pedAI.StartWalkingAround();
+                return;
+            }
+
             if (null == this.TargetPed)
             {
                 this.TargetPed = this.GetNextPedToAttack();
