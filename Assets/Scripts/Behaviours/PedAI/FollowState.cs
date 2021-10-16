@@ -68,7 +68,13 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             }
             else // we are close enough to leader
             {
-                if (_currentlyEngagedPed != null && !this.IsInRange(_currentlyEngagedPed))
+                if (null == _currentlyEngagedPed)
+                {
+                    _currentlyEngagedPed = this.GetNextPedToAttack();
+                    return;
+                }
+
+                if (!this.IsInRange(_currentlyEngagedPed))
                 {
                     // current target is not in range
 
