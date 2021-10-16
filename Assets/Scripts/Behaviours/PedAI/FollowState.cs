@@ -49,34 +49,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             // try to find new target, or remove the current one if needed
             if (this.IsFarAwayFromLeader())
             {
-                bool isCurrentTargetInRange = _currentlyEngagedPed != null && this.IsInRange(_currentlyEngagedPed);
-                Ped nextPedToAttack = this.GetNextPedToAttack();
-                bool isNextTargetInRange = nextPedToAttack != null && this.IsInRange(nextPedToAttack);
-
-                if (isCurrentTargetInRange || isNextTargetInRange)
+                if (null == _currentlyEngagedPed || !this.IsInRange(_currentlyEngagedPed))
                 {
-                    // we have a target in range
-                    // attack this target
-                    if (!isCurrentTargetInRange)
-                        _currentlyEngagedPed = nextPedToAttack;
-                }
-                else
-                {
-                    // not current nor next target are in range
-
-                    // if any of targets are in leader range, attack it, otherwise go back to leader.
-                    // because next target is the closest one, we will only check for next target.
-
-                    if (nextPedToAttack != null && this.IsInRangeOfLeader(nextPedToAttack))
-                    {
-                        // next target is in leader range, attack it
-                        _currentlyEngagedPed = nextPedToAttack;
-                    }
-                    else
-                    {
-                        // go back to leader - remove current target
-                        _currentlyEngagedPed = null;
-                    }
+                    _currentlyEngagedPed = this.GetNextPedToAttack();
+                    return;
                 }
             }
             else // we are close enough to leader
@@ -141,7 +117,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (this.MyPed.IsInVehicle || this.LeaderPed.IsInVehicle)
                 this.UpdateFollowing_MovementPart();
 
-            // this we do every frame: if we are close enough to leader and have no target, find one
+            // this we do every frame: if we are close enough to leader and have no target, find one.
+            // this is done so that we quickly choose another target after previous one was killed.
             if (!this.IsFarAwayFromLeader() && null == _currentlyEngagedPed)
             {
                 _currentlyEngagedPed = this.GetNextPedToAttack();
