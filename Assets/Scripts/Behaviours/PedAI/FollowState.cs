@@ -74,31 +74,31 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                     return;
                 }
 
-                if (!this.IsInRange(_currentlyEngagedPed))
+                if (this.IsInRange(_currentlyEngagedPed)) // current target is in range, continue attacking it
+                    return;
+
+                // current target is not in range
+
+                float currentDistance = Vector3.Distance(_currentlyEngagedPed.transform.position, _ped.transform.position);
+                Ped nextPedToAttack = this.GetNextPedToAttack();
+
+                if (nextPedToAttack != null && this.IsInRange(nextPedToAttack))
                 {
-                    // current target is not in range
+                    // next target is in range - switch to it
+                    _currentlyEngagedPed = nextPedToAttack;
+                    return;
+                }
 
-                    float currentDistance = Vector3.Distance(_currentlyEngagedPed.transform.position, _ped.transform.position);
-                    Ped nextPedToAttack = this.GetNextPedToAttack();
+                // neither current target nor next target are in range
 
-                    if (nextPedToAttack != null && this.IsInRange(nextPedToAttack))
+                if (nextPedToAttack != null)
+                {
+                    float distanceToNextPed = Vector3.Distance(nextPedToAttack.transform.position, _ped.transform.position);
+                    if (currentDistance - distanceToNextPed > 12f)
                     {
-                        // next target is in range - switch to it
+                        // next target is closer by some delta value - switch to it
                         _currentlyEngagedPed = nextPedToAttack;
                         return;
-                    }
-
-                    // neither current target nor next target are in range
-
-                    if (nextPedToAttack != null)
-                    {
-                        float distanceToNextPed = Vector3.Distance(nextPedToAttack.transform.position, _ped.transform.position);
-                        if (currentDistance - distanceToNextPed > 12f)
-                        {
-                            // next target is closer by some delta value - switch to it
-                            _currentlyEngagedPed = nextPedToAttack;
-                            return;
-                        }
                     }
                 }
             }
