@@ -46,6 +46,16 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (null == this.LeaderPed)
                 return;
 
+            _chaseState.ChooseBestWeapon();
+
+            if (null == _ped.CurrentWeapon)
+            {
+                // we have no weapon to attack with, or no ammo
+                // remove current target and go to leader
+                _currentlyEngagedPed = null;
+                return;
+            }
+
             // try to find new target, or remove the current one if needed
             if (this.IsFarAwayFromLeader())
             {
@@ -116,13 +126,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             // handle vehicle logic - follow ped in or out of vehicle
             if (this.MyPed.IsInVehicle || this.LeaderPed.IsInVehicle)
                 this.UpdateFollowing_MovementPart();
-
-            // this we do every frame: if we are close enough to leader and have no target, find one.
-            // this is done so that we quickly choose another target after previous one was killed.
-            if (!this.IsFarAwayFromLeader() && null == _currentlyEngagedPed)
-            {
-                _currentlyEngagedPed = this.GetNextPedToAttack();
-            }
 
             // update attacking or following
 
