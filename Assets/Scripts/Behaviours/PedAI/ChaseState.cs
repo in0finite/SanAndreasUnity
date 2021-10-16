@@ -65,6 +65,12 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return;
             }
 
+            if (_ped.IsInVehicle)
+            {
+                _ped.OnSubmitPressed();
+                return;
+            }
+
             this.UpdateAttackOnPed(this.TargetPed, ref _wasInRange);
         }
 
