@@ -22,6 +22,37 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 _enemyPeds.AddIfNotPresent(this.TargetPed);
         }
 
+        public override void UpdateState2Seconds()
+        {
+            if (null == this.TargetPed)
+            {
+                this.TargetPed = this.GetNextPedToAttack();
+                return;
+            }
+
+            if (this.IsInRange(this.TargetPed))
+                return; // current target is in range, continue attacking it
+
+            this.TargetPed = this.GetNextPedToAttack();
+
+            /*Ped nextPedToAttack = this.GetNextPedToAttack();
+            if (null == nextPedToAttack || nextPedToAttack == this.TargetPed)
+                return;
+
+            // check if we should switch to next target
+
+            Vector3 myPosition = _ped.transform.position;
+            float currentDistance = Vector3.Distance(this.TargetPed.transform.position, myPosition);
+            float nextDistance = Vector3.Distance(nextPedToAttack.transform.position, myPosition);
+
+            if (currentDistance - nextDistance > 6f)
+            {
+                // next target is closer by some delta value - switch to it
+                this.TargetPed = nextPedToAttack;
+                return;
+            }*/
+        }
+
         public override void UpdateState()
         {
             if (null == this.TargetPed)
