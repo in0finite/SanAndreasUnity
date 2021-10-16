@@ -49,9 +49,9 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             // try to find new target, or remove the current one if needed
             if (this.IsFarAwayFromLeader())
             {
-                bool isCurrentTargetInRange = _currentlyEngagedPed != null && _chaseState.IsInRange(_currentlyEngagedPed);
-                Ped nextPedToAttack = _chaseState.GetNextPedToAttack();
-                bool isNextTargetInRange = nextPedToAttack != null && _chaseState.IsInRange(nextPedToAttack);
+                bool isCurrentTargetInRange = _currentlyEngagedPed != null && this.IsInRange(_currentlyEngagedPed);
+                Ped nextPedToAttack = this.GetNextPedToAttack();
+                bool isNextTargetInRange = nextPedToAttack != null && this.IsInRange(nextPedToAttack);
 
                 if (isCurrentTargetInRange || isNextTargetInRange)
                 {
@@ -68,14 +68,14 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             }
             else // we are close enough to leader
             {
-                if (_currentlyEngagedPed != null && !_chaseState.IsInRange(_currentlyEngagedPed))
+                if (_currentlyEngagedPed != null && !this.IsInRange(_currentlyEngagedPed))
                 {
                     // current target is not in range
 
                     float currentDistance = Vector3.Distance(_currentlyEngagedPed.transform.position, _ped.transform.position);
-                    Ped nextPedToAttack = _chaseState.GetNextPedToAttack();
+                    Ped nextPedToAttack = this.GetNextPedToAttack();
 
-                    if (nextPedToAttack != null && _chaseState.IsInRange(nextPedToAttack))
+                    if (nextPedToAttack != null && this.IsInRange(nextPedToAttack))
                     {
                         // next target is in range - switch to it
                         _currentlyEngagedPed = nextPedToAttack;
@@ -111,7 +111,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             // this we do every frame: if we are close enough to leader and have no target, find one
             if (!this.IsFarAwayFromLeader() && null == _currentlyEngagedPed)
             {
-                _currentlyEngagedPed = _chaseState.GetNextPedToAttack();
+                _currentlyEngagedPed = this.GetNextPedToAttack();
             }
 
             // update attacking or following
@@ -301,7 +301,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             }
         }
 
-        bool IsMemberOfOurGroup(Ped ped)
+        public bool IsMemberOfOurGroup(Ped ped)
         {
             if (this.TargetPed == null) // we are not part of any group
                 return false;
@@ -316,7 +316,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             return false;
         }
 
-        bool IsFarAwayFromLeader()
+        public bool IsFarAwayFromLeader()
         {
             return Vector2.Distance(
                 _ped.transform.position.ToVec2WithXAndZ(),
