@@ -62,8 +62,21 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 }
                 else
                 {
-                    // go back to leader - remove current target
-                    _currentlyEngagedPed = null;
+                    // not current nor next target are in range
+
+                    // if any of targets are in leader range, attack it, otherwise go back to leader.
+                    // because next target is the closest one, we will only check for next target.
+
+                    if (nextPedToAttack != null && this.IsInRangeOfLeader(nextPedToAttack))
+                    {
+                        // next target is in leader range, attack it
+                        _currentlyEngagedPed = nextPedToAttack;
+                    }
+                    else
+                    {
+                        // go back to leader - remove current target
+                        _currentlyEngagedPed = null;
+                    }
                 }
             }
             else // we are close enough to leader
