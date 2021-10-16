@@ -45,11 +45,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             Vector3 myPosition = _ped.transform.position;
 
-            var closestPed = _enemyPeds.Aggregate((p1, p2) =>
-                Vector3.Distance(p1.transform.position, myPosition)
-                < Vector3.Distance(p2.transform.position, myPosition)
-                    ? p1
-                    : p2);
+            Ped closestPed = _enemyPeds.MinBy(p => Vector3.Distance(p.transform.position, myPosition), null);
 
             return closestPed;
         }
