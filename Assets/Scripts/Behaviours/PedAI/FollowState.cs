@@ -128,6 +128,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             if (_currentlyEngagedPed != null)
             {
+                if (_ped.IsInVehicle)
+                    _wasInRange = true;
                 _chaseState.UpdateAttackOnPed(_currentlyEngagedPed, ref _wasInRange);
             }
             else
