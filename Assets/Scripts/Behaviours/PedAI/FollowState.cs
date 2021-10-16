@@ -323,5 +323,32 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 this.TargetPed.transform.position.ToVec2WithXAndZ())
                    > this.maxDistanceFromLeader;
         }
+
+        public bool IsInRange(Ped ped)
+        {
+            return _chaseState.IsInRange(ped);
+        }
+
+        public Ped GetNextPedToAttack()
+        {
+            if (null == this.TargetPed)
+                return _chaseState.GetNextPedToAttack();
+
+            _enemyPeds.RemoveDeadObjectsIfNotEmpty();
+            if (_enemyPeds.Count == 0)
+                return null;
+
+            Vector3 myPosition = _ped.transform.position;
+            Vector3 leaderPosition = this.TargetPed.transform.position;
+            float maxLeaderDistanceReduced = this.maxDistanceFromLeader - 2f;
+
+            Ped closestPedInRange = _enemyPeds
+                .Where(p =>
+                    Vector3.Distance(p.transform.position, leaderPosition) < maxLeaderDistanceReduced
+                    || this.IsInRange(p))
+                .MinBy(p => Vector3.Distance(p.transform.position, myPosition), null);
+
+            return closestPedInRange;
+        }
     }
 }
