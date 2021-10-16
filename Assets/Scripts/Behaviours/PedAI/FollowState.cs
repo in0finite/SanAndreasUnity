@@ -84,12 +84,15 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
                     // neither current target nor next target are in range
 
-                    float distanceToNextPed = Vector3.Distance(nextPedToAttack.transform.position, _ped.transform.position);
-                    if (currentDistance - distanceToNextPed > 12f)
+                    if (nextPedToAttack != null)
                     {
-                        // next target is closer by some delta value - switch to it
-                        _currentlyEngagedPed = nextPedToAttack;
-                        return;
+                        float distanceToNextPed = Vector3.Distance(nextPedToAttack.transform.position, _ped.transform.position);
+                        if (currentDistance - distanceToNextPed > 12f)
+                        {
+                            // next target is closer by some delta value - switch to it
+                            _currentlyEngagedPed = nextPedToAttack;
+                            return;
+                        }
                     }
                 }
             }
