@@ -30,6 +30,8 @@ namespace SanAndreasUnity.Behaviours
 
 		[Header("Damage")]
 
+		public bool allowPedDamage = true;
+
 		public float legAndArmDamageMultiplier = 0.8f;
 		public float stomachAndChestDamageMultiplier = 1.0f;
 		public float headDamageMultiplier = 4.0f;
