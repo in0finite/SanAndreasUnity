@@ -9,6 +9,15 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         private readonly PathMovementData _pathMovementData = new PathMovementData();
         public PathMovementData PathMovementData => _pathMovementData;
 
+        private ChaseState _chaseState;
+
+
+        protected internal override void OnAwake(PedAI pedAI)
+        {
+            base.OnAwake(pedAI);
+
+            _chaseState = _pedAI.StateContainer.GetStateOrThrow<ChaseState>();
+        }
 
         public override void OnBecameActive()
         {
@@ -37,7 +46,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             // check if we gained some enemies
             _enemyPeds.RemoveDeadObjectsIfNotEmpty();
-            if (_enemyPeds.Count > 0)
+            if (_enemyPeds.Count > 0 && _chaseState.CanStartChasing())
             {
                 _pedAI.StartChasing();
                 return;

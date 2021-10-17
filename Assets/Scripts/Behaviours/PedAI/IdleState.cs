@@ -29,7 +29,12 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                  hitPed.PedDef.DefaultType.IsGangMember()))
             {
                 if (attackerPed != null)
-                    _pedAI.StartChasing();
+                {
+                    if (_pedAI.StateContainer.GetStateOrThrow<ChaseState>().CanStartChasing())
+                        _pedAI.StartChasing();
+                    else
+                        _pedAI.StartEscaping();
+                }
             }
             else
                 _pedAI.StartEscaping();

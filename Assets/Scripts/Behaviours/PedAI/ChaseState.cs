@@ -182,5 +182,11 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             return WeaponSlot.Hand;
         }
+
+        public bool CanStartChasing()
+        {
+            int slot = this.GetBestWeaponSlot();
+            return slot != WeaponSlot.Hand;
+        }
     }
 }
