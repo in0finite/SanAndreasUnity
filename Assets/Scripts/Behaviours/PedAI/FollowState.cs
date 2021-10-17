@@ -48,6 +48,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             _chaseState.ChooseBestWeapon();
 
+            // try to find new target, or remove the current one if needed
+
             if (null == _ped.CurrentWeapon)
             {
                 // we have no weapon to attack with, or no ammo
@@ -56,7 +58,13 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return;
             }
 
-            // try to find new target, or remove the current one if needed
+            if (this.LeaderPed.IsInVehicle && !_ped.IsInVehicle)
+            {
+                // follow our leader into the vehicle
+                _currentlyEngagedPed = null;
+                return;
+            }
+
             if (this.IsFarAwayFromLeader())
             {
                 if (null == _currentlyEngagedPed || !this.IsInRange(_currentlyEngagedPed))
