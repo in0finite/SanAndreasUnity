@@ -20,6 +20,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             WeaponSlot.Pistol,
         };
 
+        public float aimDirAngularSpeed = 90f;
+
 
         public override void OnBecameActive()
         {
@@ -124,6 +126,15 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             Vector3 aimDir = (targetHeadPos - firePos).normalized;
 
+            if (diff.ToVec2WithXAndZ().magnitude < 2.5f)
+                aimDir = (ped.transform.position - _ped.transform.position).normalized;
+            else
+            {
+                Vector3 currentAimDir = _ped.AimDirection;
+                Vector3 smoothFromDir = Vector3.Angle(aimDir, currentAimDir) < Vector3.Angle(aimDir, dir) ? currentAimDir : dir;
+                aimDir = SmoothOutAimDir(aimDir, smoothFromDir, this.aimDirAngularSpeed * Time.deltaTime);
+            }
+
             if (this.MyPed.IsInVehicle)
             {
                 if (diff.magnitude < 10f)
@@ -158,6 +169,15 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                     this.MyPed.Movement = dir;
                 }
             }
+        }
+
+        private static Vector3 SmoothOutAimDir(Vector3 desiredAimDir, Vector3 currentAimDir, float maxDegreesDelta)
+        {
+            return Quaternion.RotateTowards(
+                Quaternion.LookRotation(currentAimDir),
+                Quaternion.LookRotation(desiredAimDir),
+                maxDegreesDelta)
+                .TransformDirection(Vector3.forward);
         }
 
         private static Transform GetHeadOrTransform(Ped ped)
