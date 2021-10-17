@@ -75,7 +75,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         public bool CanEnterState(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment)
         {
-            if (Time.time - m_lastTimeWhenDeactivated > this.timeUntilAbleToSwitchState)
+            if (Time.time - m_lastTimeWhenDeactivated < this.timeUntilAbleToSwitchState)
                 return false;
 
             var w = m_ped.CurrentWeapon;
