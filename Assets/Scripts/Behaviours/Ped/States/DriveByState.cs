@@ -48,14 +48,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         }
 
         private float m_lastTimeWhenDeactivated = 0f;
+        public float timeUntilAbleToSwitchState = 0.5f;
 
-        public float timeUntilAbleToSwitchState = 0.3f;
+        private float m_lastTimeWhenChangedAnim = 0f;
+        private string m_lastAnim = null;
+        public float timeUntilAbleToChangeAnim = 0.5f;
 
 
 
         public override void OnBecameInactive()
         {
             m_lastTimeWhenDeactivated = Time.time;
+            m_lastAnim = null;
             base.OnBecameInactive();
         }
 
@@ -107,7 +111,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         {
             if (this.CurrentVehicleSeat != null)
             {
-                var animId = new Importing.Animation.AnimId("drivebys", this.GetAnimBasedOnAimDir());
+                var animId = new Importing.Animation.AnimId("drivebys", this.GetAnimBasedOnAimDirSmoothed());
                 m_model.PlayAnim(animId);
                 m_model.LastAnimState.wrapMode = WrapMode.ClampForever;
 
@@ -124,6 +128,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
                 m_model.VehicleParentOffset = m_model.GetAnim(animId.AnimName).RootEnd;
                 m_model.RootFrame.transform.localPosition = Vector3.zero;
             }
+        }
+
+        string GetAnimBasedOnAimDirSmoothed()
+        {
+            if (m_lastAnim != null && Time.time - m_lastTimeWhenChangedAnim < this.timeUntilAbleToChangeAnim)
+                return m_lastAnim;
+
+            m_lastTimeWhenChangedAnim = Time.time;
+
+            m_lastAnim = this.GetAnimBasedOnAimDir();
+            return m_lastAnim;
         }
 
         string GetAnimBasedOnAimDir()
