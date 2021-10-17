@@ -167,18 +167,20 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public void ChooseBestWeapon()
         {
+            _ped.WeaponHolder.SwitchWeapon(this.GetBestWeaponSlot());
+        }
+
+        public int GetBestWeaponSlot()
+        {
             for (int i = 0; i < s_weaponSlotsOrdered.Length; i++)
             {
                 int slot = s_weaponSlotsOrdered[i];
                 Weapon weapon = _ped.WeaponHolder.GetWeaponAtSlot(slot);
                 if (weapon != null && weapon.TotalAmmo > 0)
-                {
-                    _ped.WeaponHolder.SwitchWeapon(slot);
-                    return;
-                }
+                    return slot;
             }
 
-            _ped.WeaponHolder.SwitchWeapon(WeaponSlot.Hand);
+            return WeaponSlot.Hand;
         }
     }
 }
