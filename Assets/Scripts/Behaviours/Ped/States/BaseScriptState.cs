@@ -316,6 +316,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				? m_model.GetAmountOfDamageForBone(damageInfo.raycastHitTransform, damageInfo.amount)
 				: damageInfo.amount;
 
+			amount *= PedManager.Instance.pedDamageMultiplier;
+
 			m_ped.Health -= amount;
 
 			if (m_ped.Health <= 0)

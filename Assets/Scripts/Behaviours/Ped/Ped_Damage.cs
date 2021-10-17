@@ -124,9 +124,6 @@ namespace SanAndreasUnity.Behaviours
 			if (!NetStatus.IsServer)
 				return;
 
-			if (!PedManager.Instance.allowPedDamage)
-				return;
-
 			if (this.Health <= 0)
 				return;
 
