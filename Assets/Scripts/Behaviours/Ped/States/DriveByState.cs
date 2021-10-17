@@ -47,7 +47,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
             }
         }
 
+        private float m_lastTimeWhenDeactivated = 0f;
 
+        public float timeUntilAbleToSwitchState = 0.3f;
+
+
+
+        public override void OnBecameInactive()
+        {
+            m_lastTimeWhenDeactivated = Time.time;
+            base.OnBecameInactive();
+        }
 
         protected override void EnterVehicleInternal()
         {
@@ -65,6 +75,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         public bool CanEnterState(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment)
         {
+            if (Time.time - m_lastTimeWhenDeactivated > this.timeUntilAbleToSwitchState)
+                return false;
+
             var w = m_ped.CurrentWeapon;
             return null != w && w.IsGun;
         }
