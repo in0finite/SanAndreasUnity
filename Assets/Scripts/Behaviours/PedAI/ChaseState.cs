@@ -9,7 +9,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         public bool wasInRange = false;
         public float timeWhenAddedFireOffset = 0f;
         public float timeUntilOffsetChanges = 1f;
-        public Vector3 lastFireOffset = Vector3.zero;
         public Vector3 newFireOffset = Vector3.zero;
 
         public void Cleanup()
@@ -17,7 +16,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             this.wasInRange = false;
             this.timeWhenAddedFireOffset = 0f;
             this.timeUntilOffsetChanges = 1f;
-            this.lastFireOffset = Vector3.zero;
             this.newFireOffset = Vector3.zero;
         }
     }
@@ -134,7 +132,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (Time.time - updateAttackParams.timeWhenAddedFireOffset > updateAttackParams.timeUntilOffsetChanges)
             {
                 updateAttackParams.timeWhenAddedFireOffset = Time.time;
-                updateAttackParams.lastFireOffset = updateAttackParams.newFireOffset;
                 updateAttackParams.newFireOffset = Random.onUnitSphere * 0.2f;
             }
 
