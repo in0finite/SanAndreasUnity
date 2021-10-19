@@ -29,6 +29,9 @@ namespace SanAndreasUnity.Behaviours
 		/// </summary>
 		public DamageInfo KillingDamageInfo { get; set; }
 
+		public float LastTimeWhenDamaged { get; private set; }
+		public float TimeSinceDamaged => Time.time - this.LastTimeWhenDamaged;
+
 		private bool m_alreadyKilled = false;
 
 		public class DamageResult
@@ -79,7 +82,7 @@ namespace SanAndreasUnity.Behaviours
 
 		void UpdateHealthBar ()
 		{
-			bool shouldBeVisible = PedManager.Instance.displayHealthBarAbovePeds && !this.IsControlledByLocalPlayer;
+			bool shouldBeVisible = this.TimeSinceDamaged < PedManager.Instance.healthBarVisibleTimeAfterDamage && !this.IsControlledByLocalPlayer;
 			this.HealthBar.gameObject.SetActive (shouldBeVisible);
 
 			if (shouldBeVisible)
@@ -126,6 +129,8 @@ namespace SanAndreasUnity.Behaviours
 
 			if (this.Health <= 0)
 				return;
+
+			this.LastTimeWhenDamaged = Time.time;
 
 			var damageInfo = this.Damageable.LastDamageInfo;
 

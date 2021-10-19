@@ -43,6 +43,7 @@ namespace SanAndreasUnity.Behaviours
 		[Header("Health bar")]
 
 		public bool displayHealthBarAbovePeds = false;
+		public float healthBarVisibleTimeAfterDamage = 3f;
 		public float healthBarWorldWidth = 0.5f;
 		public float healthBarWorldHeight = 0.1f;
 		public float healthBarMaxScreenHeight = 20f;
