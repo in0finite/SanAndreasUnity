@@ -38,12 +38,6 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { Physics.gravity = new Vector3(Physics.gravity.x, -value, Physics.gravity.z); },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
-		OptionsWindow.BoolInput m_displayHealthBarsInput = new OptionsWindow.BoolInput ("Display health bar above peds") {
-			isAvailable = () => PedManager.Instance != null,
-			getValue = () => PedManager.Instance.displayHealthBarAbovePeds,
-			setValue = (value) => { PedManager.Instance.displayHealthBarAbovePeds = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
 		OptionsWindow.BoolInput m_displayMinimapInput = new OptionsWindow.BoolInput ("Display minimap") {
 			isAvailable = () => MiniMap.Instance != null,
 			getValue = () => MiniMap.Instance.gameObject.activeSelf,
@@ -142,7 +136,6 @@ namespace SanAndreasUnity.Settings {
 				m_physicsUpdateRate,
 				m_gravityInput,
 				m_showSpeedometerInput,
-				m_displayHealthBarsInput,
 				m_displayMinimapInput,
 				m_runInBackgroundInput,
 				m_drawLineFromGunInput,
