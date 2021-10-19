@@ -113,7 +113,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public void UpdateAttackOnPed(Ped ped, ref bool wasInRange)
         {
-            //var weapon = this.MyPed.CurrentWeapon;
             Vector3 myHeadPos = GetHeadOrTransform(this.MyPed).position;
             Vector3 targetHeadPos = GetHeadOrTransform(ped).position;
             Vector3 firePos = this.MyPed.IsAiming ? this.MyPed.FirePosition : myHeadPos;
@@ -124,6 +123,9 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             Vector3 aimDir = (targetHeadPos - firePos).normalized;
 
+            // fix for stuttering which happens when target ped is too close:
+            // we assign AimDir here, which changes skeleton and therefore changes fire position, which then
+            // changes AimDir in next frame
             if (diff.ToVec2WithXAndZ().magnitude < 2.5f)
                 aimDir = (ped.transform.position - _ped.transform.position).normalized;
 
