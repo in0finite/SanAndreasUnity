@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         private Ped _currentlyEngagedPed;
 
-        private bool _wasInRange = false;
+        private UpdateAttackParams _updateAttackParams = new UpdateAttackParams();
 
         private ChaseState _chaseState;
 
@@ -29,7 +29,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
             base.OnBecameActive();
 
-            _wasInRange = false;
+            _updateAttackParams.Cleanup();
             this.LeaderPed = this.ParameterForEnteringState as Ped;
         }
 
@@ -140,8 +140,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (_currentlyEngagedPed != null)
             {
                 if (_ped.IsInVehicle)
-                    _wasInRange = true;
-                _chaseState.UpdateAttackOnPed(_currentlyEngagedPed, ref _wasInRange);
+                    _updateAttackParams.wasInRange = true;
+                _chaseState.UpdateAttackOnPed(_currentlyEngagedPed, _updateAttackParams);
             }
             else
             {

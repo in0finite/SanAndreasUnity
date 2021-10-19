@@ -4,11 +4,29 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Peds.AI
 {
+    public class UpdateAttackParams
+    {
+        public bool wasInRange = false;
+        public float timeWhenAddedFireOffset = 0f;
+        public float timeUntilOffsetChanges = 1f;
+        public Vector3 lastFireOffset = Vector3.zero;
+        public Vector3 newFireOffset = Vector3.zero;
+
+        public void Cleanup()
+        {
+            this.wasInRange = false;
+            this.timeWhenAddedFireOffset = 0f;
+            this.timeUntilOffsetChanges = 1f;
+            this.lastFireOffset = Vector3.zero;
+            this.newFireOffset = Vector3.zero;
+        }
+    }
+
     public class ChaseState : BaseState
     {
         public Ped TargetPed { get; private set; }
 
-        private bool _wasInRange = false;
+        private readonly UpdateAttackParams _updateAttackParams = new UpdateAttackParams();
 
         private static int[] s_weaponSlotsOrdered = new[]
         {
@@ -25,7 +43,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
             base.OnBecameActive();
 
-            _wasInRange = false;
+            _updateAttackParams.Cleanup();
 
             this.TargetPed = this.ParameterForEnteringState as Ped;
             if (this.TargetPed != null)
@@ -90,7 +108,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return;
             }
 
-            this.UpdateAttackOnPed(this.TargetPed, ref _wasInRange);
+            this.UpdateAttackOnPed(this.TargetPed, _updateAttackParams);
         }
 
         public Ped GetNextPedToAttack()
@@ -111,11 +129,18 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             return Vector3.Distance(ped.transform.position, _ped.transform.position) < 10f;
         }
 
-        public void UpdateAttackOnPed(Ped ped, ref bool wasInRange)
+        public void UpdateAttackOnPed(Ped ped, UpdateAttackParams updateAttackParams)
         {
+            if (Time.time - updateAttackParams.timeWhenAddedFireOffset > updateAttackParams.timeUntilOffsetChanges)
+            {
+                updateAttackParams.timeWhenAddedFireOffset = Time.time;
+                updateAttackParams.lastFireOffset = updateAttackParams.newFireOffset;
+                updateAttackParams.newFireOffset = Random.onUnitSphere * 0.2f;
+            }
+
             Vector3 myHeadPos = GetHeadOrTransform(this.MyPed).position;
             Vector3 targetHeadPos = GetHeadOrTransform(ped).position;
-            Vector3 targetChestPos = GetChestPosition(ped);
+            Vector3 targetChestPos = GetChestPosition(ped) + updateAttackParams.newFireOffset;
             Vector3 firePos = this.MyPed.IsAiming ? this.MyPed.FirePosition : myHeadPos;
 
             Vector3 diff = targetHeadPos - myHeadPos;
@@ -128,7 +153,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             // we assign AimDir here, which changes skeleton and therefore changes fire position, which then
             // changes AimDir in next frame
             if (diff.ToVec2WithXAndZ().magnitude < 2.5f)
-                aimDir = (ped.transform.position - _ped.transform.position).normalized;
+                aimDir = (ped.transform.position + updateAttackParams.newFireOffset - _ped.transform.position).normalized;
 
             if (this.MyPed.IsInVehicle)
             {
@@ -147,13 +172,13 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             }
             else
             {
-                float rangeRequired = wasInRange ? 10f : 8f;
+                float rangeRequired = updateAttackParams.wasInRange ? 10f : 8f;
 
-                wasInRange = false;
+                updateAttackParams.wasInRange = false;
 
                 if (diff.magnitude < rangeRequired)
                 {
-                    wasInRange = true;
+                    updateAttackParams.wasInRange = true;
                     this.MyPed.AimDirection = aimDir;
                     this.MyPed.IsAimOn = true;
                     this.MyPed.IsFireOn = true;
