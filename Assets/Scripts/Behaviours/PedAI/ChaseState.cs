@@ -115,13 +115,14 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
             Vector3 myHeadPos = GetHeadOrTransform(this.MyPed).position;
             Vector3 targetHeadPos = GetHeadOrTransform(ped).position;
+            Vector3 targetChestPos = GetChestPosition(ped);
             Vector3 firePos = this.MyPed.IsAiming ? this.MyPed.FirePosition : myHeadPos;
 
             Vector3 diff = targetHeadPos - myHeadPos;
             Vector3 dir = diff.normalized;
             this.MyPed.Heading = dir;
 
-            Vector3 aimDir = (targetHeadPos - firePos).normalized;
+            Vector3 aimDir = (targetChestPos - firePos).normalized;
 
             // fix for stuttering which happens when target ped is too close:
             // we assign AimDir here, which changes skeleton and therefore changes fire position, which then
@@ -168,6 +169,13 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         private static Transform GetHeadOrTransform(Ped ped)
         {
             return ped.PlayerModel.Head != null ? ped.PlayerModel.Head : ped.transform;
+        }
+
+        private static Vector3 GetChestPosition(Ped ped)
+        {
+            return ped.PlayerModel.UpperSpine != null
+                ? ped.PlayerModel.UpperSpine.position
+                : ped.transform.position + new Vector3(0f, 0.3f, 0f);
         }
 
         public void ChooseBestWeapon()
