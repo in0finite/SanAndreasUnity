@@ -8,6 +8,7 @@ using SanAndreasUnity.Behaviours.Peds.AI;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Behaviours.WorldSystem;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using WorldSystemArea = SanAndreasUnity.Behaviours.WorldSystem.WorldSystem<SanAndreasUnity.Behaviours.Peds.AI.PedAI>.Area;
 
 namespace SanAndreasUnity.Behaviours
@@ -277,6 +278,29 @@ namespace SanAndreasUnity.Behaviours
             {
                 ped.WeaponHolder.SwitchWeapon(weapon.SlotIndex);
                 weapon.AddRandomAmmoAmount();
+            }
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            if (null == Ped.Instance)
+                return;
+
+            float radius = 200f;
+            Vector3 center = Ped.Instance.transform.position;
+
+            var pathNodes = NodeReader.GetAreasInRadius(center, radius)
+                .SelectMany(_ => _.PedNodes)
+                .Where(pn => pn.ShouldPedBeSpawnedHere
+                             && pn.Flags.SpawnProbability != 0
+                             && Vector3.Distance(pn.Position, center) < radius);
+
+            Gizmos.color = Color.yellow;
+            foreach (PathNode pathNode in pathNodes)
+            {
+                Gizmos.DrawWireSphere(pathNode.Position, pathNode.PathWidth / 2f);
+                foreach (PathNode linkedNode in NodeReader.GetAllLinkedNodes(pathNode))
+                    Gizmos.DrawLine(pathNode.Position, linkedNode.Position);
             }
         }
     }
