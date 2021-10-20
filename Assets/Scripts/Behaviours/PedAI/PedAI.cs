@@ -213,7 +213,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             var pathNodeInfo = NodeReader.GetAreasInRadius(pos, radius)
                 .SelectMany(area => area.PedNodes)
-                .Where(node => node.CanPedWalkHere)
                 .Select(node => (node, distance: Vector3.Distance(node.Position, pos)))
                 .Where(_ => _.distance < radius)
                 .MinBy(_ => _.distance, default);

@@ -220,7 +220,7 @@ namespace SanAndreasUnity.Behaviours
 
             var pathNode = areasToSearch
                 .SelectMany(_ => _.PedNodes
-                    .Where(pn => pn.CanPedWalkHere
+                    .Where(pn => pn.ShouldPedBeSpawnedHere
                                  && pn.Flags.SpawnProbability != 0
                                  && Vector3.Distance(pn.Position, targetZone) < areaRadius
                                  && (!hasFocusPointsThatSeeArea || worldSystemArea.FocusPointsThatSeeMe.All(f => Vector3.Distance(pn.Position, f.Position).BetweenExclusive(this.minSpawnDistanceFromFocusPoint, this.maxSpawnDistanceFromFocusPoint)))))

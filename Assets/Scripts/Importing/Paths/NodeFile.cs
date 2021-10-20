@@ -45,7 +45,7 @@ namespace SanAndreasUnity.Importing.Paths
         public int LinkCount { get; set; }
         public PathNodeFlag Flags;
 
-        public bool CanPedWalkHere => this.NodeType > 2;
+        public bool ShouldPedBeSpawnedHere => !this.Flags.EmergencyOnly;
 
         public bool Equals(PathNode other)
         {
