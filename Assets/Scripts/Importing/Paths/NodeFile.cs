@@ -90,15 +90,9 @@ namespace SanAndreasUnity.Importing.Paths
         private static readonly List<NodeFile> _nodeFiles = new List<NodeFile>();
         public static IReadOnlyList<NodeFile> NodeFiles { get; } = new ReadOnlyCollection<NodeFile>(_nodeFiles);
 
-        internal static float[][] Borders { get; set; }
-
         public static void Load()
         {
-            int row;
-            int col;
-
             _nodeFiles.Clear();
-            Borders = new float[64][];
 
             //TODO: according to https://gtamods.com/wiki/Paths_%28GTA_SA%29  only the active area and those surrounding it should be loaded at a time
             for (int i = 0; i < 64; i++)
@@ -108,10 +102,6 @@ namespace SanAndreasUnity.Importing.Paths
                     NodeFile nf = new NodeFile(i, node);
                     _nodeFiles.Add(nf);
                 }
-
-                row = i % 8;
-                col = i / 8;
-                Borders[i] = new float[] { -3000 + (750 * row), -3000 + (750 * col) };
             }
         }
 
