@@ -422,14 +422,19 @@ namespace SanAndreasUnity.Behaviours {
 		}
 
 
-		public void AddRandomWeapons ()
+		public void AddRandomWeapons()
 		{
-			if (!NetStatus.IsServer)
-				return;
-
 			int[] slots = new int[] { WeaponSlot.Pistol, WeaponSlot.Shotgun, WeaponSlot.Submachine,
 				WeaponSlot.Machine, WeaponSlot.Rifle, WeaponSlot.Heavy
 			};
+
+			AddRandomWeapons(slots);
+		}
+
+		public void AddRandomWeapons (int[] slots)
+		{
+			if (!NetStatus.IsServer)
+				return;
 
 			var groups = WeaponData.LoadedWeaponsData.Where( wd => slots.Contains( wd.weaponslot ) )
 				.DistinctBy( wd => wd.weaponType )

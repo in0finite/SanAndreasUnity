@@ -46,8 +46,8 @@ namespace SanAndreasUnity.Behaviours
 		[SerializeField] private Vector2 m_cameraClampValue = new Vector2(60, 60);
 		public Vector2 CameraClampValue { get { return m_cameraClampValue; } set { m_cameraClampValue = value; } }
 
-        
-		public Peds.States.BaseScriptState[] States { get; private set; }
+
+		private readonly StateContainer<Peds.States.BaseScriptState> _stateContainer = new StateContainer<Peds.States.BaseScriptState>();
 		public Peds.States.BaseScriptState CurrentState { get { return (Peds.States.BaseScriptState) m_stateMachine.CurrentState; } }
 
         public Cell Cell { get { return Cell.Instance; } }
@@ -144,7 +144,7 @@ namespace SanAndreasUnity.Behaviours
             this.characterController = this.GetComponent<CharacterController>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
 
-			this.States = this.GetComponentsInChildren<Peds.States.BaseScriptState> ();
+			_stateContainer.AddStates(this.GetComponentsInChildren<Peds.States.BaseScriptState> ());
 
 			this.AwakeForDamage ();
 
@@ -216,46 +216,37 @@ namespace SanAndreasUnity.Behaviours
 
 		public Peds.States.BaseScriptState GetState(System.Type type)
 		{
-			return this.States.FirstOrDefault (s => s.GetType ().Equals (type));
+			return _stateContainer.GetState(type);
 		}
 
-		public T GetState<T>() where T : Peds.States.BaseScriptState
+		public T GetState<T>()
+			where T : Peds.States.BaseScriptState
 		{
-			return (T) this.GetState(typeof(T));
+			return _stateContainer.GetState<T>();
 		}
 
 		public Peds.States.BaseScriptState GetStateOrLogError(System.Type type)
 		{
-			var state = this.GetState (type);
-			if(null == state)
-				Debug.LogErrorFormat ("Failed to find state: {0}", type);
-			return state;
+			return _stateContainer.GetStateOrLogError(type);
 		}
 
-		public T GetStateOrLogError<T>() where T : Peds.States.BaseScriptState
+		public T GetStateOrLogError<T>()
+			where T : Peds.States.BaseScriptState
 		{
-			return (T) this.GetStateOrLogError(typeof(T));
+			return _stateContainer.GetStateOrLogError<T>();
 		}
 
 		public void SwitchState(System.Type type)
 		{
-			
 			var state = this.GetStateOrLogError (type);
 			if (null == state)
 				return;
-			
-		//	IState oldState = this.CurrentState;
 
 			m_stateMachine.SwitchState (state);
-
-//			if (oldState != state)
-//			{
-//				Debug.LogFormat ("Switched to state: {0}", state.GetType ().Name);
-//			}
-			
 		}
 
-		public void SwitchState<T>() where T : Peds.States.BaseScriptState
+		public void SwitchState<T>()
+			where T : Peds.States.BaseScriptState
 		{
 			this.SwitchState(typeof(T));
 		}
@@ -366,7 +357,7 @@ namespace SanAndreasUnity.Behaviours
 
 		private void OnFoundGround(RaycastHit hit, int numAttempts, string customMessage) {
 
-			this.transform.position = hit.point + Vector3.up * (characterController.height + 0.1f);
+			this.transform.position = hit.point + Vector3.up * (characterController.height * 0.5f + 0.1f);
 			this.Velocity = Vector3.zero;
 
 			//Debug.LogFormat ("Found ground at {0}, distance {1}, object name {2}, num attempts {3}, {4}, ped {5}", hit.point, hit.distance, 
@@ -527,7 +518,7 @@ namespace SanAndreasUnity.Behaviours
 			
 
 			// movement can only be done on X and Z axis
-			this.Movement = this.Movement.WithXAndZ ();
+			this.Movement = this.Movement.WithXAndZ().normalized;
 
 			// change heading to match movement input
 			//if (Movement.sqrMagnitude > float.Epsilon)
@@ -541,16 +532,19 @@ namespace SanAndreasUnity.Behaviours
 			//Vector3 localMovement = this.transform.InverseTransformDirection (this.Movement);
 			//Vector3 globalMovement = this.transform.TransformDirection( Vector3.Scale( localMovement, modelVel ) );
 
-			Vector3 vDiff = this.Movement * modelVel - new Vector3(Velocity.x, 0f, Velocity.z);
-			Velocity += vDiff;
+			// override velocity along X and Z axis, accumulate it along Y axis
+			Vector3 newVelocity = this.Movement * modelVel;
+			newVelocity.y = Velocity.y + this.Movement.y * modelVel;
 
-			// apply gravity
-			Velocity = new Vector3(Velocity.x, characterController.isGrounded
-				? 0f : Velocity.y - (-Physics.gravity.y) * 2f * Time.fixedDeltaTime, Velocity.z);
+			if (characterController.isGrounded)
+				newVelocity.y = 0f;
+			else
+				newVelocity.y -= (-Physics.gravity.y) * 2f * Time.deltaTime;
 
+			Velocity = newVelocity;
 
 			// finally, move the character
-			characterController.Move(Velocity * Time.fixedDeltaTime);
+			characterController.Move(Velocity * Time.deltaTime);
 		
 
 //			if(!IsLocalPlayer)

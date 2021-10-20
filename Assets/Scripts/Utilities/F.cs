@@ -570,6 +570,39 @@ namespace SanAndreasUnity.Utilities
 			}
 		}
 
+		public static T MinBy<T, TComparable>(
+			this IEnumerable<T> enumerable,
+			System.Func<T, TComparable> selector,
+			T elementToReturnIfEmpty)
+			where TComparable : IComparable
+		{
+			var comparer = Comparer<TComparable>.Default;
+			T minElement = default;
+			TComparable minValue = default;
+			bool hasAnyValue = false;
+
+			foreach (var element in enumerable)
+			{
+				TComparable value = selector(element);
+				if (!hasAnyValue)
+				{
+					hasAnyValue = true;
+					minElement = element;
+					minValue = value;
+				}
+				else
+				{
+					if (comparer.Compare(value, minValue) < 0)
+					{
+						minElement = element;
+						minValue = value;
+					}
+				}
+			}
+
+			return !hasAnyValue ? elementToReturnIfEmpty : minElement;
+		}
+
 		public static int FindIndex<T> (this IEnumerable<T> enumerable, System.Predicate<T> predicate)
 		{
 			int i = 0;
@@ -664,9 +697,18 @@ namespace SanAndreasUnity.Utilities
 	        return enumerable.Where(obj => obj != null);
         }
 
-        public static int RemoveDeadObjects<T> (this List<T> list) where T : UnityEngine.Object
+        public static int RemoveDeadObjects<T> (this List<T> list)
+	        where T : UnityEngine.Object
         {
             return list.RemoveAll(item => null == item);
+        }
+
+        public static int RemoveDeadObjectsIfNotEmpty<T>(this List<T> list)
+	        where T : UnityEngine.Object
+        {
+	        if (list.Count > 0)
+		        return list.RemoveDeadObjects();
+	        return 0;
         }
 
 
@@ -848,6 +890,11 @@ namespace SanAndreasUnity.Utilities
 		public static Vector3 Inverted (this Vector3 vec3)
 		{
 			return new Vector3 (1.0f / vec3.x, 1.0f / vec3.y, 1.0f / vec3.z);
+		}
+
+		public static Vector2 AsAbsolute(this Vector2 vec)
+		{
+			return new Vector2(Mathf.Abs(vec.x), Mathf.Abs(vec.y));
 		}
 
 		public static Color OrangeColor { get { return Color.Lerp (Color.yellow, Color.red, 0.5f); } }

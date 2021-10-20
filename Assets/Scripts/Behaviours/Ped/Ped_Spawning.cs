@@ -4,6 +4,7 @@ using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using System.Linq;
+using SanAndreasUnity.Behaviours.Peds.AI;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -46,27 +47,30 @@ namespace SanAndreasUnity.Behaviours
 			return SpawnPed (def, pos, rot, spawnOnNetwork);
 		}
 
-		public static Ped SpawnPed (int pedId, Transform nearbyTransform)
+		public static PedAI SpawnPedAI(int pedId, Vector3 pos, Quaternion rot)
 		{
-			Vector3 pos;
-			Quaternion rot;
-			if (GetPositionForPedSpawn (out pos, out rot, nearbyTransform))
-				return SpawnPed (pedId, pos, rot, true);
+			var ped = SpawnPed(pedId, pos, rot, true);
+			return ped.gameObject.GetOrAddComponent<PedAI>();
+		}
+
+		public static PedAI SpawnPedAI(int pedId, Transform nearbyTransform, float minDistance = 5f, float maxDistance = 15f)
+		{
+			if (GetPositionForPedSpawn (out var pos, out var rot, nearbyTransform, minDistance, maxDistance))
+				return SpawnPedAI(pedId, pos, rot);
 			return null;
 		}
 
-		public static PedStalker SpawnPedStalker (int pedId, Vector3 pos, Quaternion rot, Ped targetPed)
+		public static PedAI SpawnPedStalker (int pedId, Vector3 pos, Quaternion rot, Ped targetPed)
 		{
 			var ped = SpawnPed (pedId, pos, rot, true);
 
-			var stalker = ped.gameObject.GetOrAddComponent<PedStalker> ();
-			stalker.stoppingDistance = PedManager.Instance.AIStoppingDistance;
-			stalker.TargetPed = targetPed;
+			var pedAI = ped.gameObject.GetOrAddComponent<PedAI> ();
+			pedAI.StartFollowing(targetPed);
 
-			return stalker;
+			return pedAI;
 		}
 
-		public static PedStalker SpawnPedStalker (int pedId, Transform nearbyTransform, Ped targetPed)
+		public static PedAI SpawnPedStalker (int pedId, Transform nearbyTransform, Ped targetPed)
 		{
 			Vector3 pos;
 			Quaternion rot;
@@ -75,7 +79,12 @@ namespace SanAndreasUnity.Behaviours
 			return null;
 		}
 
-		public static bool GetPositionForPedSpawn (out Vector3 pos, out Quaternion rot, Transform nearbyTransform)
+		public static bool GetPositionForPedSpawn(
+			out Vector3 pos,
+			out Quaternion rot,
+			Transform nearbyTransform,
+			float minDistance = 5f,
+			float maxDistance = 15f)
 		{
 			pos = Vector3.zero;
 			rot = Quaternion.identity;
@@ -85,7 +94,7 @@ namespace SanAndreasUnity.Behaviours
 				Vector3 offset = Random.onUnitSphere;
 				offset.y = 0f;
 				offset.Normalize ();
-				offset *= Random.Range (5f, 15f);
+				offset *= Random.Range (minDistance, maxDistance);
 
 				pos = nearbyTransform.TransformPoint (offset);
 				rot = Random.rotation;

@@ -48,8 +48,8 @@ namespace SanAndreasUnity.UI {
 			bool playerExists = Ped.Instance != null;
 
 
-			float[] widthPercsLabels = new float[]{ 0.1f, 0.3f, 0.25f, 0.25f };
-			float[] widthPercsButtons = new float[]{ 0.1f, 0.15f, 0.15f, 0.2f };
+			float[] widthPercsLabels = new float[]{ 0.1f, 0.3f, 0.25f, 0.25f,  };
+			float[] widthPercsButtons = new float[]{ 0.1f, 0.15f, 0.15f, 0.2f, 0.2f };
 			float rowHeight = 40;
 			float buttonSpacing = 3;
 
@@ -140,7 +140,7 @@ namespace SanAndreasUnity.UI {
 						GUI.enabled = NetUtils.IsServer;
 						if (GUI.Button(itemRect, "Spawn"))
 						{
-							Ped.SpawnPed(def.Id, Ped.Instance.transform);
+							Ped.SpawnPedAI(def.Id, Ped.Instance.transform);
 						}
 						GUI.enabled = true;
 
@@ -148,6 +148,12 @@ namespace SanAndreasUnity.UI {
 						if (GUI.Button(itemRect, "Spawn stalker"))
 						{
 							SendCommand($"/stalker {def.Id}");
+						}
+
+						itemRect = GUIUtils.GetNextRectInARowPerc(rect, ref i, buttonSpacing, widthPercsButtons);
+						if (GUI.Button(itemRect, "Spawn enemy"))
+						{
+							SendCommand($"/enemy {def.Id}");
 						}
 
 					}

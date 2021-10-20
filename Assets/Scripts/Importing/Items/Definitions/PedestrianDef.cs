@@ -37,6 +37,16 @@ namespace SanAndreasUnity.Importing.Items.Definitions
         {
             return (pedestrianType & PedestrianType.GangMember) != 0;
         }
+
+        public static bool IsCriminal(this PedestrianType pedestrianType)
+        {
+            return pedestrianType == PedestrianType.Criminal;
+        }
+
+        public static bool IsCop(this PedestrianType pedestrianType)
+        {
+            return pedestrianType == PedestrianType.Cop;
+        }
     }
 
     [Section("peds")]

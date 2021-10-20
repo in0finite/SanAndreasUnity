@@ -1,3 +1,4 @@
+using SanAndreasUnity.Behaviours.Peds.AI;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Importing.Weapons;
@@ -669,15 +670,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			if (null == damageable)
 				return;
 
-			var hitPed = damageable.GetComponent<Ped>();
-			if (hitPed != null && hitPed != pedToFollow && null == hitPed.PlayerOwner)
+			var hitPedAI = damageable.GetComponent<PedAI>();
+			if (hitPedAI != null && hitPedAI.MyPed != pedToFollow)
 			{
-				// ray hit a ped who is not controlled by any player
-				var pedStalker = hitPed.gameObject.GetOrAddComponent<PedStalker>();
-				if (pedStalker.TargetPed == pedToFollow)
-					pedStalker.TargetPed = null;
-				else
-					pedStalker.TargetPed = pedToFollow;
+				// ray hit NPC ped
+				hitPedAI.Recruit(pedToFollow);
 			}
 			
 		}

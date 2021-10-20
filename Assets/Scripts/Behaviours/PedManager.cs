@@ -30,6 +30,8 @@ namespace SanAndreasUnity.Behaviours
 
 		[Header("Damage")]
 
+		[Range(0f, 10f)] public float pedDamageMultiplier = 1f;
+
 		public float legAndArmDamageMultiplier = 0.8f;
 		public float stomachAndChestDamageMultiplier = 1.0f;
 		public float headDamageMultiplier = 4.0f;
@@ -40,7 +42,7 @@ namespace SanAndreasUnity.Behaviours
 
 		[Header("Health bar")]
 
-		public bool displayHealthBarAbovePeds = false;
+		public float healthBarVisibleTimeAfterDamage = 3f;
 		public float healthBarWorldWidth = 0.5f;
 		public float healthBarWorldHeight = 0.1f;
 		public float healthBarMaxScreenHeight = 20f;

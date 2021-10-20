@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -44,6 +44,7 @@ namespace SanAndreasUnity.Commands
             {
                 new CommandManager.CommandInfo("skin", "change skin", true, true, this.pedLimitInterval),
                 new CommandManager.CommandInfo("stalker", "spawn stalker ped", true, true, this.pedLimitInterval),
+                new CommandManager.CommandInfo("enemy", "spawn enemy ped", true, true, this.pedLimitInterval),
                 new CommandManager.CommandInfo("suicide", "commit suicide", true, true, this.pedLimitInterval),
                 new CommandManager.CommandInfo("teleport", "teleport", true, true, this.pedLimitInterval),
                 new CommandManager.CommandInfo("veh", "spawn a vehicle", true, true, this.vehicleLimitInterval),
@@ -118,7 +119,22 @@ namespace SanAndreasUnity.Commands
                 if (!GetPedModelId(arguments, 1, out int modelId))
                     return pedModelIdDoesNotExist;
 
-                Ped.SpawnPedStalker(modelId, player.OwnedPed.transform, player.OwnedPed);
+                var pedAI = Ped.SpawnPedStalker(modelId, player.OwnedPed.transform, player.OwnedPed);
+                AddWeaponToSpawnedPed(pedAI.MyPed, false);
+
+                return CommandManager.ProcessCommandResult.Success;
+            }
+            else if (arguments[0] == "enemy")
+            {
+                if (null == player.OwnedPed)
+                    return pedNotAliveResult;
+
+                if (!GetPedModelId(arguments, 1, out int modelId))
+                    return pedModelIdDoesNotExist;
+
+                var pedAI = Ped.SpawnPedAI(modelId, player.OwnedPed.transform, 15f, 30f);
+                AddWeaponToSpawnedPed(pedAI.MyPed, true);
+                pedAI.StartChasing(player.OwnedPed);
 
                 return CommandManager.ProcessCommandResult.Success;
             }
@@ -246,6 +262,35 @@ namespace SanAndreasUnity.Commands
             }
 
             return CommandManager.ProcessCommandResult.UnknownCommand;
+        }
+
+        void AddWeaponToSpawnedPed(Ped ped, bool force)
+        {
+            this.StartCoroutine(this.AddWeaponToSpawnedPedCoroutine(ped, force));
+        }
+
+        IEnumerator AddWeaponToSpawnedPedCoroutine(Ped ped, bool force)
+        {
+            yield return null;
+            yield return null;
+
+            if (ped.PedDef == null)
+                yield break;
+
+            int[] slots = new int[]
+            {
+                WeaponSlot.Pistol, WeaponSlot.Shotgun, WeaponSlot.Submachine, WeaponSlot.Machine,
+            };
+
+            if (force)
+            {
+                int chosenSlot = slots.RandomElement();
+                ped.WeaponHolder.AddRandomWeapons(new[] {chosenSlot});
+                ped.WeaponHolder.SwitchWeapon(chosenSlot);
+                yield break;
+            }
+
+            NPCPedSpawner.Singleton.AddWeaponToPed(ped);
         }
     }
 }

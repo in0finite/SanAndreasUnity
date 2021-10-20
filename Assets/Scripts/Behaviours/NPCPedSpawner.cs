@@ -4,10 +4,11 @@ using SanAndreasUnity.Net;
 using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using SanAndreasUnity.Behaviours.Peds.AI;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Behaviours.WorldSystem;
 using UnityEngine;
-using WorldSystemArea = SanAndreasUnity.Behaviours.WorldSystem.WorldSystem<SanAndreasUnity.Behaviours.PedAI>.Area;
+using WorldSystemArea = SanAndreasUnity.Behaviours.WorldSystem.WorldSystem<SanAndreasUnity.Behaviours.Peds.AI.PedAI>.Area;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -207,23 +208,19 @@ namespace SanAndreasUnity.Behaviours
             float areaRadius = _areaSize * Mathf.Sqrt(2) / 2f; // radius of outer circle
             bool hasFocusPointsThatSeeArea = worldSystemArea.FocusPointsThatSeeMe != null && worldSystemArea.FocusPointsThatSeeMe.Count > 0;
 
-            int currentArea = NodeFile.GetAreaFromPosition(targetZone);
-            List<int> areaIdsToSearch = NodeFile.GetAreaNeighborhood(currentArea);
-            areaIdsToSearch.Add(currentArea);
-            areaIdsToSearch.RemoveAll(_ => _ < 0);
-            areaIdsToSearch = areaIdsToSearch.Distinct().ToList(); // just in case above functions don't work properly
+            List<NodeFile> areasToSearch = NodeReader.GetAreasInRadius(targetZone, areaRadius)
+                .ToList();
 
-            if (areaIdsToSearch.Count == 0)
+            if (areasToSearch.Count == 0)
                 yield break;
 
             // choose random node among all nodes that satisfy conditions
 
             float randomValue = Random.Range(0f, 15f);
 
-            var pathNode = areaIdsToSearch
-                .Select(NodeReader.GetAreaById)
+            var pathNode = areasToSearch
                 .SelectMany(_ => _.PedNodes
-                    .Where(pn => pn.NodeType > 2 // ?
+                    .Where(pn => pn.CanPedWalkHere
                                  && pn.Flags.SpawnProbability != 0
                                  && Vector3.Distance(pn.Position, targetZone) < areaRadius
                                  && (!hasFocusPointsThatSeeArea || worldSystemArea.FocusPointsThatSeeMe.All(f => Vector3.Distance(pn.Position, f.Position).BetweenExclusive(this.minSpawnDistanceFromFocusPoint, this.maxSpawnDistanceFromFocusPoint)))))
@@ -251,8 +248,7 @@ namespace SanAndreasUnity.Behaviours
 
             _spawnedPeds.Add((ai, worldSystemArea));
 
-            ai.CurrentNode = pathNode;
-            ai.TargetNode = pathNode;
+            ai.StartWalkingAround(pathNode);
 
             var areaChangeDetector = newPed.gameObject.AddComponent<AreaChangeDetector>();
             areaChangeDetector.Init(_worldSystem);
@@ -261,7 +257,7 @@ namespace SanAndreasUnity.Behaviours
             return ai;
         }
 
-        private void AddWeaponToPed(Ped ped)
+        public void AddWeaponToPed(Ped ped)
         {
             if (null == ped.PedDef)
                 return;
@@ -270,11 +266,12 @@ namespace SanAndreasUnity.Behaviours
 
             var defaultType = ped.PedDef.DefaultType;
 
-            if (defaultType == PedestrianType.Cop
-                || defaultType == PedestrianType.Criminal)
+            if (defaultType.IsCop())
                 weapon = ped.WeaponHolder.AddWeapon(WeaponId.Pistol);
+            else if (defaultType.IsCriminal())
+                weapon = ped.WeaponHolder.AddWeapon(new int[]{WeaponId.Pistol, WeaponId.DesertEagle}.RandomElement());
             else if (defaultType.IsGangMember())
-                weapon = ped.WeaponHolder.AddWeapon(WeaponId.MicroUzi);
+                weapon = ped.WeaponHolder.AddWeapon(new int[]{WeaponId.MicroUzi, WeaponId.Tec9}.RandomElement());
 
             if (weapon != null)
             {
