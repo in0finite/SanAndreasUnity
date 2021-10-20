@@ -22,13 +22,15 @@ namespace SanAndreasUnity.Importing.Paths
         public bool RoadBlocks;
         public bool IsWater;
         public bool EmergencyOnly;
-        public bool IsHighway;
+        public bool IsHighway; // ignored for peds
         public int SpawnProbability;
+        public bool Parking;
 
         public override string ToString()
         {
-            return "TrafficLevel=" + TrafficLevel + ",Roadblocks=" + RoadBlocks + ",IsWater=" + IsWater + "\r\n" +
-                 "EmergencyOnly=" + EmergencyOnly + ",IsHighway=" + IsHighway + ",SpawnProbability=" + SpawnProbability;
+            return "TrafficLevel=" + TrafficLevel + ",Roadblocks=" + RoadBlocks + ",IsWater=" + IsWater +
+                 ",EmergencyOnly=" + EmergencyOnly + ",IsHighway=" + IsHighway + ",SpawnProbability=" + SpawnProbability +
+                 ",Parking=" + Parking;
         }
     }
 
@@ -277,12 +279,14 @@ namespace SanAndreasUnity.Importing.Paths
             node.NodeType = reader.ReadByte();
 
             int flag = reader.ReadInt32();
-            node.LinkCount = flag & 15;
-            node.Flags.RoadBlocks = Convert.ToBoolean(flag & 0xF);
-            node.Flags.IsWater = Convert.ToBoolean(flag & 0x80);
-            node.Flags.EmergencyOnly = Convert.ToBoolean(flag & 0x100);
-            node.Flags.IsHighway = !Convert.ToBoolean(flag & 0x1000);
+            node.LinkCount = flag & 0xF;
+            node.Flags.TrafficLevel = (PathNodeTrafficLevel)((flag & 0x30) >> 4);
+            node.Flags.RoadBlocks = (flag & (1 << 6)) != 0;
+            node.Flags.IsWater = (flag & 0x80) != 0;
+            node.Flags.EmergencyOnly = (flag & 0x100) != 0;
+            node.Flags.IsHighway = (flag & 0x1000) == 0;
             node.Flags.SpawnProbability = (flag & 0xF0000) >> 16;
+            node.Flags.Parking = (flag & 0x200000) != 0;
 
             return node;
         }
