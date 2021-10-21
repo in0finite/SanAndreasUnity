@@ -13,17 +13,11 @@ namespace SanAndreasUnity.Utilities
         public const string const_game_dir = "game_dir";
 
 
-        public static string FileName
-        {
-            get { return "config.json"; }
-        }
+        public static string FileName => "config.json";
 
-        public static string UserFileName
-        {
-            get { return "config.user.json"; }
-        }
+        public static string UserFileName => "config.user.json";
 
-		public static string ConfigFilesDirectoryPath
+        public static string ConfigFilesDirectoryPath
 		{
 			get {
 				#if UNITY_EDITOR || UNITY_STANDALONE
@@ -34,25 +28,13 @@ namespace SanAndreasUnity.Utilities
 			}
 		}
 
-        public static string FilePath
-        {
-			get { return Path.Combine(ConfigFilesDirectoryPath, FileName); }
-        }
+        public static string FilePath => Path.Combine(ConfigFilesDirectoryPath, FileName);
 
-        public static string UserFilePath
-        {
-			get { return Path.Combine(ConfigFilesDirectoryPath, UserFileName); }
-        }
+        public static string UserFilePath => Path.Combine(ConfigFilesDirectoryPath, UserFileName);
 
-		public static string GamePath
-		{
-			get
-			{
-				return GetPath (const_game_dir);
-			}
-		}
+        public static string GamePath => GetPath (const_game_dir);
 
-        public static string DataPath
+		public static string DataPath
         {
             get
             {
