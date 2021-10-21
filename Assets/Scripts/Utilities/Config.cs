@@ -13,9 +13,7 @@ namespace SanAndreasUnity.Utilities
         public const string const_game_dir = "game_dir";
 
 
-        public static string FileName => "config.json";
-
-        public static string UserFileName => "config.user.json";
+        public static string UserConfigFileName => "config.user.json";
 
         public static string ConfigFilesDirectoryPath
 		{
@@ -28,9 +26,7 @@ namespace SanAndreasUnity.Utilities
 			}
 		}
 
-        public static string FilePath => Path.Combine(ConfigFilesDirectoryPath, FileName);
-
-        public static string UserFilePath => Path.Combine(ConfigFilesDirectoryPath, UserFileName);
+        public static string UserConfigFilePath => Path.Combine(ConfigFilesDirectoryPath, UserConfigFileName);
 
         public static string GamePath => GetPath (const_game_dir);
 
@@ -145,16 +141,16 @@ namespace SanAndreasUnity.Utilities
 
 			_root = JObject.Parse (Resources.Load<TextAsset>("config").text);
 
-			if (File.Exists (UserFilePath))
+			if (File.Exists (UserConfigFilePath))
 			{
-				_user = JObject.Parse (File.ReadAllText (UserFilePath));
+				_user = JObject.Parse (File.ReadAllText (UserConfigFilePath));
 			}
 
 		}
 
 		public static void SaveUserConfig ()
 		{
-			File.WriteAllText (UserFilePath, _user.ToString (Newtonsoft.Json.Formatting.Indented));
+			File.WriteAllText (UserConfigFilePath, _user.ToString (Newtonsoft.Json.Formatting.Indented));
 		}
 
 		public static void SaveUserConfigSafe ()
