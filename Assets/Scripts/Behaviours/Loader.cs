@@ -370,10 +370,7 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void StepLoadAnimGroups ()
 		{
-			foreach (string fileName in Config.Get<string[]>("anim_group_files"))
-			{
-				AnimationGroup.Load(fileName);
-			}
+			AnimationGroup.Load("animgrp.dat");
 
 			// load custom anim groups from resources
 			TextAsset textAsset = Resources.Load<TextAsset>("Data/auxanimgrp");
