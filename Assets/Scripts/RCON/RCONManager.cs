@@ -24,8 +24,8 @@ namespace SanAndreasUnity.RCON
 
         public static void StartServer()
         {
-            password = Config.Get<string>("RCON_password");
-            portNumber = Config.Get<int>("RCON_port");
+            password = Config.GetString("RCON_password");
+            portNumber = Config.GetInt("RCON_port");
 
             if (workerInstance != null)
                 return;
@@ -92,7 +92,7 @@ namespace SanAndreasUnity.RCON
         {
             if (NetStatus.IsServer)
             {
-                if (Config.Get<bool>("RCON_enabled"))
+                if (Config.GetBool("RCON_enabled"))
                     StartServer();
             }
         }

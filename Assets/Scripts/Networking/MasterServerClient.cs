@@ -32,7 +32,7 @@ namespace SanAndreasUnity.Net
             _client = new HttpClient();
             _client.Timeout = System.TimeSpan.FromSeconds(7);
 
-            _masterServerUrl = Config.Get<string>("master_server_url");
+            _masterServerUrl = Config.GetString("master_server_url");
 
             if (string.IsNullOrWhiteSpace(_masterServerUrl))
                 Debug.LogError("Url of master server not defined in config");
@@ -60,7 +60,7 @@ namespace SanAndreasUnity.Net
         {
             return new ServerInfo
             {
-                Name = Config.Get<string>("server_name"),
+                Name = Config.GetString("server_name"),
                 Port = NetManager.listenPortNumber,
                 NumPlayersOnline = NetManager.numConnections,
                 MaxPlayers = NetManager.maxNumPlayers,

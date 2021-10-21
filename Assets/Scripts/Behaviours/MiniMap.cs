@@ -111,7 +111,7 @@ namespace SanAndreasUnity.Behaviours
         {
             MapTexture = new Texture2D(mapSize, mapSize, TextureFormat.ARGB32, false, true);
 
-            if (Config.Get<bool>("skip_minimap_load"))
+            if (Config.GetBool("skip_minimap_load"))
                 return;
 
             TextureLoadParams textureLoadParams = new TextureLoadParams() { makeNoLongerReadable = false };

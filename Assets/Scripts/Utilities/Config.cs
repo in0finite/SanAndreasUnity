@@ -76,6 +76,8 @@ namespace SanAndreasUnity.Utilities
         
         private static TVal ConvertVal<TVal>(JToken val)
         {
+	        // note that if you pass string[] as type, it will fail on IL2CPP
+
             try
             {
                 return (TVal)Convert.ChangeType(val, typeof(TVal));
@@ -86,22 +88,28 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
-        public static TVal Get<TVal>(string key)
+        private static TVal Get<TVal>(string key)
         {
             var userVal = _user[key];
             if (userVal != null)
-            {
-                try
-                {
-                    return ConvertVal<TVal>(userVal);
-                }
-                catch
-                {
-                    Debug.LogWarningFormat("[config] Invalid value for key '{0}'.", key);
-                }
-            }
+	            return ConvertVal<TVal>(userVal);
 
             return ConvertVal<TVal>(_root[key]);
+        }
+
+        public static string GetString(string key)
+        {
+	        return Get<string>(key);
+        }
+
+        public static int GetInt(string key)
+        {
+	        return Get<int>(key);
+        }
+
+        public static bool GetBool(string key)
+        {
+	        return Get<bool>(key);
         }
 
         private static string GetSubstitution(string key)
@@ -115,7 +123,7 @@ namespace SanAndreasUnity.Utilities
             }
             else
             {
-                subs = ReplaceSubstitutions(Get<string>(key));
+                subs = ReplaceSubstitutions(GetString(key));
             }
 
             _substitutions.Add(key, subs);
@@ -131,7 +139,7 @@ namespace SanAndreasUnity.Utilities
 
         public static string GetPath(string key)
         {
-            return ReplaceSubstitutions(Get<string>(key));
+            return ReplaceSubstitutions(GetString(key));
         }
 
         public static string[] GetPaths(string key)
