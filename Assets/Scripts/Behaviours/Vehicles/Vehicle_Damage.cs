@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using SanAndreasUnity.Behaviours.Audio;
 using SanAndreasUnity.Net;
 using SanAndreasUnity.Utilities;
@@ -240,7 +241,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             DetachFrameFromTransformDuringExplosion(this.transform, frame, mass, parentGo, this.NetIdentity.netId, this.Definition.Id, this.Colors);
         }
 
-        public static void DetachFrameFromTransformDuringExplosion(Transform tr, Frame frame, float mass, GameObject parentGo, uint vehicleNetId, int vehicleModelId, int[] vehicleColors)
+        public static void DetachFrameFromTransformDuringExplosion(Transform tr, Frame frame, float mass, GameObject parentGo, uint vehicleNetId, int vehicleModelId, IReadOnlyList<Color32> vehicleColors)
         {
             if (! tr.IsParentOf(frame.transform))   // already detached ?
                 return;

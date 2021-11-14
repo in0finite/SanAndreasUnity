@@ -3,6 +3,7 @@ using SanAndreasUnity.Net;
 using Mirror;
 using SanAndreasUnity.Utilities;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
@@ -62,8 +63,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             {
                 F.RunExceptionSafe( () => {
                     // load vehicle on clients
-                    int[] colors = DeserializeColors(m_net_carColors);
-                    m_vehicle = Vehicle.Create(this.gameObject, m_net_id, colors, this.transform.position, this.transform.rotation);
+
+                    Color32[] colors = DeserializeColors(m_net_carColors);
+
+                    m_vehicle = Vehicle.Create(this.gameObject, m_net_id, null, this.transform.position, this.transform.rotation);
+
+                    m_vehicle.SetColors(colors);
                     
                     // update rigid body status
                     this.EnableOrDisableRigidBody();
@@ -91,14 +96,38 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             this.EnableOrDisableRigidBody();
         }
 
-        public static string SerializeColors(int[] colors)
+        public static string SerializeColors(IEnumerable<Color32> colors)
         {
-            return colors != null ? string.Join(";", colors.Select(c => c.ToString(System.Globalization.CultureInfo.InvariantCulture))) : null;
+            return colors != null
+                ? string.Join("|", colors.Select(c => SerializeColor(c)))
+                : null;
         }
 
-        public static int[] DeserializeColors(string colors)
+        public static Color32[] DeserializeColors(string colors)
         {
-            return string.IsNullOrEmpty(colors) ? null : colors.Split(';').Select(s => int.Parse(s, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
+            return string.IsNullOrEmpty(colors)
+                ? null
+                : colors.Split('|').Select(s => DeserializeColor(s)).ToArray();
+        }
+
+        public static string SerializeColor(Color32 color)
+        {
+            byte[] values = new byte[] { color.r, color.g, color.b, color.a };
+            return string.Join(";", values.Select(v => v.ToString(System.Globalization.CultureInfo.InvariantCulture)));
+        }
+
+        public static Color32 DeserializeColor(string colorString)
+        {
+            string[] splits = colorString.Split(';');
+
+            if (splits.Length != 4)
+                throw new System.ArgumentException($"Failed to deserialize color - expected 4 components, found {splits.Length}");
+
+            return new Color32(
+                byte.Parse(splits[0], System.Globalization.CultureInfo.InvariantCulture),
+                byte.Parse(splits[1], System.Globalization.CultureInfo.InvariantCulture),
+                byte.Parse(splits[2], System.Globalization.CultureInfo.InvariantCulture),
+                byte.Parse(splits[3], System.Globalization.CultureInfo.InvariantCulture));
         }
 
         private void Update()

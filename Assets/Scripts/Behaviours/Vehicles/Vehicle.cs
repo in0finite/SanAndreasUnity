@@ -115,8 +115,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static int MeshLayer => UnityEngine.LayerMask.NameToLayer("VehicleMesh");
 
-        private readonly int[] _colors = { 0, 0, 0, 0 };
-        public int[] Colors => _colors;
+        public static readonly Color32 DefaultVehicleColor = default;
+
+        private readonly Color32[] _colors = { DefaultVehicleColor, DefaultVehicleColor, DefaultVehicleColor, DefaultVehicleColor };
+        public IReadOnlyList<Color32> Colors => _colors;
         private readonly float[] _lights = { 0, 0, 0, 0 };
         private MaterialPropertyBlock _props;
         private static readonly int CarColorPropertyId = Shader.PropertyToID("_CarColor");
@@ -206,10 +208,19 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public void SetColors(params int[] clrIndices)
         {
-            for (var i = 0; i < 4 && i < clrIndices.Length; ++i)
+            this.SetColors(CarColors.FromIndices(clrIndices));
+        }
+
+        public void SetColors(Color32[] colors)
+        {
+            /*if (colors.Length > 4)
+                throw new System.ArgumentException("Vehicle can not have more than 4 colors");*/
+
+            for (int i = 0; i < 4 && i < colors.Length; ++i)
             {
-                if (_colors[i].Equals(clrIndices[i])) continue;
-                _colors[i] = clrIndices[i];
+                if (_colors[i].Equals(colors[i]))
+                    continue;
+                _colors[i] = colors[i];
                 _colorsChanged = true;
             }
         }
@@ -437,12 +448,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public static void UpdateMaterials(
             FrameContainer frames,
-            int[] colors,
+            Color32[] paintJobColors,
             float[] lights,
             MaterialPropertyBlock materialPropertyBlock)
         {
-            var indices = CarColors.FromIndices(colors);
-
             Color32 headLightColor = new Color32(255, 255, 255, 255);
             Color32 tailLightColor = new Color32(255, 255, 255, 255);
 
@@ -450,10 +459,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             Color32[] carColors = new []
             {
                 new Color32(255, 255, 255, 255),
-                indices[0],
-                indices[1],
-                indices[2],
-                indices[3],
+                paintJobColors[0],
+                paintJobColors[1],
+                paintJobColors[2],
+                paintJobColors[3],
                 headLightColor,
                 headLightColor,
                 tailLightColor,

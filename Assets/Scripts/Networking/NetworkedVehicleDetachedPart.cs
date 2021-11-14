@@ -57,7 +57,7 @@ namespace SanAndreasUnity.Net
             }
         }
 
-        public void InitializeOnServer(uint vehicleNetId, int vehicleModelId, int[] vehicleColors, string frameName, float mass, Rigidbody rigidbody)
+        public void InitializeOnServer(uint vehicleNetId, int vehicleModelId, IReadOnlyList<Color32> vehicleColors, string frameName, float mass, Rigidbody rigidbody)
         {
             NetStatus.ThrowIfNotOnServer();
 
@@ -91,7 +91,7 @@ namespace SanAndreasUnity.Net
                 
                 VehicleDef def = Item.GetDefinitionOrThrow<VehicleDef>(m_net_vehicleModelId);
 
-                int[] colors = VehicleController.DeserializeColors(m_net_vehicleColors);
+                Color32[] colors = VehicleController.DeserializeColors(m_net_vehicleColors);
 
                 var geometryParts = Vehicle.LoadGeometryParts(def);
 
@@ -136,7 +136,7 @@ namespace SanAndreasUnity.Net
 
         }
 
-        private static void SetColors(FrameContainer frames, int[] colors)
+        private static void SetColors(FrameContainer frames, Color32[] colors)
         {
             Vehicle.UpdateMaterials(frames, colors, new []{ 0f, 0f, 0f, 0f }, new MaterialPropertyBlock());
         }
