@@ -68,6 +68,12 @@ namespace SanAndreasUnity.Commands
 
         private void PlayerOnDisable(Player player)
         {
+            if (m_perPlayerData.TryGetValue(player, out PlayerData playerData))
+            {
+                playerData.vehicles.RemoveDeadObjects();
+                playerData.vehicles.ForEach(v => Object.Destroy(v.gameObject));
+            }
+
             m_perPlayerData.Remove(player);
         }
 
