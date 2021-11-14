@@ -49,6 +49,7 @@ namespace SanAndreasUnity.Commands
                 new CommandManager.CommandInfo("teleport", "teleport", true, true, this.pedLimitInterval),
                 new CommandManager.CommandInfo("veh", "spawn a vehicle", true, true, this.vehicleLimitInterval),
                 new CommandManager.CommandInfo("dveh", "destroy my vehicles", true, true, 0f),
+                new CommandManager.CommandInfo("paintjob", "change vehicle paintjob", true, true, this.vehicleLimitInterval),
                 new CommandManager.CommandInfo("w", "give a weapon", true, true, this.weaponLimitInterval),
                 new CommandManager.CommandInfo("rand_w", "give random weapons", true, true, this.weaponLimitInterval),
                 new CommandManager.CommandInfo("rem_w", "remove all weapons", true, true, this.weaponLimitInterval),
@@ -208,6 +209,38 @@ namespace SanAndreasUnity.Commands
                     foreach (var vehicle in playerData.vehicles)
                         vehicle.Explode();
                 }
+
+                return CommandManager.ProcessCommandResult.Success;
+            }
+            else if (arguments[0] == "paintjob")
+            {
+                if (null == player.OwnedPed)
+                    return pedNotAliveResult;
+
+                var vehicle = player.OwnedPed.CurrentVehicle;
+                if (null == vehicle)
+                    return CommandManager.ProcessCommandResult.Error("You must be inside of a vehicle");
+
+                if (!player.OwnedPed.CurrentVehicleSeat.IsDriver)
+                    return CommandManager.ProcessCommandResult.Error("You must be in driver seat");
+
+                List<Color32> newColors = new List<Color32>(vehicle.Colors);
+
+                int numColorsProvided = Mathf.Min(numArguments - 1, 4);
+                for (int i = 0; i < numColorsProvided; i++)
+                {
+                    Color color = CommandManager.ParseColor(arguments, i + 1);
+                    newColors[i] = color;
+                }
+
+                if (numColorsProvided == 0)
+                {
+                    // use random colors
+                    for (int i = 0; i < newColors.Count; i++)
+                        newColors[i] = Random.ColorHSV();
+                }
+
+                vehicle.SetColors(newColors.ToArray());
 
                 return CommandManager.ProcessCommandResult.Success;
             }

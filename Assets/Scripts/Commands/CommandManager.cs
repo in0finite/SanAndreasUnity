@@ -165,6 +165,17 @@ namespace SanAndreasUnity.Commands
             return quaternion;
         }
 
+        public static Color ParseColor(string[] arguments, int startIndex)
+        {
+            if (startIndex + 1 >= arguments.Length)
+                throw new System.ArgumentException("Failed to parse color: not enough arguments");
+
+            if (!ColorUtility.TryParseHtmlString(arguments[startIndex], out Color color))
+                throw new System.ArgumentException("Failed to parse color");
+
+            return color;
+        }
+
         ProcessCommandResult ProcessCommand(ProcessCommandContext context)
         {
             if (string.IsNullOrWhiteSpace(context.command))
