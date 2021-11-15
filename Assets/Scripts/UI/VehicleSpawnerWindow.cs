@@ -5,14 +5,29 @@ using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Vehicles;
+using SanAndreasUnity.Importing.Vehicles;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.UI {
 
 	public class VehicleSpawnerWindow : PauseMenuWindow {
 
-		private	List<IGrouping<VehicleType, VehicleDef>>	vehicleGroupings = null;
-		private	int[]	columnWidths = new int[]{ 150, 120, 30, 70 };
+		private List<IGrouping<VehicleType, VehicleDef>> vehicleGroupings = null;
+		private int[] columnWidths = new int[] { 150, 120, 30, 70 };
 		private string m_searchText = "";
+
+		private static GUIStyle s_colorBoxStyle = null;
+		private static GUIStyle ColorBoxStyle
+		{
+			get
+			{
+				if (s_colorBoxStyle != null)
+					return s_colorBoxStyle;
+
+				s_colorBoxStyle = new GUIStyle { normal = new GUIStyleState { background = Texture2D.whiteTexture } };
+				return s_colorBoxStyle;
+			}
+		}
 
 
 
@@ -60,6 +75,48 @@ namespace SanAndreasUnity.UI {
 
 		protected override void OnWindowGUIBeforeContent()
 		{
+			// current vehicle info
+
+			if (Ped.Instance != null && Ped.Instance.CurrentVehicle != null)
+			{
+				var vehicle = Ped.Instance.CurrentVehicle;
+
+				GUILayout.Label("Current vehicle:");
+
+				GUILayout.Label(vehicle.Definition.GameName, GUILayout.Width(this.columnWidths[0]));
+
+				GUILayout.Label("Change paintjob:");
+
+				var oldBackgroundColor = GUI.backgroundColor;
+
+				GUILayout.BeginHorizontal();
+
+				if (GUIUtils.ButtonWithCalculatedSize("Random"))
+					OnPaintjobPressed(null);
+
+				var defaultClrs = CarColors.GetCarDefaults(vehicle.Definition.ModelName);
+
+				if (defaultClrs != null)
+                {
+					var colors = defaultClrs.GetAllColorIndices()
+						.Select(indices => CarColors.FromIndices(indices));
+
+					foreach (var colorArray in colors)
+					{
+						if (colorArray.Length == 0)
+							continue;
+						DisplayPaintjob(colorArray);
+						GUILayout.Space(5);
+					}
+				}
+
+				GUILayout.EndHorizontal();
+
+				GUI.backgroundColor = oldBackgroundColor;
+
+				GUILayout.Space(15);
+			}
+
 			// search box
 
 			GUILayout.BeginHorizontal();
@@ -83,7 +140,7 @@ namespace SanAndreasUnity.UI {
 				return;
 
 
-			GUILayout.Space (10);
+            GUILayout.Space(10);
 
 			// for each vehicle, display a button which spawns it
 
@@ -137,6 +194,33 @@ namespace SanAndreasUnity.UI {
 
 			GUILayout.Space (20);
 
+		}
+
+		private void DisplayPaintjob(Color32[] colors)
+        {
+			int width = 30 / colors.Length;
+
+            foreach (var color in colors)
+            {
+				DisplaySingleColor(color, width, colors);
+            }
+		}
+
+		private void DisplaySingleColor(Color32 color, int width, Color32[] allColors)
+        {
+			GUI.backgroundColor = color;
+			if (GUILayout.Button(GUIContent.none, ColorBoxStyle, GUILayout.Width(width), GUILayout.Height(30)))
+				OnPaintjobPressed(allColors);
+		}
+
+		private void OnPaintjobPressed(Color32[] colors)
+        {
+			SendCommand("/paintjob " + (colors != null ? string.Join(" ", colors.Select(c => GetColorString(c))) : ""));
+        }
+
+		private string GetColorString(Color32 color)
+        {
+			return "#" + ColorUtility.ToHtmlStringRGBA(color);
 		}
 
 

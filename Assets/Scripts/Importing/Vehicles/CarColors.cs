@@ -57,5 +57,10 @@ namespace SanAndreasUnity.Importing.Vehicles
         {
             get { return _vals[index]; }
         }
+
+        public int[][] GetAllColorIndices()
+        {
+            return (int[][])_vals.Clone();
+        }
     }
 }
