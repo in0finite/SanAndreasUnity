@@ -14,7 +14,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         bool IsControlledByLocalPlayer => m_vehicle.IsControlledByLocalPlayer;
 
         [SyncVar] int m_net_id;
-        [SyncVar] string m_net_carColors;
+        [SyncVar(hook = nameof(OnNetColorsChanged))] string m_net_carColors;
         [SyncVar] float m_net_acceleration;
         [SyncVar] float m_net_steering;
         [SyncVar] float m_net_braking;
@@ -56,9 +56,16 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             //m_vehicle = GetComponent<Vehicle>();
         }
 
+        private void OnDisable()
+        {
+            if (m_vehicle != null)
+                m_vehicle.onColorsChanged -= this.OnColorsChanged;
+        }
+
         internal void OnAfterCreateVehicle()
         {
-            m_vehicle = this.GetComponent<Vehicle>();
+            m_vehicle = this.GetComponentOrThrow<Vehicle>();
+            m_vehicle.onColorsChanged += this.OnColorsChanged;
             m_net_id = m_vehicle.Definition.Id;
             m_net_carColors = SerializeColors(m_vehicle.Colors);
         }
@@ -136,6 +143,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 byte.Parse(splits[1], System.Globalization.CultureInfo.InvariantCulture),
                 byte.Parse(splits[2], System.Globalization.CultureInfo.InvariantCulture),
                 byte.Parse(splits[3], System.Globalization.CultureInfo.InvariantCulture));
+        }
+
+        private void OnColorsChanged()
+        {
+            if (!NetStatus.IsServer)
+                return;
+
+            m_net_carColors = SerializeColors(m_vehicle.Colors);
         }
 
         private void Update()
@@ -327,6 +342,15 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (m_vehicle != null && m_vehicle.RigidBody != null)
                     m_vehicle.RigidBody.MoveRotation(rot);
             }
+        }
+
+        void OnNetColorsChanged(string stringColors)
+        {
+            if (NetStatus.IsServer)
+                return;
+
+            if (m_vehicle != null)
+                F.RunExceptionSafe(() => m_vehicle.SetColors(DeserializeColors(stringColors)));
         }
 
     }
