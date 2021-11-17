@@ -125,6 +125,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private static readonly int CarEmissionPropertyId = Shader.PropertyToID("_CarEmission");
         private bool _colorsChanged, _isNightToggled;
 
+        public event System.Action onColorsChanged = delegate {};
+
         private const float constRearNightIntensity = .7f;
 
         public bool IsNightToggled
@@ -441,9 +443,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void UpdateMaterials()
         {
+            if (!_colorsChanged)
+                return;
+
             _colorsChanged = false;
 
             UpdateMaterials(_frames, _colors, _lights, _props);
+
+            F.InvokeEventExceptionSafe(this.onColorsChanged);
         }
 
         public static void UpdateMaterials(
@@ -530,10 +537,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 }
             }
 
-            if (_colorsChanged)
-            {
-                UpdateMaterials();
-            }
+            this.UpdateMaterials();
 
             this.Update_Damage();
 
