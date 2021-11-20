@@ -72,9 +72,11 @@ namespace SanAndreasUnity.Stats
                     foreach (var w in vehicle.Wheels)
                     {
                         texts.Add("\t" + w.Alignment);
-                        objects.Add( string.Format("travel {0} rpm {1} radius {2} motor torque {3} mass {4} is grounded {5}", 
-                            w.Travel, w.Collider.rpm, w.Collider.radius, w.Collider.motorTorque, w.Collider.mass, w.Collider.isGrounded) );
-
+                        objects.Add(
+                            w.Collider != null
+                                ? string.Format("travel {0} rpm {1} radius {2} motor torque {3} mass {4} is grounded {5}",
+                                    w.Travel, w.Collider.rpm, w.Collider.radius, w.Collider.motorTorque, w.Collider.mass, w.Collider.isGrounded)
+                                : "");
                     }
 
                     if (vehicle.Definition != null)
