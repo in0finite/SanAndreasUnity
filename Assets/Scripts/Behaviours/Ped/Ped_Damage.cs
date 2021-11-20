@@ -148,6 +148,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public void OnReceivedDamageEventFromServer(float damageAmount, Ped attackingPed)
 		{
+			this.LastTimeWhenDamaged = Time.time;
+
 			if (attackingPed != null && attackingPed.IsControlledByLocalPlayer && attackingPed != this)
 			{
 				this.DisplayInflictedDamageMessage(damageAmount);
