@@ -256,18 +256,18 @@ namespace SanAndreasUnity.UI {
 			float healthPerc = Mathf.Clamp01( ped.Health / ped.MaxHealth );
 			this.healthForegroundImage.rectTransform.sizeDelta = new Vector2(this.healthBackgroundImage.rectTransform.sizeDelta.x * healthPerc, this.healthForegroundImage.rectTransform.sizeDelta.y);
 
-			this.pedStateText.enabled = true;
+			/*this.pedStateText.enabled = true;
 			string pedStateDisplayText = "Current ped state: " + (ped.CurrentState != null ? ped.CurrentState.GetType().Name : "none");
 			if (pedStateDisplayText != this.pedStateText.text)
-				this.pedStateText.text = pedStateDisplayText;
+				this.pedStateText.text = pedStateDisplayText;*/
 
-			this.pedVelocityText.enabled = PedManager.Instance.showPedSpeedometer;
+			/*this.pedVelocityText.enabled = PedManager.Instance.showPedSpeedometer;
 			if (this.pedVelocityText.enabled)
 			{
 				string pedVelocityDisplayText = string.Format("{0:0.0} km/h", ped.GetComponent<PlayerController>().CurVelocity);
 				if (pedVelocityDisplayText != this.pedVelocityText.text)
 					this.pedVelocityText.text = pedVelocityDisplayText;
-			}
+			}*/
 
 		}
 

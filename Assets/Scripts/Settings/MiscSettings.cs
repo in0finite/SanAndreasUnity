@@ -99,13 +99,13 @@ namespace SanAndreasUnity.Settings {
 			setValue = (value) => { VehicleManager.Instance.explosionLeftoverPartsLifetime = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
-		OptionsWindow.BoolInput m_showSpeedometerInput = new OptionsWindow.BoolInput() {
+		/*OptionsWindow.BoolInput m_showSpeedometerInput = new OptionsWindow.BoolInput() {
 			description = "Show speedometer",
 			isAvailable = () => PedManager.Instance != null,
 			getValue = () => PedManager.Instance.showPedSpeedometer,
 			setValue = (value) => { PedManager.Instance.showPedSpeedometer = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart,
-		};
+		};*/
 		OptionsWindow.FloatInput m_turnSpeedInput = new OptionsWindow.FloatInput() {
 			description = "Turn speed",
 			minValue = 3,
@@ -135,7 +135,6 @@ namespace SanAndreasUnity.Settings {
 				m_timeScaleInput,
 				m_physicsUpdateRate,
 				m_gravityInput,
-				m_showSpeedometerInput,
 				m_displayMinimapInput,
 				m_runInBackgroundInput,
 				m_drawLineFromGunInput,
