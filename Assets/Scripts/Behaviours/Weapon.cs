@@ -120,8 +120,6 @@ namespace SanAndreasUnity.Behaviours
 		public static Texture2D FistTexture { get; set; }
 
 		public AnimationState AimAnimState { get; set; }
-		private	float	m_aimAnimTimeForAimWithArmWeapon = 0f;
-		//public bool IsInsideFireAnim { get { return this.AimAnimState != null && this.AimAnimState.enabled && this.AimAnimState.time > this.AimAnimMaxTime; } }
 		public Transform GunFlash { get; private set; }
 
         public float LastTimeWhenFired { get; protected set; } = float.NegativeInfinity;
