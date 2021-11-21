@@ -14,6 +14,9 @@ namespace SanAndreasUnity.Utilities
 		void FixedUpdateState();
 
 		object ParameterForEnteringState { set; }
+
+		float LastTimeWhenActivated { set; }
+		float LastTimeWhenDeactivated { set; }
 	}
 
 }

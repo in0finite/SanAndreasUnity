@@ -18,6 +18,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public object ParameterForEnteringState { get; set; }
 
+        public float LastTimeWhenActivated { get; set; } = 0f;
+        public float LastTimeWhenDeactivated { get; set; } = 0f;
+
+
 
         protected internal virtual void OnAwake(PedAI pedAI)
         {

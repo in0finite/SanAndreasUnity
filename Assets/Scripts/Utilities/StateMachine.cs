@@ -31,7 +31,11 @@ namespace SanAndreasUnity.Utilities
 			{
 				// need to catch exception here, because otherwise it would freeze the state machine - it would
 				// no longer be possible to switch states, because 'm_isSwitchingState' is true
-				F.RunExceptionSafe(() => oldState.OnBecameInactive());
+				F.RunExceptionSafe(() =>
+                {
+					oldState.LastTimeWhenDeactivated = Time.time;
+                    oldState.OnBecameInactive();
+                });
 			}
 
 			m_isSwitchingState = false;
@@ -42,6 +46,7 @@ namespace SanAndreasUnity.Utilities
 			if (m_currentState != null)
 			{
 				m_currentState.ParameterForEnteringState = parameterForEnteringState;
+				m_currentState.LastTimeWhenActivated = Time.time;
 				m_currentState.OnBecameActive();
 			}
 		}
