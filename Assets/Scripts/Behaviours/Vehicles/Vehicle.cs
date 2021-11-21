@@ -45,8 +45,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [HideInInspector]
         public Light m_frontLeftLight, m_frontRightLight, m_rearLeftLight, m_rearRightLight;
 
-        private bool frontLeftLightOk = true, frontRightLightOk = true, rearLeftLightOk = true, rearRightLightOk = true,
-                    m_frontLeftLightPowered = true, m_frontRightLightPowered = true, m_rearLeftLightPowered = true, m_rearRightLightPowered = true;
+        private bool frontLeftLightOk = true, frontRightLightOk = true, rearLeftLightOk = true, rearRightLightOk = true;
 
         private const float blinkerSum = 1.5f;
 
