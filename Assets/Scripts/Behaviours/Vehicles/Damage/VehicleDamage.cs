@@ -771,7 +771,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 yield return Vector3.Distance(verticePosition[i], lastVerticePosition[i]);
         }
 
-        public string ToString()
+        public override string ToString()
         {
             return string.Format("Damage Avg: {0}", DamageAverage());
         }

@@ -36,9 +36,11 @@ namespace SanAndreasUnity.UI {
 			this.windowRect = GUIUtils.GetCenteredRect( new Vector2(550, 450) );
 		}
 
-		void OnLoaderFinished ()
+		protected override void OnLoaderFinished ()
 		{
 			m_pedDefs = Item.GetDefinitions<PedestrianDef> ().ToList ();
+
+			base.OnLoaderFinished();
 		}
 
 

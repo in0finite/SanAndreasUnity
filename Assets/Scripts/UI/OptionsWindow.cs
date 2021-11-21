@@ -302,9 +302,11 @@ namespace SanAndreasUnity.UI {
 
 		}
 
-		void OnLoaderFinished ()
+		protected override void OnLoaderFinished ()
 		{
 			LoadSettings (InputPersistType.AfterLoaderFinishes);
+
+			base.OnLoaderFinished();
 		}
 
 
