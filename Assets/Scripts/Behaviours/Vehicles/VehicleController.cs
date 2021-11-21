@@ -36,7 +36,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         class WheelSyncList : SyncList<WheelSyncData> { }
 
-        WheelSyncList m_net_wheelsData;
+        WheelSyncList m_net_wheelsData = new WheelSyncList();
 
         private readonly SyncedBag.StringSyncDictionary m_syncDictionary = new SyncedBag.StringSyncDictionary();
         public SyncedBag ExtraData { get; }
