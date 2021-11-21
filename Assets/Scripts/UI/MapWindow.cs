@@ -370,107 +370,45 @@ namespace SanAndreasUnity.UI {
 		//	this.visibleMapRect.size = this.GetVisibleMapSize();
 
 
+			//mapRect = new Vector2 (mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
 
-			//if (!toggleMap) {
-			if(false) {
-				
-				//GUILayout.BeginArea (new Rect (Screen.width - uiSize - 10, uiSize + 20, uiSize, 80));
+			// fill everything with black - why ?
+			//GUI.DrawTexture (new Rect (50, 50, Screen.width - 100, Screen.height - 100), blackPixel);
 
-				GUIStyle style = new GUIStyle ("label") { alignment = TextAnchor.MiddleCenter };
+			// fill everything with sea
+			GUI.DrawTexture (mapDisplayRect, seaPixel);
 
+			//GUILayout.BeginArea (new Rect (mapUpperLeftCorner, windowSize));
 
-				// draw some info in upper left corner
+			//GUILayout.BeginArea (new Rect (mapScroll, mapRect));
 
-				Vector2 labelSize = new Vector2 (uiSize, 25);
-				Rect labelRect = new Rect (Vector2.zero, labelSize);
+			// draw the map texture
+			this.DrawMapTexture( mapDisplayRect, visibleMapRect );
 
-				GUI.DrawTexture (labelRect, blackPixel);
-				if (Ped.Instance != null) {
-					Vector3 pPos = Ped.Instance.transform.position;
-					GUI.Label (labelRect,
-						string.Format ("x: {0}, y: {1}, z: {2}", pPos.x.ToString ("F2"), pPos.y.ToString ("F2"), pPos.z.ToString ("F2")),
-						style);
-				}
+			// what's this ?
+			//GUI.DrawTexture (new Rect (Vector2.zero, Vector2.one * 16), blackPixel);
 
 
-				// draw zone name
-
-				//Rect zoneRect = new Rect (uiSize / 2 - uiSize / (2 * 3), 25, uiSize / 3, 25);
-
-				//GUI.DrawTexture (zoneRect, blackPixel);
-				//GUI.Label (zoneRect, ZoneName, style);
+			//GUILayout.EndArea ();
+			//GUILayout.EndArea ();
 
 
-				bool showZoomPanel = true;
-				if (showZoomPanel) {
-					// display zoom panel
-
-					Color previousColor = GUI.color;
-
-					Rect zoomPanel = new Rect (uiSize / 2 - uiSize / (2 * 4), 55, uiSize / 4, 25);
-
-					float fAlpha = 1;
-
-					GUI.color = new Color (0, 0, 0, fAlpha);
-
-					// fill everything with black
-					GUI.DrawTexture (zoomPanel, blackPixel);
-
-					GUI.color = new Color (255, 255, 255, fAlpha);
-
-					// display zoom percentage
-					float curZoomPercentage = 1;
-					GUI.Label (zoomPanel, string.Format ("x{0}", curZoomPercentage.ToString ("F2")), style);
-
-					GUI.color = previousColor;
-				}
+			// draw 2 lines crossing under cursor
+			Vector2 mouseDisplayPos = ScreenPosToDisplayPos( m_lastMousePosition );
+			float linesWidth = 4;
+			Color linesColor = (Color.yellow + Color.black) / 2.0f;
+			// vertical line
+			GUIUtils.DrawRect (new Rect(mouseDisplayPos.x - linesWidth / 2.0f, 0, linesWidth, mapDisplayRect.height), linesColor);
+			// horizontal line
+			GUIUtils.DrawRect (new Rect(0, mouseDisplayPos.y - linesWidth / 2.0f, mapDisplayRect.width, linesWidth), linesColor);
 
 
-				//GUILayout.EndArea ();
-
-			} else {
-				
-				//mapRect = new Vector2 (mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
-
-				// fill everything with black - why ?
-				//GUI.DrawTexture (new Rect (50, 50, Screen.width - 100, Screen.height - 100), blackPixel);
-
-				// fill everything with sea
-				GUI.DrawTexture (mapDisplayRect, seaPixel);
-
-				//GUILayout.BeginArea (new Rect (mapUpperLeftCorner, windowSize));
-
-				//GUILayout.BeginArea (new Rect (mapScroll, mapRect));
-
-				// draw the map texture
-				this.DrawMapTexture( mapDisplayRect, visibleMapRect );
-
-				// what's this ?
-				//GUI.DrawTexture (new Rect (Vector2.zero, Vector2.one * 16), blackPixel);
+			// draw map items
+			this.DrawMapItems (mapDisplayRect);
 
 
-				//GUILayout.EndArea ();
-				//GUILayout.EndArea ();
-
-
-				// draw 2 lines crossing under cursor
-				Vector2 mouseDisplayPos = ScreenPosToDisplayPos( m_lastMousePosition );
-				float linesWidth = 4;
-				Color linesColor = (Color.yellow + Color.black) / 2.0f;
-				// vertical line
-				GUIUtils.DrawRect (new Rect(mouseDisplayPos.x - linesWidth / 2.0f, 0, linesWidth, mapDisplayRect.height), linesColor);
-				// horizontal line
-				GUIUtils.DrawRect (new Rect(0, mouseDisplayPos.y - linesWidth / 2.0f, mapDisplayRect.width, linesWidth), linesColor);
-
-
-				// draw map items
-				this.DrawMapItems (mapDisplayRect);
-
-
-				// draw info area
-				this.DrawInfoArea( mapDisplayRect );
-
-			}
+			// draw info area
+			this.DrawInfoArea( mapDisplayRect );
 
 		}
 
