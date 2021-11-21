@@ -370,28 +370,11 @@ namespace SanAndreasUnity.UI {
 		//	this.visibleMapRect.size = this.GetVisibleMapSize();
 
 
-			//mapRect = new Vector2 (mapTexture.width, mapTexture.height) * (baseScale * (mapScale / mapMaxScale) * 2);
-
-			// fill everything with black - why ?
-			//GUI.DrawTexture (new Rect (50, 50, Screen.width - 100, Screen.height - 100), blackPixel);
-
 			// fill everything with sea
 			GUI.DrawTexture (mapDisplayRect, seaPixel);
 
-			//GUILayout.BeginArea (new Rect (mapUpperLeftCorner, windowSize));
-
-			//GUILayout.BeginArea (new Rect (mapScroll, mapRect));
-
 			// draw the map texture
 			this.DrawMapTexture( mapDisplayRect, visibleMapRect );
-
-			// what's this ?
-			//GUI.DrawTexture (new Rect (Vector2.zero, Vector2.one * 16), blackPixel);
-
-
-			//GUILayout.EndArea ();
-			//GUILayout.EndArea ();
-
 
 			// draw 2 lines crossing under cursor
 			Vector2 mouseDisplayPos = ScreenPosToDisplayPos( m_lastMousePosition );
@@ -402,10 +385,8 @@ namespace SanAndreasUnity.UI {
 			// horizontal line
 			GUIUtils.DrawRect (new Rect(0, mouseDisplayPos.y - linesWidth / 2.0f, mapDisplayRect.width, linesWidth), linesColor);
 
-
 			// draw map items
 			this.DrawMapItems (mapDisplayRect);
-
 
 			// draw info area
 			this.DrawInfoArea( mapDisplayRect );
