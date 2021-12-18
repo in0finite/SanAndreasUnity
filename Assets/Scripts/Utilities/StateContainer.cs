@@ -49,6 +49,12 @@ namespace SanAndreasUnity.Utilities
             return state;
         }
 
+        public IEnumerable<TState> GetStatesThatInherit<TParent>()
+            where TParent : IState
+        {
+            return _states.OfType<TParent>().Cast<TState>();
+        }
+
         public void AddState(TState stateToAdd)
         {
             _states.Add(stateToAdd);

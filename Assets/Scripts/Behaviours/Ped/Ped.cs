@@ -48,6 +48,10 @@ namespace SanAndreasUnity.Behaviours
 
 
 		private readonly StateContainer<Peds.States.BaseScriptState> _stateContainer = new StateContainer<Peds.States.BaseScriptState>();
+		public StateContainer<Peds.States.BaseScriptState> StateContainer => _stateContainer;
+
+		public IReadOnlyList<Peds.States.IAimState> CachedAimStates { get; private set; } = System.Array.Empty<Peds.States.IAimState>();
+
 		public Peds.States.BaseScriptState CurrentState { get { return (Peds.States.BaseScriptState) m_stateMachine.CurrentState; } }
 
         public Cell Cell { get { return Cell.Instance; } }
@@ -145,6 +149,11 @@ namespace SanAndreasUnity.Behaviours
 			m_weaponHolder = GetComponent<WeaponHolder> ();
 
 			_stateContainer.AddStates(this.GetComponentsInChildren<Peds.States.BaseScriptState> ());
+
+			this.CachedAimStates = _stateContainer
+				.GetStatesThatInherit<Peds.States.IAimState>()
+				.Cast<Peds.States.IAimState>()
+				.ToArray();
 
 			this.AwakeForDamage ();
 

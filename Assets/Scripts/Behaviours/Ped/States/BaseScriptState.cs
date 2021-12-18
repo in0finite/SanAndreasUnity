@@ -24,6 +24,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public float LastTimeWhenActivated { get; set; } = 0f;
 		public float LastTimeWhenDeactivated { get; set; } = 0f;
+		public float TimeSinceDeactivated => Time.time - this.LastTimeWhenDeactivated;
 
 
 
