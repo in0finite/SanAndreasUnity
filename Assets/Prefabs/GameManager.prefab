@@ -166,19 +166,21 @@ MonoBehaviour:
     hasRevealRadius: 1
     revealRadius: 150
     timeToKeepRevealingAfterRemoved: 3
+  minTimeToReturnToAimState: 0.33
   cameraDistanceFromPed: 5
   minCameraDistanceFromPed: 2
   maxCameraDistanceFromPed: 30
   cameraRaycastIgnoredLayerMask:
     serializedVersion: 2
     m_Bits: 64310
+  pedDamageMultiplier: 1
   legAndArmDamageMultiplier: 0.8
   stomachAndChestDamageMultiplier: 1
   headDamageMultiplier: 4
   inflictedDamageMessageVelocityInScreenPerc: 0.2
   inflictedDamageMessageLifetime: 0.5
   inflictedDamageMessageColor: {r: 0.09838911, g: 0.6320754, b: 0.09838911, a: 1}
-  displayHealthBarAbovePeds: 1
+  healthBarVisibleTimeAfterDamage: 3
   healthBarWorldWidth: 0.65
   healthBarWorldHeight: 0.08
   healthBarMaxScreenHeight: 8
