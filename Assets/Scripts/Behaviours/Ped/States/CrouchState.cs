@@ -29,7 +29,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public static void SwitchToAimState(Ped ped)
 		{
 			// can only switch to CrouchAim state
-			if( ped.IsAimOn && ped.IsHoldingWeapon )
+			if( ped.IsAimOn && ped.IsHoldingWeapon && BaseMovementState.EnoughTimePassedToSwitchToAimState(ped) )
 			{
 				ped.SwitchState<CrouchAimState>();
 			}

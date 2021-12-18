@@ -20,6 +20,8 @@ namespace SanAndreasUnity.Behaviours
 		public FocusPointParameters playerPedFocusPointParameters = new FocusPointParameters(false, 0f, 3f);
 		public FocusPointParameters npcPedFocusPointParameters = FocusPointParameters.Default;
 
+		public float minTimeToReturnToAimState = 0.33f;
+
 		[Header("Camera")]
 
 		public float cameraDistanceFromPed = 3f;

@@ -70,11 +70,24 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void SwitchToAimState()
 		{
-			if (m_ped.IsAimOn && m_ped.IsHoldingWeapon)
+			if (m_ped.IsAimOn && m_ped.IsHoldingWeapon && EnoughTimePassedToSwitchToAimState(m_ped))
 			{
 				BaseAimMovementState.SwitchToAimMovementStateBasedOnInput (m_ped);
 			}
 		}
+
+		public static bool EnoughTimePassedToSwitchToAimState(Ped ped)
+        {
+			var aimStates = ped.CachedAimStates;
+
+			for (int i = 0; i < aimStates.Count; i++)
+            {
+				if (Time.time - aimStates[i].LastTimeWhenDeactivated < PedManager.Instance.minTimeToReturnToAimState)
+					return false;
+            }
+
+			return true;
+        }
 
 		protected override void UpdateAnims ()
 		{
