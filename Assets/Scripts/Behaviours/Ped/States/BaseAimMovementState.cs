@@ -61,7 +61,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			// check if we should exit aiming state
 
-			if (!m_ped.IsHoldingWeapon || !m_ped.IsAimOn)
+
+			if (null == m_weapon)
+            {
+				BaseMovementState.SwitchToMovementStateBasedOnInput(m_ped);
+				return true;
+			}
+
+			// wait until we start pointing gun - this is used to prevent fast state switching
+			if (this.TimeSinceActivated < Mathf.Max(this.AimAnimMaxTime, PedManager.Instance.minTimeToReturnToNonAimStateFromAimState))
+				return false;
+
+			if (!m_ped.IsAimOn)
 			{
 				BaseMovementState.SwitchToMovementStateBasedOnInput (m_ped);
 				return true;
@@ -69,7 +80,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			if (m_ped.IsSprintOn)
 			{
-				if (null == m_weapon || m_weapon.CanSprintWithIt)
+				if (m_weapon.CanSprintWithIt)
 				{
 					m_ped.SwitchState<SprintState>();
 					return true;

@@ -23,6 +23,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected bool m_shouldSendButtonEvents { get { return !m_isServer && m_ped.IsControlledByLocalPlayer; } }
 
 		public float LastTimeWhenActivated { get; set; } = 0f;
+		public float TimeSinceActivated => Time.time - this.LastTimeWhenActivated;
 		public float LastTimeWhenDeactivated { get; set; } = 0f;
 		public float TimeSinceDeactivated => Time.time - this.LastTimeWhenDeactivated;
 

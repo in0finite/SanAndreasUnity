@@ -21,6 +21,7 @@ namespace SanAndreasUnity.Behaviours
 		public FocusPointParameters npcPedFocusPointParameters = FocusPointParameters.Default;
 
 		public float minTimeToReturnToAimState = 0.33f;
+		public float minTimeToReturnToNonAimStateFromAimState = 0.33f;
 
 		[Header("Camera")]
 
