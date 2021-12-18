@@ -20,8 +20,17 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override bool SwitchToNonAimMovementState ()
 		{
-			// switch to Crouch state
-			if( !m_ped.IsAimOn || !m_ped.IsHoldingWeapon )
+			if (null == m_weapon)
+			{
+				m_ped.SwitchState<CrouchState>();
+				return true;
+			}
+
+			// wait until we start pointing gun - this is used to prevent fast state switching
+			if (this.TimeSinceActivated < Mathf.Max(this.AimAnimMaxTime, PedManager.Instance.minTimeToReturnToNonAimStateFromAimState))
+				return false;
+
+			if ( !m_ped.IsAimOn )
 			{
 				m_ped.SwitchState<CrouchState>();
 				return true;

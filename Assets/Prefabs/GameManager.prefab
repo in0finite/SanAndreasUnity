@@ -167,7 +167,7 @@ MonoBehaviour:
     revealRadius: 150
     timeToKeepRevealingAfterRemoved: 3
   minTimeToReturnToAimState: 0.33
-  minTimeToReturnToNonAimStateFromAimState: 0.33
+  minTimeToReturnToNonAimStateFromAimState: 0.15
   cameraDistanceFromPed: 5
   minCameraDistanceFromPed: 2
   maxCameraDistanceFromPed: 30
