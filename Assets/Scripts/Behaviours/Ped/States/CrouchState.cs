@@ -5,7 +5,7 @@ using SanAndreasUnity.Importing.Animation;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public class CrouchState : BaseMovementState
+	public class CrouchState : BaseMovementState, ICrouchState
 	{
 		public override AnimId movementAnim { get { return new AnimId ("ped", "WEAPON_crouch"); } }
 		public override AnimId movementWeaponAnim { get { return this.movementAnim; } }

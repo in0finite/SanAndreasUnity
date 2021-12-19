@@ -5,7 +5,7 @@ using SanAndreasUnity.Importing.Animation;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public class CrouchAimState : BaseAimMovementState
+	public class CrouchAimState : BaseAimMovementState, ICrouchState
 	{
 		// not used
 		public override AnimId aimWithArm_LowerAnim { get { throw new System.InvalidOperationException(); } }
