@@ -52,10 +52,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			BaseMovementState currentState,
 			BaseMovementState targetState)
         {
-			if (currentState.TimeSinceActivated <= currentState.TimeUntilStateCanBeSwitchedToOtherMovementState)
+			if (currentState.TimeSinceActivated < currentState.TimeUntilStateCanBeSwitchedToOtherMovementState)
 				return false;
 
-			if (targetState.TimeSinceDeactivated <= targetState.TimeUntilStateCanBeEnteredFromOtherMovementState)
+			if (targetState.TimeSinceDeactivated < targetState.TimeUntilStateCanBeEnteredFromOtherMovementState)
 				return false;
 
 			return true;
