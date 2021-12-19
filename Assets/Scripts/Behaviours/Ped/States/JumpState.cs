@@ -18,9 +18,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		[Range(0, 10)] public float glideVelocity = 2f;
 		[Range(0, 10)] public float landVelocityMultiplier = 1f;
 
+		public float reEntranceTime = 0.4f;
+        public override float TimeUntilStateCanBeEnteredFromOtherMovementState => this.reEntranceTime;
 
 
-		public override void OnBecameActive ()
+
+        public override void OnBecameActive ()
 		{
 			base.OnBecameActive ();
 
