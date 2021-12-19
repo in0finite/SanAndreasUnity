@@ -41,31 +41,35 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public static void SwitchToMovementStateBasedOnInput (Ped ped)
 		{
+            System.Type type = GetMovementStateToSwitchToBasedOnInput(ped);
+			ped.SwitchState(type);
+		}
 
+		public static System.Type GetMovementStateToSwitchToBasedOnInput(Ped ped)
+        {
 			if (ped.IsJumpOn && ped.GetStateOrLogError<JumpState>().CanJump())
 			{
-				ped.GetState<JumpState>().Jump();
+				return typeof(JumpState);
 			}
 			else if (ped.IsWalkOn)
 			{
-				ped.SwitchState<WalkState> ();
+				return typeof(WalkState);
 			}
 			else if (ped.IsRunOn)
 			{
-				ped.SwitchState<RunState> ();
+				return typeof(RunState);
 			}
 			else if (ped.IsSprintOn)
 			{
 				if (ped.CurrentWeapon != null && !ped.CurrentWeapon.CanSprintWithIt)
-					ped.SwitchState<RunState> ();
+					return typeof(RunState);
 				else
-					ped.SwitchState<SprintState> ();
+					return typeof(SprintState);
 			}
 			else
 			{
-				ped.SwitchState<StandState> ();
+				return typeof(StandState);
 			}
-
 		}
 
 		protected virtual void SwitchToAimState()
