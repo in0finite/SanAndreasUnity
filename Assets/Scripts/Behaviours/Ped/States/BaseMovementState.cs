@@ -39,15 +39,26 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void SwitchToMovementState()
 		{
-			if (this.TimeSinceActivated <= this.TimeUntilStateCanBeSwitchedToOtherMovementState)
-				return;
-
             System.Type type = BaseMovementState.GetMovementStateToSwitchToBasedOnInput(m_ped);
             var state = (BaseMovementState) m_ped.GetStateOrLogError(type);
-			if (state.TimeSinceDeactivated <= state.TimeUntilStateCanBeEnteredFromOtherMovementState)
+
+			if (!EnoughTimePassedToSwitchBetweenMovementStates(this, state))
 				return;
 
 			m_ped.SwitchState(type);
+		}
+
+		public static bool EnoughTimePassedToSwitchBetweenMovementStates(
+			BaseMovementState currentState,
+			BaseMovementState targetState)
+        {
+			if (currentState.TimeSinceActivated <= currentState.TimeUntilStateCanBeSwitchedToOtherMovementState)
+				return false;
+
+			if (targetState.TimeSinceDeactivated <= targetState.TimeUntilStateCanBeEnteredFromOtherMovementState)
+				return false;
+
+			return true;
 		}
 
 		public static void SwitchToMovementStateBasedOnInput (Ped ped)

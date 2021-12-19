@@ -14,14 +14,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected override void SwitchToMovementState ()
 		{
-			if (this.TimeSinceActivated <= this.TimeUntilStateCanBeSwitchedToOtherMovementState)
-				return;
-
 			// can only switch to CrouchMove state
 			if ( m_ped.Movement.sqrMagnitude > float.Epsilon )
 			{
                 var crouchMoveState = m_ped.GetState<CrouchMoveState>();
-				if (crouchMoveState.TimeSinceDeactivated <= crouchMoveState.TimeUntilStateCanBeEnteredFromOtherMovementState)
+				if (!BaseMovementState.EnoughTimePassedToSwitchBetweenMovementStates(this, crouchMoveState))
 					return;
 				m_ped.SwitchState(crouchMoveState.GetType());
 			}
