@@ -85,8 +85,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			// switch to stand state
 
 			if (m_isServer)
-				m_ped.SwitchState<StandState>();
-			else
+            {
+                var standState = m_ped.GetState<StandState>();
+				if (BaseMovementState.EnoughTimePassedToSwitchBetweenMovementStates(this, standState))
+					m_ped.SwitchState(standState.GetType());
+            }
+            else
 				base.OnCrouchButtonPressed();
 		}
 

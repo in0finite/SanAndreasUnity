@@ -38,7 +38,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override void OnCrouchButtonPressed ()
 		{
 			if (m_isServer)
-				m_ped.SwitchState<StandState>();
+			{
+				var standState = m_ped.GetState<StandState>();
+				if (BaseMovementState.EnoughTimePassedToSwitchBetweenMovementStates(this, standState))
+					m_ped.SwitchState(standState.GetType());
+			}
 			else
 				base.OnCrouchButtonPressed();
 		}
