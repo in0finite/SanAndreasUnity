@@ -47,8 +47,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
             }
         }
 
-        private float m_lastTimeWhenDeactivated = 0f;
-        public float timeUntilAbleToSwitchState = 0.5f;
+        public float timeUntilAbleToEnterState = 0.5f;
+        public float timeUntilAbleToExitState = 0.5f;
 
         private float m_lastTimeWhenChangedAnim = 0f;
         private string m_lastAnim = null;
@@ -58,7 +58,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         public override void OnBecameInactive()
         {
-            m_lastTimeWhenDeactivated = Time.time;
             m_lastAnim = null;
             base.OnBecameInactive();
         }
@@ -79,7 +78,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         public bool CanEnterState(Vehicle vehicle, Vehicle.SeatAlignment seatAlignment)
         {
-            if (Time.time - m_lastTimeWhenDeactivated < this.timeUntilAbleToSwitchState)
+            if (this.TimeSinceDeactivated < this.timeUntilAbleToEnterState)
                 return false;
 
             var w = m_ped.CurrentWeapon;
@@ -262,7 +261,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         {
             // switch to sitting state
             if (m_isServer)
-                m_ped.GetStateOrLogError<VehicleSittingState>().EnterVehicle(this.CurrentVehicle, this.CurrentVehicleSeatAlignment);
+            {
+                var vehicleSittingState = m_ped.GetStateOrLogError<VehicleSittingState>();
+                if (vehicleSittingState.TimeSinceDeactivated < this.timeUntilAbleToExitState)
+                    return;
+                vehicleSittingState.EnterVehicle(this.CurrentVehicle, this.CurrentVehicleSeatAlignment);
+            }
             else
                 base.OnAimButtonPressed();
         }
