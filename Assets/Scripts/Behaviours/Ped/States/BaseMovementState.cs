@@ -13,6 +13,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public abstract AnimId movementAnim { get; }
 		public abstract AnimId movementWeaponAnim { get; }
 
+		public virtual float TimeUntilStateCanBeSwitchedToOtherMovementState => PedManager.Instance.timeUntilMovementStateCanBeSwitchedToOtherMovementState;
+		public virtual float TimeUntilStateCanBeEnteredFromOtherMovementState => PedManager.Instance.timeUntilMovementStateCanBeEnteredFromOtherMovementState;
+
 
 
 		public override void UpdateState() {
@@ -36,7 +39,15 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void SwitchToMovementState()
 		{
-			BaseMovementState.SwitchToMovementStateBasedOnInput (m_ped);
+			if (this.TimeSinceActivated <= this.TimeUntilStateCanBeSwitchedToOtherMovementState)
+				return;
+
+            System.Type type = BaseMovementState.GetMovementStateToSwitchToBasedOnInput(m_ped);
+            var state = (BaseMovementState) m_ped.GetStateOrLogError(type);
+			if (state.TimeSinceDeactivated <= state.TimeUntilStateCanBeEnteredFromOtherMovementState)
+				return;
+
+			m_ped.SwitchState(type);
 		}
 
 		public static void SwitchToMovementStateBasedOnInput (Ped ped)

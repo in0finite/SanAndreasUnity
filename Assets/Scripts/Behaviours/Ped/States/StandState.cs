@@ -10,8 +10,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public override AnimId movementAnim { get { return new AnimId (AnimGroup.WalkCycle, AnimIndex.Idle); } }
 		public override AnimId movementWeaponAnim { get { return m_ped.CurrentWeapon.IdleAnim; } }
 
+        public override float TimeUntilStateCanBeSwitchedToOtherMovementState => 0f;
 
-		public override void UpdateState() {
+
+        public override void UpdateState() {
 
 			base.UpdateState();
 
