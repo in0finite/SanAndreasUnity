@@ -39,6 +39,8 @@ namespace SanAndreasUnity.Behaviours.Weapons
 
 		[Range(0, 90)] public float AIMWITHARM_maxHeadRotationAngle = 75f;
 
+		public float AIMWITHARM_timeUntilAbleToStopAimingBack = 0.33f;
+
 		[Space(15)]
 
 		public Vector3 crouchSpineRotationOffset;

@@ -20,9 +20,20 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public virtual float AimAnimMaxTime { get { return m_weapon.AimAnimMaxTime; } }
 		public virtual float AimAnimFireMaxTime { get { return m_weapon.AimAnimFireMaxTime; } }
 
+		protected bool m_wasAimingBackWithAWAWeapon = false;
+		protected float m_timeSinceAimingBackWithAWAWeapon = 0f;
 
 
-		public override void UpdateState()
+
+        public override void OnBecameActive()
+        {
+            base.OnBecameActive();
+
+			m_wasAimingBackWithAWAWeapon = false;
+			m_timeSinceAimingBackWithAWAWeapon = 0f;
+		}
+
+        public override void UpdateState()
 		{
 
 			base.UpdateState ();
@@ -316,10 +327,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual void UpdateArmTransformsForAWA()
 		{
-			BaseAimMovementState.UpdateArmTransformsForAWA (m_ped);
+			BaseAimMovementState.UpdateArmTransformsForAWA (
+				m_ped, ref m_wasAimingBackWithAWAWeapon, ref m_timeSinceAimingBackWithAWAWeapon);
 		}
 
-		public static void UpdateArmTransformsForAWA(Ped ped)
+		public static void UpdateArmTransformsForAWA(Ped ped, ref bool wasAimingBack, ref float timeSinceAimingBack)
 		{
 			var player = ped;
 			var model = ped.PlayerModel;
@@ -345,7 +357,16 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			bool isAimingOnOppositeSide = aimDirLocal.x < 0f;
 			float oppositeSideAngle = Vector3.Angle( Vector3.forward, aimDirLocal.WithXAndZ () );
-			bool isAimingBack = oppositeSideAngle > WeaponsManager.Instance.AIMWITHARM_maxAimAngle;
+
+			bool isAimingBack = oppositeSideAngle > WeaponsManager.Instance.AIMWITHARM_maxAimAngle
+				|| (wasAimingBack && timeSinceAimingBack < WeaponsManager.Instance.AIMWITHARM_timeUntilAbleToStopAimingBack);
+
+			if (isAimingBack)
+				timeSinceAimingBack += Time.deltaTime;
+			else
+				timeSinceAimingBack = 0f;
+
+			wasAimingBack = isAimingBack;
 
 			Quaternion startRot = Quaternion.LookRotation( -player.transform.up, player.transform.forward ); // Quaternion.Euler (WeaponsManager.Instance.AIMWITHARM_upperArmStartRotationEulers);
 			Quaternion endRot = Quaternion.LookRotation (aimDir); //Quaternion.LookRotation( forward, up );
