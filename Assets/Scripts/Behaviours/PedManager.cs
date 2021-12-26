@@ -21,7 +21,7 @@ namespace SanAndreasUnity.Behaviours
 		public FocusPointParameters npcPedFocusPointParameters = FocusPointParameters.Default;
 
 		public float minTimeToReturnToAimState = 0.33f;
-		public float minTimeToReturnToNonAimStateFromAimState = 0.33f;
+		public float minTimeToReturnToNonAimStateFromAimState = 0.25f;
 		public float timeUntilMovementStateCanBeSwitchedToOtherMovementState = 0.166f;
 		public float timeUntilMovementStateCanBeEnteredFromOtherMovementState = 0.166f;
 		public float timeUntilAimMovementStateCanBeSwitchedToOtherAimMovementState = 0.166f;

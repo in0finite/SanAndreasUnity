@@ -156,7 +156,7 @@ namespace SanAndreasUnity.Behaviours
 				.Cast<Peds.States.IAimState>()
 				.ToArray();
 			this.CachedNonAimStates = _stateContainer.States
-				.Where(_ => _ is not Peds.States.IAimState)
+				.Where(_ => !(_ is Peds.States.IAimState))
 				.ToArray();
 
 			this.AwakeForDamage ();

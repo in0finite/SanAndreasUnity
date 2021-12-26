@@ -131,6 +131,7 @@ MonoBehaviour:
   AIMWITHARM_upperArmEndRotationEulers: {x: 170, y: -90, z: -2.412}
   AIMWITHARM_maxAimAngle: 95
   AIMWITHARM_maxHeadRotationAngle: 50
+  AIMWITHARM_timeUntilAbleToStopAimingBack: 0.33
   crouchSpineRotationOffset: {x: 0, y: 35, z: 90}
   crouchSpineRotationOffset2: {x: 0, y: 15, z: 90}
   projectileRaycastMask:
@@ -167,7 +168,11 @@ MonoBehaviour:
     revealRadius: 150
     timeToKeepRevealingAfterRemoved: 3
   minTimeToReturnToAimState: 0.33
-  minTimeToReturnToNonAimStateFromAimState: 0.15
+  minTimeToReturnToNonAimStateFromAimState: 0.25
+  timeUntilMovementStateCanBeSwitchedToOtherMovementState: 0.166
+  timeUntilMovementStateCanBeEnteredFromOtherMovementState: 0.166
+  timeUntilAimMovementStateCanBeSwitchedToOtherAimMovementState: 0.166
+  timeUntilAimMovementStateCanBeEnteredFromOtherAimMovementState: 0.166
   cameraDistanceFromPed: 5
   minCameraDistanceFromPed: 2
   maxCameraDistanceFromPed: 30

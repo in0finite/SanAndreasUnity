@@ -83,10 +83,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				return true;
 			}
 
-			// wait until we start pointing gun - this is used to prevent fast state switching
-			if (this.TimeSinceActivated < Mathf.Max(this.AimAnimMaxTime, PedManager.Instance.minTimeToReturnToNonAimStateFromAimState))
+			// prevent fast state switching
+			if (!EnoughTimePassedToSwitchToNonAimState(m_ped, Mathf.Max(this.AimAnimMaxTime, PedManager.Instance.minTimeToReturnToNonAimStateFromAimState)))
 				return false;
-
+			
 			if (!m_ped.IsAimOn)
 			{
 				BaseMovementState.SwitchToMovementStateBasedOnInput (m_ped);
@@ -104,6 +104,19 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			return false;
 		}
+
+		public static bool EnoughTimePassedToSwitchToNonAimState(Ped ped, float timeRequiredToPass)
+        {
+			var states = ped.CachedNonAimStates;
+
+            for (int i = 0; i < states.Count; i++)
+            {
+				if (states[i].TimeSinceDeactivated < timeRequiredToPass)
+					return false;
+            }
+
+			return true;
+        }
 
 		protected virtual bool SwitchToFiringState ()
 		{
