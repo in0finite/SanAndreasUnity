@@ -51,6 +51,7 @@ namespace SanAndreasUnity.Behaviours
 		public StateContainer<Peds.States.BaseScriptState> StateContainer => _stateContainer;
 
 		public IReadOnlyList<Peds.States.IAimState> CachedAimStates { get; private set; } = System.Array.Empty<Peds.States.IAimState>();
+		public IReadOnlyList<Peds.States.BaseScriptState> CachedNonAimStates { get; private set; } = System.Array.Empty<Peds.States.BaseScriptState>();
 
 		public Peds.States.BaseScriptState CurrentState { get { return (Peds.States.BaseScriptState) m_stateMachine.CurrentState; } }
 
@@ -153,6 +154,9 @@ namespace SanAndreasUnity.Behaviours
 			this.CachedAimStates = _stateContainer
 				.GetStatesThatInherit<Peds.States.IAimState>()
 				.Cast<Peds.States.IAimState>()
+				.ToArray();
+			this.CachedNonAimStates = _stateContainer.States
+				.Where(_ => _ is not Peds.States.IAimState)
 				.ToArray();
 
 			this.AwakeForDamage ();
