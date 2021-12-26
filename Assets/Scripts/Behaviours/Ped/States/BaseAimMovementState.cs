@@ -23,9 +23,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected bool m_wasAimingBackWithAWAWeapon = false;
 		protected float m_timeSinceAimingBackWithAWAWeapon = 0f;
 
+		public virtual float TimeUntilStateCanBeSwitchedToOtherAimMovementState => PedManager.Instance.timeUntilAimMovementStateCanBeSwitchedToOtherAimMovementState;
+		public virtual float TimeUntilStateCanBeEnteredFromOtherAimMovementState => PedManager.Instance.timeUntilAimMovementStateCanBeEnteredFromOtherAimMovementState;
 
 
-        public override void OnBecameActive()
+
+
+		public override void OnBecameActive()
         {
             base.OnBecameActive();
 
@@ -108,8 +112,28 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		protected virtual bool SwitchToOtherAimMovementState ()
 		{
-			BaseAimMovementState.SwitchToAimMovementStateBasedOnInput (m_ped);
+			System.Type type = GetAimMovementStateToSwitchToBasedOnInput(m_ped);
+			var state = (BaseAimMovementState)m_ped.GetStateOrLogError(type);
+
+			if (!EnoughTimePassedToSwitchBetweenAimMovementStates(this, state))
+				return false;
+
+			m_ped.SwitchState(type);
+
 			return ! this.IsActiveState;
+		}
+
+		public static bool EnoughTimePassedToSwitchBetweenAimMovementStates(
+			BaseAimMovementState currentState,
+			BaseAimMovementState targetState)
+		{
+			if (currentState.TimeSinceActivated < currentState.TimeUntilStateCanBeSwitchedToOtherAimMovementState)
+				return false;
+
+			if (targetState.TimeSinceDeactivated < targetState.TimeUntilStateCanBeEnteredFromOtherAimMovementState)
+				return false;
+
+			return true;
 		}
 
 		protected virtual bool SwitchToFallingState ()

@@ -9,8 +9,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 	{
 		public override AnimId aimWithArm_LowerAnim { get { return m_ped.CurrentWeapon.IdleAnim; } }
 
+        public override float TimeUntilStateCanBeSwitchedToOtherAimMovementState => 0f;
 
-		public override void OnBecameActive ()
+
+        public override void OnBecameActive ()
 		{
 			base.OnBecameActive ();
 		//	m_ped.PlayerModel.PlayAnim (AnimGroup.MyWalkCycle, AnimIndex.GUN_STAND);

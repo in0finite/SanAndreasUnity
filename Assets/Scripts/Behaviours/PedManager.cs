@@ -24,6 +24,8 @@ namespace SanAndreasUnity.Behaviours
 		public float minTimeToReturnToNonAimStateFromAimState = 0.33f;
 		public float timeUntilMovementStateCanBeSwitchedToOtherMovementState = 0.166f;
 		public float timeUntilMovementStateCanBeEnteredFromOtherMovementState = 0.166f;
+		public float timeUntilAimMovementStateCanBeSwitchedToOtherAimMovementState = 0.166f;
+		public float timeUntilAimMovementStateCanBeEnteredFromOtherAimMovementState = 0.166f;
 
 		[Header("Camera")]
 
