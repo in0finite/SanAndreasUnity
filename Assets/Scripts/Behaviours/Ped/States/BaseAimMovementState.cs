@@ -120,23 +120,27 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public static void SwitchToAimMovementStateBasedOnInput (Ped ped)
 		{
+            System.Type type = GetAimMovementStateToSwitchToBasedOnInput(ped);
+			ped.SwitchState(type);
+		}
 
+		public static System.Type GetAimMovementStateToSwitchToBasedOnInput(Ped ped)
+        {
 			if (ped.IsWalkOn)
 			{
-				ped.SwitchState<WalkAimState> ();
+				return typeof(WalkAimState);
 			}
 			else if (ped.IsRunOn || ped.IsSprintOn)
 			{
-				if (ped.CurrentWeapon != null && ped.CurrentWeapon.HasFlag (GunFlag.AIMWITHARM))
-					ped.SwitchState<RunAimState> ();
+				if (ped.CurrentWeapon != null && ped.CurrentWeapon.HasFlag(GunFlag.AIMWITHARM))
+					return typeof(RunAimState);
 				else
-					ped.SwitchState<WalkAimState> ();
+					return typeof(WalkAimState);
 			}
 			else
 			{
-				ped.SwitchState<StandAimState> ();
+				return typeof(StandAimState);
 			}
-
 		}
 
 
