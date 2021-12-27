@@ -238,10 +238,28 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void DetachFrameDuringExplosion(Frame frame, float mass, GameObject parentGo)
         {
-            DetachFrameFromTransformDuringExplosion(this.transform, frame, mass, parentGo, this.NetIdentity.netId, this.Definition.Id, this.Colors);
+            DetachFrameFromTransformDuringExplosion(
+                this.transform,
+                frame,
+                mass,
+                parentGo,
+                this.NetIdentity.netId,
+                this.Definition.Id,
+                this.Colors,
+                this.RigidBody != null ? this.RigidBody.velocity : (Vector3?)null,
+                this.RigidBody != null ? this.RigidBody.angularVelocity : (Vector3?)null);
         }
 
-        public static void DetachFrameFromTransformDuringExplosion(Transform tr, Frame frame, float mass, GameObject parentGo, uint vehicleNetId, int vehicleModelId, IReadOnlyList<Color32> vehicleColors)
+        public static void DetachFrameFromTransformDuringExplosion(
+            Transform tr,
+            Frame frame,
+            float mass,
+            GameObject parentGo,
+            uint vehicleNetId,
+            int vehicleModelId,
+            IReadOnlyList<Color32> vehicleColors,
+            Vector3? initialVelocity = null,
+            Vector3? initialAngularVelocity = null)
         {
             if (! tr.IsParentOf(frame.transform))   // already detached ?
                 return;
@@ -269,6 +287,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             rigidBody.drag = 0.05f;
             rigidBody.maxDepenetrationVelocity = VehicleManager.Instance.explosionLeftoverPartsMaxDepenetrationVelocity;
             rigidBody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            if (initialVelocity.HasValue)
+                rigidBody.velocity = initialVelocity.Value;
+            if (initialAngularVelocity.HasValue)
+                rigidBody.angularVelocity = initialAngularVelocity.Value;
             
             if (NetStatus.IsServer)
             {
