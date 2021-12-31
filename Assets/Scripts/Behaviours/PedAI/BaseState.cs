@@ -77,6 +77,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         {
         }
 
+        protected internal virtual void OnWeaponConductedAttack(Weapon.AttackConductedEventData data)
+        {
+        }
+
         protected internal virtual void OnRecruit(Ped recruiterPed)
         {
         }

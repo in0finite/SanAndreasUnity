@@ -71,6 +71,11 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             _pedAI.StateContainer.GetStateOrThrow<IdleState>().HandleOnMyPedDamaged(dmgInfo, dmgResult);
         }
 
+        protected internal override void OnWeaponConductedAttack(Weapon.AttackConductedEventData data)
+        {
+            _pedAI.StateContainer.GetStateOrThrow<IdleState>().HandleOnWeaponConductedAttack(data);
+        }
+
         protected internal override void OnRecruit(Ped recruiterPed)
         {
             _pedAI.StateContainer.GetStateOrThrow<IdleState>().HandleOnRecruit(recruiterPed);

@@ -61,6 +61,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public float AIStoppingDistance = 3f;
 		public float AIVehicleEnterDistance = 1.25f;
+		public float AIWeaponHearingDistance = 40f;
 
 		[Header("Net")]
 

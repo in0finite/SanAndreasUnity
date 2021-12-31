@@ -54,6 +54,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             s_allPedAIs.Add(this);
             Ped.onDamaged += OnPedDamaged;
             Vehicle.onDamaged += OnVehicleDamaged;
+            Weapon.onWeaponConductedAttack += OnWeaponConductedAttack;
         }
 
         private void OnDisable()
@@ -61,6 +62,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             s_allPedAIs.Remove(this);
             Ped.onDamaged -= OnPedDamaged;
             Vehicle.onDamaged -= OnVehicleDamaged;
+            Weapon.onWeaponConductedAttack -= OnWeaponConductedAttack;
         }
 
         private void OnPedDamaged(Ped hitPed, DamageInfo dmgInfo, Ped.DamageResult dmgResult)
@@ -77,6 +79,11 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         void OnVehicleDamaged(Vehicle vehicle, DamageInfo damageInfo)
         {
             this.CurrentState.OnVehicleDamaged(vehicle, damageInfo);
+        }
+
+        void OnWeaponConductedAttack(Weapon.AttackConductedEventData data)
+        {
+            this.CurrentState.OnWeaponConductedAttack(data);
         }
 
         void Update()

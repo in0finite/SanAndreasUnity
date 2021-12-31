@@ -41,6 +41,35 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         }
 
+        protected internal override void OnWeaponConductedAttack(Weapon.AttackConductedEventData data)
+        {
+            this.HandleOnWeaponConductedAttack(data);
+        }
+
+        public void HandleOnWeaponConductedAttack(Weapon.AttackConductedEventData data)
+        {
+            if (data.Weapon.PedOwner == _ped)
+                return;
+
+            if (data.Weapon.transform.Distance(_ped.transform.position) > PedManager.Instance.AIWeaponHearingDistance)
+                return;
+
+            if (_pedAI.PedestrianType.IsCop())
+            {
+                Ped attackerPed = data.Weapon.PedOwner;
+                if (attackerPed != null)
+                    _enemyPeds.AddIfNotPresent(attackerPed);
+            }
+            else if (_pedAI.PedestrianType.IsCriminal() || _pedAI.PedestrianType.IsGangMember())
+            {
+                // ignore
+            }
+            else
+            {
+                _pedAI.StartEscaping();
+            }
+        }
+
         protected internal override void OnRecruit(Ped recruiterPed)
         {
             this.HandleOnRecruit(recruiterPed);
