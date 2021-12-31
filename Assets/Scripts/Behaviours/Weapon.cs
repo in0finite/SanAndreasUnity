@@ -719,7 +719,7 @@ namespace SanAndreasUnity.Behaviours
 					}
 					else
 					{
-						damageable.Damage(new DamageInfo()
+						var damageInfo = new DamageInfo()
 						{
 							amount = this.Damage,
 							raycastHitTransform = hit.collider.transform,
@@ -729,7 +729,8 @@ namespace SanAndreasUnity.Behaviours
 							attacker = m_ped,
 							attackingPlayer = m_ped != null ? m_ped.PlayerOwner : null,
 							damageType = DamageType.Bullet,
-						});
+						};
+						damageable.Damage(damageInfo);
 					}
 					
 				}
