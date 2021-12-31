@@ -192,19 +192,26 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         private static PathNode GetNextPathNode(PathNode previousNode, PathNode currentNode)
         {
-            var possibilities = new List<PathNode>(
-                NodeReader.GetAllLinkedNodes(currentNode)
-                    .Where(_ => !_.Equals(previousNode)));
+            // ignore Emergency nodes unless they are the only ones connected
+
+            // first try with non-Emergency nodes
+            var possibilities = NodeReader.GetAllLinkedNodes(currentNode)
+                .Where(_ => !_.Flags.EmergencyOnly && !_.Equals(previousNode))
+                .ToList();
 
             if (possibilities.Count > 0)
-            {
                 return possibilities.RandomElement();
-            }
-            else
-            {
-                //No possibilities found, returning to previous node
-                return previousNode;
-            }
+
+            // now try with Emergency nodes
+            possibilities = NodeReader.GetAllLinkedNodes(currentNode)
+                .Where(_ => _.Flags.EmergencyOnly && !_.Equals(previousNode))
+                .ToList();
+
+            if (possibilities.Count > 0)
+                return possibilities.RandomElement();
+
+            // no possibilities found, return to previous node
+            return previousNode;
         }
 
         public static PathNode? GetClosestPathNodeToWalk(Vector3 pos)
@@ -213,6 +220,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             var pathNodeInfo = NodeReader.GetAreasInRadius(pos, radius)
                 .SelectMany(area => area.PedNodes)
+                .Where(node => !node.Flags.EmergencyOnly)
                 .Select(node => (node, distance: Vector3.Distance(node.Position, pos)))
                 .Where(_ => _.distance < radius)
                 .MinBy(_ => _.distance, default);
