@@ -190,6 +190,28 @@ namespace SanAndreasUnity.Behaviours
 	        }
         }
 
+		public class AttackConductedEventData
+        {
+			public Weapon Weapon { get; }
+			public DamageInfo DamageInfo { get; }
+			public Damageable Damageable { get; }
+
+			public AttackConductedEventData(Weapon weapon)
+			{
+				Weapon = weapon;
+			}
+
+            public AttackConductedEventData(Weapon weapon, DamageInfo damageInfo, Damageable damageable)
+            {
+				Weapon = weapon;
+                DamageInfo = damageInfo;
+                Damageable = damageable;
+            }
+        }
+
+		public static event System.Action<AttackConductedEventData> onWeaponConductedAttack = delegate {};
+
+
 
         static Weapon ()
 		{
@@ -695,11 +717,13 @@ namespace SanAndreasUnity.Behaviours
             if (this.FiresProjectile)
             {
 	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), m_ped);
+				F.InvokeEventExceptionSafe(onWeaponConductedAttack, new AttackConductedEventData(this));
 	            return;
             }
 
 			// raycast against all (non-breakable ?) objects
 
+			bool shouldIvokeEvent = true;
 			RaycastHit hit;
 			if (this.ProjectileRaycast (firePos, fireDir, out hit, parameters))
 			{
@@ -716,6 +740,8 @@ namespace SanAndreasUnity.Behaviours
 					{
 						// ray hit owner ped
 						// don't do anything
+
+						shouldIvokeEvent = false;
 					}
 					else
 					{
@@ -730,11 +756,19 @@ namespace SanAndreasUnity.Behaviours
 							attackingPlayer = m_ped != null ? m_ped.PlayerOwner : null,
 							damageType = DamageType.Bullet,
 						};
+
 						damageable.Damage(damageInfo);
+
+						F.InvokeEventExceptionSafe(onWeaponConductedAttack, new AttackConductedEventData(this, damageInfo, damageable));
+
+						shouldIvokeEvent = false;
 					}
 					
 				}
 			}
+
+			if (shouldIvokeEvent)
+				F.InvokeEventExceptionSafe(onWeaponConductedAttack, new AttackConductedEventData(this));
 
 		}
 
