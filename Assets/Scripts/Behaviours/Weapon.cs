@@ -723,54 +723,14 @@ namespace SanAndreasUnity.Behaviours
 	            return;
             }
 
-			// raycast against all (non-breakable ?) objects
+			var damagable = this.ProjectileRaycastForDamagable(
+				firePos, fireDir, parameters, out bool attackWillBeConducted, out DamageInfo damageInfo);
 
-			bool shouldIvokeEvent = true;
-			RaycastHit hit;
-			if (this.ProjectileRaycast (firePos, fireDir, out hit, parameters))
-			{
-				// if target object has damageable script, inflict damage to it
+			if (attackWillBeConducted && damagable != null)
+				damagable.Damage(damageInfo);
 
-				var damageable = hit.collider.gameObject.GetComponentInParent<Damageable> ();
-				if (damageable)
-				{
-					// ray hit something that can be damaged
-					// damage it
-
-					// first check if target object is owner ped
-					if (m_ped != null && m_ped.gameObject == damageable.gameObject)
-					{
-						// ray hit owner ped
-						// don't do anything
-
-						shouldIvokeEvent = false;
-					}
-					else
-					{
-						var damageInfo = new DamageInfo()
-						{
-							amount = this.Damage,
-							raycastHitTransform = hit.collider.transform,
-							hitDirection = fireDir,
-							hitPoint = hit.point,
-							hitNormal = hit.normal,
-							attacker = m_ped,
-							attackingPlayer = m_ped != null ? m_ped.PlayerOwner : null,
-							damageType = DamageType.Bullet,
-						};
-
-						damageable.Damage(damageInfo);
-
-						F.InvokeEventExceptionSafe(onWeaponConductedAttack, new AttackConductedEventData(this, damageInfo, damageable));
-
-						shouldIvokeEvent = false;
-					}
-					
-				}
-			}
-
-			if (shouldIvokeEvent)
-				F.InvokeEventExceptionSafe(onWeaponConductedAttack, new AttackConductedEventData(this));
+			if (attackWillBeConducted)
+				F.InvokeEventExceptionSafe(onWeaponConductedAttack, new AttackConductedEventData(this, damageInfo, damagable));
 
 		}
 
@@ -823,7 +783,61 @@ namespace SanAndreasUnity.Behaviours
 			return false;
 		}
 
-        public void GetLineFromGun (out Vector3 start, out Vector3 end, WeaponAttackParams parameters)
+		public Damageable ProjectileRaycastForDamagable(
+			Vector3 firePos,
+			Vector3 fireDir,
+			WeaponAttackParams parameters,
+			out bool attackWillBeConducted,
+			out DamageInfo damageInfo)
+        {
+			// 'attackWillBeConducted' can be false if target is owner ped, or the angle to target is big (eg. > 45 degrees)
+
+			attackWillBeConducted = true;
+			damageInfo = null;
+
+			RaycastHit hit;
+			if (this.ProjectileRaycast(firePos, fireDir, out hit, parameters))
+			{
+				// find Damagable script on target object
+
+				var damageable = hit.collider.gameObject.GetComponentInParent<Damageable>();
+				if (damageable != null)
+				{
+					// ray hit something that can be damaged
+					
+					// first check if target object is owner ped
+					if (m_ped != null && m_ped.gameObject == damageable.gameObject)
+					{
+						// ray hit owner ped
+						// attack should not be conducted
+
+						attackWillBeConducted = false;
+					}
+					else
+					{
+						damageInfo = new DamageInfo()
+						{
+							amount = this.Damage,
+							raycastHitTransform = hit.collider.transform,
+							hitDirection = fireDir,
+							hitPoint = hit.point,
+							hitNormal = hit.normal,
+							attacker = m_ped,
+							attackingPlayer = m_ped != null ? m_ped.PlayerOwner : null,
+							damageType = DamageType.Bullet,
+						};
+					}
+
+				}
+
+				return damageable;
+			}
+
+			return null;
+		}
+
+
+		public void GetLineFromGun (out Vector3 start, out Vector3 end, WeaponAttackParams parameters)
 		{
 			float distance = this.MaxRange;
 			Vector3 firePos = this.GetFirePos ();
