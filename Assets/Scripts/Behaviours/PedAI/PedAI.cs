@@ -27,6 +27,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         private float _timeSinceUpdatedStateOn2Seconds = 0f;
 
+        private List<Ped.UnderAimInfo> _lastUnderAimInfos = null;
+
 
         private void Awake()
         {
@@ -100,6 +102,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 }
 
                 this.CurrentState.UpdateState();
+
+                this.CheckIfSomeoneAimedAtOurPed();
             }
         }
 
@@ -236,6 +240,48 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return null;
 
             return pathNodeInfo.node;
+        }
+
+        private void CheckIfSomeoneAimedAtOurPed()
+        {
+            var underAimInfos = this.MyPed.UnderAimInfos;
+
+            if (underAimInfos.Count == 0)
+            {
+                _lastUnderAimInfos = null;
+                return;
+            }
+
+            // there are active "aims" on our ped
+
+            // check if some of them are new
+            // if yes, notify the current state
+
+            if (null == _lastUnderAimInfos)
+                _lastUnderAimInfos = new List<Ped.UnderAimInfo>();
+
+            List<Ped.UnderAimInfo> newInfos = null;
+
+            for (int i = 0; i < underAimInfos.Count; i++)
+            {
+                if (!_lastUnderAimInfos.Contains(underAimInfos[i]))
+                {
+                    // new one
+                    if (null == newInfos)
+                        newInfos = new List<Ped.UnderAimInfo>();
+                    newInfos.Add(underAimInfos[i]);
+                }
+            }
+
+            // remember last state of the list
+            _lastUnderAimInfos.Clear();
+            _lastUnderAimInfos.AddRange(underAimInfos);
+
+            // notify current state
+            if (newInfos != null)
+            {
+                this.CurrentState.OnUnderAim(newInfos);
+            }
         }
 
         private void OnDrawGizmosSelected()
