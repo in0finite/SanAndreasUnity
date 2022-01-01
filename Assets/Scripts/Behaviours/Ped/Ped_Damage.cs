@@ -50,6 +50,23 @@ namespace SanAndreasUnity.Behaviours
 
 		public static event System.Action<Ped, DamageInfo, DamageResult> onDamaged = delegate {};
 
+		public struct UnderAimInfo
+		{
+			public DamageInfo damageInfo;
+			public float time;
+			public Ped ped;
+
+			public UnderAimInfo(DamageInfo damageInfo, float time, Ped ped)
+			{
+				this.damageInfo = damageInfo;
+				this.time = time;
+				this.ped = ped;
+			}
+		}
+
+		private List<UnderAimInfo> _underAimInfos = new List<UnderAimInfo>();
+		public IReadOnlyList<UnderAimInfo> UnderAimInfos => _underAimInfos;
+
 
 
 		void AwakeForDamage ()
@@ -78,6 +95,9 @@ namespace SanAndreasUnity.Behaviours
 		void UpdateDamageStuff ()
 		{
 			this.UpdateHealthBar ();
+
+			// remove UnderAim info that is no longer valid
+			_underAimInfos.RemoveAll(this.ShouldUnderAimInfoBeRemoved);
 		}
 
 		void UpdateHealthBar ()
@@ -179,6 +199,30 @@ namespace SanAndreasUnity.Behaviours
 			m_alreadyKilled = true;
 
 			this.CurrentState.KillPed();
+		}
+
+		public void OnUnderAimOfOtherPed(DamageInfo damageInfo)
+        {
+            Ped attackerPed = damageInfo.GetAttackerPed();
+			if (null == attackerPed)
+				throw new System.Exception("No attacker ped given");
+
+            int index = _underAimInfos.FindIndex(_ => _.ped == attackerPed);
+			if (index >= 0)
+            {
+				_underAimInfos[index] = new UnderAimInfo(damageInfo, Time.time, attackerPed);
+				return;
+			}
+
+			_underAimInfos.Add(new UnderAimInfo(damageInfo, Time.time, attackerPed));
+        }
+
+		private bool ShouldUnderAimInfoBeRemoved(UnderAimInfo underAimInfo)
+        {
+			if (null == underAimInfo.ped)
+				return true;
+
+			return Time.time - underAimInfo.time > PedManager.Instance.timeIntervalToUpdateUnderAimStatus;
 		}
 
 	}

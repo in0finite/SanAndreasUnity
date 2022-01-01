@@ -27,6 +27,8 @@ namespace SanAndreasUnity.Behaviours
 		public float timeUntilAimMovementStateCanBeSwitchedToOtherAimMovementState = 0.166f;
 		public float timeUntilAimMovementStateCanBeEnteredFromOtherAimMovementState = 0.166f;
 
+		public float timeIntervalToUpdateUnderAimStatus = 0.33f;
+
 		[Header("Camera")]
 
 		public float cameraDistanceFromPed = 3f;

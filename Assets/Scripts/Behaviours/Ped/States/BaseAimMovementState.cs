@@ -256,8 +256,22 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				{
 					m_weapon.AimAnimState = state;
 					if (state)
-						this.UpdateAimAnim (state);
-				}
+                    {
+                        this.UpdateAimAnim (state);
+
+						GetEffectiveFirePosAndDir(m_ped, WeaponAttackParams.Default, out Vector3 pos, out Vector3 dir);
+                        Damageable damagable = m_weapon.ProjectileRaycastForDamagable(
+							pos, dir, WeaponAttackParams.Default, out bool attackWillBeConducted, out DamageInfo damageInfo);
+						if (attackWillBeConducted && damagable != null)
+                        {
+							var targetPed = damagable.GetComponent<Ped>();
+							if (targetPed != null)
+                            {
+								targetPed.OnUnderAimOfOtherPed(damageInfo);
+							}
+						}
+                    }
+                }
 
 				if (m_weapon && m_weapon.HasFlag(GunFlag.AIMWITHARM))
 				{
