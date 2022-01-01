@@ -492,16 +492,28 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		}
 
 
+		public static void GetEffectiveFirePosAndDir(Ped ped, WeaponAttackParams weaponAttackParams, out Vector3 pos, out Vector3 dir)
+        {
+			if (ped.IsControlledByLocalPlayer || null == ped.PlayerOwner)
+            {
+				pos = ped.FirePosition;
+				dir = ped.FireDirection;
+            }
+            else    // this ped is owned by remote client
+            {
+				pos = ped.NetFirePos;
+				dir = ped.NetFireDir;
+            }
+        }
+
 		public static bool TryFire (Ped ped, WeaponAttackParams weaponAttackParams)
 		{
 			if (ped.CurrentWeapon != null)
 			{
 				if (Net.NetStatus.IsServer)
 				{
-					if (ped.IsControlledByLocalPlayer || null == ped.PlayerOwner)
-						return TryFire(ped, ped.FirePosition, ped.FireDirection, weaponAttackParams);
-					else	// this ped is owned by remote client
-						return TryFire(ped, ped.NetFirePos, ped.NetFireDir, weaponAttackParams);
+					GetEffectiveFirePosAndDir(ped, weaponAttackParams, out Vector3 pos, out Vector3 dir);
+					return TryFire(ped, pos, dir, weaponAttackParams);
 				}
 			}
 			return false;
