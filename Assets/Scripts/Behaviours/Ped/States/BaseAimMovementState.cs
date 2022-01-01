@@ -562,9 +562,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			}
 
-			// play firing sound
-			F.RunExceptionSafe (() => weapon.PlayFireSound() );
-
 			// notify clients
 			if (isServer)
 				Net.PedSync.OnWeaponFired(ped, weapon, firePos);

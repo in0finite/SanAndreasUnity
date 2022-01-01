@@ -714,7 +714,9 @@ namespace SanAndreasUnity.Behaviours
 
             this.LastTimeWhenFired = Time.time;
 
-            if (this.FiresProjectile)
+			F.RunExceptionSafe(() => this.PlayFireSound());
+
+			if (this.FiresProjectile)
             {
 	            Projectile.Create(this.ProjectilePrefab, firePos, Quaternion.LookRotation(fireDir), m_ped);
 				F.InvokeEventExceptionSafe(onWeaponConductedAttack, new AttackConductedEventData(this));
