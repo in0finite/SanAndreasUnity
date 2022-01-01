@@ -259,17 +259,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
                     {
                         this.UpdateAimAnim (state);
 
-						GetEffectiveFirePosAndDir(m_ped, WeaponAttackParams.Default, out Vector3 pos, out Vector3 dir);
-                        Damageable damagable = m_weapon.ProjectileRaycastForDamagable(
-							pos, dir, WeaponAttackParams.Default, out bool attackWillBeConducted, out DamageInfo damageInfo);
-						if (attackWillBeConducted && damagable != null)
-                        {
-							var targetPed = damagable.GetComponent<Ped>();
-							if (targetPed != null)
-                            {
-								targetPed.OnUnderAimOfOtherPed(damageInfo);
-							}
-						}
+						// do this right after UpdateAimAnim(), because that's the state when weapon conducts attack
+						UpdateUnderAimDetection(m_ped);
                     }
                 }
 
@@ -378,6 +369,21 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			}
 
 
+		}
+
+		public static void UpdateUnderAimDetection(Ped ped)
+        {
+			GetEffectiveFirePosAndDir(ped, WeaponAttackParams.Default, out Vector3 pos, out Vector3 dir);
+			Damageable damagable = ped.CurrentWeapon.ProjectileRaycastForDamagable(
+				pos, dir, WeaponAttackParams.Default, out bool attackWillBeConducted, out DamageInfo damageInfo);
+			if (attackWillBeConducted && damagable != null)
+			{
+				var targetPed = damagable.GetComponent<Ped>();
+				if (targetPed != null)
+				{
+					targetPed.OnUnderAimOfOtherPed(damageInfo);
+				}
+			}
 		}
 
 		protected virtual void UpdateArmTransformsForAWA()
