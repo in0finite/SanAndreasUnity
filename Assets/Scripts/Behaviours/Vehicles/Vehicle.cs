@@ -113,6 +113,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public static int LayerMask { get { return 1 << Layer; } }
 
         public static int MeshLayer => UnityEngine.LayerMask.NameToLayer("VehicleMesh");
+        public static int MeshLayerMask => 1 << MeshLayer;
 
         public static readonly Color32 DefaultVehicleColor = default;
 

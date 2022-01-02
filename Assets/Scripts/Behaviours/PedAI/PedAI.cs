@@ -284,6 +284,40 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             }
         }
 
+        public static bool PedSeesHeadOfAnotherPed(Ped ped, Ped anotherPed)
+        {
+            // first check angle
+            Vector3 dirToTargetPed = (anotherPed.transform.position - ped.transform.position).normalized;
+            if (Vector3.Angle(dirToTargetPed, ped.transform.forward) > 80f)
+                return false;
+
+
+            var targetHead = anotherPed.PlayerModel.Head;
+            var targetJaw = anotherPed.PlayerModel.Jaw;
+            
+            var sourceHead = ped.PlayerModel.Head;
+
+            if (null == targetHead || null == targetJaw || null == sourceHead)
+                return false;
+
+            LayerMask layerMask = ~ (Ped.LayerMask & Vehicle.LayerMask);
+
+            // this raycast may not work always, because animation state and skeleton updates are done separately
+            // so here, we probably raycast against animation state
+
+            foreach (Transform target in new[] { targetHead, targetJaw })
+            {
+                Vector3 dir = (target.position - sourceHead.position).normalized;
+                if (Physics.Raycast(sourceHead.position, dir, out RaycastHit hit, 30f, layerMask))
+                {
+                    if (hit.transform.GetComponentInParent<Ped>() == anotherPed)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         private void OnDrawGizmosSelected()
         {
             this.CurrentState.OnDrawGizmosSelected();

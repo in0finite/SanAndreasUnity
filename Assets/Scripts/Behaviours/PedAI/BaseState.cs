@@ -83,7 +83,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         protected internal virtual void OnUnderAim(IReadOnlyList<Ped.UnderAimInfo> underAimInfos)
         {
-            //UnityEngine.Debug.Log($"OnUnderAim() for ped {_ped.DescriptionForLogging}: {string.Join("\n", underAimInfos.Select(_ => $"{_.ped.DescriptionForLogging}, {_.time}"))}");
         }
 
         protected internal virtual void OnRecruit(Ped recruiterPed)

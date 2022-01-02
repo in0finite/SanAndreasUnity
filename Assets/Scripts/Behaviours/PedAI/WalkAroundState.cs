@@ -1,5 +1,7 @@
+using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Paths;
 using SanAndreasUnity.Utilities;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Peds.AI
@@ -10,6 +12,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         public PathMovementData PathMovementData => _pathMovementData;
 
         private ChaseState _chaseState;
+
+        private float _timeWhenStartedSurrendering = 0f;
+        public float TimeSinceStartedSurrendering => Time.time - _timeWhenStartedSurrendering;
+        public bool IsSurrendering => this.TimeSinceStartedSurrendering < 4f;
 
 
         protected internal override void OnAwake(PedAI pedAI)
@@ -52,6 +58,14 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return;
             }
 
+            if (this.IsSurrendering)
+            {
+                // TODO: set Surrendering button to on
+
+
+                return;
+            }
+
             if (PedAI.ArrivedAtDestinationNode(_pathMovementData, _ped.transform))
                 PedAI.OnArrivedToDestinationNode(_pathMovementData);
 
@@ -74,6 +88,39 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         protected internal override void OnWeaponConductedAttack(Weapon.AttackConductedEventData data)
         {
             _pedAI.StateContainer.GetStateOrThrow<IdleState>().HandleOnWeaponConductedAttack(data);
+        }
+
+        protected internal override void OnUnderAim(IReadOnlyList<Ped.UnderAimInfo> underAimInfos)
+        {
+            if (_pedAI.PedestrianType.IsGangMember())
+                return;
+
+            // find those peds that are visible by our ped
+
+            List<Ped.UnderAimInfo> visibleList = null;
+
+            for (int i = 0; i < underAimInfos.Count; i++)
+            {
+                if (PedAI.PedSeesHeadOfAnotherPed(_ped, underAimInfos[i].ped))
+                {
+                    if (null == visibleList)
+                        visibleList = new List<Ped.UnderAimInfo>();
+                    visibleList.Add(underAimInfos[i]);
+                }
+            }
+
+            if (visibleList != null)
+            {
+                if (_pedAI.PedestrianType.IsCop())
+                {
+                    visibleList.ForEach(_ => _enemyPeds.AddIfNotPresent(_.ped));
+                    return;
+                }
+
+                //_pedAI.SwitchStateWithParameter<SurrenderState>(visibleList);
+                _timeWhenStartedSurrendering = Time.time;
+            }
+
         }
 
         protected internal override void OnRecruit(Ped recruiterPed)
