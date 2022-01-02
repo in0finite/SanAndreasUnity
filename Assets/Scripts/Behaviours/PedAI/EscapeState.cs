@@ -21,7 +21,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return;
             }
 
-            this.MyPed.IsSprintOn = true;
+            this.MyPed.IsPanicButtonOn = true;
             this.MyPed.Movement = (_pathMovementData.moveDestination - this.MyPed.transform.position).normalized;
             this.MyPed.Heading = this.MyPed.Movement;
         }
