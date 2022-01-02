@@ -96,6 +96,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				else
 					return typeof(SprintState);
 			}
+			else if (ped.IsPanicButtonOn)
+            {
+				return typeof(PanicState);
+			}
 			else
 			{
 				return typeof(StandState);

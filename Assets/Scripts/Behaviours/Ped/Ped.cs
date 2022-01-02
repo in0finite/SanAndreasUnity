@@ -85,6 +85,7 @@ namespace SanAndreasUnity.Behaviours
 		public bool IsRunOn { get; set; }
 		public bool IsSprintOn { get; set; }
 		public bool IsJumpOn { get; set; }
+		public bool IsPanicButtonOn { get; set; }
 
         public Vector3 Velocity { get; private set; }
 		/// <summary> Current movement input. </summary>
@@ -598,6 +599,7 @@ namespace SanAndreasUnity.Behaviours
 			this.IsWalkOn = this.IsRunOn = this.IsSprintOn = false;
 			this.Movement = Vector3.zero;
 			this.IsJumpOn = false;
+			this.IsPanicButtonOn = false;
 		}
 
 		public void OnButtonPressed (string buttonName)
