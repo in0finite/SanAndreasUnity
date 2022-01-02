@@ -1,3 +1,4 @@
+using SanAndreasUnity.Behaviours.Peds.States;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Paths;
 using SanAndreasUnity.Utilities;
@@ -60,8 +61,9 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             if (this.IsSurrendering)
             {
-                // TODO: set Surrendering button to on
-
+                // make sure ped is surrendering
+                if (!_ped.IsSurrendering())
+                    _ped.OnSurrenderButtonPressed();
 
                 return;
             }

@@ -662,6 +662,12 @@ namespace SanAndreasUnity.Behaviours
 				this.CurrentState.OnFlyThroughButtonPressed ();
 		}
 
+		public void OnSurrenderButtonPressed()
+		{
+			if (this.CurrentState != null)
+				this.CurrentState.OnSurrenderButtonPressed();
+		}
+
 
 		internal void OnStartCollidingWithEnex(EntranceExitMapObject enex)
 		{

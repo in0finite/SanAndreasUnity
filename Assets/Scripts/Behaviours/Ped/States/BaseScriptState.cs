@@ -286,6 +286,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		}
 
+		public virtual void OnSurrenderButtonPressed()
+        {
+
+        }
+
 
 		public virtual void OnSwitchedStateByServer(byte[] data)
 		{

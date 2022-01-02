@@ -31,6 +31,7 @@ GameObject:
   - component: {fileID: 114293662543306134}
   - component: {fileID: 7181738364298022858}
   - component: {fileID: 2421064630445689714}
+  - component: {fileID: 986117917908478283}
   m_Layer: 11
   m_Name: States
   m_TagString: Untagged
@@ -330,6 +331,18 @@ MonoBehaviour:
   timeUntilAbleToEnterState: 0.5
   timeUntilAbleToExitState: 0.5
   timeUntilAbleToChangeAnim: 0.5
+--- !u!114 &986117917908478283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1154474390377672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 751a2e3fa7025a3448157779e2c99fe5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1273918895060814
 GameObject:
   m_ObjectHideFlags: 0

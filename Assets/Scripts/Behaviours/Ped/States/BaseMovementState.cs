@@ -40,12 +40,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		protected virtual void SwitchToMovementState()
 		{
             System.Type type = BaseMovementState.GetMovementStateToSwitchToBasedOnInput(m_ped);
-            var state = (BaseMovementState) m_ped.GetStateOrLogError(type);
 
-			if (!EnoughTimePassedToSwitchBetweenMovementStates(this, state))
-				return;
-
-			m_ped.SwitchState(type);
+			this.SwitchToMovementStateIfEnoughTimePassed(type);
 		}
 
 		public static bool EnoughTimePassedToSwitchBetweenMovementStates(
@@ -57,6 +53,18 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			if (targetState.TimeSinceDeactivated < targetState.TimeUntilStateCanBeEnteredFromOtherMovementState)
 				return false;
+
+			return true;
+		}
+
+		public bool SwitchToMovementStateIfEnoughTimePassed(System.Type type)
+        {
+			var state = (BaseMovementState)m_ped.GetStateOrLogError(type);
+
+			if (!EnoughTimePassedToSwitchBetweenMovementStates(this, state))
+				return false;
+
+			m_ped.SwitchState(type);
 
 			return true;
 		}
@@ -159,6 +167,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		{
 			if (m_isServer)
 				m_ped.GetStateOrLogError<FlyState> ().EnterState (true);
+		}
+
+		public override void OnSurrenderButtonPressed()
+		{
+			if (m_isServer)
+				this.SwitchToMovementStateIfEnoughTimePassed(typeof(SurrenderState));
+			else
+				base.OnSurrenderButtonPressed();
 		}
 
 	}
