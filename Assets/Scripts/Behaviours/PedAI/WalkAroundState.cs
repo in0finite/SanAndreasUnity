@@ -119,7 +119,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                     return;
                 }
 
-                //_pedAI.SwitchStateWithParameter<SurrenderState>(visibleList);
                 _timeWhenStartedSurrendering = Time.time;
             }
 
