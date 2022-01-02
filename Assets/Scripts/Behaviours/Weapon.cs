@@ -517,34 +517,6 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		public virtual AnimId GetAnimBasedOnMovement (bool canSprint)
-		{
-			Ped ped = m_ped;
-
-			if (ped.IsRunOn) {
-
-				return this.RunAnim;
-
-			} else if (ped.IsWalkOn) {
-
-				return this.WalkAnim;
-
-			} else if (ped.IsSprintOn) {
-
-				if (canSprint) {
-					return new AnimId (AnimGroup.MyWalkCycle, AnimIndex.sprint_civi);
-				} else {
-					return this.IdleAnim;
-				}
-
-			} else {
-				// player is standing
-
-				return this.IdleAnim;
-			}
-
-		}
-
 		public virtual AnimId AimAnim {
 			get {
 				return new AnimId (AnimGroup.Rifle, AnimIndex.RIFLE_fire);
@@ -606,13 +578,6 @@ namespace SanAndreasUnity.Behaviours
 			weapon.AmmoOutsideOfClip += Random.Range (50, 200);
 		}
 
-
-		// TODO: this function should be removed, and new one should be created: OnAnimsUpdated
-		public virtual void UpdateAnimWhileHolding ()
-		{
-			Ped ped = m_ped;
-			ped.PlayerModel.PlayAnim (this.GetAnimBasedOnMovement (this.CanSprintWithIt));
-		}
 
 		void AssignGunFlashTransform()
 		{

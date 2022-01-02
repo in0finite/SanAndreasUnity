@@ -32,7 +32,7 @@ namespace SanAndreasUnity.Behaviours.Weapons
 			}
 		}
 
-		public override void UpdateAnimWhileHolding ()
+		/*public override void UpdateAnimWhileHolding ()
 		{
 			Ped ped = m_ped;
 
@@ -48,7 +48,7 @@ namespace SanAndreasUnity.Behaviours.Weapons
 			} else {
 				base.UpdateAnimWhileHolding ();
 			}
-		}
+		}*/
 
 
 	}
