@@ -29,6 +29,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public float timeIntervalToUpdateUnderAimStatus = 0.25f;
 
+		public GameObject pedMouthAudioSourcePrefab;
+
 		[Header("Camera")]
 
 		public float cameraDistanceFromPed = 3f;

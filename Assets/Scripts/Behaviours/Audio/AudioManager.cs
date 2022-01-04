@@ -6,7 +6,15 @@ using SanAndreasUnity.Audio;
 
 namespace SanAndreasUnity.Behaviours.Audio
 {
-	
+	public struct SoundId
+    {
+		public bool isStream;
+		public string fileName;
+		public int bankIndex;
+		public int audioIndex;
+	}
+
+
 	public class AudioManager : MonoBehaviour
 	{
 
@@ -26,6 +34,8 @@ namespace SanAndreasUnity.Behaviours.Audio
 		static AudioSource s_startupAudioSource;
 
 		public const int kSfxSampleSize = 2;
+
+		private static Dictionary<SoundId, AudioClip> _cachedMouthAudioClips = new Dictionary<SoundId, AudioClip>();
 
 
 
@@ -177,6 +187,24 @@ namespace SanAndreasUnity.Behaviours.Audio
 			}
 
 			return ret;
+		}
+
+		public static AudioClip CreateAudioClip(SoundId soundId)
+        {
+			return soundId.isStream
+				? CreateAudioClipFromStream(soundId.fileName, soundId.bankIndex)
+				: CreateAudioClipFromSfx(soundId.fileName, soundId.bankIndex, soundId.audioIndex);
+        }
+
+		public static AudioClip GetAudioClipCached(SoundId soundId)
+        {
+			if (!_cachedMouthAudioClips.TryGetValue(soundId, out AudioClip audioClip))
+			{
+				audioClip = AudioManager.CreateAudioClip(soundId);
+				_cachedMouthAudioClips.Add(soundId, audioClip);
+			}
+
+			return audioClip;
 		}
 
 		static float FreqToKbs(int freq)

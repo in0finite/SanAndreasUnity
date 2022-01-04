@@ -49,6 +49,9 @@ namespace SanAndreasUnity.Behaviours
         public Vector3 NetFirePos { get; set; }
         public Vector3 NetFireDir { get; set; }
 
+        [SyncVar(hook = nameof(Net_OnMouthSoundIdChanged))]
+        private Audio.SoundId m_net_mouthSoundId = new Audio.SoundId();
+
 
 
         void Awake_Net()
@@ -253,6 +256,21 @@ namespace SanAndreasUnity.Behaviours
 
             });
             
+        }
+
+        void Net_OnMouthSoundIdChanged(Audio.SoundId newSoundId)
+        {
+            if (NetStatus.IsServer)
+                return;
+
+            if (string.IsNullOrEmpty(newSoundId.fileName))
+            {
+                if (_mouthAudioSource != null)
+                    _mouthAudioSource.Stop();
+                return;
+            }
+
+            this.PlaySoundFromPedMouth(newSoundId);
         }
 
     }
