@@ -26,7 +26,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         public override void UpdateState()
         {
-			this.TryEmitSound();
+			if (m_isServer)
+				this.TryEmitSound();
 
             base.UpdateState();
         }
