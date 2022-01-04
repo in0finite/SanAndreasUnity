@@ -47,6 +47,16 @@ namespace SanAndreasUnity.Importing.Items.Definitions
         {
             return pedestrianType == PedestrianType.Cop;
         }
+
+        public static bool IsFemale(this PedestrianType pedestrianType)
+        {
+            return pedestrianType == PedestrianType.CivFemale || pedestrianType == PedestrianType.Prostitute;
+        }
+
+        public static bool IsMale(this PedestrianType pedestrianType)
+        {
+            return !pedestrianType.IsFemale();
+        }
     }
 
     [Section("peds")]

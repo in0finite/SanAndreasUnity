@@ -225,6 +225,8 @@ namespace SanAndreasUnity.Behaviours
 		void OnDisable ()
 		{
 			s_allPeds.Remove (this);
+
+			this.Sound_OnDisable();
 		}
 
 

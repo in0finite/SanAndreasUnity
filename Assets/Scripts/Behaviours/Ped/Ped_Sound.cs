@@ -10,8 +10,17 @@ namespace SanAndreasUnity.Behaviours
         private AudioSource _mouthAudioSource;
 
 
-        private void PlaySoundFromPedMouth(SoundId soundId)
+        private void Sound_OnDisable()
         {
+            if (_mouthAudioSource != null)
+                _mouthAudioSource.Stop();
+        }
+
+        public void PlaySoundFromPedMouth(SoundId soundId)
+        {
+            if (!soundId.IsValid)
+                return;
+
             this.AddAudioSourceForMouth();
 
             if (null == _mouthAudioSource)

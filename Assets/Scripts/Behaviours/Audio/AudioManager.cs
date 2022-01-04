@@ -12,6 +12,8 @@ namespace SanAndreasUnity.Behaviours.Audio
 		public string fileName;
 		public int bankIndex;
 		public int audioIndex;
+
+		public bool IsValid => !string.IsNullOrEmpty(fileName) && bankIndex >= 0 && audioIndex >= 0;
 	}
 
 
