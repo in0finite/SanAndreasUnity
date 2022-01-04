@@ -36,6 +36,9 @@ namespace SanAndreasUnity.Behaviours
 
         public SyncDictionaryStringUint syncDictionaryStringUint = new SyncDictionaryStringUint();
 
+        private SyncedBag.StringSyncDictionary _syncDictionary = new SyncedBag.StringSyncDictionary();
+        public SyncedBag SyncedBag { get; }
+
         [SyncVar] Vector3 m_net_movementInput;
         [SyncVar] Vector3 m_net_heading;
 

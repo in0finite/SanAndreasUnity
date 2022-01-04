@@ -143,6 +143,11 @@ namespace SanAndreasUnity.Behaviours
 
 
         
+		Ped()
+        {
+			this.SyncedBag = new SyncedBag(_syncDictionary);
+		}
+
         void Awake()
         {
             
