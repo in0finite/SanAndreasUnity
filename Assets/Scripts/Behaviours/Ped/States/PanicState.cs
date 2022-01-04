@@ -24,14 +24,6 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		private float _timeToEmitSound;
 
 
-        /*public override void OnBecameActive()
-        {
-            base.OnBecameActive();
-
-			if (m_isServer)
-				this.TryEmitSound();
-        }*/
-
         public override void UpdateState()
         {
 			this.TryEmitSound();

@@ -263,14 +263,17 @@ namespace SanAndreasUnity.Behaviours
             if (NetStatus.IsServer)
                 return;
 
-            if (string.IsNullOrEmpty(newSoundId.fileName))
+            F.RunExceptionSafe(() =>
             {
-                if (_mouthAudioSource != null)
-                    _mouthAudioSource.Stop();
-                return;
-            }
+                if (string.IsNullOrEmpty(newSoundId.fileName))
+                {
+                    if (_mouthAudioSource != null)
+                        _mouthAudioSource.Stop();
+                    return;
+                }
 
-            this.PlaySoundFromPedMouth(newSoundId);
+                this.PlaySoundFromPedMouth(newSoundId);
+            });
         }
 
     }
