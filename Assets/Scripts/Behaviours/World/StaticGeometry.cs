@@ -185,9 +185,6 @@ namespace SanAndreasUnity.Behaviours.World
 
 			this.UpdateVisibility();
 
-			if (null == this.LodParent) // only register high LOD objects for nav mesh
-				Cell.Instance.RegisterNavMeshObject(this);
-
 		}
 
 		private void OnCollisionModelAttached ()
