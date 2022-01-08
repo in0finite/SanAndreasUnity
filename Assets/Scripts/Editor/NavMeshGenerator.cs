@@ -164,18 +164,19 @@ namespace SanAndreasUnity.Editor
 
             // save nav mesh
 
-            EditorUtility.DisplayProgressBar("Generating nav mesh", "Saving nav mesh...", 1f);
+            // CreateAsset() probably requires the file to be in project
+            string saveFilePath = EditorUtility.SaveFilePanelInProject("Save nav mesh", "NavMesh.asset", "asset", "");
 
-            string parentDirectory = Path.GetDirectoryName(activeScene.path);
-            string directory = parentDirectory + "/" + activeScene.name;
-            if (!AssetDatabase.IsValidFolder(directory))
-                AssetDatabase.CreateFolder(parentDirectory, activeScene.name);
-            AssetDatabase.CreateAsset(s_navMeshData, directory + "/NavMesh.asset");
+            if (!string.IsNullOrWhiteSpace(saveFilePath))
+            {
+                EditorUtility.DisplayProgressBar("", "Saving nav mesh...", 1f);
 
-            s_navMeshData = null; // this is now an asset, we don't want it to be destroyed
+                AssetDatabase.CreateAsset(s_navMeshData, saveFilePath);
+                s_navMeshData = null; // this is now an asset, we don't want it to be destroyed
+            }
 
             EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("", "Done", "Ok");
+            EditorUtility.DisplayDialog("", "Nav mesh generation complete !", "Ok");
         }
     }
 }
