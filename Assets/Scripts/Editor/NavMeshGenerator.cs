@@ -3,8 +3,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using SanAndreasUnity.Behaviours.World;
-using UnityEditor.SceneManagement;
-using System.IO;
 using System.Collections;
 
 namespace SanAndreasUnity.Editor
@@ -65,7 +63,9 @@ namespace SanAndreasUnity.Editor
         void OnGUI()
         {
             EditorGUILayout.HelpBox(
-                "Generate nav mesh from loaded world.\nOnly high LOD objects are included.",
+                "Generate nav mesh from loaded world.\n" +
+                "Only high LOD world objects and water are included.\n" +
+                "At the end, you will choose where to save the generated nav mesh.",
                 MessageType.Info,
                 true);
 
@@ -111,13 +111,6 @@ namespace SanAndreasUnity.Editor
             if (null == cell)
             {
                 EditorUtility.DisplayDialog("", $"{nameof(Cell)} script not found in scene. Make sure you loaded the correct scene.", "Ok");
-                yield break;
-            }
-
-            UnityEngine.SceneManagement.Scene activeScene = EditorSceneManager.GetActiveScene();
-            if (!activeScene.IsValid())
-            {
-                EditorUtility.DisplayDialog("", "Active scene is not valid", "Ok");
                 yield break;
             }
 
