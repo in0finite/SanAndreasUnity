@@ -24,7 +24,9 @@ namespace SanAndreasUnity.Stats
 
             if (cell != null)
             {
-				sb.Append($"max draw distance {cell.MaxDrawDistance}\n");
+                sb.Append($"nav mesh update percentage {cell.NavMeshUpdatePercentage}\n");
+                sb.Append($"NumMapObjectsWithNavMeshToAdd {cell.NumMapObjectsWithNavMeshToAdd}\n");
+                sb.Append($"max draw distance {cell.MaxDrawDistance}\n");
                 sb.Append($"num focus points {cell.FocusPointManager?.FocusPoints.Count ?? 0}\n");
                 sb.Append($"num static objects {cell.NumStaticGeometries}\n");
                 sb.Append($"num TOBJ objects {StaticGeometry.TimedObjects.Count}\n");

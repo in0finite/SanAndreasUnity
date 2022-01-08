@@ -8,12 +8,14 @@ using System.Linq;
 using SanAndreasUnity.Behaviours.WorldSystem;
 using UnityEngine;
 using Profiler = UnityEngine.Profiling.Profiler;
+using UnityEngine.AI;
 
 namespace SanAndreasUnity.Behaviours.World
 {
     public class Cell : MonoBehaviour
     {
 	    private Dictionary<Instance, StaticGeometry> m_insts;
+		public IReadOnlyDictionary<Instance, StaticGeometry> StaticGeometries => m_insts;
         public int NumStaticGeometries => m_insts.Count;
 		private MapObject[] m_cars;
         private List<EntranceExitMapObject> m_enexes;
@@ -113,18 +115,32 @@ namespace SanAndreasUnity.Behaviours.World
         public float yellowTrafficLightDuration = 2;
         public float greenTrafficLightDuration = 7;
 
+		private NavMeshData _navMeshData = null;
+		private List<NavMeshBuildSource> _navMeshBuildSources = new List<NavMeshBuildSource>(1024);
+		private AsyncOperation _navMeshUpdateAsyncOperation = null;
+		private List<MapObject> _mapObjectsWithNavMeshToAdd = new List<MapObject>(128);
+
+		public float navMeshUpdateInterval = 2f;
+
+		public float NavMeshUpdatePercentage => _navMeshUpdateAsyncOperation?.progress ?? 1f;
+		public int NumMapObjectsWithNavMeshToAdd => _mapObjectsWithNavMeshToAdd.Count;
 
 
-        private void Awake()
+
+		private void Awake()
         {
 			if (null == Instance)
 				Instance = this;
-			
+
+			//this.InvokeRepeating(nameof(this.UpdateNavMesh), this.navMeshUpdateInterval, this.navMeshUpdateInterval);
         }
 
 
         internal void CreateStaticGeometry ()
 		{
+			_navMeshData = new NavMeshData(0);
+			NavMesh.AddNavMeshData(_navMeshData);
+
 			var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
 
 			m_insts = new Dictionary<Instance,StaticGeometry> (48 * 1024);
@@ -372,5 +388,87 @@ namespace SanAndreasUnity.Behaviours.World
 	        }
 
         }
-    }
+
+		public void RegisterNavMeshObject(MapObject mapObject)
+        {
+			_mapObjectsWithNavMeshToAdd.Add(mapObject);
+		}
+
+		void UpdateNavMesh()
+        {
+			if (null == _navMeshData)
+				return;
+
+			if (_navMeshUpdateAsyncOperation != null && !_navMeshUpdateAsyncOperation.isDone) // still in progress
+				return;
+
+			if (_mapObjectsWithNavMeshToAdd.Count == 0) // nothing changed
+				return;
+
+            NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByID(0);
+
+            for (int i = 0; i < _mapObjectsWithNavMeshToAdd.Count; i++)
+            {
+				_navMeshBuildSources.AddRange(GetNavMeshBuildSources(_mapObjectsWithNavMeshToAdd[i].transform));
+			}
+
+			_mapObjectsWithNavMeshToAdd.Clear();
+
+			_navMeshUpdateAsyncOperation = NavMeshBuilder.UpdateNavMeshDataAsync(
+				_navMeshData,
+				navMeshBuildSettings,
+				_navMeshBuildSources,
+				new Bounds(this.transform.position, Vector3.one * this.WorldSize));
+		}
+
+		public static List<NavMeshBuildSource> GetNavMeshBuildSources(Transform root)
+        {
+			var list = new List<NavMeshBuildSource>();
+			NavMeshBuilder.CollectSources(root, -1, NavMeshCollectGeometry.PhysicsColliders, 0, new List<NavMeshBuildMarkup>(), list);
+			return list;
+        }
+
+		public List<NavMeshBuildSource> GetWaterNavMeshBuildSources()
+        {
+			if (null == this.Water)
+				return new List<NavMeshBuildSource>();
+
+			var list = new List<NavMeshBuildSource>();
+			NavMeshBuilder.CollectSources(this.Water.transform, -1, NavMeshCollectGeometry.RenderMeshes, NavMesh.GetAreaFromName("Not Walkable"), new List<NavMeshBuildMarkup>(), list);
+			return list;
+		}
+
+		/*public static bool GetNavMeshBuildSourceFromCollider(Collider collider, out NavMeshBuildSource source)
+		{
+			source = new NavMeshBuildSource();
+			source.transform = collider.transform.localToWorldMatrix;
+
+			if (collider is MeshCollider meshCollider)
+			{
+				source.shape = NavMeshBuildSourceShape.Mesh;
+				source.sourceObject = meshCollider.sharedMesh;
+			}
+			else if (collider is BoxCollider boxCollider)
+			{
+				source.shape = NavMeshBuildSourceShape.Box;
+				source.size = boxCollider.size;
+			}
+			else if (collider is CapsuleCollider capsuleCollider)
+			{
+				source.shape = NavMeshBuildSourceShape.Capsule;
+				source.size = new Vector3(capsuleCollider.radius, capsuleCollider.height, capsuleCollider.radius);
+			}
+			else if (collider is SphereCollider sphereCollider)
+			{
+				source.shape = NavMeshBuildSourceShape.Sphere;
+				source.size = Vector3.one * sphereCollider.radius;
+			}
+			else
+			{
+				return false;
+			}
+
+			return true;
+		}*/
+	}
 }
