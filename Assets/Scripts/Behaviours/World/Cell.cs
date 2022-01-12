@@ -84,6 +84,8 @@ namespace SanAndreasUnity.Behaviours.World
 			}
 		}
 
+		public float drawDistanceMultiplier = 1f;
+
 		public int WorldSize => 6000; // current world size - in the future, this will be configurable
 		public static int DefaultWorldSize => 6000;
 
@@ -173,7 +175,7 @@ namespace SanAndreasUnity.Behaviours.World
 				staticGeometry.Initialize(inst.Key, m_insts);
 				_worldSystem.AddObjectToArea(
 					staticGeometry.transform.position,
-					staticGeometry.ObjectDefinition?.DrawDist ?? 0,
+					(staticGeometry.ObjectDefinition?.DrawDist ?? 0) * this.drawDistanceMultiplier,
 					staticGeometry);
 			}
 		}
