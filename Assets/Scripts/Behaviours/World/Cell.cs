@@ -22,6 +22,8 @@ namespace SanAndreasUnity.Behaviours.World
 
         private List<int> CellIds = Enumerable.Range(0, 19).ToList();
 
+		public bool ignoreLodObjectsWhenInitializing = false;
+
         public bool HasMainExterior => this.CellIds.Contains(0);
 
         public Camera PreviewCamera;
@@ -145,6 +147,9 @@ namespace SanAndreasUnity.Behaviours.World
 
 			m_insts = new Dictionary<Instance,StaticGeometry> (48 * 1024);
 			foreach (var plcm in placements) {
+				if (this.ignoreLodObjectsWhenInitializing && plcm.IsLod)
+					continue;
+
 				m_insts.Add (plcm, StaticGeometry.Create ());
 			}
 			//m_insts = placements.ToDictionary(x => x, x => StaticGeometry.Create());
