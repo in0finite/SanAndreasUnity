@@ -10,9 +10,11 @@ namespace SanAndreasUnity.Settings
 
 		private float _drawDistanceToApply = 0f;
 
+		public const string DrawDistanceSerializationName = "max_draw_distance";
+
 		private OptionsWindow.FloatInput m_maxDrawDistanceInput = new OptionsWindow.FloatInput
 		{
-			serializationName = "max_draw_distance",
+			serializationName = DrawDistanceSerializationName,
 			description = "Max draw distance",
 			minValue = WorldManager.MinMaxDrawDistance,
 			maxValue = WorldManager.MaxMaxDrawDistance,
