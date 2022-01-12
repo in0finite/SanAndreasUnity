@@ -21,10 +21,15 @@ namespace SanAndreasUnity.Settings
 			persistType = OptionsWindow.InputPersistType.OnStart,
 		};
 
+		public float overridenMaxDrawDistance = 0f;
+
 
 		void Awake ()
 		{
 			Singleton = this;
+
+			if (this.overridenMaxDrawDistance > 0f)
+				m_maxDrawDistanceInput.maxValue = this.overridenMaxDrawDistance;
 
 			OptionsWindow.RegisterInputs ("WORLD", m_maxDrawDistanceInput);
 		}
