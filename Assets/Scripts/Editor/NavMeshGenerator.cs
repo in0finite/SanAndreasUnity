@@ -7,7 +7,7 @@ using System.Collections;
 
 namespace SanAndreasUnity.Editor
 {
-    public class NavMeshGenerator : EditorWindow
+    public class NavMeshGenerator : EditorWindowBase
     {
         private static int s_selectedAgentId = 0;
         private static NavMeshData s_navMeshData;
@@ -16,33 +16,12 @@ namespace SanAndreasUnity.Editor
         public NavMeshGenerator()
         {
             this.titleContent = new GUIContent("Nav mesh generator");
-
-            EditorApplication.update -= EditorUpdate;
-            EditorApplication.update += EditorUpdate;
-        }
-
-        void EditorUpdate()
-        {
-            if (s_coroutine != null)
-            {
-                try
-                {
-                    if (!s_coroutine.MoveNext())
-                    {
-                        s_coroutine = null;
-                        Cleanup();
-                    }
-                }
-                catch
-                {
-                    s_coroutine = null;
-                    Cleanup();
-                }
-            }
         }
 
         void Cleanup()
         {
+            s_coroutine = null;
+
             EditorUtility.ClearProgressBar();
 
             if (s_navMeshData != null)
@@ -96,11 +75,14 @@ namespace SanAndreasUnity.Editor
 
             Cleanup();
 
-            s_coroutine = DoGenerate();
+            s_coroutine = this.DoGenerate();
+            this.StartCoroutine(s_coroutine, this.Cleanup, ex => this.Cleanup());
         }
 
         IEnumerator DoGenerate()
         {
+            yield return null;
+
             if (string.IsNullOrEmpty(NavMesh.GetSettingsNameFromID(s_selectedAgentId)))
             {
                 EditorUtility.DisplayDialog("", "Invalid agent id", "Ok");
