@@ -116,7 +116,11 @@ namespace SanAndreasUnity.Editor
 
             NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByID(s_selectedAgentId);
 
+            NavMesh.RemoveAllNavMeshData();
+
             var navMeshData = s_navMeshData = new NavMeshData(s_selectedAgentId);
+
+            NavMesh.AddNavMeshData(s_navMeshData);
 
             EditorUtility.DisplayProgressBar("Generating nav mesh", "Collecting objects...", 0f);
 
