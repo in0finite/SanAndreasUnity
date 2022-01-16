@@ -235,7 +235,9 @@ namespace SanAndreasUnity.Editor
 
             for (int i = 0; i < mats.Length; i++)
             {
-                CreateAssetIfNotExists(mats[i].mainTexture, $"{TexturesPath}/{assetName}-{i}.asset");
+                var tex = mats[i].mainTexture;
+                if (tex != null)
+                    CreateAssetIfNotExists(tex, $"{TexturesPath}/{assetName}-{i}.asset");
                 CreateAssetIfNotExists(mats[i], $"{MaterialsPath}/{assetName}-{i}.mat");
             }
         }
