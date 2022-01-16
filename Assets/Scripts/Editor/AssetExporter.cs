@@ -199,7 +199,7 @@ namespace SanAndreasUnity.Editor
 
             EditorUtility.DisplayProgressBar("", "Creating prefab...", 1f);
             if (!m_exportFromSelection)
-                PrefabUtility.SaveAsPrefabAsset(cell.gameObject, $"{PrefabsPath}/{cell.gameObject.name}.prefab");
+                PrefabUtility.SaveAsPrefabAsset(cell.gameObject, $"{PrefabsPath}/ExportedWorld.prefab");
             else
             {
                 foreach (var obj in objectsToExport)
@@ -214,7 +214,7 @@ namespace SanAndreasUnity.Editor
             EditorUtility.ClearProgressBar();
             string displayText = $"number of newly exported asssets {m_numNewlyExportedAssets}, number of already exported assets {m_numAlreadyExportedAssets}, time elapsed {stopwatch.Elapsed}";
             UnityEngine.Debug.Log($"Exporting of assets finished, {displayText}");
-            EditorUtility.DisplayDialog("", $"Finished ! \r\n{displayText}", "Ok");
+            EditorUtility.DisplayDialog("", $"Finished ! \r\n\r\n{displayText}", "Ok");
         }
 
         void CreateFolders()
