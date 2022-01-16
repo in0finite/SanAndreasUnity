@@ -69,20 +69,22 @@ namespace SanAndreasUnity.Editor
 
         void ChangeFolder()
         {
-            m_selectedFolder = EditorUtility.SaveFolderPanel(
+            string newFolder = EditorUtility.SaveFolderPanel(
                 "Select folder where to export files",
                 m_selectedFolder,
                 "");
-            if (string.IsNullOrWhiteSpace(m_selectedFolder))
+            if (string.IsNullOrWhiteSpace(newFolder))
             {
                 return;
             }
 
-            m_selectedFolder = FileUtil.GetProjectRelativePath(m_selectedFolder);
-            if (string.IsNullOrWhiteSpace(m_selectedFolder))
+            newFolder = FileUtil.GetProjectRelativePath(newFolder);
+            if (string.IsNullOrWhiteSpace(newFolder))
             {
                 EditorUtility.DisplayDialog("", "Folder must be inside project.", "Ok");
             }
+
+            m_selectedFolder = newFolder;
         }
 
         void Export(bool fromSelection)
