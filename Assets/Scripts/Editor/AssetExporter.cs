@@ -29,6 +29,9 @@ namespace SanAndreasUnity.Editor
 
         private bool m_exportFromSelection = false;
 
+        private bool m_exportRenderMeshes = true;
+        private bool m_exportMaterials = true;
+        private bool m_exportTextures = true;
         private bool m_exportCollisionMeshes = true;
         private bool m_exportPrefabs = true;
 
@@ -62,6 +65,9 @@ namespace SanAndreasUnity.Editor
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
+            m_exportRenderMeshes = EditorGUILayout.Toggle("Export render meshes", m_exportRenderMeshes);
+            m_exportMaterials = EditorGUILayout.Toggle("Export materials", m_exportMaterials);
+            m_exportTextures = EditorGUILayout.Toggle("Export textures", m_exportTextures);
             m_exportCollisionMeshes = EditorGUILayout.Toggle("Export collision meshes", m_exportCollisionMeshes);
             m_exportPrefabs = EditorGUILayout.Toggle("Export prefabs", m_exportPrefabs);
 
@@ -245,13 +251,16 @@ namespace SanAndreasUnity.Editor
         {
             string assetName = go.name;
 
-            var meshFilters = go.GetComponentsInChildren<MeshFilter>();
-
-            for (int i = 0; i < meshFilters.Length; i++)
+            if (m_exportRenderMeshes)
             {
-                MeshFilter meshFilter = meshFilters[i];
-                string indexPath = meshFilters.Length == 1 ? "" : "-" + i;
-                meshFilter.sharedMesh = (Mesh)CreateAssetIfNotExists(meshFilter.sharedMesh, $"{ModelsPath}/{assetName}{indexPath}.asset");
+                var meshFilters = go.GetComponentsInChildren<MeshFilter>();
+
+                for (int i = 0; i < meshFilters.Length; i++)
+                {
+                    MeshFilter meshFilter = meshFilters[i];
+                    string indexPath = meshFilters.Length == 1 ? "" : "-" + i;
+                    meshFilter.sharedMesh = (Mesh)CreateAssetIfNotExists(meshFilter.sharedMesh, $"{ModelsPath}/{assetName}{indexPath}.asset");
+                }
             }
 
             var meshRenderers = go.GetComponentsInChildren<MeshRenderer>();
@@ -276,6 +285,9 @@ namespace SanAndreasUnity.Editor
 
         public void ExportMeshRenderer(GameObject rootGo, MeshRenderer meshRenderer, int? index)
         {
+            if (!m_exportTextures && !m_exportMaterials)
+                return;
+
             string indexPath = index.HasValue ? "-" + index.Value : "";
             string assetName = rootGo.name + indexPath;
 
@@ -283,10 +295,15 @@ namespace SanAndreasUnity.Editor
 
             for (int i = 0; i < mats.Length; i++)
             {
-                var tex = mats[i].mainTexture;
-                if (tex != null && tex != Texture2D.whiteTexture) // sometimes materials will have white texture assigned, and Unity will crash if we attempt to create asset from it
-                    mats[i].mainTexture = (Texture)CreateAssetIfNotExists(tex, $"{TexturesPath}/{assetName}-{i}.asset");
-                mats[i] = (Material)CreateAssetIfNotExists(mats[i], $"{MaterialsPath}/{assetName}-{i}.mat");
+                if (m_exportTextures)
+                {
+                    var tex = mats[i].mainTexture;
+                    if (tex != null && tex != Texture2D.whiteTexture) // sometimes materials will have white texture assigned, and Unity will crash if we attempt to create asset from it
+                        mats[i].mainTexture = (Texture)CreateAssetIfNotExists(tex, $"{TexturesPath}/{assetName}-{i}.asset");
+                }
+
+                if (m_exportMaterials)
+                    mats[i] = (Material)CreateAssetIfNotExists(mats[i], $"{MaterialsPath}/{assetName}-{i}.mat");
             }
 
             meshRenderer.sharedMaterials = mats;
