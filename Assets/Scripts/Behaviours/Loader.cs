@@ -310,6 +310,21 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
+		public static bool IsGamePathCorrect(string gamePath, out string errorMessage)
+        {
+			errorMessage = null;
+			try
+            {
+				CheckIfGamePathIsCorrect(gamePath);
+				return true;
+			}
+            catch (System.Exception ex)
+            {
+				errorMessage = ex.Message;
+				return false;
+			}
+        }
+
 		private static void StepLoadArchives ()
 		{
 			CheckIfGamePathIsCorrect(Config.GamePath);
