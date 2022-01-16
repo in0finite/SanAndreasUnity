@@ -213,13 +213,11 @@ namespace SanAndreasUnity.Editor
             if (AssetDatabase.Contains(asset))
                 return false;
 
-            if (!AssetDatabase.IsMainAssetAtPathLoaded(path))
-            {
-                AssetDatabase.CreateAsset(asset, path);
-                return true;
-            }
+            if (File.Exists(Path.Combine(Application.dataPath + "/../", path)))
+                return false;
 
-            return false;
+            AssetDatabase.CreateAsset(asset, path);
+            return true;
         }
     }
 }
