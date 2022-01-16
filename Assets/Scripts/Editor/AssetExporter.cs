@@ -47,11 +47,39 @@ namespace SanAndreasUnity.Editor
 
             GUILayout.Space(20);
 
+            GUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Folder: " + m_selectedFolder);
+            GUILayout.Space(10);
+            if (GUILayout.Button("Change"))
+                this.ChangeFolder();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+            GUILayout.Space(20);
+
             if (GUILayout.Button("Export from world"))
                 this.Export(false);
 
             if (GUILayout.Button("Export from selection"))
                 this.Export(true);
+        }
+
+        void ChangeFolder()
+        {
+            m_selectedFolder = EditorUtility.SaveFolderPanel(
+                "Select folder where to export files",
+                m_selectedFolder,
+                "");
+            if (string.IsNullOrWhiteSpace(m_selectedFolder))
+            {
+                return;
+            }
+
+            m_selectedFolder = FileUtil.GetProjectRelativePath(m_selectedFolder);
+            if (string.IsNullOrWhiteSpace(m_selectedFolder))
+            {
+                EditorUtility.DisplayDialog("", "Folder must be inside project.", "Ok");
+            }
         }
 
         void Export(bool fromSelection)
@@ -72,6 +100,12 @@ namespace SanAndreasUnity.Editor
         IEnumerator ExportCoroutine()
         {
             yield return null;
+
+            if (string.IsNullOrWhiteSpace(m_selectedFolder))
+            {
+                EditorUtility.DisplayDialog("", "Select a folder first.", "Ok");
+                yield break;
+            }
 
             if (m_exportFromSelection)
             {
@@ -112,23 +146,6 @@ namespace SanAndreasUnity.Editor
                 "Ok",
                 "Cancel"))
             {
-                yield break;
-            }
-
-            m_selectedFolder = EditorUtility.SaveFolderPanel(
-                "Select folder where to export files",
-                m_selectedFolder,
-                "");
-            if (string.IsNullOrWhiteSpace(m_selectedFolder))
-            {
-                yield break;
-            }
-
-            m_selectedFolder = FileUtil.GetProjectRelativePath(m_selectedFolder);
-            if (string.IsNullOrWhiteSpace(m_selectedFolder))
-            {
-                EditorUtility.ClearProgressBar();
-                EditorUtility.DisplayDialog("", "Folder must be inside project.", "Ok");
                 yield break;
             }
 
