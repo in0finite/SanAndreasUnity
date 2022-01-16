@@ -47,11 +47,10 @@ namespace SanAndreasUnity.Editor
                 MessageType.Info,
                 true);
 
-            GUILayout.Space(20);
+            GUILayout.Space(30);
 
             GUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Folder: " + m_selectedFolder);
-            GUILayout.Space(10);
             if (GUILayout.Button("Change"))
                 this.ChangeFolder();
             GUILayout.FlexibleSpace();
@@ -59,7 +58,7 @@ namespace SanAndreasUnity.Editor
 
             m_exportCollisionMeshes = EditorGUILayout.Toggle("Export collision meshes", m_exportCollisionMeshes);
 
-            GUILayout.Space(20);
+            GUILayout.Space(30);
 
             if (GUILayout.Button("Export from world"))
                 this.Export(false);
