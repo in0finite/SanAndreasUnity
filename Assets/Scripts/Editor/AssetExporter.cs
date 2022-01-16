@@ -233,17 +233,17 @@ namespace SanAndreasUnity.Editor
             
             string[] folders = new string[]
             {
-                "Models",
-                "Materials",
-                "Textures",
-                "Prefabs",
-                "CollisionModels",
+                ModelsPath,
+                MaterialsPath,
+                TexturesPath,
+                PrefabsPath,
+                CollisionModelsPath,
             };
 
             foreach (string folder in folders)
             {
-                if (!AssetDatabase.IsValidFolder(Path.Combine(m_selectedFolder, folder)))
-                    AssetDatabase.CreateFolder(m_selectedFolder, folder);
+                if (!Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
             }
         }
 
