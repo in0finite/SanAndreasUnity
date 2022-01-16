@@ -1,4 +1,5 @@
 ﻿using SanAndreasUnity.Utilities;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -8,11 +9,21 @@ namespace SanAndreasUnity.Editor
 {
     public class EditorWindowBase : EditorWindow
     {
-        private class CoroutineInfo
+        public class CoroutineInfo
         {
-            public IEnumerator coroutine;
-            public System.Action onFinishSuccess;
-            public System.Action<System.Exception> onFinishError;
+            private static long s_lastId = 0;
+            public long Id { get; } = ++s_lastId;
+
+            public IEnumerator coroutine { get; }
+            public System.Action onFinishSuccess { get; }
+            public System.Action<System.Exception> onFinishError { get; }
+
+            public CoroutineInfo(IEnumerator coroutine, Action onFinishSuccess, Action<Exception> onFinishError)
+            {
+                this.coroutine = coroutine;
+                this.onFinishSuccess = onFinishSuccess;
+                this.onFinishError = onFinishError;
+            }
         }
 
         private List<CoroutineInfo> m_coroutines = new List<CoroutineInfo>();
@@ -26,14 +37,16 @@ namespace SanAndreasUnity.Editor
             EditorApplication.update += this.EditorUpdate;
         }
 
-        protected void StartCoroutine(IEnumerator coroutine, System.Action onFinishSuccess, System.Action<System.Exception> onFinishError)
+        protected CoroutineInfo StartCoroutine(IEnumerator coroutine, System.Action onFinishSuccess, System.Action<System.Exception> onFinishError)
         {
-            m_newCoroutines.Add(new CoroutineInfo
-            {
-                coroutine = coroutine,
-                onFinishSuccess = onFinishSuccess,
-                onFinishError = onFinishError,
-            });
+            var coroutineInfo = new CoroutineInfo(coroutine, onFinishSuccess, onFinishError);
+            m_newCoroutines.Add(coroutineInfo);
+            return coroutineInfo;
+        }
+
+        protected bool IsCoroutineRunning(CoroutineInfo coroutineInfo)
+        {
+            return m_coroutines.Contains(coroutineInfo);
         }
 
         void EditorUpdate()
