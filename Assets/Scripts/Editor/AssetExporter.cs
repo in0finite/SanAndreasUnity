@@ -2,6 +2,7 @@
 using SanAndreasUnity.Utilities;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -21,6 +22,9 @@ namespace SanAndreasUnity.Editor
         string PrefabsPath => m_selectedFolder + "/Prefabs";
 
         private CoroutineInfo m_coroutineInfo;
+
+        private int m_numNewlyExportedAssets = 0;
+        private int m_numAlreadyExportedAssets = 0;
 
         private bool m_exportFromSelection = false;
 
@@ -106,6 +110,9 @@ namespace SanAndreasUnity.Editor
         {
             yield return null;
 
+            m_numNewlyExportedAssets = 0;
+            m_numAlreadyExportedAssets = 0;
+
             if (string.IsNullOrWhiteSpace(m_selectedFolder))
             {
                 EditorUtility.DisplayDialog("", "Select a folder first.", "Ok");
@@ -157,6 +164,8 @@ namespace SanAndreasUnity.Editor
             if (EditorApplication.isPlaying)
                 EditorApplication.isPaused = true;
 
+            var stopwatch = Stopwatch.StartNew();
+
             EditorUtility.DisplayProgressBar("", "Creating folders...", 0f);
 
             this.CreateFolders();
@@ -196,7 +205,9 @@ namespace SanAndreasUnity.Editor
             AssetDatabase.Refresh();
 
             EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("", "Finished !", "Ok");
+            string displayText = $"number of newly exported asssets {m_numNewlyExportedAssets}, number of already exported assets {m_numAlreadyExportedAssets}, time elapsed {stopwatch.Elapsed}";
+            UnityEngine.Debug.Log($"Exporting of assets finished, {displayText}");
+            EditorUtility.DisplayDialog("", $"Finished ! \r\n{displayText}", "Ok");
         }
 
         void CreateFolders()
@@ -272,15 +283,20 @@ namespace SanAndreasUnity.Editor
             meshRenderer.sharedMaterials = mats;
         }
 
-        private static Object CreateAssetIfNotExists(Object asset, string path)
+        private Object CreateAssetIfNotExists(Object asset, string path)
         {
             if (AssetDatabase.Contains(asset))
                 return asset;
 
             if (File.Exists(Path.Combine(Application.dataPath + "/../", path)))
+            {
+                m_numAlreadyExportedAssets++;
                 return AssetDatabase.LoadMainAssetAtPath(path);
+            }
 
             AssetDatabase.CreateAsset(asset, path);
+
+            m_numNewlyExportedAssets++;
 
             return AssetDatabase.LoadMainAssetAtPath(path);
         }
