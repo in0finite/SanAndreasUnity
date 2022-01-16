@@ -262,9 +262,8 @@ namespace SanAndreasUnity.Behaviours
 
 		}
 
-		private static void StepLoadArchives ()
-		{
-
+		public static void CheckIfGamePathIsCorrect(string gamePath)
+        {
 			string[] directoriesToCheck = { "models", "data" };
 
 			foreach (string directoryToCheck in directoriesToCheck)
@@ -276,10 +275,16 @@ namespace SanAndreasUnity.Behaviours
 					directoryToCheck.ToUpperInvariant(),
 				};
 
-				if (caseVariations.All(d => !Directory.Exists(Path.Combine(Config.GamePath, d))))
+				if (caseVariations.All(d => !Directory.Exists(Path.Combine(gamePath, d))))
 					throw new System.Exception($"Game folder seems to be invalid - failed to find '{directoryToCheck}' folder inside game folder");
 			}
 
+		}
+
+		private static void StepLoadArchives ()
+		{
+			CheckIfGamePathIsCorrect(Config.GamePath);
+			
 			ArchiveManager.LoadLooseArchive(Config.GamePath);
 
 			foreach (string imgFilePath in ArchiveManager.GetFilePathsFromLooseArchivesWithExtension(".img"))
