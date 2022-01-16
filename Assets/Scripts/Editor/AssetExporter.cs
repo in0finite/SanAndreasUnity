@@ -299,7 +299,7 @@ namespace SanAndreasUnity.Editor
             if (AssetDatabase.Contains(asset))
                 return asset;
 
-            if (File.Exists(Path.Combine(Application.dataPath + "/../", path)))
+            if (File.Exists(Path.Combine(Directory.GetParent(Application.dataPath).FullName, path)))
             {
                 m_numAlreadyExportedAssets++;
                 return AssetDatabase.LoadMainAssetAtPath(path);
