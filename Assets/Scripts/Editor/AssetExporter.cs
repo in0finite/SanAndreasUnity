@@ -201,6 +201,9 @@ namespace SanAndreasUnity.Editor
 
         void CreateFolders()
         {
+            if (!Directory.Exists(m_selectedFolder))
+                Directory.CreateDirectory(m_selectedFolder);
+            
             string[] folders = new string[]
             {
                 "Models",
