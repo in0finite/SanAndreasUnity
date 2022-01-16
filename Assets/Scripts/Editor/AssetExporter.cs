@@ -205,7 +205,7 @@ namespace SanAndreasUnity.Editor
             {
                 MeshFilter meshFilter = meshFilters[i];
                 string indexPath = meshFilters.Length == 1 ? "" : "-" + i;
-                CreateAssetIfNotExists(meshFilter.sharedMesh, $"{ModelsPath}/{assetName}{indexPath}.asset");
+                meshFilter.sharedMesh = (Mesh)CreateAssetIfNotExists(meshFilter.sharedMesh, $"{ModelsPath}/{assetName}{indexPath}.asset");
             }
 
             var meshRenderers = go.GetComponentsInChildren<MeshRenderer>();
@@ -220,7 +220,7 @@ namespace SanAndreasUnity.Editor
             for (int i = 0; i < meshColliders.Length; i++)
             {
                 string indexPath = meshColliders.Length == 1 ? "" : "-" + i;
-                CreateAssetIfNotExists(meshColliders[i].sharedMesh, $"{CollisionModelsPath}/{assetName}{indexPath}.asset");
+                meshColliders[i].sharedMesh = (Mesh)CreateAssetIfNotExists(meshColliders[i].sharedMesh, $"{CollisionModelsPath}/{assetName}{indexPath}.asset");
             }
 
             //PrefabUtility.SaveAsPrefabAsset(go, $"{PrefabsPath}/{assetName}.prefab");
@@ -231,27 +231,30 @@ namespace SanAndreasUnity.Editor
             string indexPath = index.HasValue ? "-" + index.Value : "";
             string assetName = rootGo.name + indexPath;
 
-            var mats = meshRenderer.sharedMaterials;
+            var mats = meshRenderer.sharedMaterials.ToArray();
 
             for (int i = 0; i < mats.Length; i++)
             {
                 var tex = mats[i].mainTexture;
                 if (tex != null)
-                    CreateAssetIfNotExists(tex, $"{TexturesPath}/{assetName}-{i}.asset");
-                CreateAssetIfNotExists(mats[i], $"{MaterialsPath}/{assetName}-{i}.mat");
+                    mats[i].mainTexture = (Texture)CreateAssetIfNotExists(tex, $"{TexturesPath}/{assetName}-{i}.asset");
+                mats[i] = (Material)CreateAssetIfNotExists(mats[i], $"{MaterialsPath}/{assetName}-{i}.mat");
             }
+
+            meshRenderer.sharedMaterials = mats;
         }
 
-        private static bool CreateAssetIfNotExists(Object asset, string path)
+        private static Object CreateAssetIfNotExists(Object asset, string path)
         {
             if (AssetDatabase.Contains(asset))
-                return false;
+                return asset;
 
             if (File.Exists(Path.Combine(Application.dataPath + "/../", path)))
-                return false;
+                return AssetDatabase.LoadMainAssetAtPath(path);
 
             AssetDatabase.CreateAsset(asset, path);
-            return true;
+
+            return AssetDatabase.LoadMainAssetAtPath(path);
         }
     }
 }
