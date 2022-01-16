@@ -153,6 +153,12 @@ namespace SanAndreasUnity.Editor
 
             EditorUtility.ClearProgressBar();
 
+            if (0 == numObjectsActive)
+            {
+                EditorUtility.DisplayDialog("", "No suitable objects to export.", "Ok");
+                yield break;
+            }
+
             if (!EditorUtility.DisplayDialog(
                 "",
                 $"There are {objectsToExport.Length} objects, with {numObjectsActive} active ones.\nProceed ?",
