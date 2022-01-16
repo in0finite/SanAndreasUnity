@@ -195,8 +195,6 @@ namespace SanAndreasUnity.Editor
                 this.ExportAssets(child.gameObject);
 
                 numExported++;
-
-                yield return null;
             }
 
             if (m_exportPrefabs)
@@ -309,7 +307,7 @@ namespace SanAndreasUnity.Editor
 
             m_numNewlyExportedAssets++;
 
-            return AssetDatabase.LoadMainAssetAtPath(path);
+            return asset;
         }
     }
 }
