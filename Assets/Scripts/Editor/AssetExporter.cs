@@ -149,7 +149,7 @@ namespace SanAndreasUnity.Editor
                 if (!child.gameObject.activeInHierarchy)
                     continue;
 
-                if (EditorUtility.DisplayCancelableProgressBar("", $"Creating assets... {child.name}", numExported / (float)numObjectsActive))
+                if (EditorUtility.DisplayCancelableProgressBar("", $"Creating assets ({numExported}/{numObjectsActive})... {child.name}", numExported / (float)numObjectsActive))
                     yield break;
 
                 this.ExportAssets(child.gameObject);
