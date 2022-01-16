@@ -1,4 +1,5 @@
-﻿using SanAndreasUnity.Behaviours.World;
+﻿using SanAndreasUnity.Behaviours;
+using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Utilities;
 using System.Collections;
 using System.Collections.Generic;
@@ -138,7 +139,7 @@ namespace SanAndreasUnity.Editor
             EditorUtility.DisplayProgressBar("", "Gathering info...", 0f);
 
             Transform[] objectsToExport = m_exportFromSelection
-                ? Selection.transforms
+                ? Selection.transforms.Where(_ => _.GetComponent<MapObject>() != null).ToArray()
                 : cell.transform.GetFirstLevelChildren().ToArray();
 
             int numObjectsActive = 0;
