@@ -24,6 +24,8 @@ namespace SanAndreasUnity.Editor
 
         private bool m_exportFromSelection = false;
 
+        private bool m_exportCollisionMeshes = true;
+
 
         [MenuItem(EditorCore.MenuName + "/" + "Asset exporter")]
         static void Init()
@@ -54,6 +56,8 @@ namespace SanAndreasUnity.Editor
                 this.ChangeFolder();
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
+
+            m_exportCollisionMeshes = EditorGUILayout.Toggle("Export collision meshes", m_exportCollisionMeshes);
 
             GUILayout.Space(20);
 
@@ -232,12 +236,15 @@ namespace SanAndreasUnity.Editor
                 ExportMeshRenderer(go, meshRenderers[i], meshRenderers.Length == 1 ? (int?)null : i);
             }
 
-            var meshColliders = go.GetComponentsInChildren<MeshCollider>();
-
-            for (int i = 0; i < meshColliders.Length; i++)
+            if (m_exportCollisionMeshes)
             {
-                string indexPath = meshColliders.Length == 1 ? "" : "-" + i;
-                meshColliders[i].sharedMesh = (Mesh)CreateAssetIfNotExists(meshColliders[i].sharedMesh, $"{CollisionModelsPath}/{assetName}{indexPath}.asset");
+                var meshColliders = go.GetComponentsInChildren<MeshCollider>();
+
+                for (int i = 0; i < meshColliders.Length; i++)
+                {
+                    string indexPath = meshColliders.Length == 1 ? "" : "-" + i;
+                    meshColliders[i].sharedMesh = (Mesh)CreateAssetIfNotExists(meshColliders[i].sharedMesh, $"{CollisionModelsPath}/{assetName}{indexPath}.asset");
+                }
             }
 
             //PrefabUtility.SaveAsPrefabAsset(go, $"{PrefabsPath}/{assetName}.prefab");
