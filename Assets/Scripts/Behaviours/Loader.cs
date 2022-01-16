@@ -19,10 +19,14 @@ namespace SanAndreasUnity.Behaviours
     public class Loader : MonoBehaviour
     {
         
+		public static Loader Instance { get; private set; }
+
 		public static bool HasLoaded { get; private set; }
 		public static bool IsLoading { get; private set; }
 
 		public static string LoadingStatus { get; private set; }
+
+		private static object s_coroutine;
 
 		private static int m_currentStepIndex = 0;
 
@@ -71,12 +75,17 @@ namespace SanAndreasUnity.Behaviours
 
 
 
+		void Awake()
+        {
+			Instance = this;
+		}
+
 		void Start ()
 		{
 
 			AddLoadingSteps ();
 
-			StartCoroutine (LoadCoroutine ());
+			StartLoading();
 
 		}
 
@@ -127,6 +136,26 @@ namespace SanAndreasUnity.Behaviours
 		private static void AddLoadingStep (LoadingStep step)
 		{
 			m_loadingSteps.AddIfNotPresent (step);
+		}
+
+		public static void StartLoading()
+        {
+			if (IsLoading)
+				return;
+
+			s_coroutine = Instance.StartCoroutine(LoadCoroutine());
+		}
+
+		public static void StopLoading()
+        {
+			if (!IsLoading)
+				return;
+
+			IsLoading = false;
+
+			if (s_coroutine != null)
+				Instance.StopCoroutine((Coroutine)s_coroutine);
+			s_coroutine = null;
 		}
 
 
