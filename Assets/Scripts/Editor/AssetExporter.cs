@@ -30,6 +30,7 @@ namespace SanAndreasUnity.Editor
         private bool m_exportFromSelection = false;
 
         private bool m_exportCollisionMeshes = true;
+        private bool m_exportPrefabs = true;
 
 
         [MenuItem(EditorCore.MenuName + "/" + "Asset exporter")]
@@ -62,6 +63,7 @@ namespace SanAndreasUnity.Editor
             GUILayout.EndHorizontal();
 
             m_exportCollisionMeshes = EditorGUILayout.Toggle("Export collision meshes", m_exportCollisionMeshes);
+            m_exportPrefabs = EditorGUILayout.Toggle("Export prefabs", m_exportPrefabs);
 
             GUILayout.Space(30);
 
@@ -197,14 +199,17 @@ namespace SanAndreasUnity.Editor
                 yield return null;
             }
 
-            EditorUtility.DisplayProgressBar("", "Creating prefab...", 1f);
-            if (!m_exportFromSelection)
-                PrefabUtility.SaveAsPrefabAsset(cell.gameObject, $"{PrefabsPath}/ExportedWorld.prefab");
-            else
+            if (m_exportPrefabs)
             {
-                foreach (var obj in objectsToExport)
+                EditorUtility.DisplayProgressBar("", "Creating prefabs...", 1f);
+                if (!m_exportFromSelection)
+                    PrefabUtility.SaveAsPrefabAsset(cell.gameObject, $"{PrefabsPath}/ExportedWorld.prefab");
+                else
                 {
-                    PrefabUtility.SaveAsPrefabAsset(obj.gameObject, $"{PrefabsPath}/{obj.gameObject.name}.prefab");
+                    foreach (var obj in objectsToExport)
+                    {
+                        PrefabUtility.SaveAsPrefabAsset(obj.gameObject, $"{PrefabsPath}/{obj.gameObject.name}.prefab");
+                    }
                 }
             }
 
@@ -269,7 +274,6 @@ namespace SanAndreasUnity.Editor
                 }
             }
 
-            //PrefabUtility.SaveAsPrefabAsset(go, $"{PrefabsPath}/{assetName}.prefab");
         }
 
         public void ExportMeshRenderer(GameObject rootGo, MeshRenderer meshRenderer, int? index)
