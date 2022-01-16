@@ -264,7 +264,7 @@ namespace SanAndreasUnity.Editor
             for (int i = 0; i < mats.Length; i++)
             {
                 var tex = mats[i].mainTexture;
-                if (tex != null)
+                if (tex != null && tex != Texture2D.whiteTexture) // sometimes materials will have white texture assigned, and Unity will crash if we attempt to create asset from it
                     mats[i].mainTexture = (Texture)CreateAssetIfNotExists(tex, $"{TexturesPath}/{assetName}-{i}.asset");
                 mats[i] = (Material)CreateAssetIfNotExists(mats[i], $"{MaterialsPath}/{assetName}-{i}.mat");
             }
