@@ -1,7 +1,9 @@
 ﻿using SanAndreasUnity.Behaviours.World;
+using SanAndreasUnity.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,6 +21,8 @@ namespace SanAndreasUnity.Editor
         string PrefabsPath => m_selectedFolder + "/Prefabs";
 
         private CoroutineInfo m_coroutineInfo;
+
+        private bool m_exportFromSelection = false;
 
 
         [MenuItem(EditorCore.MenuName + "/" + "Asset exporter")]
@@ -43,14 +47,19 @@ namespace SanAndreasUnity.Editor
 
             GUILayout.Space(20);
 
-            if (GUILayout.Button("Export"))
-                this.Export();
+            if (GUILayout.Button("Export from world"))
+                this.Export(false);
+
+            if (GUILayout.Button("Export from selection"))
+                this.Export(true);
         }
 
-        void Export()
+        void Export(bool fromSelection)
         {
             if (this.IsCoroutineRunning(m_coroutineInfo))
                 return;
+
+            m_exportFromSelection = fromSelection;
 
             m_coroutineInfo = this.StartCoroutine(this.ExportCoroutine(), this.Cleanup, ex => this.Cleanup());
         }
@@ -64,8 +73,17 @@ namespace SanAndreasUnity.Editor
         {
             yield return null;
 
+            if (m_exportFromSelection)
+            {
+                if (Selection.transforms.Length == 0)
+                {
+                    EditorUtility.DisplayDialog("", "No object selected.", "Ok");
+                    yield break;
+                }
+            }
+
             var cell = Cell.Instance;
-            if (null == cell)
+            if (null == cell && !m_exportFromSelection)
             {
                 EditorUtility.DisplayDialog("", $"{nameof(Cell)} script not found in scene. Make sure that you started the game with the correct scene.", "Ok");
                 yield break;
@@ -73,10 +91,14 @@ namespace SanAndreasUnity.Editor
 
             EditorUtility.DisplayProgressBar("", "Gathering info...", 0f);
 
+            Transform[] objectsToExport = m_exportFromSelection
+                ? Selection.transforms
+                : cell.transform.GetFirstLevelChildren().ToArray();
+
             int numObjectsActive = 0;
-            for (int i = 0; i < cell.transform.childCount; i++)
+            for (int i = 0; i < objectsToExport.Length; i++)
             {
-                var child = cell.transform.GetChild(i);
+                var child = objectsToExport[i];
 
                 if (child.gameObject.activeInHierarchy)
                     numObjectsActive++;
@@ -86,7 +108,7 @@ namespace SanAndreasUnity.Editor
 
             if (!EditorUtility.DisplayDialog(
                 "",
-                $"There are {cell.transform.childCount} world objects, with {numObjectsActive} active ones.\nProceed ?",
+                $"There are {objectsToExport.Length} objects, with {numObjectsActive} active ones.\nProceed ?",
                 "Ok",
                 "Cancel"))
             {
@@ -120,23 +142,33 @@ namespace SanAndreasUnity.Editor
             EditorUtility.DisplayProgressBar("", "Creating assets...", 0f);
 
             int numExported = 0;
-            for (int i = 0; i < cell.transform.childCount; i++)
+            for (int i = 0; i < objectsToExport.Length; i++)
             {
-                var child = cell.transform.GetChild(i);
+                var child = objectsToExport[i];
 
                 if (!child.gameObject.activeInHierarchy)
                     continue;
 
-                if (EditorUtility.DisplayCancelableProgressBar("", $"Creating assets...\n\n{child.name}", numExported / (float)numObjectsActive))
+                if (EditorUtility.DisplayCancelableProgressBar("", $"Creating assets... {child.name}", numExported / (float)numObjectsActive))
                     yield break;
 
                 this.ExportAssets(child.gameObject);
 
                 numExported++;
+
+                yield return null;
             }
 
             EditorUtility.DisplayProgressBar("", "Creating prefab...", 1f);
-            PrefabUtility.SaveAsPrefabAsset(cell.gameObject, $"{PrefabsPath}/{cell.gameObject.name}.prefab");
+            if (!m_exportFromSelection)
+                PrefabUtility.SaveAsPrefabAsset(cell.gameObject, $"{PrefabsPath}/{cell.gameObject.name}.prefab");
+            else
+            {
+                foreach (var obj in objectsToExport)
+                {
+                    PrefabUtility.SaveAsPrefabAsset(obj.gameObject, $"{PrefabsPath}/{obj.gameObject.name}.prefab");
+                }
+            }
 
             EditorUtility.DisplayProgressBar("", "Refreshing asset database...", 1f);
             AssetDatabase.Refresh();
