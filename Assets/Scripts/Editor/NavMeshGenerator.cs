@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using SanAndreasUnity.Behaviours.World;
 using System.Collections;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Editor
 {
@@ -76,7 +77,7 @@ namespace SanAndreasUnity.Editor
             Cleanup();
 
             s_coroutine = this.DoGenerate();
-            this.StartCoroutine(s_coroutine, this.Cleanup, ex => this.Cleanup());
+            CoroutineManager.Start(s_coroutine, this.Cleanup, ex => this.Cleanup());
         }
 
         IEnumerator DoGenerate()

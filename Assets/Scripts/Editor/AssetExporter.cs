@@ -102,12 +102,12 @@ namespace SanAndreasUnity.Editor
 
         void Export(bool fromSelection)
         {
-            if (this.IsCoroutineRunning(m_coroutineInfo))
+            if (CoroutineManager.IsRunning(m_coroutineInfo))
                 return;
 
             m_exportFromSelection = fromSelection;
 
-            m_coroutineInfo = this.StartCoroutine(this.ExportCoroutine(), this.Cleanup, ex => this.Cleanup());
+            m_coroutineInfo = CoroutineManager.Start(this.ExportCoroutine(), this.Cleanup, ex => this.Cleanup());
         }
 
         void Cleanup()

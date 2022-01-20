@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public static string LoadingStatus { get; private set; }
 
-		private static object s_coroutine;
+		private static CoroutineInfo s_coroutine;
 
 		private static int m_currentStepIndex = 0;
 
@@ -143,7 +143,7 @@ namespace SanAndreasUnity.Behaviours
 			if (IsLoading)
 				return;
 
-			s_coroutine = Instance.StartCoroutine(LoadCoroutine());
+			s_coroutine = CoroutineManager.Start(LoadCoroutine());
 		}
 
 		public static void StopLoading()
@@ -154,7 +154,7 @@ namespace SanAndreasUnity.Behaviours
 			IsLoading = false;
 
 			if (s_coroutine != null)
-				Instance.StopCoroutine((Coroutine)s_coroutine);
+				CoroutineManager.Stop(s_coroutine);
 			s_coroutine = null;
 		}
 
