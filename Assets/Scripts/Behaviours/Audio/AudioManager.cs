@@ -3,6 +3,7 @@ using UnityEngine;
 using GTAAudioSharp;
 using System.IO;
 using SanAndreasUnity.Audio;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Behaviours.Audio
 {
@@ -17,10 +18,8 @@ namespace SanAndreasUnity.Behaviours.Audio
 	}
 
 
-	public class AudioManager : MonoBehaviour
+	public class AudioManager : StartupSingleton<AudioManager>
 	{
-
-		public static AudioManager Instance { get; private set; }
 
 		private static GTAAudioFiles s_gtaAudioFiles;
 		public static GTAAudioFiles AudioFiles { get { return s_gtaAudioFiles; } }
@@ -41,22 +40,13 @@ namespace SanAndreasUnity.Behaviours.Audio
 
 
 
-		void Awake ()
-		{
-			Instance = this;
-		}
-
-		void OnDisable ()
+		protected override void OnSingletonDisable()
 		{
 			if (s_gtaAudioFiles != null)
 			{
 				s_gtaAudioFiles.Dispose ();
 				s_gtaAudioFiles = null;
 			}
-		}
-
-		void Start () {
-			
 		}
 
 		void OnLoaderFinished ()
@@ -73,11 +63,11 @@ namespace SanAndreasUnity.Behaviours.Audio
 
 			s_gtaAudioFiles = GTAAudio.OpenRead (Path.Combine (Utilities.Config.GamePath, "audio"));
 
-			if (Instance.playStartupSound)
+			if (Singleton.playStartupSound)
 			{
 				s_startupAudioSource = PlayStream ("Beats", 1);
 				if (s_startupAudioSource != null)
-					s_startupAudioSource.time = Instance.startupSoundTimeOffset;
+					s_startupAudioSource.time = Singleton.startupSoundTimeOffset;
 			}
 
 		}
