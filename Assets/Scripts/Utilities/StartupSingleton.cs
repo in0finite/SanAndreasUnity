@@ -6,7 +6,39 @@ namespace SanAndreasUnity.Utilities
     public class StartupSingleton<T> : MonoBehaviour
         where T : StartupSingleton<T>
     {
+#if !UNITY_EDITOR
         public static T Singleton { get; private set; }
+#else
+        private static T s_cachedSingleton;
+        public static T Singleton
+        {
+            get
+            {
+                if (!F.IsAppInEditTime)
+                {
+                    return s_cachedSingleton;
+                }
+
+                if (s_cachedSingleton != null)
+                    return s_cachedSingleton;
+
+                T[] objects = FindObjectsOfType<T>();
+
+                if (objects.Length == 0)
+                    return null;
+
+                if (objects.Length > 1)
+                    throw new Exception($"Found multiple singleton objects of type {typeof(T).Name}. Make sure there is only 1 singleton object created per type.");
+
+                s_cachedSingleton = objects[0];
+                return s_cachedSingleton;
+            }
+            private set
+            {
+                s_cachedSingleton = value;
+            }
+        }
+#endif
 
         private void Awake()
         {
@@ -21,6 +53,18 @@ namespace SanAndreasUnity.Utilities
         }
 
         protected virtual void OnSingletonAwake()
+        {
+        }
+
+        private void OnDisable()
+        {
+            if (Singleton != this)
+                return;
+
+            this.OnSingletonDisable();
+        }
+
+        protected virtual void OnSingletonDisable()
         {
         }
 

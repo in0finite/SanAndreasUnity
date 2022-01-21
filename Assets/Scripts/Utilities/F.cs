@@ -1036,6 +1036,18 @@ namespace SanAndreasUnity.Utilities
 		    }
 	    }
 
+        public static bool IsAppInEditTime
+        {
+            get
+            {
+#if !UNITY_EDITOR
+                return false;
+#else
+                return !UnityEditor.EditorApplication.isPlaying && !UnityEditor.EditorApplication.isPaused;
+#endif
+            }
+        }
+
         public static bool ScreenHasHighDensity => Application.isMobilePlatform;
 
 
