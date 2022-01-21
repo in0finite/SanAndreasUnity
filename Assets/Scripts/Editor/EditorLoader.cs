@@ -38,6 +38,11 @@ namespace SanAndreasUnity.Editor
         static void OnLoadingFinished()
         {
             EditorUtility.ClearProgressBar();
+
+            if (Loader.HasLoaded)
+                EditorUtility.DisplayDialog("", "Successfully loaded game data.", "Ok");
+            else
+                EditorUtility.DisplayDialog("", "Error in loading game data. Check console for more information.", "Ok");
         }
 
         [MenuItem(EditorCore.MenuName + "/" + "Load game data")]
