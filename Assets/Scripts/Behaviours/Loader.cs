@@ -77,16 +77,14 @@ namespace SanAndreasUnity.Behaviours
 
 		protected override void OnSingletonStart()
 		{
-
-			AddLoadingSteps ();
-
 			StartLoading();
-
 		}
 
 		private static void AddLoadingSteps ()
 		{
-			
+
+			m_loadingSteps.Clear();
+
 			LoadingStep[] steps = new LoadingStep[] {
 				new LoadingStep ( StepConfigure, "Configuring", 0f ),
 				new LoadingStep ( StepSelectGTAPath(), "Select path to GTA", 0.0f ),
@@ -158,6 +156,8 @@ namespace SanAndreasUnity.Behaviours
 
 		private static IEnumerator LoadCoroutine ()
 		{
+
+			AddLoadingSteps();
 
 			var stopwatch = System.Diagnostics.Stopwatch.StartNew ();
 
