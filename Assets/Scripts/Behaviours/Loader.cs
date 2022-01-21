@@ -16,10 +16,8 @@ using SanAndreasUnity.Importing.GXT;
 namespace SanAndreasUnity.Behaviours
 {
 	
-    public class Loader : MonoBehaviour
+    public class Loader : Utilities.SingletonComponent<Loader>
     {
-        
-		public static Loader Instance { get; private set; }
 
 		public static bool HasLoaded { get; private set; }
 		public static bool IsLoading { get; private set; }
@@ -75,12 +73,7 @@ namespace SanAndreasUnity.Behaviours
 
 
 
-		void Awake()
-        {
-			Instance = this;
-		}
-
-		void Start ()
+		protected override void OnSingletonStart()
 		{
 
 			AddLoadingSteps ();
