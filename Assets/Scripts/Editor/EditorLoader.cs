@@ -54,6 +54,12 @@ namespace SanAndreasUnity.Editor
                 return;
             }
 
+            if (Loader.HasLoaded)
+            {
+                EditorUtility.DisplayDialog("", "Game data is already loaded.", "Ok");
+                return;
+            }
+
             if (null == Loader.Singleton)
             {
                 new GameObject("Loader", typeof(Loader));
