@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace SanAndreasUnity.Behaviours
 {
-    public class MiniMap : MonoBehaviour
+    public class MiniMap : StartupSingleton<MiniMap>
     {
         public const int tileEdge = 12; // width/height of map in tiles
         public const int tileCount = tileEdge * tileEdge; // number of tiles
@@ -15,7 +15,7 @@ namespace SanAndreasUnity.Behaviours
         public const int mapSize = tileEdge * texSize; // width/height of whole map in px
         public const int uiSize = 256, uiOffset = 10;
 
-        public static MiniMap Instance { get; private set; }
+        public static MiniMap Instance => Singleton;
 
         public Image northImage,
                      outlineImage,
@@ -138,10 +138,8 @@ namespace SanAndreasUnity.Behaviours
             MapTexture.Apply(false, true);
         }
 
-        private void Awake()
+        protected override void OnSingletonAwake()
         {
-            Instance = this;
-
             _canvas = this.GetComponentInParent<Canvas>();
 
             curZoomPercentage = availableZooms[zoomSelector];
