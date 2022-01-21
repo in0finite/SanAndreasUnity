@@ -96,9 +96,15 @@ namespace SanAndreasUnity.Utilities
                 m_coroutines[coroutineIndex] = null;
 
                 if (isSuccess)
-                    F.RunExceptionSafe(coroutine.onFinishSuccess);
+                {
+                    if (coroutine.onFinishSuccess != null)
+                        F.RunExceptionSafe(coroutine.onFinishSuccess);
+                }
                 else
-                    F.RunExceptionSafe(() => coroutine.onFinishError(failureException));
+                {
+                    if (coroutine.onFinishError != null)
+                        F.RunExceptionSafe(() => coroutine.onFinishError(failureException));
+                }
             }
         }
     }
