@@ -38,24 +38,21 @@ namespace SanAndreasUnity.Behaviours
 			public IEnumerator Coroutine { get; private set; }
 			public System.Action LoadFunction { get; private set; }
 			public string Description { get; set; }
-			public bool StopLoadingOnException { get; private set; }
 			public float TimeElapsed { get; internal set; }
 			public float EstimatedTime { get; private set; }
 
-			public LoadingStep (System.Action loadFunction, string description, float estimatedTime = 0f, bool stopLoadingOnException = true)
+			public LoadingStep (System.Action loadFunction, string description, float estimatedTime = 0f)
 			{
 				this.LoadFunction = loadFunction;
 				this.Description = description;
 				this.EstimatedTime = estimatedTime;
-				this.StopLoadingOnException = stopLoadingOnException;
 			}
 
-			public LoadingStep (IEnumerator coroutine, string description, float estimatedTime = 0f, bool stopLoadingOnException = true)
+			public LoadingStep (IEnumerator coroutine, string description, float estimatedTime = 0f)
 			{
 				this.Coroutine = coroutine;
 				this.Description = description;
 				this.EstimatedTime = estimatedTime;
-				this.StopLoadingOnException = stopLoadingOnException;
 			}
 			
 		}
@@ -71,6 +68,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public static event System.Action onLoadSpecialTextures = delegate { };
 
+		// also called for failures
 		public static event System.Action onLoadingFinished = delegate { };
 
 
@@ -136,7 +134,9 @@ namespace SanAndreasUnity.Behaviours
 			if (IsLoading)
 				return;
 
-			s_coroutine = CoroutineManager.Start(LoadCoroutine());
+			AddLoadingSteps();
+
+			s_coroutine = CoroutineManager.Start(LoadCoroutine(), OnLoadCoroutineFinishedOk, OnLoadCoroutineFinishedWithError);
 		}
 
 		public static void StopLoading()
@@ -144,7 +144,7 @@ namespace SanAndreasUnity.Behaviours
 			if (!IsLoading)
 				return;
 
-			IsLoading = false;
+			CleanupState();
 
 			if (s_coroutine != null)
 				CoroutineManager.Stop(s_coroutine);
@@ -153,15 +153,43 @@ namespace SanAndreasUnity.Behaviours
 			F.InvokeEventExceptionSafe(onLoadingFinished);
 		}
 
+		static void CleanupState()
+        {
+			IsLoading = false;
+			HasLoaded = false;
+			m_hasErrors = false;
+			m_loadException = null;
+			m_currentStepIndex = 0;
+			LoadingStatus = "";
+		}
+
+		static void OnLoadCoroutineFinishedOk()
+        {
+			CleanupState();
+			HasLoaded = true;
+
+			F.InvokeEventExceptionSafe(onLoadingFinished);
+			// notify all scripts
+			F.SendMessageToObjectsOfType<MonoBehaviour>("OnLoaderFinished");
+		}
+
+		static void OnLoadCoroutineFinishedWithError(System.Exception exception)
+        {
+			CleanupState ();
+			m_hasErrors = true;
+			m_loadException = exception;
+			
+			F.InvokeEventExceptionSafe(onLoadingFinished);
+		}
+
 
 		private static IEnumerator LoadCoroutine ()
 		{
 
-			AddLoadingSteps();
-
-			var stopwatch = System.Diagnostics.Stopwatch.StartNew ();
-
+			CleanupState();
 			IsLoading = true;
+			
+			var stopwatch = System.Diagnostics.Stopwatch.StartNew ();
 
 			Debug.Log("Started loading GTA");
 
@@ -197,15 +225,7 @@ namespace SanAndreasUnity.Behaviours
 
 					while (hasNext) {
 
-						hasNext = false;
-						try {
-							hasNext = en.MoveNext ();
-						} catch (System.Exception ex) {
-							HandleExceptionDuringLoad (ex);
-							if (step.StopLoadingOnException) {
-								yield break;
-							}
-						}
+						hasNext = en.MoveNext();
 
 						// update description
 						LoadingStatus = step.Description;
@@ -215,14 +235,7 @@ namespace SanAndreasUnity.Behaviours
 				} else {
 					// this step uses a function
 
-					try {
-						step.LoadFunction ();
-					} catch(System.Exception ex) {
-						HandleExceptionDuringLoad (ex);
-						if (step.StopLoadingOnException) {
-							yield break;
-						}
-					}
+					step.LoadFunction();
 				}
 
 				// step finished it's work
@@ -236,24 +249,8 @@ namespace SanAndreasUnity.Behaviours
 
 			// all steps finished loading
 
-			HasLoaded = true;
-			IsLoading = false;
-
 			Debug.Log("GTA loading finished in " + stopwatch.Elapsed.TotalSeconds + " seconds");
 
-			F.InvokeEventExceptionSafe(onLoadingFinished);
-
-			// notify all scripts
-			F.SendMessageToObjectsOfType<MonoBehaviour>( "OnLoaderFinished" );
-
-		}
-
-		private static void HandleExceptionDuringLoad (System.Exception ex)
-		{
-			m_hasErrors = true;
-			m_loadException = ex;
-
-			Debug.LogException (ex);
 		}
 
 		private static void StepConfigure ()
