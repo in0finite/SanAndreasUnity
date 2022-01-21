@@ -50,7 +50,7 @@ namespace SanAndreasUnity.Editor
         {
             if (!F.IsAppInEditTime)
             {
-                EditorUtility.DisplayDialog("", "Exit play mode first.", "Ok");
+                EditorUtility.DisplayDialog("", "This can only be used in edit mode.", "Ok");
                 return;
             }
 
