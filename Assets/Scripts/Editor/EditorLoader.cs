@@ -14,6 +14,9 @@ namespace SanAndreasUnity.Editor
         {
             EditorApplication.update -= EditorUpdate;
             EditorApplication.update += EditorUpdate;
+
+            Loader.onLoadingFinished -= OnLoadingFinished;
+            Loader.onLoadingFinished += OnLoadingFinished;
         }
 
         static void EditorUpdate()
@@ -30,6 +33,11 @@ namespace SanAndreasUnity.Editor
                     return;
                 }
             }
+        }
+
+        static void OnLoadingFinished()
+        {
+            EditorUtility.ClearProgressBar();
         }
 
         [MenuItem(EditorCore.MenuName + "/" + "Load game data")]

@@ -71,6 +71,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public static event System.Action onLoadSpecialTextures = delegate { };
 
+		public static event System.Action onLoadingFinished = delegate { };
+
 
 
 		protected override void OnSingletonStart()
@@ -149,6 +151,8 @@ namespace SanAndreasUnity.Behaviours
 			if (s_coroutine != null)
 				CoroutineManager.Stop(s_coroutine);
 			s_coroutine = null;
+
+			F.InvokeEventExceptionSafe(onLoadingFinished);
 		}
 
 
@@ -236,6 +240,8 @@ namespace SanAndreasUnity.Behaviours
 			IsLoading = false;
 
 			Debug.Log("GTA loading finished in " + stopwatch.Elapsed.TotalSeconds + " seconds");
+
+			F.InvokeEventExceptionSafe(onLoadingFinished);
 
 			// notify all scripts
 			F.SendMessageToObjectsOfType<MonoBehaviour>( "OnLoaderFinished" );
