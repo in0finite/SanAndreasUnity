@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Editor
 
         static void EditorUpdate()
         {
-            if (EditorApplication.isPlaying)
+            if (!F.IsAppInEditTime)
                 return;
 
             if (Loader.IsLoading)
@@ -35,13 +35,13 @@ namespace SanAndreasUnity.Editor
         [MenuItem(EditorCore.MenuName + "/" + "Load game data")]
         static void MenuItemLoadGameData()
         {
-            if (EditorApplication.isPlaying)
+            if (!F.IsAppInEditTime)
             {
                 EditorUtility.DisplayDialog("", "Exit play mode first.", "Ok");
                 return;
             }
 
-            if (null == Loader.Instance)
+            if (null == Loader.Singleton)
             {
                 new GameObject("Loader", typeof(Loader));
             }
@@ -52,7 +52,7 @@ namespace SanAndreasUnity.Editor
         [MenuItem(EditorCore.MenuName + "/" + "Change path to GTA")]
         static void MenuItemChangePath()
         {
-            if (EditorApplication.isPlaying)
+            if (!F.IsAppInEditTime)
             {
                 EditorUtility.DisplayDialog("", "Exit play mode first.", "Ok");
                 return;
