@@ -20,7 +20,7 @@ namespace SanAndreasUnity.Behaviours.World
 		private MapObject[] m_cars;
         private List<EntranceExitMapObject> m_enexes;
 
-        private List<int> CellIds = Enumerable.Range(0, 19).ToList();
+        public IReadOnlyList<int> CellIds { get; } = Enumerable.Range(0, 19).ToList();
 
 		public bool ignoreLodObjectsWhenInitializing = false;
 
@@ -142,9 +142,6 @@ namespace SanAndreasUnity.Behaviours.World
 
         internal void CreateStaticGeometry ()
 		{
-			_navMeshData = new NavMeshData(0);
-			NavMesh.AddNavMeshData(_navMeshData);
-
 			var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
 
 			m_insts = new Dictionary<Instance,StaticGeometry> (48 * 1024);
