@@ -75,7 +75,7 @@ namespace SanAndreasUnity.Behaviours
 
 		protected override void OnSingletonStart()
 		{
-			StartLoading();
+
 		}
 
 		private static void AddLoadingSteps ()
