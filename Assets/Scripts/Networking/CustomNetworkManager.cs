@@ -46,6 +46,9 @@ namespace SanAndreasUnity.Net
 
         void OnLoaderFinished()
         {
+            if (F.IsAppInEditTime)
+                return;
+
             if (NetStatus.IsServer) // don't do anything on server
                 return;
 
