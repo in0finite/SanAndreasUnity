@@ -502,6 +502,8 @@ namespace SanAndreasUnity.Behaviours
         {
             if (HasLoaded)
                 return;
+			if (!m_hasErrors)
+				return;
 
 			// background
 

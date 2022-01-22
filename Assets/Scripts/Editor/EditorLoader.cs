@@ -39,6 +39,9 @@ namespace SanAndreasUnity.Editor
         {
             EditorUtility.ClearProgressBar();
 
+            if (!F.IsAppInEditTime)
+                return;
+
             if (Loader.HasLoaded)
                 EditorUtility.DisplayDialog("", "Successfully loaded game data.", "Ok");
             else
