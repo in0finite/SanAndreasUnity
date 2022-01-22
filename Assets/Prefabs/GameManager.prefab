@@ -36,6 +36,7 @@ GameObject:
   - component: {fileID: 3560199336842227889}
   - component: {fileID: 7933397811870977063}
   - component: {fileID: 7374219779517658196}
+  - component: {fileID: 2483599330734961439}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -509,3 +510,15 @@ MonoBehaviour:
   maxSpawnDistanceFromFocusPoint: 80
   timeIntervalToAttemptSpawn: 0.5
   timeIntervalToAttemptDestroy: 0.65
+--- !u!114 &2483599330734961439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297494511425690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29ff195586224b54ebfe1e606d27a4b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

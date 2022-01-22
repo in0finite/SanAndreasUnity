@@ -407,6 +407,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   directionalLight: {fileID: 10808534}
+  lightYAngle: 45
   startTimeHours: 12
   startTimeMinutes: 0
   timeScale: 0.5
@@ -436,7 +437,6 @@ GameObject:
   m_Component:
   - component: {fileID: 472884}
   - component: {fileID: 11436500}
-  - component: {fileID: 11450014}
   m_Layer: 0
   m_Name: Cell
   m_TagString: Untagged
@@ -470,10 +470,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df6efcfa667fce549bcc3deb68a7e8d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ignoreLodObjectsWhenInitializing: 0
   PreviewCamera: {fileID: 0}
   maxTimeToUpdatePerFrameMs: 10
   Water: {fileID: 11455068}
   divisionRefreshDistanceDelta: 1
+  drawDistanceMultiplier: 1
   drawDistancesPerLayers:
   - 101
   - 301
@@ -495,18 +497,7 @@ MonoBehaviour:
   redTrafficLightDuration: 7
   yellowTrafficLightDuration: 2
   greenTrafficLightDuration: 7
---- !u!114 &11450014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 149528}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29ff195586224b54ebfe1e606d27a4b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  navMeshUpdateInterval: 2
 --- !u!1 &153756
 GameObject:
   m_ObjectHideFlags: 0
