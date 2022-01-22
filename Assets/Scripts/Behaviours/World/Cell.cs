@@ -12,7 +12,7 @@ using UnityEngine.AI;
 
 namespace SanAndreasUnity.Behaviours.World
 {
-    public class Cell : MonoBehaviour
+    public class Cell : Utilities.SingletonComponent<Cell>
     {
 	    private Dictionary<Instance, StaticGeometry> m_insts;
 		public IReadOnlyDictionary<Instance, StaticGeometry> StaticGeometries => m_insts;
@@ -65,7 +65,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public Water Water;
 
-		public static Cell Instance { get ; private set; }
+		public static Cell Instance => Singleton;
 
 		public float divisionRefreshDistanceDelta = 20;
 
@@ -131,11 +131,8 @@ namespace SanAndreasUnity.Behaviours.World
 
 
 
-		private void Awake()
+		protected override void OnSingletonAwake()
         {
-			if (null == Instance)
-				Instance = this;
-
 			//this.InvokeRepeating(nameof(this.UpdateNavMesh), this.navMeshUpdateInterval, this.navMeshUpdateInterval);
         }
 
