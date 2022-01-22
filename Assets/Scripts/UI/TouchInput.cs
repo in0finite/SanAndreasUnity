@@ -104,6 +104,9 @@ namespace SanAndreasUnity.UI
 
 		void OnLoaderFinished()
 		{
+			if (F.IsAppInEditTime)
+				return;
+
 			// assign textures to movement buttons' arrows
 
 			movementButton.leftArrow.texture = HUD.LeftArrowTexture;
