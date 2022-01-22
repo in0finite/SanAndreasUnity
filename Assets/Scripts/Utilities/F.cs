@@ -400,6 +400,14 @@ namespace SanAndreasUnity.Utilities
                 SafeDestroy(component.gameObject);
         }
 
+        public static void DestroyEvenInEditMode(Object obj)
+        {
+            if (F.IsAppInEditTime)
+                Object.DestroyImmediate(obj, false);
+            else
+                Object.Destroy(obj);
+        }
+
         public static string FirstCharToUpper(this string str)
         {
 	        if (string.Empty == str)

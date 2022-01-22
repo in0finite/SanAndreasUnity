@@ -53,7 +53,7 @@ namespace SanAndreasUnity.Behaviours.Audio
 		{
 			if (s_startupAudioSource != null)
 			{
-				Destroy (s_startupAudioSource.gameObject);
+				F.DestroyEvenInEditMode(s_startupAudioSource.gameObject);
 			}
 		}
 
@@ -122,7 +122,8 @@ namespace SanAndreasUnity.Behaviours.Audio
 				audioSource.Play();
 
 				// destroy game object when sound is finished playing
-				Destroy( audioSource.gameObject, clip.length );
+				if (!F.IsAppInEditTime)
+					Destroy( audioSource.gameObject, clip.length );
 
 				return audioSource;
 			}
