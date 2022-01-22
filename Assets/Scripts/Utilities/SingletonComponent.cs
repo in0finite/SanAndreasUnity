@@ -47,12 +47,18 @@ namespace SanAndreasUnity.Utilities
                 throw new Exception($"Awake() method called twice for singleton of type {this.GetType().Name}");
             }
 
+            this.OnSingletonAwakeValidate();
+
             Singleton = (T)this;
 
             this.OnSingletonAwake();
         }
 
         protected virtual void OnSingletonAwake()
+        {
+        }
+
+        protected virtual void OnSingletonAwakeValidate()
         {
         }
 
