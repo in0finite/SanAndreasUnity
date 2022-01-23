@@ -256,11 +256,12 @@ namespace SanAndreasUnity.Editor
                     {
                         // wait for completion of jobs
 
-                        yield return WaitForCompletionOfLoadingJobs(
+                        foreach (var item in WaitForCompletionOfLoadingJobs(
                             $"\r\nobjects processed {progressIndex}/{objectsToExport.Length}",
                             progressIndex / (float)objectsToExport.Length,
                             i / (float)objectsToExport.Length,
-                            isCanceledRef);
+                            isCanceledRef))
+                            yield return item;
 
                         if (isCanceledRef.value)
                             yield break;
@@ -271,11 +272,12 @@ namespace SanAndreasUnity.Editor
 
                 // wait for rest of jobs to complete
 
-                yield return WaitForCompletionOfLoadingJobs(
+                foreach (var item in WaitForCompletionOfLoadingJobs(
                             $"\r\nobjects processed {progressIndex}/{objectsToExport.Length}",
                             progressIndex / (float)objectsToExport.Length,
                             1f,
-                            isCanceledRef);
+                            isCanceledRef))
+                    yield return item;
 
                 if (isCanceledRef.value)
                     yield break;
@@ -325,19 +327,18 @@ namespace SanAndreasUnity.Editor
             EditorUtility.DisplayDialog("", $"Finished ! \r\n\r\n{displayText}", "Ok");
         }
 
-        private static IEnumerator WaitForCompletionOfLoadingJobs(string textSuffix, float startPerc, float endPerc, Ref<bool> isCanceledRef)
+        private static IEnumerable WaitForCompletionOfLoadingJobs(string textSuffix, float startPerc, float endPerc, Ref<bool> isCanceledRef)
         {
             isCanceledRef.value = false;
 
             float diffPerc = endPerc - startPerc;
 
             long initialNumPendingJobs = LoadingThread.Singleton.GetNumJobsPending();
-            yield return null; // let background thread to receive async jobs from main thread
-
+            
             long numPendingJobs;
             do
             {
-                yield return null; // jobs are processed on the main thread, so we need to let go the main thread
+                LoadingThread.Singleton.UpdateJobs();
 
                 numPendingJobs = LoadingThread.Singleton.GetNumJobsPending();
                 long numJobsProcessed = initialNumPendingJobs - numPendingJobs;
@@ -348,6 +349,8 @@ namespace SanAndreasUnity.Editor
                     isCanceledRef.value = true;
                     yield break;
                 }
+
+                yield return null;
 
             } while (numPendingJobs > 0);
 
