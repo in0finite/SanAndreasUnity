@@ -110,15 +110,18 @@ namespace SanAndreasUnity.Behaviours
 			}
 
 
-			if (Cell.Instance != null) {
-				// add steps for cell
-				AddLoadingStep( new LoadingStep( () => Cell.Instance.CreateStaticGeometry (), "Creating static geometry", 5.8f ) );
-				AddLoadingStep( new LoadingStep( () => Cell.Instance.InitStaticGeometry (), "Init static geometry", 0.35f ) );
-				AddLoadingStep( new LoadingStep( () => Cell.Instance.LoadParkedVehicles (), "Loading parked vehicles", 0.2f ) );
-				AddLoadingStep( new LoadingStep( () => Cell.Instance.CreateEnexes (), "Creating enexes", 0.1f ) );
-				AddLoadingStep( new LoadingStep( () => Cell.Instance.LoadWater (), "Loading water", 0.08f ) );
-				AddLoadingStep( new LoadingStep( () => Cell.Instance.FinalizeLoad (), "Finalize world loading", 0.01f ) );
+			var worldSteps = new LoadingStep[]
+			{
+				new LoadingStep( () => Cell.Instance.CreateStaticGeometry (), "Creating static geometry", 5.8f ),
+				new LoadingStep( () => Cell.Instance.InitStaticGeometry (), "Init static geometry", 0.35f ),
+				new LoadingStep( () => Cell.Instance.LoadParkedVehicles (), "Loading parked vehicles", 0.2f ),
+				new LoadingStep( () => Cell.Instance.CreateEnexes (), "Creating enexes", 0.1f ),
+				new LoadingStep( () => Cell.Instance.LoadWater (), "Loading water", 0.08f ),
+				new LoadingStep( () => Cell.Instance.FinalizeLoad (), "Finalize world loading", 0.01f ),
+			};
 
+			if (Cell.Instance != null) {
+				worldSteps.ForEach(AddLoadingStep);
 			}
 
 		}
