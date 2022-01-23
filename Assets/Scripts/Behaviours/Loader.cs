@@ -120,9 +120,11 @@ namespace SanAndreasUnity.Behaviours
 				new LoadingStep( () => Cell.Instance.FinalizeLoad (), "Finalize world loading", 0.01f ),
 			};
 
-			if (Cell.Instance != null) {
+			if (Cell.Instance != null)
 				worldSteps.ForEach(AddLoadingStep);
-			}
+			else
+				worldSteps.ForEach(_ => RemoveLoadingStep(_.Description));
+			
 
 		}
 
@@ -133,6 +135,13 @@ namespace SanAndreasUnity.Behaviours
 
 			m_loadingSteps.Add(step);
 		}
+
+		private static void RemoveLoadingStep(string stepName)
+        {
+			int index = m_loadingSteps.FindIndex(_ => _.Description == stepName);
+			if (index >= 0)
+				m_loadingSteps.RemoveAt(index);
+        }
 
 		public static void StartLoading()
         {
