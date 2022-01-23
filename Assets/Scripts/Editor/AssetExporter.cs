@@ -258,7 +258,7 @@ namespace SanAndreasUnity.Editor
 
                     currentObject.GetComponentOrThrow<MapObject>().Show(1f);
 
-                    if (i % 50 == 0)
+                    if (i % 100 == 0)
                     {
                         // wait for completion of jobs
 
@@ -340,7 +340,9 @@ namespace SanAndreasUnity.Editor
             float diffPerc = endPerc - startPerc;
 
             long initialNumPendingJobs = LoadingThread.Singleton.GetNumJobsPending();
-            
+
+            yield return null; // this must be done, otherwise LoadingThread does not start processing any job
+
             long numPendingJobs;
             do
             {
@@ -356,7 +358,7 @@ namespace SanAndreasUnity.Editor
                     yield break;
                 }
 
-                yield return null;
+                System.Threading.Thread.Sleep(10); // don't interact with background thread too often, and also reduce CPU usage
 
             } while (numPendingJobs > 0);
 
