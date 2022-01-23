@@ -1,8 +1,8 @@
 ﻿using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Utilities;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -27,7 +27,19 @@ namespace SanAndreasUnity.Editor
         private int m_numNewlyExportedAssets = 0;
         private int m_numAlreadyExportedAssets = 0;
 
-        private bool m_exportFromSelection = false;
+        private enum ExportType
+        {
+            None = 0,
+            FromSelection,
+            FromLoadedWorld,
+            FromGameFiles,
+        }
+
+        private ExportType m_exportType;
+
+        private bool m_exportFromSelection => m_exportType == ExportType.FromSelection;
+        private bool IsExportingFromLoadedWorld => m_exportType == ExportType.FromLoadedWorld;
+        private bool IsExportingFromGameFiles => m_exportType == ExportType.FromGameFiles;
 
         private bool m_exportRenderMeshes = true;
         private bool m_exportMaterials = true;
@@ -73,11 +85,14 @@ namespace SanAndreasUnity.Editor
 
             GUILayout.Space(30);
 
+            if (GUILayout.Button("Export from game files"))
+                this.Export(ExportType.FromGameFiles);
+
             if (GUILayout.Button("Export from world"))
-                this.Export(false);
+                this.Export(ExportType.FromLoadedWorld);
 
             if (GUILayout.Button("Export from selection"))
-                this.Export(true);
+                this.Export(ExportType.FromSelection);
         }
 
         void ChangeFolder()
@@ -100,12 +115,12 @@ namespace SanAndreasUnity.Editor
             m_selectedFolder = newFolder;
         }
 
-        void Export(bool fromSelection)
+        void Export(ExportType exportType)
         {
             if (CoroutineManager.IsRunning(m_coroutineInfo))
                 return;
 
-            m_exportFromSelection = fromSelection;
+            m_exportType = exportType;
 
             m_coroutineInfo = CoroutineManager.Start(this.ExportCoroutine(), this.Cleanup, ex => this.Cleanup());
         }
@@ -138,30 +153,56 @@ namespace SanAndreasUnity.Editor
             }
 
             var cell = Cell.Instance;
-            if (null == cell && !m_exportFromSelection)
+            if (null == cell && this.IsExportingFromLoadedWorld)
             {
                 EditorUtility.DisplayDialog("", $"{nameof(Cell)} script not found in scene. Make sure that you started the game with the correct scene.", "Ok");
                 yield break;
             }
 
+            if (this.IsExportingFromGameFiles)
+            {
+                if (!Loader.HasLoaded)
+                {
+                    EditorUtility.DisplayDialog("", "Game data must be loaded first.", "Ok");
+                    yield break;
+                }
+
+                if (Cell.Instance != null)
+                {
+                    EditorUtility.DisplayDialog("", $"{nameof(Cell)} script already exists in scene. Make sure that you delete the world object.", "Ok");
+                    yield break;
+                }
+
+                GameObject worldPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(EditorCore.PrefabsPath + "/World.prefab");
+                GameObject worldObject = (GameObject) PrefabUtility.InstantiatePrefab(worldPrefab);
+                cell = Cell.Instance;
+                if (null == cell)
+                    throw new Exception("Failed to create world object");
+            }
+
             EditorUtility.DisplayProgressBar("", "Gathering info...", 0f);
 
-            Transform[] objectsToExport = m_exportFromSelection
-                ? Selection.transforms.Where(_ => _.GetComponent<MapObject>() != null).ToArray()
-                : cell.transform.GetFirstLevelChildren().ToArray();
+            Transform[] objectsToExport = Array.Empty<Transform>();
 
-            int numObjectsActive = 0;
-            for (int i = 0; i < objectsToExport.Length; i++)
+            if (m_exportFromSelection)
+                objectsToExport = Selection.transforms.Where(_ => _.gameObject.activeInHierarchy).Where(_ => _.GetComponent<MapObject>() != null).ToArray();
+            else if (this.IsExportingFromLoadedWorld)
+                objectsToExport = cell.transform.GetFirstLevelChildren().Where(_ => _.gameObject.activeInHierarchy).ToArray();
+            else if (this.IsExportingFromGameFiles)
             {
-                var child = objectsToExport[i];
+                cell.ignoreLodObjectsWhenInitializing = true;
 
-                if (child.gameObject.activeInHierarchy)
-                    numObjectsActive++;
+                EditorUtility.DisplayProgressBar("", "Creating static geometry...", 0f);
+                cell.CreateStaticGeometry();
+                EditorUtility.DisplayProgressBar("", "Initializing static geometry...", 0f);
+                cell.InitStaticGeometry();
+
+                objectsToExport = cell.StaticGeometries.Select(_ => _.Value.transform).ToArray();
             }
 
             EditorUtility.ClearProgressBar();
 
-            if (0 == numObjectsActive)
+            if (0 == objectsToExport.Length)
             {
                 EditorUtility.DisplayDialog("", "No suitable objects to export.", "Ok");
                 yield break;
@@ -169,7 +210,7 @@ namespace SanAndreasUnity.Editor
 
             if (!EditorUtility.DisplayDialog(
                 "",
-                $"There are {objectsToExport.Length} objects, with {numObjectsActive} active ones.\nProceed ?",
+                $"Found {objectsToExport.Length} objects to export.\r\nProceed ?",
                 "Ok",
                 "Cancel"))
             {
@@ -185,35 +226,93 @@ namespace SanAndreasUnity.Editor
 
             this.CreateFolders();
 
-            EditorUtility.DisplayProgressBar("", "Creating assets...", 0f);
+            if (this.IsExportingFromGameFiles)
+            {
+                // loading of objects is done asyncly, so first we need to trigger load, then wait for it to complete
 
-            int numExported = 0;
+                EditorUtility.DisplayProgressBar("", "Preparing...", 0f);
+
+                DayTimeManager.Singleton.SetTime(13, 0, true); // to make TOBJ objects visible
+
+                EditorUtility.ClearProgressBar();
+                yield return null;
+                yield return null; // let the Editor update after changing day-time, who knows what all is changed
+
+                LoadingThread.Singleton.maxTimePerFrameMs = 500;
+
+                int progressIndex = 0;
+                var isCanceledRef = new Ref<bool>();
+
+                for (int i = 0; i < objectsToExport.Length; i++)
+                {
+                    Transform currentObject = objectsToExport[i];
+
+                    if (EditorUtility.DisplayCancelableProgressBar("", $"Triggering async load ({i + 1}/{objectsToExport.Length})... {currentObject.name}", progressIndex / (float)objectsToExport.Length))
+                        yield break;
+
+                    currentObject.GetComponentOrThrow<MapObject>().Show(1f);
+
+                    if (i % 50 == 0)
+                    {
+                        // wait for completion of jobs
+
+                        yield return WaitForCompletionOfLoadingJobs(
+                            $"\r\nobjects processed {progressIndex}/{objectsToExport.Length}",
+                            progressIndex / (float)objectsToExport.Length,
+                            i / (float)objectsToExport.Length,
+                            isCanceledRef);
+
+                        if (isCanceledRef.value)
+                            yield break;
+
+                        progressIndex = i;
+                    }
+                }
+
+                // wait for rest of jobs to complete
+
+                yield return WaitForCompletionOfLoadingJobs(
+                            $"\r\nobjects processed {progressIndex}/{objectsToExport.Length}",
+                            progressIndex / (float)objectsToExport.Length,
+                            1f,
+                            isCanceledRef);
+
+                if (isCanceledRef.value)
+                    yield break;
+
+                // assets are loaded, let Editor refresh itself :)
+
+                EditorUtility.ClearProgressBar();
+                yield return null;
+                yield return null;
+            }
+
             for (int i = 0; i < objectsToExport.Length; i++)
             {
-                var child = objectsToExport[i];
+                Transform child = objectsToExport[i];
 
-                if (!child.gameObject.activeInHierarchy)
-                    continue;
-
-                if (EditorUtility.DisplayCancelableProgressBar("", $"Creating assets ({numExported}/{numObjectsActive})... {child.name}", numExported / (float)numObjectsActive))
+                if (EditorUtility.DisplayCancelableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length})... {child.name}", i / (float)objectsToExport.Length))
                     yield break;
 
                 this.ExportAssets(child.gameObject);
-
-                numExported++;
             }
 
             if (m_exportPrefabs)
             {
                 EditorUtility.DisplayProgressBar("", "Creating prefabs...", 1f);
-                if (!m_exportFromSelection)
+
+                if (this.IsExportingFromLoadedWorld)
                     PrefabUtility.SaveAsPrefabAsset(cell.gameObject, $"{PrefabsPath}/ExportedWorld.prefab");
-                else
+                else if (m_exportFromSelection)
                 {
                     foreach (var obj in objectsToExport)
                     {
                         PrefabUtility.SaveAsPrefabAsset(obj.gameObject, $"{PrefabsPath}/{obj.gameObject.name}.prefab");
                     }
+                }
+                else if (this.IsExportingFromGameFiles)
+                {
+                    PrefabUtility.SaveAsPrefabAsset(cell.transform.root.gameObject, $"{PrefabsPath}/ExportedWorldFromGameFiles.prefab");
                 }
             }
 
@@ -224,6 +323,34 @@ namespace SanAndreasUnity.Editor
             string displayText = $"number of newly exported asssets {m_numNewlyExportedAssets}, number of already exported assets {m_numAlreadyExportedAssets}, time elapsed {stopwatch.Elapsed}";
             UnityEngine.Debug.Log($"Exporting of assets finished, {displayText}");
             EditorUtility.DisplayDialog("", $"Finished ! \r\n\r\n{displayText}", "Ok");
+        }
+
+        private static IEnumerator WaitForCompletionOfLoadingJobs(string textSuffix, float startPerc, float endPerc, Ref<bool> isCanceledRef)
+        {
+            isCanceledRef.value = false;
+
+            float diffPerc = endPerc - startPerc;
+
+            long initialNumPendingJobs = LoadingThread.Singleton.GetNumJobsPending();
+            yield return null; // let background thread to receive async jobs from main thread
+
+            long numPendingJobs;
+            do
+            {
+                yield return null; // jobs are processed on the main thread, so we need to let go the main thread
+
+                numPendingJobs = LoadingThread.Singleton.GetNumJobsPending();
+                long numJobsProcessed = initialNumPendingJobs - numPendingJobs;
+
+                float currentPerc = startPerc + diffPerc * (numJobsProcessed / (float)initialNumPendingJobs);
+                if (EditorUtility.DisplayCancelableProgressBar("", $"Waiting for async jobs to finish ({numJobsProcessed}/{initialNumPendingJobs})...{textSuffix}", currentPerc))
+                {
+                    isCanceledRef.value = true;
+                    yield break;
+                }
+
+            } while (numPendingJobs > 0);
+
         }
 
         void CreateFolders()
@@ -309,7 +436,7 @@ namespace SanAndreasUnity.Editor
             meshRenderer.sharedMaterials = mats;
         }
 
-        private Object CreateAssetIfNotExists(Object asset, string path)
+        private UnityEngine.Object CreateAssetIfNotExists(UnityEngine.Object asset, string path)
         {
             if (AssetDatabase.Contains(asset))
                 return asset;
