@@ -75,12 +75,21 @@ namespace SanAndreasUnity.Behaviours
 		public ushort maxTimePerFrameMs = 0;
 
 
+
+#if UNITY_EDITOR
+		[UnityEditor.InitializeOnLoadMethod]
+		static void InitOnLoadInEditor()
+        {
+			if (null == Singleton)
+				return;
+
+			Singleton.StartThread();
+        }
+#endif
+
 		protected override void OnSingletonStart()
 		{
-
-			_thread = new Thread (ThreadFunction);
-			_thread.Start(_threadParameters);
-
+			this.StartThread();
 		}
 
 		protected override void OnSingletonDisable()
@@ -95,6 +104,15 @@ namespace SanAndreasUnity.Behaviours
 				else
 					Debug.LogError ("Failed to stop loading thread");
 			}
+		}
+
+		void StartThread()
+        {
+			if (_thread != null)
+				return;
+
+			_thread = new Thread(ThreadFunction);
+			_thread.Start(_threadParameters);
 		}
 
 		void Update()
