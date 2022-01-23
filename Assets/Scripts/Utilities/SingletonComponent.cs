@@ -1,8 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SanAndreasUnity.Utilities
 {
+    public static class SingletonConstants
+    {
+        public static readonly IReadOnlyList<string> nonAllowedMethodNames = new string[]
+        {
+            "Awake",
+            "OnEnable",
+            "OnDisable",
+            "Start",
+        };
+    }
+
     public class SingletonComponent<T> : MonoBehaviour
         where T : SingletonComponent<T>
     {
@@ -39,6 +51,21 @@ namespace SanAndreasUnity.Utilities
             }
         }
 #endif
+
+
+
+        protected SingletonComponent()
+        {
+            Type type = this.GetType();
+            var bindingFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+            for (int i = 0; i < SingletonConstants.nonAllowedMethodNames.Count; i++)
+            {
+                string methodName = SingletonConstants.nonAllowedMethodNames[i];
+                var methodInfo = type.GetMethod(methodName, bindingFlags);
+                if (methodInfo != null)
+                    throw new Exception($"{type.Name} is using non-allowed method {methodName}. Singletons should not have any of following methods: {string.Join(", ", SingletonConstants.nonAllowedMethodNames)}.");
+            }
+        }
 
         private void Awake()
         {
