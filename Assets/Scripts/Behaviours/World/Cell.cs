@@ -20,7 +20,10 @@ namespace SanAndreasUnity.Behaviours.World
 		private MapObject[] m_cars;
         private List<EntranceExitMapObject> m_enexes;
 
-        public IReadOnlyList<int> CellIds { get; } = Enumerable.Range(0, 19).ToList();
+		private bool m_createdStaticGeometry = false;
+		private bool m_initializedStaticGeometry = false;
+
+		public IReadOnlyList<int> CellIds { get; } = Enumerable.Range(0, 19).ToList();
 
 		public bool ignoreLodObjectsWhenInitializing = false;
 
@@ -137,8 +140,13 @@ namespace SanAndreasUnity.Behaviours.World
         }
 
 
-        internal void CreateStaticGeometry ()
+        public void CreateStaticGeometry ()
 		{
+			if (m_createdStaticGeometry)
+				return;
+
+			m_createdStaticGeometry = true;
+
 			var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
 
 			m_insts = new Dictionary<Instance,StaticGeometry> (48 * 1024);
@@ -161,8 +169,13 @@ namespace SanAndreasUnity.Behaviours.World
 			this.FocusPointManager = new FocusPointManager<MapObject>(_worldSystem, this.MaxDrawDistance);
 		}
 
-		internal void InitStaticGeometry ()
+		public void InitStaticGeometry ()
 		{
+			if (m_initializedStaticGeometry)
+				return;
+
+			m_initializedStaticGeometry = true;
+
 			foreach (var inst in m_insts)
 			{
 				var staticGeometry = inst.Value;
