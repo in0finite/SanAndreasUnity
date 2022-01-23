@@ -231,8 +231,6 @@ namespace SanAndreasUnity.Editor
 
             if (this.IsExportingFromGameFiles)
             {
-                // loading of objects is done asyncly, so first we need to trigger load, then wait for it to complete
-
                 EditorUtility.DisplayProgressBar("", "Preparing...", 0f);
 
                 // disable automatic light baking, otherwise Editor will be very slow after assets are loaded and will fill the whole memory
@@ -245,59 +243,46 @@ namespace SanAndreasUnity.Editor
                 yield return null; // let the Editor update after changing day-time, who knows what all is changed
 
                 LoadingThread.Singleton.maxTimePerFrameMs = 500;
-
-                int progressIndex = 0;
-                var isCanceledRef = new Ref<bool>();
-
-                for (int i = 0; i < objectsToExport.Length; i++)
-                {
-                    Transform currentObject = objectsToExport[i];
-
-                    if (EditorUtility.DisplayCancelableProgressBar("", $"Triggering async load ({i + 1}/{objectsToExport.Length})... {currentObject.name}", progressIndex / (float)objectsToExport.Length))
-                        yield break;
-
-                    currentObject.GetComponentOrThrow<MapObject>().Show(1f);
-
-                    if (i % 100 == 0)
-                    {
-                        // wait for completion of jobs
-
-                        foreach (var item in WaitForCompletionOfLoadingJobs(
-                            $"\r\nobjects processed {progressIndex}/{objectsToExport.Length}",
-                            progressIndex / (float)objectsToExport.Length,
-                            i / (float)objectsToExport.Length,
-                            isCanceledRef))
-                            yield return item;
-
-                        if (isCanceledRef.value)
-                            yield break;
-
-                        progressIndex = i;
-                    }
-                }
-
-                // wait for rest of jobs to complete
-
-                foreach (var item in WaitForCompletionOfLoadingJobs(
-                            $"\r\nobjects processed {progressIndex}/{objectsToExport.Length}",
-                            progressIndex / (float)objectsToExport.Length,
-                            1f,
-                            isCanceledRef))
-                    yield return item;
-
-                if (isCanceledRef.value)
-                    yield break;
-
-                // assets are loaded, let Editor refresh itself :)
-
-                EditorUtility.ClearProgressBar();
-                yield return null;
-                yield return null;
             }
+
+            int nextIndexToTriggerLoad = 0;
+            var isCanceledRef = new Ref<bool>();
 
             for (int i = 0; i < objectsToExport.Length; i++)
             {
                 Transform currentObject = objectsToExport[i];
+
+                if (this.IsExportingFromGameFiles && nextIndexToTriggerLoad == i)
+                {
+                    // loading of objects is done asyncly, so first we need to trigger load, then wait for it to complete
+
+                    int nextNextIndex = Mathf.Min(i + 100, objectsToExport.Length);
+
+                    for (int triggerLoadIndex = i; triggerLoadIndex < nextNextIndex; triggerLoadIndex++)
+                    {
+                        Transform triggerLoadObject = objectsToExport[triggerLoadIndex];
+
+                        if (EditorUtility.DisplayCancelableProgressBar("", $"Triggering async load ({triggerLoadIndex + 1}/{objectsToExport.Length})... {triggerLoadObject.name}", i / (float)objectsToExport.Length))
+                            yield break;
+
+                        triggerLoadObject.GetComponentOrThrow<MapObject>().Show(1f);
+                    }
+
+                    nextIndexToTriggerLoad = nextNextIndex;
+
+                    // wait for completion of jobs
+
+                    foreach (var item in WaitForCompletionOfLoadingJobs(
+                        $"\r\nobjects processed {i}/{objectsToExport.Length}",
+                        i / (float)objectsToExport.Length,
+                        nextNextIndex / (float)objectsToExport.Length,
+                        isCanceledRef))
+                        yield return item;
+
+                    if (isCanceledRef.value)
+                        yield break;
+
+                }
 
                 if (EditorUtility.DisplayCancelableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length})... {currentObject.name}", i / (float)objectsToExport.Length))
                     yield break;
