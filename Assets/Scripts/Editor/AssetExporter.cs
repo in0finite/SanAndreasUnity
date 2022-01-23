@@ -297,12 +297,12 @@ namespace SanAndreasUnity.Editor
 
             for (int i = 0; i < objectsToExport.Length; i++)
             {
-                Transform child = objectsToExport[i];
+                Transform currentObject = objectsToExport[i];
 
-                if (EditorUtility.DisplayCancelableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length})... {child.name}", i / (float)objectsToExport.Length))
+                if (EditorUtility.DisplayCancelableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length})... {currentObject.name}", i / (float)objectsToExport.Length))
                     yield break;
 
-                this.ExportAssets(child.gameObject);
+                this.ExportAssets(currentObject.gameObject);
             }
 
             if (m_exportPrefabs)
