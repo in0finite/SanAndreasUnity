@@ -272,6 +272,9 @@ namespace SanAndreasUnity.Behaviours.World
 
         private bool NeedsFading()
         {
+			if (F.IsAppInEditTime)
+				return false;
+
 	        if (F.IsInHeadlessMode)
 		        return false;
 
