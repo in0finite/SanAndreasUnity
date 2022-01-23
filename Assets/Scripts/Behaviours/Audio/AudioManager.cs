@@ -40,6 +40,12 @@ namespace SanAndreasUnity.Behaviours.Audio
 
 
 
+		static AudioManager()
+        {
+			Loader.onLoadingFinished -= OnLoadingFinished;
+			Loader.onLoadingFinished += OnLoadingFinished;
+		}
+
 		protected override void OnSingletonDisable()
 		{
 			if (s_gtaAudioFiles != null)
@@ -49,7 +55,7 @@ namespace SanAndreasUnity.Behaviours.Audio
 			}
 		}
 
-		void OnLoaderFinished ()
+		static void OnLoadingFinished ()
 		{
 			if (s_startupAudioSource != null)
 			{
