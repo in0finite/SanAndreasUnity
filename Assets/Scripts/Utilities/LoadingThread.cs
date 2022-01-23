@@ -10,7 +10,7 @@ using Debug = UnityEngine.Debug;
 namespace SanAndreasUnity.Behaviours
 {
 
-	public class LoadingThread : MonoBehaviour {
+	public class LoadingThread : StartupSingleton<LoadingThread> {
 
 		// TODO: maybe convert to class, because it takes 36 bytes - it's too much for red-black tree operations
 		public struct Job<T>
@@ -63,8 +63,6 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		public static LoadingThread Singleton { get; private set; }
-
 		private Thread _thread;
 		private readonly ThreadParameters _threadParameters = new ThreadParameters();
 		private readonly Queue<Job<object>> _processedJobsBuffer = new Queue<Job<object>>(256);
@@ -77,19 +75,15 @@ namespace SanAndreasUnity.Behaviours
 		public ushort maxTimePerFrameMs = 0;
 
 
-		private void Awake()
+		protected override void OnSingletonStart()
 		{
-			Singleton = this;
-		}
-
-		void Start () {
 
 			_thread = new Thread (ThreadFunction);
 			_thread.Start(_threadParameters);
 
 		}
 
-		void OnDisable ()
+		protected override void OnSingletonDisable()
 		{
 			if (_thread != null)
 			{
