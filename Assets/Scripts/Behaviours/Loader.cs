@@ -40,6 +40,7 @@ namespace SanAndreasUnity.Behaviours
 			public string Description { get; set; }
 			public float TimeElapsed { get; internal set; }
 			public float EstimatedTime { get; private set; }
+			public bool CompletedSuccessfully { get; set; } = false;
 
 			public LoadingStep (System.Action loadFunction, string description, float estimatedTime = 0f)
 			{
@@ -80,8 +81,6 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void AddLoadingSteps ()
 		{
-
-			m_loadingSteps.Clear();
 
 			LoadingStep[] steps = new LoadingStep[] {
 				new LoadingStep ( StepConfigure, "Configuring", 0f ),
@@ -126,7 +125,10 @@ namespace SanAndreasUnity.Behaviours
 
 		private static void AddLoadingStep (LoadingStep step)
 		{
-			m_loadingSteps.AddIfNotPresent (step);
+			if (m_loadingSteps.Exists(_ => _.Description == step.Description))
+				return;
+
+			m_loadingSteps.Add(step);
 		}
 
 		public static void StartLoading()
@@ -214,7 +216,13 @@ namespace SanAndreasUnity.Behaviours
 				LoadingStatus = step.Description;
 				yield return null;
 
-				stopwatchForSteps.Restart ();
+				if (step.CompletedSuccessfully)
+                {
+					m_currentStepIndex++;
+                    continue;
+                }
+
+                stopwatchForSteps.Restart ();
 
 				var en = step.Coroutine;
 
@@ -240,6 +248,7 @@ namespace SanAndreasUnity.Behaviours
 
 				// step finished it's work
 
+				step.CompletedSuccessfully = true;
 				step.TimeElapsed = stopwatchForSteps.ElapsedMilliseconds;
 
 				m_currentStepIndex++;
