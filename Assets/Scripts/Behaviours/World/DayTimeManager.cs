@@ -3,10 +3,8 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
 {
-    public class DayTimeManager : MonoBehaviour
+    public class DayTimeManager : Utilities.SingletonComponent<DayTimeManager>
     {
-        public static DayTimeManager Singleton { get; private set; }
-
         public AnimationCurve lightAngleCurve;
         public AnimationCurve lightIntensityCurve;
         public AnimationCurve nightColorsIntensityCurve;
@@ -55,22 +53,20 @@ namespace SanAndreasUnity.Behaviours.World
         public event System.Action onHourChanged = delegate {};
 
 
-        private void Awake()
+        protected override void OnSingletonAwake()
         {
-            Singleton = this;
-
             m_originalLightColor = this.directionalLight.color;
             m_originalSkyboxExposure = RenderSettings.skybox.GetFloat(ExposurePropertyId);
         }
 
-        private void OnDisable()
+        protected override void OnSingletonDisable()
         {
             // restore material settings
             if (Application.isEditor)
                 RenderSettings.skybox.SetFloat(ExposurePropertyId, m_originalSkyboxExposure);
         }
 
-        private void Start()
+        protected override void OnSingletonStart()
         {
             if (NetUtils.IsServer)
                 this.SetTime(this.startTimeHours, this.startTimeMinutes, false);
