@@ -287,7 +287,15 @@ namespace SanAndreasUnity.Editor
                 if (EditorUtility.DisplayCancelableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length})... {currentObject.name}", i / (float)objectsToExport.Length))
                     yield break;
 
-                this.ExportAssets(currentObject.gameObject);
+                AssetDatabase.StartAssetEditing();
+                try
+                {
+                    this.ExportAssets(currentObject.gameObject);
+                }
+                finally
+                {
+                    AssetDatabase.StopAssetEditing();
+                }
             }
 
             if (m_exportPrefabs)
