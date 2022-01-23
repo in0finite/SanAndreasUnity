@@ -174,7 +174,10 @@ namespace SanAndreasUnity.Editor
                 }
 
                 GameObject worldPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(EditorCore.PrefabsPath + "/World.prefab");
+                
                 GameObject worldObject = (GameObject) PrefabUtility.InstantiatePrefab(worldPrefab);
+                EditorUtility.SetDirty(worldObject);
+                
                 cell = Cell.Instance;
                 if (null == cell)
                     throw new Exception("Failed to create world object");
