@@ -97,7 +97,19 @@ namespace SanAndreasUnity.Behaviours
 			}
 		}
 
-		void Update () {
+		void Update()
+        {
+			this.UpdateJobsInternal();
+        }
+
+		public void UpdateJobs()
+        {
+			ThreadHelper.ThrowIfNotOnMainThread();
+
+			this.UpdateJobsInternal();
+        }
+
+		void UpdateJobsInternal () {
 
 			// get all processed jobs
 
