@@ -85,13 +85,8 @@ namespace SanAndreasUnity.Editor
 
             GUILayout.Space(30);
 
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Folder: " + m_selectedFolder);
-            if (GUILayout.Button("Change"))
-                this.ChangeFolder();
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-
+            EditorGUILayout.LabelField("Folder where assets are placed: " + m_selectedFolder);
+            
             m_exportRenderMeshes = EditorGUILayout.Toggle("Export render meshes", m_exportRenderMeshes);
             m_exportMaterials = EditorGUILayout.Toggle("Export materials", m_exportMaterials);
             m_exportTextures = EditorGUILayout.Toggle("Export textures", m_exportTextures);
