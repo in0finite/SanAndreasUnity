@@ -67,7 +67,7 @@ namespace SanAndreasUnity.Behaviours
 		private readonly ThreadParameters _threadParameters = new ThreadParameters();
 		private readonly Queue<Job<object>> _processedJobsBuffer = new Queue<Job<object>>(256);
 
-		private static long s_lastJobId = 1;
+		private static long s_lastJobId = 0;
 		private static readonly object s_lastJobIdLockObject = new object();
 
 		private readonly Stopwatch _stopwatch = new Stopwatch();
@@ -205,7 +205,7 @@ namespace SanAndreasUnity.Behaviours
 		{
 			lock (s_lastJobIdLockObject)
 			{
-				return s_lastJobId++;
+				return ++s_lastJobId;
 			}
 		}
 
