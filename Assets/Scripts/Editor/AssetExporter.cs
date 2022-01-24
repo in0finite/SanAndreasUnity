@@ -80,7 +80,7 @@ namespace SanAndreasUnity.Editor
 
             EditorGUILayout.HelpBox(
                 "This tool can export assets from game into Unity project.\n" +
-                "Later you can use these assets inside Unity Editor like any other asset." +
+                "Later you can use these assets inside Unity Editor like any other asset. " +
                 "It will store them in a separate folder, and will only export those objects that were not already exported. This means that you can cancel the process, and when you start it next time, it will skip already exported assets.",
                 MessageType.Info,
                 true);
@@ -333,51 +333,7 @@ namespace SanAndreasUnity.Editor
 
                 if ((i % 50 == 0) || i == objectsToExport.Length - 1)
                 {
-                    var writeActions = new List<SaveAssetAction>();
-
-                    // first read-only access
-                    foreach (var action in m_saveAssetActions)
-                    {
-                        if (action.path.IsNullOrWhiteSpace())
-                            continue;
-                        if (AssetDatabase.Contains(action.asset))
-                            continue;
-                        if (AssetExistsAtPath(action.path))
-                        {
-                            action.assignAsset(AssetDatabase.LoadMainAssetAtPath(action.path));
-                            continue;
-                        }
-
-                        writeActions.Add(action);
-                    }
-
-                    // now write access
-                    if (writeActions.Count > 0)
-                    {
-                        AssetDatabase.StartAssetEditing();
-                        try
-                        {
-                            foreach (var action in writeActions.DistinctBy(a => a.asset))
-                            {
-                                AssetDatabase.CreateAsset(action.asset, action.path);
-                                //action.assignAsset();
-                                m_numNewlyExportedAssets++;
-                            }
-                        }
-                        finally
-                        {
-                            AssetDatabase.StopAssetEditing();
-                        }
-                    }
-
-                    // now callbacks
-                    foreach (var action in m_saveAssetActions)
-                    {
-                        if (action.path.IsNullOrWhiteSpace())
-                            action.assignAsset(null);
-                    }
-
-                    m_saveAssetActions.Clear();
+                    this.ProcessSavedAssetActions();
                 }
 
                 if (i % 50 == 0)
@@ -490,6 +446,55 @@ namespace SanAndreasUnity.Editor
                 path = path,
                 assignAsset = assignAsset,
             });
+        }
+
+        private void ProcessSavedAssetActions()
+        {
+            var writeActions = new List<SaveAssetAction>();
+
+            // first read-only access
+            foreach (var action in m_saveAssetActions)
+            {
+                if (action.path.IsNullOrWhiteSpace())
+                    continue;
+                if (AssetDatabase.Contains(action.asset))
+                    continue;
+                if (AssetExistsAtPath(action.path))
+                {
+                    action.assignAsset(AssetDatabase.LoadMainAssetAtPath(action.path));
+                    continue;
+                }
+
+                writeActions.Add(action);
+            }
+
+            // now write access
+            if (writeActions.Count > 0)
+            {
+                AssetDatabase.StartAssetEditing();
+                try
+                {
+                    foreach (var action in writeActions.DistinctBy(a => a.asset))
+                    {
+                        AssetDatabase.CreateAsset(action.asset, action.path);
+                        //action.assignAsset();
+                        m_numNewlyExportedAssets++;
+                    }
+                }
+                finally
+                {
+                    AssetDatabase.StopAssetEditing();
+                }
+            }
+
+            // now callbacks
+            foreach (var action in m_saveAssetActions)
+            {
+                if (action.path.IsNullOrWhiteSpace())
+                    action.assignAsset(null);
+            }
+
+            m_saveAssetActions.Clear();
         }
 
         public void ExportAssets(GameObject go)
