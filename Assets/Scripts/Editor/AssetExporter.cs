@@ -511,6 +511,7 @@ namespace SanAndreasUnity.Editor
         {
             if (EditorUtility.DisplayCancelableProgressBar(title, text, progress))
             {
+                EditorUtility.ClearProgressBar();
                 // ok = continue
                 return !EditorUtility.DisplayDialog(title, dialogText, ok, cancel);
             }
