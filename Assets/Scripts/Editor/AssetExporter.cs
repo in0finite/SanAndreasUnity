@@ -299,7 +299,9 @@ namespace SanAndreasUnity.Editor
                         if (DisplayPausableProgressBar("", $"Triggering async load ({triggerLoadIndex + 1}/{objectsToExport.Length}), ETA {etaTime} ... {triggerLoadObject.name}", i / (float)objectsToExport.Length))
                             yield break;
 
-                        triggerLoadObject.GetComponentOrThrow<MapObject>().Show(1f);
+                        var mapObject = triggerLoadObject.GetComponentOrThrow<MapObject>();
+                        mapObject.UnShow();
+                        mapObject.Show(1f);
                     }
 
                     nextIndexToTriggerLoad = nextNextIndex;
