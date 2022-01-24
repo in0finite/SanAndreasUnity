@@ -78,8 +78,9 @@ namespace SanAndreasUnity.Editor
             m_scrollViewPos = EditorGUILayout.BeginScrollView(m_scrollViewPos);
 
             EditorGUILayout.HelpBox(
-                "This tool can export all currenty loaded world objects as assets and prefabs.\n" +
-                "It will store them in a separate folder, and will only export those objects that were not already exported.",
+                "This tool can export assets from game into Unity project.\n" +
+                "Later you can use these assets inside Unity Editor like any other asset." +
+                "It will store them in a separate folder, and will only export those objects that were not already exported. This means that you can cancel the process, and when you start it next time, it will resume.",
                 MessageType.Info,
                 true);
 
