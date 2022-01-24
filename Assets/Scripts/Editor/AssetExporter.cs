@@ -71,6 +71,7 @@ namespace SanAndreasUnity.Editor
         public AssetExporter()
         {
             this.titleContent = new GUIContent("Asset exporter");
+            this.minSize = new Vector2(400, 200);
         }
 
         void OnGUI()
@@ -80,7 +81,7 @@ namespace SanAndreasUnity.Editor
             EditorGUILayout.HelpBox(
                 "This tool can export assets from game into Unity project.\n" +
                 "Later you can use these assets inside Unity Editor like any other asset." +
-                "It will store them in a separate folder, and will only export those objects that were not already exported. This means that you can cancel the process, and when you start it next time, it will resume.",
+                "It will store them in a separate folder, and will only export those objects that were not already exported. This means that you can cancel the process, and when you start it next time, it will skip already exported assets.",
                 MessageType.Info,
                 true);
 
@@ -181,12 +182,7 @@ namespace SanAndreasUnity.Editor
                 }
 
                 LoadingThread.Singleton.EnsureBackgroundThreadStarted();
-                if (!LoadingThread.Singleton.IsBackgroundThreadRunning())
-                {
-                    EditorUtility.DisplayDialog("", "Background thread for asset loading is not running. Try restarting Unity.", "Ok");
-                    yield break;
-                }
-
+                
                 if (!Loader.HasLoaded)
                 {
                     EditorUtility.DisplayDialog("", "Game data must be loaded first.", "Ok");
