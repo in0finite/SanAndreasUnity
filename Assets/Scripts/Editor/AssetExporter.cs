@@ -268,6 +268,8 @@ namespace SanAndreasUnity.Editor
 
             int nextIndexToTriggerLoad = 0;
             var isCanceledRef = new Ref<bool>();
+            var etaStopwatch = Stopwatch.StartNew();
+            string etaTime = "0";
 
             for (int i = 0; i < objectsToExport.Length; i++)
             {
@@ -283,7 +285,7 @@ namespace SanAndreasUnity.Editor
                     {
                         Transform triggerLoadObject = objectsToExport[triggerLoadIndex];
 
-                        if (DisplayPausableProgressBar("", $"Triggering async load ({triggerLoadIndex + 1}/{objectsToExport.Length})... {triggerLoadObject.name}", i / (float)objectsToExport.Length))
+                        if (DisplayPausableProgressBar("", $"Triggering async load ({triggerLoadIndex + 1}/{objectsToExport.Length}), ETA {etaTime} ... {triggerLoadObject.name}", i / (float)objectsToExport.Length))
                             yield break;
 
                         triggerLoadObject.GetComponentOrThrow<MapObject>().Show(1f);
@@ -294,7 +296,7 @@ namespace SanAndreasUnity.Editor
                     // wait for completion of jobs
 
                     foreach (var item in WaitForCompletionOfLoadingJobs(
-                        $"\r\nobjects processed {i}/{objectsToExport.Length}",
+                        $"\r\nETA {etaTime}, objects processed {i}/{objectsToExport.Length}",
                         i / (float)objectsToExport.Length,
                         nextNextIndex / (float)objectsToExport.Length,
                         4,
@@ -306,7 +308,7 @@ namespace SanAndreasUnity.Editor
 
                 }
 
-                if (DisplayPausableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length})... {currentObject.name}", i / (float)objectsToExport.Length))
+                if (DisplayPausableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length}), ETA {etaTime} ... {currentObject.name}", i / (float)objectsToExport.Length))
                     yield break;
 
                 AssetDatabase.StartAssetEditing();
@@ -317,6 +319,16 @@ namespace SanAndreasUnity.Editor
                 finally
                 {
                     AssetDatabase.StopAssetEditing();
+                }
+
+                if (i % 20 == 0)
+                {
+                    // update ETA
+                    double numPerSecond = 20 / etaStopwatch.Elapsed.TotalSeconds;
+                    etaStopwatch.Restart();
+                    int numLeft = objectsToExport.Length - i;
+                    double secondsLeft = numLeft / numPerSecond;
+                    etaTime = F.FormatElapsedTime((float) secondsLeft);
                 }
             }
 
