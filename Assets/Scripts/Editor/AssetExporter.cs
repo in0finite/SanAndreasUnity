@@ -167,20 +167,24 @@ namespace SanAndreasUnity.Editor
                     yield break;
                 }
 
-                if (Cell.Instance != null)
+                cell = Cell.Instance;
+                if (cell != null)
                 {
-                    EditorUtility.DisplayDialog("", $"{nameof(Cell)} script already exists in scene. Make sure that you delete the world object.", "Ok");
-                    yield break;
+                    if (!EditorUtility.DisplayDialog("", $"Found existing {nameof(Cell)} script in scene. Would you like to use this game object for creating world objects ?", "Ok", "Cancel"))
+                        yield break;
                 }
 
-                GameObject worldPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(EditorCore.PrefabsPath + "/World.prefab");
-                
-                GameObject worldObject = (GameObject) PrefabUtility.InstantiatePrefab(worldPrefab);
-                EditorUtility.SetDirty(worldObject);
-                
-                cell = Cell.Instance;
                 if (null == cell)
-                    throw new Exception("Failed to create world object");
+                {
+                    GameObject worldPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(EditorCore.PrefabsPath + "/World.prefab");
+
+                    GameObject worldObject = (GameObject)PrefabUtility.InstantiatePrefab(worldPrefab);
+                    EditorUtility.SetDirty(worldObject);
+
+                    cell = Cell.Instance;
+                    if (null == cell)
+                        throw new Exception("Failed to create world object");
+                }
             }
 
             EditorUtility.DisplayProgressBar("", "Gathering info...", 0f);
