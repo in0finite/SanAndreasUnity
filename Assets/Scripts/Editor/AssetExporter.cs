@@ -177,8 +177,14 @@ namespace SanAndreasUnity.Editor
                 cell = Cell.Instance;
                 if (cell != null)
                 {
-                    if (!EditorUtility.DisplayDialog("", $"Found existing {nameof(Cell)} script in scene. Would you like to use this game object for creating world objects ?", "Ok", "Cancel"))
+                    if (!EditorUtility.DisplayDialog("", $"Found existing {nameof(Cell)} script in scene. Would you like to use this game object for creating world objects ?\r\n\r\nIf it is part of a prefab, the prefab will be unpacked.", "Ok", "Cancel"))
                         yield break;
+
+                    if (PrefabUtility.IsPartOfPrefabInstance(cell.gameObject))
+                    {
+                        PrefabUtility.UnpackPrefabInstance(PrefabUtility.GetNearestPrefabInstanceRoot(cell.gameObject), PrefabUnpackMode.OutermostRoot, InteractionMode.AutomatedAction);
+                        EditorUtilityEx.MarkActiveSceneAsDirty();
+                    }
                 }
 
                 if (null == cell)
