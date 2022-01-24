@@ -241,6 +241,26 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
+		public bool IsBackgroundThreadRunning()
+        {
+			ThreadHelper.ThrowIfNotOnMainThread();
+
+			if (null == _thread)
+				return false;
+
+			if (_thread.ThreadState != System.Threading.ThreadState.Running)
+				return false;
+
+			return true;
+		}
+
+		public void EnsureBackgroundThreadStarted()
+		{
+			ThreadHelper.ThrowIfNotOnMainThread();
+
+			this.StartThread();
+		}
+
 		static void ThreadFunction (object objectParameter)
 		{
 			ThreadParameters threadParameters = (ThreadParameters) objectParameter;

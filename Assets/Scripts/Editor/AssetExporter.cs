@@ -161,6 +161,13 @@ namespace SanAndreasUnity.Editor
 
             if (this.IsExportingFromGameFiles)
             {
+                LoadingThread.Singleton.EnsureBackgroundThreadStarted();
+                if (!LoadingThread.Singleton.IsBackgroundThreadRunning())
+                {
+                    EditorUtility.DisplayDialog("", "Background thread for asset loading is not running. Try restarting Unity.", "Ok");
+                    yield break;
+                }
+
                 if (!Loader.HasLoaded)
                 {
                     EditorUtility.DisplayDialog("", "Game data must be loaded first.", "Ok");
