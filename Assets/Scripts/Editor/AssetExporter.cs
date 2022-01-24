@@ -179,7 +179,7 @@ namespace SanAndreasUnity.Editor
                     GameObject worldPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(EditorCore.PrefabsPath + "/World.prefab");
 
                     GameObject worldObject = (GameObject)PrefabUtility.InstantiatePrefab(worldPrefab);
-                    EditorUtility.SetDirty(worldObject);
+                    EditorUtilityEx.MarkActiveSceneAsDirty();
 
                     cell = Cell.Instance;
                     if (null == cell)
@@ -198,6 +198,8 @@ namespace SanAndreasUnity.Editor
             else if (this.IsExportingFromGameFiles)
             {
                 cell.ignoreLodObjectsWhenInitializing = true;
+
+                EditorUtilityEx.MarkActiveSceneAsDirty();
 
                 EditorUtility.DisplayProgressBar("", "Creating static geometry...", 0f);
                 cell.CreateStaticGeometry();
@@ -248,6 +250,8 @@ namespace SanAndreasUnity.Editor
 
                 LoadingThread.Singleton.maxTimePerFrameMs = 500;
             }
+
+            EditorUtilityEx.MarkActiveSceneAsDirty();
 
             int nextIndexToTriggerLoad = 0;
             var isCanceledRef = new Ref<bool>();
