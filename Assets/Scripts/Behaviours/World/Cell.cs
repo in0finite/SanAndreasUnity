@@ -307,6 +307,11 @@ namespace SanAndreasUnity.Behaviours.World
 
         internal void CreateEnexes()
         {
+			this.gameObject
+				.GetFirstLevelChildrenSingleComponent<EntranceExitMapObject>()
+				.ToArray()
+				.ForEach(_ => F.DestroyEvenInEditMode(_.gameObject));
+
             m_enexes = new List<EntranceExitMapObject>(256);
             foreach(var enex in Item.Enexes.Where(enex => this.CellIds.Contains(enex.TargetInterior)))
             {
