@@ -297,6 +297,7 @@ namespace SanAndreasUnity.Editor
                         $"\r\nobjects processed {i}/{objectsToExport.Length}",
                         i / (float)objectsToExport.Length,
                         nextNextIndex / (float)objectsToExport.Length,
+                        4,
                         isCanceledRef))
                         yield return item;
 
@@ -347,35 +348,49 @@ namespace SanAndreasUnity.Editor
             EditorUtility.DisplayDialog("", $"Finished ! \r\n\r\n{displayText}", "Ok");
         }
 
-        private static IEnumerable WaitForCompletionOfLoadingJobs(string textSuffix, float startPerc, float endPerc, Ref<bool> isCanceledRef)
+        private static IEnumerable WaitForCompletionOfLoadingJobs(
+            string textSuffix,
+            float startPerc,
+            float endPerc,
+            int numIterations,
+            Ref<bool> isCanceledRef)
         {
+            if (numIterations < 1)
+                throw new ArgumentOutOfRangeException(nameof(numIterations));
+
             isCanceledRef.value = false;
 
             float diffPerc = endPerc - startPerc;
 
-            long initialNumPendingJobs = LoadingThread.Singleton.GetNumPendingJobs();
-
             // TODO: this should be removed
             yield return null; // this must be done, otherwise LoadingThread does not start processing any job
 
-            long numPendingJobs;
-            do
+            for (int i = 0; i < numIterations; i++)
             {
-                LoadingThread.Singleton.UpdateJobs();
+                long initialNumPendingJobs = LoadingThread.Singleton.GetNumPendingJobs();
+                long numPendingJobs = initialNumPendingJobs;
 
-                numPendingJobs = LoadingThread.Singleton.GetNumPendingJobs();
-                long numJobsProcessed = initialNumPendingJobs - numPendingJobs;
-
-                float currentPerc = startPerc + diffPerc * (numJobsProcessed / (float)initialNumPendingJobs);
-                if (EditorUtility.DisplayCancelableProgressBar("", $"Waiting for async jobs to finish ({numJobsProcessed}/{initialNumPendingJobs})...{textSuffix}", currentPerc))
+                do
                 {
-                    isCanceledRef.value = true;
-                    yield break;
-                }
+                    long numJobsProcessed = initialNumPendingJobs - numPendingJobs;
 
-                System.Threading.Thread.Sleep(10); // don't interact with background thread too often, and also reduce CPU usage
+                    float currentPerc = startPerc + diffPerc * (0 == initialNumPendingJobs ? 0f : numJobsProcessed / (float)initialNumPendingJobs);
+                    if (EditorUtility.DisplayCancelableProgressBar("", $"Waiting for async jobs to finish ({numJobsProcessed}/{initialNumPendingJobs})...{textSuffix}", currentPerc))
+                    {
+                        isCanceledRef.value = true;
+                        yield break;
+                    }
 
-            } while (numPendingJobs > 0);
+                    LoadingThread.Singleton.UpdateJobs();
+
+                    //System.Threading.Thread.Sleep(10); // don't interact with background thread too often, and also reduce CPU usage
+                    yield return null;
+
+                    numPendingJobs = LoadingThread.Singleton.GetNumPendingJobs();
+                    initialNumPendingJobs = Math.Max(initialNumPendingJobs, numPendingJobs);
+
+                } while (numPendingJobs > 0);
+            }
 
         }
 
