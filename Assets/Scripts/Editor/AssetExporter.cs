@@ -437,9 +437,6 @@ namespace SanAndreasUnity.Editor
 
             float diffPerc = endPerc - startPerc;
 
-            // TODO: this should be removed
-            yield return null; // this must be done, otherwise LoadingThread does not start processing any job
-
             for (int i = 0; i < numIterations; i++)
             {
                 long initialNumPendingJobs = LoadingThread.Singleton.GetNumPendingJobs();
@@ -458,9 +455,8 @@ namespace SanAndreasUnity.Editor
 
                     LoadingThread.Singleton.UpdateJobs();
 
-                    //System.Threading.Thread.Sleep(10); // don't interact with background thread too often, and also reduce CPU usage
-                    yield return null;
-
+                    System.Threading.Thread.Sleep(10); // don't interact with background thread too often, and also reduce CPU usage
+                    
                     numPendingJobs = LoadingThread.Singleton.GetNumPendingJobs();
                     initialNumPendingJobs = Math.Max(initialNumPendingJobs, numPendingJobs);
 
