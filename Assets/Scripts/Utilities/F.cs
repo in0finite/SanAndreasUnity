@@ -188,8 +188,7 @@ namespace SanAndreasUnity.Utilities
 
         public static bool IsNullOrWhiteSpace(this string value)
         {
-            if (value == null) return true;
-            return string.IsNullOrEmpty(value.Trim());
+            return string.IsNullOrWhiteSpace(value);
         }
 
         public static void Clear(this StringBuilder value)
