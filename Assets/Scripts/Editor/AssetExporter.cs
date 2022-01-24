@@ -440,6 +440,12 @@ namespace SanAndreasUnity.Editor
 
         private void RegisterSaveAssetAction(UnityEngine.Object asset, string path, Action<UnityEngine.Object> assignAsset)
         {
+            if (asset == null && !path.IsNullOrWhiteSpace())
+            {
+                UnityEngine.Debug.LogError($"RegisterSaveAssetAction(): asset is null, path: {path}");
+                return;
+            }
+
             m_saveAssetActions.Add(new SaveAssetAction
             {
                 asset = asset,
@@ -548,6 +554,9 @@ namespace SanAndreasUnity.Editor
 
             for (int i = 0; i < mats.Length; i++)
             {
+                if (null == mats[i])
+                    continue;
+
                 if (m_exportTextures)
                 {
                     int tempTexIndex = i;
