@@ -283,7 +283,7 @@ namespace SanAndreasUnity.Editor
                     {
                         Transform triggerLoadObject = objectsToExport[triggerLoadIndex];
 
-                        if (EditorUtility.DisplayCancelableProgressBar("", $"Triggering async load ({triggerLoadIndex + 1}/{objectsToExport.Length})... {triggerLoadObject.name}", i / (float)objectsToExport.Length))
+                        if (DisplayPausableProgressBar("", $"Triggering async load ({triggerLoadIndex + 1}/{objectsToExport.Length})... {triggerLoadObject.name}", i / (float)objectsToExport.Length))
                             yield break;
 
                         triggerLoadObject.GetComponentOrThrow<MapObject>().Show(1f);
@@ -306,7 +306,7 @@ namespace SanAndreasUnity.Editor
 
                 }
 
-                if (EditorUtility.DisplayCancelableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length})... {currentObject.name}", i / (float)objectsToExport.Length))
+                if (DisplayPausableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length})... {currentObject.name}", i / (float)objectsToExport.Length))
                     yield break;
 
                 AssetDatabase.StartAssetEditing();
@@ -375,7 +375,7 @@ namespace SanAndreasUnity.Editor
                     long numJobsProcessed = initialNumPendingJobs - numPendingJobs;
 
                     float currentPerc = startPerc + diffPerc * (0 == initialNumPendingJobs ? 0f : numJobsProcessed / (float)initialNumPendingJobs);
-                    if (EditorUtility.DisplayCancelableProgressBar("", $"Waiting for async jobs to finish ({numJobsProcessed}/{initialNumPendingJobs})...{textSuffix}", currentPerc))
+                    if (DisplayPausableProgressBar("", $"Waiting for async jobs to finish ({numJobsProcessed}/{initialNumPendingJobs})...{textSuffix}", currentPerc))
                     {
                         isCanceledRef.value = true;
                         yield break;
@@ -494,5 +494,22 @@ namespace SanAndreasUnity.Editor
 
             return asset;
         }
+
+        public static bool DisplayPausableProgressBar(string title, string text, float progress, string dialogText, string ok, string cancel)
+        {
+            if (EditorUtility.DisplayCancelableProgressBar(title, text, progress))
+            {
+                // ok = continue
+                return !EditorUtility.DisplayDialog(title, dialogText, ok, cancel);
+            }
+
+            return false;
+        }
+
+        public static bool DisplayPausableProgressBar(string title, string text, float progress)
+        {
+            return DisplayPausableProgressBar(title, text, progress, "Are you sure ?", "Continue", "Quit");
+        }
+
     }
 }
