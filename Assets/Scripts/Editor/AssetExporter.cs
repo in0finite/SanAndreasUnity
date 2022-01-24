@@ -3,6 +3,7 @@ using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Utilities;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -45,7 +46,17 @@ namespace SanAndreasUnity.Editor
         private bool m_exportMaterials = true;
         private bool m_exportTextures = true;
         private bool m_exportCollisionMeshes = true;
-        private bool m_exportPrefabs = true;
+        private bool m_exportPrefabs = false;
+
+        private struct SaveAssetAction
+        {
+            public UnityEngine.Object asset;
+            public string path;
+            public Action<UnityEngine.Object> assignAsset;
+        }
+
+        private readonly List<SaveAssetAction> m_saveAssetActions = new List<SaveAssetAction>();
+
 
 
         [MenuItem(EditorCore.MenuName + "/" + "Asset exporter")]
@@ -311,20 +322,62 @@ namespace SanAndreasUnity.Editor
                 if (DisplayPausableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length}), ETA {etaTime} ... {currentObject.name}", i / (float)objectsToExport.Length))
                     yield break;
 
-                AssetDatabase.StartAssetEditing();
-                try
+                currentObject.gameObject.SetActive(true); // enable it so it can be seen when Editor un-freezes
+                this.ExportAssets(currentObject.gameObject);
+
+                if ((i % 50 == 0) || i == objectsToExport.Length - 1)
                 {
-                    this.ExportAssets(currentObject.gameObject);
-                }
-                finally
-                {
-                    AssetDatabase.StopAssetEditing();
+                    var writeActions = new List<SaveAssetAction>();
+
+                    // first read-only access
+                    foreach (var action in m_saveAssetActions)
+                    {
+                        if (action.path.IsNullOrWhiteSpace())
+                            continue;
+                        if (AssetDatabase.Contains(action.asset))
+                            continue;
+                        if (AssetExistsAtPath(action.path))
+                        {
+                            action.assignAsset(AssetDatabase.LoadMainAssetAtPath(action.path));
+                            continue;
+                        }
+
+                        writeActions.Add(action);
+                    }
+
+                    // now write access
+                    if (writeActions.Count > 0)
+                    {
+                        AssetDatabase.StartAssetEditing();
+                        try
+                        {
+                            foreach (var action in writeActions.DistinctBy(a => a.asset))
+                            {
+                                AssetDatabase.CreateAsset(action.asset, action.path);
+                                //action.assignAsset();
+                                m_numNewlyExportedAssets++;
+                            }
+                        }
+                        finally
+                        {
+                            AssetDatabase.StopAssetEditing();
+                        }
+                    }
+
+                    // now callbacks
+                    foreach (var action in m_saveAssetActions)
+                    {
+                        if (action.path.IsNullOrWhiteSpace())
+                            action.assignAsset(null);
+                    }
+
+                    m_saveAssetActions.Clear();
                 }
 
-                if (i % 20 == 0)
+                if (i % 50 == 0)
                 {
                     // update ETA
-                    double numPerSecond = 20 / etaStopwatch.Elapsed.TotalSeconds;
+                    double numPerSecond = 50 / etaStopwatch.Elapsed.TotalSeconds;
                     etaStopwatch.Restart();
                     int numLeft = objectsToExport.Length - i;
                     double secondsLeft = numLeft / numPerSecond;
@@ -427,6 +480,16 @@ namespace SanAndreasUnity.Editor
             }
         }
 
+        private void RegisterSaveAssetAction(UnityEngine.Object asset, string path, Action<UnityEngine.Object> assignAsset)
+        {
+            m_saveAssetActions.Add(new SaveAssetAction
+            {
+                asset = asset,
+                path = path,
+                assignAsset = assignAsset,
+            });
+        }
+
         public void ExportAssets(GameObject go)
         {
             string assetName = go.name;
@@ -439,7 +502,8 @@ namespace SanAndreasUnity.Editor
                 {
                     MeshFilter meshFilter = meshFilters[i];
                     string indexPath = meshFilters.Length == 1 ? "" : "-" + i;
-                    meshFilter.sharedMesh = (Mesh)CreateAssetIfNotExists(meshFilter.sharedMesh, $"{ModelsPath}/{assetName}{indexPath}.asset");
+                    RegisterSaveAssetAction(meshFilter.sharedMesh, $"{ModelsPath}/{assetName}{indexPath}.asset", (obj) => meshFilter.sharedMesh = (Mesh)obj);
+                    //meshFilter.sharedMesh = (Mesh)CreateAssetIfNotExists(meshFilter.sharedMesh, $"{ModelsPath}/{assetName}{indexPath}.asset");
                 }
             }
 
@@ -456,8 +520,10 @@ namespace SanAndreasUnity.Editor
 
                 for (int i = 0; i < meshColliders.Length; i++)
                 {
+                    int tempColliderIndex = i;
                     string indexPath = meshColliders.Length == 1 ? "" : "-" + i;
-                    meshColliders[i].sharedMesh = (Mesh)CreateAssetIfNotExists(meshColliders[i].sharedMesh, $"{CollisionModelsPath}/{assetName}{indexPath}.asset");
+                    RegisterSaveAssetAction(meshColliders[i].sharedMesh, $"{CollisionModelsPath}/{assetName}{indexPath}.asset", obj => meshColliders[tempColliderIndex].sharedMesh = (Mesh)obj);
+                    //meshColliders[i].sharedMesh = (Mesh)CreateAssetIfNotExists(meshColliders[i].sharedMesh, $"{CollisionModelsPath}/{assetName}{indexPath}.asset");
                 }
             }
 
@@ -477,16 +543,21 @@ namespace SanAndreasUnity.Editor
             {
                 if (m_exportTextures)
                 {
+                    int tempTexIndex = i;
                     var tex = mats[i].mainTexture;
                     if (tex != null && tex != Texture2D.whiteTexture) // sometimes materials will have white texture assigned, and Unity will crash if we attempt to create asset from it
-                        mats[i].mainTexture = (Texture)CreateAssetIfNotExists(tex, $"{TexturesPath}/{assetName}-{i}.asset");
+                        RegisterSaveAssetAction(tex, $"{TexturesPath}/{assetName}-{i}.asset", obj => mats[tempTexIndex].mainTexture = (Texture)obj);
+                        //mats[i].mainTexture = (Texture)CreateAssetIfNotExists(tex, $"{TexturesPath}/{assetName}-{i}.asset");
                 }
 
+                int tempMatIndex = i;
                 if (m_exportMaterials)
-                    mats[i] = (Material)CreateAssetIfNotExists(mats[i], $"{MaterialsPath}/{assetName}-{i}.mat");
+                    RegisterSaveAssetAction(mats[i], $"{MaterialsPath}/{assetName}-{i}.mat", obj => mats[tempMatIndex] = (Material)obj);
+                    //mats[i] = (Material)CreateAssetIfNotExists(mats[i], $"{MaterialsPath}/{assetName}-{i}.mat");
             }
 
-            meshRenderer.sharedMaterials = mats;
+            RegisterSaveAssetAction(null, "", obj => meshRenderer.sharedMaterials = mats);
+            //meshRenderer.sharedMaterials = mats;
         }
 
         private UnityEngine.Object CreateAssetIfNotExists(UnityEngine.Object asset, string path)
@@ -494,9 +565,8 @@ namespace SanAndreasUnity.Editor
             if (AssetDatabase.Contains(asset))
                 return asset;
 
-            if (File.Exists(Path.Combine(Directory.GetParent(Application.dataPath).FullName, path)))
+            if (AssetExistsAtPath(path))
             {
-                m_numAlreadyExportedAssets++;
                 return AssetDatabase.LoadMainAssetAtPath(path);
             }
 
@@ -505,6 +575,16 @@ namespace SanAndreasUnity.Editor
             m_numNewlyExportedAssets++;
 
             return asset;
+        }
+
+        private bool AssetExistsAtPath(string path)
+        {
+            if (File.Exists(Path.Combine(Directory.GetParent(Application.dataPath).FullName, path)))
+            {
+                m_numAlreadyExportedAssets++;
+                return true;
+            }
+            return false;
         }
 
         public static bool DisplayPausableProgressBar(string title, string text, float progress, string dialogText, string ok, string cancel)
