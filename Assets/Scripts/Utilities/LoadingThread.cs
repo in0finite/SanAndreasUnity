@@ -175,7 +175,14 @@ namespace SanAndreasUnity.Behaviours
 		}
 
 
-		public static void RegisterJob<T> (Job<T> job)
+		public static void RegisterJob<T>(Job<T> job)
+        {
+			ThreadHelper.ThrowIfNotOnMainThread(); // obtaining Singleton should only happen on main thread
+
+			Singleton.RegisterJobOnInstance(job);
+		}
+
+		public void RegisterJobOnInstance<T> (Job<T> job)
 		{
 			// note: this function can be called from any thread
 
@@ -198,7 +205,7 @@ namespace SanAndreasUnity.Behaviours
 			if(job.callbackFinish != null)
 				j.callbackFinish = (arg) => job.callbackFinish( (T) arg );
 
-			Singleton._threadParameters.jobs.Add (j);
+			_threadParameters.jobs.Add (j);
 		}
 
 		static long GetNextJobId()
