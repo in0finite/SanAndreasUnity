@@ -331,15 +331,15 @@ namespace SanAndreasUnity.Editor
                 currentObject.gameObject.SetActive(true); // enable it so it can be seen when Editor un-freezes
                 this.ExportAssets(currentObject.gameObject);
 
-                if ((i % 50 == 0) || i == objectsToExport.Length - 1)
+                if ((i % 200 == 0) || i == objectsToExport.Length - 1)
                 {
                     this.ProcessSavedAssetActions();
                 }
 
-                if (i % 50 == 0)
+                if (i % 200 == 0)
                 {
                     // update ETA
-                    double numPerSecond = 50 / etaStopwatch.Elapsed.TotalSeconds;
+                    double numPerSecond = 200 / etaStopwatch.Elapsed.TotalSeconds;
                     etaStopwatch.Restart();
                     int numLeft = objectsToExport.Length - i;
                     double secondsLeft = numLeft / numPerSecond;
@@ -407,7 +407,7 @@ namespace SanAndreasUnity.Editor
 
                     LoadingThread.Singleton.UpdateJobs();
 
-                    System.Threading.Thread.Sleep(10); // don't interact with background thread too often, and also reduce CPU usage
+                    System.Threading.Thread.Sleep(5); // don't interact with background thread too often, and also reduce CPU usage
                     
                     numPendingJobs = LoadingThread.Singleton.GetNumPendingJobs();
                     initialNumPendingJobs = Math.Max(initialNumPendingJobs, numPendingJobs);
