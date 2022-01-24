@@ -292,6 +292,11 @@ namespace SanAndreasUnity.Utilities
             return go.transform.GetFirstLevelChildren().SelectMany(c => c.GetComponents<T>());
         }
 
+        public static IEnumerable<T> GetFirstLevelChildrenSingleComponent<T>(this GameObject go) where T : Component
+        {
+            return go.transform.GetFirstLevelChildren().Select(c => c.GetComponent<T>()).Where(_ => _ != null);
+        }
+
         public static void SetY(this Transform t, float yPos) {
 			Vector3 pos = t.position;
 			pos.y = yPos;

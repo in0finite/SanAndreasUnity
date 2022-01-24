@@ -20,9 +20,6 @@ namespace SanAndreasUnity.Behaviours.World
 		private MapObject[] m_cars;
         private List<EntranceExitMapObject> m_enexes;
 
-		private bool m_createdStaticGeometry = false;
-		private bool m_initializedStaticGeometry = false;
-
 		public IReadOnlyList<int> CellIds { get; } = Enumerable.Range(0, 19).ToList();
 
 		public bool ignoreLodObjectsWhenInitializing = false;
@@ -140,23 +137,136 @@ namespace SanAndreasUnity.Behaviours.World
         }
 
 
-        public void CreateStaticGeometry ()
-		{
-			if (m_createdStaticGeometry)
-				return;
+		private static string GetKey(StaticGeometry sg)
+        {
+			return $"{sg.SerializedObjectDefinitionId}_{sg.SerializedInstancePosition}_{sg.SerializedInstanceRotation}";
+		}
 
-			m_createdStaticGeometry = true;
+		private static string GetKey(Instance inst)
+		{
+			return $"{inst.ObjectId}_{inst.Position}_{inst.Rotation}";
+		}
+
+		public void CreateStaticGeometry ()
+		{
+			/*var gr = Item.GetPlacements<Instance>(CellIds.ToArray())
+				.GroupBy(_ => $"{_.ObjectId}_{_.Position}_{_.Rotation}")
+				.Where(g => g.ElementAtOrDefault(1) != default)
+				.ToList();*/
 
 			var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
 
-			m_insts = new Dictionary<Instance,StaticGeometry> (48 * 1024);
-			foreach (var plcm in placements) {
+			// find existing objects
+
+			var existingObjects = new Dictionary<string, object>(this.transform.childCount);
+
+			foreach(var sg in this.gameObject.GetFirstLevelChildrenSingleComponent<StaticGeometry>())
+            {
+				string key = GetKey(sg);
+
+				if (existingObjects.TryGetValue(key, out object obj))
+                {
+					if (obj is List<StaticGeometry> list)
+                    {
+						list.Add(sg);
+                    }
+					else
+                    {
+						list = new List<StaticGeometry>();
+						list.Add(sg);
+						existingObjects[key] = list;
+                    }
+                }
+				else
+                {
+					existingObjects.Add(key, sg);
+                }
+            }
+
+			Debug.Log($"Found {existingObjects.Count} existing objects");
+
+			// create new, or update existing objects
+
+			m_insts = new Dictionary<Instance, StaticGeometry> (48 * 1024);
+
+			int numObjectsReused = 0;
+
+			foreach (var plcm in placements)
+            {
 				if (this.ignoreLodObjectsWhenInitializing && plcm.IsLod)
 					continue;
 
-				m_insts.Add (plcm, StaticGeometry.Create ());
-			}
-			//m_insts = placements.ToDictionary(x => x, x => StaticGeometry.Create());
+				string key = GetKey(plcm);
+				if (existingObjects.TryGetValue(key, out object obj))
+                {
+					StaticGeometry sg;
+
+					if (obj is List<StaticGeometry> list)
+                    {
+						sg = list.RemoveFirst();
+						if (list.Count == 0)
+							existingObjects.Remove(key);
+                    }
+					else
+                    {
+						sg = (StaticGeometry) obj;
+						existingObjects.Remove(key);
+                    }
+
+					m_insts.Add(plcm, sg);
+
+					numObjectsReused++;
+				}
+				else
+                {
+					m_insts.Add(plcm, StaticGeometry.Create());
+				}
+            }
+
+			Debug.Log($"Reused {numObjectsReused} existing objects");
+
+			// delete unused existing objects
+
+			foreach (var pair in existingObjects)
+            {
+				if (pair.Value is List<StaticGeometry> list)
+					list.ForEach(sg => F.DestroyEvenInEditMode(sg.gameObject));
+				else
+					F.DestroyEvenInEditMode(((StaticGeometry)pair.Value).gameObject);
+            }
+
+			Debug.Log($"Deleted {existingObjects.Count} existing objects");
+
+
+/*
+			// gather existing objects, and destroy invalid ones
+
+			var toDestroy = new List<StaticGeometry>();
+
+			foreach (var sg in this.gameObject.GetFirstLevelChildrenSingleComponent<StaticGeometry>())
+            {
+				if (sg.SerializedObjectDefinitionId <= 0
+					|| !placements.TryGetValue(sg.SerializedObjectDefinitionId, out var plcm)
+					|| (this.ignoreLodObjectsWhenInitializing && plcm.IsLod))
+					toDestroy.Add(sg);
+				else
+					m_insts.Add(plcm, sg);
+            }
+
+			toDestroy.ForEach(sg => F.DestroyEvenInEditMode(sg.gameObject));
+
+			// add new objects
+
+			foreach (var pair in placements)
+			{
+				var plcm = pair.Value;
+
+				if (this.ignoreLodObjectsWhenInitializing && plcm.IsLod)
+					continue;
+
+				if (!m_insts.ContainsKey(plcm))
+					m_insts.Add(plcm, StaticGeometry.Create());
+			}*/
 
 			UnityEngine.Debug.Log("Num static geometries " + m_insts.Count);
 
@@ -171,11 +281,6 @@ namespace SanAndreasUnity.Behaviours.World
 
 		public void InitStaticGeometry ()
 		{
-			if (m_initializedStaticGeometry)
-				return;
-
-			m_initializedStaticGeometry = true;
-
 			foreach (var inst in m_insts)
 			{
 				var staticGeometry = inst.Value;

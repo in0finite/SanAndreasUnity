@@ -34,7 +34,22 @@ namespace SanAndreasUnity.Behaviours.World
 
         public ISimpleObjectDefinition ObjectDefinition { get; private set; }
 
-        private bool _canLoad;
+		[SerializeField]
+		[HideInInspector]
+		private int m_serializedObjectDefinitionId = -1;
+		public int SerializedObjectDefinitionId => m_serializedObjectDefinitionId;
+
+		[SerializeField]
+		[HideInInspector]
+		private Vector3 m_serializedInstancePosition;
+		public Vector3 SerializedInstancePosition => m_serializedInstancePosition;
+
+		[SerializeField]
+		[HideInInspector]
+		private Quaternion m_serializedInstanceRotation;
+		public Quaternion SerializedInstanceRotation => m_serializedInstanceRotation;
+
+		private bool _canLoad;
 		private bool _isGeometryLoaded = false;
 		private bool _isFading;
 
@@ -89,6 +104,10 @@ namespace SanAndreasUnity.Behaviours.World
         public void Initialize(Instance inst, Dictionary<Instance, StaticGeometry> dict)
         {
             Instance = inst;
+			m_serializedObjectDefinitionId = inst.ObjectId;
+			m_serializedInstancePosition = inst.Position;
+			m_serializedInstanceRotation = inst.Rotation;
+
             ObjectDefinition = Item.GetDefinition<Importing.Items.Definitions.ISimpleObjectDefinition>(inst.ObjectId);
 
             if (ObjectDefinition is TimeObjectDef)
@@ -104,6 +123,10 @@ namespace SanAndreasUnity.Behaviours.World
 
             name = _canLoad ? ObjectDefinition.ModelName : string.Format("Unknown ({0})", Instance.ObjectId);
 
+			if (LodChild != null)
+				LodChild.LodParent = null;
+			LodChild = null;
+            
             if (_canLoad && Instance.LodInstance != null)
             {
                 if (dict.TryGetValue(Instance.LodInstance, out StaticGeometry dictValue))
@@ -123,6 +146,9 @@ namespace SanAndreasUnity.Behaviours.World
         {
             
             if (!_canLoad) return;
+
+			if (null != this.GetComponent<MeshFilter>()) // already loaded - this also works in edit mode
+				return;
 
 			Profiler.BeginSample ("StaticGeometry.OnLoad", this);
 
