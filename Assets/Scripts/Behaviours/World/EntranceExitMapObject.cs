@@ -30,7 +30,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public EntranceExit Info { get; private set; }
 
-        void Initialize(EntranceExit info)
+        public void Initialize(EntranceExit info)
         {
             Info = info;
 

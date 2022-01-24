@@ -17,5 +17,10 @@ namespace SanAndreasUnity.Utilities
             list.RemoveAt(0);
             return firstElement;
         }
+
+        public static Queue<T> ToQueue<T>(this IEnumerable<T> enumerable)
+        {
+            return new Queue<T>(enumerable);
+        }
     }
 }

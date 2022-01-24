@@ -307,19 +307,33 @@ namespace SanAndreasUnity.Behaviours.World
 
         internal void CreateEnexes()
         {
-			this.gameObject
+			var existingEnexes = this.gameObject
 				.GetFirstLevelChildrenSingleComponent<EntranceExitMapObject>()
-				.ToArray()
-				.ForEach(_ => F.DestroyEvenInEditMode(_.gameObject));
+				.ToQueue();
 
             m_enexes = new List<EntranceExitMapObject>(256);
+
             foreach(var enex in Item.Enexes.Where(enex => this.CellIds.Contains(enex.TargetInterior)))
             {
-	            var enexComponent = EntranceExitMapObject.Create(enex);
-	            m_enexes.Add(enexComponent);
+				EntranceExitMapObject enexComponent;
+				if (existingEnexes.Count > 0)
+				{
+					enexComponent = existingEnexes.Dequeue();
+					enexComponent.Initialize(enex);
+				}
+				else
+                {
+                    enexComponent = EntranceExitMapObject.Create(enex);
+                }
+
+                m_enexes.Add(enexComponent);
 	            _worldSystem.AddObjectToArea(enexComponent.transform.position, 100f, enexComponent);
             }
-        }
+
+			// delete unused enexes
+			existingEnexes.ForEach(enex => F.DestroyEvenInEditMode(enex.gameObject));
+
+		}
 
         internal void LoadWater ()
 		{
