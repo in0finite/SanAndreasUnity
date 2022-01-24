@@ -48,6 +48,8 @@ namespace SanAndreasUnity.Editor
         private bool m_exportCollisionMeshes = true;
         private bool m_exportPrefabs = false;
 
+        private Vector2 m_scrollViewPos = Vector2.zero;
+
         private struct SaveAssetAction
         {
             public UnityEngine.Object asset;
@@ -73,6 +75,8 @@ namespace SanAndreasUnity.Editor
 
         void OnGUI()
         {
+            m_scrollViewPos = EditorGUILayout.BeginScrollView(m_scrollViewPos);
+
             EditorGUILayout.HelpBox(
                 "This tool can export all currenty loaded world objects as assets and prefabs.\n" +
                 "It will store them in a separate folder, and will only export those objects that were not already exported.",
@@ -104,6 +108,8 @@ namespace SanAndreasUnity.Editor
 
             if (GUILayout.Button("Export from selection"))
                 this.Export(ExportType.FromSelection);
+
+            EditorGUILayout.EndScrollView();
         }
 
         void ChangeFolder()
