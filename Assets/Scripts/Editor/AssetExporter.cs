@@ -332,8 +332,9 @@ namespace SanAndreasUnity.Editor
 
             float diffPerc = endPerc - startPerc;
 
-            long initialNumPendingJobs = LoadingThread.Singleton.GetNumJobsPendingApproximately();
+            long initialNumPendingJobs = LoadingThread.Singleton.GetNumPendingJobs();
 
+            // TODO: this should be removed
             yield return null; // this must be done, otherwise LoadingThread does not start processing any job
 
             long numPendingJobs;
@@ -341,7 +342,7 @@ namespace SanAndreasUnity.Editor
             {
                 LoadingThread.Singleton.UpdateJobs();
 
-                numPendingJobs = LoadingThread.Singleton.GetNumJobsPendingApproximately();
+                numPendingJobs = LoadingThread.Singleton.GetNumPendingJobs();
                 long numJobsProcessed = initialNumPendingJobs - numPendingJobs;
 
                 float currentPerc = startPerc + diffPerc * (numJobsProcessed / (float)initialNumPendingJobs);

@@ -67,8 +67,10 @@ namespace SanAndreasUnity.Behaviours
 		private readonly ThreadParameters _threadParameters = new ThreadParameters();
 		private readonly Queue<Job<object>> _processedJobsBuffer = new Queue<Job<object>>(256);
 
-		private static long s_lastJobId = 0;
-		private static readonly object s_lastJobIdLockObject = new object();
+		private long _lastJobId = 0;
+		private readonly object _lastJobIdLockObject = new object();
+
+		private long _lastProcessedJobId = 0;
 
 		private readonly Stopwatch _stopwatch = new Stopwatch();
 
@@ -170,6 +172,8 @@ namespace SanAndreasUnity.Behaviours
 				// invoke finish callback
 				if (job.callbackFinish != null)
 					F.RunExceptionSafe (() => job.callbackFinish (job.result));
+
+				_lastProcessedJobId = job.id;
 			}
 
 		}
@@ -195,7 +199,6 @@ namespace SanAndreasUnity.Behaviours
 			job.exception = null;
 
 			var j = new Job<object> () {
-				id = GetNextJobId(),
 				priority = job.priority,
 				action = () => job.action(),
 				callbackError = job.callbackError,
@@ -205,14 +208,12 @@ namespace SanAndreasUnity.Behaviours
 			if(job.callbackFinish != null)
 				j.callbackFinish = (arg) => job.callbackFinish( (T) arg );
 
-			_threadParameters.jobs.Add (j);
-		}
-
-		static long GetNextJobId()
-		{
-			lock (s_lastJobIdLockObject)
-			{
-				return ++s_lastJobId;
+			lock (_lastJobIdLockObject)
+				// make sure that changing id and adding new job is atomic operation, otherwise
+				// multiple threads accessing this part of code can cause the jobs to be inserted out of order
+            {
+				j.id = ++_lastJobId;
+				_threadParameters.jobs.Add(j);
 			}
 		}
 
@@ -222,6 +223,22 @@ namespace SanAndreasUnity.Behaviours
 
 			// this is not done in a critical section: calling Count on 2 multithreaded collections
 			return (long)_threadParameters.jobs.Count + (long)_threadParameters.processedJobs.Count + (long)_processedJobsBuffer.Count;
+        }
+
+		public long GetNumPendingJobs()
+        {
+			// this will not work if collections used are not FIFO collections (eg. other than queues)
+			// - this will be the case if job priority is used
+
+			ThreadHelper.ThrowIfNotOnMainThread();
+
+			lock (_lastJobIdLockObject)
+            {
+				if (_lastProcessedJobId > _lastJobId)
+					throw new Exception($"Last processed job id ({_lastProcessedJobId}) is higher than last registered job id ({_lastJobId}). This should not happen.");
+				
+				return _lastJobId - _lastProcessedJobId;
+            }
         }
 
 		static void ThreadFunction (object objectParameter)
