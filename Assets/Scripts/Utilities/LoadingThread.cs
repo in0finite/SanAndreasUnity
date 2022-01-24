@@ -211,6 +211,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public long GetNumJobsPendingApproximately()
         {
+			ThreadHelper.ThrowIfNotOnMainThread();
+
 			// this is not done in a critical section: calling Count on 2 multithreaded collections
 			return (long)_threadParameters.jobs.Count + (long)_threadParameters.processedJobs.Count + (long)_processedJobsBuffer.Count;
         }
