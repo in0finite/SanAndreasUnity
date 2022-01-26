@@ -22,5 +22,13 @@ namespace SanAndreasUnity.Utilities
         {
             return new Queue<T>(enumerable);
         }
+
+        public static Queue<T> ToQueueWithCapacity<T>(this IEnumerable<T> enumerable, int capacity)
+        {
+            var queue = new Queue<T>(capacity);
+            foreach (var item in enumerable)
+                queue.Enqueue(item);
+            return queue;
+        }
     }
 }

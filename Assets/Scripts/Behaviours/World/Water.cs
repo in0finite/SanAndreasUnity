@@ -1,5 +1,6 @@
 ﻿using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Placements;
+using SanAndreasUnity.Utilities;
 using System.Linq;
 using UnityEngine;
 
@@ -106,13 +107,25 @@ namespace SanAndreasUnity.Behaviours.World
             mesh.normals = normals;
             mesh.SetIndices(indices, MeshTopology.Triangles, 0);
 
-            var go = Instantiate(this.WaterPrefab, this.transform);
+            var availableObjects = this.transform.GetFirstLevelChildren().ToQueueWithCapacity(this.transform.childCount);
+
+            var go = availableObjects.Count > 0
+                ? availableObjects.Dequeue().gameObject
+                : Instantiate(this.WaterPrefab, this.transform);
+
             go.transform.localPosition = Vector3.zero;
             go.transform.localRotation = Quaternion.identity;
 
             go.name = "Water mesh";
 
-            go.GetComponent<MeshFilter>().sharedMesh = mesh;
+            var meshFilter = go.GetComponentOrThrow<MeshFilter>();
+            if (meshFilter.sharedMesh != null)
+                F.DestroyEvenInEditMode(meshFilter.sharedMesh);
+            meshFilter.sharedMesh = mesh;
+
+            foreach (var availableObject in availableObjects)
+                F.DestroyEvenInEditMode(availableObject.gameObject);
+            
         }
 
         void CreateQuad(Vector2 min, Vector2 max, Vector3[] vertexes, Vector3[] normals, ref int vertexIndex, int[] indexes, ref int indexesIndex)

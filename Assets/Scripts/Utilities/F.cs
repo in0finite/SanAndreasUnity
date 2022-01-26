@@ -286,6 +286,16 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
+        public static List<Transform> GetFirstLevelChildrenPreallocated(this Transform tr)
+        {
+            var list = new List<Transform>(tr.childCount);
+            for (int i = 0; i < tr.childCount; i++)
+            {
+                list.Add(tr.GetChild(i));
+            }
+            return list;
+        }
+
         public static IEnumerable<T> GetFirstLevelChildrenComponents<T>(this GameObject go) where T : Component
         {
             return go.transform.GetFirstLevelChildren().SelectMany(c => c.GetComponents<T>());
