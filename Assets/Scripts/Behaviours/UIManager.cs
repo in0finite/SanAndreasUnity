@@ -5,10 +5,10 @@ using SanAndreasUnity.Utilities;
 namespace SanAndreasUnity.Behaviours
 {
 
-	public class UIManager : MonoBehaviour
+	public class UIManager : StartupSingleton<UIManager>
 	{
 
-		public static UIManager Instance { get; private set; }
+		public static UIManager Instance => Singleton;
 
 		bool m_useTouchInput = false;
 		public bool UseTouchInput
@@ -45,10 +45,8 @@ namespace SanAndreasUnity.Behaviours
 
 
 
-	    void Awake()
+	    protected override void OnSingletonAwake()
 	    {
-	        
-	        Instance = this;
 
 	        // enable touch input by default on mobile platforms
 	    	if (Application.isMobilePlatform)

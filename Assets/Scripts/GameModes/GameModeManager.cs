@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using SanAndreasUnity.Net;
+using SanAndreasUnity.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.GameModes
 {
-    public class GameModeManager : MonoBehaviour
+    public class GameModeManager : StartupSingleton<GameModeManager>
     {
-        public static GameModeManager Instance { get; private set; }
+        public static GameModeManager Instance => Singleton;
 
         public class GameModeInfo
         {
@@ -31,12 +32,7 @@ namespace SanAndreasUnity.GameModes
         private GameModeInfo m_selectedGameMode;
 
 
-        void Awake()
-        {
-            Instance = this;
-        }
-
-        private void Start()
+        protected override void OnSingletonStart()
         {
             NetManager.Instance.onServerStatusChanged += OnServerStatusChanged;
         }
