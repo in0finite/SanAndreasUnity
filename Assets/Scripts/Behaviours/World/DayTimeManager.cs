@@ -53,7 +53,23 @@ namespace SanAndreasUnity.Behaviours.World
         public event System.Action onHourChanged = delegate {};
 
 
+
+#if UNITY_EDITOR
+        [UnityEditor.InitializeOnLoadMethod]
+        static void InitOnLoad()
+        {
+            if (null == Singleton)
+                return;
+            Singleton.Init();
+        }
+#endif
+
         protected override void OnSingletonAwake()
+        {
+            this.Init();
+        }
+
+        void Init()
         {
             m_originalLightColor = this.directionalLight.color;
             m_originalSkyboxExposure = RenderSettings.skybox.GetFloat(ExposurePropertyId);
