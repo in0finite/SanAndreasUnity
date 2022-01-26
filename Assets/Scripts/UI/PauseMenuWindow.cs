@@ -10,6 +10,9 @@ namespace SanAndreasUnity.UI {
 		[SerializeField]	private	bool	m_isOpenedByDefaultInMainMenu = false;
 		[SerializeField]	private	bool	m_isOpenedByDefaultInPauseMenu = false;
 
+		[SerializeField] private bool m_drawInEditMode = true;
+		public bool DrawInEditMode => m_drawInEditMode;
+
 		private	bool	m_isOpened = false;
 		public bool IsOpened {
 			get { return this.m_isOpened; } 

@@ -2313,6 +2313,7 @@ MonoBehaviour:
   windowName: Console
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2342,6 +2343,7 @@ MonoBehaviour:
   windowName: Utilities
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 1
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2369,6 +2371,7 @@ MonoBehaviour:
   windowName: Controls
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2396,6 +2399,7 @@ MonoBehaviour:
   windowName: Teleport
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 1
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2423,6 +2427,7 @@ MonoBehaviour:
   windowName: DayTime
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2451,6 +2456,7 @@ MonoBehaviour:
   windowName: Options
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 0
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2478,6 +2484,7 @@ MonoBehaviour:
   windowName: Vehicle Spawner
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2505,6 +2512,7 @@ MonoBehaviour:
   windowName: Map
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2532,6 +2540,7 @@ MonoBehaviour:
   windowName: Animations
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2559,6 +2568,7 @@ MonoBehaviour:
   windowName: Weapons
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2586,6 +2596,7 @@ MonoBehaviour:
   windowName: Peds
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2626,6 +2637,7 @@ MonoBehaviour:
   windowName: Change path to GTA
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 0
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2653,6 +2665,7 @@ MonoBehaviour:
   windowName: Audio
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2683,6 +2696,7 @@ MonoBehaviour:
   windowName: Start Game
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 0
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2719,6 +2733,7 @@ MonoBehaviour:
   windowName: Join Game
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 0
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
@@ -2747,6 +2762,7 @@ MonoBehaviour:
   windowName: Stats
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
+  m_drawInEditMode: 1
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2
