@@ -340,7 +340,7 @@ namespace SanAndreasUnity.UI {
 				m_audioSource.Stop ();
 				if (destroyClip)
 				{
-					Destroy (m_audioSource.clip);
+					F.DestroyEvenInEditMode (m_audioSource.clip);
 					m_audioSource.clip = null;
 				}
 			}
