@@ -229,29 +229,34 @@ namespace SanAndreasUnity.UI {
 			if (!this.IsMinimized) {
 				// draw contents inside window
 
-				if (this.SpaceBeforeContent > 0)
-					GUILayout.Space (this.SpaceBeforeContent);
-
-				this.OnWindowGUIBeforeContent ();
-
-				if (this.useScrollView)
-					this.scrollPos = GUILayout.BeginScrollView (this.scrollPos, m_scrollViewStyle);
-
-				this.OnWindowGUI ();
-
-				if (this.useScrollView)
-					GUILayout.EndScrollView ();
-
-				if (this.SpaceAfterContent > 0)
-					GUILayout.Space (this.SpaceAfterContent);
-
-				this.OnWindowGUIAfterContent ();
+				this.DrawWindowContent ();
 			}
 
 
 			if (this.isDraggable)
 				GUI.DragWindow ();
 			
+		}
+
+		public void DrawWindowContent()
+        {
+			if (this.SpaceBeforeContent > 0)
+				GUILayout.Space(this.SpaceBeforeContent);
+
+			this.OnWindowGUIBeforeContent();
+
+			if (this.useScrollView)
+				this.scrollPos = GUILayout.BeginScrollView(this.scrollPos, m_scrollViewStyle);
+
+			this.OnWindowGUI();
+
+			if (this.useScrollView)
+				GUILayout.EndScrollView();
+
+			if (this.SpaceAfterContent > 0)
+				GUILayout.Space(this.SpaceAfterContent);
+
+			this.OnWindowGUIAfterContent();
 		}
 
 		protected virtual void OnWindowGUIBeforeContent() {
