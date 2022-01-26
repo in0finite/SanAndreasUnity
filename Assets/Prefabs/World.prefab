@@ -670,7 +670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57ea334de36794f45af24c665b00e893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WaterPrefab: {fileID: 0}
+  WaterPrefab: {fileID: 100000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
 --- !u!1 &1000405462072482
 GameObject:
   m_ObjectHideFlags: 0
