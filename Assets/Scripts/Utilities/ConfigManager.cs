@@ -7,7 +7,7 @@ namespace SanAndreasUnity.Utilities
     {
         void Awake()
         {
-            Config.Load();
+            //Config.Load();
         }
     }
 }

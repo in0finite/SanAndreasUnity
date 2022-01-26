@@ -45,6 +45,8 @@ namespace SanAndreasUnity.Utilities
         }
 
 
+        private static bool _loaded = false;
+
 		private static JObject _root = new JObject ();
 		private static JObject _user = new JObject ();
 
@@ -52,6 +54,11 @@ namespace SanAndreasUnity.Utilities
 
 
         
+        static Config()
+        {
+            Load();
+        }
+
         private static TVal ConvertVal<TVal>(JToken val)
         {
 	        // note that if you pass string[] as type, it will fail on IL2CPP
@@ -68,6 +75,8 @@ namespace SanAndreasUnity.Utilities
 
         private static TVal Get<TVal>(string key)
         {
+            Load();
+
             var userVal = _user[key];
             if (userVal != null)
 	            return ConvertVal<TVal>(userVal);
@@ -92,6 +101,8 @@ namespace SanAndreasUnity.Utilities
 
         private static string GetSubstitution(string key)
         {
+            Load();
+
             if (_substitutions.ContainsKey(key)) return _substitutions[key];
 
             string subs;
@@ -112,16 +123,19 @@ namespace SanAndreasUnity.Utilities
 
         private static string ReplaceSubstitutions(string value)
         {
+            Load();
             return _regex.Replace(value, x => GetSubstitution(x.Groups["key"].Value));
         }
 
         public static string GetPath(string key)
         {
+            Load();
             return ReplaceSubstitutions(GetString(key));
         }
 
         public static string[] GetPaths(string key)
         {
+            Load();
             return Get<JArray>(key)
                 .Select(x => ReplaceSubstitutions((string)x))
                 .ToArray();
@@ -129,11 +143,17 @@ namespace SanAndreasUnity.Utilities
 
 		public static void SetString (string key, string value)
 		{
+            Load();
 			_user [key] = value;
 		}
 
-		public static void Load ()
+		private static void Load ()
 		{
+            if (_loaded)
+                return;
+
+            _loaded = true;
+
 			_root = new JObject ();
 			_user = new JObject ();
 			_substitutions.Clear ();
@@ -150,12 +170,14 @@ namespace SanAndreasUnity.Utilities
 
 		public static void SaveUserConfig ()
 		{
-			File.WriteAllText (UserConfigFilePath, _user.ToString (Newtonsoft.Json.Formatting.Indented));
+            Load();
+            File.WriteAllText (UserConfigFilePath, _user.ToString (Newtonsoft.Json.Formatting.Indented));
 		}
 
 		public static void SaveUserConfigSafe ()
 		{
-			F.RunExceptionSafe (() => SaveUserConfig ());
+            Load();
+            F.RunExceptionSafe (() => SaveUserConfig ());
 		}
 
     }

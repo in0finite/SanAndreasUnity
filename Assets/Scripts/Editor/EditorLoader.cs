@@ -80,8 +80,6 @@ namespace SanAndreasUnity.Editor
                 return;
             }
 
-            Config.Load();
-
             string selectedFolder = EditorUtility.OpenFolderPanel("Select GTA installation folder", Config.GamePath ?? "", "");
             if (string.IsNullOrWhiteSpace(selectedFolder))
             {
