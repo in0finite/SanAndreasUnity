@@ -35,7 +35,7 @@ namespace SanAndreasUnity.UI
             Utilities.Stats.DisplayRect = this.windowRect;
             var categories = Utilities.Stats.Categories.ToArray();
             m_tabIndex = GUIUtils.TabsControl(m_tabIndex, categories);
-            if (m_tabIndex >= 0)
+            if (m_tabIndex >= 0 && categories.Length > 0)
             {
                 m_scrollViewPos = GUILayout.BeginScrollView(m_scrollViewPos);
                 var stats = Utilities.Stats.Entries.ElementAt(m_tabIndex).Value;
