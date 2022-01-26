@@ -2313,7 +2313,7 @@ MonoBehaviour:
   windowName: Console
   m_isOpenedByDefaultInMainMenu: 0
   m_isOpenedByDefaultInPauseMenu: 0
-  m_drawInEditMode: 1
+  m_drawInEditMode: 0
   m_destroyOnClose: 0
   windowRect:
     serializedVersion: 2

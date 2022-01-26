@@ -20,7 +20,8 @@ namespace SanAndreasUnity.Editor
         public InGameWindowDrawer()
         {
             this.titleContent = new GUIContent("In-game window drawer");
-            this.minSize = new Vector2(450, 300);
+            this.minSize = new Vector2(300, 200);
+            this.position = new Rect(this.position.center, new Vector2(700, 500));
         }
 
         [MenuItem(EditorCore.MenuName + "/" + "In-game window drawer")]
@@ -68,13 +69,15 @@ namespace SanAndreasUnity.Editor
 
             GUILayout.EndArea();
 
-            GUILayout.BeginArea(new Rect(tabsAreaWidth, 0, this.position.width - tabsAreaWidth, this.position.height));
+            Rect windowRect = new Rect(tabsAreaWidth, 0, this.position.width - tabsAreaWidth, this.position.height);
+            GUILayout.BeginArea(windowRect);
 
             if (m_selectedWindowIndex >= 0)
             {
                 var window = m_pauseMenuWindows[m_selectedWindowIndex];
                 if (window != null)
                 {
+                    window.windowRect = windowRect;
                     window.DrawWindowContent();
                 }
             }

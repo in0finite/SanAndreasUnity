@@ -371,7 +371,8 @@ namespace SanAndreasUnity.UI {
 
 
 			// fill everything with sea
-			GUI.DrawTexture (mapDisplayRect, seaPixel);
+			if (seaPixel != null)
+				GUI.DrawTexture (mapDisplayRect, seaPixel);
 
 			// draw the map texture
 			this.DrawMapTexture( mapDisplayRect, visibleMapRect );
@@ -396,6 +397,9 @@ namespace SanAndreasUnity.UI {
 		private	void	DrawMapTexture(Rect mapDisplayRect, Rect visibleMapRect) {
 
 			Texture2D mapTexture = MiniMap.Instance.MapTexture;
+
+			if (null == mapTexture)
+				return;
 
 
 			//GUI.DrawTexture (new Rect (mapZoomPos, mapRect), mapTexture);
@@ -449,7 +453,8 @@ namespace SanAndreasUnity.UI {
 			Rect infoAreaRect = new Rect (3, mapDisplayRect.yMax, mapDisplayRect.width - 3, this.infoAreaHeight);
 
 			GUILayout.BeginArea (infoAreaRect);
-			GUI.DrawTexture (new Rect(new Vector2(-infoAreaRect.x, 0), infoAreaRect.size), m_infoAreaTexture);
+			if (m_infoAreaTexture != null)
+				GUI.DrawTexture (new Rect(new Vector2(-infoAreaRect.x, 0), infoAreaRect.size), m_infoAreaTexture);
 
 			m_infoAreaScrollViewPos = GUILayout.BeginScrollView (m_infoAreaScrollViewPos);
 
