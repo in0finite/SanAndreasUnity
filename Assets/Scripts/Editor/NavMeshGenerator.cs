@@ -189,11 +189,15 @@ namespace SanAndreasUnity.Editor
                 navMeshBuildSources,
                 new Bounds(cell.transform.position, Vector3.one * cell.WorldSize));
 
+            var etaMeasurer = new ETAMeasurer(2f);
+
             while (!(asyncOperation.isDone || asyncOperation.progress == 1f))
             {
                 yield return null;
 
-                if (EditorUtils.DisplayPausableProgressBar("", "Updating nav mesh...", asyncOperation.progress))
+                etaMeasurer.UpdateETA(asyncOperation.progress);
+
+                if (EditorUtils.DisplayPausableProgressBar("", $"Updating nav mesh... ETA: {etaMeasurer.ETA}", asyncOperation.progress))
                     yield break;
             }
 
