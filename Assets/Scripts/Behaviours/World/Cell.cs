@@ -149,10 +149,6 @@ namespace SanAndreasUnity.Behaviours.World
 
 		public void CreateStaticGeometry ()
 		{
-			/*var gr = Item.GetPlacements<Instance>(CellIds.ToArray())
-				.GroupBy(_ => $"{_.ObjectId}_{_.Position}_{_.Rotation}")
-				.Where(g => g.ElementAtOrDefault(1) != default)
-				.ToList();*/
 
 			var placements = Item.GetPlacements<Instance>(CellIds.ToArray());
 
@@ -183,9 +179,9 @@ namespace SanAndreasUnity.Behaviours.World
                 }
             }
 
-			Debug.Log($"Found {existingObjects.Count} existing objects");
+			int numExistingObjects = existingObjects.Count;
 
-			// create new, or update existing objects
+			// create or reuse objects
 
 			m_insts = new Dictionary<Instance, StaticGeometry> (48 * 1024);
 
@@ -223,52 +219,24 @@ namespace SanAndreasUnity.Behaviours.World
 				}
             }
 
-			Debug.Log($"Reused {numObjectsReused} existing objects");
-
 			// delete unused existing objects
 
+			int numDeletedObjects = 0;
 			foreach (var pair in existingObjects)
             {
 				if (pair.Value is List<StaticGeometry> list)
-					list.ForEach(sg => F.DestroyEvenInEditMode(sg.gameObject));
-				else
-					F.DestroyEvenInEditMode(((StaticGeometry)pair.Value).gameObject);
-            }
+                {
+                    list.ForEach(sg => F.DestroyEvenInEditMode(sg.gameObject));
+					numDeletedObjects += list.Count;
+                }
+                else
+                {
+                    F.DestroyEvenInEditMode(((StaticGeometry)pair.Value).gameObject);
+					numDeletedObjects++;
+                }
+			}
 
-			Debug.Log($"Deleted {existingObjects.Count} existing objects");
-
-
-/*
-			// gather existing objects, and destroy invalid ones
-
-			var toDestroy = new List<StaticGeometry>();
-
-			foreach (var sg in this.gameObject.GetFirstLevelChildrenSingleComponent<StaticGeometry>())
-            {
-				if (sg.SerializedObjectDefinitionId <= 0
-					|| !placements.TryGetValue(sg.SerializedObjectDefinitionId, out var plcm)
-					|| (this.ignoreLodObjectsWhenInitializing && plcm.IsLod))
-					toDestroy.Add(sg);
-				else
-					m_insts.Add(plcm, sg);
-            }
-
-			toDestroy.ForEach(sg => F.DestroyEvenInEditMode(sg.gameObject));
-
-			// add new objects
-
-			foreach (var pair in placements)
-			{
-				var plcm = pair.Value;
-
-				if (this.ignoreLodObjectsWhenInitializing && plcm.IsLod)
-					continue;
-
-				if (!m_insts.ContainsKey(plcm))
-					m_insts.Add(plcm, StaticGeometry.Create());
-			}*/
-
-			UnityEngine.Debug.Log("Num static geometries " + m_insts.Count);
+			Debug.Log($"Num static geometries {m_insts.Count}, existing {numExistingObjects}, reused {numObjectsReused}, deleted {numDeletedObjects}");
 
 			_worldSystem = new WorldSystemWithDistanceLevels<MapObject>(
 				this.drawDistancesPerLayers,
