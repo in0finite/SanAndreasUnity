@@ -11,27 +11,9 @@ namespace SanAndreasUnity.Editor
     public class NavMeshGenerator : EditorWindowBase
     {
         private static int s_selectedAgentId = 0;
-        private static NavMeshData s_navMeshData;
-        private static IEnumerator s_coroutine;
+        [SerializeField] private NavMeshData m_navMeshData;
+        private static CoroutineInfo s_coroutine;
 
-        public NavMeshGenerator()
-        {
-            this.titleContent = new GUIContent("Nav mesh generator");
-        }
-
-        void Cleanup()
-        {
-            s_coroutine = null;
-
-            EditorUtility.ClearProgressBar();
-
-            if (s_navMeshData != null)
-            {
-                NavMeshBuilder.Cancel(s_navMeshData);
-                Destroy(s_navMeshData);
-                s_navMeshData = null;
-            }
-        }
 
         [MenuItem(EditorCore.MenuName + "/" + "Generate nav mesh")]
         static void Init()
@@ -40,12 +22,23 @@ namespace SanAndreasUnity.Editor
             window.Show();
         }
 
+        public NavMeshGenerator()
+        {
+            this.titleContent = new GUIContent("Nav mesh generator");
+        }
+
+        void Cleanup()
+        {
+            EditorUtility.ClearProgressBar();
+            CancelBuild();
+        }
+
         void OnGUI()
         {
             EditorGUILayout.HelpBox(
                 "Generate nav mesh from loaded world.\n" +
                 "Only high LOD world objects and water are included.\n" +
-                "At the end, you will choose where to save the generated nav mesh.",
+                "Only collision data will be included, rendering data will be ignored.",
                 MessageType.Info,
                 true);
 
@@ -64,25 +57,85 @@ namespace SanAndreasUnity.Editor
 
             GUILayout.Space(20);
 
+            EditorGUILayout.PrefixLabel("Current nav mesh:");
+            EditorGUILayout.ObjectField(m_navMeshData, typeof(NavMeshData), false);
+
+            GUILayout.Space(20);
+
             if (GUILayout.Button("Generate"))
                 Generate();
-            
+
+            GUI.enabled = m_navMeshData != null;
+            if (GUILayout.Button("Save navmesh as asset"))
+                SaveNavMesh();
+
+            GUI.enabled = m_navMeshData != null;
+            if (GUILayout.Button("Clear current navmesh"))
+                ClearCurrentNavMesh();
+
+            GUI.enabled = true;
+            if (GUILayout.Button("Cancel build"))
+                CancelBuild();
+
+            GUI.enabled = true;
+        }
+
+        void ClearCurrentNavMesh()
+        {
+            if (m_navMeshData != null)
+            {
+                NavMeshBuilder.Cancel(m_navMeshData);
+                F.DestroyEvenInEditMode(m_navMeshData);
+                m_navMeshData = null;
+            }
+        }
+
+        void CancelBuild()
+        {
+            UnityEditor.AI.NavMeshBuilder.Cancel();
+            if (m_navMeshData != null)
+                NavMeshBuilder.Cancel(m_navMeshData);
+        }
+
+        void SaveNavMesh()
+        {
+            if (null == m_navMeshData)
+                return;
+
+            EditorUtility.ClearProgressBar();
+
+            // CreateAsset() probably requires the file to be in project
+            string saveFilePath = EditorUtility.SaveFilePanelInProject("Save nav mesh", "NavMesh.asset", "asset", "");
+
+            if (!string.IsNullOrWhiteSpace(saveFilePath))
+            {
+                EditorUtility.DisplayProgressBar("", "Saving nav mesh...", 1f);
+
+                AssetDatabase.CreateAsset(m_navMeshData, saveFilePath);
+            }
+
+            EditorUtility.ClearProgressBar();
         }
 
         void Generate()
         {
-            if (s_coroutine != null)
+            if (CoroutineManager.IsRunning(s_coroutine))
                 return;
 
             Cleanup();
 
-            s_coroutine = this.DoGenerate();
-            CoroutineManager.Start(s_coroutine, this.Cleanup, ex => this.Cleanup());
+            s_coroutine = CoroutineManager.Start(this.DoGenerate(), this.Cleanup, ex => this.Cleanup());
         }
 
         IEnumerator DoGenerate()
         {
             yield return null;
+            
+            if (UnityEditor.AI.NavMeshBuilder.isRunning)
+            {
+                EditorUtility.DisplayDialog("", "Navmesh build is already running", "Ok");
+                yield break;
+            }
 
             if (string.IsNullOrEmpty(NavMesh.GetSettingsNameFromID(s_selectedAgentId)))
             {
@@ -98,12 +151,6 @@ namespace SanAndreasUnity.Editor
             }
 
             NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByID(s_selectedAgentId);
-
-            NavMesh.RemoveAllNavMeshData();
-
-            var navMeshData = s_navMeshData = new NavMeshData(s_selectedAgentId);
-
-            NavMesh.AddNavMeshData(s_navMeshData);
 
             EditorUtility.DisplayProgressBar("Generating nav mesh", "Collecting objects...", 0f);
 
@@ -127,8 +174,17 @@ namespace SanAndreasUnity.Editor
             if (!EditorUtility.DisplayDialog("", $"Found total of {numObjects} objects with {navMeshBuildSources.Count} sources. Proceed ?", "Ok", "Cancel"))
                 yield break;
 
+            /*UnityEditor.AI.NavMeshBuilder.ClearAllNavMeshes();
+            NavMesh.RemoveAllNavMeshData();*/
+
+            if (m_navMeshData == null)
+            {
+                m_navMeshData = new NavMeshData(s_selectedAgentId);
+                NavMesh.AddNavMeshData(m_navMeshData);
+            }
+
             var asyncOperation = NavMeshBuilder.UpdateNavMeshDataAsync(
-                navMeshData,
+                m_navMeshData,
                 navMeshBuildSettings,
                 navMeshBuildSources,
                 new Bounds(cell.transform.position, Vector3.one * cell.WorldSize));
@@ -137,7 +193,7 @@ namespace SanAndreasUnity.Editor
             {
                 yield return null;
 
-                if (EditorUtility.DisplayCancelableProgressBar("", "Updating nav mesh...", asyncOperation.progress))
+                if (EditorUtils.DisplayPausableProgressBar("", "Updating nav mesh...", asyncOperation.progress))
                     yield break;
             }
 
@@ -147,19 +203,6 @@ namespace SanAndreasUnity.Editor
             {
                 EditorUtility.DisplayDialog("", $"Updating nav mesh did not finish completely, progress is {asyncOperation.progress}", "Ok");
                 yield break;
-            }
-
-            // save nav mesh
-
-            // CreateAsset() probably requires the file to be in project
-            string saveFilePath = EditorUtility.SaveFilePanelInProject("Save nav mesh", "NavMesh.asset", "asset", "");
-
-            if (!string.IsNullOrWhiteSpace(saveFilePath))
-            {
-                EditorUtility.DisplayProgressBar("", "Saving nav mesh...", 1f);
-
-                AssetDatabase.CreateAsset(s_navMeshData, saveFilePath);
-                s_navMeshData = null; // this is now an asset, we don't want it to be destroyed
             }
 
             EditorUtility.ClearProgressBar();

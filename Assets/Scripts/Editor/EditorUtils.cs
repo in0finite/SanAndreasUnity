@@ -88,5 +88,22 @@ namespace SanAndreasUnity.Editor
                 EditorGUILayout.LabelField($"{labelText} {value}");
             }
         }
+
+        public static bool DisplayPausableProgressBar(string title, string text, float progress, string dialogText, string ok, string cancel)
+        {
+            if (EditorUtility.DisplayCancelableProgressBar(title, text, progress))
+            {
+                EditorUtility.ClearProgressBar();
+                // ok = continue
+                return !EditorUtility.DisplayDialog(title, dialogText, ok, cancel);
+            }
+
+            return false;
+        }
+
+        public static bool DisplayPausableProgressBar(string title, string text, float progress)
+        {
+            return DisplayPausableProgressBar(title, text, progress, "Are you sure ?", "Continue", "Quit");
+        }
     }
 }

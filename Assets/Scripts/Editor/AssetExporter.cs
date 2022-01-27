@@ -300,7 +300,7 @@ namespace SanAndreasUnity.Editor
                     {
                         Transform triggerLoadObject = objectsToExport[triggerLoadIndex];
 
-                        if (DisplayPausableProgressBar("", $"Triggering async load ({triggerLoadIndex + 1}/{objectsToExport.Length}), ETA {etaTime} ... {triggerLoadObject.name}", i / (float)objectsToExport.Length))
+                        if (EditorUtils.DisplayPausableProgressBar("", $"Triggering async load ({triggerLoadIndex + 1}/{objectsToExport.Length}), ETA {etaTime} ... {triggerLoadObject.name}", i / (float)objectsToExport.Length))
                             yield break;
 
                         var mapObject = triggerLoadObject.GetComponentOrThrow<MapObject>();
@@ -325,7 +325,7 @@ namespace SanAndreasUnity.Editor
 
                 }
 
-                if (DisplayPausableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length}), ETA {etaTime} ... {currentObject.name}", i / (float)objectsToExport.Length))
+                if (EditorUtils.DisplayPausableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length}), ETA {etaTime} ... {currentObject.name}", i / (float)objectsToExport.Length))
                     yield break;
 
                 currentObject.gameObject.SetActive(true); // enable it so it can be seen when Editor un-freezes
@@ -399,7 +399,7 @@ namespace SanAndreasUnity.Editor
                     long numJobsProcessed = initialNumPendingJobs - numPendingJobs;
 
                     float currentPerc = startPerc + diffPerc * (0 == initialNumPendingJobs ? 0f : numJobsProcessed / (float)initialNumPendingJobs);
-                    if (DisplayPausableProgressBar("", $"Waiting for async jobs to finish ({numJobsProcessed}/{initialNumPendingJobs})...{textSuffix}", currentPerc))
+                    if (EditorUtils.DisplayPausableProgressBar("", $"Waiting for async jobs to finish ({numJobsProcessed}/{initialNumPendingJobs})...{textSuffix}", currentPerc))
                     {
                         isCanceledRef.value = true;
                         yield break;
@@ -601,23 +601,6 @@ namespace SanAndreasUnity.Editor
                 return true;
             }
             return false;
-        }
-
-        public static bool DisplayPausableProgressBar(string title, string text, float progress, string dialogText, string ok, string cancel)
-        {
-            if (EditorUtility.DisplayCancelableProgressBar(title, text, progress))
-            {
-                EditorUtility.ClearProgressBar();
-                // ok = continue
-                return !EditorUtility.DisplayDialog(title, dialogText, ok, cancel);
-            }
-
-            return false;
-        }
-
-        public static bool DisplayPausableProgressBar(string title, string text, float progress)
-        {
-            return DisplayPausableProgressBar(title, text, progress, "Are you sure ?", "Continue", "Quit");
         }
 
     }
