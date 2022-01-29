@@ -117,9 +117,10 @@ namespace SanAndreasUnity.Behaviours.World
             go.transform.localRotation = Quaternion.identity;
 
             go.name = "Water mesh";
+            mesh.name = go.name;
 
             var meshFilter = go.GetComponentOrThrow<MeshFilter>();
-            if (meshFilter.sharedMesh != null)
+            if (meshFilter.sharedMesh != null && !EditorUtilityEx.IsAsset(meshFilter.sharedMesh))
                 F.DestroyEvenInEditMode(meshFilter.sharedMesh);
             meshFilter.sharedMesh = mesh;
 

@@ -23,5 +23,14 @@ namespace SanAndreasUnity.Utilities
             return false;
 #endif
         }
+
+        public static bool IsAsset(Object obj)
+        {
+#if UNITY_EDITOR
+            return AssetDatabase.Contains(obj);
+#else
+            return false;
+#endif
+        }
     }
 }
