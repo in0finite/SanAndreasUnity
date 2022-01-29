@@ -287,9 +287,8 @@ namespace SanAndreasUnity.Editor
 
             int nextIndexToTriggerLoad = 0;
             var isCanceledRef = new Ref<bool>();
-            var etaStopwatch = Stopwatch.StartNew();
-            string etaTime = "0";
-
+            var etaMeasurer = new ETAMeasurer(0f);
+            
             for (int i = 0; i < objectsToExport.Length; i++)
             {
                 Transform currentObject = objectsToExport[i];
@@ -304,7 +303,7 @@ namespace SanAndreasUnity.Editor
                     {
                         Transform triggerLoadObject = objectsToExport[triggerLoadIndex];
 
-                        if (EditorUtils.DisplayPausableProgressBar("", $"Triggering async load ({triggerLoadIndex + 1}/{objectsToExport.Length}), ETA {etaTime} ... {triggerLoadObject.name}", i / (float)objectsToExport.Length))
+                        if (EditorUtils.DisplayPausableProgressBar("", $"Triggering async load ({triggerLoadIndex + 1}/{objectsToExport.Length}), ETA {etaMeasurer.ETA} ... {triggerLoadObject.name}", i / (float)objectsToExport.Length))
                             yield break;
 
                         var mapObject = triggerLoadObject.GetComponentOrThrow<MapObject>();
@@ -317,7 +316,7 @@ namespace SanAndreasUnity.Editor
                     // wait for completion of jobs
 
                     foreach (var item in WaitForCompletionOfLoadingJobs(
-                        $"\r\nETA {etaTime}, objects processed {i}/{objectsToExport.Length}",
+                        $"\r\nETA {etaMeasurer.ETA}, objects processed {i}/{objectsToExport.Length}",
                         i / (float)objectsToExport.Length,
                         nextNextIndex / (float)objectsToExport.Length,
                         4,
@@ -329,26 +328,19 @@ namespace SanAndreasUnity.Editor
 
                 }
 
-                if (EditorUtils.DisplayPausableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length}), ETA {etaTime} ... {currentObject.name}", i / (float)objectsToExport.Length))
+                if (EditorUtils.DisplayPausableProgressBar("", $"Creating assets ({i + 1}/{objectsToExport.Length}), ETA {etaMeasurer.ETA} ... {currentObject.name}", i / (float)objectsToExport.Length))
                     yield break;
 
                 currentObject.gameObject.SetActive(true); // enable it so it can be seen when Editor un-freezes
+                
                 this.ExportAssets(currentObject.gameObject);
 
                 if ((i % 200 == 0) || i == objectsToExport.Length - 1)
                 {
                     this.ProcessSavedAssetActions();
+                    etaMeasurer.UpdateETA(i / (float)objectsToExport.Length);
                 }
 
-                if (i % 200 == 0)
-                {
-                    // update ETA
-                    double numPerSecond = 200 / etaStopwatch.Elapsed.TotalSeconds;
-                    etaStopwatch.Restart();
-                    int numLeft = objectsToExport.Length - i;
-                    double secondsLeft = numLeft / numPerSecond;
-                    etaTime = F.FormatElapsedTime((float) secondsLeft);
-                }
             }
 
             if (m_exportPrefabs)
