@@ -138,7 +138,8 @@ namespace SanAndreasUnity.Behaviours.World
 
             this.SetDrawDistance(ObjectDefinition?.DrawDist ?? 0);
 
-            gameObject.SetActive(false);
+			if (!F.IsAppInEditTime)
+				gameObject.SetActive(false);
             gameObject.isStatic = true;
         }
 

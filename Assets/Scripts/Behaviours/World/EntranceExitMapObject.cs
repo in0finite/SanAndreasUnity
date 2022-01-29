@@ -44,7 +44,8 @@ namespace SanAndreasUnity.Behaviours.World
                     info.TargetInterior),
                 Quaternion.identity);
 
-            gameObject.SetActive(false);
+            if (!F.IsAppInEditTime)
+                gameObject.SetActive(false);
             gameObject.isStatic = true;
 
             // collider
