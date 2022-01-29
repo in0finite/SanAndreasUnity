@@ -192,8 +192,8 @@ namespace SanAndreasUnity.Behaviours.World
 				if (this.ignoreLodObjectsWhenInitializing && plcm.IsLod)
 					continue;
 
-				string key = GetKey(plcm);
-				if (existingObjects.TryGetValue(key, out object obj))
+				string key = existingObjects.Count > 0 ? GetKey(plcm) : null; // this makes the function 2.5x faster
+				if (existingObjects.Count > 0 && existingObjects.TryGetValue(key, out object obj))
                 {
 					StaticGeometry sg;
 
