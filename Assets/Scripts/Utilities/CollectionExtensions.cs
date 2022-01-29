@@ -32,6 +32,18 @@ namespace SanAndreasUnity.Utilities
             return queue;
         }
 
+        public static T[] ToArrayOfLength<T>(this IEnumerable<T> enumerable, int length)
+        {
+            T[] array = new T[length];
+            int i = 0;
+            foreach (var item in enumerable)
+            {
+                array[i] = item;
+                i++;
+            }
+            return array;
+        }
+
         public static IEnumerable<T> AppendIf<T>(this IEnumerable<T> enumerable, bool condition, T element)
         {
             return condition ? enumerable.Append(element) : enumerable;
