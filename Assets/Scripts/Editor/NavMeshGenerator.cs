@@ -79,6 +79,10 @@ namespace SanAndreasUnity.Editor
                 ClearCurrentNavMesh();
 
             GUI.enabled = true;
+            if (GUILayout.Button("Remove all navmeshes"))
+                RemoveAllNavMeshes();
+
+            GUI.enabled = true;
             if (GUILayout.Button("Cancel build"))
                 CancelBuild();
 
@@ -93,6 +97,12 @@ namespace SanAndreasUnity.Editor
                 F.DestroyEvenInEditMode(m_navMeshData);
                 m_navMeshData = null;
             }
+        }
+
+        void RemoveAllNavMeshes()
+        {
+            UnityEditor.AI.NavMeshBuilder.ClearAllNavMeshes();
+            NavMesh.RemoveAllNavMeshData();
         }
 
         void CancelBuild()
