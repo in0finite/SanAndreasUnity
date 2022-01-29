@@ -220,9 +220,16 @@ namespace SanAndreasUnity.Editor
             Transform[] objectsToExport = Array.Empty<Transform>();
 
             if (m_exportFromSelection)
-                objectsToExport = Selection.transforms.Where(_ => _.gameObject.activeInHierarchy).Where(_ => _.GetComponent<MapObject>() != null).ToArray();
+                objectsToExport = Selection.transforms
+                    .Where(_ => _.gameObject.activeInHierarchy)
+                    .Where(_ => _.GetComponent<MapObject>() != null || _.GetComponent<Water>() != null)
+                    .ToArray();
             else if (this.IsExportingFromLoadedWorld)
-                objectsToExport = cell.transform.GetFirstLevelChildren().Where(_ => _.gameObject.activeInHierarchy).ToArray();
+                objectsToExport = cell.transform
+                    .GetFirstLevelChildren()
+                    .AppendIf(cell.Water != null, cell.Water.GetTransformOrNull())
+                    .Where(_ => _.gameObject.activeInHierarchy)
+                    .ToArray();
             else if (this.IsExportingFromGameFiles)
             {
                 cell.ignoreLodObjectsWhenInitializing = true;
@@ -234,7 +241,10 @@ namespace SanAndreasUnity.Editor
                 EditorUtility.DisplayProgressBar("", "Initializing static geometry...", 0f);
                 cell.InitStaticGeometry();
 
-                objectsToExport = cell.StaticGeometries.Select(_ => _.Value.transform).ToArray();
+                objectsToExport = cell.StaticGeometries
+                    .Select(_ => _.Value.transform)
+                    .AppendIf(cell.Water != null, cell.Water.GetTransformOrNull())
+                    .ToArray();
             }
 
             EditorUtility.ClearProgressBar();
@@ -306,9 +316,12 @@ namespace SanAndreasUnity.Editor
                         if (EditorUtils.DisplayPausableProgressBar("", $"Triggering async load ({triggerLoadIndex + 1}/{objectsToExport.Length}), ETA {etaMeasurer.ETA} ... {triggerLoadObject.name}", i / (float)objectsToExport.Length))
                             yield break;
 
-                        var mapObject = triggerLoadObject.GetComponentOrThrow<MapObject>();
-                        mapObject.UnShow();
-                        mapObject.Show(1f);
+                        var mapObject = triggerLoadObject.GetComponent<MapObject>();
+                        if (mapObject != null)
+                        {
+                            mapObject.UnShow();
+                            mapObject.Show(1f);
+                        }
                     }
 
                     nextIndexToTriggerLoad = nextNextIndex;

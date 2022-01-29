@@ -263,6 +263,11 @@ namespace SanAndreasUnity.Utilities
             }
         }
 
+        public static Transform GetTransformOrNull(this Component component)
+        {
+            return (component != null) ? component.transform : null;
+        }
+
         public static IEnumerable<Transform> GetAllParents(this Transform tr)
         {
             Transform currentParent = tr.parent;

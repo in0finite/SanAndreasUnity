@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SanAndreasUnity.Utilities
 {
@@ -29,6 +30,11 @@ namespace SanAndreasUnity.Utilities
             foreach (var item in enumerable)
                 queue.Enqueue(item);
             return queue;
+        }
+
+        public static IEnumerable<T> AppendIf<T>(this IEnumerable<T> enumerable, bool condition, T element)
+        {
+            return condition ? enumerable.Append(element) : enumerable;
         }
     }
 }
