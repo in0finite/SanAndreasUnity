@@ -23,6 +23,7 @@ namespace SanAndreasUnity.Behaviours
 		public static bool IsLoading { get; private set; }
 
 		public static string LoadingStatus { get; private set; }
+		public static string LastLoadingStatusWhenErrorHappened { get; private set; }
 
 		private static CoroutineInfo s_coroutine;
 
@@ -189,6 +190,7 @@ namespace SanAndreasUnity.Behaviours
 
 		static void OnLoadCoroutineFinishedWithError(System.Exception exception)
         {
+			LastLoadingStatusWhenErrorHappened = LoadingStatus;
 			CleanupState ();
 			m_hasErrors = true;
 			m_loadException = exception;
@@ -523,7 +525,7 @@ namespace SanAndreasUnity.Behaviours
         {
             if (HasLoaded)
                 return;
-			if (!m_hasErrors)
+			if (!m_hasErrors && !IsLoading)
 				return;
 
 			// background
@@ -539,7 +541,7 @@ namespace SanAndreasUnity.Behaviours
 			GUILayout.BeginArea(new Rect(10, 5, 400, Screen.height - 5));
 
 			// current status
-			GUILayout.Label("<size=25>" + LoadingStatus + "</size>");
+			GUILayout.Label("<size=25>" + (IsLoading ? LoadingStatus : LastLoadingStatusWhenErrorHappened) + "</size>");
 
 			// progress bar
 			GUILayout.Space (10);
@@ -548,7 +550,7 @@ namespace SanAndreasUnity.Behaviours
 			// display error
 			if (m_hasErrors) {
 				GUILayout.Space (20);
-				GUILayout.Label("<size=20>" + "The following exception occured during the current step:" + "</size>");
+				GUILayout.Label("<size=20>" + "The following error occured during the current step:" + "</size>");
 				GUILayout.TextArea( m_loadException.ToString () );
 				GUILayout.Space (30);
 				if (GUIUtils.ButtonWithCalculatedSize("Exit", 80, 30)) {
