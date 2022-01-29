@@ -5,6 +5,8 @@ using UnityEngine.AI;
 using SanAndreasUnity.Behaviours.World;
 using System.Collections;
 using SanAndreasUnity.Utilities;
+using UnityEditor.SceneManagement;
+using SanAndreasUnity.Behaviours;
 
 namespace SanAndreasUnity.Editor
 {
@@ -12,6 +14,7 @@ namespace SanAndreasUnity.Editor
     {
         private static int s_selectedAgentId = 0;
         [SerializeField] private NavMeshData m_navMeshData;
+        private NavMeshDataInstance m_navMeshDataInstance = new NavMeshDataInstance();
         private static CoroutineInfo s_coroutine;
 
 
@@ -94,7 +97,13 @@ namespace SanAndreasUnity.Editor
             if (m_navMeshData != null)
             {
                 NavMeshBuilder.Cancel(m_navMeshData);
-                F.DestroyEvenInEditMode(m_navMeshData);
+
+                NavMesh.RemoveNavMeshData(m_navMeshDataInstance);
+                m_navMeshDataInstance = new NavMeshDataInstance();
+
+                if (!AssetDatabase.Contains(m_navMeshData))
+                    F.DestroyEvenInEditMode(m_navMeshData);
+
                 m_navMeshData = null;
             }
         }
@@ -195,13 +204,14 @@ namespace SanAndreasUnity.Editor
             if (!EditorUtility.DisplayDialog("", $"Found total of {numObjects} objects with {navMeshBuildSources.Count} sources. Proceed ?", "Ok", "Cancel"))
                 yield break;
 
-            /*UnityEditor.AI.NavMeshBuilder.ClearAllNavMeshes();
-            NavMesh.RemoveAllNavMeshData();*/
-
             if (m_navMeshData == null)
             {
-                m_navMeshData = new NavMeshData(s_selectedAgentId);
-                NavMesh.AddNavMeshData(m_navMeshData);
+                m_navMeshData = NavMeshBuilder.BuildNavMeshData(
+                    navMeshBuildSettings,
+                    new List<NavMeshBuildSource>(),
+                    new Bounds(),
+                    cell.transform.position,
+                    cell.transform.rotation);
             }
 
             var asyncOperation = NavMeshBuilder.UpdateNavMeshDataAsync(
@@ -212,7 +222,7 @@ namespace SanAndreasUnity.Editor
 
             var etaMeasurer = new ETAMeasurer(2f);
 
-            while (!(asyncOperation.isDone || asyncOperation.progress == 1f))
+            while (!asyncOperation.isDone)
             {
                 yield return null;
 
@@ -229,6 +239,9 @@ namespace SanAndreasUnity.Editor
                 EditorUtility.DisplayDialog("", $"Updating nav mesh did not finish completely, progress is {asyncOperation.progress}", "Ok");
                 yield break;
             }
+
+            m_navMeshDataInstance = NavMesh.AddNavMeshData(m_navMeshData);
+            EditorSceneManager.MarkSceneDirty(cell.gameObject.scene);
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("", "Nav mesh generation complete !", "Ok");
