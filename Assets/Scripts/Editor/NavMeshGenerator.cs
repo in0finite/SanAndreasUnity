@@ -135,10 +135,26 @@ namespace SanAndreasUnity.Editor
             {
                 EditorUtility.DisplayProgressBar("", "Saving nav mesh...", 1f);
 
-                AssetDatabase.CreateAsset(m_navMeshData, saveFilePath);
-            }
+                try
+                {
+                    if (AssetDatabase.Contains(m_navMeshData))
+                    {
+                        NavMesh.RemoveAllNavMeshData();
+                        UnityEditor.AI.NavMeshBuilder.ClearAllNavMeshes();
+                        m_navMeshDataInstance = new NavMeshDataInstance();
 
-            EditorUtility.ClearProgressBar();
+                        m_navMeshData = Object.Instantiate(m_navMeshData);
+
+                        m_navMeshDataInstance = NavMesh.AddNavMeshData(m_navMeshData);
+                    }
+
+                    AssetDatabase.CreateAsset(m_navMeshData, saveFilePath);
+                }
+                finally
+                {
+                    EditorUtility.ClearProgressBar();
+                }
+            }
         }
 
         void Generate()
