@@ -157,17 +157,23 @@ namespace SanAndreasUnity.Editor
             var navMeshBuildSources = new List<NavMeshBuildSource>(1024 * 20);
             int numObjects = 0;
 
-            foreach (StaticGeometry staticGeometry in cell.StaticGeometries.Values)
+            foreach (MapObject mapObject in cell.gameObject.GetFirstLevelChildrenSingleComponent<MapObject>())
             {
-                if (null != staticGeometry.LodParent)
+                if (!mapObject.gameObject.activeInHierarchy)
+                    continue;
+                if (mapObject is StaticGeometry staticGeometry && null != staticGeometry.LodParent)
                     continue;
 
                 numObjects++;
 
-                navMeshBuildSources.AddRange(Cell.GetNavMeshBuildSources(staticGeometry.transform));
+                navMeshBuildSources.AddRange(Cell.GetNavMeshBuildSources(mapObject.transform));
             }
 
-            navMeshBuildSources.AddRange(cell.GetWaterNavMeshBuildSources());
+            if (cell.Water != null && cell.Water.gameObject.activeInHierarchy)
+            {
+                navMeshBuildSources.AddRange(cell.GetWaterNavMeshBuildSources());
+                numObjects++;
+            }
 
             EditorUtility.ClearProgressBar();
 
