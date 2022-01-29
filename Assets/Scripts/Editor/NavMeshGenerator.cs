@@ -44,8 +44,13 @@ namespace SanAndreasUnity.Editor
 
             GUILayout.Space(20);
 
-            EditorGUILayout.PrefixLabel("Agent ID:");
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Agent ID:");
             s_selectedAgentId = EditorGUILayout.IntField(s_selectedAgentId);
+            if (GUILayout.Button("Edit"))
+                UnityEditor.AI.NavMeshEditorHelpers.OpenAgentSettings(s_selectedAgentId);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
 
             GUILayout.Space(10);
 
