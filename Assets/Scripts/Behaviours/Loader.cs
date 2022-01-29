@@ -247,7 +247,9 @@ namespace SanAndreasUnity.Behaviours
 
 					while (hasNext) {
 
+						UnityEngine.Profiling.Profiler.BeginSample($"Loading step: {step.Description}");
 						hasNext = en.MoveNext();
+						UnityEngine.Profiling.Profiler.EndSample();
 
 						// update description
 						LoadingStatus = step.Description;
@@ -257,7 +259,9 @@ namespace SanAndreasUnity.Behaviours
 				} else {
 					// this step uses a function
 
+					UnityEngine.Profiling.Profiler.BeginSample($"Loading step: {step.Description}");
 					step.LoadFunction();
+					UnityEngine.Profiling.Profiler.EndSample();
 				}
 
 				// step finished it's work
