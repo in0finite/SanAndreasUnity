@@ -72,6 +72,7 @@ namespace SanAndreasUnity.Editor
         {
             this.titleContent = new GUIContent("Asset exporter");
             this.minSize = new Vector2(400, 200);
+            this.position = new Rect(this.position.center, new Vector2(400, 500));
         }
 
         void OnGUI()
