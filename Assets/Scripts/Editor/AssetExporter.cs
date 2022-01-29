@@ -269,6 +269,10 @@ namespace SanAndreasUnity.Editor
 
                 // disable automatic light baking, otherwise Editor will be very slow after assets are loaded and will fill the whole memory
                 Lightmapping.giWorkflowMode = Lightmapping.GIWorkflowMode.OnDemand;
+                
+                // disable GI - it makes Editor very slow after the assets are loaded
+                Lightmapping.bakedGI = false;
+                Lightmapping.realtimeGI = false;
 
                 DayTimeManager.Singleton.SetTime(13, 0, true); // to make TOBJ objects visible
 
