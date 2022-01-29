@@ -186,6 +186,8 @@ namespace SanAndreasUnity.Behaviours.World
 			m_insts = new Dictionary<Instance, StaticGeometry> (48 * 1024);
 
 			int numObjectsReused = 0;
+            var stopwatchCreation = System.Diagnostics.Stopwatch.StartNew();
+			double totalCreationTime = 0;
 
 			foreach (var plcm in placements)
             {
@@ -215,7 +217,9 @@ namespace SanAndreasUnity.Behaviours.World
 				}
 				else
                 {
+					stopwatchCreation.Restart();
 					m_insts.Add(plcm, StaticGeometry.Create());
+					totalCreationTime += stopwatchCreation.Elapsed.TotalSeconds;
 				}
             }
 
@@ -236,7 +240,7 @@ namespace SanAndreasUnity.Behaviours.World
                 }
 			}
 
-			Debug.Log($"Num static geometries {m_insts.Count}, existing {numExistingObjects}, reused {numObjectsReused}, deleted {numDeletedObjects}");
+			var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
 			_worldSystem = new WorldSystemWithDistanceLevels<MapObject>(
 				this.drawDistancesPerLayers,
@@ -245,6 +249,10 @@ namespace SanAndreasUnity.Behaviours.World
 				this.OnAreaChangedVisibility);
 
 			this.FocusPointManager = new FocusPointManager<MapObject>(_worldSystem, this.MaxDrawDistance);
+
+			double worldSystemInitTime = stopwatch.Elapsed.TotalSeconds;
+
+			Debug.Log($"Num static geometries {m_insts.Count}, existing {numExistingObjects}, reused {numObjectsReused}, deleted {numDeletedObjects}, creation time {totalCreationTime:F3} s, world system init time {worldSystemInitTime:F3} s");
 		}
 
 		public void InitStaticGeometry ()
