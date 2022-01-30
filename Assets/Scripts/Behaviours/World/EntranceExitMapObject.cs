@@ -44,7 +44,7 @@ namespace SanAndreasUnity.Behaviours.World
                     info.TargetInterior),
                 Quaternion.identity);
 
-            if (!F.IsAppInEditTime)
+            if (!F.IsAppInEditMode)
                 gameObject.SetActive(false);
             gameObject.isStatic = true;
 

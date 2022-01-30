@@ -138,7 +138,7 @@ namespace SanAndreasUnity.Behaviours.World
 
             this.SetDrawDistance(ObjectDefinition?.DrawDist ?? 0);
 
-			if (!F.IsAppInEditTime)
+			if (!F.IsAppInEditMode)
 				gameObject.SetActive(false);
             gameObject.isStatic = true;
         }
@@ -299,7 +299,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         private bool NeedsFading()
         {
-			if (F.IsAppInEditTime)
+			if (F.IsAppInEditMode)
 				return false;
 
 	        if (F.IsInHeadlessMode)

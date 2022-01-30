@@ -421,7 +421,7 @@ namespace SanAndreasUnity.Utilities
 
         public static void DestroyEvenInEditMode(Object obj)
         {
-            if (F.IsAppInEditTime)
+            if (F.IsAppInEditMode)
                 Object.DestroyImmediate(obj, false);
             else
                 Object.Destroy(obj);
@@ -1063,7 +1063,7 @@ namespace SanAndreasUnity.Utilities
 		    }
 	    }
 
-        public static bool IsAppInEditTime
+        public static bool IsAppInEditMode
         {
             get
             {

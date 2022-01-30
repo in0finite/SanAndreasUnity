@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Utilities
 
         static void EditorUpdate()
         {
-            if (!F.IsAppInEditTime)
+            if (!F.IsAppInEditMode)
                 return;
 
             m_coroutineRunner.Update();

@@ -128,7 +128,7 @@ namespace SanAndreasUnity.Behaviours.Audio
 				audioSource.Play();
 
 				// destroy game object when sound is finished playing
-				if (!F.IsAppInEditTime)
+				if (!F.IsAppInEditMode)
 					Destroy( audioSource.gameObject, clip.length );
 
 				return audioSource;

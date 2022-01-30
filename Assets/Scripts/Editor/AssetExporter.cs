@@ -176,7 +176,7 @@ namespace SanAndreasUnity.Editor
 
             if (this.IsExportingFromGameFiles)
             {
-                if (!F.IsAppInEditTime)
+                if (!F.IsAppInEditMode)
                 {
                     EditorUtility.DisplayDialog("", "This type of export can only run in edit-mode.", "Ok");
                     yield break;

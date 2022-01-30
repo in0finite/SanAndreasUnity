@@ -104,7 +104,7 @@ namespace SanAndreasUnity.UI
 
 		void OnLoaderFinished()
 		{
-			if (F.IsAppInEditTime)
+			if (F.IsAppInEditMode)
 				return;
 
 			// assign textures to movement buttons' arrows

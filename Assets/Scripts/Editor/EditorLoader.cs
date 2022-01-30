@@ -21,7 +21,7 @@ namespace SanAndreasUnity.Editor
 
         static void EditorUpdate()
         {
-            if (!F.IsAppInEditTime)
+            if (!F.IsAppInEditMode)
                 return;
 
             if (Loader.IsLoading)
@@ -39,7 +39,7 @@ namespace SanAndreasUnity.Editor
         {
             EditorUtility.ClearProgressBar();
 
-            if (!F.IsAppInEditTime)
+            if (!F.IsAppInEditMode)
                 return;
 
             if (Loader.HasLoaded)
@@ -51,7 +51,7 @@ namespace SanAndreasUnity.Editor
         [MenuItem(EditorCore.MenuName + "/" + "Load game data")]
         static void MenuItemLoadGameData()
         {
-            if (!F.IsAppInEditTime)
+            if (!F.IsAppInEditMode)
             {
                 EditorUtility.DisplayDialog("", "This can only be used in edit mode.", "Ok");
                 return;
@@ -74,7 +74,7 @@ namespace SanAndreasUnity.Editor
         [MenuItem(EditorCore.MenuName + "/" + "Change path to GTA")]
         static void MenuItemChangePath()
         {
-            if (!F.IsAppInEditTime)
+            if (!F.IsAppInEditMode)
             {
                 EditorUtility.DisplayDialog("", "Exit play mode first.", "Ok");
                 return;

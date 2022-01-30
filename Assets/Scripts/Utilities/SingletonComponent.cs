@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Utilities
         {
             get
             {
-                if (!F.IsAppInEditTime)
+                if (!F.IsAppInEditMode)
                 {
                     return s_cachedSingleton;
                 }
