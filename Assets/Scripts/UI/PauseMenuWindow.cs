@@ -249,7 +249,7 @@ namespace SanAndreasUnity.UI {
 			this.OnWindowGUIBeforeContent();
 
 			if (this.useScrollView)
-				this.scrollPos = GUILayout.BeginScrollView(this.scrollPos, m_scrollViewStyle);
+				this.scrollPos = GUILayout.BeginScrollView(this.scrollPos, m_scrollViewStyle ?? GUI.skin.scrollView);
 
 			this.OnWindowGUI();
 
