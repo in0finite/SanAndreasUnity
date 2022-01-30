@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverOnly: 0
   localPlayerAuthority: 1
-  m_AssetId: abddce9c98c1ba5a992f109cfd8c5a5c
+  m_AssetId: 
   m_SceneId: 0
 --- !u!114 &459295042993608392
 MonoBehaviour:
@@ -203,6 +203,7 @@ MonoBehaviour:
   parameters:
     hasRevealRadius: 1
     revealRadius: 150
+    timeToKeepRevealingAfterRemoved: 3
 --- !u!114 &9038525027628313851
 MonoBehaviour:
   m_ObjectHideFlags: 0
