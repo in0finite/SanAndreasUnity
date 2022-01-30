@@ -356,6 +356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ff3ce5295c89b4fbfd4a6867fe0bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  randomAverageTimeIntervalToEmitSound: 10
 --- !u!1 &1273918895060814
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,6 +483,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114099438993920694}
+        m_TargetAssemblyTypeName: 
         m_MethodName: OnDamaged
         m_Mode: 1
         m_Arguments:
@@ -492,8 +494,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &8031585062060932984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -508,7 +508,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverOnly: 0
   localPlayerAuthority: 0
-  m_AssetId: 9d45d42a7408c1e4ab325d6840364b84
+  m_AssetId: 
   m_SceneId: 0
 --- !u!114 &4594788420466467901
 MonoBehaviour:
