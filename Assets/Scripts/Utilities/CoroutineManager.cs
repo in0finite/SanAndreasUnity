@@ -19,16 +19,16 @@ namespace SanAndreasUnity.Utilities
 
         static void EditorUpdate()
         {
-            if (!F.IsAppInEditMode)
-                return;
-
+            // note: this will also update coroutines in play mode, and also while the Editor is paused.
+            // if coroutines wish to avoid that, we need to add a flag for every coroutine
             m_coroutineRunner.Update();
         }
 #endif
 
         void Update()
         {
-            m_coroutineRunner.Update();
+            if (!Application.isEditor)
+                m_coroutineRunner.Update();
         }
 
         public static CoroutineInfo Start(IEnumerator coroutine)
