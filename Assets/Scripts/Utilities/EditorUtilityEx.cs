@@ -18,6 +18,8 @@ namespace SanAndreasUnity.Utilities
         public static bool MarkActiveSceneAsDirty()
         {
 #if UNITY_EDITOR
+            if (Application.isPlaying) // exception will be thrown if we attempt this in play mode
+                return false;
             return EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
 #else
             return false;
