@@ -153,7 +153,7 @@ namespace SanAndreasUnity.Importing.Archive
 	//	[MethodImpl(MethodImplOptions.Synchronized)]
 		public static void ReadFileAsync(string name, float loadPriority, System.Action<Stream> onFinish)
 		{
-			Behaviours.LoadingThread.RegisterJob (new Behaviours.LoadingThread.Job<Stream> () {
+			Behaviours.LoadingThread.RegisterJob (new BackgroundJobRunner.Job<Stream> () {
                 priority = loadPriority,
 				action = () => ReadFile( name ),
 				callbackFinish = (stream) => { onFinish(stream); },

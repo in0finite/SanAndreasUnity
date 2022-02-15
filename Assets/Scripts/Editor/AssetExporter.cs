@@ -182,7 +182,7 @@ namespace SanAndreasUnity.Editor
                     yield break;
                 }
 
-                LoadingThread.Singleton.EnsureBackgroundThreadStarted();
+                LoadingThread.Singleton.BackgroundJobRunner.EnsureBackgroundThreadStarted();
                 
                 if (!Loader.HasLoaded)
                 {
@@ -401,7 +401,7 @@ namespace SanAndreasUnity.Editor
 
             for (int i = 0; i < numIterations; i++)
             {
-                long initialNumPendingJobs = LoadingThread.Singleton.GetNumPendingJobs();
+                long initialNumPendingJobs = LoadingThread.Singleton.BackgroundJobRunner.GetNumPendingJobs();
                 long numPendingJobs = initialNumPendingJobs;
 
                 do
@@ -419,7 +419,7 @@ namespace SanAndreasUnity.Editor
 
                     System.Threading.Thread.Sleep(5); // don't interact with background thread too often, and also reduce CPU usage
                     
-                    numPendingJobs = LoadingThread.Singleton.GetNumPendingJobs();
+                    numPendingJobs = LoadingThread.Singleton.BackgroundJobRunner.GetNumPendingJobs();
                     initialNumPendingJobs = Math.Max(initialNumPendingJobs, numPendingJobs);
 
                 } while (numPendingJobs > 0);

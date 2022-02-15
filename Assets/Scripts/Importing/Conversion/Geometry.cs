@@ -599,7 +599,7 @@ namespace SanAndreasUnity.Importing.Conversion
 
 			GeometryParts loadedGeoms = null;
 
-			LoadingThread.RegisterJob (new LoadingThread.Job<Clump> () {
+			LoadingThread.RegisterJob (new BackgroundJobRunner.Job<Clump> () {
                 priority = loadPriority,
 				action = () => {
 					// read archive file in background thread
