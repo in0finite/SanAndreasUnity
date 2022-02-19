@@ -16,6 +16,10 @@ namespace SanAndreasUnity.Behaviours
 
             public List<PathNodeId> Nodes { get; set; }
 
+            public float Distance { get; set; }
+
+            public float TotalWeight { get; set; }
+
             public float TimeElapsed { get; set; }
         }
 
@@ -30,8 +34,19 @@ namespace SanAndreasUnity.Behaviours
 
             int IComparer<PathNodeId>.Compare(PathNodeId a, PathNodeId b)
             {
-                return m_nodePathfindingDatas[a.AreaID][a.NodeID].f.CompareTo(
-                    m_nodePathfindingDatas[b.AreaID][b.NodeID].f);
+                float fa = m_nodePathfindingDatas[a.AreaID][a.NodeID].f;
+                float fb = m_nodePathfindingDatas[b.AreaID][b.NodeID].f;
+
+                if (fa == fb)
+                {
+                    // f is equal, compare by id
+
+                    if (a.AreaID == b.AreaID)
+                        return a.NodeID.CompareTo(b.NodeID);
+                    return a.AreaID.CompareTo(b.AreaID);
+                }
+                
+                return fa.CompareTo(fb);
             }
         }
 
@@ -112,11 +127,25 @@ namespace SanAndreasUnity.Behaviours
 
             this.RestoreModifiedDatas();
 
+            if (FindPathFromNodeToNode(closestSourceNode.Id, closestDestinationNode.Id))
+            {
+                pathResult = BuildPath(closestDestinationNode.Id);
+            }
+
+            int numModifiedDatas = m_modifiedDatas.Count;
+            RestoreModifiedDatas();
+
+            pathResult.TimeElapsed = (float)stopwatch.Elapsed.TotalSeconds;
+
+            UnityEngine.Debug.Log($"Path finding finished: time {pathResult.TimeElapsed}, num nodes {pathResult.Nodes?.Count ?? 0}, numModifiedDatas {numModifiedDatas}, g {pathResult.TotalWeight}, distance {pathResult.Distance}");
+
+            return pathResult;
+        }
+
+        private bool FindPathFromNodeToNode(PathNodeId startId, PathNodeId targetId)
+        {
             var closedList = new HashSet<PathNodeId>();
             var openList = new SortedSet<PathNodeId>(new NodeComparer(m_nodePathfindingDatas));
-
-            PathNodeId startId = closestSourceNode.Id;
-            PathNodeId targetId = closestDestinationNode.Id;
 
             var startData = GetData(startId);
             startData.f = startData.g + CalculateHeuristic(startId, targetId);
@@ -127,13 +156,14 @@ namespace SanAndreasUnity.Behaviours
             while (openList.Count > 0)
             {
                 PathNodeId idN = openList.Min; // TODO: optimize ; call Remove() ;
-                
+
                 if (idN.Equals(targetId))
                 {
-                    pathResult.Nodes = BuildPath(idN);
-                    pathResult.IsSuccess = true;
-                    break;
+                    return true;
                 }
+
+                openList.Remove(idN);
+                closedList.Add(idN);
 
                 var nodeN = NodeReader.GetNodeById(idN);
                 var areaN = NodeReader.GetAreaById(idN.AreaID);
@@ -144,51 +174,63 @@ namespace SanAndreasUnity.Behaviours
                     NodeLink link = areaN.NodeLinks[nodeN.BaseLinkID + i];
 
                     PathNodeId idM = link.PathNodeId;
-                    var dataM = GetData(idM);
 
-                    float totalWeight = dataN.g + link.Length;
-
-                    if (!openList.Contains(idM) && !closedList.Contains(idM))
+                    if (idM.Equals(targetId))
                     {
+                        var dataM = GetResettedData();
+                        dataM.g = dataN.g + link.Length;
+                        float h = CalculateHeuristic(idM, targetId);
+                        dataM.f = dataM.g + h;
                         dataM.parentId = idN;
                         dataM.hasParent = true;
-                        dataM.g = totalWeight;
-                        dataM.f = dataM.g + CalculateHeuristic(idM, targetId);
                         SetData(idM, dataM);
 
-                        openList.Add(idM);
+                        return true;
+                    }
+
+                    if (closedList.Contains(idM))
+                        continue;
+
+                    if (openList.Contains(idM))
+                    {
+                        float gNew = dataN.g + link.Length;
+                        float hNew = CalculateHeuristic(idM, targetId);
+                        float fNew = gNew + hNew;
+
+                        var dataM = GetData(idM);
+
+                        if (dataM.f > fNew)
+                        {
+                            // update
+
+                            openList.Remove(idM); // first remove with old data
+
+                            dataM.g = gNew;
+                            dataM.f = fNew;
+                            dataM.parentId = idN;
+                            dataM.hasParent = true;
+
+                            SetData(idM, dataM);
+
+                            openList.Add(idM); // now add with new data
+                        }
                     }
                     else
                     {
-                        if (totalWeight < dataM.g)
-                        {
-                            dataM.parentId = idN;
-                            dataM.hasParent = true;
-                            dataM.g = totalWeight;
-                            dataM.f = dataM.g + CalculateHeuristic(idM, targetId);
-                            SetData(idM, dataM);
-
-                            if (closedList.Contains(idM))
-                            {
-                                closedList.Remove(idM);
-                                openList.Add(idM);
-                            }
-                        }
+                        var dataM = GetResettedData();
+                        dataM.g = dataN.g + link.Length;
+                        float h = CalculateHeuristic(idM, targetId);
+                        dataM.f = dataM.g + h;
+                        dataM.parentId = idN;
+                        dataM.hasParent = true;
+                        SetData(idM, dataM);
+                        openList.Add(idM); // do it after setting data
                     }
-                }
 
-                openList.Remove(idN);
-                closedList.Add(idN);
+                }
             }
 
-            int numModifiedDatas = m_modifiedDatas.Count;
-            RestoreModifiedDatas();
-
-            pathResult.TimeElapsed = (float)stopwatch.Elapsed.TotalSeconds;
-
-            UnityEngine.Debug.Log($"Path finding finished: time {pathResult.TimeElapsed}, num nodes {pathResult.Nodes?.Count ?? 0}, numModifiedDatas {numModifiedDatas}");
-
-            return pathResult;
+            return false;
         }
 
         private NodePathfindingData GetData(PathNodeId id)
@@ -209,9 +251,7 @@ namespace SanAndreasUnity.Behaviours
 
         private float CalculateHeuristic(PathNodeId source, PathNodeId destination)
         {
-            return Vector3.Distance(
-                NodeReader.GetNodeById(source).Position,
-                NodeReader.GetNodeById(destination).Position);
+            return NodeReader.GetDistanceBetweenNodes(source, destination);
         }
 
         private void RestoreModifiedDatas()
@@ -232,16 +272,20 @@ namespace SanAndreasUnity.Behaviours
             return data;
         }
 
-        private List<PathNodeId> BuildPath(PathNodeId root)
+        private PathResult BuildPath(PathNodeId root)
         {
             var list = new List<PathNodeId>();
 
             PathNodeId n = root;
             var data = GetData(n);
+            float totalWeight = data.g;
+            float distance = 0f;
 
             while (data.hasParent)
             {
                 list.Add(n);
+
+                distance += NodeReader.GetDistanceBetweenNodes(n, data.parentId);
 
                 n = data.parentId;
                 data = GetData(n);
@@ -251,7 +295,13 @@ namespace SanAndreasUnity.Behaviours
 
             list.Reverse();
 
-            return list;
+            return new PathResult
+            {
+                IsSuccess = true,
+                Nodes = list,
+                TotalWeight = totalWeight,
+                Distance = distance,
+            };
         }
     }
 }

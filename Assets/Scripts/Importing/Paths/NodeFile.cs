@@ -248,6 +248,11 @@ namespace SanAndreasUnity.Importing.Paths
                 yield return targetNode;
             }
         }
+
+        public static float GetDistanceBetweenNodes(PathNodeId a, PathNodeId b)
+        {
+            return UnityEngine.Vector3.Distance(GetNodeById(a).Position, GetNodeById(b).Position);
+        }
     }
 
     public class NodeFile
