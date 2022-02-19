@@ -129,6 +129,8 @@ namespace SanAndreasUnity.Behaviours
 		/// <summary>Ped who is controlled by local player.</summary>
 		public static Ped Instance { get { return Net.Player.Local != null ? Net.Player.Local.OwnedPed : null; } }
 
+		public static Ped LocalPed => Ped.Instance;
+
 		/// <summary>Position of ped instance.</summary>
 		public static Vector3 InstancePos { get { return Instance.transform.position; } }
 

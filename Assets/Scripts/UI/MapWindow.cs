@@ -27,6 +27,8 @@ namespace SanAndreasUnity.UI {
 		private	bool	m_isWaypointPlaced = false;
 		private	Vector2	m_waypointMapPos = Vector2.zero;
 
+		private List<PathNodeId> m_pathToWaypoint = null;
+
 		private	Vector2	m_lastMousePosition = Vector2.zero;
 
 		private	Vector2	m_infoAreaScrollViewPos = Vector2.zero;
@@ -258,6 +260,14 @@ namespace SanAndreasUnity.UI {
 
 		}
 
+		private void OnPathToWaypointFound(PathfindingManager.PathResult pathResult)
+        {
+			if (m_isWaypointPlaced && pathResult.IsSuccess)
+				m_pathToWaypoint = pathResult.Nodes;
+			else
+				m_pathToWaypoint = null;
+        }
+
 
 		void Update() {
 
@@ -329,9 +339,17 @@ namespace SanAndreasUnity.UI {
 				Vector2 mouseMapPos;
 				if (this.GetMapPosUnderMouse (out mouseMapPos)) {
 					m_isWaypointPlaced = !m_isWaypointPlaced;
+					m_pathToWaypoint = null;
 					if (m_isWaypointPlaced)
-						m_waypointMapPos = mouseMapPos;
-				}
+                    {
+                        m_waypointMapPos = mouseMapPos;
+						if (Ped.LocalPed != null)
+							PathfindingManager.Singleton.FindPath(
+								Ped.LocalPed.transform.position,
+								MiniMap.MapPosToWorldPos(mouseMapPos),
+								OnPathToWaypointFound);
+                    }
+                }
 
 			}
 
@@ -579,6 +597,17 @@ namespace SanAndreasUnity.UI {
 			if (m_isWaypointPlaced) {
 				this.DrawItemOnMap (MiniMap.Instance.WaypointTexture, m_waypointMapPos, 12);
 			}
+
+			// draw path to waypoint
+			if (m_pathToWaypoint != null)
+            {
+                foreach (PathNodeId nodeId in m_pathToWaypoint)
+                {
+					Vector2 pos = MiniMap.WorldPosToMapPos(NodeReader.GetNodeById(nodeId).Position);
+					if (GetMapItemRenderRect(F.CreateRect(pos, Vector2.one * 2), out Rect renderRect))
+						GUIUtils.DrawRect(renderRect, Color.yellow);
+                }
+            }
 
 
 			if (!m_clipMapItems) {
