@@ -91,9 +91,9 @@ namespace SanAndreasUnity.Utilities
 				//	_thread.Interrupt ();
 				_threadParameters.TellThreadToExit();
 				if (_thread.Join(7000))
-					Debug.LogFormat("Stopped loading thread in {0} ms", sw.Elapsed.TotalMilliseconds);
+					Debug.LogFormat("Stopped background thread in {0} ms", sw.Elapsed.TotalMilliseconds);
 				else
-					Debug.LogError("Failed to stop loading thread");
+					Debug.LogError("Failed to stop background thread");
 			}
 		}
 
