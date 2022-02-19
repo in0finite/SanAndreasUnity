@@ -34,12 +34,38 @@ namespace SanAndreasUnity.Importing.Paths
         }
     }
 
+    public struct PathNodeId : IEquatable<PathNodeId>
+    {
+        public int AreaID { get; set; }
+        public int NodeID { get; set; }
+
+        public bool Equals(PathNodeId other)
+        {
+            return AreaID == other.AreaID && NodeID == other.NodeID;
+        }
+
+        public override int GetHashCode()
+        {
+            return ((AreaID << 5) + AreaID) ^ NodeID;
+        }
+
+        public static PathNodeId InvalidId => new PathNodeId { AreaID = -1, NodeID = -1 };
+    }
+
+    public struct NodePathfindingData
+    {
+        public float f, g;
+        public PathNodeId parentId;
+        public bool hasParent;
+    }
+
     public struct PathNode : IEquatable<PathNode>
     {
         public UnityEngine.Vector3 Position { get; set; }
         public int BaseLinkID { get; set; }
         public int AreaID { get; set; }
         public int NodeID { get; set; }
+        public PathNodeId Id => new PathNodeId { AreaID = AreaID, NodeID = NodeID };
         public float PathWidth { get; set; }
         public int NodeType { get; set; } // enum
         public int LinkCount { get; set; }
@@ -51,6 +77,8 @@ namespace SanAndreasUnity.Importing.Paths
         {
             return AreaID == other.AreaID && NodeID == other.NodeID;
         }
+
+        public static PathNode InvalidNode => new PathNode { AreaID = -1, NodeID = -1 };
     }
 
     public struct NavNode
@@ -72,6 +100,7 @@ namespace SanAndreasUnity.Importing.Paths
     {
         public int AreaID { get; set; }
         public int NodeID { get; set; }
+        public PathNodeId PathNodeId => new PathNodeId { AreaID = AreaID, NodeID = NodeID };
         public int Length { get; set; }
     }
 
@@ -120,6 +149,11 @@ namespace SanAndreasUnity.Importing.Paths
         public static NodeFile GetAreaById(int id)
         {
             return NodeFiles[id];
+        }
+
+        public static PathNode GetNodeById(PathNodeId id)
+        {
+            return NodeFiles[id.AreaID].GetNodeById(id.NodeID);
         }
 
         public static Vector2Int GetAreaIndexesFromPosition(UnityEngine.Vector3 position, bool clamp)
