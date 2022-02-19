@@ -52,13 +52,6 @@ namespace SanAndreasUnity.Importing.Paths
         public static PathNodeId InvalidId => new PathNodeId { AreaID = -1, NodeID = -1 };
     }
 
-    public struct NodePathfindingData
-    {
-        public float f, g;
-        public PathNodeId parentId;
-        public bool hasParent;
-    }
-
     public struct PathNode : IEquatable<PathNode>
     {
         public UnityEngine.Vector3 Position { get; set; }

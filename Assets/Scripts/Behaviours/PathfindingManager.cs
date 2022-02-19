@@ -23,7 +23,14 @@ namespace SanAndreasUnity.Behaviours
             public float TimeElapsed { get; set; }
         }
 
-        public class NodeComparer : IComparer<PathNodeId>
+        private struct NodePathfindingData
+        {
+            public float f, g;
+            public PathNodeId parentId;
+            public bool hasParent;
+        }
+
+        private class NodeComparer : IComparer<PathNodeId>
         {
             private readonly NodePathfindingData[][] m_nodePathfindingDatas;
 
@@ -137,7 +144,7 @@ namespace SanAndreasUnity.Behaviours
 
             pathResult.TimeElapsed = (float)stopwatch.Elapsed.TotalSeconds;
 
-            UnityEngine.Debug.Log($"Path finding finished: time {pathResult.TimeElapsed}, num nodes {pathResult.Nodes?.Count ?? 0}, numModifiedDatas {numModifiedDatas}, g {pathResult.TotalWeight}, distance {pathResult.Distance}");
+            UnityEngine.Debug.Log($"Path finding finished: time {pathResult.TimeElapsed * 1000} ms, num nodes {pathResult.Nodes?.Count ?? 0}, numModifiedDatas {numModifiedDatas}, g {pathResult.TotalWeight}, distance {pathResult.Distance}");
 
             return pathResult;
         }
