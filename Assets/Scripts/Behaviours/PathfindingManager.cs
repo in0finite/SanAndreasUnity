@@ -190,7 +190,7 @@ namespace SanAndreasUnity.Behaviours
                     if (idM.Equals(targetId))
                     {
                         var dataM = GetResettedData();
-                        dataM.g = dataN.g + link.Length;
+                        dataM.g = dataN.g + CalculateLinkWeight(idN, idM);
                         float h = CalculateHeuristic(idM, targetId);
                         dataM.f = dataM.g + h;
                         dataM.parentId = idN;
@@ -205,7 +205,7 @@ namespace SanAndreasUnity.Behaviours
 
                     if (openList.Contains(idM))
                     {
-                        float gNew = dataN.g + link.Length;
+                        float gNew = dataN.g + CalculateLinkWeight(idN, idM);
                         float hNew = CalculateHeuristic(idM, targetId);
                         float fNew = gNew + hNew;
 
@@ -230,7 +230,7 @@ namespace SanAndreasUnity.Behaviours
                     else
                     {
                         var dataM = GetResettedData();
-                        dataM.g = dataN.g + link.Length;
+                        dataM.g = dataN.g + CalculateLinkWeight(idN, idM);
                         float h = CalculateHeuristic(idM, targetId);
                         dataM.f = dataM.g + h;
                         dataM.parentId = idN;
@@ -264,6 +264,11 @@ namespace SanAndreasUnity.Behaviours
         private float CalculateHeuristic(PathNodeId source, PathNodeId destination)
         {
             return NodeReader.GetDistanceBetweenNodes(source, destination);
+        }
+
+        private float CalculateLinkWeight(PathNodeId parentId, PathNodeId neighbourId)
+        {
+            return NodeReader.GetDistanceBetweenNodes(parentId, neighbourId);
         }
 
         private void RestoreModifiedDatas()
