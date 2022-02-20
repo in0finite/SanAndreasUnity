@@ -174,7 +174,7 @@ namespace SanAndreasUnity.Behaviours
             startData.f = startData.g + CalculateHeuristic(startId, targetId);
             SetData(startId, startData);
 
-            openList.Add(startId);
+            AddOrThrow(openList, startId);
 
             while (openList.Count > 0)
             {
@@ -185,7 +185,7 @@ namespace SanAndreasUnity.Behaviours
                     return true;
                 }
 
-                openList.Remove(idN); // TODO: throw exception if failed to remove/add
+                RemoveOrThrow(openList, idN);
                 closedList.Add(idN);
 
                 var nodeN = NodeReader.GetNodeById(idN);
@@ -226,7 +226,7 @@ namespace SanAndreasUnity.Behaviours
                         {
                             // update
 
-                            openList.Remove(idM); // first remove with old data
+                            RemoveOrThrow(openList, idM); // first remove with old data
 
                             dataM.g = gNew;
                             dataM.f = fNew;
@@ -235,7 +235,7 @@ namespace SanAndreasUnity.Behaviours
 
                             SetData(idM, dataM);
 
-                            openList.Add(idM); // now add with new data
+                            AddOrThrow(openList, idM); // now add with new data
                         }
                     }
                     else
@@ -247,7 +247,7 @@ namespace SanAndreasUnity.Behaviours
                         dataM.parentId = idN;
                         dataM.hasParent = true;
                         SetData(idM, dataM);
-                        openList.Add(idM); // do it after setting data
+                        AddOrThrow(openList, idM); // do it after setting data
                     }
 
                 }
@@ -343,6 +343,18 @@ namespace SanAndreasUnity.Behaviours
             }
 
             return (PathNodeId)s_itemNodeField.GetValue(minNode); // note: this will allocate memory
+        }
+
+        private static void AddOrThrow(SortedSet<PathNodeId> sortedSet, PathNodeId element)
+        {
+            if (!sortedSet.Add(element))
+                throw new InvalidOperationException("Failed to add element to SortedSet");
+        }
+
+        private static void RemoveOrThrow(SortedSet<PathNodeId> sortedSet, PathNodeId element)
+        {
+            if (!sortedSet.Remove(element))
+                throw new InvalidOperationException("Failed to remove element from SortedSet");
         }
     }
 }
