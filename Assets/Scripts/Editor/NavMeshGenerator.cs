@@ -257,7 +257,8 @@ namespace SanAndreasUnity.Editor
             }
 
             m_navMeshDataInstance = NavMesh.AddNavMeshData(m_navMeshData);
-            EditorSceneManager.MarkSceneDirty(cell.gameObject.scene);
+            if (!Application.isPlaying)
+                EditorSceneManager.MarkSceneDirty(cell.gameObject.scene);
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("", "Nav mesh generation complete !", "Ok");
