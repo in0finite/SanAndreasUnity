@@ -142,8 +142,6 @@ namespace SanAndreasUnity.Behaviours
                 return pathResult;
 
 
-
-
             this.RestoreModifiedDatas();
 
             if (FindPathFromNodeToNode(closestSourceNode.Id, closestDestinationNode.Id))
