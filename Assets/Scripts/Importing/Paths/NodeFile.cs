@@ -49,6 +49,11 @@ namespace SanAndreasUnity.Importing.Paths
             return ((AreaID << 5) + AreaID) ^ NodeID;
         }
 
+        public override string ToString()
+        {
+            return $"(AreaID {AreaID}, NodeID {NodeID})";
+        }
+
         public static PathNodeId InvalidId => new PathNodeId { AreaID = -1, NodeID = -1 };
     }
 
@@ -69,6 +74,11 @@ namespace SanAndreasUnity.Importing.Paths
         public bool Equals(PathNode other)
         {
             return AreaID == other.AreaID && NodeID == other.NodeID;
+        }
+
+        public override string ToString()
+        {
+            return $"(Id {Id}, Position {Position}, PathWidth {PathWidth})";
         }
 
         public static PathNode InvalidNode => new PathNode { AreaID = -1, NodeID = -1 };
@@ -95,6 +105,11 @@ namespace SanAndreasUnity.Importing.Paths
         public int NodeID { get; set; }
         public PathNodeId PathNodeId => new PathNodeId { AreaID = AreaID, NodeID = NodeID };
         public int Length { get; set; }
+
+        public override string ToString()
+        {
+            return $"(AreaID {AreaID}, NodeID {NodeID}, Length {Length})";
+        }
     }
 
     public struct PathIntersectionFlags

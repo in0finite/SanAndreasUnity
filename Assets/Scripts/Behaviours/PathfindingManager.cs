@@ -28,6 +28,11 @@ namespace SanAndreasUnity.Behaviours
             public float f, g;
             public PathNodeId parentId;
             public bool hasParent;
+
+            public override string ToString()
+            {
+                return $"(f {f}, g {g}{(hasParent ? $", parent {parentId}" : string.Empty)})";
+            }
         }
 
         private class NodeComparer : IComparer<PathNodeId>
