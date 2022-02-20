@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours
@@ -69,6 +70,11 @@ namespace SanAndreasUnity.Behaviours
         private NodePathfindingData[][] m_nodePathfindingDatas = null;
 
         private readonly List<PathNodeId> m_modifiedDatas = new List<PathNodeId>();
+
+        private static readonly FieldInfo s_rootField = typeof(SortedSet<PathNodeId>).GetField("root", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly Type s_nodeType = s_rootField.FieldType;
+        private static readonly FieldInfo s_leftNodeField = s_nodeType.GetField("<Left>k__BackingField", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo s_itemNodeField = s_nodeType.GetField("<Item>k__BackingField", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
 
 
@@ -156,7 +162,7 @@ namespace SanAndreasUnity.Behaviours
 
         private bool FindPathFromNodeToNode(PathNodeId startId, PathNodeId targetId)
         {
-            var closedList = new HashSet<PathNodeId>();
+            var closedList = new HashSet<PathNodeId>(); // TODO: optimization: re-use hashset
             var openList = new SortedSet<PathNodeId>(new NodeComparer(m_nodePathfindingDatas));
 
             var startData = GetData(startId);
@@ -167,14 +173,14 @@ namespace SanAndreasUnity.Behaviours
 
             while (openList.Count > 0)
             {
-                PathNodeId idN = openList.Min; // TODO: optimize ; call Remove() ;
+                PathNodeId idN = MinFast(openList);
 
                 if (idN.Equals(targetId))
                 {
                     return true;
                 }
 
-                openList.Remove(idN);
+                openList.Remove(idN); // TODO: throw exception if failed to remove/add
                 closedList.Add(idN);
 
                 var nodeN = NodeReader.GetNodeById(idN);
@@ -319,6 +325,19 @@ namespace SanAndreasUnity.Behaviours
                 TotalWeight = totalWeight,
                 Distance = distance,
             };
+        }
+
+        private static PathNodeId MinFast(SortedSet<PathNodeId> sortedSet)
+        {
+            object node = s_rootField.GetValue(sortedSet);
+            object minNode = node;
+            while (node != null)
+            {
+                minNode = node;
+                node = s_leftNodeField.GetValue(node);
+            }
+
+            return (PathNodeId)s_itemNodeField.GetValue(minNode); // note: this will allocate memory
         }
     }
 }
