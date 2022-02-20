@@ -69,6 +69,7 @@ namespace SanAndreasUnity.Behaviours
 
         private NodePathfindingData[][] m_nodePathfindingDatas = null;
 
+        private readonly HashSet<PathNodeId> m_closedList = new HashSet<PathNodeId>();
         private readonly List<PathNodeId> m_modifiedDatas = new List<PathNodeId>();
 
         private static readonly FieldInfo s_rootField = typeof(SortedSet<PathNodeId>).GetField("root", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -153,6 +154,8 @@ namespace SanAndreasUnity.Behaviours
             int numModifiedDatas = m_modifiedDatas.Count;
             RestoreModifiedDatas();
 
+            m_closedList.Clear();
+
             pathResult.TimeElapsed = (float)stopwatch.Elapsed.TotalSeconds;
 
             UnityEngine.Debug.Log($"Path finding finished: time {pathResult.TimeElapsed * 1000} ms, num nodes {pathResult.Nodes?.Count ?? 0}, numModifiedDatas {numModifiedDatas}, g {pathResult.TotalWeight}, distance {pathResult.Distance}");
@@ -162,7 +165,9 @@ namespace SanAndreasUnity.Behaviours
 
         private bool FindPathFromNodeToNode(PathNodeId startId, PathNodeId targetId)
         {
-            var closedList = new HashSet<PathNodeId>(); // TODO: optimization: re-use hashset
+            m_closedList.Clear();
+            var closedList = m_closedList;
+
             var openList = new SortedSet<PathNodeId>(new NodeComparer(m_nodePathfindingDatas));
 
             var startData = GetData(startId);
