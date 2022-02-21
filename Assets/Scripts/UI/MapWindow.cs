@@ -4,6 +4,7 @@ using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Utilities;
 using System.Linq;
 using SanAndreasUnity.Importing.Paths;
+using UnityEngine.AI;
 
 namespace SanAndreasUnity.UI {
 
@@ -28,6 +29,15 @@ namespace SanAndreasUnity.UI {
 		private	Vector2	m_waypointMapPos = Vector2.zero;
 
 		private List<PathNodeId> m_pathToWaypoint = null;
+		private Vector3[] m_navMeshPathToWaypoint = null;
+		private enum PathType
+        {
+			NavMesh,
+			Ped,
+        }
+		private PathType m_pathType = PathType.NavMesh;
+		private static readonly string[] s_pathTypeTexts = new string[] { "NavMesh", "Ped" };
+		private int m_selectedPathType = 0;
 
 		private	Vector2	m_lastMousePosition = Vector2.zero;
 
@@ -260,9 +270,46 @@ namespace SanAndreasUnity.UI {
 
 		}
 
+		private void FindPathToWaypoint()
+        {
+			if (!m_isWaypointPlaced)
+				return;
+
+			m_pathToWaypoint = null;
+			m_navMeshPathToWaypoint = null;
+
+			if (null == Ped.LocalPed)
+				return;
+
+			Vector3 sourcePos = Ped.LocalPed.transform.position;
+			Vector3 targetPos = MiniMap.MapPosToWorldPos(m_waypointMapPos);
+
+			if (m_pathType == PathType.Ped)
+            {
+				PathfindingManager.Singleton.FindPath(
+					sourcePos,
+					targetPos,
+					OnPathToWaypointFound);
+			}
+			else if (m_pathType == PathType.NavMesh)
+            {
+				if (NavMesh.SamplePosition(targetPos, out var hit, 300f, -1))
+					targetPos = hit.position;
+
+				var path = new NavMeshPath();
+				if (NavMesh.CalculatePath(sourcePos, targetPos, -1, path))
+					m_navMeshPathToWaypoint = path.corners;
+            }
+		}
+
 		private void OnPathToWaypointFound(PathfindingManager.PathResult pathResult)
         {
-			if (m_isWaypointPlaced && pathResult.IsSuccess)
+			if (m_pathType != PathType.Ped)
+				return;
+			if (!m_isWaypointPlaced)
+				return;
+
+			if (pathResult.IsSuccess)
 				m_pathToWaypoint = pathResult.Nodes;
 			else
 				m_pathToWaypoint = null;
@@ -339,15 +386,14 @@ namespace SanAndreasUnity.UI {
 				Vector2 mouseMapPos;
 				if (this.GetMapPosUnderMouse (out mouseMapPos)) {
 					m_isWaypointPlaced = !m_isWaypointPlaced;
+
 					m_pathToWaypoint = null;
+					m_navMeshPathToWaypoint = null;
+
 					if (m_isWaypointPlaced)
                     {
                         m_waypointMapPos = mouseMapPos;
-						if (Ped.LocalPed != null)
-							PathfindingManager.Singleton.FindPath(
-								Ped.LocalPed.transform.position,
-								MiniMap.MapPosToWorldPos(mouseMapPos),
-								OnPathToWaypointFound);
+						this.FindPathToWaypoint();
                     }
                 }
 
@@ -487,11 +533,25 @@ namespace SanAndreasUnity.UI {
 			if (GUILayout.Button ("Teleport to waypoint [T]", GUILayout.MinHeight(25))) {
 				this.TeleportToWaypoint ();
 			}
-			GUILayout.Space (5);
+			GUILayout.Space(10);
 			GUILayout.Label ("Player size: " + (int) m_playerPointerSize, GUILayout.ExpandWidth(false));
 			m_playerPointerSize = GUILayout.HorizontalSlider (m_playerPointerSize, 1, 50, GUILayout.MinWidth(40));
+			GUILayout.Space(10);
 			m_drawZones = GUILayout.Toggle (m_drawZones, "Draw zones");
+			GUILayout.Space(10);
 			m_drawEnexes = GUILayout.Toggle(m_drawEnexes, "Draw enexes");
+
+			GUILayout.Space(10);
+			GUILayout.Label("Path:");
+			int newSelectedPathType = GUILayout.SelectionGrid(m_selectedPathType, s_pathTypeTexts, s_pathTypeTexts.Length);
+			if (newSelectedPathType != m_selectedPathType)
+            {
+				m_selectedPathType = newSelectedPathType;
+				m_pathType = (PathType)System.Enum.GetValues(typeof(PathType)).GetValue(m_selectedPathType);
+				this.FindPathToWaypoint();
+            }
+
+			GUILayout.FlexibleSpace();
 
 			GUILayout.EndHorizontal ();
 
@@ -598,7 +658,7 @@ namespace SanAndreasUnity.UI {
 				this.DrawItemOnMap (MiniMap.Instance.WaypointTexture, m_waypointMapPos, 12);
 			}
 
-			// draw path to waypoint
+			// draw ped path to waypoint
 			if (m_pathToWaypoint != null)
             {
                 foreach (PathNodeId nodeId in m_pathToWaypoint)
@@ -608,6 +668,17 @@ namespace SanAndreasUnity.UI {
 						GUIUtils.DrawRect(renderRect, Color.yellow);
                 }
             }
+
+			// draw navmesh path to waypoint
+			if (m_navMeshPathToWaypoint != null)
+			{
+				foreach (Vector3 worldPos in m_navMeshPathToWaypoint)
+				{
+					Vector2 pos = MiniMap.WorldPosToMapPos(worldPos);
+					if (GetMapItemRenderRect(F.CreateRect(pos, Vector2.one * 2), out Rect renderRect))
+						GUIUtils.DrawRect(renderRect, Color.yellow);
+				}
+			}
 
 
 			if (!m_clipMapItems) {
