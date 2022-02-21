@@ -212,6 +212,9 @@ namespace SanAndreasUnity.Behaviours.World
 
 			this.UpdateVisibility();
 
+			if (LodParent == null)
+				Cell.Singleton.RegisterNavMeshObject(this);
+            
 		}
 
 		private void OnCollisionModelAttached ()

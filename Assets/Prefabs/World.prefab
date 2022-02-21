@@ -489,6 +489,10 @@ MonoBehaviour:
   redTrafficLightDuration: 7
   yellowTrafficLightDuration: 2
   greenTrafficLightDuration: 7
+  m_generateNavMesh: 1
+  m_navMeshMinRegionArea: 30
+  m_navMeshMaxJobWorkers: 1
+  m_navMeshAsyncOperationPriority: 5
   navMeshUpdateInterval: 2
 --- !u!1 &153756
 GameObject:

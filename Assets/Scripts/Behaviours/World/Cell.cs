@@ -124,6 +124,10 @@ namespace SanAndreasUnity.Behaviours.World
 		private AsyncOperation _navMeshUpdateAsyncOperation = null;
 		private List<MapObject> _mapObjectsWithNavMeshToAdd = new List<MapObject>(128);
 
+		[SerializeField] private bool m_generateNavMesh = false;
+		[SerializeField] private float m_navMeshMinRegionArea = 10f;
+		[SerializeField] private uint m_navMeshMaxJobWorkers = 1;
+		[SerializeField] private int m_navMeshAsyncOperationPriority = 0;
 		public float navMeshUpdateInterval = 2f;
 
 		public float NavMeshUpdatePercentage => _navMeshUpdateAsyncOperation?.progress ?? 1f;
@@ -133,7 +137,12 @@ namespace SanAndreasUnity.Behaviours.World
 
 		protected override void OnSingletonAwake()
         {
-			//this.InvokeRepeating(nameof(this.UpdateNavMesh), this.navMeshUpdateInterval, this.navMeshUpdateInterval);
+			if (m_generateNavMesh)
+            {
+				_navMeshData = new NavMeshData(0);
+				NavMesh.AddNavMeshData(_navMeshData);
+				this.InvokeRepeating(nameof(this.UpdateNavMesh), this.navMeshUpdateInterval, this.navMeshUpdateInterval);
+            }
         }
 
 
@@ -505,11 +514,17 @@ namespace SanAndreasUnity.Behaviours.World
 
 		public void RegisterNavMeshObject(MapObject mapObject)
         {
+			if (null == _navMeshData) // nav mesh not initialized, generation can not be even unpaused
+				return;
+
 			_mapObjectsWithNavMeshToAdd.Add(mapObject);
 		}
 
 		void UpdateNavMesh()
         {
+			if (!m_generateNavMesh)
+				return;
+
 			if (null == _navMeshData)
 				return;
 
@@ -520,8 +535,10 @@ namespace SanAndreasUnity.Behaviours.World
 				return;
 
             NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByID(0);
+			navMeshBuildSettings.minRegionArea = m_navMeshMinRegionArea;
+			navMeshBuildSettings.maxJobWorkers = m_navMeshMaxJobWorkers;
 
-            for (int i = 0; i < _mapObjectsWithNavMeshToAdd.Count; i++)
+			for (int i = 0; i < _mapObjectsWithNavMeshToAdd.Count; i++)
             {
 				_navMeshBuildSources.AddRange(GetNavMeshBuildSources(_mapObjectsWithNavMeshToAdd[i].transform));
 			}
@@ -533,6 +550,8 @@ namespace SanAndreasUnity.Behaviours.World
 				navMeshBuildSettings,
 				_navMeshBuildSources,
 				new Bounds(this.transform.position, Vector3.one * this.WorldSize));
+
+			_navMeshUpdateAsyncOperation.priority = m_navMeshAsyncOperationPriority;
 		}
 
 		public static List<NavMeshBuildSource> GetNavMeshBuildSources(Transform root)
