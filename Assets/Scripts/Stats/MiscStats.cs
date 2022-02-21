@@ -183,10 +183,35 @@ namespace SanAndreasUnity.Stats
             // on-screen messages
             sb.AppendFormat("num on-screen messages: {0}\n", OnScreenMessageManager.Instance.Messages.Count);
             sb.AppendFormat("num pooled on-screen messages: {0}\n", OnScreenMessageManager.Instance.NumPooledMessages);
+            sb.AppendLine();
+
+            // loading thread
+            sb.Append("loading thread:\n");
+            sb.Append($"\tmax time per frame ms: {LoadingThread.Singleton.maxTimePerFrameMs}\n");
+            AppendStatsForBackgroundJobRunner(sb, LoadingThread.Singleton.BackgroundJobRunner, "\t");
+            sb.AppendLine();
+
+            // pathfinding manager
+            sb.Append("pathfinding manager:\n");
+            sb.Append($"\tmax time per frame ms: {PathfindingManager.Singleton.MaxTimePerFrameMs}\n");
+            AppendStatsForBackgroundJobRunner(sb, PathfindingManager.Singleton.BackgroundJobRunner, "\t");
+            sb.AppendLine();
 
 
             GUILayout.Label(sb.ToString());
 
+        }
+
+        private static void AppendStatsForBackgroundJobRunner(
+            System.Text.StringBuilder sb,
+            BackgroundJobRunner backgroundJobRunner,
+            string prefix)
+        {
+            sb.Append($"{prefix}is background thread running: {backgroundJobRunner.IsBackgroundThreadRunning()}\n");
+            sb.Append($"{prefix}background thread id: {backgroundJobRunner.GetBackgroundThreadId()}\n");
+            sb.Append($"{prefix}num pending jobs: {backgroundJobRunner.GetNumPendingJobs()}\n");
+            sb.Append($"{prefix}last processed job id: {backgroundJobRunner.GetLastProcessedJobId()}\n");
+            sb.Append($"{prefix}processed jobs buffer count: {backgroundJobRunner.GetProcessedJobsBufferCount()}\n");
         }
 
     }

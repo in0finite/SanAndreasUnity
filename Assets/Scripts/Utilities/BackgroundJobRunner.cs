@@ -210,6 +210,24 @@ namespace SanAndreasUnity.Utilities
 			}
 		}
 
+		public long GetLastProcessedJobId()
+        {
+			ThreadHelper.ThrowIfNotOnMainThread();
+			return _lastProcessedJobId;
+		}
+
+		public int? GetBackgroundThreadId()
+		{
+			ThreadHelper.ThrowIfNotOnMainThread();
+			return _thread?.ManagedThreadId;
+		}
+
+		public int GetProcessedJobsBufferCount()
+		{
+			ThreadHelper.ThrowIfNotOnMainThread();
+			return _processedJobsBuffer.Count;
+		}
+
 		public bool IsBackgroundThreadRunning()
 		{
 			ThreadHelper.ThrowIfNotOnMainThread();

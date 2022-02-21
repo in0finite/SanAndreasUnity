@@ -66,6 +66,7 @@ namespace SanAndreasUnity.Behaviours
         public BackgroundJobRunner BackgroundJobRunner { get; } = new BackgroundJobRunner();
 
         [SerializeField] private ushort m_maxTimePerFrameMs = 0;
+        public ushort MaxTimePerFrameMs => m_maxTimePerFrameMs;
 
         private NodePathfindingData[][] m_nodePathfindingDatas = null;
 
