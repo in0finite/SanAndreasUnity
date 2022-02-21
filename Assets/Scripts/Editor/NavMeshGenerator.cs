@@ -230,6 +230,11 @@ namespace SanAndreasUnity.Editor
                     cell.transform.rotation);
             }
 
+            m_navMeshDataInstance = NavMesh.AddNavMeshData(m_navMeshData);
+
+            if (!Application.isPlaying)
+                EditorSceneManager.MarkSceneDirty(cell.gameObject.scene);
+
             var asyncOperation = NavMeshBuilder.UpdateNavMeshDataAsync(
                 m_navMeshData,
                 navMeshBuildSettings,
@@ -255,10 +260,6 @@ namespace SanAndreasUnity.Editor
                 EditorUtility.DisplayDialog("", $"Updating nav mesh did not finish completely, progress is {asyncOperation.progress}", "Ok");
                 yield break;
             }
-
-            m_navMeshDataInstance = NavMesh.AddNavMeshData(m_navMeshData);
-            if (!Application.isPlaying)
-                EditorSceneManager.MarkSceneDirty(cell.gameObject.scene);
 
             EditorUtility.ClearProgressBar();
             EditorUtility.DisplayDialog("", "Nav mesh generation complete !", "Ok");
