@@ -691,6 +691,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WaterPrefab: {fileID: 100000, guid: 780611a67e8e941a2b3aa96e5915a793, type: 3}
+  m_waterCollisionPrefab: {fileID: 1851338461656571883, guid: e6c6e08b2f4ea5146acb88b9f1fd1529,
+    type: 3}
+  m_createCollisionObjects: 1
+  m_renderingObjects: []
+  m_collisionObjects: []
 --- !u!1 &1000405462072482
 GameObject:
   m_ObjectHideFlags: 0

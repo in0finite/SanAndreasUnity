@@ -1,6 +1,7 @@
 ﻿using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Placements;
 using SanAndreasUnity.Utilities;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -9,6 +10,12 @@ namespace SanAndreasUnity.Behaviours.World
     public class Water : MonoBehaviour
     {
         public GameObject WaterPrefab;
+        [SerializeField] private GameObject m_waterCollisionPrefab;
+
+        [SerializeField] private bool m_createCollisionObjects = false;
+
+        [HideInInspector] [SerializeField] private List<Transform> m_renderingObjects = new List<Transform>();
+        [HideInInspector] [SerializeField] private List<Transform> m_collisionObjects = new List<Transform>();
 
 
         public void Initialize(WaterFile file, Vector2 worldSize)
@@ -43,22 +50,7 @@ namespace SanAndreasUnity.Behaviours.World
 
             foreach (var face in faces)
             {
-                for (int j = 0; j < face.Vertices.Length; j++)
-                {
-                    vertices[verticesIndex + j] = face.Vertices[j].Position;
-                    normals[verticesIndex + j] = Vector3.up;
-                }
-
-                for (var j = 0; j < face.Vertices.Length - 2; ++j)
-                {
-                    var flip = j & 1;
-                    indices[indicesIndex + j * 3 + 0] = verticesIndex + j + 1 - flip;
-                    indices[indicesIndex + j * 3 + 1] = verticesIndex + j + 0 + flip;
-                    indices[indicesIndex + j * 3 + 2] = verticesIndex + j + 2;
-                }
-
-                verticesIndex += face.Vertices.Length;
-                indicesIndex += (face.Vertices.Length - 2) * 3;
+                ProcessFace(face, vertices, normals, ref verticesIndex, indices, ref indicesIndex);
             }
 
             // add "infinite" water
@@ -107,7 +99,9 @@ namespace SanAndreasUnity.Behaviours.World
             mesh.normals = normals;
             mesh.SetIndices(indices, MeshTopology.Triangles, 0);
 
-            var availableObjects = this.transform.GetFirstLevelChildren().ToQueueWithCapacity(this.transform.childCount);
+            m_renderingObjects.RemoveDeadObjects();
+
+            var availableObjects = m_renderingObjects.ToQueueWithCapacity(m_renderingObjects.Count);
 
             var go = availableObjects.Count > 0
                 ? availableObjects.Dequeue().gameObject
@@ -116,7 +110,7 @@ namespace SanAndreasUnity.Behaviours.World
             go.transform.localPosition = Vector3.zero;
             go.transform.localRotation = Quaternion.identity;
 
-            go.name = "Water mesh";
+            go.name = "Water rendering mesh";
             mesh.name = go.name;
 
             var meshFilter = go.GetComponentOrThrow<MeshFilter>();
@@ -126,7 +120,98 @@ namespace SanAndreasUnity.Behaviours.World
 
             foreach (var availableObject in availableObjects)
                 F.DestroyEvenInEditMode(availableObject.gameObject);
-            
+
+            m_renderingObjects.Clear();
+            m_renderingObjects.Add(go.transform);
+
+
+            if (m_createCollisionObjects)
+                CreateCollisionObjects(faces);
+
+        }
+
+        void ProcessFace(WaterFace face, Vector3[] vertices, Vector3[] normals, ref int verticesIndex, int[] indices, ref int indicesIndex)
+        {
+            for (int j = 0; j < face.Vertices.Length; j++)
+            {
+                vertices[verticesIndex + j] = face.Vertices[j].Position;
+                normals[verticesIndex + j] = Vector3.up;
+            }
+
+            for (var j = 0; j < face.Vertices.Length - 2; ++j)
+            {
+                var flip = j & 1;
+                indices[indicesIndex + j * 3 + 0] = verticesIndex + j + 1 - flip;
+                indices[indicesIndex + j * 3 + 1] = verticesIndex + j + 0 + flip;
+                indices[indicesIndex + j * 3 + 2] = verticesIndex + j + 2;
+            }
+
+            verticesIndex += face.Vertices.Length;
+            indicesIndex += (face.Vertices.Length - 2) * 3;
+        }
+
+        void CreateCollisionObjects(IEnumerable<WaterFace> faces)
+        {
+            if (null == m_waterCollisionPrefab)
+            {
+                Debug.LogError("Water collision prefab not set");
+                return;
+            }
+
+            m_collisionObjects.RemoveDeadObjects();
+
+            var availableObjects = m_collisionObjects.ToQueueWithCapacity(m_collisionObjects.Count);
+
+            m_collisionObjects.Clear();
+
+            int i = 0;
+            foreach (var face in faces)
+            {
+                Vector3[] vertices = new Vector3[face.Vertices.Length];
+                Vector3[] normals = new Vector3[face.Vertices.Length];
+                int numIndices = (face.Vertices.Length - 2) * 3;
+                int[] indices = new int[numIndices];
+
+                int verticesIndex = 0;
+                int indicesIndex = 0;
+
+                ProcessFace(face, vertices, normals, ref verticesIndex, indices, ref indicesIndex);
+
+                Vector3 center = Vector3.zero;
+                vertices.ForEach(v => center += v / vertices.Length);
+                for (int v = 0; v < vertices.Length; v++)
+                    vertices[v] = vertices[v] - center;
+
+                var mesh = new Mesh();
+
+                mesh.vertices = vertices;
+                mesh.normals = normals;
+                mesh.SetIndices(indices, MeshTopology.Triangles, 0);
+
+                mesh.name = $"Water collision mesh {i}";
+
+                GameObject go = availableObjects.Count > 0
+                    ? availableObjects.Dequeue().gameObject
+                    : Instantiate(m_waterCollisionPrefab, this.transform);
+
+                go.name = mesh.name;
+
+                go.transform.localPosition = center;
+                go.transform.localRotation = Quaternion.identity;
+
+                var meshCollider = go.GetComponentOrThrow<MeshCollider>();
+                if (meshCollider.sharedMesh != null && !EditorUtilityEx.IsAsset(meshCollider.sharedMesh))
+                    F.DestroyEvenInEditMode(meshCollider.sharedMesh);
+                meshCollider.sharedMesh = mesh;
+
+                m_collisionObjects.Add(go.transform);
+
+                i++;
+            }
+
+            foreach (var availableObject in availableObjects)
+                F.DestroyEvenInEditMode(availableObject.gameObject);
+
         }
 
         void CreateQuad(Vector2 min, Vector2 max, Vector3[] vertexes, Vector3[] normals, ref int vertexIndex, int[] indexes, ref int indexesIndex)
