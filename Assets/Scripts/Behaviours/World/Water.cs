@@ -13,6 +13,7 @@ namespace SanAndreasUnity.Behaviours.World
         [SerializeField] private GameObject m_waterCollisionPrefab;
 
         [SerializeField] private bool m_createCollisionObjects = false;
+        [SerializeField] private float m_collisionHeight = 20f;
 
         [HideInInspector] [SerializeField] private List<Transform> m_renderingObjects = new List<Transform>();
         [HideInInspector] [SerializeField] private List<Transform> m_collisionObjects = new List<Transform>();
@@ -167,42 +168,37 @@ namespace SanAndreasUnity.Behaviours.World
             int i = 0;
             foreach (var face in faces)
             {
-                Vector3[] vertices = new Vector3[face.Vertices.Length];
-                Vector3[] normals = new Vector3[face.Vertices.Length];
-                int numIndices = (face.Vertices.Length - 2) * 3;
-                int[] indices = new int[numIndices];
-
-                int verticesIndex = 0;
-                int indicesIndex = 0;
-
-                ProcessFace(face, vertices, normals, ref verticesIndex, indices, ref indicesIndex);
-
                 Vector3 center = Vector3.zero;
-                vertices.ForEach(v => center += v / vertices.Length);
-                for (int v = 0; v < vertices.Length; v++)
-                    vertices[v] = vertices[v] - center;
+                face.Vertices.ForEach(v => center += v.Position / face.Vertices.Length);
 
-                var mesh = new Mesh();
+                // create box collider based on vertices
+                Vector3 min = Vector3.positiveInfinity;
+                Vector3 max = Vector3.negativeInfinity;
+                for (int v = 0; v < face.Vertices.Length; v++)
+                {
+                    min = MathUtils.MinComponents(min, face.Vertices[v].Position);
+                    max = MathUtils.MaxComponents(max, face.Vertices[v].Position);
+                }
 
-                mesh.vertices = vertices;
-                mesh.normals = normals;
-                mesh.SetIndices(indices, MeshTopology.Triangles, 0);
-
-                mesh.name = $"Water collision mesh {i}";
+                Vector3 size = max - min;
+                size.y = m_collisionHeight;
 
                 GameObject go = availableObjects.Count > 0
                     ? availableObjects.Dequeue().gameObject
                     : Instantiate(m_waterCollisionPrefab, this.transform);
 
-                go.name = mesh.name;
+                go.name = $"Water collision {i}";
 
-                go.transform.localPosition = center;
+                go.transform.localPosition = center.WithY(center.y - size.y * 0.5f);
                 go.transform.localRotation = Quaternion.identity;
 
-                var meshCollider = go.GetComponentOrThrow<MeshCollider>();
+                var boxCollider = go.GetComponentOrThrow<BoxCollider>();
+                boxCollider.size = size;
+
+                /*var meshCollider = go.GetComponentOrThrow<MeshCollider>();
                 if (meshCollider.sharedMesh != null && !EditorUtilityEx.IsAsset(meshCollider.sharedMesh))
                     F.DestroyEvenInEditMode(meshCollider.sharedMesh);
-                meshCollider.sharedMesh = mesh;
+                meshCollider.sharedMesh = mesh;*/
 
                 m_collisionObjects.Add(go.transform);
 

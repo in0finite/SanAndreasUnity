@@ -17,5 +17,15 @@ namespace SanAndreasUnity.Utilities
             Vector3 projection = v + t * (w - v);  // Projection falls on the segment
             return Vector3.Distance(p, projection);
         }
+
+        public static Vector3 MinComponents(Vector3 a, Vector3 b)
+        {
+            return new Vector3(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y), Mathf.Min(a.z, b.z));
+        }
+
+        public static Vector3 MaxComponents(Vector3 a, Vector3 b)
+        {
+            return new Vector3(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y), Mathf.Max(a.z, b.z));
+        }
     }
 }
