@@ -23,13 +23,15 @@ namespace SanAndreasUnity.Behaviours.World
         [HideInInspector] [SerializeField] private List<Transform> m_collisionObjects = new List<Transform>();
 
 
-        public void Initialize(WaterFile file, Vector2 worldSize)
+        public void Initialize(Vector2 worldSize)
         {
             if (this.WaterPrefab == null)
             {
                 Debug.LogError("No water prefab set, skipping load!");
                 return;
             }
+
+            WaterFile file = new WaterFile(Importing.Archive.ArchiveManager.PathToCaseSensitivePath(Config.GetPath("water_path")));
 
             // TODO: what to do with faces that don't have WaterFlags.Visible flag ?
 

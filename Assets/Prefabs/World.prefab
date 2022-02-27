@@ -694,6 +694,8 @@ MonoBehaviour:
   m_waterCollisionPrefab: {fileID: 1851338461656571883, guid: e6c6e08b2f4ea5146acb88b9f1fd1529,
     type: 3}
   m_createCollisionObjects: 1
+  m_collisionHeight: 200
+  m_createVisualsForCollisionObjects: 0
   m_renderingObjects: []
   m_collisionObjects: []
 --- !u!1 &1000405462072482

@@ -327,9 +327,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 			if (Water != null)
 			{
-				Water.Initialize(
-					new WaterFile(Importing.Archive.ArchiveManager.PathToCaseSensitivePath(Config.GetPath("water_path"))),
-					Vector2.one * this.WorldSize);
+				Water.Initialize(Vector2.one * this.WorldSize);
 			}
 		}
 
