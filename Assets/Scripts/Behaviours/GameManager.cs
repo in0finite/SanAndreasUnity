@@ -26,6 +26,7 @@ namespace SanAndreasUnity.Behaviours {
 		[SerializeField] [Range(5, 100)] int m_defaultPhysicsUpdateRateOnMobile = 20;
 
 		public static int DefaultLayerIndex => 0;
+		public static int DefaultLayerMask => 1 << DefaultLayerIndex;
 
 		public Vector2 cursorSensitivity = new Vector2(2f, 2f);
 

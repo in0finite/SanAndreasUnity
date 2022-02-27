@@ -9,6 +9,9 @@ namespace SanAndreasUnity.Behaviours.World
 {
     public class Water : MonoBehaviour
     {
+        public static string LayerName => "Water";
+        public static int LayerMask => 1 << UnityEngine.LayerMask.NameToLayer(LayerName);
+
         public GameObject WaterPrefab;
         [SerializeField] private GameObject m_waterCollisionPrefab;
 
