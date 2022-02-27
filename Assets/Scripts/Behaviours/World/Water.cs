@@ -14,6 +14,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         [SerializeField] private bool m_createCollisionObjects = false;
         [SerializeField] private float m_collisionHeight = 20f;
+        [SerializeField] private bool m_createVisualsForCollisionObjects = false;
 
         [HideInInspector] [SerializeField] private List<Transform> m_renderingObjects = new List<Transform>();
         [HideInInspector] [SerializeField] private List<Transform> m_collisionObjects = new List<Transform>();
@@ -199,6 +200,14 @@ namespace SanAndreasUnity.Behaviours.World
                 if (meshCollider.sharedMesh != null && !EditorUtilityEx.IsAsset(meshCollider.sharedMesh))
                     F.DestroyEvenInEditMode(meshCollider.sharedMesh);
                 meshCollider.sharedMesh = mesh;*/
+
+                if (m_createVisualsForCollisionObjects)
+                {
+                    var visualGo = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    Destroy(visualGo.GetComponent<BoxCollider>());
+                    visualGo.transform.SetParent(go.transform, false);
+                    visualGo.transform.localScale = size;
+                }
 
                 m_collisionObjects.Add(go.transform);
 
