@@ -914,7 +914,12 @@ namespace SanAndreasUnity.Utilities
 			return new Vector3 (vec3.x, yValue, vec3.z);
 		}
 
-		public static Vector3 Inverted (this Vector3 vec3)
+        public static Vector3 WithAddedY(this Vector3 vec3, float addedYValue)
+        {
+            return new Vector3(vec3.x, vec3.y + addedYValue, vec3.z);
+        }
+
+        public static Vector3 Inverted (this Vector3 vec3)
 		{
 			return new Vector3 (1.0f / vec3.x, 1.0f / vec3.y, 1.0f / vec3.z);
 		}

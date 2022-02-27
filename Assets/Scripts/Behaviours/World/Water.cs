@@ -214,6 +214,12 @@ namespace SanAndreasUnity.Behaviours.World
                     visualGo.transform.localScale = size;
                 }
 
+                if (Application.isEditor) // only do it in Editor, no need to do it in a build
+                {
+                    var waterFaceInfo = go.GetOrAddComponent<WaterFaceInfo>();
+                    waterFaceInfo.WaterFace = face;
+                }
+
                 m_collisionObjects.Add(go.transform);
 
                 i++;
