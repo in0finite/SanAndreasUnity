@@ -97,7 +97,7 @@ namespace SanAndreasUnity.Editor
 
             var waterFaceInfos = water
                 .GetComponentsInChildren<WaterFaceInfo>()
-                .Where(_ => _.transform.localPosition.y > 500f)
+                .Where(_ => water.IsInterior(_.WaterFace))
                 .Select(_ => _.gameObject)
                 .ToArray();
 

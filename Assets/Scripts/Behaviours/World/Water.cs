@@ -137,11 +137,35 @@ namespace SanAndreasUnity.Behaviours.World
 
         }
 
+        public (Vector3 center, Vector3 size) GetCenterAndSize(WaterFace face)
+        {
+            Vector3 min = Vector3.positiveInfinity;
+            Vector3 max = Vector3.negativeInfinity;
+            for (int v = 0; v < face.Vertices.Length; v++)
+            {
+                min = MathUtils.MinComponents(min, face.Vertices[v].Position);
+                max = MathUtils.MaxComponents(max, face.Vertices[v].Position);
+            }
+
+            Vector3 center = (min + max) * 0.5f;
+            if (this.IsInterior(center.y))
+                center.y += Cell.Singleton.interiorHeightOffset;
+
+            Vector3 size = max - min;
+            size.y = m_collisionHeight;
+
+            return (center, size);
+        }
+
         void ProcessFace(WaterFace face, Vector3[] vertices, Vector3[] normals, ref int verticesIndex, int[] indices, ref int indicesIndex)
         {
+            bool isInterior = this.IsInterior(face);
+
             for (int j = 0; j < face.Vertices.Length; j++)
             {
-                vertices[verticesIndex + j] = face.Vertices[j].Position;
+                vertices[verticesIndex + j] = isInterior
+                    ? face.Vertices[j].Position.WithAddedY(Cell.Singleton.interiorHeightOffset)
+                    : face.Vertices[j].Position;
                 normals[verticesIndex + j] = Vector3.up;
             }
 
@@ -175,18 +199,8 @@ namespace SanAndreasUnity.Behaviours.World
             foreach (var face in faces)
             {
                 // create box collider based on vertices
-                Vector3 min = Vector3.positiveInfinity;
-                Vector3 max = Vector3.negativeInfinity;
-                for (int v = 0; v < face.Vertices.Length; v++)
-                {
-                    min = MathUtils.MinComponents(min, face.Vertices[v].Position);
-                    max = MathUtils.MaxComponents(max, face.Vertices[v].Position);
-                }
 
-                Vector3 center = (min + max) * 0.5f;
-
-                Vector3 size = max - min;
-                size.y = m_collisionHeight;
+                (Vector3 center, Vector3 size) = this.GetCenterAndSize(face);
 
                 GameObject go = availableObjects.Count > 0
                     ? availableObjects.Dequeue().gameObject
@@ -232,6 +246,16 @@ namespace SanAndreasUnity.Behaviours.World
             foreach (var availableObject in availableObjects)
                 F.DestroyEvenInEditMode(availableObject.gameObject);
 
+        }
+
+        public bool IsInterior(float y)
+        {
+            return y > 500f;
+        }
+
+        public bool IsInterior(WaterFace face)
+        {
+            return this.IsInterior(this.GetCenterAndSize(face).center.y);
         }
 
         void CreateQuad(Vector2 min, Vector2 max, Vector3[] vertexes, Vector3[] normals, ref int vertexIndex, int[] indexes, ref int indexesIndex)
