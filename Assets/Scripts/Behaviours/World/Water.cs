@@ -203,9 +203,14 @@ namespace SanAndreasUnity.Behaviours.World
 
                 if (m_createVisualsForCollisionObjects)
                 {
-                    var visualGo = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    GameObject visualGo = go.transform.childCount > 0
+                        ? go.transform.GetChild(0).gameObject
+                        : GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    visualGo.name = "visualization cube";
                     Destroy(visualGo.GetComponent<BoxCollider>());
                     visualGo.transform.SetParent(go.transform, false);
+                    visualGo.transform.localPosition = Vector3.zero;
+                    visualGo.transform.localRotation = Quaternion.identity;
                     visualGo.transform.localScale = size;
                 }
 
