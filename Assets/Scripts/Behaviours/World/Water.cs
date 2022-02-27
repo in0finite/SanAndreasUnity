@@ -172,9 +172,6 @@ namespace SanAndreasUnity.Behaviours.World
             int i = 0;
             foreach (var face in faces)
             {
-                Vector3 center = Vector3.zero;
-                face.Vertices.ForEach(v => center += v.Position / face.Vertices.Length);
-
                 // create box collider based on vertices
                 Vector3 min = Vector3.positiveInfinity;
                 Vector3 max = Vector3.negativeInfinity;
@@ -183,6 +180,8 @@ namespace SanAndreasUnity.Behaviours.World
                     min = MathUtils.MinComponents(min, face.Vertices[v].Position);
                     max = MathUtils.MaxComponents(max, face.Vertices[v].Position);
                 }
+
+                Vector3 center = (min + max) * 0.5f;
 
                 Vector3 size = max - min;
                 size.y = m_collisionHeight;
