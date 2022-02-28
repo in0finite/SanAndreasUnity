@@ -153,51 +153,60 @@ namespace SanAndreasUnity.Behaviours.World
 
 			Profiler.BeginSample ("StaticGeometry.OnLoad", this);
 
+			// note: some Clumps have collision model inside, but they are only used for vehicles, so we don't
+			// need to load Clump if rendering is disabled
 
-            //var geoms = Geometry.Load(Instance.Object.ModelName, Instance.Object.TextureDictionaryName);
-			//OnGeometryLoaded (geoms);
+			bool loadRendering = !F.IsInHeadlessMode && Config.GetBool("loadStaticRenderModels");
 
-			// we could start loading collision model here
-			// - we can't, because we don't know the name of collision file until clump is loaded
+			bool renderingLoaded = false;
+			bool collisionLoaded = false;
+			Geometry.GeometryParts geoms = null;
 
-			Geometry.LoadAsync( ObjectDefinition.ModelName, new string[] {ObjectDefinition.TextureDictionaryName}, this.LoadPriority, (geoms) => {
-				if(geoms != null)
-				{
-					// we can't load collision model asyncly, because it requires a transform to attach to
-					// but, we can load collision file asyncly
-					Importing.Collision.CollisionFile.FromNameAsync( geoms.Collisions != null ? geoms.Collisions.Name : geoms.Name, this.LoadPriority, (cf) => {
-						OnGeometryLoaded (geoms);
-					});
-				}
-			});
+			if (loadRendering)
+            {
+				Geometry.LoadAsync(
+					this.ObjectDefinition.ModelName,
+					new string[] { this.ObjectDefinition.TextureDictionaryName },
+					this.LoadPriority,
+                    g =>
+                    {
+						renderingLoaded = true;
+                        geoms = g;
+						this.OnOneAssetLoaded(geoms, loadRendering, renderingLoaded, collisionLoaded);
+                    });
+            }
+
+            // we can't load collision model asyncly, because it requires a transform to attach to
+            // but, we can load collision file asyncly
+            Importing.Collision.CollisionFile.FromNameAsync(
+				this.ObjectDefinition.ModelName,
+				this.LoadPriority,
+                cf =>
+                {
+                    collisionLoaded = true;
+					this.OnOneAssetLoaded(geoms, loadRendering, renderingLoaded, collisionLoaded);
+                });
 
 
 			Profiler.EndSample ();
 
         }
 
-		private void OnGeometryLoaded (Geometry.GeometryParts geoms)
+		private void OnOneAssetLoaded(Geometry.GeometryParts geoms, bool loadRendering, bool renderingLoaded, bool collisionLoaded)
+        {
+			if (collisionLoaded && (!loadRendering || renderingLoaded))
+				this.OnAssetsLoaded(geoms);
+        }
+
+		private void OnAssetsLoaded(Geometry.GeometryParts geoms)
 		{
 
-			Profiler.BeginSample ("Add mesh", this);
+			if (geoms != null)
+				this.AddRenderingParts(geoms);
 
-			var mf = gameObject.AddComponent<MeshFilter>();
-			var mr = gameObject.AddComponent<MeshRenderer>();
-
-			mr.receiveShadows = this.ShouldReceiveShadows();
-			mr.shadowCastingMode = this.ShouldCastShadows() ? ShadowCastingMode.On : ShadowCastingMode.Off;
-
-			mf.sharedMesh = geoms.Geometry[0].Mesh;
-			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(ObjectDefinition.Flags, mat => mat.SetTexture(NoiseTexPropertyId, NoiseTex));
-
-			Profiler.EndSample ();
-
-			Profiler.BeginSample("CreateLights()", this);
-			if (!F.IsInHeadlessMode)
-				this.CreateLights(geoms);
+			Profiler.BeginSample("Attach collision", this);
+			Importing.Conversion.CollisionModel.Load(this.ObjectDefinition.ModelName, this.transform, false);
 			Profiler.EndSample();
-
-			geoms.AttachCollisionModel(transform);
 
 			Profiler.BeginSample ("Set layer", this);
 
@@ -217,9 +226,25 @@ namespace SanAndreasUnity.Behaviours.World
             
 		}
 
-		private void OnCollisionModelAttached ()
-		{
+		private void AddRenderingParts(Geometry.GeometryParts geoms)
+        {
+			Profiler.BeginSample("Add mesh", this);
 
+			var mf = gameObject.AddComponent<MeshFilter>();
+			var mr = gameObject.AddComponent<MeshRenderer>();
+
+			mr.receiveShadows = this.ShouldReceiveShadows();
+			mr.shadowCastingMode = this.ShouldCastShadows() ? ShadowCastingMode.On : ShadowCastingMode.Off;
+
+			mf.sharedMesh = geoms.Geometry[0].Mesh;
+			mr.sharedMaterials = geoms.Geometry[0].GetMaterials(ObjectDefinition.Flags, mat => mat.SetTexture(NoiseTexPropertyId, NoiseTex));
+
+			Profiler.EndSample();
+
+			Profiler.BeginSample("CreateLights()", this);
+			if (!F.IsInHeadlessMode)
+				this.CreateLights(geoms);
+			Profiler.EndSample();
 
 		}
 

@@ -12,6 +12,7 @@
   "car_colors_path": "${game_dir}/data/carcols.dat",
   "weapons_path": "${game_dir}/data/weapon.dat",
 
+  "loadStaticRenderModels": true,
   "dontLoadTextures": false,
 
   "skip_minimap_load": false,
