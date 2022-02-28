@@ -33,6 +33,21 @@ namespace SanAndreasUnity.Editor
             Selection.objects = objectsToSelect;
         }
 
+        [MenuItem(EditorCore.MenuName + "/World/Select active world objects without renderer")]
+        static void SelectObjectsWithoutRenderer()
+        {
+            GameObject[] objectsToSelect = GetAllWorldObjects()
+                .Where(_ => _.gameObject.activeSelf && _.GetComponent<Renderer>() == null)
+                .Select(_ => _.gameObject)
+                .ToArray();
+
+            if (objectsToSelect.Length == 0)
+                return;
+
+            Selection.objects = objectsToSelect;
+            EditorGUIUtility.PingObject(objectsToSelect[0]);
+        }
+
         [MenuItem(EditorCore.MenuName + "/World/Enable all world objects")]
         static void EnableAllWorldObjects()
         {

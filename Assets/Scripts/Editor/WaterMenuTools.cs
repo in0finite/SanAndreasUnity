@@ -126,6 +126,25 @@ namespace SanAndreasUnity.Editor
             SetSelection(new GameObject[] { hit.transform.gameObject });
         }
 
+        [MenuItem(WaterMenuItemPrefix + "Add focus point to every water face")]
+        static void AddFocusPointToFaces()
+        {
+            var water = GetWaterOrShowMessage();
+            if (null == water)
+                return;
+
+            var waterFaceInfos = water.GetComponentsInChildren<WaterFaceInfo>();
+
+            foreach (var waterFaceInfo in waterFaceInfos)
+            {
+                var focusPoint = waterFaceInfo.gameObject.GetComponent<FocusPoint>();
+                if (focusPoint != null)
+                    UnityEngine.Object.DestroyImmediate(focusPoint.gameObject);
+                focusPoint = waterFaceInfo.gameObject.AddComponent<FocusPoint>();
+                focusPoint.parameters = FocusPointParameters.Default;
+            }
+        }
+
         [MenuItem(WaterMenuItemPrefix + "Test collision against ground beneath")]
         static void TestCollision()
         {
@@ -141,7 +160,7 @@ namespace SanAndreasUnity.Editor
             {
                 var boxCollider = waterFaceInfo.GetComponentOrThrow<BoxCollider>();
                 if (Physics.CheckBox(
-                    waterFaceInfo.transform.position.WithAddedY(-10f),
+                    waterFaceInfo.transform.position.WithAddedY(-20f),
                     boxCollider.size * 0.5f,
                     waterFaceInfo.transform.rotation,
                     Behaviours.GameManager.DefaultLayerMask,
