@@ -565,7 +565,7 @@ namespace SanAndreasUnity.Behaviours.World
 				return new List<NavMeshBuildSource>();
 
 			var list = new List<NavMeshBuildSource>();
-			NavMeshBuilder.CollectSources(this.Water.transform, -1, NavMeshCollectGeometry.RenderMeshes, NavMesh.GetAreaFromName("Not Walkable"), new List<NavMeshBuildMarkup>(), list);
+			NavMeshBuilder.CollectSources(this.Water.transform, -1, NavMeshCollectGeometry.PhysicsColliders, NavMesh.GetAreaFromName("Not Walkable"), new List<NavMeshBuildMarkup>(), list);
 			return list;
 		}
 
