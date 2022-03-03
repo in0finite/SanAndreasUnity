@@ -70,7 +70,7 @@ namespace SanAndreasUnity.Importing.Conversion
         private static GameObject _sTemplateParent;
 
         private static readonly Dictionary<string, CollisionModel> _sLoaded
-            = new Dictionary<string, CollisionModel>();
+            = new Dictionary<string, CollisionModel>(StringComparer.InvariantCultureIgnoreCase);
 
         public static void Load(string name, Transform destParent, bool forceConvex = false)
         {
