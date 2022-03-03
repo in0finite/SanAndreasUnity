@@ -16,7 +16,8 @@ namespace SanAndreasUnity.Behaviours.World
         [SerializeField] private GameObject m_waterCollisionPrefab;
 
         [SerializeField] private bool m_createCollisionObjects = false;
-        [SerializeField] private float m_collisionHeight = 20f;
+        [SerializeField] private float m_collisionHeight = 200f;
+        [SerializeField] private float m_shallowCollisionHeight = 10f;
         [SerializeField] private bool m_createVisualsForCollisionObjects = false;
 
         [HideInInspector] [SerializeField] private List<Transform> m_renderingObjects = new List<Transform>();
@@ -151,8 +152,10 @@ namespace SanAndreasUnity.Behaviours.World
             if (this.IsInterior(center.y))
                 center.y += Cell.Singleton.interiorHeightOffset;
 
+            bool isShallow = (face.Flags & WaterFlags.Shallow) != 0;
+
             Vector3 size = max - min;
-            size.y = m_collisionHeight;
+            size.y = isShallow ? m_shallowCollisionHeight : m_collisionHeight;
 
             return (center, size);
         }
