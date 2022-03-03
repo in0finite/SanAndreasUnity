@@ -46,20 +46,15 @@ namespace SanAndreasUnity.Behaviours.World
 
             const int numQuadsForInfiniteWater = 4;
 
-            int totalNumVertexes = faces.Sum(f => f.Vertices.Length) + numQuadsForInfiniteWater * GetNumVertexesForQuad();
-            int totalNumIndexes = faces.Sum(f => (f.Vertices.Length - 2) * 3) + numQuadsForInfiniteWater * GetNumIndexesForQuad();
-
-            Vector3[] vertices = new Vector3[totalNumVertexes];
-            Vector3[] normals = new Vector3[totalNumVertexes];
-            int[] indices = new int[totalNumIndexes];
+            var vertices = new List<Vector3>(1536);
+            var normals = new List<Vector3>(1536);
+            var indices = new List<int>(2048);
 
             int verticesIndex = 0;
             int indicesIndex = 0;
 
-            foreach (var face in faces)
-            {
-                ProcessFace(face, vertices, normals, ref verticesIndex, indices, ref indicesIndex);
-            }
+            foreach (WaterFace face in faces)
+                this.ProcessFaceForRenderMesh(face, vertices, normals, indices);
 
             // add "infinite" water
 
@@ -70,41 +65,33 @@ namespace SanAndreasUnity.Behaviours.World
                 new Vector2(worldSize.x / 2f + infiniteWaterOffset, worldSize.y / 2f + infiniteWaterOffset),
                 vertices,
                 normals,
-                ref verticesIndex,
-                indices,
-                ref indicesIndex);
+                indices);
             // lower quad
             CreateQuad(
                 new Vector2( -worldSize.x / 2f - infiniteWaterOffset, - worldSize.y / 2f - infiniteWaterOffset),
                 new Vector2(worldSize.x / 2f + infiniteWaterOffset, - worldSize.y / 2f),
                 vertices,
                 normals,
-                ref verticesIndex,
-                indices,
-                ref indicesIndex);
+                indices);
             // left quad
             CreateQuad(
                 new Vector2( -worldSize.x / 2f - infiniteWaterOffset, - worldSize.y / 2f),
                 new Vector2(- worldSize.x / 2f, worldSize.y / 2f),
                 vertices,
                 normals,
-                ref verticesIndex,
-                indices,
-                ref indicesIndex);
+                indices);
             // right quad
             CreateQuad(
                 new Vector2( worldSize.x / 2f, - worldSize.y / 2f),
                 new Vector2(worldSize.x / 2f + infiniteWaterOffset, worldSize.y / 2f),
                 vertices,
                 normals,
-                ref verticesIndex,
-                indices,
-                ref indicesIndex);
+                indices);
 
             var mesh = new Mesh();
 
-            mesh.vertices = vertices;
-            mesh.normals = normals;
+            mesh.SetVertices(vertices);
+            mesh.SetNormals(normals);
             mesh.SetIndices(indices, MeshTopology.Triangles, 0);
 
             m_renderingObjects.RemoveDeadObjects();
@@ -160,28 +147,33 @@ namespace SanAndreasUnity.Behaviours.World
             return (center, size);
         }
 
-        void ProcessFace(WaterFace face, Vector3[] vertices, Vector3[] normals, ref int verticesIndex, int[] indices, ref int indicesIndex)
+        void ProcessFaceForRenderMesh(
+            WaterFace face, List<Vector3> vertices, List<Vector3> normals, List<int> indices)
         {
+            int verticesIndex = vertices.Count;
+            int indicesIndex = indices.Count;
+
             bool isInterior = this.IsInterior(face);
 
-            for (int j = 0; j < face.Vertices.Length; j++)
+            for (int v = 0; v < face.Vertices.Length; v++)
             {
-                vertices[verticesIndex + j] = isInterior
-                    ? face.Vertices[j].Position.WithAddedY(Cell.Singleton.interiorHeightOffset)
-                    : face.Vertices[j].Position;
-                normals[verticesIndex + j] = Vector3.up;
+                vertices.Add(isInterior
+                    ? face.Vertices[v].Position.WithAddedY(Cell.Singleton.interiorHeightOffset)
+                    : face.Vertices[v].Position);
+
+                normals.Add(Vector3.up);
             }
 
-            for (var j = 0; j < face.Vertices.Length - 2; ++j)
-            {
-                var flip = j & 1;
-                indices[indicesIndex + j * 3 + 0] = verticesIndex + j + 1 - flip;
-                indices[indicesIndex + j * 3 + 1] = verticesIndex + j + 0 + flip;
-                indices[indicesIndex + j * 3 + 2] = verticesIndex + j + 2;
-            }
+            int numIndices = (face.Vertices.Length - 2) * 3;
+            indices.AddMultiple(numIndices);
 
-            verticesIndex += face.Vertices.Length;
-            indicesIndex += (face.Vertices.Length - 2) * 3;
+            for (int i = 0; i < face.Vertices.Length - 2; ++i)
+            {
+                int flip = i & 1;
+                indices[indicesIndex + i * 3 + 0] = verticesIndex + i + 1 - flip;
+                indices[indicesIndex + i * 3 + 1] = verticesIndex + i + 0 + flip;
+                indices[indicesIndex + i * 3 + 2] = verticesIndex + i + 2;
+            }
         }
 
         void CreateCollisionObjects(IEnumerable<WaterFace> faces)
@@ -261,22 +253,26 @@ namespace SanAndreasUnity.Behaviours.World
             return this.IsInterior(this.GetCenterAndSize(face).center.y);
         }
 
-        void CreateQuad(Vector2 min, Vector2 max, Vector3[] vertexes, Vector3[] normals, ref int vertexIndex, int[] indexes, ref int indexesIndex)
+        void CreateQuad(Vector2 min, Vector2 max, List<Vector3> vertexes, List<Vector3> normals, List<int> indexes)
         {
+            int vertexIndex = vertexes.Count;
+            int indexesIndex = indexes.Count;
+
+            vertexes.AddMultiple(4);
+            
             vertexes[vertexIndex++] = new Vector3(min.x, 0f, min.y); // low left
             vertexes[vertexIndex++] = new Vector3(max.x, 0f, min.y); // low right
             vertexes[vertexIndex++] = new Vector3(min.x, 0f, max.y); // up left
             vertexes[vertexIndex++] = new Vector3(max.x, 0f, max.y); // up right
 
-            normals[vertexIndex - 4] = Vector3.up;
-            normals[vertexIndex - 3] = Vector3.up;
-            normals[vertexIndex - 2] = Vector3.up;
-            normals[vertexIndex - 1] = Vector3.up;
+            normals.AddMultiple(Vector3.up, 4);
 
             int lowLeft = vertexIndex - 4;
             int lowRight = vertexIndex - 3;
             int upLeft = vertexIndex - 2;
             int upRight = vertexIndex - 1;
+
+            indexes.AddMultiple(6);
 
             indexes[indexesIndex++] = upRight;
             indexes[indexesIndex++] = lowRight;
@@ -285,9 +281,5 @@ namespace SanAndreasUnity.Behaviours.World
             indexes[indexesIndex++] = upRight;
             indexes[indexesIndex++] = lowLeft;
         }
-
-        int GetNumVertexesForQuad() => 4;
-
-        int GetNumIndexesForQuad() => 6;
     }
 }

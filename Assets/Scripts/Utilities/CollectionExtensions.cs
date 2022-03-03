@@ -48,5 +48,16 @@ namespace SanAndreasUnity.Utilities
         {
             return condition ? enumerable.Append(element) : enumerable;
         }
+
+        public static void AddMultiple<T>(this ICollection<T> collection, T value, int count)
+        {
+            for (int i = 0; i < count; i++)
+                collection.Add(value);
+        }
+
+        public static void AddMultiple<T>(this ICollection<T> collection, int count)
+        {
+            collection.AddMultiple(default, count);
+        }
     }
 }
