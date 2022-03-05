@@ -147,6 +147,33 @@ namespace SanAndreasUnity.Behaviours.World
             return (center, size);
         }
 
+        private static Vector3 GetIncenterOfLastTriangle(
+            List<Vector3> vertexes,
+            List<int> indexes)
+        {
+            Vector3 a = vertexes[indexes[indexes.Count - 3]];
+            Vector3 b = vertexes[indexes[indexes.Count - 2]];
+            Vector3 c = vertexes[indexes[indexes.Count - 1]];
+
+            Vector3 sideC = b - a;
+            Vector3 sideB = c - a;
+            Vector3 sideA = c - b;
+
+            float lengthA = sideA.magnitude;
+            float lengthB = sideB.magnitude;
+            float lengthC = sideC.magnitude;
+
+            float perimeter = lengthA + lengthB + lengthC;
+
+            Vector3 incenter;
+            incenter.x = lengthA * a.x + lengthB * b.x + lengthC * c.x;
+            incenter.y = lengthA * a.y + lengthB * b.y + lengthC * c.y;
+            incenter.z = lengthA * a.z + lengthB * b.z + lengthC * c.z;
+            incenter /= perimeter;
+
+            return incenter;
+        }
+
         void ProcessFaceForRenderMesh(
             WaterFace face, List<Vector3> vertices, List<Vector3> normals, List<int> indices)
         {
@@ -231,6 +258,7 @@ namespace SanAndreasUnity.Behaviours.World
 
                     meshCollider = go.GetOrAddComponent<MeshCollider>();
                     meshCollider.cookingOptions = MeshColliderCookingOptions.None;
+                    meshCollider.convex = true;
                     meshCollider.isTrigger = true;
 
                     vertexes.Clear();
@@ -246,7 +274,7 @@ namespace SanAndreasUnity.Behaviours.World
                     var mesh = new Mesh();
                     mesh.name = go.name;
                     mesh.SetVertices(vertexes);
-                    mesh.SetNormals(normals);
+                    //mesh.SetNormals(normals);
                     mesh.SetIndices(indexes, MeshTopology.Triangles, 0, calculateBounds: true);
 
                     meshCollider.sharedMesh = mesh;
@@ -332,14 +360,14 @@ namespace SanAndreasUnity.Behaviours.World
 
             // create top triangle
             int topSideVertexIndex = vertexes.Count;
-            CreateTriangle(face, vertexes, normals, indexes, 0f);
+            CreateTriangle(face, vertexes, normals, indexes, 0f, Vector3.up);
 
             // create bottom triangle
             int bottomSideVertexIndex = vertexes.Count;
-            CreateTriangle(face, vertexes, normals, indexes, -height);
+            CreateTriangle(face, vertexes, normals, indexes, -height, - Vector3.up);
 
             // create side quads
-            int sideIndexesIndex = indexes.Count;
+            Vector3 coordinateCenter = GetIncenterOfLastTriangle(vertexes, indexes);
             for (int i = 0; i < 3; i++)
             {
                 int otherIndex = (i + 1) % 3;
@@ -349,21 +377,26 @@ namespace SanAndreasUnity.Behaviours.World
                 indexes.Add(topSideVertexIndex + otherIndex);
                 indexes.Add(bottomSideVertexIndex + i);
 
+                Vector3 lastTriangleCenter = GetIncenterOfLastTriangle(vertexes, indexes);
+                ReverseTriangleIfNeeded(vertexes, indexes, lastTriangleCenter - coordinateCenter);
+
                 // 2 bottom, 1 top
                 indexes.Add(topSideVertexIndex + otherIndex);
                 indexes.Add(bottomSideVertexIndex + otherIndex);
                 indexes.Add(bottomSideVertexIndex + i);
-            }
 
-            // add side indexes in reverse - because we don't know direction of those triangles
-            for (int i = indexes.Count - 1; i >= sideIndexesIndex; i--)
-            {
-                indexes.Add(indexes[i]);
+                lastTriangleCenter = GetIncenterOfLastTriangle(vertexes, indexes);
+                ReverseTriangleIfNeeded(vertexes, indexes, lastTriangleCenter - coordinateCenter);
             }
         }
 
         void CreateTriangle(
-            WaterFace face, List<Vector3> vertexes, List<Vector3> normals, List<int> indexes, float heightOffset)
+            WaterFace face,
+            List<Vector3> vertexes,
+            List<Vector3> normals,
+            List<int> indexes,
+            float heightOffset,
+            Vector3 lookDirection)
         {
             if (face.Vertices.Length != 3)
                 throw new System.ArgumentException("Face must contain 3 vertices");
@@ -380,10 +413,32 @@ namespace SanAndreasUnity.Behaviours.World
             indexes.Add(vertexIndex + 1);
             indexes.Add(vertexIndex + 2);
 
-            // other side, because we don't know direction of this triangle
-            indexes.Add(vertexIndex + 2);
-            indexes.Add(vertexIndex + 1);
-            indexes.Add(vertexIndex);
+            ReverseTriangleIfNeeded(vertexes, indexes, lookDirection);
+        }
+
+        void ReverseTriangleIfNeeded(
+            List<Vector3> vertexes,
+            List<int> indexes,
+            Vector3 lookDirection)
+        {
+            Vector3 a = vertexes[indexes[indexes.Count - 3]];
+            Vector3 b = vertexes[indexes[indexes.Count - 2]];
+            Vector3 c = vertexes[indexes[indexes.Count - 1]];
+
+            Vector3 side1 = b - a;
+            Vector3 side2 = c - a;
+
+            Vector3 normalNonNormalized = Vector3.Cross(side1, side2);
+
+            if (Vector3.Angle(normalNonNormalized, lookDirection) < 90f)
+                return;
+
+            // reverse triangle
+            int firstIndexValue = indexes[indexes.Count - 3];
+            int lastIndexValue = indexes[indexes.Count - 1];
+            indexes[indexes.Count - 3] = lastIndexValue;
+            indexes[indexes.Count - 1] = firstIndexValue;
+
         }
     }
 }
