@@ -190,10 +190,14 @@ namespace SanAndreasUnity.Behaviours.World
 
             m_collisionObjects.Clear();
 
+            var vertexes = new List<Vector3>();
+            var normals = new List<Vector3>();
+            var indexes = new List<int>();
+
             int i = 0;
             foreach (var face in faces)
             {
-                // create box collider based on vertices
+                // create box/mesh collider based on vertexes
 
                 (Vector3 center, Vector3 size) = this.GetCenterAndSize(face);
 
@@ -203,16 +207,54 @@ namespace SanAndreasUnity.Behaviours.World
 
                 go.name = $"Water collision {i}";
 
-                go.transform.localPosition = center.WithY(center.y - size.y * 0.5f);
+                go.transform.localPosition = center.WithAddedY(- size.y * 0.5f);
                 go.transform.localRotation = Quaternion.identity;
 
-                var boxCollider = go.GetComponentOrThrow<BoxCollider>();
-                boxCollider.size = size;
-
-                /*var meshCollider = go.GetComponentOrThrow<MeshCollider>();
-                if (meshCollider.sharedMesh != null && !EditorUtilityEx.IsAsset(meshCollider.sharedMesh))
+                var meshCollider = go.GetComponent<MeshCollider>();
+                if (meshCollider != null && meshCollider.sharedMesh != null && !EditorUtilityEx.IsAsset(meshCollider.sharedMesh))
                     F.DestroyEvenInEditMode(meshCollider.sharedMesh);
-                meshCollider.sharedMesh = mesh;*/
+
+                if (face.Vertices.Length == 4)
+                {
+                    if (meshCollider != null)
+                        F.DestroyEvenInEditMode(meshCollider);
+                    
+                    var boxCollider = go.GetOrAddComponent<BoxCollider>();
+                    boxCollider.size = size;
+                    boxCollider.isTrigger = true;
+                }
+                else if (face.Vertices.Length == 3)
+                {
+                    var boxCollider = go.GetComponent<BoxCollider>();
+                    if (boxCollider != null)
+                        F.DestroyEvenInEditMode(boxCollider);
+
+                    meshCollider = go.GetOrAddComponent<MeshCollider>();
+                    meshCollider.cookingOptions = MeshColliderCookingOptions.None;
+                    meshCollider.isTrigger = true;
+
+                    vertexes.Clear();
+                    normals.Clear();
+                    indexes.Clear();
+                    CreateCollisionMeshFor3VertexFace(face, vertexes, normals, indexes, size.y);
+
+                    // modify vertexes based on center of game object
+                    Vector3 centerToSubstract = go.transform.localPosition;
+                    for (int v = 0; v < vertexes.Count; v++)
+                        vertexes[v] = vertexes[v] - centerToSubstract;
+                    
+                    var mesh = new Mesh();
+                    mesh.name = go.name;
+                    mesh.SetVertices(vertexes);
+                    mesh.SetNormals(normals);
+                    mesh.SetIndices(indexes, MeshTopology.Triangles, 0, calculateBounds: true);
+
+                    meshCollider.sharedMesh = mesh;
+                }
+                else
+                {
+                    Debug.LogError($"Only water faces with 3 or 4 vertices are supported, found {face.Vertices.Length}");
+                }
 
                 if (m_createVisualsForCollisionObjects)
                 {
@@ -220,7 +262,7 @@ namespace SanAndreasUnity.Behaviours.World
                         ? go.transform.GetChild(0).gameObject
                         : GameObject.CreatePrimitive(PrimitiveType.Cube);
                     visualGo.name = "visualization cube";
-                    Destroy(visualGo.GetComponent<BoxCollider>());
+                    F.DestroyEvenInEditMode(visualGo.GetComponent<BoxCollider>());
                     visualGo.transform.SetParent(go.transform, false);
                     visualGo.transform.localPosition = Vector3.zero;
                     visualGo.transform.localRotation = Quaternion.identity;
@@ -280,6 +322,68 @@ namespace SanAndreasUnity.Behaviours.World
             indexes[indexesIndex++] = upLeft;
             indexes[indexesIndex++] = upRight;
             indexes[indexesIndex++] = lowLeft;
+        }
+
+        void CreateCollisionMeshFor3VertexFace(
+            WaterFace face, List<Vector3> vertexes, List<Vector3> normals, List<int> indexes, float height)
+        {
+            if (face.Vertices.Length != 3)
+                throw new System.ArgumentException("Face must contain 3 vertices");
+
+            // create top triangle
+            int topSideVertexIndex = vertexes.Count;
+            CreateTriangle(face, vertexes, normals, indexes, 0f);
+
+            // create bottom triangle
+            int bottomSideVertexIndex = vertexes.Count;
+            CreateTriangle(face, vertexes, normals, indexes, -height);
+
+            // create side quads
+            int sideIndexesIndex = indexes.Count;
+            for (int i = 0; i < 3; i++)
+            {
+                int otherIndex = (i + 1) % 3;
+
+                // 2 top, 1 bottom
+                indexes.Add(topSideVertexIndex + i);
+                indexes.Add(topSideVertexIndex + otherIndex);
+                indexes.Add(bottomSideVertexIndex + i);
+
+                // 2 bottom, 1 top
+                indexes.Add(topSideVertexIndex + otherIndex);
+                indexes.Add(bottomSideVertexIndex + otherIndex);
+                indexes.Add(bottomSideVertexIndex + i);
+            }
+
+            // add side indexes in reverse - because we don't know direction of those triangles
+            for (int i = indexes.Count - 1; i >= sideIndexesIndex; i--)
+            {
+                indexes.Add(indexes[i]);
+            }
+        }
+
+        void CreateTriangle(
+            WaterFace face, List<Vector3> vertexes, List<Vector3> normals, List<int> indexes, float heightOffset)
+        {
+            if (face.Vertices.Length != 3)
+                throw new System.ArgumentException("Face must contain 3 vertices");
+
+            int vertexIndex = vertexes.Count;
+
+            for (int i = 0; i < 3; i++)
+            {
+                vertexes.Add(face.Vertices[i].Position.WithAddedY(heightOffset));
+                normals.Add(Vector3.up);
+            }
+
+            indexes.Add(vertexIndex);
+            indexes.Add(vertexIndex + 1);
+            indexes.Add(vertexIndex + 2);
+
+            // other side, because we don't know direction of this triangle
+            indexes.Add(vertexIndex + 2);
+            indexes.Add(vertexIndex + 1);
+            indexes.Add(vertexIndex);
         }
     }
 }
