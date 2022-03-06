@@ -35,6 +35,7 @@ namespace SanAndreasUnity.Behaviours.World
             WaterFile file = new WaterFile(Importing.Archive.ArchiveManager.PathToCaseSensitivePath(Config.GetPath("water_path")));
 
             // TODO: what to do with faces that don't have WaterFlags.Visible flag ?
+            // - it seems that those faces are transparent, usually used for very shallow waters
 
             var faces = file.Faces.Where(f => (f.Flags & WaterFlags.Visible) == WaterFlags.Visible);
 
@@ -44,14 +45,9 @@ namespace SanAndreasUnity.Behaviours.World
             // - left side (between first 2 quads)
             // - right side (between first 2 quads)
 
-            const int numQuadsForInfiniteWater = 4;
-
             var vertices = new List<Vector3>(1536);
             var normals = new List<Vector3>(1536);
             var indices = new List<int>(2048);
-
-            int verticesIndex = 0;
-            int indicesIndex = 0;
 
             foreach (WaterFace face in faces)
                 this.ProcessFaceForRenderMesh(face, vertices, normals, indices);
