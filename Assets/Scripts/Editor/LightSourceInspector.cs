@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Editor
 
             var lightSource = (LightSource) this.target;
 
-            EditorUtils.DrawFieldsInInspector(lightSource.LightInfo, 0);
+            EditorUtils.DrawFieldsInInspector(lightSource.LightInfo, 0, false);
         }
 
     }

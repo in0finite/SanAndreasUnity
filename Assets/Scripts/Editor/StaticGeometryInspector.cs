@@ -21,7 +21,7 @@ namespace SanAndreasUnity.Editor
 
             _scrollViewPos = EditorGUILayout.BeginScrollView(_scrollViewPos, GUILayout.MinHeight(350));
 
-            EditorUtils.DrawPropertiesInInspector(staticGeometry, 1);
+            EditorUtils.DrawPropertiesInInspector(staticGeometry, 1, false);
 
             GUILayout.Space (10);
             GUILayout.Label("Object definition:");

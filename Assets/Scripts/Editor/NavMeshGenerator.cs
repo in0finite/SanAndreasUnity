@@ -12,7 +12,8 @@ namespace SanAndreasUnity.Editor
 {
     public class NavMeshGenerator : EditorWindowBase
     {
-        private static int s_selectedAgentId = 0;
+        private int m_selectedAgentId = 0;
+        private NavMeshBuildSettings m_navMeshBuildSettings;
         [SerializeField] private NavMeshData m_navMeshData;
         private NavMeshDataInstance m_navMeshDataInstance = new NavMeshDataInstance();
         private static CoroutineInfo s_coroutine;
@@ -28,6 +29,7 @@ namespace SanAndreasUnity.Editor
         public NavMeshGenerator()
         {
             this.titleContent = new GUIContent("Nav mesh generator");
+            m_navMeshBuildSettings = NavMesh.GetSettingsByID(m_selectedAgentId);
         }
 
         void Cleanup()
@@ -49,20 +51,19 @@ namespace SanAndreasUnity.Editor
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Agent ID:");
-            s_selectedAgentId = EditorGUILayout.IntField(s_selectedAgentId);
+            m_selectedAgentId = EditorGUILayout.IntField(m_selectedAgentId);
             if (GUILayout.Button("Edit"))
-                UnityEditor.AI.NavMeshEditorHelpers.OpenAgentSettings(s_selectedAgentId);
+                UnityEditor.AI.NavMeshEditorHelpers.OpenAgentSettings(m_selectedAgentId);
+            if (GUILayout.Button("Use"))
+                m_navMeshBuildSettings = NavMesh.GetSettingsByID(m_selectedAgentId);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
             GUILayout.Space(10);
 
-            if (!string.IsNullOrEmpty(NavMesh.GetSettingsNameFromID(s_selectedAgentId)))
-            {
-                var navMeshBuildSettings = NavMesh.GetSettingsByID(s_selectedAgentId);
-                EditorUtils.DrawFieldsAndPropertiesInInspector(navMeshBuildSettings, 0);
-            }
-
+            m_navMeshBuildSettings = (NavMeshBuildSettings)EditorUtils.DrawFieldsAndPropertiesInInspector(
+                m_navMeshBuildSettings, 0, true);
+            
             GUILayout.Space(20);
 
             EditorGUILayout.PrefixLabel("Current nav mesh:");
@@ -177,12 +178,6 @@ namespace SanAndreasUnity.Editor
                 yield break;
             }
 
-            if (string.IsNullOrEmpty(NavMesh.GetSettingsNameFromID(s_selectedAgentId)))
-            {
-                EditorUtility.DisplayDialog("", "Invalid agent id", "Ok");
-                yield break;
-            }
-
             var cell = Cell.Instance;
             if (null == cell)
             {
@@ -190,7 +185,7 @@ namespace SanAndreasUnity.Editor
                 yield break;
             }
 
-            NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByID(s_selectedAgentId);
+            NavMeshBuildSettings navMeshBuildSettings = m_navMeshBuildSettings;
 
             EditorUtility.DisplayProgressBar("Generating nav mesh", "Collecting objects...", 0f);
 

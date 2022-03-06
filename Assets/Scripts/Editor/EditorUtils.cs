@@ -28,24 +28,36 @@ namespace SanAndreasUnity.Editor
             return types;
         }
 
-        public static void DrawFieldsAndPropertiesInInspector(object objectToDraw, int inheritanceLevel)
+        public static object DrawFieldsAndPropertiesInInspector(
+            object objectToDraw,
+            int inheritanceLevel,
+            bool isEditable = false)
         {
-            DrawFieldsInInspector(objectToDraw, inheritanceLevel);
-            DrawPropertiesInInspector(objectToDraw, inheritanceLevel);
+            objectToDraw = DrawFieldsInInspector(objectToDraw, inheritanceLevel, isEditable);
+            objectToDraw = DrawPropertiesInInspector(objectToDraw, inheritanceLevel, isEditable);
+            return objectToDraw;
         }
 
-        public static void DrawFieldsInInspector(object objectToDraw, int inheritanceLevel)
+        public static object DrawFieldsInInspector(object objectToDraw, int inheritanceLevel, bool isEditable)
         {
             var fieldInfos = GetWithBaseTypes(objectToDraw.GetType(), inheritanceLevel)
                 .SelectMany(t => t.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly));
 
             foreach (var fieldInfo in fieldInfos)
             {
-                DrawObjectInInspector(fieldInfo.FieldType, fieldInfo.GetValue(objectToDraw), fieldInfo.Name);
+                object newValue = DrawObjectInInspector(
+                    fieldInfo.FieldType,
+                    fieldInfo.GetValue(objectToDraw),
+                    fieldInfo.Name);
+
+                if (isEditable && !fieldInfo.IsInitOnly)
+                    fieldInfo.SetValue(objectToDraw, newValue);
             }
+
+            return objectToDraw;
         }
 
-        public static void DrawPropertiesInInspector(object objectToDraw, int inheritanceLevel)
+        public static object DrawPropertiesInInspector(object objectToDraw, int inheritanceLevel, bool isEditable)
         {
             var properties = GetWithBaseTypes(objectToDraw.GetType(), inheritanceLevel)
                 .SelectMany(t => t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))
@@ -53,11 +65,19 @@ namespace SanAndreasUnity.Editor
 
             foreach (var propertyInfo in properties)
             {
-                DrawObjectInInspector(propertyInfo.PropertyType, propertyInfo.GetValue(objectToDraw), propertyInfo.Name);
+                object newValue = DrawObjectInInspector(
+                    propertyInfo.PropertyType,
+                    propertyInfo.GetValue(objectToDraw),
+                    propertyInfo.Name);
+
+                if (isEditable && propertyInfo.CanWrite)
+                    propertyInfo.SetValue(objectToDraw, newValue);
             }
+
+            return objectToDraw;
         }
 
-        public static void DrawObjectInInspector(
+        public static object DrawObjectInInspector(
             Type type,
             object value,
             string name)
@@ -66,26 +86,47 @@ namespace SanAndreasUnity.Editor
 
             if (typeof(Component).IsAssignableFrom(type))
             {
-                EditorGUILayout.ObjectField(labelText, value as Component, type, true);
+                return EditorGUILayout.ObjectField(labelText, (Component)value, type, true);
             }
             else if (type.IsEnum)
             {
                 if (type.GetCustomAttribute<System.FlagsAttribute>() != null)
-                    EditorGUILayout.EnumFlagsField(labelText, value as System.Enum);
+                    return EditorGUILayout.EnumFlagsField(labelText, (System.Enum)value);
                 else
-                    EditorGUILayout.EnumPopup(labelText, value as System.Enum);
+                    return EditorGUILayout.EnumPopup(labelText, (System.Enum)value);
             }
             else if (type == typeof(Color))
             {
-                EditorGUILayout.ColorField(labelText, (Color) value);
+                return EditorGUILayout.ColorField(labelText, (Color) value);
             }
             else if (type == typeof(Color32))
             {
-                EditorGUILayout.ColorField(labelText, (Color32) value);
+                return EditorGUILayout.ColorField(labelText, (Color32) value);
+            }
+            else if (type == typeof(string))
+            {
+                return EditorGUILayout.TextField(labelText, (string)value);
+            }
+            else if (type == typeof(int))
+            {
+                return EditorGUILayout.IntField(labelText, (int)value);
+            }
+            else if (type == typeof(uint))
+            {
+                return (uint)EditorGUILayout.IntField(labelText, (int)(uint)value);
+            }
+            else if (type == typeof(float))
+            {
+                return EditorGUILayout.FloatField(labelText, (float)value);
+            }
+            else if (type == typeof(bool))
+            {
+                return EditorGUILayout.Toggle(labelText, (bool)value);
             }
             else
             {
                 EditorGUILayout.LabelField($"{labelText} {value}");
+                return value;
             }
         }
 
