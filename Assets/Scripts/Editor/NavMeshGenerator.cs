@@ -29,6 +29,10 @@ namespace SanAndreasUnity.Editor
         public NavMeshGenerator()
         {
             this.titleContent = new GUIContent("Nav mesh generator");
+        }
+
+        void OnEnable()
+        {
             m_navMeshBuildSettings = NavMesh.GetSettingsByID(m_selectedAgentId);
         }
 
