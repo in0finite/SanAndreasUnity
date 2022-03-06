@@ -187,15 +187,14 @@ namespace SanAndreasUnity.Behaviours.World
                 normals.Add(Vector3.up);
             }
 
-            int numIndices = (face.Vertices.Length - 2) * 3;
-            indices.AddMultiple(numIndices);
-
             for (int i = 0; i < face.Vertices.Length - 2; ++i)
             {
+                indices.AddMultiple(3);
                 int flip = i & 1;
-                indices[indicesIndex + i * 3 + 0] = verticesIndex + i + 1 - flip;
-                indices[indicesIndex + i * 3 + 1] = verticesIndex + i + 0 + flip;
-                indices[indicesIndex + i * 3 + 2] = verticesIndex + i + 2;
+                indices[indicesIndex++] = verticesIndex + i + 1 - flip;
+                indices[indicesIndex++] = verticesIndex + i + 0 + flip;
+                indices[indicesIndex++] = verticesIndex + i + 2;
+                ReverseTriangleIfNeeded(vertices, indices, Vector3.up);
             }
         }
 
