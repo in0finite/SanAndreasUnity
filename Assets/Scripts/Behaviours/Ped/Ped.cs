@@ -9,6 +9,7 @@ using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Net;
+using UnityEngine.AI;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -37,6 +38,8 @@ namespace SanAndreasUnity.Behaviours
 		public bool shouldPlayAnims = true;
 
         public CharacterController characterController { get; private set; }
+
+		public NavMeshAgent NavMeshAgent { get; private set; }
 
 		public float CameraDistance { get { return PedManager.Instance.cameraDistanceFromPed; } set { PedManager.Instance.cameraDistanceFromPed = value; } }
 
@@ -155,6 +158,7 @@ namespace SanAndreasUnity.Behaviours
             
 			this.PlayerModel = this.GetComponentInChildren<PedModel>();
             this.characterController = this.GetComponent<CharacterController>();
+			this.NavMeshAgent = this.GetComponentOrThrow<NavMeshAgent>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
 
 			_stateContainer.AddStates(this.GetComponentsInChildren<Peds.States.BaseScriptState> ());
@@ -166,6 +170,9 @@ namespace SanAndreasUnity.Behaviours
 			this.CachedNonAimStates = _stateContainer.States
 				.Where(_ => !(_ is Peds.States.IAimState))
 				.ToArray();
+
+			this.NavMeshAgent.updatePosition = false;
+			this.NavMeshAgent.updateRotation = false;
 
 			this.AwakeForDamage ();
 
@@ -410,6 +417,9 @@ namespace SanAndreasUnity.Behaviours
 
             //if (IsDrivingVehicle)
             //    UpdateWheelTurning();
+
+
+			this.NavMeshAgent.nextPosition = this.transform.position;
 
 			this.UpdateDamageStuff ();
 
