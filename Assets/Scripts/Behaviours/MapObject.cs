@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using SanAndreasUnity.Behaviours.World;
 using UnityEngine;
+using UnityEngine.AI;
 using Object = UnityEngine.Object;
 using Profiler = UnityEngine.Profiling.Profiler;
 
@@ -134,6 +136,10 @@ namespace SanAndreasUnity.Behaviours
         protected virtual void OnUnShow()
         {
             this.gameObject.SetActive(false);
+        }
+
+        public virtual void AddNavMeshBuildSources(List<NavMeshBuildSource> list)
+        {
         }
     }
 }

@@ -3,6 +3,7 @@ using SanAndreasUnity.Importing.Items.Placements;
 using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.AI;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -169,6 +170,11 @@ namespace SanAndreasUnity.Behaviours.World
             }
 
             return firstMatchingWithDifferentInterior ?? firstMatchingWithSameInterior;
+        }
+
+        public override void AddNavMeshBuildSources(List<NavMeshBuildSource> list)
+        {
+            list.AddRange(Cell.GetNavMeshBuildSources(this.transform, Cell.NavMeshNotWalkableArea));
         }
 
     }

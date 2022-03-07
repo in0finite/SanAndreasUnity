@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using Geometry = SanAndreasUnity.Importing.Conversion.Geometry;
 using Profiler = UnityEngine.Profiling.Profiler;
+using UnityEngine.AI;
 
 namespace SanAndreasUnity.Behaviours.World
 {
@@ -563,5 +564,13 @@ namespace SanAndreasUnity.Behaviours.World
 
 	        return Mathf.Abs(diffR) <= redVar && Mathf.Abs(diffG) <= greenVar && Mathf.Abs(diffB) <= blueVar;
         }
-    }
+
+		public override void AddNavMeshBuildSources(List<NavMeshBuildSource> list)
+		{
+			if (LodParent != null)
+				return;
+
+			list.AddRange(Cell.GetNavMeshBuildSources(this.transform, 0));
+		}
+	}
 }

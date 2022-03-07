@@ -200,12 +200,10 @@ namespace SanAndreasUnity.Editor
             {
                 if (!mapObject.gameObject.activeInHierarchy)
                     continue;
-                if (mapObject is StaticGeometry staticGeometry && null != staticGeometry.LodParent)
-                    continue;
-
+                
                 numObjects++;
 
-                navMeshBuildSources.AddRange(Cell.GetNavMeshBuildSources(mapObject.transform));
+                mapObject.AddNavMeshBuildSources(navMeshBuildSources);
             }
 
             if (cell.Water != null && cell.Water.gameObject.activeInHierarchy)

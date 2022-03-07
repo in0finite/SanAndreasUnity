@@ -119,6 +119,8 @@ namespace SanAndreasUnity.Behaviours.World
         public float yellowTrafficLightDuration = 2;
         public float greenTrafficLightDuration = 7;
 
+		public static int NavMeshNotWalkableArea => NavMesh.GetAreaFromName("Not Walkable");
+
 		private NavMeshData _navMeshData = null;
 		private List<NavMeshBuildSource> _navMeshBuildSources = new List<NavMeshBuildSource>(1024);
 		private AsyncOperation _navMeshUpdateAsyncOperation = null;
@@ -538,7 +540,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 			for (int i = 0; i < _mapObjectsWithNavMeshToAdd.Count; i++)
             {
-				_navMeshBuildSources.AddRange(GetNavMeshBuildSources(_mapObjectsWithNavMeshToAdd[i].transform));
+				_mapObjectsWithNavMeshToAdd[i].AddNavMeshBuildSources(_navMeshBuildSources);
 			}
 
 			_mapObjectsWithNavMeshToAdd.Clear();
@@ -552,10 +554,10 @@ namespace SanAndreasUnity.Behaviours.World
 			_navMeshUpdateAsyncOperation.priority = m_navMeshAsyncOperationPriority;
 		}
 
-		public static List<NavMeshBuildSource> GetNavMeshBuildSources(Transform root)
+		public static List<NavMeshBuildSource> GetNavMeshBuildSources(Transform root, int area)
         {
 			var list = new List<NavMeshBuildSource>();
-			NavMeshBuilder.CollectSources(root, -1, NavMeshCollectGeometry.PhysicsColliders, 0, new List<NavMeshBuildMarkup>(), list);
+			NavMeshBuilder.CollectSources(root, -1, NavMeshCollectGeometry.PhysicsColliders, area, new List<NavMeshBuildMarkup>(), list);
 			return list;
         }
 
@@ -564,9 +566,7 @@ namespace SanAndreasUnity.Behaviours.World
 			if (null == this.Water)
 				return new List<NavMeshBuildSource>();
 
-			var list = new List<NavMeshBuildSource>();
-			NavMeshBuilder.CollectSources(this.Water.transform, -1, NavMeshCollectGeometry.PhysicsColliders, NavMesh.GetAreaFromName("Not Walkable"), new List<NavMeshBuildMarkup>(), list);
-			return list;
+			return GetNavMeshBuildSources(this.Water.transform, NavMeshNotWalkableArea);
 		}
 
 		/*public static bool GetNavMeshBuildSourceFromCollider(Collider collider, out NavMeshBuildSource source)
