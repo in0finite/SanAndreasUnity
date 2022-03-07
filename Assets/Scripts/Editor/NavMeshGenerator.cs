@@ -236,7 +236,7 @@ namespace SanAndreasUnity.Editor
                 m_navMeshData,
                 navMeshBuildSettings,
                 navMeshBuildSources,
-                new Bounds(cell.transform.position, Vector3.one * cell.WorldSize));
+                new Bounds(cell.transform.position, new Vector3(cell.WorldSize, (cell.interiorHeightOffset + 1000f + 300f) * 2f, cell.WorldSize)));
 
             var etaMeasurer = new ETAMeasurer(2f);
 
