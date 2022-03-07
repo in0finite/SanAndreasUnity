@@ -237,13 +237,13 @@ namespace SanAndreasUnity.Editor
 
                 EditorUtilityEx.MarkActiveSceneAsDirty();
 
-                EditorUtility.DisplayProgressBar("", "Creating static geometry...", 0f);
-                cell.CreateStaticGeometry();
-                EditorUtility.DisplayProgressBar("", "Initializing static geometry...", 0f);
-                cell.InitStaticGeometry();
+                EditorUtility.DisplayProgressBar("", "Initializing world...", 0f);
+                cell.InitAll();
 
-                objectsToExport = cell.StaticGeometries
-                    .Select(_ => _.Value.transform)
+                yield return null;
+
+                objectsToExport = cell.gameObject.GetFirstLevelChildrenSingleComponent<MapObject>()
+                    .Select(_ => _.transform)
                     .AppendIf(cell.Water != null, cell.Water.GetTransformOrNull())
                     .ToArray();
             }

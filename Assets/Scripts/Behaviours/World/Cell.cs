@@ -158,6 +158,16 @@ namespace SanAndreasUnity.Behaviours.World
 			return $"{inst.ObjectId}_{inst.Position}_{inst.Rotation}";
 		}
 
+		public void InitAll()
+        {
+			this.CreateStaticGeometry();
+			this.InitStaticGeometry();
+			this.LoadParkedVehicles();
+			this.CreateEnexes();
+			this.LoadWater();
+			this.FinalizeLoad();
+        }
+
 		public void CreateStaticGeometry ()
 		{
 
