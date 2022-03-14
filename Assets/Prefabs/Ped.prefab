@@ -374,6 +374,7 @@ GameObject:
   - component: {fileID: 8031585062060932984}
   - component: {fileID: 4594788420466467901}
   - component: {fileID: 7038296094652462326}
+  - component: {fileID: 614328402837403552}
   m_Layer: 11
   m_Name: Ped
   m_TagString: Player
@@ -547,6 +548,18 @@ NavMeshAgent:
   m_BaseOffset: 0.875
   m_WalkableMask: 5
   m_ObstacleAvoidanceType: 4
+--- !u!114 &614328402837403552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273918895060814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5192eaa721a64d4c9e80632f38623ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1531309216951106
 GameObject:
   m_ObjectHideFlags: 0

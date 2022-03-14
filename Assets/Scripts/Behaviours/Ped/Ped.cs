@@ -40,7 +40,7 @@ namespace SanAndreasUnity.Behaviours
         public CharacterController characterController { get; private set; }
 
 		public NavMeshAgent NavMeshAgent { get; private set; }
-		public MovementAgent MovementAgent { get; private set; } = new MovementAgent();
+		public MovementAgent MovementAgent { get; private set; }
 
 		public float CameraDistance { get { return PedManager.Instance.cameraDistanceFromPed; } set { PedManager.Instance.cameraDistanceFromPed = value; } }
 
@@ -160,6 +160,7 @@ namespace SanAndreasUnity.Behaviours
 			this.PlayerModel = this.GetComponentInChildren<PedModel>();
             this.characterController = this.GetComponent<CharacterController>();
 			this.NavMeshAgent = this.GetComponentOrThrow<NavMeshAgent>();
+			this.MovementAgent = this.GetComponentOrThrow<MovementAgent>();
 			m_weaponHolder = GetComponent<WeaponHolder> ();
 
 			_stateContainer.AddStates(this.GetComponentsInChildren<Peds.States.BaseScriptState> ());
@@ -171,10 +172,6 @@ namespace SanAndreasUnity.Behaviours
 			this.CachedNonAimStates = _stateContainer.States
 				.Where(_ => !(_ is Peds.States.IAimState))
 				.ToArray();
-
-			this.NavMeshAgent.updatePosition = false;
-			this.NavMeshAgent.updateRotation = false;
-			this.NavMeshAgent.updateUpAxis = false;
 
 			this.AwakeForDamage ();
 
@@ -419,9 +416,6 @@ namespace SanAndreasUnity.Behaviours
 
             //if (IsDrivingVehicle)
             //    UpdateWheelTurning();
-
-
-			this.MovementAgent.Update(this.NavMeshAgent);
 
 			this.UpdateDamageStuff ();
 

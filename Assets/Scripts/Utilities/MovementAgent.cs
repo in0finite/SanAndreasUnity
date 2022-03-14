@@ -1,30 +1,39 @@
-using SanAndreasUnity.Importing.Paths;
-using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.Utilities
 {
-    public class MovementAgent
+    public class MovementAgent : MonoBehaviour
     {
+        public NavMeshAgent NavMeshAgent { get; private set; }
+
         private float m_lastTimeWhenSearchedForPath = 0f;
-        private List<PathNodeId> m_path = null;
+
+        /*private List<PathNodeId> m_path = null;
         private int m_pathIndex = -1;
-        private bool m_isSearchingForPath = false;
+        private bool m_isSearchingForPath = false;*/
+
         public Vector3? Destination { get; set; } = null;
         private Vector3? m_lastAssignedDestination = null;
         private Vector3? m_lastPositionWhenAssignedDestination = null;
 
         private float m_lastTimeWhenWarped = 0f;
 
-        public Vector3? NextMovementPos { get; private set; } = null;
-
-        public Vector3 GetDesiredVelocity(NavMeshAgent agent) => agent.desiredVelocity;
+        public Vector3 DesiredVelocity => this.NavMeshAgent.desiredVelocity;
 
 
 
-        public void Update(NavMeshAgent agent)
+        void Awake()
+        {
+            this.NavMeshAgent = this.GetComponentOrThrow<NavMeshAgent>();
+
+            this.NavMeshAgent.updatePosition = false;
+            this.NavMeshAgent.updateRotation = false;
+            this.NavMeshAgent.updateUpAxis = false;
+        }
+
+        void Update()
         {
             /*
                         // check if arrived to next position
@@ -53,6 +62,8 @@ namespace SanAndreasUnity.Behaviours
                 : null;*/
 
 
+            NavMeshAgent agent = this.NavMeshAgent;
+
             Vector3 myPosition = agent.transform.position;
 
             agent.nextPosition = myPosition;
@@ -60,11 +71,11 @@ namespace SanAndreasUnity.Behaviours
                 && Time.time - m_lastTimeWhenWarped > 1f)
             {
                 m_lastTimeWhenWarped = Time.time;
-                
+
                 if (agent.Warp(myPosition))
                 {
                     if (this.Destination.HasValue && agent.isOnNavMesh)
-                        this.SetDestination(agent);
+                        this.SetDestination();
                 }
             }
 
@@ -77,13 +88,13 @@ namespace SanAndreasUnity.Behaviours
 
                 if (agent.hasPath)
                     agent.ResetPath();
-                
+
                 return;
             }
 
             if (Time.time - m_lastTimeWhenSearchedForPath < 0.4f)
                 return;
-            
+
             if (agent.pathPending)
                 return;
 
@@ -92,7 +103,7 @@ namespace SanAndreasUnity.Behaviours
 
             if (!m_lastAssignedDestination.HasValue)
             {
-                this.SetDestination(agent);
+                this.SetDestination();
                 return;
             }
 
@@ -106,10 +117,10 @@ namespace SanAndreasUnity.Behaviours
 
             // we require 10% change, with 1.5 as min
             float requiredPosChange = Mathf.Max(distanceToTarget * 0.1f, 1.5f);
-            
+
             if (deltaPosLength > requiredPosChange)
             {
-                this.SetDestination(agent);
+                this.SetDestination();
                 return;
             }
 
@@ -120,7 +131,7 @@ namespace SanAndreasUnity.Behaviours
             float angleDelta = Vector3.Angle(this.Destination.Value - m_lastPositionWhenAssignedDestination.Value, lastDiffToTarget);
             if (angleDelta > 25f)
             {
-                this.SetDestination(agent);
+                this.SetDestination();
                 return;
             }
 
@@ -133,14 +144,16 @@ namespace SanAndreasUnity.Behaviours
             if (Time.time - m_lastTimeWhenSearchedForPath > regularUpdateInterval
                 && this.Destination.Value != m_lastAssignedDestination.Value)
             {
-                this.SetDestination(agent);
+                this.SetDestination();
                 return;
             }
 
         }
 
-        void SetDestination(NavMeshAgent navMeshAgent)
+        void SetDestination()
         {
+            NavMeshAgent navMeshAgent = this.NavMeshAgent;
+
             m_lastTimeWhenSearchedForPath = Time.time;
             m_lastAssignedDestination = this.Destination.Value;
             m_lastPositionWhenAssignedDestination = navMeshAgent.transform.position;
@@ -164,7 +177,7 @@ namespace SanAndreasUnity.Behaviours
             }
         }
 
-        void OnPathFinished(PathfindingManager.PathResult pathResult)
+        /*void OnPathFinished(PathfindingManager.PathResult pathResult)
         {
             m_isSearchingForPath = false;
             m_lastTimeWhenSearchedForPath = Time.time;
@@ -181,6 +194,6 @@ namespace SanAndreasUnity.Behaviours
             m_path = pathResult.Nodes;
             m_pathIndex = 0;
             NextMovementPos = NodeReader.GetNodeById(m_path[m_pathIndex]).Position;
-        }
+        }*/
     }
 }

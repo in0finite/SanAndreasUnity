@@ -226,7 +226,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             _ped.MovementAgent.Destination = targetPos;
 
-            Vector3 desiredVelocity = _ped.MovementAgent.GetDesiredVelocity(_ped.NavMeshAgent).WithXAndZ();
+            Vector3 desiredVelocity = _ped.MovementAgent.DesiredVelocity.WithXAndZ();
             
             if (desiredVelocity != Vector3.zero)
             {
