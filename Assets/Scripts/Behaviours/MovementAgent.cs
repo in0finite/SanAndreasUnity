@@ -60,11 +60,14 @@ namespace SanAndreasUnity.Behaviours
                 && Time.time - m_lastTimeWhenWarped > 1f)
             {
                 m_lastTimeWhenWarped = Time.time;
-                agent.Warp(myPosition);
-
-                if (this.Destination.HasValue)
-                    this.SetDestination(agent);
+                
+                if (agent.Warp(myPosition))
+                {
+                    if (this.Destination.HasValue && agent.isOnNavMesh)
+                        this.SetDestination(agent);
+                }
             }
+
             //this.NavMeshAgent.velocity = this.Velocity;
 
             if (!this.Destination.HasValue)
