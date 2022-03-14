@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace SanAndreasUnity.Behaviours
 {
@@ -78,11 +79,15 @@ namespace SanAndreasUnity.Behaviours
         private static readonly FieldInfo s_leftNodeField = s_nodeType.GetField("<Left>k__BackingField", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo s_itemNodeField = s_nodeType.GetField("<Item>k__BackingField", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
+        [SerializeField] private int m_navMeshPathfindingIterationsPerFrame = 100;
+
 
 
         protected override void OnSingletonStart()
         {
             this.BackgroundJobRunner.EnsureBackgroundThreadStarted();
+
+            NavMesh.pathfindingIterationsPerFrame = m_navMeshPathfindingIterationsPerFrame;
         }
 
         protected override void OnSingletonDisable()

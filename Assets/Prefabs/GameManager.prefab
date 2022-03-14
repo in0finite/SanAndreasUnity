@@ -549,3 +549,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_maxTimePerFrameMs: 0
+  m_navMeshPathfindingIterationsPerFrame: 1000
