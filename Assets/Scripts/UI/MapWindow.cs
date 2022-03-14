@@ -293,12 +293,16 @@ namespace SanAndreasUnity.UI {
 			}
 			else if (m_pathType == PathType.NavMesh)
             {
+				var sw = System.Diagnostics.Stopwatch.StartNew();
+
 				if (NavMesh.SamplePosition(targetPos, out var hit, 300f, -1))
 					targetPos = hit.position;
 
 				var path = new NavMeshPath();
 				if (NavMesh.CalculatePath(sourcePos, targetPos, -1, path))
 					m_navMeshPathToWaypoint = path.corners;
+
+				Debug.Log($"Nav mesh path calculation done - status {path.status}, num corners {m_navMeshPathToWaypoint?.Length ?? 0}, time {sw.ElapsedMilliseconds} ms");
             }
 		}
 
