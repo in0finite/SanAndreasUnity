@@ -38,6 +38,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             this.LeaderPed = null;
             _currentlyEngagedPed = null;
 
+            _ped.MovementAgent.Destination = null;
+
             base.OnBecameInactive();
         }
 
@@ -125,6 +127,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public override void UpdateState()
         {
+            _ped.MovementAgent.Destination = null;
+
             if (null == this.LeaderPed)
             {
                 _pedAI.StartIdling();
@@ -216,10 +220,18 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (this.MyPed.IsInVehicle)
                 return;
 
-            Vector3 diff = targetPos - _ped.transform.position;
-            float distance = diff.ToVec2WithXAndZ().magnitude;
+            _ped.MovementAgent.Destination = targetPos;
 
-            if (distance > currentStoppingDistance)
+            /*Vector3? nextMovementPos = _movementAgent.NextMovementPos;
+            if (!nextMovementPos.HasValue)
+                return;
+
+            Vector3 diff = nextMovementPos.Value - _ped.transform.position;
+*/
+            Vector3 diff = _ped.NavMeshAgent.desiredVelocity.WithXAndZ();
+            float distance = diff.magnitude;
+
+            if (distance > 0.001f)
             {
                 Vector3 diffDir = diff.normalized;
 

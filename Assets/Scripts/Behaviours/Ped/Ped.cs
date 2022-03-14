@@ -40,6 +40,7 @@ namespace SanAndreasUnity.Behaviours
         public CharacterController characterController { get; private set; }
 
 		public NavMeshAgent NavMeshAgent { get; private set; }
+		public MovementAgent MovementAgent { get; private set; } = new MovementAgent();
 
 		public float CameraDistance { get { return PedManager.Instance.cameraDistanceFromPed; } set { PedManager.Instance.cameraDistanceFromPed = value; } }
 
@@ -173,6 +174,7 @@ namespace SanAndreasUnity.Behaviours
 
 			this.NavMeshAgent.updatePosition = false;
 			this.NavMeshAgent.updateRotation = false;
+			this.NavMeshAgent.updateUpAxis = false;
 
 			this.AwakeForDamage ();
 
@@ -419,7 +421,7 @@ namespace SanAndreasUnity.Behaviours
             //    UpdateWheelTurning();
 
 
-			this.NavMeshAgent.nextPosition = this.transform.position;
+			this.MovementAgent.Update(this);
 
 			this.UpdateDamageStuff ();
 
