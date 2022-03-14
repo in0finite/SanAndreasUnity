@@ -421,7 +421,7 @@ namespace SanAndreasUnity.Behaviours
             //    UpdateWheelTurning();
 
 
-			this.MovementAgent.Update(this);
+			this.MovementAgent.Update(this.NavMeshAgent);
 
 			this.UpdateDamageStuff ();
 

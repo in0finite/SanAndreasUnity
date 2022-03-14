@@ -302,7 +302,7 @@ namespace SanAndreasUnity.UI {
 				if (NavMesh.CalculatePath(sourcePos, targetPos, -1, path))
 					m_navMeshPathToWaypoint = path.corners;
 
-				Debug.Log($"Nav mesh path calculation done - status {path.status}, num corners {m_navMeshPathToWaypoint?.Length ?? 0}, time {sw.ElapsedMilliseconds} ms");
+				Debug.Log($"Nav mesh path calculation done - status {path.status}, num corners {m_navMeshPathToWaypoint?.Length ?? 0}, time {sw.Elapsed.TotalMilliseconds} ms");
             }
 		}
 

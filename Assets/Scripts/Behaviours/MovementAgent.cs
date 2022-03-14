@@ -22,7 +22,7 @@ namespace SanAndreasUnity.Behaviours
 
 
 
-        public void Update(Ped ped)
+        public void Update(NavMeshAgent agent)
         {
             /*
                         // check if arrived to next position
@@ -51,17 +51,17 @@ namespace SanAndreasUnity.Behaviours
                 : null;*/
 
 
-            Vector3 myPosition = ped.transform.position;
+            Vector3 myPosition = agent.transform.position;
 
-            ped.NavMeshAgent.nextPosition = myPosition;
-            if (ped.NavMeshAgent.nextPosition.WithXAndZ() != myPosition.WithXAndZ()
+            agent.nextPosition = myPosition;
+            if (agent.nextPosition.WithXAndZ() != myPosition.WithXAndZ()
                 && Time.time - m_lastTimeWhenWarped > 1f)
             {
                 m_lastTimeWhenWarped = Time.time;
-                ped.NavMeshAgent.Warp(myPosition);
+                agent.Warp(myPosition);
 
                 if (this.Destination.HasValue)
-                    this.SetDestination(ped);
+                    this.SetDestination(agent);
             }
             //this.NavMeshAgent.velocity = this.Velocity;
 
@@ -70,8 +70,8 @@ namespace SanAndreasUnity.Behaviours
                 m_lastAssignedDestination = null;
                 m_lastPositionWhenAssignedDestination = null;
 
-                if (ped.NavMeshAgent.hasPath)
-                    ped.NavMeshAgent.ResetPath();
+                if (agent.hasPath)
+                    agent.ResetPath();
                 
                 return;
             }
@@ -79,15 +79,15 @@ namespace SanAndreasUnity.Behaviours
             if (Time.time - m_lastTimeWhenSearchedForPath < 0.4f)
                 return;
             
-            if (ped.NavMeshAgent.pathPending)
+            if (agent.pathPending)
                 return;
 
-            if (!ped.NavMeshAgent.isOnNavMesh)
+            if (!agent.isOnNavMesh)
                 return;
 
             if (!m_lastAssignedDestination.HasValue)
             {
-                this.SetDestination(ped);
+                this.SetDestination(agent);
                 return;
             }
 
@@ -104,7 +104,7 @@ namespace SanAndreasUnity.Behaviours
             
             if (deltaPosLength > requiredPosChange)
             {
-                this.SetDestination(ped);
+                this.SetDestination(agent);
                 return;
             }
 
@@ -115,7 +115,7 @@ namespace SanAndreasUnity.Behaviours
             float angleDelta = Vector3.Angle(this.Destination.Value - m_lastPositionWhenAssignedDestination.Value, lastDiffToTarget);
             if (angleDelta > 25f)
             {
-                this.SetDestination(ped);
+                this.SetDestination(agent);
                 return;
             }
 
@@ -128,34 +128,34 @@ namespace SanAndreasUnity.Behaviours
             if (Time.time - m_lastTimeWhenSearchedForPath > regularUpdateInterval
                 && this.Destination.Value != m_lastAssignedDestination.Value)
             {
-                this.SetDestination(ped);
+                this.SetDestination(agent);
                 return;
             }
 
         }
 
-        void SetDestination(Ped ped)
+        void SetDestination(NavMeshAgent navMeshAgent)
         {
             m_lastTimeWhenSearchedForPath = Time.time;
             m_lastAssignedDestination = this.Destination.Value;
-            m_lastPositionWhenAssignedDestination = ped.transform.position;
+            m_lastPositionWhenAssignedDestination = navMeshAgent.transform.position;
 
             // here we need to sample position on navmesh first, because otherwise agent will fail
             // to calculate path if target position is not on navmesh, and as a result he will be stopped
 
             // there is a performance problem: if target position is on isolated part of navmesh,
             // path calculation will take too long because the algorithm tries to go through all
-            // surrounding nodes
+            // surrounding nodes, and in the meantime agent stays in place
 
-            // TODO: maybe try to manually calculate path and assign it to agent ?
+            // that's why we manually calculate path and assign it to agent - in this case, there is no waiting
+            // for path to be calculated asyncly, and agent starts moving immediately. The potential problem
+            // is that CalculatePath() can take 1-2 ms.
 
-            if (NavMesh.SamplePosition(this.Destination.Value, out var hit, 100f, ped.NavMeshAgent.areaMask))
+            if (NavMesh.SamplePosition(this.Destination.Value, out var hit, 100f, navMeshAgent.areaMask))
             {
                 var navMeshPath = new NavMeshPath();
-                NavMesh.CalculatePath(ped.NavMeshAgent.nextPosition, hit.position, ped.NavMeshAgent.areaMask, navMeshPath);
-                ped.NavMeshAgent.path = navMeshPath;
-
-                //ped.NavMeshAgent.SetDestination(hit.position);
+                NavMesh.CalculatePath(navMeshAgent.nextPosition, hit.position, navMeshAgent.areaMask, navMeshPath);
+                navMeshAgent.path = navMeshPath;
             }
         }
 
