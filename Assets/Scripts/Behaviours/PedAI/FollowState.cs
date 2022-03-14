@@ -220,24 +220,21 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             if (this.MyPed.IsInVehicle)
                 return;
 
-            _ped.MovementAgent.Destination = targetPos;
-
-            /*Vector3? nextMovementPos = _movementAgent.NextMovementPos;
-            if (!nextMovementPos.HasValue)
+            float distance = (_ped.transform.position - targetPos).magnitude;
+            if (distance <= currentStoppingDistance)
                 return;
 
-            Vector3 diff = nextMovementPos.Value - _ped.transform.position;
-*/
-            Vector3 diff = _ped.NavMeshAgent.desiredVelocity.WithXAndZ();
-            float distance = diff.magnitude;
+            _ped.MovementAgent.Destination = targetPos;
 
-            if (distance > 0.001f)
+            Vector3 desiredVelocity = _ped.MovementAgent.GetDesiredVelocity(_ped.NavMeshAgent).WithXAndZ();
+            
+            if (desiredVelocity != Vector3.zero)
             {
-                Vector3 diffDir = diff.normalized;
+                Vector3 moveInput = desiredVelocity.normalized;
 
                 this.MyPed.IsRunOn = true;
-                this.MyPed.Movement = diffDir;
-                this.MyPed.Heading = diffDir;
+                this.MyPed.Movement = moveInput;
+                this.MyPed.Heading = moveInput;
             }
         }
 

@@ -20,6 +20,8 @@ namespace SanAndreasUnity.Behaviours
 
         public Vector3? NextMovementPos { get; private set; } = null;
 
+        public Vector3 GetDesiredVelocity(NavMeshAgent agent) => agent.desiredVelocity;
+
 
 
         public void Update(NavMeshAgent agent)
