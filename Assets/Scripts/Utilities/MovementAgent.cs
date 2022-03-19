@@ -67,16 +67,28 @@ namespace SanAndreasUnity.Utilities
             Vector3 myPosition = agent.transform.position;
 
             agent.nextPosition = myPosition;
-            if (agent.nextPosition.WithXAndZ() != myPosition.WithXAndZ()
+
+            Vector3 retreivedNextPosition = agent.nextPosition;
+
+            if (retreivedNextPosition.WithXAndZ() != myPosition.WithXAndZ()
                 && Time.time - m_lastTimeWhenWarped > 1f)
             {
                 m_lastTimeWhenWarped = Time.time;
 
+                bool bWarp = false;
+                bool bSetDestination = false;
+                
                 if (agent.Warp(myPosition))
                 {
+                    bWarp = true;
                     if (this.Destination.HasValue && agent.isOnNavMesh)
+                    {
                         this.SetDestination();
+                        bSetDestination = true;
+                    }
                 }
+
+                Debug.Log($"warped agent {this.name} - bWarp {bWarp}, isOnNavMesh {agent.isOnNavMesh}, pos diff {retreivedNextPosition - myPosition}, bSetDestination {bSetDestination}", this);
             }
 
             //this.NavMeshAgent.velocity = this.Velocity;
