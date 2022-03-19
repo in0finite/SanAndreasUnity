@@ -70,8 +70,8 @@ namespace SanAndreasUnity.Utilities
 
             Vector3 retreivedNextPosition = agent.nextPosition;
 
-            if (retreivedNextPosition.WithXAndZ() != myPosition.WithXAndZ()
-                && Time.time - m_lastTimeWhenWarped > 1f)
+            if (Time.time - m_lastTimeWhenWarped > 1f
+                && (retreivedNextPosition.WithXAndZ() != myPosition.WithXAndZ() || !agent.isOnNavMesh))
             {
                 m_lastTimeWhenWarped = Time.time;
 
