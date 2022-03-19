@@ -48,7 +48,8 @@ namespace SanAndreasUnity.Editor
                 object newValue = DrawObjectInInspector(
                     fieldInfo.FieldType,
                     fieldInfo.GetValue(objectToDraw),
-                    fieldInfo.Name);
+                    fieldInfo.Name,
+                    isEditable);
 
                 if (isEditable && !fieldInfo.IsInitOnly)
                     fieldInfo.SetValue(objectToDraw, newValue);
@@ -63,12 +64,19 @@ namespace SanAndreasUnity.Editor
                 .SelectMany(t => t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))
                 .Where(p => p.CanRead);
 
+            return DrawPropertiesInInspector(objectToDraw, properties, isEditable);
+        }
+
+        public static object DrawPropertiesInInspector(
+            object objectToDraw, IEnumerable<PropertyInfo> properties, bool isEditable)
+        {
             foreach (var propertyInfo in properties)
             {
                 object newValue = DrawObjectInInspector(
                     propertyInfo.PropertyType,
                     propertyInfo.GetValue(objectToDraw),
-                    propertyInfo.Name);
+                    propertyInfo.Name,
+                    isEditable);
 
                 if (isEditable && propertyInfo.CanWrite)
                     propertyInfo.SetValue(objectToDraw, newValue);
@@ -80,10 +88,11 @@ namespace SanAndreasUnity.Editor
         public static object DrawObjectInInspector(
             Type type,
             object value,
-            string name)
+            string name,
+            bool isEditable)
         {
             string labelText = $"{name}: ";
-
+            
             if (typeof(Component).IsAssignableFrom(type))
             {
                 return EditorGUILayout.ObjectField(labelText, (Component)value, type, true);
@@ -105,29 +114,32 @@ namespace SanAndreasUnity.Editor
             }
             else if (type == typeof(string))
             {
-                return EditorGUILayout.TextField(labelText, (string)value);
+                if (isEditable)
+                    return EditorGUILayout.TextField(labelText, (string)value);
             }
             else if (type == typeof(int))
             {
-                return EditorGUILayout.IntField(labelText, (int)value);
+                if (isEditable)
+                    return EditorGUILayout.IntField(labelText, (int)value);
             }
             else if (type == typeof(uint))
             {
-                return (uint)EditorGUILayout.IntField(labelText, (int)(uint)value);
+                if (isEditable)
+                    return (uint)EditorGUILayout.IntField(labelText, (int)(uint)value);
             }
             else if (type == typeof(float))
             {
-                return EditorGUILayout.FloatField(labelText, (float)value);
+                if (isEditable)
+                    return EditorGUILayout.FloatField(labelText, (float)value);
             }
             else if (type == typeof(bool))
             {
-                return EditorGUILayout.Toggle(labelText, (bool)value);
+                if (isEditable)
+                    return EditorGUILayout.Toggle(labelText, (bool)value);
             }
-            else
-            {
-                EditorGUILayout.LabelField($"{labelText} {value}");
-                return value;
-            }
+
+            EditorGUILayout.LabelField($"{labelText} {value}");
+            return value;
         }
 
         public static bool DisplayPausableProgressBar(string title, string text, float progress, string dialogText, string ok, string cancel)
