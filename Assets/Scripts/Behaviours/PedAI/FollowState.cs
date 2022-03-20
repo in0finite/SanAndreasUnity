@@ -224,12 +224,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             }
 
             _ped.MovementAgent.Destination = targetPos;
-
-            Vector3? calculatedDestination = _ped.MovementAgent.CalculatedDestination;
-            Vector3 targetPosToCalculateDistance = ignoreCalculatedDestination ? targetPos : calculatedDestination.GetValueOrDefault(targetPos);
-            float distance = (_ped.transform.position - targetPosToCalculateDistance).magnitude;
-            if (distance <= currentStoppingDistance)
-                return;
+            _ped.MovementAgent.StoppingDistance = currentStoppingDistance;
 
             Vector3 desiredVelocity = _ped.MovementAgent.DesiredVelocity.WithXAndZ();
             

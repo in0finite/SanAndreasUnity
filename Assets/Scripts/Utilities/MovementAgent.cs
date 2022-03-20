@@ -21,13 +21,30 @@ namespace SanAndreasUnity.Utilities
         private float m_lastTimeWhenWarped = 0f;
         private float m_timeSinceSampledOffNavMesh = 0f;
 
-        public Vector3 DesiredVelocity => m_sampledPosOffNavMesh.HasValue
-            ? (m_sampledPosOffNavMesh.Value - this.NavMeshAgent.transform.position).normalized
-            : this.NavMeshAgent.desiredVelocity;
+        public Vector3 DesiredVelocity
+        {
+            get
+            {
+                if (!m_sampledPosOffNavMesh.HasValue)
+                    return this.NavMeshAgent.desiredVelocity;
+
+                Vector3 diff = m_sampledPosOffNavMesh.Value - this.NavMeshAgent.transform.position;
+                float distance = diff.magnitude;
+                if (distance <= this.StoppingDistance)
+                    return Vector3.zero;
+                return diff / distance;
+            }
+        }
 
         public Vector3? CalculatedDestination { get; private set; } = null;
 
         private Vector3? m_sampledPosOffNavMesh = null;
+
+        public float StoppingDistance
+        {
+            get => this.NavMeshAgent.stoppingDistance;
+            set => this.NavMeshAgent.stoppingDistance = value;
+        }
 
 
 
