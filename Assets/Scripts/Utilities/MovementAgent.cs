@@ -71,6 +71,8 @@ namespace SanAndreasUnity.Utilities
 
             NavMeshAgent agent = this.NavMeshAgent;
 
+            // TODO: handle case when Agent is disabled
+
             Vector3 myPosition = agent.transform.position;
 
             agent.nextPosition = myPosition;
@@ -95,7 +97,7 @@ namespace SanAndreasUnity.Utilities
                     }
                 }
 
-                Debug.Log($"warped agent {agent.name} - bWarp {bWarp}, isOnNavMesh {agent.isOnNavMesh}, pos diff {retreivedNextPosition - myPosition}, bSetDestination {bSetDestination}", this);
+                //Debug.Log($"warped agent {agent.name} - bWarp {bWarp}, isOnNavMesh {agent.isOnNavMesh}, pos diff {retreivedNextPosition - myPosition}, bSetDestination {bSetDestination}", this);
             }
 
             // no need to set velocity, it's automatically set by Agent
@@ -118,7 +120,7 @@ namespace SanAndreasUnity.Utilities
                     if (NavMesh.SamplePosition(myPosition, out var hit, 150f, agent.areaMask))
                         m_sampledPosOffNavMesh = hit.position;
 
-                    Debug.Log($"Tried to sample position off nav mesh - agent {agent.name}, sampled pos {m_sampledPosOffNavMesh}, distance {hit.distance}", this);
+                    //Debug.Log($"Tried to sample position off nav mesh - agent {agent.name}, sampled pos {m_sampledPosOffNavMesh}, distance {hit.distance}", this);
                 }
             }
             else
@@ -191,6 +193,18 @@ namespace SanAndreasUnity.Utilities
             if (Time.time - m_lastTimeWhenSearchedForPath > regularUpdateInterval
                 && this.Destination.Value != m_lastAssignedDestination.Value)
             {
+                this.SetDestination();
+                return;
+            }
+
+            // handle cases when destination changes by significant amount, but it's not recognized
+            // by "delta position" method above
+
+            float deltaInPosition = (this.Destination.Value - m_lastAssignedDestination.Value).magnitude;
+            float currentDistance = (m_lastAssignedDestination.Value - myPosition).magnitude;
+            if (deltaInPosition > currentDistance)
+            {
+                Debug.Log($"delta pos higher than current distance - agent {agent.name}, delta {deltaInPosition}, current distance {currentDistance}", this);
                 this.SetDestination();
                 return;
             }
