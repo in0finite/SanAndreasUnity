@@ -22,6 +22,8 @@ namespace SanAndreasUnity.Utilities
 
         public Vector3 DesiredVelocity => this.NavMeshAgent.desiredVelocity;
 
+        public Vector3? CalculatedDestination { get; private set; } = null;
+
 
 
         void Awake()
@@ -91,12 +93,17 @@ namespace SanAndreasUnity.Utilities
                 Debug.Log($"warped agent {this.name} - bWarp {bWarp}, isOnNavMesh {agent.isOnNavMesh}, pos diff {retreivedNextPosition - myPosition}, bSetDestination {bSetDestination}", this);
             }
 
+            // no need to set velocity, it's automatically set by Agent
             //this.NavMeshAgent.velocity = this.Velocity;
+
+            // update calculated destination
+            this.CalculatedDestination = agent.hasPath ? agent.destination : (Vector3?)null;
 
             if (!this.Destination.HasValue)
             {
                 m_lastAssignedDestination = null;
                 m_lastPositionWhenAssignedDestination = null;
+                this.CalculatedDestination = null;
 
                 if (agent.hasPath)
                     agent.ResetPath();
@@ -169,6 +176,7 @@ namespace SanAndreasUnity.Utilities
             m_lastTimeWhenSearchedForPath = Time.time;
             m_lastAssignedDestination = this.Destination.Value;
             m_lastPositionWhenAssignedDestination = navMeshAgent.transform.position;
+            this.CalculatedDestination = null;
 
             // here we need to sample position on navmesh first, because otherwise agent will fail
             // to calculate path if target position is not on navmesh, and as a result he will be stopped
@@ -186,6 +194,12 @@ namespace SanAndreasUnity.Utilities
                 var navMeshPath = new NavMeshPath();
                 NavMesh.CalculatePath(navMeshAgent.nextPosition, hit.position, navMeshAgent.areaMask, navMeshPath);
                 navMeshAgent.path = navMeshPath;
+
+                this.CalculatedDestination = navMeshAgent.hasPath ? navMeshAgent.destination : (Vector3?)null;
+            }
+            else
+            {
+                // TODO: reset agent's path
             }
         }
 

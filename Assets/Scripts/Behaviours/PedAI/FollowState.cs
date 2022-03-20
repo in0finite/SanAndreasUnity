@@ -127,8 +127,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public override void UpdateState()
         {
-            _ped.MovementAgent.Destination = null;
-
             if (null == this.LeaderPed)
             {
                 _pedAI.StartIdling();
@@ -175,6 +173,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             Vector3 targetPos = this.LeaderPed.transform.position;
             float currentStoppingDistance = 3f;
+            bool ignoreCalculatedDestination = false;
 
             if (this.LeaderPed.IsInVehicleSeat && !this.MyPed.IsInVehicle)
             {
@@ -203,6 +202,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                         // move toward the seat
                         targetPos = closestfreeSeat.tr.position;
                         currentStoppingDistance = 0.01f;
+                        ignoreCalculatedDestination = true;
                     }
                 }
 
@@ -218,13 +218,18 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
 
             if (this.MyPed.IsInVehicle)
+            {
+                _ped.MovementAgent.Destination = null;
                 return;
-
-            float distance = (_ped.transform.position - targetPos).magnitude;
-            if (distance <= currentStoppingDistance)
-                return;
+            }
 
             _ped.MovementAgent.Destination = targetPos;
+
+            Vector3? calculatedDestination = _ped.MovementAgent.CalculatedDestination;
+            Vector3 targetPosToCalculateDistance = ignoreCalculatedDestination ? targetPos : calculatedDestination.GetValueOrDefault(targetPos);
+            float distance = (_ped.transform.position - targetPosToCalculateDistance).magnitude;
+            if (distance <= currentStoppingDistance)
+                return;
 
             Vector3 desiredVelocity = _ped.MovementAgent.DesiredVelocity.WithXAndZ();
             
