@@ -19,10 +19,15 @@ namespace SanAndreasUnity.Utilities
         private Vector3? m_lastPositionWhenAssignedDestination = null;
 
         private float m_lastTimeWhenWarped = 0f;
+        private float m_timeSinceSampledOffNavMesh = 0f;
 
-        public Vector3 DesiredVelocity => this.NavMeshAgent.desiredVelocity;
+        public Vector3 DesiredVelocity => m_sampledPosOffNavMesh.HasValue
+            ? (m_sampledPosOffNavMesh.Value - this.NavMeshAgent.transform.position).normalized
+            : this.NavMeshAgent.desiredVelocity;
 
         public Vector3? CalculatedDestination { get; private set; } = null;
+
+        private Vector3? m_sampledPosOffNavMesh = null;
 
 
 
@@ -90,7 +95,7 @@ namespace SanAndreasUnity.Utilities
                     }
                 }
 
-                Debug.Log($"warped agent {this.name} - bWarp {bWarp}, isOnNavMesh {agent.isOnNavMesh}, pos diff {retreivedNextPosition - myPosition}, bSetDestination {bSetDestination}", this);
+                Debug.Log($"warped agent {agent.name} - bWarp {bWarp}, isOnNavMesh {agent.isOnNavMesh}, pos diff {retreivedNextPosition - myPosition}, bSetDestination {bSetDestination}", this);
             }
 
             // no need to set velocity, it's automatically set by Agent
@@ -98,6 +103,29 @@ namespace SanAndreasUnity.Utilities
 
             // update calculated destination
             this.CalculatedDestination = agent.hasPath ? agent.destination : (Vector3?)null;
+
+            // if agent is off nav mesh for some time, try to get it back
+            if (!agent.isOnNavMesh)
+            {
+                m_timeSinceSampledOffNavMesh += Time.deltaTime;
+                if (m_timeSinceSampledOffNavMesh > 2.5f)
+                {
+                    // try to get back to nav mesh
+                    m_timeSinceSampledOffNavMesh = 0f;
+
+                    m_sampledPosOffNavMesh = this.Destination; // if position can not be sampled, go straight to destination
+
+                    if (NavMesh.SamplePosition(myPosition, out var hit, 150f, agent.areaMask))
+                        m_sampledPosOffNavMesh = hit.position;
+
+                    Debug.Log($"Tried to sample position off nav mesh - agent {agent.name}, sampled pos {m_sampledPosOffNavMesh}, distance {hit.distance}", this);
+                }
+            }
+            else
+            {
+                m_timeSinceSampledOffNavMesh = 0f;
+                m_sampledPosOffNavMesh = null;
+            }
 
             if (!this.Destination.HasValue)
             {
