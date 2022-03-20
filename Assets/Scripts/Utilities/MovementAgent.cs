@@ -71,7 +71,11 @@ namespace SanAndreasUnity.Utilities
 
             NavMeshAgent agent = this.NavMeshAgent;
 
-            // TODO: handle case when Agent is disabled
+            if (!agent.enabled)
+            {
+                this.ResetParams();
+                return;
+            }
 
             Vector3 myPosition = agent.transform.position;
 
@@ -131,13 +135,7 @@ namespace SanAndreasUnity.Utilities
 
             if (!this.Destination.HasValue)
             {
-                m_lastAssignedDestination = null;
-                m_lastPositionWhenAssignedDestination = null;
-                this.CalculatedDestination = null;
-
-                if (agent.hasPath)
-                    agent.ResetPath();
-
+                this.ResetParams();
                 return;
             }
 
@@ -244,6 +242,16 @@ namespace SanAndreasUnity.Utilities
                 navMeshAgent.ResetPath();
                 this.CalculatedDestination = null;
             }
+        }
+
+        private void ResetParams()
+        {
+            m_lastAssignedDestination = null;
+            m_lastPositionWhenAssignedDestination = null;
+            this.CalculatedDestination = null;
+
+            if (this.NavMeshAgent.hasPath)
+                this.NavMeshAgent.ResetPath();
         }
 
         /*void OnPathFinished(PathfindingManager.PathResult pathResult)
