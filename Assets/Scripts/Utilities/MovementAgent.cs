@@ -28,11 +28,16 @@ namespace SanAndreasUnity.Utilities
                 if (!m_destinationPosOffNavMesh.HasValue)
                     return this.NavMeshAgent.desiredVelocity;
 
-                // TODO: if we are in range of destination, don't move
+                Vector3 myPosition = this.NavMeshAgent.transform.position;
+                float stoppingDistance = this.StoppingDistance;
 
-                Vector3 diff = m_destinationPosOffNavMesh.Value - this.NavMeshAgent.transform.position;
+                // if we are in range of destination, don't move
+                if (this.Destination.HasValue && Vector3.Distance(this.Destination.Value, myPosition) <= stoppingDistance)
+                    return Vector3.zero;
+
+                Vector3 diff = m_destinationPosOffNavMesh.Value - myPosition;
                 float distance = diff.magnitude;
-                if (distance <= this.StoppingDistance)
+                if (distance <= stoppingDistance)
                     return Vector3.zero;
                 return diff / distance;
             }
