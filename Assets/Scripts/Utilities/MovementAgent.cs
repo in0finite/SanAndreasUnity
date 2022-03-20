@@ -218,8 +218,7 @@ namespace SanAndreasUnity.Utilities
             m_lastTimeWhenSearchedForPath = Time.time;
             m_lastAssignedDestination = this.Destination.Value;
             m_lastPositionWhenAssignedDestination = navMeshAgent.transform.position;
-            this.CalculatedDestination = null;
-
+            
             // here we need to sample position on navmesh first, because otherwise agent will fail
             // to calculate path if target position is not on navmesh, and as a result he will be stopped
 
@@ -241,7 +240,9 @@ namespace SanAndreasUnity.Utilities
             }
             else
             {
-                // TODO: reset agent's path
+                // if position can not be sampled, we stop the agent
+                navMeshAgent.ResetPath();
+                this.CalculatedDestination = null;
             }
         }
 
