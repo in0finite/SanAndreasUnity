@@ -25,10 +25,12 @@ namespace SanAndreasUnity.Utilities
         {
             get
             {
-                if (!m_sampledPosOffNavMesh.HasValue)
+                if (!m_destinationPosOffNavMesh.HasValue)
                     return this.NavMeshAgent.desiredVelocity;
 
-                Vector3 diff = m_sampledPosOffNavMesh.Value - this.NavMeshAgent.transform.position;
+                // TODO: if we are in range of destination, don't move
+
+                Vector3 diff = m_destinationPosOffNavMesh.Value - this.NavMeshAgent.transform.position;
                 float distance = diff.magnitude;
                 if (distance <= this.StoppingDistance)
                     return Vector3.zero;
@@ -38,7 +40,8 @@ namespace SanAndreasUnity.Utilities
 
         public Vector3? CalculatedDestination { get; private set; } = null;
 
-        private Vector3? m_sampledPosOffNavMesh = null;
+        private Vector3? m_destinationPosOffNavMesh = null;
+        private bool m_hasSampledPosOffNavMesh = false;
 
         public float StoppingDistance
         {
@@ -136,18 +139,29 @@ namespace SanAndreasUnity.Utilities
                     // try to get back to nav mesh
                     m_timeSinceSampledOffNavMesh = 0f;
 
-                    m_sampledPosOffNavMesh = this.Destination; // if position can not be sampled, go straight to destination
+                    m_hasSampledPosOffNavMesh = false;
+                    m_destinationPosOffNavMesh = this.Destination; // if position can not be sampled, go straight to destination
 
                     if (NavMesh.SamplePosition(myPosition, out var hit, 150f, agent.areaMask))
-                        m_sampledPosOffNavMesh = hit.position;
+                    {
+                        m_destinationPosOffNavMesh = hit.position;
+                        m_hasSampledPosOffNavMesh = true;
+                    }
 
                     //Debug.Log($"Tried to sample position off nav mesh - agent {agent.name}, sampled pos {m_sampledPosOffNavMesh}, distance {hit.distance}", this);
+                }
+                else
+                {
+                    // if we are moving toward destination, not sampled position, then update position
+                    if (!m_hasSampledPosOffNavMesh)
+                        m_destinationPosOffNavMesh = this.Destination;
                 }
             }
             else
             {
                 m_timeSinceSampledOffNavMesh = 0f;
-                m_sampledPosOffNavMesh = null;
+                m_hasSampledPosOffNavMesh = false;
+                m_destinationPosOffNavMesh = null;
             }
 
             if (!this.Destination.HasValue)
