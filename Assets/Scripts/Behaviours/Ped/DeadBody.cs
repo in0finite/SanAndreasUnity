@@ -254,7 +254,7 @@ namespace SanAndreasUnity.Behaviours.Peds
         {
             if (NetStatus.IsServer)
             {
-                this.SetDirtyBit(1);
+                this.SetSyncVarDirtyBit(1);
             }
         }
 
