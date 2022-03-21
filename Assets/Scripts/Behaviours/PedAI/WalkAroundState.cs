@@ -94,11 +94,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             _ped.MovementAgent.Destination = _pathMovementData.moveDestination;
             _ped.MovementAgent.StoppingDistance = 0f;
 
-            Vector3 desiredVelocity = _ped.MovementAgent.DesiredVelocity.WithXAndZ();
+            Vector3 moveInput = _ped.MovementAgent.DesiredDirectionXZ;
 
-            if (desiredVelocity != Vector3.zero)
+            if (moveInput != Vector3.zero)
             {
-                Vector3 moveInput = desiredVelocity.normalized;
                 this.MyPed.IsWalkOn = true;
                 this.MyPed.Movement = moveInput;
                 this.MyPed.Heading = moveInput;

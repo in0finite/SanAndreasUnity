@@ -21,12 +21,12 @@ namespace SanAndreasUnity.Utilities
         private float m_lastTimeWhenWarped = 0f;
         private float m_timeWhenSampledOffNavMesh = 0f;
 
-        public Vector3 DesiredVelocity
+        public Vector3 DesiredDirection
         {
             get
             {
                 if (!m_isMovingOffNavMesh)
-                    return this.NavMeshAgent.desiredVelocity;
+                    return this.NavMeshAgent.desiredVelocity.NormalizedOrZero();
 
                 // agent is not on nav mesh
 
@@ -44,6 +44,17 @@ namespace SanAndreasUnity.Utilities
 
                 Vector3 diff = effectiveDestination - myPosition;
                 return diff.normalized;
+            }
+        }
+
+        public Vector3 DesiredDirectionXZ
+        {
+            get
+            {
+                Vector3 desiredDir = this.DesiredDirection;
+                if (desiredDir.y == 0f)
+                    return desiredDir;
+                return desiredDir.WithXAndZ().NormalizedOrZero();
             }
         }
 

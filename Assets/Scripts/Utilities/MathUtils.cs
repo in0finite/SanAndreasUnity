@@ -27,5 +27,13 @@ namespace SanAndreasUnity.Utilities
         {
             return new Vector3(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y), Mathf.Max(a.z, b.z));
         }
+
+        public static Vector3 NormalizedOrZero(this Vector3 vec)
+        {
+            if (vec == Vector3.zero)
+                return Vector3.zero;
+
+            return vec.normalized;
+        }
     }
 }
