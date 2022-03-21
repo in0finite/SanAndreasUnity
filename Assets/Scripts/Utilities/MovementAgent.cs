@@ -19,14 +19,19 @@ namespace SanAndreasUnity.Utilities
         private Vector3? m_lastPositionWhenAssignedDestination = null;
 
         private float m_lastTimeWhenWarped = 0f;
-        private float m_timeSinceSampledOffNavMesh = 0f;
+        private float m_timeWhenSampledOffNavMesh = 0f;
 
         public Vector3 DesiredVelocity
         {
             get
             {
-                if (!m_destinationPosOffNavMesh.HasValue)
+                if (!m_isMovingOffNavMesh)
                     return this.NavMeshAgent.desiredVelocity;
+
+                // agent is not on nav mesh
+
+                if (!this.Destination.HasValue && !m_sampledPosOffNavMesh.HasValue)
+                    return Vector3.zero;
 
                 Vector3 myPosition = this.NavMeshAgent.transform.position;
                 float stoppingDistance = this.StoppingDistance;
@@ -35,18 +40,18 @@ namespace SanAndreasUnity.Utilities
                 if (this.Destination.HasValue && Vector3.Distance(this.Destination.Value, myPosition) <= stoppingDistance)
                     return Vector3.zero;
 
-                Vector3 diff = m_destinationPosOffNavMesh.Value - myPosition;
-                float distance = diff.magnitude;
-                if (distance <= stoppingDistance)
-                    return Vector3.zero;
-                return diff / distance;
+                Vector3 effectiveDestination = m_sampledPosOffNavMesh ?? this.Destination.Value;
+
+                Vector3 diff = effectiveDestination - myPosition;
+                return diff.normalized;
             }
         }
 
         public Vector3? CalculatedDestination { get; private set; } = null;
 
-        private Vector3? m_destinationPosOffNavMesh = null;
-        private bool m_hasSampledPosOffNavMesh = false;
+        private bool m_isMovingOffNavMesh = false;
+        private Vector3? m_sampledPosOffNavMesh = null;
+        //private bool m_hasSampledPosOffNavMesh = false;
 
         public float StoppingDistance
         {
@@ -135,38 +140,29 @@ namespace SanAndreasUnity.Utilities
             // update calculated destination
             this.CalculatedDestination = agent.hasPath ? agent.destination : (Vector3?)null;
 
-            // if agent is off nav mesh for some time, try to get it back
+            // if agent is off nav mesh, try to get it back
             if (!agent.isOnNavMesh)
             {
-                m_timeSinceSampledOffNavMesh += Time.deltaTime;
-                if (m_timeSinceSampledOffNavMesh > 2.5f)
+                m_isMovingOffNavMesh = true; // immediately start moving when agent goes off the nav mesh
+                if (Time.time - m_timeWhenSampledOffNavMesh > 2.5f)
                 {
-                    // try to get back to nav mesh
-                    m_timeSinceSampledOffNavMesh = 0f;
+                    // try to sample position on nav mesh where agent could go
 
-                    m_hasSampledPosOffNavMesh = false;
-                    m_destinationPosOffNavMesh = this.Destination; // if position can not be sampled, go straight to destination
+                    m_timeWhenSampledOffNavMesh = Time.time;
+                    m_sampledPosOffNavMesh = null;
 
                     if (NavMesh.SamplePosition(myPosition, out var hit, 150f, agent.areaMask))
                     {
-                        m_destinationPosOffNavMesh = hit.position;
-                        m_hasSampledPosOffNavMesh = true;
+                        m_sampledPosOffNavMesh = hit.position;
                     }
 
                     //Debug.Log($"Tried to sample position off nav mesh - agent {agent.name}, sampled pos {m_sampledPosOffNavMesh}, distance {hit.distance}", this);
                 }
-                else
-                {
-                    // if we are moving toward destination, not sampled position, then update position
-                    if (!m_hasSampledPosOffNavMesh)
-                        m_destinationPosOffNavMesh = this.Destination;
-                }
             }
             else
             {
-                m_timeSinceSampledOffNavMesh = 0f;
-                m_hasSampledPosOffNavMesh = false;
-                m_destinationPosOffNavMesh = null;
+                m_isMovingOffNavMesh = false;
+                m_sampledPosOffNavMesh = null;
             }
 
             if (!this.Destination.HasValue)
