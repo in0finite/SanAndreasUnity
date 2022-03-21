@@ -48,6 +48,13 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 _enemyPeds.AddIfNotPresent(this.TargetPed);
         }
 
+        public override void OnBecameInactive()
+        {
+            _ped.MovementAgent.Destination = null;
+
+            base.OnBecameInactive();
+        }
+
         public override void UpdateState2Seconds()
         {
             this.ChooseBestWeapon();
@@ -171,6 +178,9 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             {
                 float rangeRequired = updateAttackParams.wasInRange ? 10f : 8f;
 
+                _ped.MovementAgent.Destination = targetHeadPos;
+                _ped.MovementAgent.StoppingDistance = rangeRequired - 2f;
+
                 updateAttackParams.wasInRange = false;
 
                 if (diff.magnitude < rangeRequired)
@@ -180,10 +190,15 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                     this.MyPed.IsAimOn = true;
                     this.MyPed.IsFireOn = true;
                 }
-                else if (Vector2.Distance(ped.transform.position.ToVec2WithXAndZ(), this.MyPed.transform.position.ToVec2WithXAndZ()) > 3f)
+                else
                 {
-                    this.MyPed.IsRunOn = true;
-                    this.MyPed.Movement = dir;
+                    Vector3 moveInput = _ped.MovementAgent.DesiredDirectionXZ;
+                    if (moveInput != Vector3.zero)
+                    {
+                        this.MyPed.IsRunOn = true;
+                        this.MyPed.Movement = moveInput;
+                        this.MyPed.Heading = moveInput;
+                    }
                 }
             }
         }
