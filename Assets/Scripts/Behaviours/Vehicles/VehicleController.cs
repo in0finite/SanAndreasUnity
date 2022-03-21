@@ -38,7 +38,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         WheelSyncList m_net_wheelsData = new WheelSyncList();
 
-        private readonly SyncedBag.StringSyncDictionary m_syncDictionary = new SyncedBag.StringSyncDictionary();
+        private readonly SyncDictionary<string, string> m_syncDictionary = new SyncDictionary<string, string>();
         public SyncedBag ExtraData { get; }
 
         // is it better to place syncvars in Vehicle class ? - that way, there is no need for hooks

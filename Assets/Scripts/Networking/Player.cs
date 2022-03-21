@@ -43,7 +43,7 @@ namespace SanAndreasUnity.Net
 
         public string DescriptionForLogging => "(netId=" + this.netId + ", addr=" + (this.connectionToClient != null ? this.connectionToClient.address : "") + ")";
 
-        private readonly SyncedBag.StringSyncDictionary m_syncDictionary = new SyncedBag.StringSyncDictionary();
+        private readonly SyncDictionary<string, string> m_syncDictionary = new SyncDictionary<string, string>();
         public SyncedBag ExtraData { get; }
 
 
