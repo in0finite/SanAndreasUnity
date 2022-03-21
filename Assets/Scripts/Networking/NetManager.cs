@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using Mirror;
 using SanAndreasUnity.Utilities;
 
@@ -37,7 +39,27 @@ namespace SanAndreasUnity.Net
 		private NetworkServerStatus m_lastServerStatus = NetworkServerStatus.Stopped;
 		public event System.Action onServerStatusChanged = delegate {};
 
-		public static int NumSpawnedNetworkObjects => NetworkIdentity.spawned.Count;
+
+		public static Dictionary<uint, NetworkIdentity> ActiveSpawnedList
+		{
+			get
+			{
+				if (NetworkServer.active)
+				{
+					return NetworkServer.spawned;
+				}
+				else if (NetworkClient.active)
+				{
+					return NetworkClient.spawned;
+				}
+
+
+				throw new Exception(
+					"NetManager.ActiveSpawnedList was accessed before NetworkServer/NetworkClient were active.");
+			}
+		}
+
+		public static int NumSpawnedNetworkObjects => ActiveSpawnedList.Count;
 
 		public static double NetworkTime => Mirror.NetworkTime.time;
 
@@ -150,7 +172,7 @@ namespace SanAndreasUnity.Net
 		/// </summary>
 		public	static	void	StopNetwork() {
 
-		//	NetworkManager.singleton.StopHost ();
+			//	NetworkManager.singleton.StopHost ();
 			NetworkManager.singleton.StopServer ();
 			NetworkManager.singleton.StopClient ();
 
@@ -190,15 +212,15 @@ namespace SanAndreasUnity.Net
 			if (string.IsNullOrEmpty (ip))
 				throw new System.ArgumentException ("IP address empty");
 
-		//	System.Net.IPAddress.Parse ();
+			//	System.Net.IPAddress.Parse ();
 
 		}
 
 		private	static	void	CheckIfOnlineSceneIsAssigned() {
 
-            // we won't use scene management from NetworkManager
-		//	if (string.IsNullOrEmpty (NetManager.onlineScene))
-		//		throw new System.Exception ("Online scene is not assigned");
+			// we won't use scene management from NetworkManager
+			//	if (string.IsNullOrEmpty (NetManager.onlineScene))
+			//		throw new System.Exception ("Online scene is not assigned");
 
 		}
 
@@ -261,13 +283,8 @@ namespace SanAndreasUnity.Net
 
 		public static GameObject GetNetworkObjectById(uint netId)
 		{
-			NetworkIdentity networkIdentity;
-			if (NetworkIdentity.spawned.TryGetValue(netId, out networkIdentity))
-			{
-				if (networkIdentity != null)
-					return networkIdentity.gameObject;
-			}
-			return null;
+			if (!ActiveSpawnedList.TryGetValue(netId, out var networkIdentity)) return null;
+			return networkIdentity != null ? networkIdentity.gameObject : null;
 		}
 
 	}
