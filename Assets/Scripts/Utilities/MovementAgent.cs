@@ -107,16 +107,17 @@ namespace SanAndreasUnity.Utilities
                 return;
             }
 
+            float currentTime = Time.time;
             Vector3 myPosition = agent.transform.position;
 
             agent.nextPosition = myPosition;
 
             Vector3 retreivedNextPosition = agent.nextPosition;
 
-            if (Time.time - m_lastTimeWhenWarped > 1f
+            if (currentTime - m_lastTimeWhenWarped > 1f
                 && (retreivedNextPosition.WithXAndZ() != myPosition.WithXAndZ() || !agent.isOnNavMesh))
             {
-                m_lastTimeWhenWarped = Time.time;
+                m_lastTimeWhenWarped = currentTime;
 
                 bool bWarp = false;
                 bool bSetDestination = false;
@@ -144,11 +145,11 @@ namespace SanAndreasUnity.Utilities
             if (!agent.isOnNavMesh)
             {
                 m_isMovingOffNavMesh = true; // immediately start moving when agent goes off the nav mesh
-                if (Time.time - m_timeWhenSampledOffNavMesh > 2.5f)
+                if (currentTime - m_timeWhenSampledOffNavMesh > 2.5f)
                 {
                     // try to sample position on nav mesh where agent could go
 
-                    m_timeWhenSampledOffNavMesh = Time.time;
+                    m_timeWhenSampledOffNavMesh = currentTime;
                     m_sampledPosOffNavMesh = null;
 
                     if (NavMesh.SamplePosition(myPosition, out var hit, 150f, agent.areaMask))
@@ -171,7 +172,7 @@ namespace SanAndreasUnity.Utilities
                 return;
             }
 
-            if (Time.time - m_lastTimeWhenSearchedForPath < 0.4f)
+            if (currentTime - m_lastTimeWhenSearchedForPath < 0.4f)
                 return;
 
             if (agent.pathPending)
@@ -220,7 +221,7 @@ namespace SanAndreasUnity.Utilities
             // from 5 to 12, with sqrt function, 150 as max distance
             float regularUpdateInterval = 5 + 7 * Mathf.Clamp01(Mathf.Sqrt(Mathf.Min(distanceToTarget, 150f) / 150f));
 
-            if (Time.time - m_lastTimeWhenSearchedForPath > regularUpdateInterval
+            if (currentTime - m_lastTimeWhenSearchedForPath > regularUpdateInterval
                 && this.Destination.Value != m_lastAssignedDestination.Value)
             {
                 this.SetDestination();
