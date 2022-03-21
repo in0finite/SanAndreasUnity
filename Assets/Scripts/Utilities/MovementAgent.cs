@@ -233,6 +233,8 @@ namespace SanAndreasUnity.Utilities
 
             // handle cases when destination changes by significant amount, but it's not recognized
             // by "delta position" method above
+            // - this happens when position delta is too small, but Agent should still do re-path
+            // (for example, he needs to touch the destination object)
 
             float deltaInPosition = (this.Destination.Value - m_lastAssignedDestination.Value).magnitude;
             float currentDistance = (m_lastAssignedDestination.Value - myPosition).magnitude;
