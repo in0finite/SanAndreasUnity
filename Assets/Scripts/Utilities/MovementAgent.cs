@@ -70,6 +70,11 @@ namespace SanAndreasUnity.Utilities
             this.NavMeshAgent.updateUpAxis = false;
         }
 
+        public void RunUpdate()
+        {
+            this.Update();
+        }
+
         void Update()
         {
             /*

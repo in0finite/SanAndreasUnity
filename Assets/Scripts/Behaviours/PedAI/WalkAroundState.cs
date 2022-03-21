@@ -39,6 +39,13 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 _pathMovementData.Cleanup();
         }
 
+        public override void OnBecameInactive()
+        {
+            _ped.MovementAgent.Destination = null;
+
+            base.OnBecameInactive();
+        }
+
         public override void UpdateState()
         {
             if (this.MyPed.IsInVehicleSeat)
@@ -69,7 +76,14 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             }
 
             if (PedAI.ArrivedAtDestinationNode(_pathMovementData, _ped.transform))
+            {
                 PedAI.OnArrivedToDestinationNode(_pathMovementData);
+                if (_pathMovementData.destinationNode.HasValue)
+                {
+                    _ped.MovementAgent.Destination = _pathMovementData.moveDestination;
+                    _ped.MovementAgent.RunUpdate();
+                }
+            }
 
             if (!_pathMovementData.destinationNode.HasValue)
             {
@@ -77,9 +91,18 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return;
             }
 
-            this.MyPed.IsWalkOn = true;
-            this.MyPed.Movement = (_pathMovementData.moveDestination - this.MyPed.transform.position).normalized;
-            this.MyPed.Heading = this.MyPed.Movement;
+            _ped.MovementAgent.Destination = _pathMovementData.moveDestination;
+            _ped.MovementAgent.StoppingDistance = 0f;
+
+            Vector3 desiredVelocity = _ped.MovementAgent.DesiredVelocity.WithXAndZ();
+
+            if (desiredVelocity != Vector3.zero)
+            {
+                Vector3 moveInput = desiredVelocity.normalized;
+                this.MyPed.IsWalkOn = true;
+                this.MyPed.Movement = moveInput;
+                this.MyPed.Heading = moveInput;
+            }
         }
 
         protected internal override void OnMyPedDamaged(DamageInfo dmgInfo, Ped.DamageResult dmgResult)
