@@ -113,9 +113,9 @@ namespace SanAndreasUnity.Net
             F.InvokeEventExceptionSafe(onStart, this);
         }
 
-        public override void OnNetworkDestroy()
+        public override void OnStopClient()
         {
-            base.OnNetworkDestroy();
+            base.OnStopClient();
             
             // log some info about this
             if (!this.isLocalPlayer)
