@@ -231,12 +231,12 @@ namespace SanAndreasUnity.Net
 
 			var netIdentity = go.GetComponentOrThrow<NetworkIdentity>();
 
-			if (netIdentity.clientAuthorityOwner == player.connectionToClient)	// already has authority
+			if (netIdentity.connectionToClient == player.connectionToClient)	// already has authority
 				return;
 
 			// first remove existing authority client
-			if (netIdentity.clientAuthorityOwner != null)
-				netIdentity.RemoveClientAuthority(netIdentity.clientAuthorityOwner);
+			if (netIdentity.connectionToClient != null)
+				netIdentity.RemoveClientAuthority();
 
 			// assign new authority client
 			netIdentity.AssignClientAuthority(player.connectionToClient);
@@ -249,8 +249,8 @@ namespace SanAndreasUnity.Net
 
 			var netIdentity = go.GetComponentOrThrow<NetworkIdentity>();
 
-			if (netIdentity.clientAuthorityOwner != null)
-				netIdentity.RemoveClientAuthority(netIdentity.clientAuthorityOwner);
+			if (netIdentity.connectionToClient != null)
+				netIdentity.RemoveClientAuthority();
 			
 		}
 

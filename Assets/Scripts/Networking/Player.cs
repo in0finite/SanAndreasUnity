@@ -122,7 +122,7 @@ namespace SanAndreasUnity.Net
                 Debug.LogFormat("Player {0} disconnected, time: {1}", this.DescriptionForLogging, F.CurrentDateForLogging);
         }
 
-        void OnOwnedGameObjectChanged(GameObject newGo)
+        void OnOwnedGameObjectChanged(GameObject oldGo, GameObject newGo)
         {
             Debug.LogFormat("Owned game object changed for player (net id {0})", this.netId);
 

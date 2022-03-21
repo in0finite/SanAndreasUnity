@@ -129,7 +129,7 @@ namespace SanAndreasUnity.Net
             this.UpdateClient();
         }
 
-        void OnNetPositionChanged(Vector3 pos)
+        void OnNetPositionChanged(Vector3 oldPos, Vector3 newPos)
         {
             if (NetStatus.IsServer)
                 return;
@@ -137,10 +137,10 @@ namespace SanAndreasUnity.Net
             if (null == this.Rigidbody)
                 return;
 
-            this.Rigidbody.MovePosition(pos);
+            this.Rigidbody.MovePosition(newPos);
         }
 
-        void OnNetRotationChanged(Vector3 eulers)
+        void OnNetRotationChanged(Vector3 oldEulers, Vector3 newEulers)
         {
             if (NetStatus.IsServer)
                 return;
@@ -148,7 +148,7 @@ namespace SanAndreasUnity.Net
             if (null == this.Rigidbody)
                 return;
 
-            this.Rigidbody.MoveRotation(Quaternion.Euler(eulers));
+            this.Rigidbody.MoveRotation(Quaternion.Euler(newEulers));
         }
 
     }

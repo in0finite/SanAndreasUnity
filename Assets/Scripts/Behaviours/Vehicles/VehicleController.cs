@@ -322,29 +322,29 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             
         }
 
-        void OnNetPositionChanged(Vector3 pos)
+        void OnNetPositionChanged(Vector3 oldPos, Vector3 newPos)
         {
             if (NetStatus.IsServer)
                 return;
 
             if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars) {
                 if (m_vehicle != null && m_vehicle.RigidBody != null)
-                    m_vehicle.RigidBody.MovePosition(pos);
+                    m_vehicle.RigidBody.MovePosition(newPos);
             }
         }
 
-        void OnNetRotationChanged(Quaternion rot)
+        void OnNetRotationChanged(Quaternion oldRot, Quaternion newRot)
         {
             if (NetStatus.IsServer)
                 return;
 
             if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars) {
                 if (m_vehicle != null && m_vehicle.RigidBody != null)
-                    m_vehicle.RigidBody.MoveRotation(rot);
+                    m_vehicle.RigidBody.MoveRotation(newRot);
             }
         }
 
-        void OnNetColorsChanged(string stringColors)
+        void OnNetColorsChanged(string oldColors, string stringColors)
         {
             if (NetStatus.IsServer)
                 return;
