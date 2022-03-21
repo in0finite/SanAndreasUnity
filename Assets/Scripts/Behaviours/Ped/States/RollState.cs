@@ -75,7 +75,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			m_ped.SwitchState(this.GetType());
 		}
 
-		void OnDictChanged(Ped.SyncDictionaryStringUint.Operation op, string key, uint value)
+		void OnDictChanged(SyncDictionary<string, uint>.Operation op, string key, uint value)
 		{
 			// switch (op)
 			// {

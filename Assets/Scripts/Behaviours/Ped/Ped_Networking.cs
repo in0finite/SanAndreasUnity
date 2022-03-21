@@ -32,11 +32,9 @@ namespace SanAndreasUnity.Behaviours
         
         public static int NumStateChangesReceived { get; private set; }
 
-        public class SyncDictionaryStringUint : Mirror.SyncDictionary<string, uint> { }
+        public readonly SyncDictionary<string, uint> syncDictionaryStringUint = new SyncDictionary<string, uint>();
 
-        public SyncDictionaryStringUint syncDictionaryStringUint = new SyncDictionaryStringUint();
-
-        private SyncDictionary<string, string> _syncDictionary = new SyncDictionary<string, string>();
+        private readonly SyncDictionary<string, string> _syncDictionary = new SyncDictionary<string, string>();
         public SyncedBag SyncedBag { get; }
 
         [SyncVar] Vector3 m_net_movementInput;

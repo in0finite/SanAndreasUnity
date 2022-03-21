@@ -7,19 +7,26 @@ using System.Collections.Generic;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
-    
     public class VehicleController : NetworkBehaviour
     {
         private Vehicle m_vehicle;
         bool IsControlledByLocalPlayer => m_vehicle.IsControlledByLocalPlayer;
 
         [SyncVar] int m_net_id;
-        [SyncVar(hook = nameof(OnNetColorsChanged))] string m_net_carColors;
+
+        [SyncVar(hook = nameof(OnNetColorsChanged))]
+        string m_net_carColors;
+
         [SyncVar] float m_net_acceleration;
         [SyncVar] float m_net_steering;
         [SyncVar] float m_net_braking;
-        [SyncVar(hook=nameof(OnNetPositionChanged))] Vector3 m_net_position;
-        [SyncVar(hook=nameof(OnNetRotationChanged))] Quaternion m_net_rotation;
+
+        [SyncVar(hook = nameof(OnNetPositionChanged))]
+        Vector3 m_net_position;
+
+        [SyncVar(hook = nameof(OnNetRotationChanged))]
+        Quaternion m_net_rotation;
+
         [SyncVar] Vector3 m_net_linearVelocity;
         [SyncVar] Vector3 m_net_angularVelocity;
         [SyncVar] float m_net_health;
@@ -28,22 +35,22 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             public float brakeTorque;
             public float motorTorque;
+
             public float steerAngle;
+
             //public float travel;
             public float localPosY;
             public float rpm;
         }
 
-        class WheelSyncList : SyncList<WheelSyncData> { }
 
-        WheelSyncList m_net_wheelsData = new WheelSyncList();
+        readonly SyncList<WheelSyncData> m_net_wheelsData = new SyncList<WheelSyncData>();
 
         private readonly SyncDictionary<string, string> m_syncDictionary = new SyncDictionary<string, string>();
         public SyncedBag ExtraData { get; }
 
         // is it better to place syncvars in Vehicle class ? - that way, there is no need for hooks
         // - or we could assign/read syncvars in Update()
-
 
 
         private VehicleController()
@@ -76,15 +83,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             if (!NetStatus.IsServer)
             {
-                F.RunExceptionSafe( () => {
+                F.RunExceptionSafe(() =>
+                {
                     // load vehicle on clients
 
                     Color32[] colors = DeserializeColors(m_net_carColors);
 
-                    m_vehicle = Vehicle.Create(this.gameObject, m_net_id, null, this.transform.position, this.transform.rotation);
+                    m_vehicle = Vehicle.Create(this.gameObject, m_net_id, null, this.transform.position,
+                        this.transform.rotation);
 
                     m_vehicle.SetColors(colors);
-                    
+
                     // update rigid body status
                     this.EnableOrDisableRigidBody();
 
@@ -136,7 +145,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             string[] splits = colorString.Split(';');
 
             if (splits.Length != 4)
-                throw new System.ArgumentException($"Failed to deserialize color - expected 4 components, found {splits.Length}");
+                throw new System.ArgumentException(
+                    $"Failed to deserialize color - expected 4 components, found {splits.Length}");
 
             return new Color32(
                 byte.Parse(splits[0], System.Globalization.CultureInfo.InvariantCulture),
@@ -155,9 +165,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Update()
         {
-            
             // if syncvars are used for updating transform, then disable NetworkTransform, and vice versa
-            m_vehicle.NetTransform.enabled = ! VehicleManager.Instance.syncVehicleTransformUsingSyncVars;
+            m_vehicle.NetTransform.enabled = !VehicleManager.Instance.syncVehicleTransformUsingSyncVars;
 
             // update status of rigid body
             this.EnableOrDisableRigidBody();
@@ -174,17 +183,17 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     this.ResetInput();
                 return;
             }
-            
+
             if (null == Ped.Instance || driverSeat.OccupyingPed != Ped.Instance)
                 return;
-            
+
             // local ped is occupying driver seat
 
             float oldAcc = m_vehicle.Accelerator;
             float oldBrake = m_vehicle.Braking;
             float oldSteer = m_vehicle.Steering;
 
-			if (!GameManager.CanPlayerReadInput())
+            if (!GameManager.CanPlayerReadInput())
                 this.ResetInput();
             else
                 this.ReadInput();
@@ -203,7 +212,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_vehicle.Braking = oldBrake;
                 m_vehicle.Steering = oldSteer;
             }
-
         }
 
         void ProcessSyncvars()
@@ -220,10 +228,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_health = m_vehicle.Health;
 
                 // wheels
-                m_net_wheelsData.Flush();   // remove current list of changes - this ensures that only the current wheel state is sent, and prevents memory leak bug in Mirror
+                m_net_wheelsData
+                    .ClearChanges(); // remove current list of changes - this ensures that only the current wheel state is sent, and prevents memory leak bug in Mirror
                 m_net_wheelsData.Clear();
-                foreach (var wheel in m_vehicle.Wheels) {
-                    m_net_wheelsData.Add(new WheelSyncData() {
+                foreach (var wheel in m_vehicle.Wheels)
+                {
+                    m_net_wheelsData.Add(new WheelSyncData()
+                    {
                         brakeTorque = wheel.Collider.brakeTorque,
                         motorTorque = wheel.Collider.motorTorque,
                         steerAngle = wheel.Collider.steerAngle,
@@ -236,7 +247,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             else
             {
                 // apply input
-                if (!this.IsControlledByLocalPlayer || (this.IsControlledByLocalPlayer && !VehicleManager.Instance.controlInputOnLocalPlayer))
+                if (!this.IsControlledByLocalPlayer || (this.IsControlledByLocalPlayer &&
+                                                        !VehicleManager.Instance.controlInputOnLocalPlayer))
                 {
                     m_vehicle.Accelerator = m_net_acceleration;
                     m_vehicle.Steering = m_net_steering;
@@ -244,9 +256,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 }
 
                 // update wheels
-                if (!this.IsControlledByLocalPlayer || (this.IsControlledByLocalPlayer && !VehicleManager.Instance.controlWheelsOnLocalPlayer))
+                if (!this.IsControlledByLocalPlayer || (this.IsControlledByLocalPlayer &&
+                                                        !VehicleManager.Instance.controlWheelsOnLocalPlayer))
                 {
-                    for (int i=0; i < m_vehicle.Wheels.Count && i < m_net_wheelsData.Count; i++) {
+                    for (int i = 0; i < m_vehicle.Wheels.Count && i < m_net_wheelsData.Count; i++)
+                    {
                         var w = m_vehicle.Wheels[i];
                         var data = m_net_wheelsData[i];
 
@@ -256,6 +270,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                             w.Collider.motorTorque = data.motorTorque;
                             w.Collider.steerAngle = data.steerAngle;
                         }
+
                         //w.Travel = data.travel;
                         w.Child.SetLocalY(data.localPosY);
                         Vehicle.UpdateWheelRotation(w, data.rpm, data.steerAngle);
@@ -314,12 +329,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 F.EnableRigidBody(m_vehicle.RigidBody);
                 return;
             }
-            
-            if (VehicleManager.Instance.whenToDisableRigidBody.Matches(this.IsControlledByLocalPlayer, !NetStatus.IsServer))
+
+            if (VehicleManager.Instance.whenToDisableRigidBody.Matches(this.IsControlledByLocalPlayer,
+                    !NetStatus.IsServer))
                 F.DisableRigidBody(m_vehicle.RigidBody);
             else
                 F.EnableRigidBody(m_vehicle.RigidBody);
-            
         }
 
         void OnNetPositionChanged(Vector3 oldPos, Vector3 newPos)
@@ -327,7 +342,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (NetStatus.IsServer)
                 return;
 
-            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars) {
+            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars)
+            {
                 if (m_vehicle != null && m_vehicle.RigidBody != null)
                     m_vehicle.RigidBody.MovePosition(newPos);
             }
@@ -338,7 +354,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (NetStatus.IsServer)
                 return;
 
-            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars) {
+            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars)
+            {
                 if (m_vehicle != null && m_vehicle.RigidBody != null)
                     m_vehicle.RigidBody.MoveRotation(newRot);
             }
@@ -352,6 +369,5 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (m_vehicle != null)
                 F.RunExceptionSafe(() => m_vehicle.SetColors(DeserializeColors(stringColors)));
         }
-
     }
 }

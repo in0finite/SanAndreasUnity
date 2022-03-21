@@ -8,7 +8,7 @@ namespace SanAndreasUnity.Net
     {
         public static SyncedServerData Instance { get; private set; }
 
-        SyncDictionary<string, string> _syncDictionary = new SyncDictionary<string, string>();
+        readonly SyncDictionary<string, string> _syncDictionary = new SyncDictionary<string, string>();
 
         public static SyncedBag Data { get; private set; } = new SyncedBag(new SyncDictionary<string, string>());
 
