@@ -21,6 +21,8 @@ namespace SanAndreasUnity.Utilities
         private float m_lastTimeWhenWarped = 0f;
         private float m_timeWhenSampledOffNavMesh = 0f;
 
+        public float warpSampleDistance = 4.5f;
+
         public Vector3 DesiredDirection
         {
             get
@@ -138,7 +140,10 @@ namespace SanAndreasUnity.Utilities
                 bool bWarp = false;
                 bool bSetDestination = false;
                 
-                if (agent.Warp(myPosition))
+                // here we sample position to prevent Unity to spam with warning messages saying that agent is
+                // not close to nav mesh
+                if (NavMesh.SamplePosition(myPosition, out var hit, this.warpSampleDistance, agent.areaMask)
+                    && agent.Warp(myPosition))
                 {
                     bWarp = true;
                     if (this.Destination.HasValue && agent.isOnNavMesh)
