@@ -179,7 +179,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 float rangeRequired = updateAttackParams.wasInRange ? 10f : 8f;
 
                 _ped.MovementAgent.Destination = targetHeadPos;
-                _ped.MovementAgent.StoppingDistance = rangeRequired - 2f;
+                _ped.MovementAgent.StoppingDistance = 1f;
 
                 updateAttackParams.wasInRange = false;
 
