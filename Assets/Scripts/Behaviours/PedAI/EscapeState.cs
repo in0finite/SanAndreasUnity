@@ -8,12 +8,26 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         public PathMovementData PathMovementData => _pathMovementData;
 
 
+        public override void OnBecameInactive()
+        {
+            _ped.MovementAgent.Destination = null;
+
+            base.OnBecameInactive();
+        }
+
         public override void UpdateState()
         {
             // TODO: exit vehicle
 
             if (PedAI.ArrivedAtDestinationNode(_pathMovementData, _ped.transform))
+            {
                 PedAI.OnArrivedToDestinationNode(_pathMovementData);
+                if (_pathMovementData.destinationNode.HasValue)
+                {
+                    _ped.MovementAgent.Destination = _pathMovementData.moveDestination;
+                    _ped.MovementAgent.RunUpdate();
+                }
+            }
 
             if (!_pathMovementData.destinationNode.HasValue)
             {
@@ -21,9 +35,17 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return;
             }
 
-            this.MyPed.IsPanicButtonOn = true;
-            this.MyPed.Movement = (_pathMovementData.moveDestination - this.MyPed.transform.position).normalized;
-            this.MyPed.Heading = this.MyPed.Movement;
+            _ped.MovementAgent.Destination = _pathMovementData.moveDestination;
+            _ped.MovementAgent.StoppingDistance = 0f;
+
+            Vector3 moveInput = _ped.MovementAgent.DesiredDirectionXZ;
+
+            if (moveInput != Vector3.zero)
+            {
+                this.MyPed.IsPanicButtonOn = true;
+                this.MyPed.Movement = moveInput;
+                this.MyPed.Heading = moveInput;
+            }
         }
 
         protected internal override void OnDrawGizmosSelected()
