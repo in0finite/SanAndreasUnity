@@ -28,6 +28,9 @@ namespace SanAndreasUnity.Editor
         public bool IsSilentMode { get => m_isSilentMode; set => m_isSilentMode = value; }
 
         private CoroutineInfo m_coroutineInfo;
+        public bool FinishedSuccessfully { get; private set; } = false;
+
+        public bool IsRunning => CoroutineManager.IsRunning(m_coroutineInfo);
 
         private int m_numNewlyExportedAssets = 0;
         private int m_numAlreadyExportedAssets = 0;
@@ -91,9 +94,10 @@ namespace SanAndreasUnity.Editor
 
         public void Export(ExportType exportType)
         {
-            if (CoroutineManager.IsRunning(m_coroutineInfo))
+            if (this.IsRunning)
                 return;
 
+            this.FinishedSuccessfully = false;
             m_exportType = exportType;
 
             m_coroutineInfo = CoroutineManager.Start(this.ExportCoroutine(), this.Cleanup, ex => this.Cleanup());
@@ -342,6 +346,8 @@ namespace SanAndreasUnity.Editor
             string displayText = $"number of newly exported asssets {m_numNewlyExportedAssets}, number of already exported assets {m_numAlreadyExportedAssets}, time elapsed {stopwatch.Elapsed}";
             UnityEngine.Debug.Log($"Exporting of assets finished, {displayText}");
             DisplayMessage($"Finished ! \r\n\r\n{displayText}");
+
+            this.FinishedSuccessfully = true;
         }
 
         private static IEnumerable WaitForCompletionOfLoadingJobs(
