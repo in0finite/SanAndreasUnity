@@ -124,7 +124,7 @@ namespace SanAndreasUnity.Editor
             newFolder = FileUtil.GetProjectRelativePath(newFolder);
             if (string.IsNullOrWhiteSpace(newFolder))
             {
-                EditorUtility.DisplayDialog("", "Folder must be inside project.", "Ok");
+                DisplayMessage("Folder must be inside project.");
             }
 
             m_selectedFolder = newFolder;
@@ -154,7 +154,7 @@ namespace SanAndreasUnity.Editor
 
             if (string.IsNullOrWhiteSpace(m_selectedFolder))
             {
-                EditorUtility.DisplayDialog("", "Select a folder first.", "Ok");
+                DisplayMessage("Select a folder first.");
                 yield break;
             }
 
@@ -162,7 +162,7 @@ namespace SanAndreasUnity.Editor
             {
                 if (Selection.transforms.Length == 0)
                 {
-                    EditorUtility.DisplayDialog("", "No object selected.", "Ok");
+                    DisplayMessage("No object selected.");
                     yield break;
                 }
             }
@@ -170,7 +170,7 @@ namespace SanAndreasUnity.Editor
             var cell = Cell.Instance;
             if (null == cell && this.IsExportingFromLoadedWorld)
             {
-                EditorUtility.DisplayDialog("", $"{nameof(Cell)} script not found in scene. Make sure that you started the game with the correct scene.", "Ok");
+                DisplayMessage($"{nameof(Cell)} script not found in scene. Make sure that you started the game with the correct scene.");
                 yield break;
             }
 
@@ -178,7 +178,7 @@ namespace SanAndreasUnity.Editor
             {
                 if (!F.IsAppInEditMode)
                 {
-                    EditorUtility.DisplayDialog("", "This type of export can only run in edit-mode.", "Ok");
+                    DisplayMessage("This type of export can only run in edit-mode.");
                     yield break;
                 }
 
@@ -186,14 +186,14 @@ namespace SanAndreasUnity.Editor
                 
                 if (!Loader.HasLoaded)
                 {
-                    EditorUtility.DisplayDialog("", "Game data must be loaded first.", "Ok");
+                    DisplayMessage("Game data must be loaded first.");
                     yield break;
                 }
 
                 cell = Cell.Instance;
                 if (cell != null)
                 {
-                    if (!EditorUtility.DisplayDialog("", $"Found existing {nameof(Cell)} script in scene. Would you like to use this game object for creating world objects ?\r\n\r\nIf it is part of a prefab, the prefab will be unpacked.", "Ok", "Cancel"))
+                    if (!AskDialog(true, $"Found existing {nameof(Cell)} script in scene. Would you like to use this game object for creating world objects ?\r\n\r\nIf it is part of a prefab, the prefab will be unpacked.", "Ok", "Cancel"))
                         yield break;
 
                     if (PrefabUtility.IsPartOfPrefabInstance(cell.gameObject))
@@ -252,12 +252,12 @@ namespace SanAndreasUnity.Editor
 
             if (0 == objectsToExport.Length)
             {
-                EditorUtility.DisplayDialog("", "No suitable objects to export.", "Ok");
+                DisplayMessage("No suitable objects to export.");
                 yield break;
             }
 
-            if (!EditorUtility.DisplayDialog(
-                "",
+            if (!AskDialog(
+                true,
                 $"Found {objectsToExport.Length} objects to export.\r\nProceed ?",
                 "Ok",
                 "Cancel"))
@@ -382,7 +382,7 @@ namespace SanAndreasUnity.Editor
             EditorUtility.ClearProgressBar();
             string displayText = $"number of newly exported asssets {m_numNewlyExportedAssets}, number of already exported assets {m_numAlreadyExportedAssets}, time elapsed {stopwatch.Elapsed}";
             UnityEngine.Debug.Log($"Exporting of assets finished, {displayText}");
-            EditorUtility.DisplayDialog("", $"Finished ! \r\n\r\n{displayText}", "Ok");
+            DisplayMessage($"Finished ! \r\n\r\n{displayText}");
         }
 
         private static IEnumerable WaitForCompletionOfLoadingJobs(
@@ -611,6 +611,16 @@ namespace SanAndreasUnity.Editor
                 return true;
             }
             return false;
+        }
+
+        private void DisplayMessage(string message)
+        {
+            EditorUtility.DisplayDialog("", message, "Ok");
+        }
+
+        private bool AskDialog(bool defaultValue, string message, string ok, string cancel)
+        {
+            return EditorUtility.DisplayDialog("", message, ok, cancel);
         }
 
     }
