@@ -23,6 +23,8 @@ namespace SanAndreasUnity.Editor
         string TexturesPath => m_selectedFolder + "/Textures";
         string PrefabsPath => m_selectedFolder + "/Prefabs";
 
+        private bool m_isSilentMode = false;
+
         private CoroutineInfo m_coroutineInfo;
 
         private int m_numNewlyExportedAssets = 0;
@@ -615,11 +617,16 @@ namespace SanAndreasUnity.Editor
 
         private void DisplayMessage(string message)
         {
-            EditorUtility.DisplayDialog("", message, "Ok");
+            if (m_isSilentMode)
+                UnityEngine.Debug.Log(message);
+            else
+                EditorUtility.DisplayDialog("", message, "Ok");
         }
 
         private bool AskDialog(bool defaultValue, string message, string ok, string cancel)
         {
+            if (m_isSilentMode)
+                return defaultValue;
             return EditorUtility.DisplayDialog("", message, ok, cancel);
         }
 
