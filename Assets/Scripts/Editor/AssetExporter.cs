@@ -12,10 +12,11 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Editor
 {
-    public class AssetExporter : EditorWindowBase
+    public class AssetExporter
     {
         private const string DefaultFolderName = "ExportedAssets";
         private string m_selectedFolder = "Assets/" + DefaultFolderName;
+        public string SelectedFolder => m_selectedFolder;
 
         string ModelsPath => m_selectedFolder + "/Models";
         string CollisionModelsPath => m_selectedFolder + "/CollisionModels";
@@ -24,13 +25,14 @@ namespace SanAndreasUnity.Editor
         string PrefabsPath => m_selectedFolder + "/Prefabs";
 
         private bool m_isSilentMode = false;
+        public bool IsSilentMode { get => m_isSilentMode; set => m_isSilentMode = value; }
 
         private CoroutineInfo m_coroutineInfo;
 
         private int m_numNewlyExportedAssets = 0;
         private int m_numAlreadyExportedAssets = 0;
 
-        private enum ExportType
+        public enum ExportType
         {
             None = 0,
             FromSelection,
@@ -44,13 +46,17 @@ namespace SanAndreasUnity.Editor
         private bool IsExportingFromLoadedWorld => m_exportType == ExportType.FromLoadedWorld;
         private bool IsExportingFromGameFiles => m_exportType == ExportType.FromGameFiles;
 
+        public bool ExportRenderMeshes { get => m_exportRenderMeshes; set => m_exportRenderMeshes = value; }
+        public bool ExportMaterials { get => m_exportMaterials; set => m_exportMaterials = value; }
+        public bool ExportTextures { get => m_exportTextures; set => m_exportTextures = value; }
+        public bool ExportCollisionMeshes { get => m_exportCollisionMeshes; set => m_exportCollisionMeshes = value; }
+        public bool ExportPrefabs { get => m_exportPrefabs; set => m_exportPrefabs = value; }
+        
         private bool m_exportRenderMeshes = true;
         private bool m_exportMaterials = true;
         private bool m_exportTextures = true;
         private bool m_exportCollisionMeshes = true;
         private bool m_exportPrefabs = false;
-
-        private Vector2 m_scrollViewPos = Vector2.zero;
 
         private struct SaveAssetAction
         {
@@ -62,55 +68,6 @@ namespace SanAndreasUnity.Editor
         private readonly List<SaveAssetAction> m_saveAssetActions = new List<SaveAssetAction>();
 
 
-
-        [MenuItem(EditorCore.MenuName + "/" + "Asset exporter")]
-        static void Init()
-        {
-            var window = GetWindow<AssetExporter>();
-            window.Show();
-        }
-
-        public AssetExporter()
-        {
-            this.titleContent = new GUIContent("Asset exporter");
-            this.minSize = new Vector2(400, 200);
-            this.position = new Rect(this.position.center, new Vector2(400, 500));
-        }
-
-        void OnGUI()
-        {
-            m_scrollViewPos = EditorGUILayout.BeginScrollView(m_scrollViewPos);
-
-            EditorGUILayout.HelpBox(
-                "This tool can export assets from game into Unity project.\n" +
-                "Later you can use these assets inside Unity Editor like any other asset. " +
-                "It will store them in a separate folder, and will only export those objects that were not already exported. This means that you can cancel the process, and when you start it next time, it will skip already exported assets.",
-                MessageType.Info,
-                true);
-
-            GUILayout.Space(30);
-
-            EditorGUILayout.LabelField("Folder where assets are placed: " + m_selectedFolder);
-            
-            m_exportRenderMeshes = EditorGUILayout.Toggle("Export render meshes", m_exportRenderMeshes);
-            m_exportMaterials = EditorGUILayout.Toggle("Export materials", m_exportMaterials);
-            m_exportTextures = EditorGUILayout.Toggle("Export textures", m_exportTextures);
-            m_exportCollisionMeshes = EditorGUILayout.Toggle("Export collision meshes", m_exportCollisionMeshes);
-            m_exportPrefabs = EditorGUILayout.Toggle("Export prefabs", m_exportPrefabs);
-
-            GUILayout.Space(30);
-
-            if (GUILayout.Button("Export from game files"))
-                this.Export(ExportType.FromGameFiles);
-
-            if (GUILayout.Button("Export from world"))
-                this.Export(ExportType.FromLoadedWorld);
-
-            if (GUILayout.Button("Export from selection"))
-                this.Export(ExportType.FromSelection);
-
-            EditorGUILayout.EndScrollView();
-        }
 
         void ChangeFolder()
         {
@@ -132,7 +89,7 @@ namespace SanAndreasUnity.Editor
             m_selectedFolder = newFolder;
         }
 
-        void Export(ExportType exportType)
+        public void Export(ExportType exportType)
         {
             if (CoroutineManager.IsRunning(m_coroutineInfo))
                 return;
