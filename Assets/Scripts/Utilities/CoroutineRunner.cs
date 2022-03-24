@@ -52,7 +52,7 @@ namespace SanAndreasUnity.Utilities
             if (null == coroutineInfo)
                 return false;
 
-            return m_coroutines.Contains(coroutineInfo);
+            return m_coroutines.Contains(coroutineInfo) || m_newCoroutines.Contains(coroutineInfo);
         }
 
         public void Update()
