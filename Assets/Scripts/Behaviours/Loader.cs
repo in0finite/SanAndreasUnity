@@ -486,7 +486,8 @@ namespace SanAndreasUnity.Behaviours
 
 				mouseFix.Apply();
 
-				Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
+				if (!F.IsInHeadlessMode)
+					Cursor.SetCursor(mouseFix, Vector2.zero, CursorMode.Auto);
 			});
 
 			// fist texture
