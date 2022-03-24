@@ -52,8 +52,6 @@ namespace SanAndreasUnity.Editor
             while (Loader.IsLoading)
                 yield return null;
 
-            // TODO: dialog is shown when loading completes, it will block Editor ...
-
             if (!Loader.HasLoaded)
                 throw new Exception("Loader did not finish successfully");
 
