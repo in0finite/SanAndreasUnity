@@ -8,6 +8,7 @@ using SanAndreasUnity.Utilities;
 using UnityEngine.AI;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Behaviours;
+using UnityEditor.SceneManagement;
 
 namespace SanAndreasUnity.Editor
 {
@@ -38,6 +39,11 @@ namespace SanAndreasUnity.Editor
             // skip loading models and textures
             Config.SetString("loadStaticRenderModels", false.ToString());
             Config.SetString("dontLoadTextures", true.ToString());
+
+            // open startup scene
+            EditorSceneManager.OpenScene(EditorBuildSettings.scenes[0].path, OpenSceneMode.Single);
+            yield return null;
+            yield return null;
 
             // load game data
 
@@ -73,6 +79,8 @@ namespace SanAndreasUnity.Editor
             if (!assetExporter.FinishedSuccessfully)
                 throw new Exception("Asset exporter did not finish successfully");
 
+            yield return null;
+
             // we need to create collision for water
             Cell.Singleton.Water.CreateCollisionObjects = true;
             Cell.Singleton.Water.Initialize(Cell.Singleton.WorldSize * Vector2.one);
@@ -97,20 +105,21 @@ namespace SanAndreasUnity.Editor
             if (!navMeshGenerator.FinishedSuccessfully)
                 throw new Exception("Nav mesh generator did not finish successfully");
 
-            navMeshGenerator.SaveNavMesh("Assets/GeneratedNavMeshFromCommandLine.asset");
-
-            Debug.Log("Finished generator of nav mesh from command line");
-
             yield return null;
 
-            // TODO: re-enable
-            //EditorApplication.Exit(0);
+            navMeshGenerator.SaveNavMesh("Assets/GeneratedNavMeshFromCommandLine.asset");
+
+            Debug.Log("Finished generation of nav mesh from command line");
+
+            yield return null;
+            yield return null;
+
+            EditorApplication.Exit(0);
         }
 
         static void OnFinishWithError(Exception exception)
         {
-            // TODO: re-enable
-            //EditorApplication.Exit(1);
+            EditorApplication.Exit(1);
         }
 
         static void DisableObjects()

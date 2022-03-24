@@ -42,6 +42,9 @@ namespace SanAndreasUnity.Editor
             if (!F.IsAppInEditMode)
                 return;
 
+            if (F.IsInHeadlessMode)
+                return;
+
             if (Loader.HasLoaded)
                 EditorUtility.DisplayDialog("", "Successfully loaded game data.", "Ok");
             else
