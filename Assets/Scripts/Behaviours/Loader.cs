@@ -293,6 +293,11 @@ namespace SanAndreasUnity.Behaviours
 
 			if (string.IsNullOrEmpty (path)) {
 				// path is not set
+
+				// if we can't show file browser, throw exception
+				if (F.IsInHeadlessMode || F.IsAppInEditMode)
+					throw new System.InvalidOperationException("Game path is not set");
+
 				// show file browser to user to select path
 				m_showFileBrowser = true;
 			} else {
