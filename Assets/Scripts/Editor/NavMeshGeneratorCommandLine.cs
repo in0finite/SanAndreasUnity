@@ -83,8 +83,11 @@ namespace SanAndreasUnity.Editor
             Cell.Singleton.Water.CreateCollisionObjects = true;
             Cell.Singleton.Water.Initialize(Cell.Singleton.WorldSize * Vector2.one);
 
-            // TODO: just some testing, remove ...
-            DisableObjects();
+            yield return null;
+
+            // if specified, disable objects out of given radius
+            if (CmdLineUtils.TryGetUshortArgument("navMeshGenerationObjectsIncludeRadius", out ushort objectsRadius))
+                DisableObjectsOutOfRadius(objectsRadius);
 
             // now fire up NavMeshGenerator
 
@@ -120,11 +123,11 @@ namespace SanAndreasUnity.Editor
             EditorApplication.Exit(1);
         }
 
-        static void DisableObjects()
+        static void DisableObjectsOutOfRadius(ushort radius)
         {
             Cell.Singleton.gameObject.GetFirstLevelChildrenSingleComponent<MapObject>().ForEach(mapObject =>
             {
-                if (mapObject.transform.Distance(Vector3.zero) > 400)
+                if (mapObject.transform.Distance(Vector3.zero) > radius)
                     mapObject.gameObject.SetActive(false);
             });
         }
