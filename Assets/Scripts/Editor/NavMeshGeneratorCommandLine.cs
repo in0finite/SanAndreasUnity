@@ -6,6 +6,8 @@ using System.Linq;
 using UnityEditor;
 using SanAndreasUnity.Utilities;
 using UnityEngine.AI;
+using SanAndreasUnity.Behaviours.World;
+using SanAndreasUnity.Behaviours;
 
 namespace SanAndreasUnity.Editor
 {
@@ -35,6 +37,18 @@ namespace SanAndreasUnity.Editor
             Config.SetString("loadStaticRenderModels", false.ToString());
             Config.SetString("dontLoadTextures", true.ToString());
 
+            // load game data
+
+            Loader.StartLoading();
+
+            while (Loader.IsLoading)
+                yield return null;
+
+            if (!Loader.HasLoaded)
+                throw new Exception("Loader did not finish successfully");
+
+            // use AssetExporter to load game collision
+
             var assetExporter = new AssetExporter
             {
                 ExportPrefabs = false,
@@ -55,6 +69,15 @@ namespace SanAndreasUnity.Editor
             if (!assetExporter.FinishedSuccessfully)
                 throw new Exception("Asset exporter did not finish successfully");
 
+            // we need to create collision for water
+            Cell.Singleton.Water.CreateCollisionObjects = true;
+            Cell.Singleton.Water.Initialize(Cell.Singleton.WorldSize * Vector2.one);
+
+            // just some testing
+            DisableObjects();
+
+            // now fire up NavMeshGenerator
+
             var navMeshGenerator = new NavMeshGenerator(null);
 
             var navMeshBuildSettings = NavMesh.GetSettingsByID(0);
@@ -74,12 +97,23 @@ namespace SanAndreasUnity.Editor
 
             Debug.Log("Finished generator of nav mesh from command line");
 
+            yield return null;
+
             //EditorApplication.Exit(0);
         }
 
         static void OnFinishWithError(Exception exception)
         {
             //EditorApplication.Exit(1);
+        }
+
+        static void DisableObjects()
+        {
+            Cell.Singleton.gameObject.GetFirstLevelChildrenSingleComponent<MapObject>().ForEach(mapObject =>
+            {
+                if (mapObject.transform.Distance(Vector3.zero) > 300)
+                    mapObject.gameObject.SetActive(false);
+            });
         }
     }
 }

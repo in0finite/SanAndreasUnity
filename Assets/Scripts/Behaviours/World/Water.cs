@@ -16,6 +16,7 @@ namespace SanAndreasUnity.Behaviours.World
         [SerializeField] private GameObject m_waterCollisionPrefab;
 
         [SerializeField] private bool m_createCollisionObjects = false;
+        public bool CreateCollisionObjects { get => m_createCollisionObjects; set => m_createCollisionObjects = value; }
         [SerializeField] private float m_collisionHeight = 200f;
         [SerializeField] private float m_shallowCollisionHeight = 10f;
         [SerializeField] private bool m_createVisualsForCollisionObjects = false;
