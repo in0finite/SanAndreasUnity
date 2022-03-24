@@ -38,24 +38,31 @@ namespace SanAndreasUnity.Utilities
             return true;
         }
 
-        public static bool GetIntArgument(string argName, ref int argValue)
-        {
-            string str = null;
-            if (GetArgument(argName, ref str))
-            {
-                if (int.TryParse(str, out argValue))
-                    return true;
-            }
-            return false;
-        }
-
         public static bool GetUshortArgument(string argName, ref ushort argValue)
         {
             string str = null;
             if (GetArgument(argName, ref str))
             {
-                if (ushort.TryParse(str, out argValue))
+                if (ushort.TryParse(str, out ushort parsedValue))
+                {
+                    argValue = parsedValue;
                     return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool TryGetUshortArgument(string argName, out ushort argValue)
+        {
+            argValue = 0;
+            string str = null;
+            if (GetArgument(argName, ref str))
+            {
+                if (ushort.TryParse(str, out ushort parsedValue))
+                {
+                    argValue = parsedValue;
+                    return true;
+                }
             }
             return false;
         }
