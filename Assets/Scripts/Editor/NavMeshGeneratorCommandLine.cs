@@ -46,6 +46,8 @@ namespace SanAndreasUnity.Editor
             while (Loader.IsLoading)
                 yield return null;
 
+            // TODO: dialog is shown when loading completes, it will block Editor ...
+
             if (!Loader.HasLoaded)
                 throw new Exception("Loader did not finish successfully");
 
@@ -115,7 +117,7 @@ namespace SanAndreasUnity.Editor
         {
             Cell.Singleton.gameObject.GetFirstLevelChildrenSingleComponent<MapObject>().ForEach(mapObject =>
             {
-                if (mapObject.transform.Distance(Vector3.zero) > 300)
+                if (mapObject.transform.Distance(Vector3.zero) > 400)
                     mapObject.gameObject.SetActive(false);
             });
         }
