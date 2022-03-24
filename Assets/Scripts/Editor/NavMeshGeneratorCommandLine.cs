@@ -92,6 +92,7 @@ namespace SanAndreasUnity.Editor
             // now fire up NavMeshGenerator
 
             var navMeshGenerator = new NavMeshGenerator(null);
+            navMeshGenerator.LogProgressPeriodically = true;
 
             var navMeshBuildSettings = NavMesh.GetSettingsByID(0);
             navMeshBuildSettings.maxJobWorkers = CmdLineUtils.TryGetUshortArgument("navMeshGenerationMaxJobWorkers", out ushort maxJobWorkers) ? maxJobWorkers : (uint)2;

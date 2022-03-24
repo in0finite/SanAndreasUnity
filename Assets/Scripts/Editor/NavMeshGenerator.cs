@@ -23,6 +23,8 @@ namespace SanAndreasUnity.Editor
 
         public bool FinishedSuccessfully { get; private set; } = false;
 
+        public bool LogProgressPeriodically { get; set; } = false;
+
 
 
         public NavMeshGenerator(NavMeshData navMeshData)
@@ -190,12 +192,20 @@ namespace SanAndreasUnity.Editor
                 new Bounds(cell.transform.position, new Vector3(cell.WorldSize, (cell.interiorHeightOffset + 1000f + 300f) * 2f, cell.WorldSize)));
 
             var etaMeasurer = new ETAMeasurer(2f);
+            var logStopwatch = System.Diagnostics.Stopwatch.StartNew();
+            var totalUpdateTimeStopwatch = System.Diagnostics.Stopwatch.StartNew();
 
             while (!asyncOperation.isDone)
             {
                 yield return null;
 
                 etaMeasurer.UpdateETA(asyncOperation.progress);
+
+                if (this.LogProgressPeriodically && logStopwatch.Elapsed.TotalSeconds > 20)
+                {
+                    Debug.Log($"Updating nav mesh... ETA: {etaMeasurer.ETA}, progress: {asyncOperation.progress}, elapsed: {totalUpdateTimeStopwatch.Elapsed}");
+                    logStopwatch.Restart();
+                }
 
                 if (EditorUtils.DisplayPausableProgressBar("", $"Updating nav mesh... ETA: {etaMeasurer.ETA}", asyncOperation.progress))
                     yield break;
@@ -210,7 +220,7 @@ namespace SanAndreasUnity.Editor
             }
 
             EditorUtility.ClearProgressBar();
-            DisplayMessage("Nav mesh generation complete !");
+            DisplayMessage($"Nav mesh generation complete !\r\nElapsed time: {totalUpdateTimeStopwatch.Elapsed}");
 
             this.FinishedSuccessfully = true;
         }
