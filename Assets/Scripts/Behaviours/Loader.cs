@@ -149,6 +149,9 @@ namespace SanAndreasUnity.Behaviours
 			if (IsLoading)
 				return;
 
+			CleanupState();
+			IsLoading = true;
+
 			AddLoadingSteps();
 
 			s_coroutine = CoroutineManager.Start(LoadCoroutine(), OnLoadCoroutineFinishedOk, OnLoadCoroutineFinishedWithError);
@@ -202,9 +205,6 @@ namespace SanAndreasUnity.Behaviours
 		private static IEnumerator LoadCoroutine ()
 		{
 
-			CleanupState();
-			IsLoading = true;
-			
 			var stopwatch = System.Diagnostics.Stopwatch.StartNew ();
 
 			Debug.Log("Started loading GTA");
