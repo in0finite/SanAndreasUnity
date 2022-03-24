@@ -13,6 +13,8 @@ namespace SanAndreasUnity.Editor
 {
     public static class NavMeshGeneratorCommandLine
     {
+        // TODO: remove menu item
+        [MenuItem(EditorCore.MenuName + "/" + "Generate nav mesh in batch")]
         private static void Run()
         {
             string[] args = Environment.GetCommandLineArgs();
@@ -73,7 +75,7 @@ namespace SanAndreasUnity.Editor
             Cell.Singleton.Water.CreateCollisionObjects = true;
             Cell.Singleton.Water.Initialize(Cell.Singleton.WorldSize * Vector2.one);
 
-            // just some testing
+            // TODO: just some testing, remove ...
             DisableObjects();
 
             // now fire up NavMeshGenerator
@@ -99,11 +101,13 @@ namespace SanAndreasUnity.Editor
 
             yield return null;
 
+            // TODO: re-enable
             //EditorApplication.Exit(0);
         }
 
         static void OnFinishWithError(Exception exception)
         {
+            // TODO: re-enable
             //EditorApplication.Exit(1);
         }
 

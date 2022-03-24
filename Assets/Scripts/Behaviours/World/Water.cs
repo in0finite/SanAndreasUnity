@@ -118,7 +118,7 @@ namespace SanAndreasUnity.Behaviours.World
 
 
             if (m_createCollisionObjects)
-                CreateCollisionObjects(faces);
+                CreateCollision(faces);
 
         }
 
@@ -199,7 +199,7 @@ namespace SanAndreasUnity.Behaviours.World
             }
         }
 
-        void CreateCollisionObjects(IEnumerable<WaterFace> faces)
+        void CreateCollision(IEnumerable<WaterFace> faces)
         {
             if (null == m_waterCollisionPrefab)
             {
