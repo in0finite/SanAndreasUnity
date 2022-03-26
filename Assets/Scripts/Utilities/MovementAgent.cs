@@ -263,6 +263,30 @@ namespace SanAndreasUnity.Utilities
                 return;
             }
 
+            // handle case caused by bug in NavMesh system - it can not calculate paths that are too
+            // long (or have too many corners). The path returned has status Partial, and it's final
+            // corner is not even close to destination. Not only that it doesn't return full path, but it actually
+            // returns path which contain closest point to destination, which can be totally wrong path.
+
+            // be careful not to mix this case with regular partial paths that happen because destination is really
+            // not reachable. This can actually happen quite often, if destination is, for example, on nearby roof.
+
+            float stoppingDistance = this.StoppingDistance;
+            float distanceToCalculatedDestination = this.CalculatedDestination.HasValue ? Vector3.Distance(this.CalculatedDestination.Value, myPosition) : float.PositiveInfinity;
+            float originalDistanceToCalculatedDestination = this.CalculatedDestination.HasValue ? Vector3.Distance(m_lastPositionWhenAssignedDestination.Value, this.CalculatedDestination.Value) : float.PositiveInfinity;
+
+            if (this.CalculatedDestination.HasValue
+                && currentTime - m_lastTimeWhenSearchedForPath > 3f // seems like it's not needed, but just in case
+                && originalDistanceToCalculatedDestination > 50f // this will make a difference between regular partial paths
+                && originalDistanceToCalculatedDestination > stoppingDistance + 3f // also need to handle case when stopping distance is too large
+                && (distanceToCalculatedDestination < 4f || distanceToCalculatedDestination <= stoppingDistance) // already stopped or close enough
+                && agent.pathStatus == NavMeshPathStatus.PathPartial)
+            {
+                Debug.Log($"re-path due to bug in NavMesh system - agent {agent.name}, distanceToCalculatedDestination {distanceToCalculatedDestination}, originalDistanceToCalculatedDestination {originalDistanceToCalculatedDestination}", this);
+                this.SetDestination();
+                return;
+            }
+
         }
 
         void SetDestination()
@@ -286,6 +310,7 @@ namespace SanAndreasUnity.Utilities
 
             if (NavMesh.SamplePosition(this.Destination.Value, out var hit, 100f, navMeshAgent.areaMask))
             {
+                // TODO: re-use NavMeshPath object
                 var navMeshPath = new NavMeshPath();
                 NavMesh.CalculatePath(navMeshAgent.nextPosition, hit.position, navMeshAgent.areaMask, navMeshPath);
                 navMeshAgent.path = navMeshPath;
@@ -328,5 +353,23 @@ namespace SanAndreasUnity.Utilities
             m_pathIndex = 0;
             NextMovementPos = NodeReader.GetNodeById(m_path[m_pathIndex]).Position;
         }*/
+
+        private void OnDrawGizmosSelected()
+        {
+            if (null == this.NavMeshAgent)
+                return;
+
+            if (!this.NavMeshAgent.hasPath)
+                return;
+
+            Gizmos.color = Color.Lerp(Color.red, Color.black, 0.5f);
+
+            Vector3[] corners = this.NavMeshAgent.path.corners;
+            for (int i = 1; i < corners.Length; i++)
+            {
+                Gizmos.DrawWireSphere(corners[i], 0.75f);
+                Gizmos.DrawLine(corners[i - 1], corners[i]);
+            }
+        }
     }
 }
