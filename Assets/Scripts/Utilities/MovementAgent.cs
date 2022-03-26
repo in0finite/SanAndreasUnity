@@ -10,10 +10,6 @@ namespace SanAndreasUnity.Utilities
 
         private float m_lastTimeWhenSearchedForPath = 0f;
 
-        /*private List<PathNodeId> m_path = null;
-        private int m_pathIndex = -1;
-        private bool m_isSearchingForPath = false;*/
-
         public Vector3? Destination { get; set; } = null;
         private Vector3? m_lastAssignedDestination = null;
         private Vector3? m_lastPositionWhenAssignedDestination = null;
@@ -64,8 +60,7 @@ namespace SanAndreasUnity.Utilities
 
         private bool m_isMovingOffNavMesh = false;
         private Vector3? m_sampledPosOffNavMesh = null;
-        //private bool m_hasSampledPosOffNavMesh = false;
-
+        
         public float StoppingDistance
         {
             get => this.NavMeshAgent.stoppingDistance;
@@ -90,32 +85,6 @@ namespace SanAndreasUnity.Utilities
 
         void Update()
         {
-            /*
-                        // check if arrived to next position
-                        if (m_path != null && Vector2.Distance(ped.transform.position.ToVec2WithXAndZ(), NodeReader.GetNodeById(m_path[m_pathIndex]).Position.ToVec2WithXAndZ())
-                            < NodeReader.GetNodeById(m_path[m_pathIndex]).PathWidth / 2f)
-                        {
-                            // arrived at next position
-                            m_pathIndex ++;
-                            if (m_pathIndex >= m_path.Count)
-                            {
-                                // arrived at destination
-                                m_path = null;
-                                m_pathIndex = -1;
-                                NextMovementPos = null;
-                            }
-                            else
-                            {
-                                // move-on to next path node
-                                NextMovementPos = NodeReader.GetNodeById(m_path[m_pathIndex]).Position;
-                            }
-                        }
-            */
-
-            /*this.NextMovementPos = ped.NavMeshAgent.hasPath
-                ? (Vector3?) ped.NavMeshAgentNextPosition
-                : null;*/
-
 
             NavMeshAgent agent = this.NavMeshAgent;
 
@@ -308,6 +277,9 @@ namespace SanAndreasUnity.Utilities
             // for path to be calculated asyncly, and agent starts moving immediately. The potential problem
             // is that CalculatePath() can take 1-2 ms.
 
+            // TODO: performance optimization: this can be done "asyncly": register pathfinding request, and process
+            // requests from all agents in Update() function of some Manager script, with some time limit (eg. 1 ms)
+
             if (NavMesh.SamplePosition(this.Destination.Value, out var hit, 100f, navMeshAgent.areaMask))
             {
                 // TODO: re-use NavMeshPath object
@@ -334,25 +306,6 @@ namespace SanAndreasUnity.Utilities
             if (this.NavMeshAgent.hasPath)
                 this.NavMeshAgent.ResetPath();
         }
-
-        /*void OnPathFinished(PathfindingManager.PathResult pathResult)
-        {
-            m_isSearchingForPath = false;
-            m_lastTimeWhenSearchedForPath = Time.time;
-
-            if (null == pathResult || !pathResult.IsSuccess)
-            {
-                m_path = null;
-                m_pathIndex = -1;
-                NextMovementPos = null;
-
-                return;
-            }
-
-            m_path = pathResult.Nodes;
-            m_pathIndex = 0;
-            NextMovementPos = NodeReader.GetNodeById(m_path[m_pathIndex]).Position;
-        }*/
 
         private void OnDrawGizmosSelected()
         {
