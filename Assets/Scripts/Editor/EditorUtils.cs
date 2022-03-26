@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SanAndreasUnity.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -157,6 +158,11 @@ namespace SanAndreasUnity.Editor
         public static bool DisplayPausableProgressBar(string title, string text, float progress)
         {
             return DisplayPausableProgressBar(title, text, progress, "Are you sure ?", "Continue", "Quit");
+        }
+
+        public static void FocusSceneViewsOnPosition(Vector3 pos)
+        {
+            SceneView.sceneViews.Cast<SceneView>().ForEach(s => s.LookAt(pos));
         }
     }
 }

@@ -65,7 +65,7 @@ namespace SanAndreasUnity.Editor
 
         void GoTo(PathNode node)
         {
-            SceneView.sceneViews.Cast<SceneView>().ForEach(s => s.LookAt(node.Position));
+            EditorUtils.FocusSceneViewsOnPosition(node.Position);
         }
     }
 }
