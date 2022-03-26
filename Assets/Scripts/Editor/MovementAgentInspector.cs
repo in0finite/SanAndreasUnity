@@ -42,9 +42,7 @@ namespace SanAndreasUnity.Editor
         {
             base.DrawDefaultInspector();
 
-            GUILayout.Space(10);
-            GUILayout.Label("Nav mesh agent info:");
-            GUILayout.Space(10);
+            GUILayout.Space(15);
 
             var movementAgent = (MovementAgent)this.target;
 
@@ -53,7 +51,19 @@ namespace SanAndreasUnity.Editor
                 bool isOnNavMesh = movementAgent.NavMeshAgent.isOnNavMesh;
                 EditorUtils.DrawPropertiesInInspector(movementAgent.NavMeshAgent, isOnNavMesh ? s_propertyInfos : s_propertyInfosWhenNotOnNavMesh, false);
                 EditorGUILayout.LabelField("Diff between simulation position: " + (movementAgent.NavMeshAgent.nextPosition - movementAgent.transform.position));
+                EditorGUILayout.LabelField("Distance to calculated destination: " + Vector3.Distance(movementAgent.transform.position, movementAgent.CalculatedDestination.GetValueOrDefault(Vector3.positiveInfinity)));
+                DisplayGoToButton(movementAgent.CalculatedDestination, "Go to calculated destination");
+                EditorGUILayout.LabelField("Distance to new destination: " + Vector3.Distance(movementAgent.transform.position, movementAgent.Destination.GetValueOrDefault(Vector3.positiveInfinity)));
+                DisplayGoToButton(movementAgent.Destination, "Go to new destination");
             }
+        }
+
+        private void DisplayGoToButton(Vector3? pos, string text)
+        {
+            GUI.enabled = pos.HasValue;
+            if (GUILayout.Button(text))
+                EditorUtils.FocusSceneViewsOnPosition(pos.Value);
+            GUI.enabled = true;
         }
 
     }
