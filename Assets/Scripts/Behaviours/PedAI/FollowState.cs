@@ -173,7 +173,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             Vector3 targetPos = this.LeaderPed.transform.position;
             float currentStoppingDistance = 3f;
-            bool ignoreCalculatedDestination = false;
 
             if (this.LeaderPed.IsInVehicleSeat && !this.MyPed.IsInVehicle)
             {
@@ -202,7 +201,6 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                         // move toward the seat
                         targetPos = closestfreeSeat.tr.position;
                         currentStoppingDistance = 0.01f;
-                        ignoreCalculatedDestination = true;
                     }
                 }
 
