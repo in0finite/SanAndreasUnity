@@ -121,23 +121,18 @@ namespace SanAndreasUnity.Behaviours
 
         private PathResult FindPathInBackground(Vector3 sourcePos, Vector3 destinationPos)
         {
-            var stopwatch = Stopwatch.StartNew();
-            PathResult pathResult = new PathResult { IsSuccess = false };
+
+            // First try including Emergency nodes as source node, then if it fails,
+            // try without Emergency nodes. This is because some of them are isolated in
+            // small groups.
 
             // find closest node of source position
-
-            /*var closestSourceEdge = NodeReader.GetAreasInRadius(sourcePos, 300f)
-                .SelectMany(_ => _.PedNodes)
-                .Where(_ => Vector3.Distance(_.Position, sourcePos) < 1000f)
-                .SelectMany(_ => NodeReader.GetAllLinkedNodes(_).Select(ln => (n1: _, n2: ln)))
-                .MinBy(_ => MathUtils.DistanceFromPointToLineSegment(sourcePos, _.n1.Position, _.n2.Position), default);*/
-
             var closestSourceNode = NodeReader.GetAreasInRadius(sourcePos, 300f)
                 .SelectMany(_ => _.PedNodes)
                 .MinBy(_ => Vector3.Distance(_.Position, sourcePos), PathNode.InvalidNode);
 
             if (closestSourceNode.Equals(PathNode.InvalidNode))
-                return pathResult;
+                return new PathResult { IsSuccess = false };
 
             // find closest node of destination position
             var closestDestinationNode = NodeReader.GetAreasInRadius(destinationPos, 300f)
@@ -145,8 +140,32 @@ namespace SanAndreasUnity.Behaviours
                 .MinBy(_ => Vector3.Distance(_.Position, destinationPos), PathNode.InvalidNode);
 
             if (closestDestinationNode.Equals(PathNode.InvalidNode))
+                return new PathResult { IsSuccess = false };
+
+            var pathResult = FindPathInBackground(closestSourceNode, closestDestinationNode);
+            if (pathResult.IsSuccess)
                 return pathResult;
 
+            // try with non-Emergency node
+
+            if (!closestSourceNode.Flags.EmergencyOnly)
+                return pathResult;
+
+            closestSourceNode = NodeReader.GetAreasInRadius(sourcePos, 300f)
+                .SelectMany(_ => _.PedNodes)
+                .Where(_ => !_.Flags.EmergencyOnly)
+                .MinBy(_ => Vector3.Distance(_.Position, sourcePos), PathNode.InvalidNode);
+
+            if (closestSourceNode.Equals(PathNode.InvalidNode))
+                return pathResult;
+
+            return FindPathInBackground(closestSourceNode, closestDestinationNode);
+        }
+
+        private PathResult FindPathInBackground(PathNode closestSourceNode, PathNode closestDestinationNode)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            PathResult pathResult = new PathResult { IsSuccess = false };
 
             this.RestoreModifiedDatas();
 
