@@ -14,8 +14,6 @@ namespace SanAndreasUnity.Editor
 {
     public static class NavMeshGeneratorCommandLine
     {
-        // TODO: remove menu item
-        [MenuItem(EditorCore.MenuName + "/" + "Generate nav mesh in batch")]
         private static void Run()
         {
             string[] args = Environment.GetCommandLineArgs();
