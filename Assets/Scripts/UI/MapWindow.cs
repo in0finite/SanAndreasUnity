@@ -32,11 +32,12 @@ namespace SanAndreasUnity.UI {
 		private Vector3[] m_navMeshPathToWaypoint = null;
 		private enum PathType
         {
+			NavMeshFull,
 			NavMesh,
 			Ped,
         }
-		private PathType m_pathType = PathType.NavMesh;
-		private static readonly string[] s_pathTypeTexts = new string[] { "NavMesh", "Ped" };
+		private PathType m_pathType = PathType.NavMeshFull;
+		private static readonly string[] s_pathTypeTexts = new string[] { "NavMeshFull", "NavMesh", "Ped" };
 		private int m_selectedPathType = 0;
 
 		private	Vector2	m_lastMousePosition = Vector2.zero;
@@ -291,6 +292,17 @@ namespace SanAndreasUnity.UI {
 					targetPos,
 					OnPathToWaypointFound);
 			}
+			else if (m_pathType == PathType.NavMeshFull)
+            {
+				var sw = System.Diagnostics.Stopwatch.StartNew();
+
+				if (NavMesh.SamplePosition(targetPos, out var hit, 300f, -1))
+					targetPos = hit.position;
+
+				m_navMeshPathToWaypoint = PathfindingManager.CalculateFullNavMeshPath(sourcePos, targetPos, -1).ToArray();
+
+				LogPathCalculationInfo(m_navMeshPathToWaypoint, null, sw.Elapsed.TotalMilliseconds);
+            }
 			else if (m_pathType == PathType.NavMesh)
             {
 				var sw = System.Diagnostics.Stopwatch.StartNew();
@@ -302,12 +314,8 @@ namespace SanAndreasUnity.UI {
 				if (NavMesh.CalculatePath(sourcePos, targetPos, -1, path))
 					m_navMeshPathToWaypoint = path.corners;
 
-				Debug.Log($"Nav mesh path calculation done - " +
-					$"status {path.status}, " +
-					$"num corners {m_navMeshPathToWaypoint?.Length ?? 0}, " +
-					$"total distance {m_navMeshPathToWaypoint?.Skip(1).Select((corner, i) => Vector3.Distance(corner, m_navMeshPathToWaypoint[i])).Sum()}, " +
-					$"time {sw.Elapsed.TotalMilliseconds} ms");
-            }
+				LogPathCalculationInfo(m_navMeshPathToWaypoint, path.status, sw.Elapsed.TotalMilliseconds);
+			}
 		}
 
 		private void OnPathToWaypointFound(PathfindingManager.PathResult pathResult)
@@ -322,6 +330,16 @@ namespace SanAndreasUnity.UI {
 			else
 				m_pathToWaypoint = null;
         }
+
+		private static void LogPathCalculationInfo(
+			Vector3[] corners, NavMeshPathStatus? pathStatus, double timeElapsedMs)
+        {
+			Debug.Log($"Nav mesh path calculation done - " +
+					(pathStatus.HasValue ? $"status {pathStatus.Value}, " : "") +
+					$"num corners {corners?.Length ?? 0}, " +
+					$"total distance {corners?.Skip(1).Select((corner, i) => Vector3.Distance(corner, corners[i])).Sum()}, " +
+					$"time {timeElapsedMs} ms");
+		}
 
 
 		void Update() {

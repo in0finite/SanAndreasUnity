@@ -360,5 +360,37 @@ namespace SanAndreasUnity.Behaviours
             if (!sortedSet.Remove(element))
                 throw new InvalidOperationException("Failed to remove element from SortedSet");
         }
+
+        public static List<Vector3> CalculateFullNavMeshPath(
+            Vector3 source, Vector3 dest, int areaMask)
+        {
+            var allCorners = new List<Vector3>();
+            var path = new NavMeshPath();
+            Vector3 nextSource = source;
+            int i = 0;
+
+            while (true)
+            {
+                if (!NavMesh.CalculatePath(nextSource, dest, areaMask, path))
+                    break;
+
+                Vector3[] pathCorners = path.corners;
+                allCorners.AddRange(pathCorners);
+
+                if (path.status == NavMeshPathStatus.PathComplete)
+                    break;
+
+                if (pathCorners.Length <= 1) // partial path that leads nowhere ?
+                    break;
+
+                nextSource = pathCorners.Last();
+
+                i++;
+                if (i >= 50)
+                    break;
+            }
+
+            return allCorners;
+        }
     }
 }
