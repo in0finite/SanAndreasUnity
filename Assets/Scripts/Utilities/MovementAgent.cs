@@ -256,6 +256,19 @@ namespace SanAndreasUnity.Utilities
                 return;
             }
 
+            // 2nd solution for problem above
+
+            float distanceTraveled = (myPosition - m_lastPositionWhenAssignedDestination.Value).magnitude;
+
+            if (currentTime - m_lastTimeWhenSearchedForPath > 3f
+                && distanceTraveled > 200f
+                && agent.pathStatus == NavMeshPathStatus.PathPartial)
+            {
+                Debug.Log($"re-path due to bug in NavMesh system #2 - agent {agent.name}, distanceTraveled {distanceTraveled}", this);
+                this.SetDestination();
+                return;
+            }
+
         }
 
         void SetDestination()
