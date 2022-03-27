@@ -560,6 +560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5192eaa721a64d4c9e80632f38623ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  warpSampleDistance: 4.5
 --- !u!1 &1531309216951106
 GameObject:
   m_ObjectHideFlags: 0
