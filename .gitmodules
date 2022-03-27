@@ -7,6 +7,6 @@
 [submodule "Assets/RCONdotnet"]
 	path = Assets/RCONdotnet
 	url = https://github.com/undbsd/rcon-dotnet
-[submodule "NavMeshes"]
+[submodule "Assets/NavMeshes"]
 	path = Assets/NavMeshes
 	url = https://github.com/GTA-ASM/NavMeshes
