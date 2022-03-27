@@ -162,16 +162,16 @@ namespace SanAndreasUnity.Behaviours
             return FindPathInBackground(closestSourceNode, closestDestinationNode);
         }
 
-        private PathResult FindPathInBackground(PathNode closestSourceNode, PathNode closestDestinationNode)
+        private PathResult FindPathInBackground(PathNode sourceNode, PathNode destinationNode)
         {
             var stopwatch = Stopwatch.StartNew();
             PathResult pathResult = new PathResult { IsSuccess = false };
 
             this.RestoreModifiedDatas();
 
-            if (FindPathFromNodeToNode(closestSourceNode.Id, closestDestinationNode.Id))
+            if (FindPathFromNodeToNode(sourceNode.Id, destinationNode.Id))
             {
-                pathResult = BuildPath(closestDestinationNode.Id);
+                pathResult = BuildPath(destinationNode.Id);
             }
 
             int numModifiedDatas = m_modifiedDatas.Count;
