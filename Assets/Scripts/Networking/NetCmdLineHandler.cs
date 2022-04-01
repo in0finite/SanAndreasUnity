@@ -13,9 +13,11 @@ namespace SanAndreasUnity.Net
 
         IEnumerator Start()
         {
-#if UNITY_SERVER
+            if (F.IsInHeadlessMode)
+            {
                 yield break;
-#else
+            }
+
 
 
             for (int i = 0; i < this.numFramesToWait; i++)
@@ -55,8 +57,6 @@ namespace SanAndreasUnity.Net
                 Debug.LogFormat("Starting client in headless mode, params: {0}, {1}", serverIp, portNum);
                 NetManager.StartClient(serverIp, portNum);
             }
-
-#endif
         }
     }
 }
