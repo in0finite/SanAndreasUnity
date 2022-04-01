@@ -71,5 +71,10 @@ namespace SanAndreasUnity.Net
                 NetworkClient.AddPlayer();
             }
         }
+
+        public override void ConfigureHeadlessFrameRate()
+        {
+           //Overriden so that other scripts can set the framerate without Mirror overriding it.
+        }
     }
 }
