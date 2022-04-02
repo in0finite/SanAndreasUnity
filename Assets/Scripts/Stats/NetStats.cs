@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Mirror;
@@ -9,15 +8,13 @@ namespace SanAndreasUnity.Stats
 {
     public class NetStats : MonoBehaviour
     {
-        
         void Start()
         {
-            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry(){category = "NET", onGUI = OnStatGUI});
+            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry() { category = "NET", onGUI = OnStatGUI });
         }
 
         void OnStatGUI()
         {
-            
             GUILayout.Label("Time: " + NetworkTime.time);
 
             if (NetStatus.IsServer)
@@ -33,15 +30,14 @@ namespace SanAndreasUnity.Stats
                 Utilities.GUIUtils.DrawHorizontalLine(1, 1, Color.black);
                 GUILayout.Label("Ping: " + NetworkTime.rtt);
                 GUILayout.Label("Ping send frequency: " + NetworkTime.PingFrequency);
-                GUILayout.Label("Rtt sd: " + NetworkTime.rttSd);
-                GUILayout.Label("Rtt var: " + NetworkTime.rttVar);
+                GUILayout.Label("Rtt sd: " + NetworkTime.rttStandardDeviation);
+                GUILayout.Label("Rtt var: " + NetworkTime.rttVariance);
                 GUILayout.Label("Server ip: " + NetworkClient.serverIp);
-                GUILayout.Label("Time since last message: " + (Time.unscaledTime - NetworkClient.connection.lastMessageTime));
+                GUILayout.Label("Time since last message: " +
+                                (Time.unscaledTime - NetworkClient.connection.lastMessageTime));
             }
 
             GUILayout.Label($"Num spawned network objects: {NetManager.NumSpawnedNetworkObjects}");
-
         }
-
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
@@ -6,42 +7,38 @@ using SanAndreasUnity.Behaviours;
 
 namespace SanAndreasUnity.Net
 {
-
     public class CustomNetworkManager : NetworkManager
     {
-
-        public override void OnClientConnect(NetworkConnection conn)
+        public override void OnClientConnect()
         {
             if (NetStatus.IsServer)
             {
                 // just do default action
-                base.OnClientConnect(conn);
+                base.OnClientConnect();
                 return;
             }
 
             // default method: if no scene was loaded, do Ready/AddPlayer
-
             // we won't do this until loading process finishes
 
             if (Loader.HasLoaded)
-                base.OnClientConnect(conn);
+                base.OnClientConnect();
         }
 
-        public override void OnClientSceneChanged(NetworkConnection conn)
+        public override void OnClientSceneChanged()
         {
             if (NetStatus.IsServer)
             {
                 // just do default action
-                base.OnClientSceneChanged(conn);
+                base.OnClientSceneChanged();
                 return;
             }
 
             // default method: do Ready/AddPlayer
-
             // we won't do this until loading process finishes
 
             if (Loader.HasLoaded)
-                base.OnClientSceneChanged(conn);
+                base.OnClientSceneChanged();
         }
 
         void OnLoaderFinished()
@@ -59,26 +56,25 @@ namespace SanAndreasUnity.Net
                 return;
             }
 
+
             // make client ready
-            if (ClientScene.ready)
+            if (NetworkClient.ready)
                 Debug.LogErrorFormat("Client was made ready before loader finished");
             else
-                ClientScene.Ready(NetworkClient.connection);
+            {
+                NetworkClient.Ready();
+            }
 
             // add player if specified
-            if (autoCreatePlayer && ClientScene.localPlayer == null)
+            if (autoCreatePlayer && NetworkClient.localPlayer == null)
             {
-                ClientScene.AddPlayer();
+                NetworkClient.AddPlayer();
             }
         }
 
-        public override void ConfigureServerFrameRate()
+        public override void ConfigureHeadlessFrameRate()
         {
-            // don't set frame rate
-            // it will be done by other scripts
-            
+           //Overriden so that other scripts can set the framerate without Mirror overriding it.
         }
-
     }
-
 }

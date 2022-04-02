@@ -182,7 +182,7 @@ namespace SanAndreasUnity.Behaviours.Peds
         public override void OnDeserialize(NetworkReader reader, bool initialState)
         {
             if (initialState)
-                m_net_modelId = reader.ReadInt32();
+                m_net_modelId = reader.ReadInt();
 
             byte flags = reader.ReadByte();
 
@@ -254,7 +254,7 @@ namespace SanAndreasUnity.Behaviours.Peds
         {
             if (NetStatus.IsServer)
             {
-                this.SetDirtyBit(1);
+                this.SetSyncVarDirtyBit(1);
             }
         }
 

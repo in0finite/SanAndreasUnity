@@ -9,12 +9,10 @@ namespace SanAndreasUnity.Net
 {
     public class SyncedBag
     {
-        public class StringSyncDictionary : SyncDictionary<string, string>
-        {
-        }
+        private readonly SyncDictionary<string, string> m_syncDictionary;
 
-        private readonly StringSyncDictionary m_syncDictionary;
-        private readonly Dictionary<string, List<System.Action<string>>> m_callbacks = new Dictionary<string, List<Action<string>>>();
+        private readonly Dictionary<string, List<System.Action<string>>> m_callbacks =
+            new Dictionary<string, List<Action<string>>>();
 
         private struct ArrayWrapper<T> // use struct so that it doesn't allocate memory
         {
@@ -27,24 +25,22 @@ namespace SanAndreasUnity.Net
         }
 
 
-        public SyncedBag(StringSyncDictionary syncDictionary)
+        public SyncedBag(SyncDictionary<string, string> syncDictionary)
         {
             m_syncDictionary = syncDictionary;
 
             m_syncDictionary.Callback += DictionaryCallback;
         }
 
-        private void DictionaryCallback(StringSyncDictionary.Operation op, string key, string item)
+        private void DictionaryCallback(SyncDictionary<string, string>.Operation op, string key, string item)
         {
             if (NetUtils.IsServer)
                 return;
 
             switch (op)
             {
-                case StringSyncDictionary.Operation.OP_ADD:
-                case StringSyncDictionary.Operation.OP_SET:
-                case StringSyncDictionary.Operation.OP_DIRTY:
-
+                case SyncDictionary<string, string>.Operation.OP_ADD:
+                case SyncDictionary<string, string>.Operation.OP_SET:
                     if (m_callbacks.TryGetValue(key, out var list))
                     {
                         // don't leave garbage
@@ -67,7 +63,7 @@ namespace SanAndreasUnity.Net
             }
             else
             {
-                m_callbacks.Add(key, new List<Action<string>>{callback});
+                m_callbacks.Add(key, new List<Action<string>> { callback });
             }
         }
 

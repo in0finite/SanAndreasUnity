@@ -43,7 +43,7 @@ namespace SanAndreasUnity.Net
 
         public string DescriptionForLogging => "(netId=" + this.netId + ", addr=" + (this.connectionToClient != null ? this.connectionToClient.address : "") + ")";
 
-        private readonly SyncedBag.StringSyncDictionary m_syncDictionary = new SyncedBag.StringSyncDictionary();
+        private readonly SyncDictionary<string, string> m_syncDictionary = new SyncDictionary<string, string>();
         public SyncedBag ExtraData { get; }
 
 
@@ -113,16 +113,16 @@ namespace SanAndreasUnity.Net
             F.InvokeEventExceptionSafe(onStart, this);
         }
 
-        public override void OnNetworkDestroy()
+        public override void OnStopClient()
         {
-            base.OnNetworkDestroy();
+            base.OnStopClient();
             
             // log some info about this
             if (!this.isLocalPlayer)
                 Debug.LogFormat("Player {0} disconnected, time: {1}", this.DescriptionForLogging, F.CurrentDateForLogging);
         }
 
-        void OnOwnedGameObjectChanged(GameObject newGo)
+        void OnOwnedGameObjectChanged(GameObject oldGo, GameObject newGo)
         {
             Debug.LogFormat("Owned game object changed for player (net id {0})", this.netId);
 

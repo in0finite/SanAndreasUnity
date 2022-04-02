@@ -1,3 +1,4 @@
+using Mirror;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Importing.Animation;
@@ -69,12 +70,12 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			string magicWord = reader.ReadString();
 			if (magicWord != "roll")
 				Debug.LogErrorFormat("wrong magic word when switching to roll state: {0}", magicWord);
-			m_rollLeft = reader.ReadBoolean();
+			m_rollLeft = reader.ReadBool();
 
 			m_ped.SwitchState(this.GetType());
 		}
 
-		void OnDictChanged(Ped.SyncDictionaryStringUint.Operation op, string key, uint value)
+		void OnDictChanged(SyncDictionary<string, uint>.Operation op, string key, uint value)
 		{
 			// switch (op)
 			// {

@@ -1,3 +1,4 @@
+using Mirror;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours.Vehicles;
@@ -52,8 +53,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			// extract vehicle and seat from data
 
-			int magicNumber = reader.ReadInt32();
-			m_currentVehicleNetId = reader.ReadUInt32();
+			int magicNumber = reader.ReadInt();
+			m_currentVehicleNetId = reader.ReadUInt();
 			this.CurrentVehicleSeatAlignment = (Vehicle.SeatAlignment) reader.ReadSByte();
 
 			// assign current vehicle

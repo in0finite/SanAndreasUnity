@@ -3,6 +3,7 @@ using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Animation;
 using System.Linq;
+using Mirror;
 
 namespace SanAndreasUnity.Behaviours.Peds.States
 {

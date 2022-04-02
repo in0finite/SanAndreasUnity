@@ -32,11 +32,9 @@ namespace SanAndreasUnity.Behaviours
         
         public static int NumStateChangesReceived { get; private set; }
 
-        public class SyncDictionaryStringUint : Mirror.SyncDictionary<string, uint> { }
+        public readonly SyncDictionary<string, uint> syncDictionaryStringUint = new SyncDictionary<string, uint>();
 
-        public SyncDictionaryStringUint syncDictionaryStringUint = new SyncDictionaryStringUint();
-
-        private SyncedBag.StringSyncDictionary _syncDictionary = new SyncedBag.StringSyncDictionary();
+        private readonly SyncDictionary<string, string> _syncDictionary = new SyncDictionary<string, string>();
         public SyncedBag SyncedBag { get; }
 
         [SyncVar] Vector3 m_net_movementInput;
@@ -189,7 +187,7 @@ namespace SanAndreasUnity.Behaviours
             
         }
 
-        void Net_OnIdChanged(int newId)
+        void Net_OnIdChanged(int oldId, int newId)
         {
             //Debug.LogFormat("ped (net id {0}) changed model id to {1}", this.netId, newId);
             
@@ -199,7 +197,7 @@ namespace SanAndreasUnity.Behaviours
             this.TryToLoadNewModel(newId);
         }
 
-        void Net_OnStateChanged(string newStateName)
+        void Net_OnStateChanged(string oldStateName, string newStateName)
         {
             if (this.isServer)
                 return;
@@ -241,7 +239,7 @@ namespace SanAndreasUnity.Behaviours
             
         }
 
-        void Net_OnWeaponChanged(int newSlot)
+        void Net_OnWeaponChanged(int oldSlot, int newSlot)
         {
 
             if (NetStatus.IsServer)
@@ -261,7 +259,7 @@ namespace SanAndreasUnity.Behaviours
             
         }
 
-        void Net_OnMouthSoundIdChanged(Audio.SoundId newSoundId)
+        void Net_OnMouthSoundIdChanged(Audio.SoundId oldSoundId, Audio.SoundId newSoundId)
         {
             if (NetStatus.IsServer)
                 return;

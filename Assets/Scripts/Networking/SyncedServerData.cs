@@ -8,9 +8,9 @@ namespace SanAndreasUnity.Net
     {
         public static SyncedServerData Instance { get; private set; }
 
-        SyncedBag.StringSyncDictionary _syncDictionary = new SyncedBag.StringSyncDictionary();
+        readonly SyncDictionary<string, string> _syncDictionary = new SyncDictionary<string, string>();
 
-        public static SyncedBag Data { get; private set; } = new SyncedBag(new SyncedBag.StringSyncDictionary());
+        public static SyncedBag Data { get; private set; } = new SyncedBag(new SyncDictionary<string, string>());
 
         public static event System.Action onInitialSyncDataAvailable = delegate {};
 
@@ -49,7 +49,7 @@ namespace SanAndreasUnity.Net
         private void OnDisable()
         {
             // clear data for next server start
-            Data = new SyncedBag(new SyncedBag.StringSyncDictionary());
+            Data = new SyncedBag(new SyncDictionary<string, string>());
         }
 
         public override void OnStartClient()
