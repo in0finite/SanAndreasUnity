@@ -13,13 +13,9 @@ namespace SanAndreasUnity.Net
 
         IEnumerator Start()
         {
-            if (F.IsInHeadlessMode)
-            {
+            if (!F.IsInHeadlessMode)
                 yield break;
-            }
-
-
-
+            
             for (int i = 0; i < this.numFramesToWait; i++)
                 yield return null;
 
