@@ -41,10 +41,15 @@ namespace SanAndreasUnity.Net
         public static readonly int MinPlayerNameLength = 2;
         public static readonly string DefaultPlayerName = "Player";
 
-        public string DescriptionForLogging => "(netId=" + this.netId + ", addr=" + (this.connectionToClient != null ? this.connectionToClient.address : "") + ")";
+        public string DescriptionForLogging => $"(netId={this.netId}, addr={this.CachedIpAddress})";
 
         private readonly SyncDictionary<string, string> m_syncDictionary = new SyncDictionary<string, string>();
         public SyncedBag ExtraData { get; }
+
+        /// <summary>
+        /// We cache IP address of the client, because it's sometimes not available (eg. in destroy callbacks).
+        /// </summary>
+        public string CachedIpAddress { get; private set; } = string.Empty;
 
 
         Player()
@@ -86,6 +91,16 @@ namespace SanAndreasUnity.Net
 
             F.InvokeEventExceptionSafe(onDisable, this);
 
+            // log some info about this
+            if (!this.isLocalPlayer)
+                Debug.LogFormat("Player {0} disconnected, time: {1}", this.DescriptionForLogging, F.CurrentDateForLogging);
+        }
+
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
+
+            this.CachedIpAddress = this.connectionToClient.address;
         }
 
         public override void OnStartClient()
@@ -111,15 +126,6 @@ namespace SanAndreasUnity.Net
                 Debug.LogFormat("Player {0} connected, time: {1}", this.DescriptionForLogging, F.CurrentDateForLogging);
 
             F.InvokeEventExceptionSafe(onStart, this);
-        }
-
-        public override void OnStopClient()
-        {
-            base.OnStopClient();
-            
-            // log some info about this
-            if (!this.isLocalPlayer)
-                Debug.LogFormat("Player {0} disconnected, time: {1}", this.DescriptionForLogging, F.CurrentDateForLogging);
         }
 
         void OnOwnedGameObjectChanged(GameObject oldGo, GameObject newGo)

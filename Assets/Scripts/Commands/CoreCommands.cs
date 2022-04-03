@@ -78,7 +78,7 @@ namespace SanAndreasUnity.Commands
                 {
                     response += player.netId;
                     if (NetUtils.IsServer && context.hasServerPermissions)
-                        response += " | " + player.connectionToClient.address;
+                        response += " | " + player.CachedIpAddress;
                     response += "\n";
                 }
             }

@@ -52,7 +52,7 @@ namespace SanAndreasUnity.Stats
 
                 m_currentIndex = 0;
                 GUILayout.Label(p.PlayerName, GUILayout.Width(GetWidth()));
-                GUILayout.Label(isServer ? p.connectionToClient.address : "", GUILayout.Width(GetWidth()));
+                GUILayout.Label(p.CachedIpAddress, GUILayout.Width(GetWidth()));
                 GUILayout.Label(p.netId.ToString(), GUILayout.Width(GetWidth()));
                 GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.netId.ToString() : "", GUILayout.Width(GetWidth()));
                 GUILayout.Label(p.OwnedPed != null && p.OwnedPed.PedDef != null ? p.OwnedPed.PedDef.ModelName : "", GUILayout.Width(GetWidth()));
