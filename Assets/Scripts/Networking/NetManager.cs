@@ -40,7 +40,9 @@ namespace SanAndreasUnity.Net
 		public event System.Action onServerStatusChanged = delegate {};
 
 
-		public static Dictionary<uint, NetworkIdentity> ActiveSpawnedList
+		private static readonly IReadOnlyDictionary<uint, NetworkIdentity> s_emptySpawnedDictionary =
+			new Dictionary<uint, NetworkIdentity>();
+		private static IReadOnlyDictionary<uint, NetworkIdentity> SpawnedDictionary
 		{
 			get
 			{
@@ -53,13 +55,11 @@ namespace SanAndreasUnity.Net
 					return NetworkClient.spawned;
 				}
 
-
-				throw new Exception(
-					"NetManager.ActiveSpawnedList was accessed before NetworkServer/NetworkClient were active.");
+				return s_emptySpawnedDictionary;
 			}
 		}
 
-		public static int NumSpawnedNetworkObjects => ActiveSpawnedList.Count;
+		public static int NumSpawnedNetworkObjects => SpawnedDictionary.Count;
 
 		public static double NetworkTime => Mirror.NetworkTime.time;
 
@@ -283,7 +283,7 @@ namespace SanAndreasUnity.Net
 
 		public static GameObject GetNetworkObjectById(uint netId)
 		{
-			if (!ActiveSpawnedList.TryGetValue(netId, out var networkIdentity)) return null;
+			if (!SpawnedDictionary.TryGetValue(netId, out var networkIdentity)) return null;
 			return networkIdentity != null ? networkIdentity.gameObject : null;
 		}
 

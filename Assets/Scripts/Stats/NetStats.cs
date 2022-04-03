@@ -15,26 +15,27 @@ namespace SanAndreasUnity.Stats
 
         void OnStatGUI()
         {
-            GUILayout.Label("Time: " + NetworkTime.time);
+            GUILayout.Label("Network time: " + NetworkTime.time);
+            GUILayout.Label("Local network time: " + NetworkTime.localTime);
 
             if (NetStatus.IsServer)
             {
                 Utilities.GUIUtils.DrawHorizontalLine(1, 1, Color.black);
                 GUILayout.Label("Num connections: " + NetworkServer.connections.Count);
                 GUILayout.Label("Max num players: " + NetManager.maxNumPlayers);
-                GUILayout.Label($"Dead body traffic per player: {DeadBody.DeadBodies.Sum(db => db.TrafficKbps)} Kb/s");
+                GUILayout.Label($"Dead body traffic per client: {DeadBody.DeadBodies.Sum(db => db.TrafficKbps)} Kb/s");
             }
 
             if (NetStatus.IsClientActive())
             {
                 Utilities.GUIUtils.DrawHorizontalLine(1, 1, Color.black);
-                GUILayout.Label("Ping: " + NetworkTime.rtt);
-                GUILayout.Label("Ping send frequency: " + NetworkTime.PingFrequency);
-                GUILayout.Label("Rtt sd: " + NetworkTime.rttStandardDeviation);
-                GUILayout.Label("Rtt var: " + NetworkTime.rttVariance);
+                GUILayout.Label("Ping: " + (NetworkTime.rtt * 1000) + " ms");
+                GUILayout.Label("Ping send frequency: " + (NetworkTime.PingFrequency * 1000) + " ms");
+                GUILayout.Label("Rtt sd: " + (NetworkTime.rttStandardDeviation * 1000) + " ms");
+                GUILayout.Label("Rtt var: " + (NetworkTime.rttVariance * 1000) + " ms");
                 GUILayout.Label("Server ip: " + NetworkClient.serverIp);
                 GUILayout.Label("Time since last message: " +
-                                (Time.unscaledTime - NetworkClient.connection.lastMessageTime));
+                                (Time.time - NetworkClient.connection.lastMessageTime));
             }
 
             GUILayout.Label($"Num spawned network objects: {NetManager.NumSpawnedNetworkObjects}");
