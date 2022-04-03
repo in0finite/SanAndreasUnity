@@ -10,3 +10,6 @@
 [submodule "Assets/NavMeshes"]
 	path = Assets/NavMeshes
 	url = https://github.com/GTA-ASM/NavMeshes
+[submodule "Assets/NetworkDiscoveryUnity"]
+	path = Assets/NetworkDiscoveryUnity
+	url = https://github.com/in0finite/NetworkDiscoveryUnity

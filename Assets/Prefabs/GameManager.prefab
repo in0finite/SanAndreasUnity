@@ -39,6 +39,9 @@ GameObject:
   - component: {fileID: 2483599330734961439}
   - component: {fileID: 6746758691818800092}
   - component: {fileID: 6423383668577662412}
+  - component: {fileID: 492799016881118158}
+  - component: {fileID: 5842669163583086755}
+  - component: {fileID: 450012255851182817}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -550,3 +553,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_maxTimePerFrameMs: 0
   m_navMeshPathfindingIterationsPerFrame: 1000
+--- !u!114 &492799016881118158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297494511425690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65d5e9cc49a255842837a7d853db68fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_serverPort: 18418
+  gameServerPortNumber: 7777
+--- !u!114 &5842669163583086755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297494511425690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97d06c4b188731a47baf1a65a4b8a512, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawGUI: 0
+  offsetX: 5
+  offsetY: 150
+  width: 500
+  height: 400
+  refreshInterval: 3
+  onConnectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &450012255851182817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297494511425690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98aa3365f77ceca4b89c239f0d96a766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

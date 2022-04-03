@@ -4,7 +4,7 @@ using SanAndreasUnity.Utilities;
 using SanAndreasUnity.Net;
 using System.Linq;
 using System.Threading.Tasks;
-using Mirror.Discovery;
+using NetworkDiscoveryUnity;
 
 namespace SanAndreasUnity.UI
 {
@@ -45,12 +45,16 @@ namespace SanAndreasUnity.UI
 			float height = width * 9f / 16f;
 			this.windowRect = GUIUtils.GetCenteredRect(new Vector2(width, height));
 
-			m_netDiscoveryHUD = Mirror.NetworkManager.singleton.GetComponentOrThrow<NetworkDiscoveryHUD>();
-		
-			// TODO: NetworkDiscoveryHud connection actions & draw gui
-			//	m_netDiscoveryHUD.connectAction = this.ConnectFromDiscovery;
-			//	m_netDiscoveryHUD.drawGUI = false;
-        }
+			m_netDiscoveryHUD = NetworkDiscoveryManager.Singleton.NetworkDiscovery.GetComponentOrThrow<NetworkDiscoveryHUD>();
+			m_netDiscoveryHUD.drawGUI = false;
+			m_netDiscoveryHUD.onConnectEvent.RemoveAllListeners();
+			m_netDiscoveryHUD.onConnectEvent.AddListener(this.ConnectFromDiscovery);
+			m_netDiscoveryHUD.additionalDataToDisplay.AddRange(new string[]
+			{
+				NetworkDiscoveryManager.NumPlayersKey,
+				NetworkDiscoveryManager.MaxNumPlayersKey,
+			});
+		}
 
 		void Update()
 		{
@@ -88,9 +92,8 @@ namespace SanAndreasUnity.UI
 			}
 			else if (LanTabIndex == m_currentTabIndex)
 			{
-				//TODO: NetDiscovery Hud window resizing
-				//m_netDiscoveryHUD.width = (int) this.WindowSize.x - 30;
-				//m_netDiscoveryHUD.DisplayServers();
+				m_netDiscoveryHUD.width = (int) this.WindowSize.x - 30;
+				m_netDiscoveryHUD.DisplayServers();
 			}
 			else if (InternetTabIndex == m_currentTabIndex)
             {
@@ -165,10 +168,9 @@ namespace SanAndreasUnity.UI
 			{
 				if (LanTabIndex == m_currentTabIndex)
 				{
-					//TODO: NetDiscovery Hud visibility & button stuff
-				//	GUI.enabled = ! m_netDiscoveryHUD.IsRefreshing;
-				//	buttonText = m_netDiscoveryHUD.IsRefreshing ? ( "Refreshing." + new string('.', (int) ((Time.time * 2) % 3)) ) : "Refresh LAN";
-				//	buttonAction = () => m_netDiscoveryHUD.Refresh();
+					GUI.enabled = ! m_netDiscoveryHUD.IsRefreshing;
+					buttonText = m_netDiscoveryHUD.IsRefreshing ? ( "Refreshing." + new string('.', (int) ((Time.time * 2) % 3)) ) : "Refresh LAN";
+					buttonAction = () => m_netDiscoveryHUD.Refresh();
 				}
 				else if (InternetTabIndex == m_currentTabIndex)
                 {
@@ -208,20 +210,20 @@ namespace SanAndreasUnity.UI
 
 		void ConnectDirectly()
 		{
-			this.Connect(m_ipStr, int.Parse(m_portStr));
+			this.Connect(m_ipStr, ushort.Parse(m_portStr));
 		}
 
-		void ConnectFromDiscovery(ServerResponse info)
+		void ConnectFromDiscovery(NetworkDiscovery.DiscoveryInfo info)
 		{
-			this.Connect(info.EndPoint.Address.ToString(), info.EndPoint.Port);
+			this.Connect(info.EndPoint.Address.ToString(), info.GetGameServerPort());
 		}
 
 		void ConnectToServerFromMasterServer(ServerInfo serverInfo)
 		{
-			Connect(serverInfo.IP, serverInfo.Port);
+			Connect(serverInfo.IP, (ushort) serverInfo.Port);
 		}
 
-		void Connect(string ip, int port)
+		void Connect(string ip, ushort port)
 		{
 			try
 			{
