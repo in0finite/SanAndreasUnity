@@ -448,7 +448,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 				// we need to apply rotation that is opposite of given offset for x axis - to assure that forehand's up matches ped's back
 				Quaternion q = Quaternion.AngleAxis( 90f - WeaponsManager.Instance.AIMWITHARM_foreArmRotationOffset.x, player.transform.up );
-				endRotForeArm = Quaternion.LookRotation (q * player.transform.up, q * (-player.transform.forward));
+				// This is a fix for when arm rotates in opposite direction - we need to define in which way to rotate arm to target rotation.
+				// We do this by lerping from starting rotation to target rotation based on timePerc.
+				Vector3 forward = Vector3.Lerp(player.transform.forward, player.transform.up, timePerc);
+				Vector3 up = Vector3.Lerp(player.transform.up, -player.transform.forward, timePerc);
+				endRotForeArm = Quaternion.LookRotation (q * forward, q * up);
 
 			} else if (isAimingOnOppositeSide) {
 				// upper arm will slightly follow direction of aiming, but only along y and z axes
