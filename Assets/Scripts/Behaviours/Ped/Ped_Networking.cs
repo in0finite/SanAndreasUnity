@@ -18,7 +18,7 @@ namespace SanAndreasUnity.Behaviours
         internal GameObject NetPlayerOwnerGameObject { set { m_net_playerOwnerGameObject = value; } }
         public Player PlayerOwner => Player.GetOwningPlayer(this);
 
-        [SyncVar(hook=nameof(Net_OnIdChanged))] int m_net_pedId = 0;
+        [SyncVar(hook=nameof(Net_OnIdChanged))] int m_net_pedId = -1;
 
         struct StateSyncData
         {
@@ -79,6 +79,14 @@ namespace SanAndreasUnity.Behaviours
             F.RunExceptionSafe( () => this.WeaponHolder.SwitchWeapon(m_net_currentWeaponSlot) );
 
             this.ChangeStateBasedOnSyncData(new StateSyncData(){state = m_net_state, additionalData = m_net_additionalStateData});
+        }
+
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
+
+            // assign syncvars as soon as object is spawned
+            this.Update_Net();
         }
 
         void Start_Net()

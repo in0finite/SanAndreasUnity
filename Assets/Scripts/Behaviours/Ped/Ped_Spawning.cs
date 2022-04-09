@@ -30,8 +30,9 @@ namespace SanAndreasUnity.Behaviours
 			go.name = "Ped " + def.ModelName + " " + def.Id;
 
 			var ped = go.GetComponentOrThrow<Ped> ();
-			ped.PlayerModel.StartingPedId = def.Id;
 			ped.EnterVehicleRadius = PedManager.Instance.AIVehicleEnterDistance;
+
+			F.RunExceptionSafe(() => ped.PlayerModel.Load(def.Id));
 
 			if (spawnOnNetwork)
 				Net.NetManager.Spawn(go);

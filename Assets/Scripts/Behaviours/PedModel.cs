@@ -46,13 +46,7 @@ namespace SanAndreasUnity.Behaviours
 
         public PedestrianDef Definition { get; private set; }
 
-		[SerializeField] private int m_startingPedId = 167;
-		public int StartingPedId { get { return m_startingPedId; } set { m_startingPedId = value; } }
-
-		public int PedestrianId { get; private set; }
-
-        // have we loaded model since the Loader has finished loading
-        private bool loadedModelOnStartup = false;
+		public int PedestrianId { get; private set; } = -1;
 
         public bool IsInVehicle { get; set; }
 
@@ -123,6 +117,7 @@ namespace SanAndreasUnity.Behaviours
 		private List<FrameAnimData> m_originalFrameDatas = new List<FrameAnimData> ();
 		public List<FrameAnimData> OriginalFrameDatas { get { return m_originalFrameDatas; } }
 
+		// TODO: this class should not be aware of Ped class
 		private Ped m_ped;
 
 		/// <summary> Velocity of the model extracted from animation. </summary>
@@ -144,6 +139,8 @@ namespace SanAndreasUnity.Behaviours
 
         private void LateUpdate()
         {
+			// TODO: this function should be removed, and all skeleton updates should be done by state classes
+
             if (_root == null) return;
 
             var trans = _root.transform;
@@ -162,32 +159,6 @@ namespace SanAndreasUnity.Behaviours
             }
 
 			this.onLateUpdate ();
-        }
-
-        private void Update()
-        {
-
-            if (Loader.HasLoaded)
-            {
-				// FIXME: should not be done like this
-                if (!loadedModelOnStartup)
-                {
-					loadedModelOnStartup = true;
-
-                    // load model on startup
-                    
-					// only load it if it wasn't loaded so far
-					if (null == this.Definition)
-					{
-						Load (m_startingPedId);
-
-						// and play animation
-						PlayAnim(AnimGroup.WalkCycle, AnimIndex.Idle);
-					}
-
-                }
-            }
-
         }
 
         
