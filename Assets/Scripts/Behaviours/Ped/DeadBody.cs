@@ -22,16 +22,30 @@ namespace SanAndreasUnity.Behaviours.Peds
 
         public PushableByDamage PushableByDamage { get; private set; }
 
-        public readonly struct BoneInfo
+        public struct BoneInfo
         {
-            public BoneInfo(Transform transform)
+            public static BoneInfo Create(Transform transform)
             {
-                this.Transform = transform;
-                this.Rigidbody = transform.GetComponent<Rigidbody>();
+                var boneInfo = new BoneInfo();
+                boneInfo.Transform = transform;
+                boneInfo.Rigidbody = transform.GetComponent<Rigidbody>();
+                return boneInfo;
             }
 
-            public Transform Transform { get; }
-            public Rigidbody Rigidbody { get; }
+            public Transform Transform { get; private set; }
+            public Rigidbody Rigidbody { get; private set; }
+
+            // current sync data toward which we move the transform
+            public Vector3 CurrentPosition;
+            public Quaternion CurrentRotation;
+            public Vector3 CurrentVelocity;
+            public float CurrentAngularVelocity;
+
+            // next sync data, which will be used when we reach the current sync data
+            public Vector3? NextPosition;
+            public Quaternion? NextRotation;
+            public Vector3? NextVelocity;
+            public float? NextAngularVelocity;
         }
 
         private Dictionary<int, BoneInfo> m_framesDict = new Dictionary<int, BoneInfo>();
@@ -40,6 +54,8 @@ namespace SanAndreasUnity.Behaviours.Peds
 
         private Dictionary<int, BoneInfo> m_rigidBodiesDict = new Dictionary<int, BoneInfo>();
         public int NumRigidBodies => m_rigidBodiesDict.Count;
+
+        private int[] m_boneIds = System.Array.Empty<int>();
 
         public float TrafficKbps => (2 + NumRigidBodies * (1 + 12 + 12) + 12) / 1000f / this.syncInterval;
 
@@ -117,7 +133,7 @@ namespace SanAndreasUnity.Behaviours.Peds
             var model = this.gameObject.GetOrAddComponent<PedModel>();
             model.Load(m_net_modelId);
 
-            // add rigid bodies - syncing looks smoother with them
+            /*// add rigid bodies - syncing looks smoother with them
             model.RagdollBuilder.BuildBodies();
             foreach (var rb in this.transform.GetComponentsInChildren<Rigidbody>())
             {
@@ -125,23 +141,34 @@ namespace SanAndreasUnity.Behaviours.Peds
                 rb.detectCollisions = false;
                 rb.maxAngularVelocity = 0;
                 rb.interpolation = PedManager.Instance.ragdollInterpolationMode;
-            }
+            }*/
 
-            m_framesDict = model.Frames.ToDictionary(f => f.BoneId, f => new BoneInfo(f.transform));
+            m_framesDict = model.Frames.ToDictionary(f => f.BoneId, f => BoneInfo.Create(f.transform));
 
-            // destroy all rigid bodies except for the root bone - they work for themselves, and bones look deformed and stretched
+            m_boneIds = m_framesDict.Keys.ToArray();
+
+            /*// destroy all rigid bodies except for the root bone - they work for themselves, and bones look deformed and stretched
             m_framesDict
                 .Where(pair => pair.Key != 0)
                 .Select(pair => pair.Value.Rigidbody)
                 .WhereAlive()
-                .ForEach(Object.Destroy);
+                .ForEach(Object.Destroy);*/
 
             Object.Destroy(model.AnimComponent);
             Object.Destroy(model);
 
             // apply initial sync data
-            // first sync should've been done before calling this function
-            this.UpdateBonesAfterDeserialization((byte)m_bonesSyncData.Count);
+            // first sync should've been done before calling this function, so the data is available
+
+            /*foreach (int boneId in m_framesDict.Keys)
+            {
+                BoneInfo boneInfo = m_framesDict[boneId];
+                boneInfo.CurrentPosition = boneInfo.Transform.localPosition;
+                boneInfo.CurrentRotation = boneInfo.Transform.localRotation;
+                m_framesDict[boneId] = boneInfo;
+            }*/
+
+            this.UpdateBonesDataAfterDeserialization((byte)m_bonesSyncData.Count, true);
 
         }
 
@@ -195,20 +222,31 @@ namespace SanAndreasUnity.Behaviours.Peds
                 m_bonesSyncData[i] = BoneSyncData.DeSerialize(reader);
             }
 
-            F.RunExceptionSafe(() => UpdateBonesAfterDeserialization(count));
+            F.RunExceptionSafe(() => UpdateBonesDataAfterDeserialization(count, false));
         }
 
-        private void UpdateBonesAfterDeserialization(byte count)
+        private void UpdateBonesDataAfterDeserialization(byte count, bool applyToTransform)
         {
             for (int i = 0; i < count; i++)
             {
                 var boneSyncData = m_bonesSyncData[i];
                 if (m_framesDict.TryGetValue(boneSyncData.boneId, out BoneInfo boneInfo))
                 {
-                    SetPosition(boneInfo, boneSyncData.position);
-                    SetRotation(boneInfo, boneSyncData.rotation);
-                    if (boneInfo.Rigidbody != null)
-                        SetVelocity(boneInfo, boneSyncData.velocity);
+                    if (applyToTransform)
+                    {
+                        boneInfo.Transform.localPosition = boneInfo.CurrentPosition = boneSyncData.position;
+                        boneInfo.Transform.localRotation = boneInfo.CurrentRotation = Quaternion.Euler(boneSyncData.rotation);
+                        boneInfo.CurrentVelocity = Vector3.zero;
+                        boneInfo.CurrentAngularVelocity = 0;
+                    }
+
+                    boneInfo.NextPosition = boneSyncData.position;
+                    boneInfo.NextVelocity = (boneInfo.NextPosition.Value - boneInfo.CurrentPosition).NormalizedOrZero() / this.syncInterval;
+
+                    boneInfo.NextRotation = Quaternion.Euler(boneSyncData.rotation);
+                    boneInfo.NextAngularVelocity = Quaternion.Angle(boneInfo.NextRotation.Value, boneInfo.CurrentRotation) / this.syncInterval;
+
+                    m_framesDict[boneSyncData.boneId] = boneInfo;
                 }
             }
         }
@@ -227,13 +265,13 @@ namespace SanAndreasUnity.Behaviours.Peds
             ragdollTransform.SetParent(ragdollGameObject.transform);
 
             deadBody.m_framesDict = ragdollTransform.GetComponentsInChildren<Frame>()
-                .ToDictionary(f => f.BoneId, f => new BoneInfo(f.transform));
+                .ToDictionary(f => f.BoneId, f => BoneInfo.Create(f.transform));
 
             foreach (var pair in deadBody.m_framesDict)
             {
                 var rb = pair.Value.Rigidbody;
                 if (rb != null)
-                    deadBody.m_rigidBodiesDict.Add(pair.Key, new BoneInfo(rb.transform));
+                    deadBody.m_rigidBodiesDict.Add(pair.Key, BoneInfo.Create(rb.transform));
             }
 
             FocusPoint.Create(ragdollTransform.gameObject, deadBody.focusPointParameters);
@@ -255,6 +293,63 @@ namespace SanAndreasUnity.Behaviours.Peds
             if (NetStatus.IsServer)
             {
                 this.SetSyncVarDirtyBit(1);
+            }
+            else
+            {
+                this.UpdateRagdollBasedOnSyncData();
+            }
+        }
+
+        private void UpdateRagdollBasedOnSyncData()
+        {
+            for (int i = 0; i < m_boneIds.Length; i++)
+            {
+                int boneId = m_boneIds[i];
+                BoneInfo boneInfo = m_framesDict[boneId];
+
+                // move transform to current position/rotation
+
+                // position
+
+                Vector3 transformPos = boneInfo.Transform.localPosition;
+                Vector3 moveDiff = boneInfo.CurrentPosition - transformPos;
+                float sqrDistance = moveDiff.sqrMagnitude;
+                Vector3 moveDelta = moveDiff.normalized * boneInfo.CurrentVelocity.magnitude * Time.deltaTime;
+                if (moveDelta.sqrMagnitude < sqrDistance && moveDelta.sqrMagnitude > float.Epsilon)
+                    boneInfo.Transform.localPosition += moveDelta;
+                else
+                {
+                    boneInfo.Transform.localPosition = boneInfo.CurrentPosition;
+                    if (boneInfo.NextPosition.HasValue)
+                    {
+                        boneInfo.CurrentPosition = boneInfo.NextPosition.Value;
+                        boneInfo.NextPosition = null;
+                        boneInfo.CurrentVelocity = boneInfo.NextVelocity.Value;
+                        boneInfo.NextVelocity = null;
+                    }
+                }
+
+                // rotation
+
+                Quaternion transformRotation = boneInfo.Transform.localRotation;
+                float angle = Quaternion.Angle(transformRotation, boneInfo.CurrentRotation);
+                float angleDelta = boneInfo.CurrentAngularVelocity * Time.deltaTime;
+                if (angleDelta < angle && angleDelta > float.Epsilon)
+                    boneInfo.Transform.localRotation = Quaternion.RotateTowards(transformRotation, boneInfo.CurrentRotation, angleDelta);
+                else
+                {
+                    boneInfo.Transform.localRotation = boneInfo.CurrentRotation;
+                    if (boneInfo.NextRotation.HasValue)
+                    {
+                        boneInfo.CurrentRotation = boneInfo.NextRotation.Value;
+                        boneInfo.NextRotation = null;
+                        boneInfo.CurrentAngularVelocity = boneInfo.NextAngularVelocity.Value;
+                        boneInfo.NextAngularVelocity = null;
+                    }
+                }
+
+
+                m_framesDict[boneId] = boneInfo;
             }
         }
 
