@@ -35,17 +35,20 @@ namespace SanAndreasUnity.Behaviours.Peds
             public Transform Transform { get; private set; }
             public Rigidbody Rigidbody { get; private set; }
 
-            // current sync data toward which we move the transform
-            public Vector3 CurrentPosition;
-            public Quaternion CurrentRotation;
-            public Vector3 CurrentVelocity;
-            public float CurrentAngularVelocity;
+            // current sync data (as reported by server) toward which we move the transform
+            public Vector3 Position;
+            public Quaternion Rotation;
+            public Vector3 Velocity;
+
+            // these are the velocities used to move the object, calculated when new server data arrives
+            public float CalculatedVelocityMagnitude;
+            public float CalculatedAngularVelocityMagnitude;
 
             // next sync data, which will be used when we reach the current sync data
-            public Vector3? NextPosition;
+            /*public Vector3? NextPosition;
             public Quaternion? NextRotation;
             public Vector3? NextVelocity;
-            public float? NextAngularVelocity;
+            public float? NextAngularVelocity;*/
         }
 
         private Dictionary<int, BoneInfo> m_framesDict = new Dictionary<int, BoneInfo>();
@@ -234,17 +237,15 @@ namespace SanAndreasUnity.Behaviours.Peds
                 {
                     if (applyToTransform)
                     {
-                        boneInfo.Transform.localPosition = boneInfo.CurrentPosition = boneSyncData.position;
-                        boneInfo.Transform.localRotation = boneInfo.CurrentRotation = Quaternion.Euler(boneSyncData.rotation);
-                        boneInfo.CurrentVelocity = Vector3.zero;
-                        boneInfo.CurrentAngularVelocity = 0;
+                        boneInfo.Transform.localPosition = boneSyncData.position;
+                        boneInfo.Transform.localRotation = Quaternion.Euler(boneSyncData.rotation);
                     }
 
-                    boneInfo.NextPosition = boneSyncData.position;
-                    boneInfo.NextVelocity = (boneInfo.NextPosition.Value - boneInfo.CurrentPosition).NormalizedOrZero() / this.syncInterval;
+                    boneInfo.Position = boneSyncData.position;// + boneSyncData.velocity * this.syncInterval;
+                    boneInfo.CalculatedVelocityMagnitude = (boneInfo.Position - boneInfo.Transform.localPosition).magnitude / this.syncInterval;
 
-                    boneInfo.NextRotation = Quaternion.Euler(boneSyncData.rotation);
-                    boneInfo.NextAngularVelocity = Quaternion.Angle(boneInfo.NextRotation.Value, boneInfo.CurrentRotation) / this.syncInterval;
+                    boneInfo.Rotation = Quaternion.Euler(boneSyncData.rotation);
+                    boneInfo.CalculatedAngularVelocityMagnitude = Quaternion.Angle(boneInfo.Rotation, boneInfo.Transform.localRotation) / this.syncInterval;
 
                     m_framesDict[boneSyncData.boneId] = boneInfo;
                 }
@@ -312,40 +313,26 @@ namespace SanAndreasUnity.Behaviours.Peds
                 // position
 
                 Vector3 transformPos = boneInfo.Transform.localPosition;
-                Vector3 moveDiff = boneInfo.CurrentPosition - transformPos;
+                Vector3 moveDiff = boneInfo.Position - transformPos;
                 float sqrDistance = moveDiff.sqrMagnitude;
-                Vector3 moveDelta = moveDiff.normalized * boneInfo.CurrentVelocity.magnitude * Time.deltaTime;
+                Vector3 moveDelta = moveDiff.normalized * boneInfo.CalculatedVelocityMagnitude * Time.deltaTime;
                 if (moveDelta.sqrMagnitude < sqrDistance && moveDelta.sqrMagnitude > float.Epsilon)
                     boneInfo.Transform.localPosition += moveDelta;
                 else
                 {
-                    boneInfo.Transform.localPosition = boneInfo.CurrentPosition;
-                    if (boneInfo.NextPosition.HasValue)
-                    {
-                        boneInfo.CurrentPosition = boneInfo.NextPosition.Value;
-                        boneInfo.NextPosition = null;
-                        boneInfo.CurrentVelocity = boneInfo.NextVelocity.Value;
-                        boneInfo.NextVelocity = null;
-                    }
+                    boneInfo.Transform.localPosition = boneInfo.Position;
                 }
 
                 // rotation
 
                 Quaternion transformRotation = boneInfo.Transform.localRotation;
-                float angle = Quaternion.Angle(transformRotation, boneInfo.CurrentRotation);
-                float angleDelta = boneInfo.CurrentAngularVelocity * Time.deltaTime;
+                float angle = Quaternion.Angle(transformRotation, boneInfo.Rotation);
+                float angleDelta = boneInfo.CalculatedAngularVelocityMagnitude * Time.deltaTime;
                 if (angleDelta < angle && angleDelta > float.Epsilon)
-                    boneInfo.Transform.localRotation = Quaternion.RotateTowards(transformRotation, boneInfo.CurrentRotation, angleDelta);
+                    boneInfo.Transform.localRotation = Quaternion.RotateTowards(transformRotation, boneInfo.Rotation, angleDelta);
                 else
                 {
-                    boneInfo.Transform.localRotation = boneInfo.CurrentRotation;
-                    if (boneInfo.NextRotation.HasValue)
-                    {
-                        boneInfo.CurrentRotation = boneInfo.NextRotation.Value;
-                        boneInfo.NextRotation = null;
-                        boneInfo.CurrentAngularVelocity = boneInfo.NextAngularVelocity.Value;
-                        boneInfo.NextAngularVelocity = null;
-                    }
+                    boneInfo.Transform.localRotation = boneInfo.Rotation;
                 }
 
 
