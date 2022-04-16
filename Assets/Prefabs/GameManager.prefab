@@ -565,6 +565,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65d5e9cc49a255842837a7d853db68fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onReceivedServerResponse:
+    m_PersistentCalls:
+      m_Calls: []
   m_serverPort: 18418
   gameServerPortNumber: 7777
 --- !u!114 &5842669163583086755
@@ -579,6 +582,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97d06c4b188731a47baf1a65a4b8a512, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  additionalDataToDisplay:
+  - Map
   drawGUI: 0
   offsetX: 5
   offsetY: 150

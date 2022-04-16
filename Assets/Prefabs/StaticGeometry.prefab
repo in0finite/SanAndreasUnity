@@ -43,3 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2400fe08bb4191409f1e53b32fedcc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_serializedObjectDefinitionId: -1
+  m_serializedInstancePosition: {x: 0, y: 0, z: 0}
+  m_serializedInstanceRotation: {x: 0, y: 0, z: 0, w: 0}

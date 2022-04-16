@@ -695,6 +695,7 @@ MonoBehaviour:
     type: 3}
   m_createCollisionObjects: 1
   m_collisionHeight: 200
+  m_shallowCollisionHeight: 10
   m_createVisualsForCollisionObjects: 0
   m_renderingObjects: []
   m_collisionObjects: []
