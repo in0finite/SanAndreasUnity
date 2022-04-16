@@ -561,6 +561,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   warpSampleDistance: 4.5
+  destinationSampleDistances:
+  - 3
+  - 8
+  - 100
 --- !u!1 &1531309216951106
 GameObject:
   m_ObjectHideFlags: 0

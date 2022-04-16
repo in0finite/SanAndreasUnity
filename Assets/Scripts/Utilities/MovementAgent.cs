@@ -19,6 +19,8 @@ namespace SanAndreasUnity.Utilities
 
         public float warpSampleDistance = 4.5f;
 
+        public float[] destinationSampleDistances = new float[] { 3f, 8f, 100f };
+
         public Vector3 DesiredDirection
         {
             get
@@ -293,7 +295,7 @@ namespace SanAndreasUnity.Utilities
             // TODO: performance optimization: this can be done "asyncly": register pathfinding request, and process
             // requests from all agents in Update() function of some Manager script, with some time limit (eg. 1 ms)
 
-            if (NavMesh.SamplePosition(this.Destination.Value, out var hit, 100f, navMeshAgent.areaMask))
+            if (this.SamplePosition(this.Destination.Value, this.destinationSampleDistances, out var hit))
             {
                 // TODO: re-use NavMeshPath object
                 var navMeshPath = new NavMeshPath();
@@ -318,6 +320,20 @@ namespace SanAndreasUnity.Utilities
 
             if (this.NavMeshAgent.hasPath)
                 this.NavMeshAgent.ResetPath();
+        }
+
+        private bool SamplePosition(Vector3 pos, float[] sampleDistances, out NavMeshHit hit)
+        {
+            int areaMask = this.NavMeshAgent.areaMask;
+
+            for (int i = 0; i < sampleDistances.Length; i++)
+            {
+                if (NavMesh.SamplePosition(pos, out hit, sampleDistances[i], areaMask))
+                    return true;
+            }
+
+            hit = default;
+            return false;
         }
 
         private void OnDrawGizmosSelected()
