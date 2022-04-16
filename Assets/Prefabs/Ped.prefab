@@ -428,6 +428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef6b4848632966a4cb177a878e7ce8e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
   syncInterval: 0.1
   shouldPlayAnims: 1
   m_cameraClampValue: {x: 60, y: 60}
@@ -508,10 +509,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneId: 0
   serverOnly: 0
-  localPlayerAuthority: 0
-  m_AssetId: 
-  m_SceneId: 0
+  visible: 0
+  m_AssetId: 9d45d42a7408c1e4ab325d6840364b84
+  hasSpawned: 0
 --- !u!114 &4594788420466467901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,8 +526,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
   syncInterval: 0.1
-  compressRotation: 1
+  clientAuthority: 0
+  sendInterval: 0.05
+  syncPosition: 1
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 0
+  bufferTimeMultiplier: 1
+  bufferSizeLimit: 64
+  catchupThreshold: 4
+  catchupMultiplier: 0.1
+  onlySyncOnChange: 1
+  bufferResetMultiplier: 5
+  positionSensitivity: 0.01
+  rotationSensitivity: 0.01
+  scaleSensitivity: 0.01
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
 --- !u!195 &7038296094652462326
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -609,7 +631,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e93599847d269df4da17655e4ac7b3d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_startingPedId: 167
 --- !u!111 &111466364692026036
 Animation:
   m_ObjectHideFlags: 0

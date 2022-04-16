@@ -47,10 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneId: 0
   serverOnly: 0
-  localPlayerAuthority: 1
-  m_AssetId: 
-  m_SceneId: 0
+  visible: 0
+  m_AssetId: 750f4b120647dadf39075cba7361800a
+  hasSpawned: 0
 --- !u!114 &2203233818454028071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,6 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44df51f4023494b6daf499c76c834403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
   syncInterval: 0.1
 --- !u!114 &2657593453642018504
 MonoBehaviour:
@@ -76,6 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d4923a179fc52c499e4faa2519b80f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
   syncInterval: 0.1
 --- !u!114 &3097963212107052643
 MonoBehaviour:
@@ -101,4 +104,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dde946d1fa4b8774c96e953122a36d77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
   syncInterval: 0.1
