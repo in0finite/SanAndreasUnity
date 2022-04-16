@@ -8,14 +8,14 @@ namespace SanAndreasUnity.Utilities
     {
         public NavMeshAgent NavMeshAgent { get; private set; }
 
-        private float m_lastTimeWhenSearchedForPath = 0f;
+        private double m_lastTimeWhenSearchedForPath = 0f;
 
         public Vector3? Destination { get; set; } = null;
         private Vector3? m_lastAssignedDestination = null;
         private Vector3? m_lastPositionWhenAssignedDestination = null;
 
-        private float m_lastTimeWhenWarped = 0f;
-        private float m_timeWhenSampledOffNavMesh = 0f;
+        private double m_lastTimeWhenWarped = 0f;
+        private double m_timeWhenSampledOffNavMesh = 0f;
 
         public float warpSampleDistance = 4.5f;
 
@@ -94,7 +94,7 @@ namespace SanAndreasUnity.Utilities
                 return;
             }
 
-            float currentTime = Time.time;
+            double currentTime = Time.timeAsDouble;
             Vector3 myPosition = agent.transform.position;
 
             agent.nextPosition = myPosition;
@@ -275,7 +275,7 @@ namespace SanAndreasUnity.Utilities
         {
             NavMeshAgent navMeshAgent = this.NavMeshAgent;
 
-            m_lastTimeWhenSearchedForPath = Time.time;
+            m_lastTimeWhenSearchedForPath = Time.timeAsDouble;
             m_lastAssignedDestination = this.Destination.Value;
             m_lastPositionWhenAssignedDestination = navMeshAgent.transform.position;
             
