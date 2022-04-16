@@ -43,12 +43,6 @@ namespace SanAndreasUnity.Behaviours.Peds
             // these are the velocities used to move the object, calculated when new server data arrives
             public float CalculatedVelocityMagnitude;
             public float CalculatedAngularVelocityMagnitude;
-
-            // next sync data, which will be used when we reach the current sync data
-            /*public Vector3? NextPosition;
-            public Quaternion? NextRotation;
-            public Vector3? NextVelocity;
-            public float? NextAngularVelocity;*/
         }
 
         private Dictionary<int, BoneInfo> m_framesDict = new Dictionary<int, BoneInfo>();
@@ -136,41 +130,15 @@ namespace SanAndreasUnity.Behaviours.Peds
             var model = this.gameObject.GetOrAddComponent<PedModel>();
             model.Load(m_net_modelId);
 
-            /*// add rigid bodies - syncing looks smoother with them
-            model.RagdollBuilder.BuildBodies();
-            foreach (var rb in this.transform.GetComponentsInChildren<Rigidbody>())
-            {
-                rb.useGravity = false;
-                rb.detectCollisions = false;
-                rb.maxAngularVelocity = 0;
-                rb.interpolation = PedManager.Instance.ragdollInterpolationMode;
-            }*/
-
             m_framesDict = model.Frames.ToDictionary(f => f.BoneId, f => BoneInfo.Create(f.transform));
 
             m_boneIds = m_framesDict.Keys.ToArray();
-
-            /*// destroy all rigid bodies except for the root bone - they work for themselves, and bones look deformed and stretched
-            m_framesDict
-                .Where(pair => pair.Key != 0)
-                .Select(pair => pair.Value.Rigidbody)
-                .WhereAlive()
-                .ForEach(Object.Destroy);*/
 
             Object.Destroy(model.AnimComponent);
             Object.Destroy(model);
 
             // apply initial sync data
             // first sync should've been done before calling this function, so the data is available
-
-            /*foreach (int boneId in m_framesDict.Keys)
-            {
-                BoneInfo boneInfo = m_framesDict[boneId];
-                boneInfo.CurrentPosition = boneInfo.Transform.localPosition;
-                boneInfo.CurrentRotation = boneInfo.Transform.localRotation;
-                m_framesDict[boneId] = boneInfo;
-            }*/
-
             this.UpdateBonesDataAfterDeserialization((byte)m_bonesSyncData.Count, true);
 
         }
@@ -350,42 +318,6 @@ namespace SanAndreasUnity.Behaviours.Peds
             // it's better to send local velocity, because rotation of ragdoll can change very fast, and so
             // will the world velocity
             return rb.transform.InverseTransformVector(rb.velocity);
-        }
-
-        private static Vector3 GetReceivedVelocityAsLocal(Transform tr, Vector3 receivedVelocity)
-        {
-            return receivedVelocity;
-        }
-
-        private static Vector3 GetReceivedVelocityAsWorld(Transform tr, Vector3 receivedVelocity)
-        {
-            return tr.TransformVector(receivedVelocity);
-        }
-
-        private static void SetPosition(BoneInfo boneInfo, Vector3 receivedPosition)
-        {
-            // if (boneInfo.Rigidbody != null)
-            //     boneInfo.Rigidbody.MovePosition(boneInfo.Transform.TransformVector(receivedPosition));
-            // else
-            //     boneInfo.Transform.localPosition = receivedPosition;
-
-            boneInfo.Transform.localPosition = receivedPosition;
-        }
-
-        private static void SetRotation(BoneInfo boneInfo, Vector3 receivedRotation)
-        {
-            // Quaternion localRotation = Quaternion.Euler(receivedRotation);
-            // if (boneInfo.Rigidbody != null)
-            //     boneInfo.Rigidbody.MoveRotation(boneInfo.Transform.TransformRotation(localRotation));
-            // else
-            //     boneInfo.Transform.localRotation = localRotation;
-
-            boneInfo.Transform.localRotation = Quaternion.Euler(receivedRotation);
-        }
-
-        private static void SetVelocity(BoneInfo boneInfo, Vector3 receivedVelocity)
-        {
-            boneInfo.Rigidbody.velocity = GetReceivedVelocityAsWorld(boneInfo.Transform, receivedVelocity);
         }
     }
 }
