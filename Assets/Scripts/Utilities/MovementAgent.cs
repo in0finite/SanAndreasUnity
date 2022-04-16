@@ -108,19 +108,14 @@ namespace SanAndreasUnity.Utilities
             {
                 m_lastTimeWhenWarped = currentTime;
 
-                bool bWarp = false;
-                bool bSetDestination = false;
-                
                 // here we sample position to prevent Unity to spam with warning messages saying that agent is
                 // not close to nav mesh
                 if (NavMesh.SamplePosition(myPosition, out var hit, this.warpSampleDistance, agent.areaMask)
                     && agent.Warp(myPosition))
                 {
-                    bWarp = true;
                     if (this.Destination.HasValue && agent.isOnNavMesh)
                     {
                         this.SetDestination();
-                        bSetDestination = true;
                     }
                 }
 
