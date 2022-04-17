@@ -7,6 +7,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         private readonly PathMovementData _pathMovementData = new PathMovementData();
         public PathMovementData PathMovementData => _pathMovementData;
 
+        public float nodeSearchRadius = 500f;
+
 
         public override void OnBecameInactive()
         {
@@ -31,7 +33,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             if (!_pathMovementData.destinationNode.HasValue)
             {
-                PedAI.FindClosestWalkableNode(_pathMovementData, _ped.transform.position);
+                PedAI.FindClosestWalkableNode(_pathMovementData, _ped.transform.position, this.nodeSearchRadius);
                 return;
             }
 

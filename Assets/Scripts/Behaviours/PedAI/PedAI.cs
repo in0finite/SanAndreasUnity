@@ -134,14 +134,14 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             return targetNode.Position + offset.ToVector3XZ();
         }
 
-        public static void FindClosestWalkableNode(PathMovementData pathMovementData, Vector3 position)
+        public static void FindClosestWalkableNode(PathMovementData pathMovementData, Vector3 position, float radius = 200f)
         {
             if (Time.timeAsDouble - pathMovementData.timeWhenAttemptedToFindClosestNode < 2f) // don't attempt to find it every frame
                 return;
 
             pathMovementData.timeWhenAttemptedToFindClosestNode = Time.timeAsDouble;
 
-            var closestPathNodeToWalk = PedAI.GetClosestPathNodeToWalk(position);
+            var closestPathNodeToWalk = PedAI.GetClosestPathNodeToWalk(position, radius);
             if (null == closestPathNodeToWalk)
                 return;
 
@@ -225,10 +225,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
             return previousNode;
         }
 
-        public static PathNode? GetClosestPathNodeToWalk(Vector3 pos)
+        public static PathNode? GetClosestPathNodeToWalk(Vector3 pos, float radius)
         {
-            float radius = 200f;
-
             var pathNodeInfo = NodeReader.GetAreasInRadius(pos, radius)
                 .SelectMany(area => area.PedNodes)
                 .Where(node => !node.Flags.EmergencyOnly)
