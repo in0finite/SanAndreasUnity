@@ -16,7 +16,11 @@ namespace SanAndreasUnity.Commands
 
         private class PlayerData
         {
+            // vehicles spawned by player
             public List<Vehicle> vehicles = new List<Vehicle>();
+
+            // peds spawned by player
+            public List<Ped> peds = new List<Ped>();
         }
 
         readonly Dictionary<Player, PlayerData> m_perPlayerData = new Dictionary<Player, PlayerData>();
@@ -73,6 +77,9 @@ namespace SanAndreasUnity.Commands
             {
                 playerData.vehicles.RemoveDeadObjects();
                 playerData.vehicles.ForEach(v => Object.Destroy(v.gameObject));
+
+                playerData.peds.RemoveDeadObjects();
+                playerData.peds.ForEach(p => Object.Destroy(p.gameObject));
             }
 
             m_perPlayerData.Remove(player);
@@ -126,8 +133,16 @@ namespace SanAndreasUnity.Commands
                 if (!GetPedModelId(arguments, 1, out int modelId))
                     return pedModelIdDoesNotExist;
 
+                if (!m_perPlayerData.TryGetValue(player, out PlayerData playerData))
+                    playerData = new PlayerData();
+
+                playerData.peds.RemoveDeadObjects();
+
                 var pedAI = Ped.SpawnPedStalker(modelId, player.OwnedPed.transform, player.OwnedPed);
                 AddWeaponToSpawnedPed(pedAI.MyPed, false);
+
+                playerData.peds.Add(pedAI.MyPed);
+                m_perPlayerData[player] = playerData;
 
                 return CommandManager.ProcessCommandResult.Success;
             }
@@ -139,9 +154,17 @@ namespace SanAndreasUnity.Commands
                 if (!GetPedModelId(arguments, 1, out int modelId))
                     return pedModelIdDoesNotExist;
 
+                if (!m_perPlayerData.TryGetValue(player, out PlayerData playerData))
+                    playerData = new PlayerData();
+
+                playerData.peds.RemoveDeadObjects();
+
                 var pedAI = Ped.SpawnPedAI(modelId, player.OwnedPed.transform, 15f, 30f);
                 AddWeaponToSpawnedPed(pedAI.MyPed, true);
                 pedAI.StartChasing(player.OwnedPed);
+
+                playerData.peds.Add(pedAI.MyPed);
+                m_perPlayerData[player] = playerData;
 
                 return CommandManager.ProcessCommandResult.Success;
             }
