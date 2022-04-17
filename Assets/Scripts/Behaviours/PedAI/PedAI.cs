@@ -136,10 +136,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public static void FindClosestWalkableNode(PathMovementData pathMovementData, Vector3 position)
         {
-            if (Time.time - pathMovementData.timeWhenAttemptedToFindClosestNode < 2f) // don't attempt to find it every frame
+            if (Time.timeAsDouble - pathMovementData.timeWhenAttemptedToFindClosestNode < 2f) // don't attempt to find it every frame
                 return;
 
-            pathMovementData.timeWhenAttemptedToFindClosestNode = Time.time;
+            pathMovementData.timeWhenAttemptedToFindClosestNode = Time.timeAsDouble;
 
             var closestPathNodeToWalk = PedAI.GetClosestPathNodeToWalk(position);
             if (null == closestPathNodeToWalk)
