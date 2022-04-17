@@ -18,6 +18,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         public float TimeSinceStartedSurrendering => Time.time - _timeWhenStartedSurrendering;
         public bool IsSurrendering => this.TimeSinceStartedSurrendering < 4f;
 
+        public float nodeSearchRadius = 500f;
+
 
         protected internal override void OnAwake(PedAI pedAI)
         {
@@ -87,7 +89,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
             if (!_pathMovementData.destinationNode.HasValue)
             {
-                PedAI.FindClosestWalkableNode(_pathMovementData, _ped.transform.position);
+                PedAI.FindClosestWalkableNode(_pathMovementData, _ped.transform.position, this.nodeSearchRadius);
                 return;
             }
 
