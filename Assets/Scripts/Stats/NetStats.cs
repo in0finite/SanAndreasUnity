@@ -3,6 +3,7 @@ using UnityEngine;
 using Mirror;
 using SanAndreasUnity.Behaviours.Peds;
 using SanAndreasUnity.Net;
+using System;
 
 namespace SanAndreasUnity.Stats
 {
@@ -15,30 +16,39 @@ namespace SanAndreasUnity.Stats
 
         void OnStatGUI()
         {
-            GUILayout.Label("Network time: " + NetworkTime.time);
-            GUILayout.Label("Local network time: " + NetworkTime.localTime);
+            var sb = new System.Text.StringBuilder();
+
+            AddTimeSpan(sb, "Network time: ", NetworkTime.time);
+            AddTimeSpan(sb, "Local network time: ", NetworkTime.localTime);
 
             if (NetStatus.IsServer)
             {
-                Utilities.GUIUtils.DrawHorizontalLine(1, 1, Color.black);
-                GUILayout.Label("Num connections: " + NetworkServer.connections.Count);
-                GUILayout.Label("Max num players: " + NetManager.maxNumPlayers);
-                GUILayout.Label($"Dead body traffic per client: {DeadBody.DeadBodies.Sum(db => db.TrafficKbps)} Kb/s");
+                sb.AppendLine("-----------------------");
+                sb.AppendLine("Num connections: " + NetworkServer.connections.Count);
+                sb.AppendLine("Max num players: " + NetManager.maxNumPlayers);
+                sb.AppendLine($"Dead body traffic per client: {DeadBody.DeadBodies.Sum(db => db.TrafficKbps)} Kb/s");
             }
 
             if (NetStatus.IsClientActive())
             {
-                Utilities.GUIUtils.DrawHorizontalLine(1, 1, Color.black);
-                GUILayout.Label("Ping: " + (NetworkTime.rtt * 1000) + " ms");
-                GUILayout.Label("Ping send frequency: " + (NetworkTime.PingFrequency * 1000) + " ms");
-                GUILayout.Label("Rtt sd: " + (NetworkTime.rttStandardDeviation * 1000) + " ms");
-                GUILayout.Label("Rtt var: " + (NetworkTime.rttVariance * 1000) + " ms");
-                GUILayout.Label("Server ip: " + NetworkClient.serverIp);
-                GUILayout.Label("Time since last message: " +
+                sb.AppendLine("-----------------------");
+                sb.AppendLine("Ping: " + (NetworkTime.rtt * 1000) + " ms");
+                sb.AppendLine("Ping send frequency: " + (NetworkTime.PingFrequency * 1000) + " ms");
+                sb.AppendLine("Rtt sd: " + (NetworkTime.rttStandardDeviation * 1000) + " ms");
+                sb.AppendLine("Rtt var: " + (NetworkTime.rttVariance * 1000) + " ms");
+                sb.AppendLine("Server ip: " + NetworkClient.serverIp);
+                sb.AppendLine("Time since last message: " +
                                 (Time.time - NetworkClient.connection.lastMessageTime));
             }
 
-            GUILayout.Label($"Num spawned network objects: {NetManager.NumSpawnedNetworkObjects}");
+            sb.AppendLine($"Num spawned network objects: {NetManager.NumSpawnedNetworkObjects}");
+
+            GUILayout.Label(sb.ToString());
+        }
+
+        private static void AddTimeSpan(System.Text.StringBuilder sb, string text, double seconds)
+        {
+            sb.AppendLine($"{text}: {TimeSpan.FromSeconds(seconds)}");
         }
     }
 }
