@@ -18,8 +18,8 @@ namespace SanAndreasUnity.Stats
         {
             var sb = new System.Text.StringBuilder();
 
-            AddTimeSpan(sb, "Network time: ", NetworkTime.time);
-            AddTimeSpan(sb, "Local network time: ", NetworkTime.localTime);
+            AddTimeSpan(sb, "Network time", NetworkTime.time);
+            AddTimeSpan(sb, "Local network time", NetworkTime.localTime);
 
             if (NetStatus.IsServer)
             {
@@ -32,13 +32,13 @@ namespace SanAndreasUnity.Stats
             if (NetStatus.IsClientActive())
             {
                 sb.AppendLine("-----------------------");
-                sb.AppendLine("Ping: " + (NetworkTime.rtt * 1000) + " ms");
-                sb.AppendLine("Ping send frequency: " + (NetworkTime.PingFrequency * 1000) + " ms");
-                sb.AppendLine("Rtt sd: " + (NetworkTime.rttStandardDeviation * 1000) + " ms");
-                sb.AppendLine("Rtt var: " + (NetworkTime.rttVariance * 1000) + " ms");
+                AddAsMs(sb, "Ping", NetworkTime.rtt);
+                AddAsMs(sb, "Ping send frequency", NetworkTime.PingFrequency);
+                AddAsMs(sb, "Rtt sd", NetworkTime.rttStandardDeviation);
+                AddAsMs(sb, "Rtt var", NetworkTime.rttVariance);
                 sb.AppendLine("Server ip: " + NetworkClient.serverIp);
-                sb.AppendLine("Time since last message: " +
-                                (Time.time - NetworkClient.connection.lastMessageTime));
+                AddAsMs(sb, "Time since last message",
+                                Time.time - NetworkClient.connection.lastMessageTime);
             }
 
             sb.AppendLine($"Num spawned network objects: {NetManager.NumSpawnedNetworkObjects}");
@@ -49,6 +49,11 @@ namespace SanAndreasUnity.Stats
         private static void AddTimeSpan(System.Text.StringBuilder sb, string text, double seconds)
         {
             sb.AppendLine($"{text}: {TimeSpan.FromSeconds(seconds)}");
+        }
+
+        private static void AddAsMs(System.Text.StringBuilder sb, string text, double seconds)
+        {
+            sb.AppendLine($"{text}: {seconds * 1000:0.00} ms");
         }
     }
 }
