@@ -5,11 +5,14 @@ using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Peds;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Utilities;
+using System;
 
 namespace SanAndreasUnity.Stats
 {
     public class MiscStats : MonoBehaviour
     {
+        private int m_nestingLevel = 0;
+
         
         void Start()
         {
@@ -18,6 +21,8 @@ namespace SanAndreasUnity.Stats
 
         void OnStatGUI()
         {
+
+            m_nestingLevel = 0;
 
             var sb = new System.Text.StringBuilder();
 
@@ -180,6 +185,22 @@ namespace SanAndreasUnity.Stats
 
             }
 
+            // time
+            sb.AppendLine("time:");
+            m_nestingLevel++;
+            AddTimeSpan(sb, "time", Time.timeAsDouble);
+            AddTimeSpan(sb, "unscaled time", Time.unscaledTimeAsDouble);
+            AddTimeSpan(sb, "fixed time", Time.fixedTimeAsDouble);
+            AddTimeSpan(sb, "fixed unscaled time", Time.fixedUnscaledTimeAsDouble);
+            AddTimeSpan(sb, "realtime since startup", Time.realtimeSinceStartupAsDouble);
+            AddTimeSpan(sb, "time since level load", Time.timeSinceLevelLoadAsDouble);
+            AddAsMs(sb, "delta time", Time.deltaTime);
+            AddAsMs(sb, "fixed delta time", Time.fixedDeltaTime);
+            AddAsMs(sb, "smooth delta time", Time.smoothDeltaTime);
+            AddAsMs(sb, "maximum delta time", Time.maximumDeltaTime);
+            m_nestingLevel--;
+            sb.AppendLine();
+
             // on-screen messages
             sb.AppendFormat("num on-screen messages: {0}\n", OnScreenMessageManager.Instance.Messages.Count);
             sb.AppendFormat("num pooled on-screen messages: {0}\n", OnScreenMessageManager.Instance.NumPooledMessages);
@@ -200,6 +221,24 @@ namespace SanAndreasUnity.Stats
 
             GUILayout.Label(sb.ToString());
 
+        }
+
+        private void AddNesting(System.Text.StringBuilder sb)
+        {
+            for (int i = 0; i < m_nestingLevel; i++)
+                sb.Append('\t');
+        }
+
+        private void AddTimeSpan(System.Text.StringBuilder sb, string text, double seconds)
+        {
+            AddNesting(sb);
+            sb.AppendLine($"{text}: {TimeSpan.FromSeconds(seconds)}");
+        }
+
+        private void AddAsMs(System.Text.StringBuilder sb, string text, double seconds)
+        {
+            AddNesting(sb);
+            sb.AppendLine($"{text}: {seconds * 1000:0.00} ms");
         }
 
         private static void AppendStatsForBackgroundJobRunner(
