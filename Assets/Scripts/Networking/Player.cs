@@ -51,6 +51,11 @@ namespace SanAndreasUnity.Net
         /// </summary>
         public string CachedIpAddress { get; private set; } = string.Empty;
 
+        /// <summary>
+        /// Is this player a server admin ? Admins have full control of server.
+        /// </summary>
+        public bool IsServerAdmin { get; set; } = false;
+
 
         Player()
         {

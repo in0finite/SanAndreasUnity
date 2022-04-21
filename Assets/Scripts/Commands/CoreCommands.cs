@@ -14,6 +14,7 @@ namespace SanAndreasUnity.Commands
                 new CommandManager.CommandInfo("uptime", true),
                 new CommandManager.CommandInfo("players", true),
                 new CommandManager.CommandInfo("kick", false),
+                new CommandManager.CommandInfo("auth", null, true, true, 2f),
                 new CommandManager.CommandInfo("startserver", false),
                 new CommandManager.CommandInfo("starthost", false),
                 new CommandManager.CommandInfo("connect", false),
@@ -97,6 +98,24 @@ namespace SanAndreasUnity.Commands
                         p.Disconnect();
                     }
                 }
+            }
+            else if (words[0] == "auth")
+            {
+                // authenticate player
+
+                if (NetUtils.IsServer)
+                {
+                    string adminPass = Config.GetString("admin_pass");
+                    if (!string.IsNullOrWhiteSpace(adminPass))
+                    {
+                        string providedPass = words[1];
+                        bool matches = providedPass == adminPass;
+                        context.player.IsServerAdmin = matches;
+                        response = matches ? "Success" : "Failed";
+                        Debug.Log($"Player {context.player.DescriptionForLogging} performed authentication, result {matches}");
+                    }
+                }
+
             }
             else if (words[0] == "startserver" || words[0] == "starthost")
             {
