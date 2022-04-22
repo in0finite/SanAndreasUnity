@@ -23,5 +23,7 @@
   "RCON_password": "super_secret_password",
   "RCON_port": 25575,
 
+  "admin_pass": null,
+
   "master_server_url": "http://saumasterserver.servegame.com:7080"
 }

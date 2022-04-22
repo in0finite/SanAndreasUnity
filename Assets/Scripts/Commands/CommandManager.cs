@@ -215,7 +215,10 @@ namespace SanAndreasUnity.Commands
 
         public ProcessCommandResult ProcessCommandForPlayer(Player player, string command)
         {
-            bool hasServerPermissions = player == Player.Local;
+            if (null == player)
+                throw new System.ArgumentNullException(nameof(player));
+
+            bool hasServerPermissions = player == Player.Local || player.IsServerAdmin;
             return ProcessCommand(new ProcessCommandContext
             {
                 command = command,
