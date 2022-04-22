@@ -80,8 +80,19 @@ namespace SanAndreasUnity.Commands
 
         public class ProcessCommandContext
         {
+            /// <summary>
+            /// Command that should be processed. This variable contains the entire command, including arguments.
+            /// </summary>
             public string command;
+
+            /// <summary>
+            /// Does the executor have server permissions ?
+            /// </summary>
             public bool hasServerPermissions;
+            
+            /// <summary>
+            /// Player who is executing the command.
+            /// </summary>
             public Player player;
         }
 
@@ -105,6 +116,12 @@ namespace SanAndreasUnity.Commands
 
         public bool RegisterCommand(CommandInfo commandInfo)
         {
+            if (null == commandInfo.commandHandler)
+                throw new System.ArgumentException("Command handler must be provided");
+
+            if (string.IsNullOrWhiteSpace(commandInfo.command))
+                throw new System.ArgumentException("Command can not be empty");
+
             commandInfo.command = commandInfo.command.Trim();
 
             if (this.ForbiddenCommands.Contains(commandInfo.command))
