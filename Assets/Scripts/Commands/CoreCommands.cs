@@ -1,6 +1,7 @@
 ﻿using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Net;
 using SanAndreasUnity.Utilities;
+using System.Linq;
 using UnityEngine;
 
 namespace SanAndreasUnity.Commands
@@ -13,6 +14,7 @@ namespace SanAndreasUnity.Commands
             {
                 new CommandManager.CommandInfo("uptime", true),
                 new CommandManager.CommandInfo("players", true),
+                new CommandManager.CommandInfo("stats", "show statistics", false, false, 1f),
                 new CommandManager.CommandInfo("kick", false),
                 new CommandManager.CommandInfo("auth", null, true, true, 2f),
                 new CommandManager.CommandInfo("startserver", false),
@@ -82,6 +84,37 @@ namespace SanAndreasUnity.Commands
                         response += " | " + player.CachedIpAddress;
                     response += "\n";
                 }
+            }
+            else if (words[0] == "stats")
+            {
+                string category = null;
+                if (numWords > 1)
+                    category = words[1];
+
+                var entries = Utilities.Stats.Entries;
+                if (category != null)
+                    entries = entries.Where(_ => _.Key == category);
+
+                var statsContext = new Utilities.Stats.GetStatsContext();
+
+                foreach (var entriesWithCategory in entries)
+                {
+                    statsContext.AppendLine("--------------------------------");
+                    statsContext.AppendLine(entriesWithCategory.Key);
+                    statsContext.AppendLine("--------------------------------");
+                    statsContext.AppendLine();
+                    statsContext.AppendLine();
+
+                    foreach (var entry in entriesWithCategory.Value)
+                    {
+                        entry.getStatsAction?.Invoke(statsContext);
+                    }
+
+                    statsContext.AppendLine();
+                }
+
+                response += statsContext.stringBuilder.ToString();
+
             }
             else if (words[0] == "kick")
             {
