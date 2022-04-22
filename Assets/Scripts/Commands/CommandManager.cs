@@ -9,7 +9,8 @@ namespace SanAndreasUnity.Commands
     {
         public static CommandManager Singleton { get; private set; }
 
-        readonly Dictionary<string, CommandInfo> m_registeredCommands = new Dictionary<string, CommandInfo>();
+        readonly Dictionary<string, CommandInfo> m_registeredCommands =
+            new Dictionary<string, CommandInfo>(System.StringComparer.InvariantCulture);
 
         public IEnumerable<string> RegisteredCommands => m_registeredCommands.Keys;
 
