@@ -22,6 +22,7 @@ namespace SanAndreasUnity.Commands
                 new CommandManager.CommandInfo("connect", "connect to server", false),
                 new CommandManager.CommandInfo("exit", "exit application", false),
                 new CommandManager.CommandInfo("camera_disable", "disable or enable camera", false),
+                new CommandManager.CommandInfo("cmd_server", "run command as server", false),
             };
 
             foreach (var immutableCmd in commands)
@@ -63,6 +64,10 @@ namespace SanAndreasUnity.Commands
                         response += "Invalid value. Use 0 or 1.";
                     }
                 }
+            }
+            else if (words[0] == "cmd_server")
+            {
+                return CommandManager.Singleton.ProcessCommandAsServer(restOfTheCommand);
             }
             else if (words[0] == "uptime")
             {
