@@ -89,11 +89,11 @@ namespace SanAndreasUnity.Commands
             {
                 string category = null;
                 if (numWords > 1)
-                    category = words[1];
+                    category = words[1].ToLowerInvariant();
 
                 var entries = Utilities.Stats.Entries;
                 if (category != null)
-                    entries = entries.Where(_ => _.Key == category);
+                    entries = entries.Where(_ => _.Key.ToLowerInvariant() == category);
 
                 var statsContext = new Utilities.Stats.GetStatsContext();
 
