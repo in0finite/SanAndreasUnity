@@ -11,6 +11,10 @@ namespace SanAndreasUnity.Chat
         private void Start()
         {
             ChatManager.singleton.RegisterChatPreprocessor(new ChatPreprocessor {processCallback = ProcessChatMessage});
+            CommandManager.Singleton.RegisterCommand(new CommandManager.CommandInfo("say", "send chat message", true, false, 1.5f)
+            {
+                commandHandler = ProcessSayCommand,
+            });
         }
 
         private ChatPreprocessorResult ProcessChatMessage(Player player, string chatMessage)
@@ -49,6 +53,12 @@ namespace SanAndreasUnity.Chat
 
             // discard chat message
             return new ChatPreprocessorResult {shouldBeDiscarded = true};
+        }
+
+        CommandManager.ProcessCommandResult ProcessSayCommand(CommandManager.ProcessCommandContext context)
+        {
+            ChatManager.SubmitChatMessage(CommandManager.GetRestOfTheCommand(context.command, 0));
+            return CommandManager.ProcessCommandResult.Success;
         }
     }
 }

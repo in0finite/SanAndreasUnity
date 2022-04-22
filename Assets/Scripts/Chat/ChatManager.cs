@@ -168,6 +168,18 @@ namespace SanAndreasUnity.Chat
 			SendChatMessageToPlayerAsServer (player, msg, useServerNick ? singleton.serverChatNick : "");
 		}
 
+		/// <summary>
+		/// Submit chat message. If there is a local player, message will be sent from that player to the server.
+		/// Otherwise, if server is active, message will be sent from server to all players.
+		/// </summary>
+		public static void SubmitChatMessage(string msg)
+        {
+			if (Player.Local != null)
+				SendChatMessageToAllPlayersAsLocalPlayer(msg);
+			else if (NetStatus.IsServer)
+				SendChatMessageToAllPlayersAsServer(msg);
+        }
+
 		private	static	void	SendChatMessageToPlayerAsServer( Player player, string msg, string sender ) {
 
 			NetStatus.ThrowIfNotOnServer();
