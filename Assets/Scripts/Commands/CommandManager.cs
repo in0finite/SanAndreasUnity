@@ -46,6 +46,14 @@ namespace SanAndreasUnity.Commands
                 this.allowToRunWithoutServerPermissions = allowToRunWithoutServerPermissions;
             }
 
+            public CommandInfo(string command, string description, bool allowToRunWithoutServerPermissions)
+                : this()
+            {
+                this.command = command;
+                this.description = description;
+                this.allowToRunWithoutServerPermissions = allowToRunWithoutServerPermissions;
+            }
+
             public CommandInfo(string command, string description, bool allowToRunWithoutServerPermissions, bool runOnlyOnServer, float limitInterval)
                 : this()
             {

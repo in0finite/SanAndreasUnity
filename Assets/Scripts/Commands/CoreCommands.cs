@@ -12,16 +12,16 @@ namespace SanAndreasUnity.Commands
         {
             var commands = new CommandManager.CommandInfo[]
             {
-                new CommandManager.CommandInfo("uptime", true),
-                new CommandManager.CommandInfo("players", true),
+                new CommandManager.CommandInfo("uptime", "show uptime of application", true),
+                new CommandManager.CommandInfo("players", "show players", true),
                 new CommandManager.CommandInfo("stats", "show statistics", false, false, 1f),
-                new CommandManager.CommandInfo("kick", false),
-                new CommandManager.CommandInfo("auth", null, true, true, 2f),
-                new CommandManager.CommandInfo("startserver", false),
-                new CommandManager.CommandInfo("starthost", false),
-                new CommandManager.CommandInfo("connect", false),
-                new CommandManager.CommandInfo("exit", false),
-                new CommandManager.CommandInfo("camera_disable", false),
+                new CommandManager.CommandInfo("kick", "kick player from server", false),
+                new CommandManager.CommandInfo("auth", "authenticate", true, true, 2f),
+                new CommandManager.CommandInfo("startserver", "start server", false),
+                new CommandManager.CommandInfo("starthost", "start host", false),
+                new CommandManager.CommandInfo("connect", "connect to server", false),
+                new CommandManager.CommandInfo("exit", "exit application", false),
+                new CommandManager.CommandInfo("camera_disable", "disable or enable camera", false),
             };
 
             foreach (var immutableCmd in commands)
