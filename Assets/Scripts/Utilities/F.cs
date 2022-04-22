@@ -120,38 +120,14 @@ namespace SanAndreasUnity.Utilities
         }
 
         /// <summary>
-        /// Formats the elapsed time (in seconds) in format hh:mm:ss, but removes the unnecessary prefix values which are zero.
-        /// For example, 40 seconds will just return 40, 70 will return 01:10, 3700 will return 01:01:40.
+        /// Formats the elapsed time (in seconds) in format [d].[hh]:mm:ss.[fff].
+        /// For example, 40 seconds will return 00:40, 70 will return 01:10, 3700 will return 01:01:40.
         /// </summary>
-        public	static	string	FormatElapsedTime( float elapsedTime ) {
-
-	        int elapsedTimeInteger = Mathf.CeilToInt (elapsedTime);
-
-	        int hours = elapsedTimeInteger / 3600;
-	        int minutes = elapsedTimeInteger % 3600 / 60;
-	        int seconds = elapsedTimeInteger % 3600 % 60 ;
-
-	        var sb = new System.Text.StringBuilder (10);
-
-	        if (hours > 0) {
-		        if (hours < 10)
-			        sb.Append ("0");
-		        sb.Append (hours);
-		        sb.Append (":");
-	        }
-
-	        if (hours > 0 || minutes > 0) {
-		        if (minutes < 10)
-			        sb.Append ("0");
-		        sb.Append (minutes);
-		        sb.Append (":");
-	        }
-
-	        if (seconds < 10)
-		        sb.Append ("0");
-	        sb.Append (seconds);
-
-	        return sb.ToString ();
+        public static string FormatElapsedTime(double elapsedTimeSeconds, bool useMilliseconds = false)
+        {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(elapsedTimeSeconds);
+            string format = (timeSpan.Days > 0 ? "d\\." : "") + (timeSpan.Hours > 0 ? "hh\\:" : "") + "mm\\:ss" + (useMilliseconds ? "\\.fff" : "");
+            return timeSpan.ToString(format, CultureInfo.InvariantCulture);
         }
 
         public static string Nl2Br(this string str)

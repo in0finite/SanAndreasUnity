@@ -4,6 +4,7 @@ using Mirror;
 using SanAndreasUnity.Behaviours.Peds;
 using SanAndreasUnity.Net;
 using System;
+using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Stats
 {
@@ -46,7 +47,7 @@ namespace SanAndreasUnity.Stats
 
         private static void AddTimeSpan(System.Text.StringBuilder sb, string text, double seconds)
         {
-            sb.AppendLine($"{text}: {TimeSpan.FromSeconds(seconds)}");
+            sb.AppendLine($"{text}: {F.FormatElapsedTime(seconds)}");
         }
 
         private static void AddAsMs(System.Text.StringBuilder sb, string text, double seconds)

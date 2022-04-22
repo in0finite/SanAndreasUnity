@@ -44,7 +44,7 @@ namespace SanAndreasUnity.Utilities
 
             double percLeft = 1.0 - newProgressPerc;
             double secondsLeft = percLeft / percPerSecond;
-            this.ETA = F.FormatElapsedTime((float)secondsLeft);
+            this.ETA = F.FormatElapsedTime(secondsLeft);
 
             m_lastProgressPerc = newProgressPerc;
         }

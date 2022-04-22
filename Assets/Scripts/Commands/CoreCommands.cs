@@ -71,7 +71,7 @@ namespace SanAndreasUnity.Commands
             }
             else if (words[0] == "uptime")
             {
-                response += F.FormatElapsedTime(Time.realtimeSinceStartup);
+                response += F.FormatElapsedTime(Time.realtimeSinceStartupAsDouble);
             }
             else if (words[0] == "players")
             {

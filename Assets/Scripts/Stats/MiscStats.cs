@@ -229,7 +229,7 @@ namespace SanAndreasUnity.Stats
         private void AddTimeSpan(System.Text.StringBuilder sb, string text, double seconds)
         {
             AddNesting(sb);
-            sb.AppendLine($"{text}: {TimeSpan.FromSeconds(seconds)}");
+            sb.AppendLine($"{text}: {F.FormatElapsedTime(seconds)}");
         }
 
         private void AddAsMs(System.Text.StringBuilder sb, string text, double seconds)
