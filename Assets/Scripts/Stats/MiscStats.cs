@@ -16,15 +16,15 @@ namespace SanAndreasUnity.Stats
         
         void Start()
         {
-            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry(){category = "MISC", onGUI = OnStatGUI});
+            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry(){category = "MISC", getStatsAction = GetStats});
         }
 
-        void OnStatGUI()
+        void GetStats(Utilities.Stats.GetStatsContext context)
         {
 
             m_nestingLevel = 0;
 
-            var sb = new System.Text.StringBuilder();
+            var sb = context.stringBuilder;
 
             sb.AppendFormat("num peds: {0}\n", Ped.NumPeds);
             sb.AppendFormat("num vehicles: {0}\n", Vehicle.NumVehicles);
@@ -217,9 +217,6 @@ namespace SanAndreasUnity.Stats
             sb.Append($"\tmax time per frame ms: {PathfindingManager.Singleton.MaxTimePerFrameMs}\n");
             AppendStatsForBackgroundJobRunner(sb, PathfindingManager.Singleton.BackgroundJobRunner, "\t");
             sb.AppendLine();
-
-
-            GUILayout.Label(sb.ToString());
 
         }
 

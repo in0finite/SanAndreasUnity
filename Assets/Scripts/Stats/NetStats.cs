@@ -11,12 +11,12 @@ namespace SanAndreasUnity.Stats
     {
         void Start()
         {
-            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry() { category = "NET", onGUI = OnStatGUI });
+            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry() { category = "NET", getStatsAction = GetStats });
         }
 
-        void OnStatGUI()
+        void GetStats(Utilities.Stats.GetStatsContext context)
         {
-            var sb = new System.Text.StringBuilder();
+            var sb = context.stringBuilder;
 
             AddTimeSpan(sb, "Network time", NetworkTime.time);
             AddTimeSpan(sb, "Local network time", NetworkTime.localTime);
@@ -42,8 +42,6 @@ namespace SanAndreasUnity.Stats
             }
 
             sb.AppendLine($"Num spawned network objects: {NetManager.NumSpawnedNetworkObjects}");
-
-            GUILayout.Label(sb.ToString());
         }
 
         private static void AddTimeSpan(System.Text.StringBuilder sb, string text, double seconds)

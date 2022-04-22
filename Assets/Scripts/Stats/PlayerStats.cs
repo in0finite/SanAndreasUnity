@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 using SanAndreasUnity.Net;
+using System.Collections.Generic;
 
 namespace SanAndreasUnity.Stats
 {
@@ -17,15 +18,18 @@ namespace SanAndreasUnity.Stats
         public const string ColumnNamesKey = "player_stats_column_names";
         public const string ColumnWidthsKey = "player_stats_column_widths";
 
+        private readonly List<string> m_textsForPlayer = new List<string>();
+
 
         void Start()
         {
-            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry(){category = "PLAYERS", onGUI = OnStatGUI});
+            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry(){category = "PLAYERS", getStatsAction = GetStats});
         }
 
-        void OnStatGUI()
+        void GetStats(Utilities.Stats.GetStatsContext context)
         {
-            
+
+            var sb = context.stringBuilder;
             bool isServer = NetStatus.IsServer;
 
             string[] dataKeys = SyncedServerData.Data.GetStringArray(ColumnDataKeysKey) ?? new string[0];
@@ -40,38 +44,66 @@ namespace SanAndreasUnity.Stats
                 return;
 
             // columns
-            GUILayout.BeginHorizontal();
+
+            if (context.isOnGui)
+                GUILayout.BeginHorizontal();
+
             m_currentIndex = 0;
             for (int i=0; i < m_currentColumnNames.Length; i++)
-                GUILayout.Button(m_currentColumnNames[i], GUILayout.Width(GetWidth()));
-            GUILayout.EndHorizontal();
+            {
+                if (context.isOnGui)
+                    GUILayout.Button(m_currentColumnNames[i], GUILayout.Width(GetWidth()));
+                else
+                    sb.Append(m_currentColumnNames[i].PadRight(GetWidthForText()));
+            }
+
+            if (context.isOnGui)
+                GUILayout.EndHorizontal();
+            else
+                sb.AppendLine();
 
             foreach (var p in Player.AllPlayersEnumerable)
             {
-                GUILayout.BeginHorizontal();
+                if (context.isOnGui)
+                    GUILayout.BeginHorizontal();
 
                 m_currentIndex = 0;
-                GUILayout.Label(p.PlayerName, GUILayout.Width(GetWidth()));
-                GUILayout.Label(p.CachedIpAddress, GUILayout.Width(GetWidth()));
-                GUILayout.Label(p.netId.ToString(), GUILayout.Width(GetWidth()));
-                GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.netId.ToString() : "", GUILayout.Width(GetWidth()));
-                GUILayout.Label(p.OwnedPed != null && p.OwnedPed.PedDef != null ? p.OwnedPed.PedDef.ModelName : "", GUILayout.Width(GetWidth()));
-                GUILayout.Label(p.OwnedPed != null && p.OwnedPed.CurrentState != null ? p.OwnedPed.CurrentState.GetType().Name : "", GUILayout.Width(GetWidth()));
-                GUILayout.Label(p.OwnedPed != null ? p.OwnedPed.Health.ToString() : "", GUILayout.Width(GetWidth()));
-                GUILayout.Label(p.OwnedPed != null && p.OwnedPed.CurrentWeapon != null && p.OwnedPed.CurrentWeapon.Definition != null ? p.OwnedPed.CurrentWeapon.Definition.ModelName : "", GUILayout.Width(GetWidth()));
+                m_textsForPlayer.Clear();
+
+                m_textsForPlayer.Add(p.PlayerName);
+                m_textsForPlayer.Add(p.CachedIpAddress);
+                m_textsForPlayer.Add(p.netId.ToString());
+                m_textsForPlayer.Add(p.OwnedPed != null ? p.OwnedPed.netId.ToString() : "");
+                m_textsForPlayer.Add(p.OwnedPed != null && p.OwnedPed.PedDef != null ? p.OwnedPed.PedDef.ModelName : "");
+                m_textsForPlayer.Add(p.OwnedPed != null && p.OwnedPed.CurrentState != null ? p.OwnedPed.CurrentState.GetType().Name : "");
+                m_textsForPlayer.Add(p.OwnedPed != null ? p.OwnedPed.Health.ToString() : "");
+                m_textsForPlayer.Add(p.OwnedPed != null && p.OwnedPed.CurrentWeapon != null && p.OwnedPed.CurrentWeapon.Definition != null ? p.OwnedPed.CurrentWeapon.Definition.ModelName : "");
 
                 foreach (string dataKey in dataKeys)
                 {
                     string data = p.ExtraData.GetString(dataKey) ?? string.Empty;
-                    GUILayout.Label(data, GUILayout.Width(GetWidth()));
+                    m_textsForPlayer.Add(data);
                 }
 
-                GUILayout.EndHorizontal();
+                foreach (string text in m_textsForPlayer)
+                {
+                    if (context.isOnGui)
+                        GUILayout.Label(text, GUILayout.Width(GetWidth()));
+                    else
+                        sb.Append(text.PadRight(GetWidthForText()));
+                }
+
+                if (context.isOnGui)
+                    GUILayout.EndHorizontal();
+                else
+                    sb.AppendLine();
             }
 
         }
 
         float GetWidth() => m_currentWidths[m_currentIndex++];
+
+        int GetWidthForText() => Mathf.RoundToInt(this.GetWidth() / 3f);
 
     }
 }

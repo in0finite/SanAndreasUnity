@@ -10,6 +10,7 @@ namespace SanAndreasUnity.UI
     {
 		int m_tabIndex = 0;
         Vector2 m_scrollViewPos = Vector2.zero;
+        readonly Utilities.Stats.GetStatsContext m_statsContext = new Utilities.Stats.GetStatsContext(true);
 
 
 		StatsWindow()
@@ -43,8 +44,11 @@ namespace SanAndreasUnity.UI
                 {
                     if (!string.IsNullOrEmpty(stat.text))
                         GUILayout.Label(stat.text);
-                    if (stat.onGUI != null)
-                        stat.onGUI();
+
+                    m_statsContext.stringBuilder.Clear();
+                    stat.getStatsAction?.Invoke(m_statsContext);
+                    if (m_statsContext.stringBuilder.Length > 0)
+                        GUILayout.Label(m_statsContext.stringBuilder.ToString());
                 }
                 GUILayout.EndScrollView();
             }

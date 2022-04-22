@@ -7,18 +7,14 @@ namespace SanAndreasUnity.Stats
 {
     public class WorldStats : MonoBehaviour
     {
-        private readonly System.Text.StringBuilder _stringBuilder = new System.Text.StringBuilder();
-
-
         void Start()
         {
-            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry(){category = "WORLD", onGUI = OnStatGUI});
+            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry(){ category = "WORLD", getStatsAction = GetStats });
         }
 
-        void OnStatGUI()
+        void GetStats(Utilities.Stats.GetStatsContext context)
         {
-            var sb = _stringBuilder;
-            sb.Clear();
+            var sb = context.stringBuilder;
 
             var cell = Cell.Instance;
 
@@ -75,7 +71,6 @@ namespace SanAndreasUnity.Stats
                 sb.Append($"World not loaded\n");
             }
 
-            GUILayout.Label(sb.ToString());
         }
 
     }
