@@ -108,20 +108,31 @@ namespace SanAndreasUnity.Chat
 			return true;
 		}
 
-		public static string ProcessChatMessage(string chatMessage, bool allowTags)
+		public static string ProcessChatMessage(string chatMessage, bool allowTags, bool limitLength = true)
 		{
+			// note: if tags are allowed, length of the message will not be limited
+
 			if (chatMessage == null)
 				return string.Empty;
 
-			if (chatMessage.Length > 2000)
+			if (limitLength && chatMessage.Length > 2000)
 				return string.Empty;
 
 			var sb = _stringBuilderForMessageProcessing;
 			sb.Clear();
-			sb.Append(allowTags ? chatMessage : (chatMessage.Length > singleton.maxChatMessageLength ? chatMessage.Substring(0, singleton.maxChatMessageLength) : chatMessage));
 
-			// remove tags
-			if (!allowTags)
+			if (allowTags)
+				sb.Append(chatMessage); // we need to process the entire message to remove tags
+			else
+            {
+				if (limitLength)
+					sb.Append(chatMessage, 0, Mathf.Min(singleton.maxChatMessageLength, chatMessage.Length));
+				else
+					sb.Append(chatMessage);
+            }
+
+            // remove tags
+            if (!allowTags)
 			{
 				sb.Replace("<", "< "); // the easiest way
 			}
