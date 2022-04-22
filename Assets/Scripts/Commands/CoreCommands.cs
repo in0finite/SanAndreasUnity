@@ -103,8 +103,7 @@ namespace SanAndreasUnity.Commands
                     statsContext.AppendLine(entriesWithCategory.Key);
                     statsContext.AppendLine("--------------------------------");
                     statsContext.AppendLine();
-                    statsContext.AppendLine();
-
+                    
                     foreach (var entry in entriesWithCategory.Value)
                     {
                         entry.getStatsAction?.Invoke(statsContext);
