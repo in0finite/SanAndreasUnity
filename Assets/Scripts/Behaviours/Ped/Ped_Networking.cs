@@ -103,7 +103,10 @@ namespace SanAndreasUnity.Behaviours
 
             // also change it for NetworkTransform, because it can be disabled
             if (this.NetTransform != null)
+            {
                 this.NetTransform.syncInterval = newSyncInterval;
+                this.NetTransform.sendInterval = newSyncInterval; // one more property that we need to assign
+            }
         }
 
         void Update_Net()
