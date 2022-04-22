@@ -70,7 +70,7 @@ namespace SanAndreasUnity.Chat
 
 		internal void OnChatMessageReceivedOnServer(Player player, string msg)
 		{
-			msg = ChatManager.ProcessChatMessage(msg, false);
+			msg = ChatManager.ProcessIncomingChatMessage(msg);
 			if (string.IsNullOrEmpty(msg))
 				return;
 
@@ -82,10 +82,6 @@ namespace SanAndreasUnity.Chat
 
 		internal void OnChatMessageReceivedOnLocalPlayer(ChatMessage chatMsg)
 		{
-			chatMsg.msg = ChatManager.ProcessChatMessage(chatMsg.msg, true);
-			if (string.IsNullOrEmpty(chatMsg.msg))
-				return;
-
 			F.InvokeEventExceptionSafe(onChatMessage, chatMsg);
 		}
 
@@ -108,35 +104,19 @@ namespace SanAndreasUnity.Chat
 			return true;
 		}
 
-		public static string ProcessChatMessage(string chatMessage, bool allowTags, bool limitLength = true)
+		public static string ProcessIncomingChatMessage(string chatMessage)
 		{
-			// note: if tags are allowed, length of the message will not be limited
-
 			if (chatMessage == null)
-				return string.Empty;
-
-			if (limitLength && chatMessage.Length > 2000)
 				return string.Empty;
 
 			var sb = _stringBuilderForMessageProcessing;
 			sb.Clear();
 
-			if (allowTags)
-				sb.Append(chatMessage); // we need to process the entire message to remove tags
-			else
-            {
-				if (limitLength)
-					sb.Append(chatMessage, 0, Mathf.Min(singleton.maxChatMessageLength, chatMessage.Length));
-				else
-					sb.Append(chatMessage);
-            }
-
+            sb.Append(chatMessage, 0, Mathf.Min(singleton.maxChatMessageLength, chatMessage.Length));
+			
             // remove tags
-            if (!allowTags)
-			{
-				sb.Replace("<", "< "); // the easiest way
-			}
-
+            sb.Replace("<", "< "); // the easiest way
+			
 			sb.Replace('\r', ' ');
 			sb.Replace('\n', ' ');
 			sb.Replace('\t', ' ');
@@ -169,10 +149,6 @@ namespace SanAndreasUnity.Chat
 
 			NetStatus.ThrowIfNotOnServer();
 
-			msg = ChatManager.ProcessChatMessage(msg, true);
-			if (string.IsNullOrEmpty(msg))
-				return;
-
 			foreach (var player in Player.AllPlayersCopy) {
 				SendChatMessageToPlayerAsServer ( player, msg, sender );
 			}
@@ -189,12 +165,7 @@ namespace SanAndreasUnity.Chat
 
 			NetStatus.ThrowIfNotOnServer();
 
-			msg = ChatManager.ProcessChatMessage(msg, true);
-			if (string.IsNullOrEmpty(msg))
-				return;
-
 			SendChatMessageToPlayerAsServer (player, msg, useServerNick ? singleton.serverChatNick : "");
-
 		}
 
 		private	static	void	SendChatMessageToPlayerAsServer( Player player, string msg, string sender ) {
