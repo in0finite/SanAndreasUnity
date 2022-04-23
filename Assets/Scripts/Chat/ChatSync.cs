@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Chat
 		[Command]
 		void	CmdChatMsg( string msg )
 		{
-			F.RunExceptionSafe(() => ChatManager.singleton.OnChatMessageReceivedOnServer(m_player, msg));
+			F.RunExceptionSafe(() => ChatManager.singleton.SubmitMessageFromPlayer(m_player, msg));
 		}
 
 		internal	void	SendChatMsgToServer( string msg )

@@ -68,8 +68,13 @@ namespace SanAndreasUnity.Chat
 			Debug.Log(senderText + chatMessage.msg);
 		}
 
-		internal void OnChatMessageReceivedOnServer(Player player, string msg)
+		public void SubmitMessageFromPlayer(Player player, string msg)
 		{
+			NetStatus.ThrowIfNotOnServer();
+
+			if (null == player)
+				throw new System.ArgumentNullException(nameof(player));
+
 			msg = ChatManager.ProcessIncomingChatMessage(msg);
 			if (string.IsNullOrEmpty(msg))
 				return;

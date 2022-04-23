@@ -57,7 +57,13 @@ namespace SanAndreasUnity.Chat
 
         CommandManager.ProcessCommandResult ProcessSayCommand(CommandManager.ProcessCommandContext context)
         {
-            ChatManager.SubmitChatMessage(CommandManager.GetRestOfTheCommand(context.command, 0));
+            string msg = CommandManager.GetRestOfTheCommand(context.command, 0);
+
+            if (context.player != null)
+                ChatManager.singleton.SubmitMessageFromPlayer(context.player, msg);
+            else
+                ChatManager.SendChatMessageToAllPlayersAsServer(msg);
+
             return CommandManager.ProcessCommandResult.Success;
         }
     }
