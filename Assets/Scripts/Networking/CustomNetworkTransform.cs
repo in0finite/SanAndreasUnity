@@ -9,6 +9,17 @@ namespace SanAndreasUnity.Net
     {
         public bool useSmoothDeltaTime = false;
 
+        public float lerpFactor = 0.8f;
+
+        public enum ClientUpdateType
+        {
+            Constant,
+            Lerp,
+            Slerp,
+        }
+
+        public ClientUpdateType clientUpdateType = ClientUpdateType.Constant;
+
         private SyncInfo m_syncInfo;
         private SyncData m_syncData;
 
@@ -101,11 +112,24 @@ namespace SanAndreasUnity.Net
             }
             else
             {
-                this.UpdateBasedOnSyncData();
+                switch (this.clientUpdateType)
+                {
+                    case ClientUpdateType.Constant:
+                        this.UpdateClientUsingVelocity();
+                        break;
+                    case ClientUpdateType.Lerp:
+                        this.UpdateClientUsingLerp();
+                        break;
+                    case ClientUpdateType.Slerp:
+                        this.UpdateClientUsingSphericalLerp();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
-        private void UpdateBasedOnSyncData()
+        private void UpdateClientUsingVelocity()
         {
             SyncInfo syncInfo = m_syncInfo;
 
@@ -137,6 +161,34 @@ namespace SanAndreasUnity.Net
             }
 
             m_syncInfo = syncInfo;
+        }
+
+        private void UpdateClientUsingLerp()
+        {
+            m_syncInfo.Transform.localPosition = Vector3.Lerp(
+                m_syncInfo.Transform.localPosition,
+                m_syncInfo.Position,
+                1 - Mathf.Exp(-this.lerpFactor * this.GetDeltaTime()));
+
+            m_syncInfo.Transform.localRotation = Quaternion.Lerp(
+                m_syncInfo.Transform.localRotation,
+                m_syncInfo.Rotation,
+                1 - Mathf.Exp(-this.lerpFactor * this.GetDeltaTime()));
+
+        }
+
+        private void UpdateClientUsingSphericalLerp()
+        {
+            m_syncInfo.Transform.localPosition = Vector3.Slerp(
+                m_syncInfo.Transform.localPosition,
+                m_syncInfo.Position,
+                1 - Mathf.Exp(-this.lerpFactor * this.GetDeltaTime()));
+
+            m_syncInfo.Transform.localRotation = Quaternion.Slerp(
+                m_syncInfo.Transform.localRotation,
+                m_syncInfo.Rotation,
+                1 - Mathf.Exp(-this.lerpFactor * this.GetDeltaTime()));
+
         }
 
         private float GetDeltaTime()
