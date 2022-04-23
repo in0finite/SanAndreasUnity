@@ -1,5 +1,4 @@
 using Mirror;
-using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Utilities;
 
@@ -7,18 +6,18 @@ namespace SanAndreasUnity.Net
 {
     public class CustomNetworkTransform : NetworkBehaviour
     {
-        public bool useSmoothDeltaTime = false;
-
-        public float lerpFactor = 0.8f;
+        public bool useSmoothDeltaTime = true;
 
         public enum ClientUpdateType
         {
-            Constant,
+            ConstantVelocity,
             Lerp,
             Slerp,
         }
 
-        public ClientUpdateType clientUpdateType = ClientUpdateType.Constant;
+        public ClientUpdateType clientUpdateType = ClientUpdateType.ConstantVelocity;
+
+        public float lerpFactor = 30f;
 
         private SyncInfo m_syncInfo;
         private SyncData m_syncData;
@@ -114,8 +113,8 @@ namespace SanAndreasUnity.Net
             {
                 switch (this.clientUpdateType)
                 {
-                    case ClientUpdateType.Constant:
-                        this.UpdateClientUsingConstant();
+                    case ClientUpdateType.ConstantVelocity:
+                        this.UpdateClientUsingConstantVelocity();
                         break;
                     case ClientUpdateType.Lerp:
                         this.UpdateClientUsingLerp();
@@ -129,7 +128,7 @@ namespace SanAndreasUnity.Net
             }
         }
 
-        private void UpdateClientUsingConstant()
+        private void UpdateClientUsingConstantVelocity()
         {
             SyncInfo syncInfo = m_syncInfo;
 
