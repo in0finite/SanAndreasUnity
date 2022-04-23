@@ -115,7 +115,7 @@ namespace SanAndreasUnity.Net
                 switch (this.clientUpdateType)
                 {
                     case ClientUpdateType.Constant:
-                        this.UpdateClientUsingVelocity();
+                        this.UpdateClientUsingConstant();
                         break;
                     case ClientUpdateType.Lerp:
                         this.UpdateClientUsingLerp();
@@ -129,38 +129,20 @@ namespace SanAndreasUnity.Net
             }
         }
 
-        private void UpdateClientUsingVelocity()
+        private void UpdateClientUsingConstant()
         {
             SyncInfo syncInfo = m_syncInfo;
 
-            // move transform to current position/rotation
+            syncInfo.Transform.localPosition = Vector3.MoveTowards(
+                syncInfo.Transform.localPosition,
+                syncInfo.Position,
+                syncInfo.CalculatedVelocityMagnitude * this.GetDeltaTime());
 
-            // position
+            syncInfo.Transform.localRotation = Quaternion.RotateTowards(
+                syncInfo.Transform.localRotation,
+                syncInfo.Rotation,
+                syncInfo.CalculatedAngularVelocityMagnitude * this.GetDeltaTime());
 
-            Vector3 transformPos = syncInfo.Transform.localPosition;
-            Vector3 moveDiff = syncInfo.Position - transformPos;
-            float sqrDistance = moveDiff.sqrMagnitude;
-            Vector3 moveDelta = moveDiff.normalized * syncInfo.CalculatedVelocityMagnitude * this.GetDeltaTime();
-            if (moveDelta.sqrMagnitude < sqrDistance && moveDelta.sqrMagnitude > float.Epsilon)
-                syncInfo.Transform.localPosition += moveDelta;
-            else
-            {
-                syncInfo.Transform.localPosition = syncInfo.Position;
-            }
-
-            // rotation
-
-            Quaternion transformRotation = syncInfo.Transform.localRotation;
-            float angle = Quaternion.Angle(transformRotation, syncInfo.Rotation);
-            float angleDelta = syncInfo.CalculatedAngularVelocityMagnitude * this.GetDeltaTime();
-            if (angleDelta < angle && angleDelta > float.Epsilon)
-                syncInfo.Transform.localRotation = Quaternion.RotateTowards(transformRotation, syncInfo.Rotation, angleDelta);
-            else
-            {
-                syncInfo.Transform.localRotation = syncInfo.Rotation;
-            }
-
-            m_syncInfo = syncInfo;
         }
 
         private void UpdateClientUsingLerp()
