@@ -1,180 +1,56 @@
 using Mirror;
 using UnityEngine;
-using SanAndreasUnity.Utilities;
 
 namespace SanAndreasUnity.Net
 {
     public class CustomNetworkTransform : NetworkBehaviour
     {
-        public bool useSmoothDeltaTime = true;
+        private TransformSyncer m_transformSyncer;
 
-        public enum ClientUpdateType
-        {
-            ConstantVelocity,
-            Lerp,
-            Slerp,
-        }
+        [SerializeField]
+        private Transform m_transformToSync;
 
-        public ClientUpdateType clientUpdateType = ClientUpdateType.ConstantVelocity;
-
-        public float lerpFactor = 30f;
-
-        private SyncInfo m_syncInfo;
-        private SyncData m_syncData;
-
-        private struct SyncInfo
-        {
-            public Transform Transform;
-
-            // current sync data (as reported by server) toward which we move the transform
-            public Vector3 Position;
-            public Quaternion Rotation;
-            public Vector3 Velocity;
-
-            // these are the velocities used to move the object, calculated when new server data arrives
-            public float CalculatedVelocityMagnitude;
-            public float CalculatedAngularVelocityMagnitude;
-        }
-
-        private struct SyncData
-        {
-            public Vector3 position;
-            public Vector3 rotation;
-        }
+        [SerializeField]
+        private TransformSyncer.Parameters m_transformSyncParameters = TransformSyncer.Parameters.Default;
 
 
 
         void Awake()
         {
-            m_syncInfo.Transform = this.transform;
+            m_transformSyncer = new TransformSyncer(m_transformToSync, m_transformSyncParameters, this);
         }
 
         public override void OnStartClient()
         {
-            if (NetUtils.IsServer)
-                return;
-
-            // apply initial sync data
-            // first sync should've been done before calling this function, so the data is available
-            this.UpdateDataAfterDeserialization(m_syncData, true);
+            m_transformSyncer.OnStartClient();
         }
 
         public override bool OnSerialize(NetworkWriter writer, bool initialState)
         {
-            byte flags = 0;
-            writer.Write(flags);
-
-            Transform tr = m_syncInfo.Transform;
-
-            writer.Write(tr.localPosition);
-            writer.Write(tr.localRotation.eulerAngles);
-
-            return true;
+            return m_transformSyncer.OnSerialize(writer, initialState);
         }
 
         public override void OnDeserialize(NetworkReader reader, bool initialState)
         {
-            byte flags = reader.ReadByte();
-
-            var syncData = new SyncData();
-            syncData.position = reader.ReadVector3();
-            syncData.rotation = reader.ReadVector3();
-            m_syncData = syncData;
-
-            F.RunExceptionSafe(() => UpdateDataAfterDeserialization(syncData, false));
-        }
-
-        private void UpdateDataAfterDeserialization(SyncData syncData, bool applyToTransform)
-        {
-            SyncInfo syncInfo = m_syncInfo;
-
-            if (applyToTransform)
-            {
-                syncInfo.Transform.localPosition = syncData.position;
-                syncInfo.Transform.localRotation = Quaternion.Euler(syncData.rotation);
-            }
-
-            syncInfo.Position = syncData.position;// + syncData.velocity * this.syncInterval;
-            syncInfo.CalculatedVelocityMagnitude = (syncInfo.Position - syncInfo.Transform.localPosition).magnitude / this.syncInterval;
-
-            syncInfo.Rotation = Quaternion.Euler(syncData.rotation);
-            syncInfo.CalculatedAngularVelocityMagnitude = Quaternion.Angle(syncInfo.Rotation, syncInfo.Transform.localRotation) / this.syncInterval;
-
-            m_syncInfo = syncInfo;
+            m_transformSyncer.OnDeserialize(reader, initialState);
         }
 
         private void Update()
         {
-            if (NetUtils.IsServer)
-            {
-                this.SetSyncVarDirtyBit(1);
-            }
-            else
-            {
-                switch (this.clientUpdateType)
-                {
-                    case ClientUpdateType.ConstantVelocity:
-                        this.UpdateClientUsingConstantVelocity();
-                        break;
-                    case ClientUpdateType.Lerp:
-                        this.UpdateClientUsingLerp();
-                        break;
-                    case ClientUpdateType.Slerp:
-                        this.UpdateClientUsingSphericalLerp();
-                        break;
-                    default:
-                        break;
-                }
-            }
+            m_transformSyncer.Update();
         }
 
-        private void UpdateClientUsingConstantVelocity()
+        private void OnValidate()
         {
-            SyncInfo syncInfo = m_syncInfo;
-
-            syncInfo.Transform.localPosition = Vector3.MoveTowards(
-                syncInfo.Transform.localPosition,
-                syncInfo.Position,
-                syncInfo.CalculatedVelocityMagnitude * this.GetDeltaTime());
-
-            syncInfo.Transform.localRotation = Quaternion.RotateTowards(
-                syncInfo.Transform.localRotation,
-                syncInfo.Rotation,
-                syncInfo.CalculatedAngularVelocityMagnitude * this.GetDeltaTime());
-
+            m_transformSyncer?.OnValidate(m_transformSyncParameters);
         }
 
-        private void UpdateClientUsingLerp()
+        public void ChangeSyncedTransform(Transform newTransform)
         {
-            m_syncInfo.Transform.localPosition = Vector3.Lerp(
-                m_syncInfo.Transform.localPosition,
-                m_syncInfo.Position,
-                1 - Mathf.Exp(-this.lerpFactor * this.GetDeltaTime()));
+            m_transformToSync = newTransform;
 
-            m_syncInfo.Transform.localRotation = Quaternion.Lerp(
-                m_syncInfo.Transform.localRotation,
-                m_syncInfo.Rotation,
-                1 - Mathf.Exp(-this.lerpFactor * this.GetDeltaTime()));
-
-        }
-
-        private void UpdateClientUsingSphericalLerp()
-        {
-            m_syncInfo.Transform.localPosition = Vector3.Slerp(
-                m_syncInfo.Transform.localPosition,
-                m_syncInfo.Position,
-                1 - Mathf.Exp(-this.lerpFactor * this.GetDeltaTime()));
-
-            m_syncInfo.Transform.localRotation = Quaternion.Slerp(
-                m_syncInfo.Transform.localRotation,
-                m_syncInfo.Rotation,
-                1 - Mathf.Exp(-this.lerpFactor * this.GetDeltaTime()));
-
-        }
-
-        private float GetDeltaTime()
-        {
-            return this.useSmoothDeltaTime ? Time.smoothDeltaTime : Time.deltaTime;
+            m_transformSyncer = new TransformSyncer(newTransform, m_transformSyncParameters, this);
+            m_transformSyncer.ResetSyncInfoToTransform();
         }
     }
 }
