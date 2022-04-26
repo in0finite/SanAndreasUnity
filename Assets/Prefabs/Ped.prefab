@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 114879899237604226}
   - component: {fileID: 114220037769542022}
   - component: {fileID: 8031585062060932984}
-  - component: {fileID: 4594788420466467901}
+  - component: {fileID: 3337177822774145499}
   - component: {fileID: 7038296094652462326}
   - component: {fileID: 614328402837403552}
   m_Layer: 11
@@ -514,7 +514,7 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 9d45d42a7408c1e4ab325d6840364b84
   hasSpawned: 0
---- !u!114 &4594788420466467901
+--- !u!114 &3337177822774145499
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -523,31 +523,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1273918895060814}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Script: {fileID: 11500000, guid: 7810004c3617c05419e4e60874dc18a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.05
-  clientAuthority: 0
-  sendInterval: 0.05
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 0
-  bufferTimeMultiplier: 1
-  bufferSizeLimit: 64
-  catchupThreshold: 4
-  catchupMultiplier: 0.1
-  onlySyncOnChange: 1
-  bufferResetMultiplier: 5
-  positionSensitivity: 0.01
-  rotationSensitivity: 0.01
-  scaleSensitivity: 0.01
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_transformToSync: {fileID: 4388436116821042}
+  m_transformSyncParameters:
+    useSmoothDeltaTime: 1
+    clientUpdateType: 0
+    constantVelocityMultiplier: 1
+    lerpFactor: 30
 --- !u!195 &7038296094652462326
 NavMeshAgent:
   m_ObjectHideFlags: 0

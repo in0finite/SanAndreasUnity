@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Behaviours
 {
     public partial class Ped
     {
-        public NetworkTransform NetTransform { get; private set; }
+        public CustomNetworkTransform NetTransform { get; private set; }
 
         [Range(1f / 60f, 0.5f)] [SerializeField] float m_inputSendInterval = 1f / 30f;
         float m_timeSinceSentInput = 0f;
@@ -57,7 +57,7 @@ namespace SanAndreasUnity.Behaviours
 
         void Awake_Net()
         {
-            this.NetTransform = this.GetComponentOrThrow<NetworkTransform>();
+            this.NetTransform = this.GetComponentOrThrow<CustomNetworkTransform>();
         }
 
         public override void OnStartClient()
@@ -105,7 +105,7 @@ namespace SanAndreasUnity.Behaviours
             if (this.NetTransform != null)
             {
                 this.NetTransform.syncInterval = newSyncInterval;
-                this.NetTransform.sendInterval = newSyncInterval; // one more property that we need to assign
+                //this.NetTransform.sendInterval = newSyncInterval; // one more property that we need to assign
             }
         }
 
