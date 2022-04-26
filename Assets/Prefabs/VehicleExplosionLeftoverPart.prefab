@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5468094862909607614}
   - component: {fileID: 6750907620125006804}
   - component: {fileID: 3359912204732796237}
-  - component: {fileID: 7107055912798612425}
+  - component: {fileID: 4408118702257020743}
   - component: {fileID: 1658066758197886442}
   - component: {fileID: 9051170896248035060}
   m_Layer: 13
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
---- !u!114 &7107055912798612425
+--- !u!114 &4408118702257020743
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,13 +75,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 5998353205578393877}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18b3d5884b734d84894d176734f1de9d, type: 3}
+  m_Script: {fileID: 11500000, guid: 7810004c3617c05419e4e60874dc18a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.0667
-  disableCollisionDetectionOnClients: 1
-  disableGravityOnClients: 1
+  syncInterval: 0.05
+  m_transformToSync: {fileID: 0}
+  m_transformSyncParameters:
+    useSmoothDeltaTime: 1
+    clientUpdateType: 0
+    constantVelocityMultiplier: 1
+    lerpFactor: 30
 --- !u!114 &1658066758197886442
 MonoBehaviour:
   m_ObjectHideFlags: 0

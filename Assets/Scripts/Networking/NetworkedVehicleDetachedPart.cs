@@ -14,7 +14,7 @@ namespace SanAndreasUnity.Net
 
     public class NetworkedVehicleDetachedPart : NetworkBehaviour
     {
-        public NetworkRigidBody NetworkRigidBody { get; private set; }
+        public CustomNetworkTransform NetworkTransform { get; private set; }
 
         [SyncVar] uint m_net_vehicleNetId;
         [SyncVar] int m_net_vehicleModelId;
@@ -36,7 +36,7 @@ namespace SanAndreasUnity.Net
 
         void Awake()
         {
-            this.NetworkRigidBody = this.GetComponentOrThrow<NetworkRigidBody>();
+            this.NetworkTransform = this.GetComponentOrThrow<CustomNetworkTransform>();
         }
 
         void OnDisable()
@@ -67,8 +67,7 @@ namespace SanAndreasUnity.Net
             m_net_frameName = frameName;
             m_net_mass = mass;
 
-            this.NetworkRigidBody.Rigidbody = rigidbody;
-            this.NetworkRigidBody.UpdateServer();
+            this.NetworkTransform.ChangeSyncedTransform(rigidbody.transform);
         }
 
         public override void OnStartClient()
@@ -130,9 +129,11 @@ namespace SanAndreasUnity.Net
             }
 
             var rb = this.GetComponentInChildren<Rigidbody>();
+
+            this.NetworkTransform.ChangeSyncedTransform(rb != null ? rb.transform : null);
+
             if (rb != null)
-                rb.interpolation = RigidbodyInterpolation.Interpolate;
-            this.NetworkRigidBody.Rigidbody = rb;
+                Object.Destroy(rb); // destroy rigidbody because it can ruin network sync
 
         }
 
