@@ -42,8 +42,13 @@ namespace SanAndreasUnity.Net
         private SyncData m_currentSyncData = new SyncData { Rotation = Quaternion.identity };
         public SyncData CurrentSyncData => m_currentSyncData;
 
+        private Vector3 m_positionForSending;
+        private Quaternion m_rotationForSending = Quaternion.identity;
+
         private readonly Transform m_transform;
         public Transform Transform => m_transform;
+
+        private readonly Rigidbody m_rigidbody;
 
         public struct SyncData
         {
@@ -57,6 +62,7 @@ namespace SanAndreasUnity.Net
         }
 
         private readonly bool m_hasTransform = false;
+        private readonly bool m_hasRigidBody = false;
 
         private readonly NetworkBehaviour m_networkBehaviour;
 
@@ -65,9 +71,13 @@ namespace SanAndreasUnity.Net
         public TransformSyncer(Transform tr, Parameters parameters, NetworkBehaviour networkBehaviour)
         {
             m_transform = tr;
+            m_rigidbody = tr != null ? tr.GetComponent<Rigidbody>() : null;
             m_parameters = parameters;
             m_networkBehaviour = networkBehaviour;
             m_hasTransform = tr != null;
+            m_hasRigidBody = m_rigidbody != null;
+
+            this.AssignDataForSending();
         }
 
         public void OnStartClient()
@@ -82,16 +92,11 @@ namespace SanAndreasUnity.Net
 
         public bool OnSerialize(NetworkWriter writer, bool initialState)
         {
-            if (!m_hasTransform)
-                return false;
-
             byte flags = 0;
             writer.Write(flags);
 
-            Transform tr = m_transform;
-
-            writer.Write(tr.localPosition);
-            writer.Write(tr.localRotation.eulerAngles);
+            writer.Write(m_positionForSending);
+            writer.Write(m_rotationForSending.eulerAngles);
 
             return true;
         }
@@ -126,6 +131,8 @@ namespace SanAndreasUnity.Net
             if (NetUtils.IsServer)
             {
                 m_networkBehaviour.SetSyncVarDirtyBit(1);
+
+                this.AssignDataForSending();
             }
             else
             {
@@ -242,6 +249,15 @@ namespace SanAndreasUnity.Net
 
             m_transform.localPosition = m_currentSyncData.Position;
             m_transform.localRotation = m_currentSyncData.Rotation;
+        }
+
+        private void AssignDataForSending()
+        {
+            if (!m_hasTransform)
+                return;
+
+            m_positionForSending = m_hasRigidBody ? m_rigidbody.position : m_transform.localPosition;
+            m_rotationForSending = m_hasRigidBody ? m_rigidbody.rotation : m_transform.localRotation;
         }
     }
 }
