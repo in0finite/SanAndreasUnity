@@ -1,6 +1,7 @@
 using UnityEngine;
 using Mirror;
 using SanAndreasUnity.Utilities;
+using System.Collections.Generic;
 
 namespace SanAndreasUnity.Net
 {
@@ -35,27 +36,24 @@ namespace SanAndreasUnity.Net
 
         private Parameters m_parameters = Parameters.Default;
 
-        private SyncInfo m_syncInfo;
-        private SyncData m_syncData;
+        private readonly Queue<SyncData> m_syncDataQueue = new Queue<SyncData>();
+        public int NumSyncDatasInQueue => m_syncDataQueue.Count;
 
-        private struct SyncInfo
+        private SyncData m_currentSyncData = new SyncData { Rotation = Quaternion.identity };
+        public SyncData CurrentSyncData => m_currentSyncData;
+
+        private readonly Transform m_transform;
+        public Transform Transform => m_transform;
+
+        public struct SyncData
         {
-            public Transform Transform;
-
-            // current sync data (as reported by server) toward which we move the transform
+            // sync data (as reported by server) toward which we move the transform
             public Vector3 Position;
             public Quaternion Rotation;
-            public Vector3 Velocity;
 
             // these are the velocities used to move the object, calculated when new server data arrives
             public float CalculatedVelocityMagnitude;
             public float CalculatedAngularVelocityMagnitude;
-        }
-
-        private struct SyncData
-        {
-            public Vector3 position;
-            public Vector3 rotation;
         }
 
         private readonly bool m_hasTransform = false;
@@ -66,7 +64,7 @@ namespace SanAndreasUnity.Net
 
         public TransformSyncer(Transform tr, Parameters parameters, NetworkBehaviour networkBehaviour)
         {
-            m_syncInfo.Transform = tr;
+            m_transform = tr;
             m_parameters = parameters;
             m_networkBehaviour = networkBehaviour;
             m_hasTransform = tr != null;
@@ -79,7 +77,7 @@ namespace SanAndreasUnity.Net
 
             // apply initial sync data
             // first sync should've been done before calling this function, so the data is available
-            this.UpdateDataAfterDeserialization(m_syncData, true);
+            this.ApplyCurrentSyncData();
         }
 
         public bool OnSerialize(NetworkWriter writer, bool initialState)
@@ -90,7 +88,7 @@ namespace SanAndreasUnity.Net
             byte flags = 0;
             writer.Write(flags);
 
-            Transform tr = m_syncInfo.Transform;
+            Transform tr = m_transform;
 
             writer.Write(tr.localPosition);
             writer.Write(tr.localRotation.eulerAngles);
@@ -103,32 +101,21 @@ namespace SanAndreasUnity.Net
             byte flags = reader.ReadByte();
 
             var syncData = new SyncData();
-            syncData.position = reader.ReadVector3();
-            syncData.rotation = reader.ReadVector3();
-            m_syncData = syncData;
 
-            F.RunExceptionSafe(() => UpdateDataAfterDeserialization(syncData, false));
+            syncData.Position = reader.ReadVector3();// + syncData.velocity * this.syncInterval;
+            syncData.Rotation = Quaternion.Euler(reader.ReadVector3());
+
+            if (initialState)
+                m_currentSyncData = syncData;
+            else
+                this.Enqueue(syncData);
         }
 
-        private void UpdateDataAfterDeserialization(SyncData syncData, bool applyToTransform)
+        private void Enqueue(SyncData syncData)
         {
-            SyncInfo syncInfo = m_syncInfo;
-
-            if (applyToTransform && m_hasTransform)
-            {
-                syncInfo.Transform.localPosition = syncData.position;
-                syncInfo.Transform.localRotation = Quaternion.Euler(syncData.rotation);
-            }
-
-            syncInfo.Position = syncData.position;// + syncData.velocity * this.syncInterval;
-            if (m_hasTransform)
-                syncInfo.CalculatedVelocityMagnitude = (syncInfo.Position - syncInfo.Transform.localPosition).magnitude / m_networkBehaviour.syncInterval;
-
-            syncInfo.Rotation = Quaternion.Euler(syncData.rotation);
-            if (m_hasTransform)
-                syncInfo.CalculatedAngularVelocityMagnitude = Quaternion.Angle(syncInfo.Rotation, syncInfo.Transform.localRotation) / m_networkBehaviour.syncInterval;
-
-            m_syncInfo = syncInfo;
+            if (m_syncDataQueue.Count >= 4)
+                m_syncDataQueue.Dequeue();
+            m_syncDataQueue.Enqueue(syncData);
         }
 
         public void Update()
@@ -156,27 +143,42 @@ namespace SanAndreasUnity.Net
                     default:
                         break;
                 }
+
+                // check if we reached current snapshot
+                if (Vector3.SqrMagnitude(m_transform.localPosition - m_currentSyncData.Position) < 0.001f
+                    && Quaternion.Angle(m_transform.localRotation, m_currentSyncData.Rotation) < 1f)
+                {
+                    // current snapshot reached, switch to next one
+                    if (m_syncDataQueue.Count > 0)
+                    {
+                        var newSyncData = m_syncDataQueue.Dequeue();
+                        // calculate velocities
+                        newSyncData.CalculatedVelocityMagnitude = (newSyncData.Position - m_currentSyncData.Position).magnitude / m_networkBehaviour.syncInterval;
+                        newSyncData.CalculatedAngularVelocityMagnitude = Quaternion.Angle(newSyncData.Rotation, m_currentSyncData.Rotation) / m_networkBehaviour.syncInterval;
+                        m_currentSyncData = newSyncData;
+                    }
+                }
             }
         }
 
         private void UpdateClientUsingConstantVelocity()
         {
-            SyncInfo syncInfo = m_syncInfo;
+            var syncInfo = m_currentSyncData;
 
             float moveDelta = syncInfo.CalculatedVelocityMagnitude * this.GetDeltaTime() * m_parameters.constantVelocityMultiplier;
 
-            float distanceSqr = (syncInfo.Transform.localPosition - syncInfo.Position).sqrMagnitude;
+            float distanceSqr = (m_transform.localPosition - syncInfo.Position).sqrMagnitude;
 
             if (moveDelta < float.Epsilon || distanceSqr < float.Epsilon || Mathf.Sqrt(distanceSqr) < float.Epsilon)
-                syncInfo.Transform.localPosition = syncInfo.Position;
+                m_transform.localPosition = syncInfo.Position;
             else
-                syncInfo.Transform.localPosition = Vector3.MoveTowards(
-                    syncInfo.Transform.localPosition,
+                m_transform.localPosition = Vector3.MoveTowards(
+                    m_transform.localPosition,
                     syncInfo.Position,
                     moveDelta);
 
-            syncInfo.Transform.localRotation = Quaternion.RotateTowards(
-                syncInfo.Transform.localRotation,
+            m_transform.localRotation = Quaternion.RotateTowards(
+                m_transform.localRotation,
                 syncInfo.Rotation,
                 syncInfo.CalculatedAngularVelocityMagnitude * this.GetDeltaTime() * m_parameters.constantVelocityMultiplier);
 
@@ -184,28 +186,28 @@ namespace SanAndreasUnity.Net
 
         private void UpdateClientUsingLerp()
         {
-            m_syncInfo.Transform.localPosition = Vector3.Lerp(
-                m_syncInfo.Transform.localPosition,
-                m_syncInfo.Position,
+            m_transform.localPosition = Vector3.Lerp(
+                m_transform.localPosition,
+                m_currentSyncData.Position,
                 1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime()));
 
-            m_syncInfo.Transform.localRotation = Quaternion.Lerp(
-                m_syncInfo.Transform.localRotation,
-                m_syncInfo.Rotation,
+            m_transform.localRotation = Quaternion.Lerp(
+                m_transform.localRotation,
+                m_currentSyncData.Rotation,
                 1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime()));
 
         }
 
         private void UpdateClientUsingSphericalLerp()
         {
-            m_syncInfo.Transform.localPosition = Vector3.Slerp(
-                m_syncInfo.Transform.localPosition,
-                m_syncInfo.Position,
+            m_transform.localPosition = Vector3.Slerp(
+                m_transform.localPosition,
+                m_currentSyncData.Position,
                 1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime()));
 
-            m_syncInfo.Transform.localRotation = Quaternion.Slerp(
-                m_syncInfo.Transform.localRotation,
-                m_syncInfo.Rotation,
+            m_transform.localRotation = Quaternion.Slerp(
+                m_transform.localRotation,
+                m_currentSyncData.Rotation,
                 1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime()));
 
         }
@@ -224,11 +226,22 @@ namespace SanAndreasUnity.Net
         {
             if (m_hasTransform)
             {
-                m_syncInfo.Position = m_syncInfo.Transform.localPosition;
-                m_syncInfo.Rotation = m_syncInfo.Transform.localRotation;
+                m_currentSyncData.Position = m_transform.localPosition;
+                m_currentSyncData.Rotation = m_transform.localRotation;
             }
-            m_syncInfo.CalculatedVelocityMagnitude = 0;
-            m_syncInfo.CalculatedAngularVelocityMagnitude = 0;
+            m_currentSyncData.CalculatedVelocityMagnitude = 0;
+            m_currentSyncData.CalculatedAngularVelocityMagnitude = 0;
+
+            m_syncDataQueue.Clear();
+        }
+
+        private void ApplyCurrentSyncData()
+        {
+            if (!m_hasTransform)
+                return;
+
+            m_transform.localPosition = m_currentSyncData.Position;
+            m_transform.localRotation = m_currentSyncData.Rotation;
         }
     }
 }

@@ -6,6 +6,7 @@ namespace SanAndreasUnity.Net
     public class CustomNetworkTransform : NetworkBehaviour
     {
         private TransformSyncer m_transformSyncer;
+        public TransformSyncer TransformSyncer => m_transformSyncer;
 
         [SerializeField]
         private Transform m_transformToSync;

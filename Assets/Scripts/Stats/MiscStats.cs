@@ -44,6 +44,8 @@ namespace SanAndreasUnity.Stats
                 sb.AppendFormat("position: {0}\n", ped.transform.position);
                 sb.AppendFormat("net id: {0}\n", ped.netId);
                 sb.AppendFormat("sync interval: {0}\n", ped.NetTransform.syncInterval);
+                sb.AppendFormat("transform syncer: \n");
+                AddTransformSyncer(sb, ped.NetTransform.TransformSyncer, "\t");
                 sb.AppendFormat("state: {0}\n", ped.CurrentState != null ? ped.CurrentState.GetType().Name : "");
                 sb.AppendFormat("velocity: {0}\n", ped.Velocity);
                 sb.AppendFormat("is grounded: {0}\n", ped.IsGrounded);
@@ -248,6 +250,21 @@ namespace SanAndreasUnity.Stats
             sb.Append($"{prefix}num pending jobs: {backgroundJobRunner.GetNumPendingJobs()}\n");
             sb.Append($"{prefix}last processed job id: {backgroundJobRunner.GetLastProcessedJobId()}\n");
             sb.Append($"{prefix}processed jobs buffer count: {backgroundJobRunner.GetProcessedJobsBufferCount()}\n");
+        }
+
+        private static void AddTransformSyncer(
+            System.Text.StringBuilder sb,
+            Net.TransformSyncer transformSyncer,
+            string prefix)
+        {
+            sb.AppendLine($"{prefix}num sync datas in queue: {transformSyncer.NumSyncDatasInQueue}");
+            sb.AppendLine($"{prefix}calculated velocity: {transformSyncer.CurrentSyncData.CalculatedVelocityMagnitude}");
+            sb.AppendLine($"{prefix}calculated angular velocity: {transformSyncer.CurrentSyncData.CalculatedAngularVelocityMagnitude}");
+            if (transformSyncer.Transform != null)
+            {
+                sb.AppendLine($"{prefix}distance: {Vector3.Distance(transformSyncer.CurrentSyncData.Position, transformSyncer.Transform.localPosition)}");
+                sb.AppendLine($"{prefix}angle: {Quaternion.Angle(transformSyncer.CurrentSyncData.Rotation, transformSyncer.Transform.localRotation)}");
+            }
         }
 
     }
