@@ -12,15 +12,18 @@ namespace SanAndreasUnity.Net
 
 		public	static	int	defaultListenPortNumber { get { return 7777; } }
 
-		public	static	int	listenPortNumber { get { return telepathyTransport.port; } }
+        public static int listenPortNumber => Transport.activeTransport switch
+        {
+            TelepathyTransport telepathyTransport => telepathyTransport.port,
+            kcp2k.KcpTransport kcpTransport => kcpTransport.Port,
+            _ => throw new NotSupportedException("Can not obtain port number from current transport"),
+        };
 
-		public static bool dontListen { get { return NetworkServer.dontListen; } set { NetworkServer.dontListen = value; } }
+        public static bool dontListen { get { return NetworkServer.dontListen; } set { NetworkServer.dontListen = value; } }
 
 		public static int maxNumPlayers { get => NetworkManager.singleton.maxConnections; set { NetworkManager.singleton.maxConnections = value; } }
 
 		public static int numConnections => NetworkServer.connections.Count;
-
-		public static TelepathyTransport telepathyTransport { get { return ((TelepathyTransport)Transport.activeTransport); } }
 
 		public	static	string	onlineScene {
 			get {
@@ -228,7 +231,18 @@ namespace SanAndreasUnity.Net
 		private	static	void	SetupNetworkManger( string ip, int port ) {
 
 			NetworkManager.singleton.networkAddress = ip;
-			telepathyTransport.port = (ushort) port;
+
+            switch (Transport.activeTransport)
+            {
+				case TelepathyTransport telepathyTransport:
+					telepathyTransport.port = (ushort)port;
+					break;
+				case kcp2k.KcpTransport kcp2kTransport:
+					kcp2kTransport.Port = (ushort)port;
+					break;
+                default:
+					throw new NotSupportedException("Can not assign port number to current transport");
+            }
 
 		}
 
