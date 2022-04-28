@@ -39,6 +39,9 @@ namespace SanAndreasUnity.Net
         private SyncData m_currentSyncData = new SyncData { Rotation = Quaternion.identity };
         public SyncData CurrentSyncData => m_currentSyncData;
 
+        // we will switch to this sync data when we reach the current sync data
+        private SyncData? m_nextSyncData = null;
+
         private readonly Transform m_transform;
         public Transform Transform => m_transform;
 
@@ -102,10 +105,20 @@ namespace SanAndreasUnity.Net
             syncData.Position = reader.ReadVector3();// + syncData.velocity * this.syncInterval;
             syncData.Rotation = Quaternion.Euler(reader.ReadVector3());
 
-            syncData.CalculatedVelocityMagnitude = (syncData.Position - m_currentSyncData.Position).magnitude / m_networkBehaviour.syncInterval;
-            syncData.CalculatedAngularVelocityMagnitude = Quaternion.Angle(syncData.Rotation, m_currentSyncData.Rotation) / m_networkBehaviour.syncInterval;
+            if (initialState)
+            {
+                syncData.CalculatedVelocityMagnitude = float.PositiveInfinity;
+                syncData.CalculatedAngularVelocityMagnitude = float.PositiveInfinity;
 
-            m_currentSyncData = syncData;
+                m_currentSyncData = syncData;
+            }
+            else
+            {
+                syncData.CalculatedVelocityMagnitude = (syncData.Position - m_currentSyncData.Position).magnitude / m_networkBehaviour.syncInterval;
+                syncData.CalculatedAngularVelocityMagnitude = Quaternion.Angle(syncData.Rotation, m_currentSyncData.Rotation) / m_networkBehaviour.syncInterval;
+
+                m_nextSyncData = syncData;
+            }
         }
 
         public void Update()
@@ -119,6 +132,8 @@ namespace SanAndreasUnity.Net
             }
             else
             {
+                this.CheckIfArrivedToNextSyncData();
+
                 switch (m_parameters.clientUpdateType)
                 {
                     case ClientUpdateType.ConstantVelocity:
@@ -133,6 +148,8 @@ namespace SanAndreasUnity.Net
                     default:
                         break;
                 }
+
+                this.CheckIfArrivedToNextSyncData();
             }
         }
 
@@ -250,6 +267,24 @@ namespace SanAndreasUnity.Net
             if (m_hasTransform)
                 return m_transform.localRotation;
             return m_currentSyncData.Rotation;
+        }
+
+        private bool ArrivedToCurrentSyncData()
+        {
+            return Vector3.Distance(m_currentSyncData.Position, this.GetPosition()) < 0.01f
+                && Quaternion.Angle(m_currentSyncData.Rotation, this.GetRotation()) < 1f;
+        }
+
+        private void CheckIfArrivedToNextSyncData()
+        {
+            if (m_nextSyncData.HasValue && this.ArrivedToCurrentSyncData())
+            {
+                this.SetPosition();
+                this.SetRotation();
+
+                m_currentSyncData = m_nextSyncData.Value;
+                m_nextSyncData = null;
+            }
         }
     }
 }
