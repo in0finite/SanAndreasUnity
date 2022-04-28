@@ -152,9 +152,12 @@ namespace SanAndreasUnity.Net
                 }
 
                 // check if we reached current snapshot
-                if (Vector3.SqrMagnitude(m_transform.localPosition - m_currentSyncData.Position) < 0.001f
-                    && Quaternion.Angle(m_transform.localRotation, m_currentSyncData.Rotation) < 1f)
+                if (Vector3.SqrMagnitude(this.GetPosition() - m_currentSyncData.Position) < 0.01f
+                    && Quaternion.Angle(this.GetRotation(), m_currentSyncData.Rotation) < 1f)
                 {
+                    this.SetPosition();
+                    this.SetRotation();
+
                     // current snapshot reached, switch to next one
                     if (m_syncDataQueue.Count > 0)
                     {
@@ -174,48 +177,48 @@ namespace SanAndreasUnity.Net
 
             float moveDelta = syncInfo.CalculatedVelocityMagnitude * this.GetDeltaTime() * m_parameters.constantVelocityMultiplier;
 
-            float distanceSqr = (m_transform.localPosition - syncInfo.Position).sqrMagnitude;
+            float distanceSqr = (this.GetPosition() - syncInfo.Position).sqrMagnitude;
 
             if (moveDelta < float.Epsilon || distanceSqr < float.Epsilon || Mathf.Sqrt(distanceSqr) < float.Epsilon)
-                m_transform.localPosition = syncInfo.Position;
+                this.SetPosition(syncInfo.Position);
             else
-                m_transform.localPosition = Vector3.MoveTowards(
-                    m_transform.localPosition,
+                this.SetPosition(Vector3.MoveTowards(
+                    this.GetPosition(),
                     syncInfo.Position,
-                    moveDelta);
+                    moveDelta));
 
-            m_transform.localRotation = Quaternion.RotateTowards(
-                m_transform.localRotation,
+            this.SetRotation(Quaternion.RotateTowards(
+                this.GetRotation(),
                 syncInfo.Rotation,
-                syncInfo.CalculatedAngularVelocityMagnitude * this.GetDeltaTime() * m_parameters.constantVelocityMultiplier);
+                syncInfo.CalculatedAngularVelocityMagnitude * this.GetDeltaTime() * m_parameters.constantVelocityMultiplier));
 
         }
 
         private void UpdateClientUsingLerp()
         {
-            m_transform.localPosition = Vector3.Lerp(
-                m_transform.localPosition,
+            this.SetPosition(Vector3.Lerp(
+                this.GetPosition(),
                 m_currentSyncData.Position,
-                1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime()));
+                1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime())));
 
-            m_transform.localRotation = Quaternion.Lerp(
-                m_transform.localRotation,
+            this.SetRotation(Quaternion.Lerp(
+                this.GetRotation(),
                 m_currentSyncData.Rotation,
-                1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime()));
+                1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime())));
 
         }
 
         private void UpdateClientUsingSphericalLerp()
         {
-            m_transform.localPosition = Vector3.Slerp(
-                m_transform.localPosition,
+            this.SetPosition(Vector3.Slerp(
+                this.GetPosition(),
                 m_currentSyncData.Position,
-                1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime()));
+                1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime())));
 
-            m_transform.localRotation = Quaternion.Slerp(
-                m_transform.localRotation,
+            this.SetRotation(Quaternion.Slerp(
+                this.GetRotation(),
                 m_currentSyncData.Rotation,
-                1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime()));
+                1 - Mathf.Exp(-m_parameters.lerpFactor * this.GetDeltaTime())));
 
         }
 
@@ -233,8 +236,8 @@ namespace SanAndreasUnity.Net
         {
             if (m_hasTransform)
             {
-                m_currentSyncData.Position = m_transform.localPosition;
-                m_currentSyncData.Rotation = m_transform.localRotation;
+                m_currentSyncData.Position = this.GetPosition();
+                m_currentSyncData.Rotation = this.GetRotation();
             }
             m_currentSyncData.CalculatedVelocityMagnitude = 0;
             m_currentSyncData.CalculatedAngularVelocityMagnitude = 0;
@@ -247,8 +250,8 @@ namespace SanAndreasUnity.Net
             if (!m_hasTransform)
                 return;
 
-            m_transform.localPosition = m_currentSyncData.Position;
-            m_transform.localRotation = m_currentSyncData.Rotation;
+            this.SetPosition();
+            this.SetRotation();
         }
 
         private void AssignDataForSending()
@@ -256,8 +259,52 @@ namespace SanAndreasUnity.Net
             if (!m_hasTransform)
                 return;
 
-            m_positionForSending = m_hasRigidBody ? m_rigidbody.position : m_transform.localPosition;
-            m_rotationForSending = m_hasRigidBody ? m_rigidbody.rotation : m_transform.localRotation;
+            m_positionForSending = this.GetPosition();
+            m_rotationForSending = this.GetRotation();
+        }
+
+        private void SetPosition()
+        {
+            this.SetPosition(m_currentSyncData.Position);
+        }
+
+        private void SetPosition(Vector3 pos)
+        {
+            if (m_hasRigidBody)
+                m_rigidbody.position = pos;
+            else if (m_hasTransform)
+                m_transform.localPosition = pos;
+        }
+
+        private void SetRotation()
+        {
+            this.SetRotation(m_currentSyncData.Rotation);
+        }
+
+        private void SetRotation(Quaternion rot)
+        {
+            if (m_hasRigidBody)
+                m_rigidbody.rotation = rot;
+            else if (m_hasTransform)
+                m_transform.localRotation = rot;
+        }
+
+        private Vector3 GetPosition()
+        {
+            if (m_hasRigidBody)
+                return m_rigidbody.position;
+            if (m_hasTransform)
+                return m_transform.localPosition;
+            return m_currentSyncData.Position;
+        }
+
+        private Quaternion GetRotation()
+        {
+            if (m_hasRigidBody)
+                return m_rigidbody.rotation;
+            if (m_hasTransform)
+                return m_transform.localRotation;
+            return m_currentSyncData.Rotation;
         }
     }
 }
