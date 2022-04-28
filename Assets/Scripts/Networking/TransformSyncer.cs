@@ -36,9 +36,6 @@ namespace SanAndreasUnity.Net
 
         private Parameters m_parameters = Parameters.Default;
 
-        private readonly Queue<SyncData> m_syncDataQueue = new Queue<SyncData>();
-        public int NumSyncDatasInQueue => m_syncDataQueue.Count;
-
         private SyncData m_currentSyncData = new SyncData { Rotation = Quaternion.identity };
         public SyncData CurrentSyncData => m_currentSyncData;
 
@@ -110,17 +107,10 @@ namespace SanAndreasUnity.Net
             syncData.Position = reader.ReadVector3();// + syncData.velocity * this.syncInterval;
             syncData.Rotation = Quaternion.Euler(reader.ReadVector3());
 
-            if (initialState)
-                m_currentSyncData = syncData;
-            else
-                this.Enqueue(syncData);
-        }
+            syncData.CalculatedVelocityMagnitude = (syncData.Position - m_currentSyncData.Position).magnitude / m_networkBehaviour.syncInterval;
+            syncData.CalculatedAngularVelocityMagnitude = Quaternion.Angle(syncData.Rotation, m_currentSyncData.Rotation) / m_networkBehaviour.syncInterval;
 
-        private void Enqueue(SyncData syncData)
-        {
-            if (m_syncDataQueue.Count >= 4)
-                m_syncDataQueue.Dequeue();
-            m_syncDataQueue.Enqueue(syncData);
+            m_currentSyncData = syncData;
         }
 
         public void Update()
@@ -149,24 +139,6 @@ namespace SanAndreasUnity.Net
                         break;
                     default:
                         break;
-                }
-
-                // check if we reached current snapshot
-                if (Vector3.SqrMagnitude(this.GetPosition() - m_currentSyncData.Position) < 0.01f
-                    && Quaternion.Angle(this.GetRotation(), m_currentSyncData.Rotation) < 1f)
-                {
-                    this.SetPosition();
-                    this.SetRotation();
-
-                    // current snapshot reached, switch to next one
-                    if (m_syncDataQueue.Count > 0)
-                    {
-                        var newSyncData = m_syncDataQueue.Dequeue();
-                        // calculate velocities
-                        newSyncData.CalculatedVelocityMagnitude = (newSyncData.Position - m_currentSyncData.Position).magnitude / m_networkBehaviour.syncInterval;
-                        newSyncData.CalculatedAngularVelocityMagnitude = Quaternion.Angle(newSyncData.Rotation, m_currentSyncData.Rotation) / m_networkBehaviour.syncInterval;
-                        m_currentSyncData = newSyncData;
-                    }
                 }
             }
         }
@@ -241,8 +213,6 @@ namespace SanAndreasUnity.Net
             }
             m_currentSyncData.CalculatedVelocityMagnitude = 0;
             m_currentSyncData.CalculatedAngularVelocityMagnitude = 0;
-
-            m_syncDataQueue.Clear();
         }
 
         private void ApplyCurrentSyncData()
