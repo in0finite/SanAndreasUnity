@@ -39,9 +39,6 @@ namespace SanAndreasUnity.Net
         private SyncData m_currentSyncData = new SyncData { Rotation = Quaternion.identity };
         public SyncData CurrentSyncData => m_currentSyncData;
 
-        private Vector3 m_positionForSending;
-        private Quaternion m_rotationForSending = Quaternion.identity;
-
         private readonly Transform m_transform;
         public Transform Transform => m_transform;
 
@@ -73,8 +70,6 @@ namespace SanAndreasUnity.Net
             m_networkBehaviour = networkBehaviour;
             m_hasTransform = tr != null;
             m_hasRigidBody = m_rigidbody != null;
-
-            this.AssignDataForSending();
         }
 
         public void OnStartClient()
@@ -92,8 +87,8 @@ namespace SanAndreasUnity.Net
             byte flags = 0;
             writer.Write(flags);
 
-            writer.Write(m_positionForSending);
-            writer.Write(m_rotationForSending.eulerAngles);
+            writer.Write(this.GetPosition());
+            writer.Write(this.GetRotation().eulerAngles);
 
             return true;
         }
@@ -121,8 +116,6 @@ namespace SanAndreasUnity.Net
             if (NetUtils.IsServer)
             {
                 m_networkBehaviour.SetSyncVarDirtyBit(1);
-
-                this.AssignDataForSending();
             }
             else
             {
@@ -213,15 +206,6 @@ namespace SanAndreasUnity.Net
 
             this.SetPosition();
             this.SetRotation();
-        }
-
-        private void AssignDataForSending()
-        {
-            if (!m_hasTransform)
-                return;
-
-            m_positionForSending = this.GetPosition();
-            m_rotationForSending = this.GetRotation();
         }
 
         private void SetPosition()
