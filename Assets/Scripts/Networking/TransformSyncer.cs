@@ -145,24 +145,15 @@ namespace SanAndreasUnity.Net
 
         private void UpdateClientUsingConstantVelocity()
         {
-            var syncInfo = m_currentSyncData;
-
-            float moveDelta = syncInfo.CalculatedVelocityMagnitude * this.GetDeltaTime() * m_parameters.constantVelocityMultiplier;
-
-            float distanceSqr = (this.GetPosition() - syncInfo.Position).sqrMagnitude;
-
-            if (moveDelta < float.Epsilon || distanceSqr < float.Epsilon || Mathf.Sqrt(distanceSqr) < float.Epsilon)
-                this.SetPosition(syncInfo.Position);
-            else
-                this.SetPosition(Vector3.MoveTowards(
-                    this.GetPosition(),
-                    syncInfo.Position,
-                    moveDelta));
+            this.SetPosition(Vector3.MoveTowards(
+                this.GetPosition(),
+                m_currentSyncData.Position,
+                m_currentSyncData.CalculatedVelocityMagnitude * this.GetDeltaTime() * m_parameters.constantVelocityMultiplier));
 
             this.SetRotation(Quaternion.RotateTowards(
                 this.GetRotation(),
-                syncInfo.Rotation,
-                syncInfo.CalculatedAngularVelocityMagnitude * this.GetDeltaTime() * m_parameters.constantVelocityMultiplier));
+                m_currentSyncData.Rotation,
+                m_currentSyncData.CalculatedAngularVelocityMagnitude * this.GetDeltaTime() * m_parameters.constantVelocityMultiplier));
 
         }
 
