@@ -271,7 +271,7 @@ namespace SanAndreasUnity.Net
         private void SetPosition(Vector3 pos)
         {
             if (m_hasRigidBody)
-                m_rigidbody.position = pos;
+                m_rigidbody.MovePosition(pos);
             else if (m_hasTransform)
                 m_transform.localPosition = pos;
         }
@@ -284,7 +284,7 @@ namespace SanAndreasUnity.Net
         private void SetRotation(Quaternion rot)
         {
             if (m_hasRigidBody)
-                m_rigidbody.rotation = rot;
+                m_rigidbody.MoveRotation(rot);
             else if (m_hasTransform)
                 m_transform.localRotation = rot;
         }
