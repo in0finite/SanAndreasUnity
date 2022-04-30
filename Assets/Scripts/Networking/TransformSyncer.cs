@@ -25,12 +25,15 @@ namespace SanAndreasUnity.Net
 
             public float lerpFactor;
 
+            public bool useRigidBody;
+
             public static Parameters Default => new Parameters
             {
                 useSmoothDeltaTime = true,
                 clientUpdateType = ClientUpdateType.ConstantVelocity,
                 constantVelocityMultiplier = 1f,
                 lerpFactor = 30f,
+                useRigidBody = true,
             };
         }
 
@@ -232,7 +235,7 @@ namespace SanAndreasUnity.Net
 
         private void SetPosition(Vector3 pos)
         {
-            if (m_hasRigidBody)
+            if (m_parameters.useRigidBody && m_hasRigidBody)
                 m_rigidbody.MovePosition(pos);
             else if (m_hasTransform)
                 m_transform.localPosition = pos;
@@ -245,7 +248,7 @@ namespace SanAndreasUnity.Net
 
         private void SetRotation(Quaternion rot)
         {
-            if (m_hasRigidBody)
+            if (m_parameters.useRigidBody && m_hasRigidBody)
                 m_rigidbody.MoveRotation(rot);
             else if (m_hasTransform)
                 m_transform.localRotation = rot;
@@ -253,7 +256,7 @@ namespace SanAndreasUnity.Net
 
         private Vector3 GetPosition()
         {
-            if (m_hasRigidBody)
+            if (m_parameters.useRigidBody && m_hasRigidBody)
                 return m_rigidbody.position;
             if (m_hasTransform)
                 return m_transform.localPosition;
@@ -262,7 +265,7 @@ namespace SanAndreasUnity.Net
 
         private Quaternion GetRotation()
         {
-            if (m_hasRigidBody)
+            if (m_parameters.useRigidBody && m_hasRigidBody)
                 return m_rigidbody.rotation;
             if (m_hasTransform)
                 return m_transform.localRotation;

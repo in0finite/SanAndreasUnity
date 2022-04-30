@@ -86,6 +86,7 @@ MonoBehaviour:
     clientUpdateType: 0
     constantVelocityMultiplier: 1
     lerpFactor: 30
+    useRigidBody: 0
 --- !u!114 &1658066758197886442
 MonoBehaviour:
   m_ObjectHideFlags: 0
