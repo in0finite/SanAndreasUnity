@@ -21,11 +21,6 @@ namespace SanAndreasUnity.Net
             m_transformSyncer = new TransformSyncer(m_transformToSync, m_transformSyncParameters, this);
         }
 
-        public override void OnStartClient()
-        {
-            m_transformSyncer.OnStartClient();
-        }
-
         public override bool OnSerialize(NetworkWriter writer, bool initialState)
         {
             return m_transformSyncer.OnSerialize(writer, initialState);

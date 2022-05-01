@@ -84,16 +84,6 @@ namespace SanAndreasUnity.Net
             m_hasRigidBody = m_rigidbody != null;
         }
 
-        public void OnStartClient()
-        {
-            if (NetUtils.IsServer)
-                return;
-
-            // apply initial sync data
-            // first sync should've been done before calling this function, so the data is available
-            
-        }
-
         public bool OnSerialize(NetworkWriter writer, bool initialState)
         {
             byte flags = 0;
