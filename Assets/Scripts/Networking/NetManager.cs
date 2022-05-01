@@ -160,6 +160,7 @@ namespace SanAndreasUnity.Net
 			CheckIfIPAddressIsValid (ip);
 			CheckIfPortIsValid (serverPortNumber);
 			SetupNetworkManger( ip, serverPortNumber );
+			Mirror.NetworkTime.PingFrequency = 0.5f; // we need more agile ping measurement
 			NetworkManager.singleton.StartClient ();
 
 		}
