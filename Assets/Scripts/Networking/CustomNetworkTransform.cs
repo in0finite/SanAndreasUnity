@@ -51,7 +51,7 @@ namespace SanAndreasUnity.Net
             m_transformToSync = newTransform;
 
             m_transformSyncer = new TransformSyncer(newTransform, m_transformSyncParameters, this);
-            m_transformSyncer.ResetSyncInfoToTransform();
+            m_transformSyncer.ResetSyncDataToTransform();
         }
     }
 }

@@ -216,7 +216,7 @@ namespace SanAndreasUnity.Net
             m_parameters = parameters;
         }
 
-        public void ResetSyncInfoToTransform()
+        public void ResetSyncDataToTransform()
         {
             if (m_hasTransform)
             {
