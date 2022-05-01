@@ -59,6 +59,12 @@ namespace SanAndreasUnity.Net
             // these are the velocities used to move the object, calculated when new server data arrives
             public float CalculatedVelocityMagnitude;
             public float CalculatedAngularVelocityMagnitude;
+
+            public void Apply(Transform tr)
+            {
+                tr.localPosition = this.Position;
+                tr.localRotation = this.Rotation;
+            }
         }
 
         private readonly bool m_hasTransform = false;
@@ -85,7 +91,7 @@ namespace SanAndreasUnity.Net
 
             // apply initial sync data
             // first sync should've been done before calling this function, so the data is available
-            this.WarpToLatestSyncData();
+            
         }
 
         public bool OnSerialize(NetworkWriter writer, bool initialState)
@@ -114,6 +120,8 @@ namespace SanAndreasUnity.Net
                 syncData.CalculatedAngularVelocityMagnitude = float.PositiveInfinity;
 
                 m_currentSyncData = syncData;
+
+                this.WarpToLatestSyncData();
             }
             else
             {
@@ -222,20 +230,21 @@ namespace SanAndreasUnity.Net
 
         public void WarpToLatestSyncData()
         {
-            var syncData = m_nextSyncData ?? m_currentSyncData;
+            var syncData = this.GetLatestSyncData();
 
-            this.SetPosition(syncData.Position);
-            this.SetRotation(syncData.Rotation);
-
-            // also assign position/rotation directly to transform, because rigid body may not warp
+            // assign position/rotation directly to transform, because rigid body may not warp ?
             if (m_hasTransform)
             {
-                m_transform.localPosition = syncData.Position;
-                m_transform.localRotation = syncData.Rotation;
+                syncData.Apply(m_transform);
             }
 
             m_currentSyncData = syncData;
             m_nextSyncData = null;
+        }
+
+        public SyncData GetLatestSyncData()
+        {
+            return m_nextSyncData ?? m_currentSyncData;
         }
 
         private void SetPosition()
