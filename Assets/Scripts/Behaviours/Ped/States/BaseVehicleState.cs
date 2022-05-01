@@ -148,8 +148,11 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				m_ped.transform.SetParent(null, true);
 				m_model.IsInVehicle = false;
 				if (m_ped.NetTransform != null)
-					m_ped.NetTransform.enabled = true;
-				if (this.CurrentVehicle != null)
+                {
+                    m_ped.NetTransform.enabled = true;
+					m_ped.NetTransform.TransformSyncer.ResetSyncDataToTransform();
+                }
+                if (this.CurrentVehicle != null)
 					F.RunExceptionSafe( () => this.CurrentVehicle.OnPedRemovedFromVehicle(m_ped, this.CurrentVehicleSeat) );
 				m_ped.NavMeshAgent.enabled = true;
 			}
