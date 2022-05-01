@@ -130,6 +130,19 @@ namespace SanAndreasUnity.Net
 
             var rb = this.GetComponentInChildren<Rigidbody>();
 
+            // Because first sync will send position/rotation for this transform, we need to assign it's
+            // position/rotation to the child's transform, which is the transform that will be synced from
+            // now on. We do this to maintain same behaviour as on server.
+
+            if (rb != null)
+            {
+                rb.transform.localPosition = this.transform.localPosition;
+                rb.transform.localRotation = this.transform.localRotation;
+            }
+
+            this.transform.localPosition = Vector3.zero;
+            this.transform.localRotation = Quaternion.identity;
+
             this.NetworkTransform.ChangeSyncedTransform(rb != null ? rb.transform : null);
 
             if (rb != null)
