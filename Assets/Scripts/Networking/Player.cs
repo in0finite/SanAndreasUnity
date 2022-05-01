@@ -151,7 +151,9 @@ namespace SanAndreasUnity.Net
             // Telepathy does not detect dead connections, so we'll have to detect them ourselves
             if (NetStatus.IsServer && !this.isLocalPlayer)
             {
-                if (Time.time - this.connectionToClient.lastMessageTime > 6f)
+                // use 20 seconds to allow slow clients (eg. mobile phones) to initialize scene or do some other
+                // blocking operation
+                if (Time.time - this.connectionToClient.lastMessageTime > 20f)
                 {
                     // disconnect client
                     Debug.LogFormat("Detected dead connection for player {0}", this.DescriptionForLogging);
