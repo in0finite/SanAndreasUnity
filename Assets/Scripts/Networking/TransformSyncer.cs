@@ -85,7 +85,7 @@ namespace SanAndreasUnity.Net
 
             // apply initial sync data
             // first sync should've been done before calling this function, so the data is available
-            this.ApplyCurrentSyncData();
+            this.WarpToLatestSyncData();
         }
 
         public bool OnSerialize(NetworkWriter writer, bool initialState)
@@ -215,17 +215,27 @@ namespace SanAndreasUnity.Net
                 m_currentSyncData.Position = this.GetPosition();
                 m_currentSyncData.Rotation = this.GetRotation();
             }
-            m_currentSyncData.CalculatedVelocityMagnitude = 0;
-            m_currentSyncData.CalculatedAngularVelocityMagnitude = 0;
+            m_currentSyncData.CalculatedVelocityMagnitude = float.PositiveInfinity;
+            m_currentSyncData.CalculatedAngularVelocityMagnitude = float.PositiveInfinity;
+            m_nextSyncData = null;
         }
 
-        private void ApplyCurrentSyncData()
+        public void WarpToLatestSyncData()
         {
-            if (!m_hasTransform)
-                return;
+            var syncData = m_nextSyncData ?? m_currentSyncData;
 
-            this.SetPosition();
-            this.SetRotation();
+            this.SetPosition(syncData.Position);
+            this.SetRotation(syncData.Rotation);
+
+            // also assign position/rotation directly to transform, because rigid body may not warp
+            if (m_hasTransform)
+            {
+                m_transform.localPosition = syncData.Position;
+                m_transform.localRotation = syncData.Rotation;
+            }
+
+            m_currentSyncData = syncData;
+            m_nextSyncData = null;
         }
 
         private void SetPosition()
