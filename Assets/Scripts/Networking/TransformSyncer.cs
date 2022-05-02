@@ -27,6 +27,12 @@ namespace SanAndreasUnity.Net
 
             public bool useRigidBody;
 
+            public bool visualize;
+
+            public ushort maxNumVisualizations;
+
+            public float visualizationScale;
+
             public static Parameters Default => new Parameters
             {
                 useSmoothDeltaTime = true,
@@ -34,6 +40,9 @@ namespace SanAndreasUnity.Net
                 constantVelocityMultiplier = 1f,
                 lerpFactor = 30f,
                 useRigidBody = true,
+                visualize = false,
+                maxNumVisualizations = 10,
+                visualizationScale = 0.2f,
             };
         }
 
@@ -71,6 +80,8 @@ namespace SanAndreasUnity.Net
         private readonly bool m_hasRigidBody = false;
 
         private readonly NetworkBehaviour m_networkBehaviour;
+
+        private readonly Queue<GameObject> m_visualizationQueue = new Queue<GameObject>();
 
 
 
@@ -119,6 +130,37 @@ namespace SanAndreasUnity.Net
                 syncData.CalculatedAngularVelocityMagnitude = Quaternion.Angle(syncData.Rotation, m_currentSyncData.Rotation) / m_networkBehaviour.syncInterval;
 
                 m_nextSyncData = syncData;
+
+                this.AddToVisualization(syncData);
+            }
+        }
+
+        void AddToVisualization(SyncData syncData)
+        {
+            if (!m_parameters.visualize || m_parameters.maxNumVisualizations <= 0)
+            {
+                while (m_visualizationQueue.Count > 0)
+                    Object.Destroy(m_visualizationQueue.Dequeue());
+
+                return;
+            }
+
+            while (m_visualizationQueue.Count >= m_parameters.maxNumVisualizations)
+                Object.Destroy(m_visualizationQueue.Dequeue());
+
+            var newGo = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            newGo.transform.SetPositionAndRotation(syncData.Position, syncData.Rotation);
+            newGo.transform.localScale = Vector3.one * m_parameters.visualizationScale;
+            Object.DestroyImmediate(newGo.GetComponent<Collider>());
+            
+            m_visualizationQueue.Enqueue(newGo);
+
+            int i = 0;
+            foreach (var go in m_visualizationQueue)
+            {
+                go.name = $"{m_networkBehaviour.name} - sync visualization {i}";
+                go.GetComponent<Renderer>().material.color = Color.Lerp(Color.white, Color.black, i / (float)m_visualizationQueue.Count);
+                i++;
             }
         }
 
