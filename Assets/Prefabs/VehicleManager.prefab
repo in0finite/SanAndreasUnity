@@ -92,9 +92,8 @@ MonoBehaviour:
   rigidBodyCollisionDetectionMode: 2
   syncLinearVelocity: 1
   syncAngularVelocity: 1
-  whenToDisableRigidBody: 0
+  destroyRigidBodyOnClients: 1
   syncPedTransformWhileInVehicle: 0
-  syncVehicleTransformUsingSyncVars: 1
   controlInputOnLocalPlayer: 0
   controlWheelsOnLocalPlayer: 0
   destroyWheelCollidersOnClient: 1
