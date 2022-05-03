@@ -98,7 +98,7 @@ MonoBehaviour:
   controlInputOnLocalPlayer: 0
   controlWheelsOnLocalPlayer: 0
   destroyWheelCollidersOnClient: 1
-  vehicleSyncRate: 20
+  vehicleSyncRate: 30
   massToHealthExponent: 1
   explosionDamageRadius: 7
   explosionDamageOverDistanceCurve:

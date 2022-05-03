@@ -205,7 +205,7 @@ MonoBehaviour:
   AIStoppingDistance: 3
   AIVehicleEnterDistance: 1.25
   AIWeaponHearingDistance: 40
-  pedSyncRate: 20
+  pedSyncRate: 30
   ragdollPrefab: {fileID: 2141754834917738923, guid: 14d22e60f4926f64cbd36f393fe11b9a,
     type: 3}
   ragdollMass: 1000
