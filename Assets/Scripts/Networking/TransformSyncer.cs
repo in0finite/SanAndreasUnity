@@ -35,7 +35,7 @@ namespace SanAndreasUnity.Net
 
             public float visualizationScale;
 
-            public float snapshotLatencyMultiplier;
+            public float snapshotLatency;
 
             public static Parameters Default => new Parameters
             {
@@ -47,7 +47,7 @@ namespace SanAndreasUnity.Net
                 visualize = false,
                 maxNumVisualizations = 10,
                 visualizationScale = 0.2f,
-                snapshotLatencyMultiplier = 2f, // latency of 100 ms for 20/s rate
+                snapshotLatency = 0.1f,
             };
         }
 
@@ -260,7 +260,7 @@ namespace SanAndreasUnity.Net
             if (m_syncDataBuffer.Count == 0)
                 return;
 
-            double currentNetworkTime = NetworkTime.time - m_networkBehaviour.syncInterval * m_parameters.snapshotLatencyMultiplier;
+            double currentNetworkTime = NetworkTime.time - m_parameters.snapshotLatency;
 
             SyncData syncDataOfHigher;
             SyncData syncDataOfLower;
