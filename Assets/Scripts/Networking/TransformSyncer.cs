@@ -2,6 +2,7 @@ using UnityEngine;
 using Mirror;
 using SanAndreasUnity.Utilities;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SanAndreasUnity.Net
 {
@@ -12,6 +13,7 @@ namespace SanAndreasUnity.Net
             ConstantVelocity,
             Lerp,
             Slerp,
+            SnapshotInterpolation,
         }
 
         [System.Serializable]
@@ -33,6 +35,8 @@ namespace SanAndreasUnity.Net
 
             public float visualizationScale;
 
+            public float snapshotLatencyMultiplier;
+
             public static Parameters Default => new Parameters
             {
                 useSmoothDeltaTime = true,
@@ -43,6 +47,7 @@ namespace SanAndreasUnity.Net
                 visualize = false,
                 maxNumVisualizations = 10,
                 visualizationScale = 0.2f,
+                snapshotLatencyMultiplier = 2f, // latency of 100 ms for 20/s rate
             };
         }
 
@@ -69,6 +74,12 @@ namespace SanAndreasUnity.Net
             public float CalculatedVelocityMagnitude;
             public float CalculatedAngularVelocityMagnitude;
 
+            // timestamp of server when this data was sent (batch timestamp)
+            public double sentNetworkTime;
+
+            // network time when this data was received
+            public double receivedNetworkTime;
+
             public void Apply(Transform tr)
             {
                 tr.localPosition = this.Position;
@@ -83,6 +94,8 @@ namespace SanAndreasUnity.Net
 
         private readonly Queue<GameObject> m_visualizationQueue = new Queue<GameObject>();
 
+        private readonly Queue<SyncData> m_syncDataBuffer = new Queue<SyncData>();
+        
 
 
         public TransformSyncer(Transform tr, Parameters parameters, NetworkBehaviour networkBehaviour)
@@ -112,6 +125,9 @@ namespace SanAndreasUnity.Net
 
             var syncData = new SyncData();
 
+            syncData.sentNetworkTime = NetworkClient.connection.remoteTimeStamp;
+            syncData.receivedNetworkTime = NetworkTime.time;
+
             syncData.Position = reader.ReadVector3();// + syncData.velocity * this.syncInterval;
             syncData.Rotation = Quaternion.Euler(reader.ReadVector3());
 
@@ -133,6 +149,8 @@ namespace SanAndreasUnity.Net
 
                 this.AddToVisualization(syncData);
             }
+
+            this.AddToBuffer(syncData);
         }
 
         void AddToVisualization(SyncData syncData)
@@ -164,6 +182,29 @@ namespace SanAndreasUnity.Net
             }
         }
 
+        private void AddToBuffer(SyncData syncData)
+        {
+            if (m_parameters.clientUpdateType != ClientUpdateType.SnapshotInterpolation)
+            {
+                m_syncDataBuffer.Clear();
+                return;
+            }
+
+            if (m_syncDataBuffer.Count == 0)
+            {
+                m_syncDataBuffer.Enqueue(syncData);
+                return;
+            }
+
+            if (m_syncDataBuffer.Last().sentNetworkTime >= syncData.sentNetworkTime)
+            {
+                // can happen if packets arrive out of order (eg. on UDP transport)
+                return;
+            }
+
+            m_syncDataBuffer.Enqueue(syncData);
+        }
+
         public void Update()
         {
             if (!m_hasTransform)
@@ -188,12 +229,90 @@ namespace SanAndreasUnity.Net
                     case ClientUpdateType.Slerp:
                         this.UpdateClientUsingSphericalLerp();
                         break;
+                    case ClientUpdateType.SnapshotInterpolation:
+                        this.UpdateClientUsingSnapshotInterpolation();
+                        break;
                     default:
                         break;
                 }
 
                 this.CheckIfArrivedToNextSyncData();
             }
+        }
+
+        private void UpdateClientUsingSnapshotInterpolation()
+        {
+            /*if (SnapshotInterpolation.Compute(
+                    NetworkTime.localTime,
+                    Time.deltaTime,
+                    ref m_clientInterpolationTime,
+                    m_networkBehaviour.syncInterval * 2f,
+                    m_syncDataBuffer,
+                    4,
+                    0.1f,
+                    DoSnapshotInterpolation,
+                    out SyncData computed))
+            {
+                this.SetPosition(computed.Position);
+                this.SetRotation(computed.Rotation);
+            }*/
+
+            if (m_syncDataBuffer.Count == 0)
+                return;
+
+            double currentNetworkTime = NetworkTime.time - m_networkBehaviour.syncInterval * m_parameters.snapshotLatencyMultiplier;
+
+            SyncData syncDataOfHigher;
+            SyncData syncDataOfLower;
+
+            int firstHigherIndex = m_syncDataBuffer.FindIndex(_ => _.sentNetworkTime >= currentNetworkTime);
+            if (firstHigherIndex >= 0)
+            {
+                syncDataOfHigher = m_syncDataBuffer.ElementAt(firstHigherIndex);
+                syncDataOfLower = firstHigherIndex > 0 ? m_syncDataBuffer.ElementAt(firstHigherIndex - 1) : syncDataOfHigher;
+            }
+            else
+            {
+                // we are ahead of all snapshots
+                syncDataOfHigher = m_syncDataBuffer.Last();
+                syncDataOfLower = syncDataOfHigher;
+            }
+
+            // interpolate between lower and higher syncdata
+            double ratio = (currentNetworkTime - syncDataOfLower.sentNetworkTime) / (syncDataOfHigher.sentNetworkTime - syncDataOfLower.sentNetworkTime);
+            if (double.IsNaN(ratio))
+                ratio = 1;
+            ratio = Mathd.Clamp01(ratio);
+            SyncData interpolated = DoSnapshotInterpolation(syncDataOfLower, syncDataOfHigher, ratio);
+            this.Apply(interpolated);
+
+            // remove old snapshots, but be careful not to remove the current lower snapshot
+            this.RemoveOldSnapshots(System.Math.Min(currentNetworkTime, syncDataOfLower.sentNetworkTime));
+
+        }
+
+        private void RemoveOldSnapshots(double currentNetworkTime)
+        {
+            while (true)
+            {
+                if (m_syncDataBuffer.Count == 0)
+                    break;
+
+                SyncData syncData = m_syncDataBuffer.Peek();
+                if (syncData.sentNetworkTime < currentNetworkTime)
+                    m_syncDataBuffer.Dequeue();
+                else
+                    break;
+            }
+        }
+
+        private static SyncData DoSnapshotInterpolation(SyncData from, SyncData to, double t)
+        {
+            return new SyncData
+            {
+                Position = Vector3.LerpUnclamped(from.Position, to.Position, (float)t),
+                Rotation = Quaternion.SlerpUnclamped(from.Rotation, to.Rotation, (float)t),
+            };
         }
 
         private void UpdateClientUsingConstantVelocity()
@@ -258,6 +377,7 @@ namespace SanAndreasUnity.Net
             m_currentSyncData.CalculatedVelocityMagnitude = float.PositiveInfinity;
             m_currentSyncData.CalculatedAngularVelocityMagnitude = float.PositiveInfinity;
             m_nextSyncData = null;
+            m_syncDataBuffer.Clear();
         }
 
         public void WarpToLatestSyncData()
@@ -272,11 +392,18 @@ namespace SanAndreasUnity.Net
 
             m_currentSyncData = syncData;
             m_nextSyncData = null;
+            m_syncDataBuffer.Clear();
         }
 
         public SyncData GetLatestSyncData()
         {
             return m_nextSyncData ?? m_currentSyncData;
+        }
+
+        private void Apply(SyncData syncData)
+        {
+            this.SetPosition(syncData.Position);
+            this.SetRotation(syncData.Rotation);
         }
 
         private void SetPosition()
@@ -331,6 +458,9 @@ namespace SanAndreasUnity.Net
 
         private void CheckIfArrivedToNextSyncData()
         {
+            if (m_parameters.clientUpdateType == ClientUpdateType.SnapshotInterpolation)
+                return;
+
             if (m_nextSyncData.HasValue && this.ArrivedToCurrentSyncData())
             {
                 this.SetPosition();

@@ -531,9 +531,14 @@ MonoBehaviour:
   m_transformToSync: {fileID: 4388436116821042}
   m_transformSyncParameters:
     useSmoothDeltaTime: 1
-    clientUpdateType: 0
+    clientUpdateType: 3
     constantVelocityMultiplier: 1
     lerpFactor: 30
+    useRigidBody: 1
+    visualize: 0
+    maxNumVisualizations: 10
+    visualizationScale: 0.2
+    snapshotLatencyMultiplier: 3
 --- !u!195 &7038296094652462326
 NavMeshAgent:
   m_ObjectHideFlags: 0
