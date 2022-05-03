@@ -257,6 +257,7 @@ namespace SanAndreasUnity.Stats
             Net.TransformSyncer transformSyncer,
             string prefix)
         {
+            sb.AppendLine($"{prefix}snapshot buffer count: {transformSyncer.SnapshotBufferCount}");
             sb.AppendLine($"{prefix}calculated velocity: {transformSyncer.CurrentSyncData.CalculatedVelocityMagnitude}");
             sb.AppendLine($"{prefix}calculated angular velocity: {transformSyncer.CurrentSyncData.CalculatedAngularVelocityMagnitude}");
             if (transformSyncer.Transform != null)

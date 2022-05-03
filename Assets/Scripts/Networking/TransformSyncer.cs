@@ -95,6 +95,7 @@ namespace SanAndreasUnity.Net
         private readonly Queue<GameObject> m_visualizationQueue = new Queue<GameObject>();
 
         private readonly Queue<SyncData> m_syncDataBuffer = new Queue<SyncData>();
+        public int SnapshotBufferCount => m_syncDataBuffer.Count;
         
 
 
