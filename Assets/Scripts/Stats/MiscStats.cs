@@ -149,6 +149,10 @@ namespace SanAndreasUnity.Stats
                     {
                         sb.AppendFormat("{0}: {1}\n", texts[i], objects[i]);
                     }
+
+                    sb.AppendFormat("transform syncer: \n");
+                    AddTransformSyncer(sb, vehicle.NetTransform.TransformSyncer, "\t");
+
                     sb.AppendFormat("\n");
 
                 }
