@@ -30,7 +30,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             _geometryParts.AttachCollisionModel(transform, true);
 
-            _rigidBody = gameObject.GetComponent<Rigidbody>();
+            _rigidBody = gameObject.GetComponentOrThrow<Rigidbody>();
 
             _rigidBody.interpolation = Net.NetStatus.IsServer ? VehicleManager.Instance.rigidbodyInterpolationOnServer : VehicleManager.Instance.rigidbodyInterpolationOnClient;
             _rigidBody.collisionDetectionMode = VehicleManager.Instance.rigidBodyCollisionDetectionMode;
