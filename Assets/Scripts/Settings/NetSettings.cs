@@ -39,12 +39,6 @@ namespace SanAndreasUnity.Settings
 			setValue = (value) => { ApplyVehicleSyncRate(value); },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
-		OptionsWindow.BoolInput m_syncVehicleTransformUsingSyncVars = new OptionsWindow.BoolInput ("Sync vehicle transform using syncvars") {
-			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.syncVehicleTransformUsingSyncVars,
-			setValue = (value) => { VehicleManager.Instance.syncVehicleTransformUsingSyncVars = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
 		OptionsWindow.BoolInput m_syncVehiclesLinearVelocity = new OptionsWindow.BoolInput ("Sync vehicle's linear velocity") {
 			isAvailable = () => VehicleManager.Instance != null,
 			getValue = () => VehicleManager.Instance.syncLinearVelocity,
@@ -76,11 +70,11 @@ namespace SanAndreasUnity.Settings
 			setValue = (value) => { VehicleManager.Instance.controlInputOnLocalPlayer = value; },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
-		OptionsWindow.EnumInput<WhenOnClient> m_whenToDisableVehiclesRigidBody = new OptionsWindow.EnumInput<WhenOnClient> () {
-			description = "When to disable vehicle rigid body on clients",
+		OptionsWindow.BoolInput m_destroyVehiclesRigidBodyOnClients = new OptionsWindow.BoolInput () {
+			description = "Destroy vehicle rigid body on clients",
 			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.whenToDisableRigidBody,
-			setValue = (value) => { ApplyRigidBodyState(value); },
+			getValue = () => VehicleManager.Instance.destroyRigidBodyOnClients,
+			setValue = (value) => VehicleManager.Instance.destroyRigidBodyOnClients = value,
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
 		OptionsWindow.BoolInput m_syncPedTransformWhileInVehicle = new OptionsWindow.BoolInput ("Sync ped transform while in vehicle") {
@@ -111,13 +105,12 @@ namespace SanAndreasUnity.Settings
 	            m_deadBodySyncRate,
 	            m_deadBodyInterpolationMode,
 	            m_vehicleSyncRate,
-	            m_syncVehicleTransformUsingSyncVars,
 	            m_syncVehiclesLinearVelocity,
 	            m_syncVehiclesAngularVelocity,
 	            m_controlWheelsOnLocalPlayer,
 	            m_destroyWheelCollidersOnClient,
 	            m_controlVehicleInputOnLocalPlayer,
-	            m_whenToDisableVehiclesRigidBody,
+	            m_destroyVehiclesRigidBodyOnClients,
 	            m_vehicleRigidBodyInterpolationModeOnServer,
 	            m_vehicleRigidBodyInterpolationModeOnClient,
 	            m_syncPedTransformWhileInVehicle);
@@ -157,13 +150,6 @@ namespace SanAndreasUnity.Settings
 	        {
 		        v.ApplySyncRate(syncRate);
 	        }
-        }
-
-        static void ApplyRigidBodyState(WhenOnClient when)
-        {
-	        VehicleManager.Instance.whenToDisableRigidBody = when;
-	        foreach (var v in Vehicle.AllVehicles)
-		        v.GetComponent<VehicleController>().EnableOrDisableRigidBody();
         }
 
         static void ApplyRigidBodyInterpolationModeOnServer(RigidbodyInterpolation interpolation)

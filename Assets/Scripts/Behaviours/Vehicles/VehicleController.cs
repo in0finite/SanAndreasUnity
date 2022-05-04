@@ -21,14 +21,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [SyncVar] float m_net_steering;
         [SyncVar] float m_net_braking;
 
-        [SyncVar(hook = nameof(OnNetPositionChanged))]
-        Vector3 m_net_position;
-
-        [SyncVar(hook = nameof(OnNetRotationChanged))]
-        Quaternion m_net_rotation;
-
-        [SyncVar] Vector3 m_net_linearVelocity;
-        [SyncVar] Vector3 m_net_angularVelocity;
         [SyncVar] float m_net_health;
 
         struct WheelSyncData
@@ -104,6 +96,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                             Destroy(wheelCollider);
                         }
                     }
+
+                    if (VehicleManager.Instance.destroyRigidBodyOnClients)
+                    {
+                        if (m_vehicle.RigidBody != null)
+                            Object.Destroy(m_vehicle.RigidBody);
+                    }
                 });
             }
         }
@@ -165,9 +163,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void Update()
         {
-            // if syncvars are used for updating transform, then disable NetworkTransform, and vice versa
-            m_vehicle.NetTransform.enabled = !VehicleManager.Instance.syncVehicleTransformUsingSyncVars;
-
             // update status of rigid body
             this.EnableOrDisableRigidBody();
 
@@ -221,10 +216,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 m_net_acceleration = m_vehicle.Accelerator;
                 m_net_steering = m_vehicle.Steering;
                 m_net_braking = m_vehicle.Braking;
-                m_net_position = m_vehicle.RigidBody.position;
-                m_net_rotation = m_vehicle.RigidBody.rotation;
-                m_net_linearVelocity = m_vehicle.RigidBody.velocity;
-                m_net_angularVelocity = m_vehicle.RigidBody.angularVelocity;
                 m_net_health = m_vehicle.Health;
 
                 // wheels
@@ -277,21 +268,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     }
                 }
 
-                // position and rotation will be applied in syncvar hooks
-
-                // apply velocity on all clients
-
-                if (VehicleManager.Instance.syncLinearVelocity)
-                    m_vehicle.RigidBody.velocity = m_net_linearVelocity;
-                else
-                    m_vehicle.RigidBody.velocity = Vector3.zero;
-
-                if (VehicleManager.Instance.syncAngularVelocity)
-                    m_vehicle.RigidBody.angularVelocity = m_net_angularVelocity;
-                else
-                    m_vehicle.RigidBody.angularVelocity = Vector3.zero;
-
-
                 m_vehicle.Health = m_net_health;
             }
         }
@@ -327,37 +303,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (NetStatus.IsServer)
             {
                 F.EnableRigidBody(m_vehicle.RigidBody);
-                return;
-            }
-
-            if (VehicleManager.Instance.whenToDisableRigidBody.Matches(this.IsControlledByLocalPlayer,
-                    !NetStatus.IsServer))
-                F.DisableRigidBody(m_vehicle.RigidBody);
-            else
-                F.EnableRigidBody(m_vehicle.RigidBody);
-        }
-
-        void OnNetPositionChanged(Vector3 oldPos, Vector3 newPos)
-        {
-            if (NetStatus.IsServer)
-                return;
-
-            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars)
-            {
-                if (m_vehicle != null && m_vehicle.RigidBody != null)
-                    m_vehicle.RigidBody.MovePosition(newPos);
-            }
-        }
-
-        void OnNetRotationChanged(Quaternion oldRot, Quaternion newRot)
-        {
-            if (NetStatus.IsServer)
-                return;
-
-            if (VehicleManager.Instance.syncVehicleTransformUsingSyncVars)
-            {
-                if (m_vehicle != null && m_vehicle.RigidBody != null)
-                    m_vehicle.RigidBody.MoveRotation(newRot);
             }
         }
 

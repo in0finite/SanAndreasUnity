@@ -153,7 +153,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public Mirror.NetworkIdentity NetIdentity { get; private set; }
 
-        public Mirror.NetworkTransform NetTransform { get; private set; }
+        public Net.CustomNetworkTransform NetTransform { get; private set; }
 
         List<Ped> m_lastPreparedPeds = new List<Ped>();
 
@@ -173,7 +173,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private void Awake()
         {
             this.NetIdentity = this.GetComponentOrThrow<Mirror.NetworkIdentity>();
-            this.NetTransform = this.GetComponent<Mirror.NetworkTransform>();
+            this.NetTransform = this.GetComponent<Net.CustomNetworkTransform>();
             _props = new MaterialPropertyBlock();
             this.Awake_Damage();
             this.Awake_Radio();

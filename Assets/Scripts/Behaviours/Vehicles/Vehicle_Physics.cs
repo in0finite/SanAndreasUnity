@@ -6,7 +6,6 @@ using VConsts = SanAndreasUnity.Behaviours.Vehicles.VehiclePhysicsConstants;
 
 namespace SanAndreasUnity.Behaviours.Vehicles
 {
-    [RequireComponent(typeof(Rigidbody))]
     public partial class Vehicle
     {
         private Rigidbody _rigidBody;
@@ -21,7 +20,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         [Range(0, 1)]
         public float Braking = 1f;
 
-        public Vector3 Velocity { get { return _rigidBody.velocity; } }
+        public Vector3 Velocity { get { return _rigidBody != null ? _rigidBody.velocity : Vector3.zero; } }
 
         public float AverageWheelHeight { get { return _wheels.Count == 0 ? transform.position.y : _wheels.Average(x => x.Child.position.y); } }
 
@@ -73,12 +72,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private void UpdateValues(VConsts vals)
         {
-            _rigidBody.drag = HandlingData.Drag * vals.DragScale;
-            _rigidBody.mass = HandlingData.Mass * vals.MassScale;
-            _rigidBody.centerOfMass = HandlingData.CentreOfMass;
+            if (_rigidBody != null)
+            {
+                _rigidBody.drag = HandlingData.Drag * vals.DragScale;
+                _rigidBody.mass = HandlingData.Mass * vals.MassScale;
+                _rigidBody.centerOfMass = HandlingData.CentreOfMass;
+            }
 
             foreach (var wheel in _wheels)
             {
+                if (null == wheel.Collider)
+                    continue;
+
                 var spring = wheel.Collider.suspensionSpring;
 
                 spring.damper = HandlingData.SuspensionDampingLevel * vals.SuspensionDampingScale;

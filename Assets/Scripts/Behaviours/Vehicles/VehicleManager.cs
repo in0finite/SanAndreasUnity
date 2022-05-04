@@ -18,9 +18,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public bool syncLinearVelocity = true;
         public bool syncAngularVelocity = true;
-        public Utilities.WhenOnClient whenToDisableRigidBody = Utilities.WhenOnClient.OnlyOnOtherClients;
+        public bool destroyRigidBodyOnClients = true;
         public bool syncPedTransformWhileInVehicle = false;
-        public bool syncVehicleTransformUsingSyncVars = false;
         public bool controlInputOnLocalPlayer = true;
         public bool controlWheelsOnLocalPlayer = true;
         public bool destroyWheelCollidersOnClient = true;

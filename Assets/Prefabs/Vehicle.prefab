@@ -10,12 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 8267877565696799342}
   - component: {fileID: 6732552431618800415}
-  - component: {fileID: 459295042993608392}
   - component: {fileID: 9183683351129218624}
+  - component: {fileID: 6154053831592577151}
   - component: {fileID: 575085982327711637}
   - component: {fileID: 6891581410426086992}
   - component: {fileID: 1742792654273641741}
   - component: {fileID: 9038525027628313851}
+  - component: {fileID: 6804370665295485595}
   m_Layer: 0
   m_Name: Vehicle
   m_TagString: Untagged
@@ -54,40 +55,6 @@ MonoBehaviour:
   visible: 0
   m_AssetId: abddce9c98c1ba5a992f109cfd8c5a5c
   hasSpawned: 0
---- !u!114 &459295042993608392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5841438317718401360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.05
-  clientAuthority: 0
-  sendInterval: 0.05
-  syncPosition: 1
-  syncRotation: 1
-  syncScale: 0
-  interpolatePosition: 1
-  interpolateRotation: 1
-  interpolateScale: 0
-  bufferTimeMultiplier: 1
-  bufferSizeLimit: 64
-  catchupThreshold: 4
-  catchupMultiplier: 0.1
-  onlySyncOnChange: 1
-  bufferResetMultiplier: 5
-  positionSensitivity: 0.01
-  rotationSensitivity: 0.01
-  scaleSensitivity: 0.01
-  showGizmos: 0
-  showOverlay: 0
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
 --- !u!114 &9183683351129218624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,6 +69,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.05
+--- !u!114 &6154053831592577151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5841438317718401360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7810004c3617c05419e4e60874dc18a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.05
+  m_transformToSync: {fileID: 8267877565696799342}
+  m_transformSyncParameters:
+    useSmoothDeltaTime: 1
+    clientUpdateType: 3
+    constantVelocityMultiplier: 1
+    lerpFactor: 30
+    useRigidBody: 0
+    visualize: 0
+    maxNumVisualizations: 10
+    visualizationScale: 0.2
+    snapshotLatency: 0.1
 --- !u!114 &575085982327711637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,3 +232,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   componentsToDestroy:
   - {fileID: 1742792654273641741}
+--- !u!54 &6804370665295485595
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5841438317718401360}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
