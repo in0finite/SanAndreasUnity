@@ -419,22 +419,12 @@ namespace SanAndreasUnity.Net
             this.SetRotation(syncData.Rotation);
         }
 
-        private void SetPosition()
-        {
-            this.SetPosition(m_currentSyncData.Position);
-        }
-
         private void SetPosition(Vector3 pos)
         {
             if (m_parameters.useRigidBody && m_hasRigidBody)
                 m_rigidbody.MovePosition(pos);
             else if (m_hasTransform)
                 m_transform.localPosition = pos;
-        }
-
-        private void SetRotation()
-        {
-            this.SetRotation(m_currentSyncData.Rotation);
         }
 
         private void SetRotation(Quaternion rot)
@@ -476,8 +466,7 @@ namespace SanAndreasUnity.Net
 
             if (m_nextSyncData.HasValue && this.ArrivedToCurrentSyncData())
             {
-                this.SetPosition();
-                this.SetRotation();
+                this.Apply(m_currentSyncData);
 
                 m_currentSyncData = m_nextSyncData.Value;
                 m_nextSyncData = null;
