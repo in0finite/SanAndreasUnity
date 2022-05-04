@@ -99,6 +99,9 @@ namespace SanAndreasUnity.Net
 				F.InvokeEventExceptionSafe(this.onServerStatusChanged);
 			}
 
+			// we need more agile ping measurement
+			// the reason we assign this here, is because Mirror resets the value after scene load
+			Mirror.NetworkTime.PingFrequency = 0.5f;
 		}
 
 
@@ -160,7 +163,6 @@ namespace SanAndreasUnity.Net
 			CheckIfIPAddressIsValid (ip);
 			CheckIfPortIsValid (serverPortNumber);
 			SetupNetworkManger( ip, serverPortNumber );
-			Mirror.NetworkTime.PingFrequency = 0.5f; // we need more agile ping measurement
 			NetworkManager.singleton.StartClient ();
 
 		}
