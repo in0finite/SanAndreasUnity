@@ -87,7 +87,7 @@ MonoBehaviour:
   vehiclePrefab: {fileID: 5841438317718401360, guid: abddce9c98c1ba5a992f109cfd8c5a5c,
     type: 3}
   cameraDistanceFromVehicle: 10
-  rigidbodyInterpolationOnServer: 0
+  rigidbodyInterpolationOnServer: 1
   rigidbodyInterpolationOnClient: 1
   rigidBodyCollisionDetectionMode: 2
   syncLinearVelocity: 1
