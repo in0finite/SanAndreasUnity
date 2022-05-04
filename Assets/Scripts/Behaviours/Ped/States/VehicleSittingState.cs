@@ -146,13 +146,13 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 			
 			m_model.VehicleParentOffset = Vector3.zero;
 
-			var driveState = this.CurrentVehicle.Steering > 0 ? AnimIndex.DriveRight : AnimIndex.DriveLeft;
+			var driveState = this.CurrentVehicle.Input.steering > 0 ? AnimIndex.DriveRight : AnimIndex.DriveLeft;
 
 			var state = m_model.PlayAnim(AnimGroup.Car, driveState, PlayMode.StopAll);
 
 			state.speed = 0.0f;
 			state.wrapMode = WrapMode.ClampForever;
-			state.time = Mathf.Lerp(0.0f, state.length, Mathf.Abs(this.CurrentVehicle.Steering));
+			state.time = Mathf.Lerp(0.0f, state.length, Mathf.Abs(this.CurrentVehicle.Input.steering));
 
 		}
 

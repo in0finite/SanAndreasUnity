@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         [SyncVar] float m_net_acceleration;
         [SyncVar] float m_net_steering;
-        [SyncVar] float m_net_braking;
+        [SyncVar] bool m_net_isHandBrakeOn;
 
         [SyncVar] float m_net_health;
 
@@ -184,9 +184,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             // local ped is occupying driver seat
 
-            float oldAcc = m_vehicle.Accelerator;
-            float oldBrake = m_vehicle.Braking;
-            float oldSteer = m_vehicle.Steering;
+            var oldInput = m_vehicle.Input;
 
             if (!GameManager.CanPlayerReadInput())
                 this.ResetInput();
@@ -196,16 +194,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             // why do we send input ?
             // - so that everyone knows if the gas/brake is pressed, and can simulate wheel effects
             // - so that server can predict position and velocity of rigid body
-            PedSync.Local.SendVehicleInput(m_vehicle.Accelerator, m_vehicle.Steering, m_vehicle.Braking);
+            PedSync.Local.SendVehicleInput(m_vehicle.Input);
 
             // TODO: also send velocity of rigid body
 
             if (!NetStatus.IsServer && !VehicleManager.Instance.controlInputOnLocalPlayer)
             {
                 // local player should not control input, so restore old input
-                m_vehicle.Accelerator = oldAcc;
-                m_vehicle.Braking = oldBrake;
-                m_vehicle.Steering = oldSteer;
+                m_vehicle.Input = oldInput;
             }
         }
 
@@ -213,9 +209,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             if (NetStatus.IsServer)
             {
-                m_net_acceleration = m_vehicle.Accelerator;
-                m_net_steering = m_vehicle.Steering;
-                m_net_braking = m_vehicle.Braking;
+                var vehicleInput = m_vehicle.Input;
+                m_net_acceleration = vehicleInput.accelerator;
+                m_net_steering = vehicleInput.steering;
+                m_net_isHandBrakeOn = vehicleInput.isHandBrakeOn;
+
                 m_net_health = m_vehicle.Health;
 
                 // wheels
@@ -241,9 +239,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if (!this.IsControlledByLocalPlayer || (this.IsControlledByLocalPlayer &&
                                                         !VehicleManager.Instance.controlInputOnLocalPlayer))
                 {
-                    m_vehicle.Accelerator = m_net_acceleration;
-                    m_vehicle.Steering = m_net_steering;
-                    m_vehicle.Braking = m_net_braking;
+                    m_vehicle.Input = new Vehicle.VehicleInput
+                    {
+                        accelerator = m_net_acceleration,
+                        steering = m_net_steering,
+                        isHandBrakeOn = m_net_isHandBrakeOn,
+                    };
                 }
 
                 // update wheels
@@ -274,28 +275,21 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         void ResetInput()
         {
-            m_vehicle.Accelerator = 0;
-            m_vehicle.Steering = 0;
-            m_vehicle.Braking = 0;
+            var input = m_vehicle.Input;
+            input.Reset();
+            m_vehicle.Input = input;
         }
 
         void ReadInput()
         {
             var customInput = CustomInput.Instance;
 
-            var accel = customInput.GetAxis("Vertical");
-            var brake = customInput.GetButton("Brake") ? 1.0f : 0.0f;
-            var speed = Vector3.Dot(m_vehicle.Velocity, m_vehicle.transform.forward);
+            var vehicleInput = new Vehicle.VehicleInput();
+            vehicleInput.accelerator = customInput.GetAxis("Vertical");
+            vehicleInput.isHandBrakeOn = customInput.GetButton("Brake");
+            vehicleInput.steering = customInput.GetAxis("Horizontal");
 
-            if (speed * accel < 0f)
-            {
-                brake = Mathf.Max(brake, 0.75f);
-                accel = 0f;
-            }
-
-            m_vehicle.Accelerator = accel;
-            m_vehicle.Steering = customInput.GetAxis("Horizontal");
-            m_vehicle.Braking = brake;
+            m_vehicle.Input = vehicleInput;
         }
 
         public void EnableOrDisableRigidBody()

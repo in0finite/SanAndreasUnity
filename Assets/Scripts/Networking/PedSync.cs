@@ -68,19 +68,24 @@ namespace SanAndreasUnity.Net
 
         }
 
-        public void SendVehicleInput(float acceleration, float steering, float braking) => 
-            this.CmdSendingVehicleInput(acceleration, steering, braking);
+        public void SendVehicleInput(Vehicle.VehicleInput vehicleInput) => 
+            this.CmdSendingVehicleInput(vehicleInput.accelerator, vehicleInput.steering, vehicleInput.isHandBrakeOn);
 
         [Command]
-        void CmdSendingVehicleInput(float acceleration, float steering, float braking)
+        void CmdSendingVehicleInput(float acceleration, float steering, bool isHandBrakeOn)
         {
-            if (null == m_ped || null == m_ped.CurrentVehicle)
+            if (null == m_ped)
                 return;
 
-            var v = m_ped.CurrentVehicle;
-            v.Accelerator = acceleration;
-            v.Steering = steering;
-            v.Braking = braking;
+            var vehicle = m_ped.CurrentVehicle;
+            if (null == vehicle)
+                return;
+
+            var input = new Vehicle.VehicleInput();
+            input.accelerator = acceleration;
+            input.steering = steering;
+            input.isHandBrakeOn = isHandBrakeOn;
+            vehicle.Input = input;
         }
 
 

@@ -11,14 +11,40 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private Rigidbody _rigidBody;
         public Rigidbody RigidBody => _rigidBody;
 
-        [Range(-1, 1)]
-        public float Accelerator;
+        public struct VehicleInput
+        {
+            public float accelerator;
+            public float steering;
+            public bool isHandBrakeOn;
 
-        [Range(-1, 1)]
-        public float Steering;
+            public void Reset()
+            {
+                this.accelerator = 0f;
+                this.steering = 0f;
+                this.isHandBrakeOn = false;
+            }
 
-        [Range(0, 1)]
-        public float Braking = 1f;
+            public void Validate()
+            {
+                if (float.IsNaN(this.accelerator))
+                    this.accelerator = 0f;
+                if (float.IsNaN(this.steering))
+                    this.steering = 0f;
+                this.accelerator = Mathf.Clamp(this.accelerator, -1f, 1f);
+                this.steering = Mathf.Clamp(this.steering, -1f, 1f);
+            }
+        }
+
+        private VehicleInput m_input;
+        public VehicleInput Input
+        {
+            get => m_input;
+            set
+            {
+                m_input = value;
+                m_input.Validate();
+            }
+        }
 
         public Vector3 Velocity { get { return _rigidBody != null ? _rigidBody.velocity : Vector3.zero; } }
 
@@ -156,22 +182,38 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             var vals = VConsts.Instance;
 
+            Vector3 velocity = this.Velocity;
+
+            float movementSign = 1f;
+            if (velocity == Vector3.zero)
+                movementSign = 0f;
+            else if (Vector3.Angle(velocity, this.transform.forward) > 90f) // going in reverse
+                movementSign = -1f;
+            
+            float acc = m_input.accelerator;
+            float brake = m_input.isHandBrakeOn ? 1f : 0f;
+            if (acc != 0f && movementSign != 0f && Mathf.Sign(movementSign) != Mathf.Sign(acc))
+            {
+                acc = 0f;
+                brake = 1f;
+            }
+
             foreach (var wheel in _wheels)
             {
                 // apply steering
                 if (ShouldSteer(wheel))
                 {
-                    wheel.Collider.steerAngle = HandlingData.SteeringLock * Steering;
+                    wheel.Collider.steerAngle = HandlingData.SteeringLock * m_input.steering;
                 }
 
                 // apply motor torque
                 wheel.Collider.motorTorque =
-                    Accelerator * HandlingData.TransmissionEngineAccel
+                    acc * HandlingData.TransmissionEngineAccel
                     * vals.AccelerationScale * DriveBias(wheel);
 
                 // apply brake torque
                 wheel.Collider.brakeTorque =
-                    Braking * HandlingData.BrakeDecel
+                    brake * HandlingData.BrakeDecel
                     * vals.BreakingScale * BrakeBias(wheel);
 
                 // update travel

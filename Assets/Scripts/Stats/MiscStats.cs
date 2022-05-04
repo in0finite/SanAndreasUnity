@@ -61,16 +61,16 @@ namespace SanAndreasUnity.Stats
                 {
                     List<System.Object> objects = new List<System.Object>(){
                         vehicle.Velocity,
-                        vehicle.Accelerator,
-                        vehicle.Braking,
-                        vehicle.Steering,
+                        vehicle.Input.accelerator,
+                        vehicle.Input.isHandBrakeOn,
+                        vehicle.Input.steering,
                         vehicle.AverageWheelHeight,
                         vehicle.NetTransform.netId,
                         vehicle.NetTransform.syncInterval,
                         vehicle.NetTransform.ComponentIndex,
                     };
 
-                    var texts = new List<string>() {"velocity", "accelerator", "braking", "steering", "average wheel height", 
+                    var texts = new List<string>() {"velocity", "accelerator", "is handbrake on", "steering angle", "average wheel height", 
                         "net id", "sync interval", "component index"};
 
 
@@ -81,8 +81,8 @@ namespace SanAndreasUnity.Stats
                         texts.Add("\t" + w.Alignment);
                         objects.Add(
                             w.Collider != null
-                                ? string.Format("travel {0} rpm {1} radius {2} motor torque {3} mass {4} is grounded {5}",
-                                    w.Travel, w.Collider.rpm, w.Collider.radius, w.Collider.motorTorque, w.Collider.mass, w.Collider.isGrounded)
+                                ? string.Format("travel {0} rpm {1} radius {2} motor torque {3} brake torque {4} mass {5} is grounded {6}",
+                                    w.Travel, w.Collider.rpm, w.Collider.radius, w.Collider.motorTorque, w.Collider.brakeTorque, w.Collider.mass, w.Collider.isGrounded)
                                 : "");
                     }
 
