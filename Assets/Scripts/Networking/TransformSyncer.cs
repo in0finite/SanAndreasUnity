@@ -74,7 +74,7 @@ namespace SanAndreasUnity.Net
             public float CalculatedAngularVelocityMagnitude;
 
             // timestamp of server when this data was sent (batch timestamp)
-            public double sentNetworkTime;
+            public double RemoteTimeStamp;
 
             public void Apply(Transform tr)
             {
@@ -94,9 +94,9 @@ namespace SanAndreasUnity.Net
         // choice than List, because
         // we often remove multiple elements from it, so the comparison boils down to: Dequeue() multiple
         // times vs RemoveRange().
-        private Queue<SyncData> m_syncDataBuffer = null; // null to save memory server-side
+        private Queue<SyncData> m_snapshotBuffer = null; // null to save memory server-side
         
-        public int SnapshotBufferCount => m_syncDataBuffer?.Count ?? 0;
+        public int SnapshotBufferCount => m_snapshotBuffer?.Count ?? 0;
 
         // cached for fast access, otherwise we would have to iterate through Queue
         private SyncData m_lastAddedSnapshot;
@@ -130,7 +130,7 @@ namespace SanAndreasUnity.Net
 
             var syncData = new SyncData();
 
-            syncData.sentNetworkTime = NetworkClient.connection.remoteTimeStamp;
+            syncData.RemoteTimeStamp = NetworkClient.connection.remoteTimeStamp;
 
             syncData.Position = reader.ReadVector3();// + syncData.velocity * this.syncInterval;
             syncData.Rotation = Quaternion.Euler(reader.ReadVector3());
@@ -154,7 +154,7 @@ namespace SanAndreasUnity.Net
                 this.AddToVisualization(syncData);
             }
 
-            this.AddToBuffer(syncData);
+            this.AddToSnapshotBuffer(syncData);
         }
 
         void AddToVisualization(SyncData syncData)
@@ -192,30 +192,30 @@ namespace SanAndreasUnity.Net
             }
         }
 
-        private void AddToBuffer(SyncData syncData)
+        private void AddToSnapshotBuffer(SyncData syncData)
         {
             if (m_parameters.clientUpdateType != ClientUpdateType.SnapshotInterpolation)
             {
-                m_syncDataBuffer = null;
+                m_snapshotBuffer = null;
                 return;
             }
 
-            m_syncDataBuffer ??= new Queue<SyncData>();
+            m_snapshotBuffer ??= new Queue<SyncData>();
 
-            if (m_syncDataBuffer.Count == 0)
+            if (m_snapshotBuffer.Count == 0)
             {
-                m_syncDataBuffer.Enqueue(syncData);
+                m_snapshotBuffer.Enqueue(syncData);
                 m_lastAddedSnapshot = syncData;
                 return;
             }
 
-            if (m_lastAddedSnapshot.sentNetworkTime >= syncData.sentNetworkTime)
+            if (m_lastAddedSnapshot.RemoteTimeStamp >= syncData.RemoteTimeStamp)
             {
                 // can happen if packets arrive out of order (eg. on UDP transport)
                 return;
             }
 
-            m_syncDataBuffer.Enqueue(syncData);
+            m_snapshotBuffer.Enqueue(syncData);
             m_lastAddedSnapshot = syncData;
         }
 
@@ -256,7 +256,7 @@ namespace SanAndreasUnity.Net
 
         private void UpdateClientUsingSnapshotInterpolation()
         {
-            if (null == m_syncDataBuffer || m_syncDataBuffer.Count == 0)
+            if (null == m_snapshotBuffer || m_snapshotBuffer.Count == 0)
                 return;
 
             double currentNetworkTime = NetworkTime.time - m_parameters.snapshotLatency;
@@ -269,9 +269,9 @@ namespace SanAndreasUnity.Net
             // note: using foreach with Queue<T> will not allocate memory
             bool isFirst = true;
             bool foundFirstHigher = false;
-            foreach (SyncData snapshot in m_syncDataBuffer)
+            foreach (SyncData snapshot in m_snapshotBuffer)
             {
-                if (snapshot.sentNetworkTime >= currentNetworkTime)
+                if (snapshot.RemoteTimeStamp >= currentNetworkTime)
                 {
                     syncDataOfHigher = snapshot;
                     if (isFirst)
@@ -292,7 +292,7 @@ namespace SanAndreasUnity.Net
             }
 
             // interpolate between lower and higher syncdata
-            double ratio = (currentNetworkTime - syncDataOfLower.sentNetworkTime) / (syncDataOfHigher.sentNetworkTime - syncDataOfLower.sentNetworkTime);
+            double ratio = (currentNetworkTime - syncDataOfLower.RemoteTimeStamp) / (syncDataOfHigher.RemoteTimeStamp - syncDataOfLower.RemoteTimeStamp);
             if (double.IsNaN(ratio))
                 ratio = 1;
             ratio = Mathd.Clamp01(ratio);
@@ -300,7 +300,7 @@ namespace SanAndreasUnity.Net
             this.Apply(interpolated);
 
             // remove old snapshots, but be careful not to remove the current lower snapshot
-            this.RemoveOldSnapshots(System.Math.Min(currentNetworkTime, syncDataOfLower.sentNetworkTime));
+            this.RemoveOldSnapshots(System.Math.Min(currentNetworkTime, syncDataOfLower.RemoteTimeStamp));
 
         }
 
@@ -308,12 +308,12 @@ namespace SanAndreasUnity.Net
         {
             while (true)
             {
-                if (m_syncDataBuffer.Count == 0)
+                if (m_snapshotBuffer.Count == 0)
                     break;
 
-                SyncData syncData = m_syncDataBuffer.Peek();
-                if (syncData.sentNetworkTime < currentNetworkTime)
-                    m_syncDataBuffer.Dequeue();
+                SyncData syncData = m_snapshotBuffer.Peek();
+                if (syncData.RemoteTimeStamp < currentNetworkTime)
+                    m_snapshotBuffer.Dequeue();
                 else
                     break;
             }
@@ -390,7 +390,7 @@ namespace SanAndreasUnity.Net
             m_currentSyncData.CalculatedVelocityMagnitude = float.PositiveInfinity;
             m_currentSyncData.CalculatedAngularVelocityMagnitude = float.PositiveInfinity;
             m_nextSyncData = null;
-            m_syncDataBuffer?.Clear();
+            m_snapshotBuffer?.Clear();
         }
 
         public void WarpToLatestSyncData()
@@ -405,7 +405,7 @@ namespace SanAndreasUnity.Net
 
             m_currentSyncData = syncData;
             m_nextSyncData = null;
-            m_syncDataBuffer?.Clear();
+            m_snapshotBuffer?.Clear();
         }
 
         public SyncData GetLatestSyncData()
