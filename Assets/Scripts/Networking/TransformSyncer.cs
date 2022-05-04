@@ -312,10 +312,10 @@ namespace SanAndreasUnity.Net
                     break;
 
                 SyncData syncData = m_snapshotBuffer.Peek();
-                if (syncData.RemoteTimeStamp < currentNetworkTime)
-                    m_snapshotBuffer.Dequeue();
-                else
+                if (syncData.RemoteTimeStamp >= currentNetworkTime)
                     break;
+
+                m_snapshotBuffer.Dequeue();
             }
         }
 
