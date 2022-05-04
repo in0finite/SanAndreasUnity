@@ -538,7 +538,7 @@ MonoBehaviour:
     visualize: 0
     maxNumVisualizations: 10
     visualizationScale: 0.2
-    snapshotLatencyMultiplier: 3
+    snapshotLatency: 0.1
 --- !u!195 &7038296094652462326
 NavMeshAgent:
   m_ObjectHideFlags: 0

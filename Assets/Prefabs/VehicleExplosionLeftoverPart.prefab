@@ -83,10 +83,14 @@ MonoBehaviour:
   m_transformToSync: {fileID: 0}
   m_transformSyncParameters:
     useSmoothDeltaTime: 1
-    clientUpdateType: 0
+    clientUpdateType: 3
     constantVelocityMultiplier: 1
     lerpFactor: 30
     useRigidBody: 0
+    visualize: 0
+    maxNumVisualizations: 10
+    visualizationScale: 0.2
+    snapshotLatency: 0.1
 --- !u!114 &1658066758197886442
 MonoBehaviour:
   m_ObjectHideFlags: 0
