@@ -76,9 +76,6 @@ namespace SanAndreasUnity.Net
             // timestamp of server when this data was sent (batch timestamp)
             public double RemoteTimeStamp;
 
-            // estimated local time for this snapshot
-            public double EstimatedLocalTime;
-
             public void Apply(Transform tr)
             {
                 tr.localPosition = this.Position;
@@ -207,7 +204,6 @@ namespace SanAndreasUnity.Net
 
             if (m_snapshotBuffer.Count == 0)
             {
-                syncData.EstimatedLocalTime = NetworkTime.localTime;
                 m_snapshotBuffer.Enqueue(syncData);
                 m_lastAddedSnapshot = syncData;
                 return;
@@ -219,7 +215,6 @@ namespace SanAndreasUnity.Net
                 return;
             }
 
-            syncData.EstimatedLocalTime = m_lastAddedSnapshot.EstimatedLocalTime + (syncData.RemoteTimeStamp - m_lastAddedSnapshot.RemoteTimeStamp);
             m_snapshotBuffer.Enqueue(syncData);
             m_lastAddedSnapshot = syncData;
         }
@@ -264,7 +259,7 @@ namespace SanAndreasUnity.Net
             if (null == m_snapshotBuffer || m_snapshotBuffer.Count == 0)
                 return;
 
-            double currentNetworkTime = NetworkTime.localTime - m_parameters.snapshotLatency;
+            double currentNetworkTime = NetworkTime.time - m_parameters.snapshotLatency;
 
             // find higher and lower snapshots - those are snapshots that surround the 'currentNetworkTime'
 
@@ -276,7 +271,7 @@ namespace SanAndreasUnity.Net
             bool foundFirstHigher = false;
             foreach (SyncData snapshot in m_snapshotBuffer)
             {
-                if (snapshot.EstimatedLocalTime >= currentNetworkTime)
+                if (snapshot.RemoteTimeStamp >= currentNetworkTime)
                 {
                     syncDataOfHigher = snapshot;
                     if (isFirst)
@@ -297,7 +292,7 @@ namespace SanAndreasUnity.Net
             }
 
             // interpolate between lower and higher syncdata
-            double ratio = (currentNetworkTime - syncDataOfLower.EstimatedLocalTime) / (syncDataOfHigher.EstimatedLocalTime - syncDataOfLower.EstimatedLocalTime);
+            double ratio = (currentNetworkTime - syncDataOfLower.RemoteTimeStamp) / (syncDataOfHigher.RemoteTimeStamp - syncDataOfLower.RemoteTimeStamp);
             if (double.IsNaN(ratio))
                 ratio = 1;
             ratio = Mathd.Clamp01(ratio);
@@ -305,7 +300,7 @@ namespace SanAndreasUnity.Net
             this.Apply(interpolated);
 
             // remove old snapshots, but be careful not to remove the current lower snapshot
-            this.RemoveOldSnapshots(System.Math.Min(currentNetworkTime, syncDataOfLower.EstimatedLocalTime));
+            this.RemoveOldSnapshots(System.Math.Min(currentNetworkTime, syncDataOfLower.RemoteTimeStamp));
 
         }
 
@@ -317,7 +312,7 @@ namespace SanAndreasUnity.Net
                     break;
 
                 SyncData syncData = m_snapshotBuffer.Peek();
-                if (syncData.EstimatedLocalTime >= currentNetworkTime)
+                if (syncData.RemoteTimeStamp >= currentNetworkTime)
                     break;
 
                 m_snapshotBuffer.Dequeue();
