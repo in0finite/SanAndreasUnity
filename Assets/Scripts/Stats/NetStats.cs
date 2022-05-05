@@ -21,6 +21,7 @@ namespace SanAndreasUnity.Stats
 
             AddTimeSpan(sb, "Network time", NetworkTime.time);
             AddTimeSpan(sb, "Local network time", NetworkTime.localTime);
+            AddTimeSpan(sb, "Diff between network times", NetworkTime.time - NetworkTime.localTime, true);
 
             if (NetStatus.IsServer)
             {
@@ -45,9 +46,9 @@ namespace SanAndreasUnity.Stats
             sb.AppendLine($"Num spawned network objects: {NetManager.NumSpawnedNetworkObjects}");
         }
 
-        private static void AddTimeSpan(System.Text.StringBuilder sb, string text, double seconds)
+        private static void AddTimeSpan(System.Text.StringBuilder sb, string text, double seconds, bool useMilliseconds = false)
         {
-            sb.AppendLine($"{text}: {F.FormatElapsedTime(seconds)}");
+            sb.AppendLine($"{text}: {F.FormatElapsedTime(seconds, useMilliseconds)}");
         }
 
         private static void AddAsMs(System.Text.StringBuilder sb, string text, double seconds)
