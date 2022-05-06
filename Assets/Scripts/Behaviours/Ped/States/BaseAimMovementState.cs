@@ -262,7 +262,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
                         this.UpdateAimAnim (state);
 
 						// do this right after UpdateAimAnim(), because that's the state when weapon conducts attack
-						if (Time.time - m_timeWhenDidUnderAimDetection >= PedManager.Instance.timeIntervalToUpdateUnderAimStatus)
+						if (m_isServer && Time.time - m_timeWhenDidUnderAimDetection >= PedManager.Instance.timeIntervalToUpdateUnderAimStatus)
                         {
 							m_timeWhenDidUnderAimDetection = Time.time;
 							UpdateUnderAimDetection(m_ped);
