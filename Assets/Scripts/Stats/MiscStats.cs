@@ -204,6 +204,10 @@ namespace SanAndreasUnity.Stats
             AddAsMs(sb, "fixed delta time", Time.fixedDeltaTime);
             AddAsMs(sb, "smooth delta time", Time.smoothDeltaTime);
             AddAsMs(sb, "maximum delta time", Time.maximumDeltaTime);
+            AddNesting(sb);
+            sb.AppendLine($"frame count: {(Time.frameCount / 1000.0):0.00} K");
+            AddNesting(sb);
+            sb.AppendLine($"rendered frame count: {(Time.renderedFrameCount / 1000.0):0.00} K");
             m_nestingLevel--;
             sb.AppendLine();
 
