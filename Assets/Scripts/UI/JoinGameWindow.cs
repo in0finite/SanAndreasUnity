@@ -140,7 +140,7 @@ namespace SanAndreasUnity.UI
 			if (NetStatus.IsClientConnecting())
 			{
 				strStatus = "Connecting.";
-				for (int i = 0; i < ((int)Time.realtimeSinceStartup) % 3; i++)
+				for (int i = 0; i < ((int)Time.timeAsDouble) % 3; i++)
 					strStatus += ".";
 			}
 			else if (NetStatus.IsClientConnected())
