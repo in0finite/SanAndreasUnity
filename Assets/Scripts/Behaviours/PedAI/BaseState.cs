@@ -18,8 +18,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public object ParameterForEnteringState { get; set; }
 
-        public float LastTimeWhenActivated { get; set; } = 0f;
-        public float LastTimeWhenDeactivated { get; set; } = 0f;
+        public double LastTimeWhenActivated { get; set; } = 0;
+        public double LastTimeWhenDeactivated { get; set; } = 0;
 
 
 
