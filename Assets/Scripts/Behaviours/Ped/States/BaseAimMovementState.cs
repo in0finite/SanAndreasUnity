@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		public virtual float TimeUntilStateCanBeSwitchedToOtherAimMovementState => PedManager.Instance.timeUntilAimMovementStateCanBeSwitchedToOtherAimMovementState;
 		public virtual float TimeUntilStateCanBeEnteredFromOtherAimMovementState => PedManager.Instance.timeUntilAimMovementStateCanBeEnteredFromOtherAimMovementState;
 
-		protected float m_timeWhenDidUnderAimDetection = 0f;
+		protected double m_timeWhenDidUnderAimDetection = 0f;
 
 
 
@@ -262,9 +262,9 @@ namespace SanAndreasUnity.Behaviours.Peds.States
                         this.UpdateAimAnim (state);
 
 						// do this right after UpdateAimAnim(), because that's the state when weapon conducts attack
-						if (m_isServer && Time.time - m_timeWhenDidUnderAimDetection >= PedManager.Instance.timeIntervalToUpdateUnderAimStatus)
+						if (m_isServer && Time.timeAsDouble - m_timeWhenDidUnderAimDetection >= PedManager.Instance.timeIntervalToUpdateUnderAimStatus)
                         {
-							m_timeWhenDidUnderAimDetection = Time.time;
+							m_timeWhenDidUnderAimDetection = Time.timeAsDouble;
 							UpdateUnderAimDetection(m_ped);
 						}
                     }

@@ -8,7 +8,7 @@ namespace SanAndreasUnity.Utilities
 		IState m_currentState;
 		public IState CurrentState { get { return m_currentState; } }
 		bool m_isSwitchingState = false;
-		public float TimeWhenSwitchedState { get; private set; }
+		public double TimeWhenSwitchedState { get; private set; }
 		public long FrameWhenSwitchedState { get; private set; }
 
 
@@ -33,20 +33,20 @@ namespace SanAndreasUnity.Utilities
 				// no longer be possible to switch states, because 'm_isSwitchingState' is true
 				F.RunExceptionSafe(() =>
                 {
-					oldState.LastTimeWhenDeactivated = Time.time;
+					oldState.LastTimeWhenDeactivated = Time.timeAsDouble;
                     oldState.OnBecameInactive();
                 });
 			}
 
 			m_isSwitchingState = false;
 
-			this.TimeWhenSwitchedState = Time.time;
+			this.TimeWhenSwitchedState = Time.timeAsDouble;
 			this.FrameWhenSwitchedState = Time.frameCount;
 
 			if (m_currentState != null)
 			{
 				m_currentState.ParameterForEnteringState = parameterForEnteringState;
-				m_currentState.LastTimeWhenActivated = Time.time;
+				m_currentState.LastTimeWhenActivated = Time.timeAsDouble;
 				m_currentState.OnBecameActive();
 			}
 		}

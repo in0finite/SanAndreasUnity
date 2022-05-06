@@ -11,10 +11,10 @@ public  class GLDebug : MonoBehaviour
                 public Vector3 start;
                 public Vector3 end;
                 public Color color;
-                public float startTime;
+                public double startTime;
                 public float duration;
                
-                public Line (Vector3 start, Vector3 end, Color color, float startTime, float duration)
+                public Line (Vector3 start, Vector3 end, Color color, double startTime, float duration)
                 {
                         this.start = start;
                         this.end = end;
@@ -31,7 +31,7 @@ public  class GLDebug : MonoBehaviour
                                 GL.Vertex (start);
                                 GL.Vertex (end);
                         }
-                        return Time.time - startTime >= duration;
+                        return Time.timeAsDouble - startTime >= duration;
                 }
         }
        
@@ -149,9 +149,9 @@ public  class GLDebug : MonoBehaviour
                 if (start == end)
                         return;
                 if (depthTest)
-                        instance.linesZOn.Add (new Line (start, end, color, Time.time, duration));
+                        instance.linesZOn.Add (new Line (start, end, color, Time.timeAsDouble, duration));
                 else
-                        instance.linesZOff.Add (new Line (start, end, color, Time.time, duration));
+                        instance.linesZOff.Add (new Line (start, end, color, Time.timeAsDouble, duration));
         }
  
         /// <summary>

@@ -120,7 +120,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			for (int i = 0; i < aimStates.Count; i++)
             {
-				if (Time.time - aimStates[i].LastTimeWhenDeactivated < PedManager.Instance.minTimeToReturnToAimState)
+				if (Time.timeAsDouble - aimStates[i].LastTimeWhenDeactivated < PedManager.Instance.minTimeToReturnToAimState)
 					return false;
             }
 

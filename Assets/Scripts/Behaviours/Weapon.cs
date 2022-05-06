@@ -122,8 +122,8 @@ namespace SanAndreasUnity.Behaviours
 		public AnimationState AimAnimState { get; set; }
 		public Transform GunFlash { get; private set; }
 
-        public float LastTimeWhenFired { get; protected set; } = float.NegativeInfinity;
-        public float TimeSinceFired => Time.time - this.LastTimeWhenFired;
+        public double LastTimeWhenFired { get; protected set; } = double.NegativeInfinity;
+        public double TimeSinceFired => Time.timeAsDouble - this.LastTimeWhenFired;
 
 
 		// weapon sounds are located in SFX -> GENRL -> BANK 137
@@ -677,7 +677,7 @@ namespace SanAndreasUnity.Behaviours
 		public virtual void FireProjectile (Vector3 firePos, Vector3 fireDir, WeaponAttackParams parameters)
 		{
 
-            this.LastTimeWhenFired = Time.time;
+            this.LastTimeWhenFired = Time.timeAsDouble;
 
 			F.RunExceptionSafe(() => this.PlayFireSound());
 

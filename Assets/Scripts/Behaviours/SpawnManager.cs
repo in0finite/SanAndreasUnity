@@ -14,7 +14,7 @@ namespace SanAndreasUnity.Behaviours
         public bool spawnPlayerWhenConnected = true;
         public bool IsSpawningPaused { get; set; } = false;
         public float spawnInterval = 4f;
-        float m_lastSpawnTime = 0f;
+        double m_lastSpawnTime = 0;
 
         public bool addWeaponsToSpawnedPlayers = true;
 
@@ -77,10 +77,10 @@ namespace SanAndreasUnity.Behaviours
             if (this.IsSpawningPaused)
                 return;
 
-            if (Time.time - m_lastSpawnTime >= this.spawnInterval)
+            if (Time.timeAsDouble - m_lastSpawnTime >= this.spawnInterval)
             {
                 // enough time passed
-                m_lastSpawnTime = Time.time;
+                m_lastSpawnTime = Time.timeAsDouble;
 
                 F.RunExceptionSafe(() => this.SpawnPlayers());
             }

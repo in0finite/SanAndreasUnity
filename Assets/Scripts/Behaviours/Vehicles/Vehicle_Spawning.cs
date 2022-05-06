@@ -243,8 +243,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 			/// <summary> Ped that is occupying this seat. </summary>
 			public Ped OccupyingPed { get; internal set; }
 
-            public float TimeWhenPedChanged { get; internal set; } = float.NegativeInfinity;
-            public float TimeSincePedChanged => Time.time - this.TimeWhenPedChanged;
+            public double TimeWhenPedChanged { get; internal set; } = double.NegativeInfinity;
+            public double TimeSincePedChanged => Time.timeAsDouble - this.TimeWhenPedChanged;
 
 			public bool IsTaken { get { return this.OccupyingPed != null; } }
 

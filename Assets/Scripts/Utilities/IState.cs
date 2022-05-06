@@ -15,8 +15,8 @@ namespace SanAndreasUnity.Utilities
 
 		object ParameterForEnteringState { set; }
 
-		float LastTimeWhenActivated { get; set; }
-		float LastTimeWhenDeactivated { get; set; }
+		double LastTimeWhenActivated { get; set; }
+		double LastTimeWhenDeactivated { get; set; }
 	}
 
 }

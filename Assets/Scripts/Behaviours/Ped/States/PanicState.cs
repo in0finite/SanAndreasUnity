@@ -19,7 +19,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		private const int kFemaleSoundIndexMin = 88;
 		private const int kFemaleSoundIndexMax = 130;
 
-		private float _timeWhenEmittedSound = 0f;
+		private double _timeWhenEmittedSound = 0;
 		public float randomAverageTimeIntervalToEmitSound = 10f;
 		private float _timeToEmitSound;
 
@@ -65,14 +65,14 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		private void TryEmitSound()
         {
-			if (Time.time - _timeWhenEmittedSound < _timeToEmitSound)
+			if (Time.timeAsDouble - _timeWhenEmittedSound < _timeToEmitSound)
 				return;
 
 			_timeToEmitSound = Random.Range(
 					this.randomAverageTimeIntervalToEmitSound * 0.5f,
 					this.randomAverageTimeIntervalToEmitSound * 1.5f);
 
-			_timeWhenEmittedSound = Time.time;
+			_timeWhenEmittedSound = Time.timeAsDouble;
 			m_ped.PlaySoundFromPedMouth(this.GetSoundToPlay());
 		}
 

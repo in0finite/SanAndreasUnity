@@ -169,13 +169,13 @@ namespace SanAndreasUnity.UI
 				if (LanTabIndex == m_currentTabIndex)
 				{
 					GUI.enabled = ! m_netDiscoveryHUD.IsRefreshing;
-					buttonText = m_netDiscoveryHUD.IsRefreshing ? ( "Refreshing." + new string('.', (int) ((Time.time * 2) % 3)) ) : "Refresh LAN";
+					buttonText = m_netDiscoveryHUD.IsRefreshing ? ( "Refreshing." + new string('.', (int) ((Time.timeAsDouble * 2) % 3)) ) : "Refresh LAN";
 					buttonAction = () => m_netDiscoveryHUD.Refresh();
 				}
 				else if (InternetTabIndex == m_currentTabIndex)
                 {
 					GUI.enabled = !_isRefreshingMasterServerList;
-                    buttonText = _isRefreshingMasterServerList ? ( "Refreshing." + new string('.', (int) ((Time.time * 2) % 3)) ) : "Refresh servers";
+                    buttonText = _isRefreshingMasterServerList ? ( "Refreshing." + new string('.', (int) ((Time.timeAsDouble * 2) % 3)) ) : "Refresh servers";
 					buttonAction = async () => await RefreshMasterServersButtonPressed();
                 }
 			}

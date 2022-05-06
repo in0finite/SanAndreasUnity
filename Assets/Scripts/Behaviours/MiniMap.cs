@@ -45,7 +45,7 @@ namespace SanAndreasUnity.Behaviours
 
         public bool IsMinimapVisible => _canvas.enabled && this.gameObject.activeInHierarchy;
 
-        private float _timeWhenRetrievedZoneName = 0f;
+        private double _timeWhenRetrievedZoneName = 0f;
 
         private string _lastZoneName = "";
 
@@ -53,9 +53,9 @@ namespace SanAndreasUnity.Behaviours
         {
             get
             {
-                if (Time.time - _timeWhenRetrievedZoneName > 2f)
+                if (Time.timeAsDouble - _timeWhenRetrievedZoneName > 2f)
                 {
-                    _timeWhenRetrievedZoneName = Time.time;
+                    _timeWhenRetrievedZoneName = Time.timeAsDouble;
                     _lastZoneName = Zone.GetZoneName(this.FocusPos);
                 }
 

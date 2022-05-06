@@ -29,8 +29,8 @@ namespace SanAndreasUnity.Behaviours
 		/// </summary>
 		public DamageInfo KillingDamageInfo { get; set; }
 
-		public float LastTimeWhenDamaged { get; private set; }
-		public float TimeSinceDamaged => Time.time - this.LastTimeWhenDamaged;
+		public double LastTimeWhenDamaged { get; private set; }
+		public double TimeSinceDamaged => Time.timeAsDouble - this.LastTimeWhenDamaged;
 
 		private bool m_alreadyKilled = false;
 
@@ -53,10 +53,10 @@ namespace SanAndreasUnity.Behaviours
 		public struct UnderAimInfo
 		{
 			public DamageInfo damageInfo;
-			public float time;
+			public double time;
 			public Ped ped;
 
-			public UnderAimInfo(DamageInfo damageInfo, float time, Ped ped)
+			public UnderAimInfo(DamageInfo damageInfo, double time, Ped ped)
 			{
 				this.damageInfo = damageInfo;
 				this.time = time;
@@ -150,7 +150,7 @@ namespace SanAndreasUnity.Behaviours
 			if (this.Health <= 0)
 				return;
 
-			this.LastTimeWhenDamaged = Time.time;
+			this.LastTimeWhenDamaged = Time.timeAsDouble;
 
 			var damageInfo = this.Damageable.LastDamageInfo;
 
@@ -168,7 +168,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public void OnReceivedDamageEventFromServer(float damageAmount, Ped attackingPed)
 		{
-			this.LastTimeWhenDamaged = Time.time;
+			this.LastTimeWhenDamaged = Time.timeAsDouble;
 
 			if (attackingPed != null && attackingPed.IsControlledByLocalPlayer && attackingPed != this)
 			{
@@ -210,11 +210,11 @@ namespace SanAndreasUnity.Behaviours
             int index = _underAimInfos.FindIndex(_ => _.ped == attackerPed);
 			if (index >= 0)
             {
-				_underAimInfos[index] = new UnderAimInfo(damageInfo, Time.time, attackerPed);
+				_underAimInfos[index] = new UnderAimInfo(damageInfo, Time.timeAsDouble, attackerPed);
 				return;
 			}
 
-			_underAimInfos.Add(new UnderAimInfo(damageInfo, Time.time, attackerPed));
+			_underAimInfos.Add(new UnderAimInfo(damageInfo, Time.timeAsDouble, attackerPed));
         }
 
 		private bool ShouldUnderAimInfoBeRemoved(UnderAimInfo underAimInfo)
@@ -222,7 +222,7 @@ namespace SanAndreasUnity.Behaviours
 			if (null == underAimInfo.ped)
 				return true;
 
-			return Time.time - underAimInfo.time > PedManager.Instance.timeIntervalToUpdateUnderAimStatus;
+			return Time.timeAsDouble - underAimInfo.time > PedManager.Instance.timeIntervalToUpdateUnderAimStatus;
 		}
 
 	}

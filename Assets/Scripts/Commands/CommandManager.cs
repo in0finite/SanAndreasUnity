@@ -25,7 +25,7 @@ namespace SanAndreasUnity.Commands
 
         private struct PlayerData
         {
-            public float timeWhenLastExecutedCommand;
+            public double timeWhenLastExecutedCommand;
         }
 
         readonly Dictionary<Player, PlayerData> m_perPlayerData = new Dictionary<Player, PlayerData>();
@@ -224,10 +224,10 @@ namespace SanAndreasUnity.Commands
             {
                 m_perPlayerData.TryGetValue(context.player, out PlayerData playerData);
 
-                if (commandInfo.limitInterval > 0 && Time.time - playerData.timeWhenLastExecutedCommand < commandInfo.limitInterval)
+                if (commandInfo.limitInterval > 0 && Time.timeAsDouble - playerData.timeWhenLastExecutedCommand < commandInfo.limitInterval)
                     return ProcessCommandResult.LimitInterval(commandInfo.limitInterval);
 
-                playerData.timeWhenLastExecutedCommand = Time.time;
+                playerData.timeWhenLastExecutedCommand = Time.timeAsDouble;
                 m_perPlayerData[context.player] = playerData;
             }
 

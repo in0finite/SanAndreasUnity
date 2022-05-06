@@ -36,7 +36,7 @@ namespace SanAndreasUnity.Behaviours.World
             public WorldSystem.FocusPoint focusPoint;
             public Transform transform;
             public float timeToKeepRevealingAfterRemoved;
-            public float timeWhenRemoved;
+            public double timeWhenRemoved;
             public bool hasRevealRadius;
         }
 
@@ -82,7 +82,7 @@ namespace SanAndreasUnity.Behaviours.World
 
             if (focusPoint.timeToKeepRevealingAfterRemoved > 0)
             {
-                focusPoint.timeWhenRemoved = Time.time;
+                focusPoint.timeWhenRemoved = Time.timeAsDouble;
                 _focusPointsToRemoveAfterTimeout.Add(focusPoint);
                 _focusPoints.RemoveAt(index);
                 return;
@@ -94,7 +94,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         public void Update()
         {
-            float timeNow = Time.time;
+            double timeNow = Time.timeAsDouble;
 
             UnityEngine.Profiling.Profiler.BeginSample("Update focus points");
             this._focusPoints.RemoveAll(f =>

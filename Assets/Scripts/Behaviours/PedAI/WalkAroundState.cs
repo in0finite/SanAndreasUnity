@@ -14,9 +14,9 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         private ChaseState _chaseState;
 
-        private float _timeWhenStartedSurrendering = 0f;
-        public float TimeSinceStartedSurrendering => Time.time - _timeWhenStartedSurrendering;
-        public bool IsSurrendering => this.TimeSinceStartedSurrendering < 4f;
+        private double _timeWhenStartedSurrendering = 0;
+        public double TimeSinceStartedSurrendering => Time.timeAsDouble - _timeWhenStartedSurrendering;
+        public bool IsSurrendering => this.TimeSinceStartedSurrendering < 4.0;
 
         public float nodeSearchRadius = 500f;
 
@@ -143,7 +143,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                     return;
                 }
 
-                _timeWhenStartedSurrendering = Time.time;
+                _timeWhenStartedSurrendering = Time.timeAsDouble;
             }
 
         }

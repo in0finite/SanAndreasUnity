@@ -7,7 +7,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
     public class UpdateAttackParams
     {
         public bool wasInRange = false;
-        public float timeWhenAddedFireOffset = 0f;
+        public double timeWhenAddedFireOffset = 0;
         public float timeUntilOffsetChanges = 1f;
         public Vector3 newFireOffset = Vector3.zero;
 
@@ -136,9 +136,9 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public void UpdateAttackOnPed(Ped ped, UpdateAttackParams updateAttackParams)
         {
-            if (Time.time - updateAttackParams.timeWhenAddedFireOffset > updateAttackParams.timeUntilOffsetChanges)
+            if (Time.timeAsDouble - updateAttackParams.timeWhenAddedFireOffset > updateAttackParams.timeUntilOffsetChanges)
             {
-                updateAttackParams.timeWhenAddedFireOffset = Time.time;
+                updateAttackParams.timeWhenAddedFireOffset = Time.timeAsDouble;
                 updateAttackParams.newFireOffset = Random.onUnitSphere * 0.2f;
             }
 

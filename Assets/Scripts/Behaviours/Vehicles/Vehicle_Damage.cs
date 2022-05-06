@@ -23,8 +23,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         bool m_alreadyExploded = false;
         public bool ExplodedThisFrame => m_alreadyExploded;
 
-        public float TimeWhenBecameUnderFlame { get; private set; } = float.NegativeInfinity;
-        public float TimeSinceBecameUnderFlame => Time.time - this.TimeWhenBecameUnderFlame;
+        public double TimeWhenBecameUnderFlame { get; private set; } = double.NegativeInfinity;
+        public double TimeSinceBecameUnderFlame => Time.timeAsDouble - this.TimeWhenBecameUnderFlame;
 
         GameObject m_smokeGameObject;
         GameObject m_flameGameObject;
@@ -85,12 +85,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 // flame status changed
                 this.IsUnderFlame = shouldBeUnderFlame;
                 if (this.IsUnderFlame)
-                    this.TimeWhenBecameUnderFlame = Time.time;
+                    this.TimeWhenBecameUnderFlame = Time.timeAsDouble;
                 // update vfx
                 this.UpdateFlameVfx();
             }
 
-            if (this.IsUnderFlame && Time.time - this.TimeWhenBecameUnderFlame >= 5)
+            if (this.IsUnderFlame && Time.timeAsDouble - this.TimeWhenBecameUnderFlame >= 5)
             {
                 // enough time passed since vehicle flamed - explode it
                 if (NetStatus.IsServer)

@@ -50,7 +50,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
         public float timeUntilAbleToEnterState = 0.5f;
         public float timeUntilAbleToExitState = 0.5f;
 
-        private float m_lastTimeWhenChangedAnim = 0f;
+        private double m_lastTimeWhenChangedAnim = 0f;
         private string m_lastAnim = null;
         public float timeUntilAbleToChangeAnim = 0.5f;
 
@@ -131,10 +131,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
         string GetAnimBasedOnAimDirSmoothed()
         {
-            if (m_lastAnim != null && Time.time - m_lastTimeWhenChangedAnim < this.timeUntilAbleToChangeAnim)
+            if (m_lastAnim != null && Time.timeAsDouble - m_lastTimeWhenChangedAnim < this.timeUntilAbleToChangeAnim)
                 return m_lastAnim;
 
-            m_lastTimeWhenChangedAnim = Time.time;
+            m_lastTimeWhenChangedAnim = Time.timeAsDouble;
 
             m_lastAnim = this.GetAnimBasedOnAimDir();
             return m_lastAnim;

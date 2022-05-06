@@ -420,7 +420,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 return;
 
             m_lastPreparedPeds[index] = ped;
-            seat.TimeWhenPedChanged = Time.time;
+            seat.TimeWhenPedChanged = Time.timeAsDouble;
 
             this.OnPedAssignedToVehicle_Radio(ped, seat);
 
@@ -437,7 +437,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             int index = this.Seats.FindIndex(s => s == seat);
             
             m_lastPreparedPeds[index] = null;
-            seat.TimeWhenPedChanged = Time.time;
+            seat.TimeWhenPedChanged = Time.timeAsDouble;
 
         }
 

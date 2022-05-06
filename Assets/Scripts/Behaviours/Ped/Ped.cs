@@ -334,12 +334,12 @@ namespace SanAndreasUnity.Behaviours
 
 			// yield until you find ground beneath or above the player, or until timeout expires
 
-			float timeStarted = Time.time;
+			double timeStarted = Time.timeAsDouble;
 			int numAttempts = 1;
 
 			while (true) {
 				
-				if (Time.time - timeStarted > 4.0f) {
+				if (Time.timeAsDouble - timeStarted > 4.0f) {
 					// timeout expired
 					Debug.LogWarningFormat("Failed to find ground for ped {0} - timeout expired", this.DescriptionForLogging);
 					yield break;
