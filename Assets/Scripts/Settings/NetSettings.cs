@@ -39,18 +39,6 @@ namespace SanAndreasUnity.Settings
 			setValue = (value) => { ApplyVehicleSyncRate(value); },
 			persistType = OptionsWindow.InputPersistType.OnStart
 		};
-		OptionsWindow.BoolInput m_syncVehiclesLinearVelocity = new OptionsWindow.BoolInput ("Sync vehicle's linear velocity") {
-			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.syncLinearVelocity,
-			setValue = (value) => { VehicleManager.Instance.syncLinearVelocity = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
-		OptionsWindow.BoolInput m_syncVehiclesAngularVelocity = new OptionsWindow.BoolInput ("Sync vehicle's angular velocity") {
-			isAvailable = () => VehicleManager.Instance != null,
-			getValue = () => VehicleManager.Instance.syncAngularVelocity,
-			setValue = (value) => { VehicleManager.Instance.syncAngularVelocity = value; },
-			persistType = OptionsWindow.InputPersistType.OnStart
-		};
 		OptionsWindow.BoolInput m_controlWheelsOnLocalPlayer = new OptionsWindow.BoolInput ("Control wheels on local player") {
 			isAvailable = () => VehicleManager.Instance != null,
 			getValue = () => VehicleManager.Instance.controlWheelsOnLocalPlayer,
@@ -105,8 +93,6 @@ namespace SanAndreasUnity.Settings
 	            m_deadBodySyncRate,
 	            m_deadBodyInterpolationMode,
 	            m_vehicleSyncRate,
-	            m_syncVehiclesLinearVelocity,
-	            m_syncVehiclesAngularVelocity,
 	            m_controlWheelsOnLocalPlayer,
 	            m_destroyWheelCollidersOnClient,
 	            m_controlVehicleInputOnLocalPlayer,

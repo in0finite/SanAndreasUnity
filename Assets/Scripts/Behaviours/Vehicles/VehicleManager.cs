@@ -16,8 +16,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public CollisionDetectionMode rigidBodyCollisionDetectionMode = CollisionDetectionMode.Discrete;
 
-        public bool syncLinearVelocity = true;
-        public bool syncAngularVelocity = true;
         public bool destroyRigidBodyOnClients = true;
         public bool syncPedTransformWhileInVehicle = false;
         public bool controlInputOnLocalPlayer = true;
