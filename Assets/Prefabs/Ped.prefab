@@ -433,7 +433,7 @@ MonoBehaviour:
   shouldPlayAnims: 1
   m_cameraClampValue: {x: 60, y: 60}
   m_maxHealth: 100
-  m_inputSendInterval: 0.033333335
+  m_inputSendInterval: 0.016666668
   m_enterVehicleRadius: 2
 --- !u!114 &114173420020992462
 MonoBehaviour:

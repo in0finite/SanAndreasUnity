@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Behaviours
     {
         public CustomNetworkTransform NetTransform { get; private set; }
 
-        [Range(1f / 60f, 0.5f)] [SerializeField] float m_inputSendInterval = 1f / 30f;
+        [Range(1f / 60f, 0.5f)] [SerializeField] float m_inputSendInterval = 1f / 60f;
         float m_timeSinceSentInput = 0f;
 
         [SyncVar] GameObject m_net_playerOwnerGameObject;
