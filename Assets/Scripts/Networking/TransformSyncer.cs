@@ -51,6 +51,7 @@ namespace SanAndreasUnity.Net
         }
 
         private Parameters m_parameters = Parameters.Default;
+        public Parameters Params => m_parameters;
 
         private SyncData m_currentSyncData = new SyncData { Rotation = Quaternion.identity };
         public SyncData CurrentSyncData => m_currentSyncData;

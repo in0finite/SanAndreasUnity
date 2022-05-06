@@ -204,10 +204,8 @@ namespace SanAndreasUnity.Stats
             AddAsMs(sb, "fixed delta time", Time.fixedDeltaTime);
             AddAsMs(sb, "smooth delta time", Time.smoothDeltaTime);
             AddAsMs(sb, "maximum delta time", Time.maximumDeltaTime);
-            AddNesting(sb);
-            sb.AppendLine($"frame count: {(Time.frameCount / 1000.0):0.00} K");
-            AddNesting(sb);
-            sb.AppendLine($"rendered frame count: {(Time.renderedFrameCount / 1000.0):0.00} K");
+            Add(sb, "frame count", $"{(Time.frameCount / 1000.0):0.00} K");
+            Add(sb, "rendered frame count", $"{(Time.renderedFrameCount / 1000.0):0.00} K");
             m_nestingLevel--;
             sb.AppendLine();
 
@@ -236,16 +234,24 @@ namespace SanAndreasUnity.Stats
                 sb.Append('\t');
         }
 
+        private void Add(System.Text.StringBuilder sb, string text, string value)
+        {
+            this.AddNesting(sb);
+
+            sb.Append(text);
+            sb.Append(": ");
+            sb.Append(value);
+            sb.AppendLine();
+        }
+
         private void AddTimeSpan(System.Text.StringBuilder sb, string text, double seconds)
         {
-            AddNesting(sb);
-            sb.AppendLine($"{text}: {F.FormatElapsedTime(seconds)}");
+            this.Add(sb, text, F.FormatElapsedTime(seconds));
         }
 
         private void AddAsMs(System.Text.StringBuilder sb, string text, double seconds)
         {
-            AddNesting(sb);
-            sb.AppendLine($"{text}: {seconds * 1000:0.00} ms");
+            this.Add(sb, text, $"{seconds * 1000:0.00} ms");
         }
 
         private static void AppendStatsForBackgroundJobRunner(
@@ -265,7 +271,11 @@ namespace SanAndreasUnity.Stats
             Net.TransformSyncer transformSyncer,
             string prefix)
         {
+            var parameters = transformSyncer.Params;
+            sb.AppendLine($"{prefix}client update type: {parameters.clientUpdateType}");
+            sb.AppendLine($"{prefix}snapshot latency: {parameters.snapshotLatency}");
             sb.AppendLine($"{prefix}snapshot buffer count: {transformSyncer.SnapshotBufferCount}");
+            sb.AppendLine($"{prefix}use rigid body: {parameters.useRigidBody}");
             sb.AppendLine($"{prefix}calculated velocity: {transformSyncer.CurrentSyncData.CalculatedVelocityMagnitude}");
             sb.AppendLine($"{prefix}calculated angular velocity: {transformSyncer.CurrentSyncData.CalculatedAngularVelocityMagnitude}");
             if (transformSyncer.Transform != null)
