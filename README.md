@@ -40,7 +40,6 @@ If you want to run a dedicated server, take a look at these [instructions](https
 
 ## Development setup
 
-- install [Git LFS (large file storage)](https://git-lfs.github.com/), then set it up: `git lfs install`
 - clone the project, including submodules: `git clone --depth 1 --recurse-submodules https://github.com/GTA-ASM/SanAndreasUnity`
 - open the project with Unity 2020.3.26 or newer
 - open startup scene located at Assets/Scenes/Startup.unity
