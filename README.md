@@ -26,7 +26,7 @@ When running for the first time, the game will ask you for path to GTA installat
 
 ## Download
 
-Download it for [Windows](https://github.com/GTA-ASM/SanAndreasUnity/releases/download/v3.6/SanAndreasUnity-3.6-windows.zip), [Linux](https://github.com/GTA-ASM/SanAndreasUnity/releases/download/v3.6/SanAndreasUnity-3.6-linux.zip) or [Android](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Running-on-Android).
+Download it for [Windows](https://github.com/GTA-ASM/SanAndreasUnity/releases/download/v4.0/SanAndreasUnity-4.0-windows.zip), [Linux](https://github.com/GTA-ASM/SanAndreasUnity/releases/download/v4.0/SanAndreasUnity-4.0-linux.zip) or [Android](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Running-on-Android).
 
 The game is tested on Linux, Windows, Mac, and Android. It supports both Mono and IL2CPP scripting backends, so it can be built for any platform that Unity supports, provided that you can copy PC version of GTASA to target device.
 
