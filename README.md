@@ -35,7 +35,7 @@ The game is tested on Linux, Windows, Mac, and Android. It supports both Mono an
 
 Game fully works in multiplayer. You can start the game as dedicated server, as a host (server & client at the same time), or you can connect to a server. This works on all supported platforms, which means you can start a host even on Android device.
 
-If you want to run a dedicated server, take a look at these [instructions](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Command-line).
+If you want to host a server, take a look at [command line instructions](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Command-line) and [server administration](https://github.com/GTA-ASM/SanAndreasUnity/wiki/Server-administration).
 
 
 ## Development setup
