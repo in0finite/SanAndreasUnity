@@ -206,7 +206,16 @@ namespace SanAndreasUnity.UI {
 				this.weaponImage.texture = weaponTextureToDisplay;
 
 			this.weaponAmmoText.enabled = true;
-			string ammoText = weapon != null ? weapon.AmmoOutsideOfClip + "-" + weapon.AmmoInClip : string.Empty;
+			string ammoText = string.Empty;
+
+			if (weapon != null)
+			{
+				if (weapon.ReloadTime == 0f && weapon.AmmoClipSize == 1)
+					ammoText = weapon.TotalAmmo.ToString();
+				else
+					ammoText = $"{weapon.AmmoOutsideOfClip}-{weapon.AmmoInClip}";
+			}
+
 			if (this.weaponAmmoText.text != ammoText)
 				this.weaponAmmoText.text = ammoText;
 
