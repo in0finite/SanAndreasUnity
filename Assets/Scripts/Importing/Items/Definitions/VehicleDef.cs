@@ -20,7 +20,56 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     [Section("cars")]
     public class VehicleDef : Definition, IObjectDefinition
     {
-        public readonly int Id;
+		public struct CompRulesUnion
+		{
+			public int nExtraA_comp1;
+			public int nExtraA_comp2;
+			public int nExtraA_comp3;
+
+			public int nExtraB_comp1;
+			public int nExtraB_comp2;
+			public int nExtraB_comp3;
+
+			public int nExtraAComp;
+			public int nExtraARule;
+			public int nExtraBComp;
+			public int nExtraBRule;
+
+			public int nExtraA;
+			public int nExtraB;
+
+			public CompRulesUnion(int value)
+			{
+				nExtraA = (value & 0x0000FFFF) >> 0;
+				nExtraB = (int)(value & 0xFFFF0000) >> 16;
+
+				nExtraAComp = (nExtraA & 0x0FFF) >> 0;
+				nExtraARule = (nExtraA & 0xF000) >> 12;
+
+				nExtraBComp = (nExtraB & 0x0FFF) >> 0;
+				nExtraBRule = (nExtraB & 0xF000) >> 12;
+
+				nExtraA_comp1 = (nExtraA & 0x000F) >> 0;
+				nExtraA_comp2 = (nExtraA & 0x00F0) >> 4;
+				nExtraA_comp3 = (nExtraA & 0x0F00) >> 8;
+
+				nExtraB_comp1 = (nExtraB & 0x000F) >> 0;
+				nExtraB_comp2 = (nExtraB & 0x00F0) >> 4;
+				nExtraB_comp3 = (nExtraB & 0x0F00) >> 8;
+			}
+
+			public Boolean HasExtraOne()
+			{
+				return nExtraA != 0;
+			}
+
+			public Boolean HasExtraTwo()
+			{
+				return nExtraB != 0;
+			}
+		}
+
+		public readonly int Id;
 
         int IObjectDefinition.Id
         {
@@ -39,7 +88,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
 
         public readonly int Frequency;
         public readonly int Flags;
-        public readonly int CompRules;
+        public readonly CompRulesUnion CompRules;
 
         public readonly bool HasWheels;
 
@@ -65,7 +114,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
 
             Frequency = GetInt(8);
             Flags = GetInt(9);
-            CompRules = GetInt(10, NumberStyles.HexNumber);
+            CompRules = new CompRulesUnion(GetInt(10, NumberStyles.HexNumber));
 
             HasWheels = Parts >= 15;
 
