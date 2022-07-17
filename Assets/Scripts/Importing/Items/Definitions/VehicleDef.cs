@@ -22,7 +22,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     {
         public struct CompRulesUnion
         {
-            private int value;
+            private readonly int value;
 
             public int nExtraA_comp1 { get { return (nExtraA & 0x000F) >> 0; } }
             public int nExtraA_comp2 { get { return (nExtraA & 0x00F0) >> 4; } }
@@ -37,7 +37,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
             public int nExtraBComp { get { return (nExtraB & 0x0FFF) >> 0; } }
             public int nExtraBRule { get { return (nExtraB & 0xF000) >> 12; } }
 
-            public int nExtraA { get { return (value & 0x0FFF) >> 0; } }
+            public int nExtraA { get { return (value & 0xFFFF) >> 0; } }
             public int nExtraB { get { return (int)(value & 0xFFFF0000) >> 16; } }
 
             public CompRulesUnion(int value)
