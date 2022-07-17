@@ -64,6 +64,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             LeftRear,
         }
 
+        public enum VehicleComponentsRules
+        {
+            ALLOW_ALWAYS = 1,
+            ONLY_WHEN_RAINING = 2,
+            MAYBE_HIDE = 3,
+            FULL_RANDOM = 4,
+        }
+
         private static VehicleDef[] _sRandomSpawnable;
         private static int _sMaxSpawnableIndex;
 
@@ -287,9 +295,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         private readonly List<Wheel> _wheels = new List<Wheel>();
         private readonly List<Seat> _seats = new List<Seat>();
+        private readonly List<Frame> _extras = new List<Frame>();
 
         public List<Wheel> Wheels { get { return _wheels; } }
         public List<Seat> Seats { get { return _seats; } }
+        public List<Frame> Extras { get { return _extras; } }
 
         private WheelAlignment GetWheelAlignment(string frameName)
         {
@@ -405,6 +415,11 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             foreach (var frame in _frames)
             {
+                if (frame.Name.StartsWith("extra"))
+                {
+                    _extras.Add(frame);
+                }
+
                 if (!frame.Name.StartsWith("wheel_")) continue;
                 if (!frame.Name.EndsWith("_dummy")) continue;
 
@@ -462,6 +477,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     inst.Complement.Complement = inst;
                 }
             }
+
+            SelectExtras();
 
             InitializePhysics();
 
@@ -617,6 +634,148 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 hinge.limits = new JointLimits { min = Mathf.Min(0, limit), max = Mathf.Max(0, limit), };
                 hinge.connectedBody = gameObject.GetComponent<Rigidbody>();
             }
+        }
+
+        private void SelectExtras()
+        {
+            int firstExtraIdx = -1;
+            int secondExtraIdx = -1;
+
+            VehicleDef.CompRulesUnion compsUnion = Definition.CompRules;
+            if (compsUnion.HasExtraOne())
+            {
+                firstExtraIdx = ChooseComponent(Definition.CompRules.nExtraARule, compsUnion.nExtraAComp);
+            }
+
+            if (compsUnion.HasExtraTwo())
+            {
+                firstExtraIdx = ChooseComponent(compsUnion.nExtraBRule, compsUnion.nExtraBComp);
+            }
+
+            foreach (var extra in Extras)
+            {
+                Boolean isFirstExtra = extra.Name == ("extra" + firstExtraIdx.ToString());
+                Boolean isSecondExtra = extra.Name == ("extra" + secondExtraIdx.ToString());
+
+                extra.gameObject.SetActive(isFirstExtra || isSecondExtra);
+            }
+        }
+
+        private int ChooseComponent(int rule, int comps)
+        {
+            VehicleDef.CompRulesUnion compsUnion = Definition.CompRules;
+
+            if ((rule != 0) && IsValidCompRule(rule))
+            {
+                return ChooseComponentInternal(rule, comps);
+            }
+            else if (UnityEngine.Random.Range(0, 3) < 2)
+            {
+                int[] anVariations = new int[6];
+                int numComps = GetListOfComponentsNotUsedByRules(Extras.Count, anVariations);
+                if (numComps > 0)
+                    return anVariations[UnityEngine.Random.Range(0, numComps)];
+            }
+
+            return -1;
+        }
+
+        private bool IsValidCompRule(int nRule)
+        {
+            //    TODO add weather checking, when weather is implemented.
+            Boolean isRainingNow = false;
+
+            return (nRule != (int)VehicleComponentsRules.ONLY_WHEN_RAINING)
+                || isRainingNow
+            ;
+        }
+
+        private int ChooseComponentInternal(int rule, int comps)
+        {
+            int component = -1;
+            if (rule == (int)VehicleComponentsRules.ALLOW_ALWAYS || 
+                rule == (int)VehicleComponentsRules.ONLY_WHEN_RAINING)
+            {
+                int iNumComps = CountCompsInRule(comps);
+                int rand = UnityEngine.Random.Range(0, iNumComps);
+                component = (comps >> (4 * rand)) & 0xF;
+            }
+            else if (rule == (int)VehicleComponentsRules.MAYBE_HIDE)
+            {
+                int iNumComps = CountCompsInRule(comps);
+                int rand = UnityEngine.Random.Range(-1, iNumComps);
+                if (rand != -1)
+                    component = (comps >> (4 * rand)) & 0xF;
+            }
+            else if (rule == (int)VehicleComponentsRules.FULL_RANDOM)
+            {
+                component = UnityEngine.Random.Range(0, 5);
+            }
+
+            return component;
+        }
+
+        int CountCompsInRule(int comps)
+        {
+            int result = 0;
+            while (comps != 0)
+            {
+                if ((comps & 0xF) != 0xF)
+                    ++result;
+
+                comps >>= 4;
+            }
+
+            return result;
+        }
+
+        int GetListOfComponentsNotUsedByRules(int numExtras, int[] outList)
+        {
+            int[] iCompsList = new int[]{ 0, 1, 2, 3, 4, 5 };
+
+            VehicleDef.CompRulesUnion comps = Definition.CompRules;
+
+            if (comps.nExtraARule != 0 && IsValidCompRule(comps.nExtraARule))
+            {
+                if (comps.nExtraARule == (int)VehicleComponentsRules.FULL_RANDOM)
+                    return 0;
+
+                if (comps.nExtraA_comp1 != 0xF)
+                    iCompsList[comps.nExtraA_comp1] = 0xF;
+
+                if (comps.nExtraA_comp2 != 0xF)
+                    iCompsList[comps.nExtraA_comp2] = 0xF;
+
+                if (comps.nExtraA_comp3 != 0xF)
+                    iCompsList[comps.nExtraA_comp3] = 0xF;
+            }
+
+            if (comps.nExtraBRule != 0 && IsValidCompRule(comps.nExtraBRule))
+            {
+                if (comps.nExtraBRule == (int)VehicleComponentsRules.FULL_RANDOM)
+                    return 0;
+
+                if (comps.nExtraB_comp1 != 0xF)
+                    iCompsList[comps.nExtraB_comp1] = 0xF;
+
+                if (comps.nExtraB_comp2 != 0xF)
+                    iCompsList[comps.nExtraB_comp2] = 0xF;
+
+                if (comps.nExtraB_comp3 != 0xF)
+                    iCompsList[comps.nExtraB_comp3] = 0xF;
+            }
+
+            int iNumComps = 0;
+            for (int i = 0; i < numExtras; ++i)
+            {
+                if (iCompsList[i] == 0xF)
+                    continue;
+
+                outList[iNumComps] = i;
+                ++iNumComps;
+            }
+
+            return iNumComps;
         }
     }
 }

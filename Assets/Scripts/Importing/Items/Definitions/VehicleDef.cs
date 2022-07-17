@@ -20,6 +20,42 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     [Section("cars")]
     public class VehicleDef : Definition, IObjectDefinition
     {
+        public struct CompRulesUnion
+        {
+            private readonly int value;
+
+            public int nExtraA_comp1 { get { return (nExtraA & 0x000F) >> 0; } }
+            public int nExtraA_comp2 { get { return (nExtraA & 0x00F0) >> 4; } }
+            public int nExtraA_comp3 { get { return (nExtraA & 0x0F00) >> 8; } }
+
+            public int nExtraB_comp1 { get { return (nExtraB & 0x000F) >> 0; } }
+            public int nExtraB_comp2 { get { return (nExtraB & 0x00F0) >> 4; } }
+            public int nExtraB_comp3 { get { return (nExtraB & 0x0F00) >> 8; } }
+
+            public int nExtraAComp { get { return (nExtraA & 0x0FFF) >> 0; } }
+            public int nExtraARule { get { return (nExtraA & 0xF000) >> 12; } }
+            public int nExtraBComp { get { return (nExtraB & 0x0FFF) >> 0; } }
+            public int nExtraBRule { get { return (nExtraB & 0xF000) >> 12; } }
+
+            public int nExtraA { get { return (value & 0xFFFF) >> 0; } }
+            public int nExtraB { get { return (int)(value & 0xFFFF0000) >> 16; } }
+
+            public CompRulesUnion(int value)
+            {
+                this.value = value;
+            }
+
+            public Boolean HasExtraOne()
+            {
+                return nExtraA != 0;
+            }
+
+            public Boolean HasExtraTwo()
+            {
+                return nExtraB != 0;
+            }
+        }
+
         public readonly int Id;
 
         int IObjectDefinition.Id
@@ -39,7 +75,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
 
         public readonly int Frequency;
         public readonly int Flags;
-        public readonly int CompRules;
+        public readonly CompRulesUnion CompRules;
 
         public readonly bool HasWheels;
 
@@ -65,7 +101,7 @@ namespace SanAndreasUnity.Importing.Items.Definitions
 
             Frequency = GetInt(8);
             Flags = GetInt(9);
-            CompRules = GetInt(10, NumberStyles.HexNumber);
+            CompRules = new CompRulesUnion(GetInt(10, NumberStyles.HexNumber));
 
             HasWheels = Parts >= 15;
 
