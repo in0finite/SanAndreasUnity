@@ -661,7 +661,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
         }
 
-        private    int ChooseComponent(int rule, int comps)
+        private int ChooseComponent(int rule, int comps)
         {
             VehicleDef.CompRulesUnion compsUnion = Definition.CompRules;
 
@@ -723,9 +723,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 if ((comps & 0xF) != 0xF)
                     ++result;
 
-                int a = comps / 16;
-                int b = comps >> 4;
-
                 comps >>= 4;
             }
 
@@ -759,13 +756,13 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     return 0;
 
                 if (comps.nExtraB_comp1 != 0xF)
-                    iCompsList[comps.nExtraA_comp1] = 0xF;
+                    iCompsList[comps.nExtraB_comp1] = 0xF;
 
                 if (comps.nExtraB_comp2 != 0xF)
-                    iCompsList[comps.nExtraA_comp2] = 0xF;
+                    iCompsList[comps.nExtraB_comp2] = 0xF;
 
                 if (comps.nExtraB_comp3 != 0xF)
-                    iCompsList[comps.nExtraA_comp3] = 0xF;
+                    iCompsList[comps.nExtraB_comp3] = 0xF;
             }
 
             int iNumComps = 0;

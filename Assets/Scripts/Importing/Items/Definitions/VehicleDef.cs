@@ -22,40 +22,27 @@ namespace SanAndreasUnity.Importing.Items.Definitions
     {
         public struct CompRulesUnion
         {
-            public int nExtraA_comp1;
-            public int nExtraA_comp2;
-            public int nExtraA_comp3;
+            private int value;
 
-            public int nExtraB_comp1;
-            public int nExtraB_comp2;
-            public int nExtraB_comp3;
+            public int nExtraA_comp1 { get { return (nExtraA & 0x000F) >> 0; } }
+            public int nExtraA_comp2 { get { return (nExtraA & 0x00F0) >> 4; } }
+            public int nExtraA_comp3 { get { return (nExtraA & 0x0F00) >> 8; } }
 
-            public int nExtraAComp;
-            public int nExtraARule;
-            public int nExtraBComp;
-            public int nExtraBRule;
+            public int nExtraB_comp1 { get { return (nExtraB & 0x000F) >> 0; } }
+            public int nExtraB_comp2 { get { return (nExtraB & 0x00F0) >> 4; } }
+            public int nExtraB_comp3 { get { return (nExtraB & 0x0F00) >> 8; } }
 
-            public int nExtraA;
-            public int nExtraB;
+            public int nExtraAComp { get { return (nExtraA & 0x0FFF) >> 0; } }
+            public int nExtraARule { get { return (nExtraA & 0xF000) >> 12; } }
+            public int nExtraBComp { get { return (nExtraB & 0x0FFF) >> 0; } }
+            public int nExtraBRule { get { return (nExtraB & 0xF000) >> 12; } }
+
+            public int nExtraA { get { return (value & 0x0FFF) >> 0; } }
+            public int nExtraB { get { return (int)(value & 0xFFFF0000) >> 16; } }
 
             public CompRulesUnion(int value)
             {
-                nExtraA = (value & 0x0000FFFF) >> 0;
-                nExtraB = (int)(value & 0xFFFF0000) >> 16;
-
-                nExtraAComp = (nExtraA & 0x0FFF) >> 0;
-                nExtraARule = (nExtraA & 0xF000) >> 12;
-
-                nExtraBComp = (nExtraB & 0x0FFF) >> 0;
-                nExtraBRule = (nExtraB & 0xF000) >> 12;
-
-                nExtraA_comp1 = (nExtraA & 0x000F) >> 0;
-                nExtraA_comp2 = (nExtraA & 0x00F0) >> 4;
-                nExtraA_comp3 = (nExtraA & 0x0F00) >> 8;
-
-                nExtraB_comp1 = (nExtraB & 0x000F) >> 0;
-                nExtraB_comp2 = (nExtraB & 0x00F0) >> 4;
-                nExtraB_comp3 = (nExtraB & 0x0F00) >> 8;
+                this.value = value;
             }
 
             public Boolean HasExtraOne()
