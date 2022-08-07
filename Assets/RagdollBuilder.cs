@@ -406,9 +406,7 @@ namespace SanAndreasUnity
             int largest = LargestComponent(point);
             if (smallest < largest)
             {
-                int temp = largest;
-                largest = smallest;
-                smallest = temp;
+                (smallest, largest) = (largest, smallest);
             }
 
             if (smallest == 0 && largest == 1)

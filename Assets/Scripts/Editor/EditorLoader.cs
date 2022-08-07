@@ -51,7 +51,7 @@ namespace SanAndreasUnity.Editor
                 EditorUtility.DisplayDialog("", "Error in loading game data. Check console for more information.", "Ok");
         }
 
-        [MenuItem(EditorCore.MenuName + "/" + "Load game data")]
+        [MenuItem(EditorCore.MenuName + "/Load game data")]
         static void MenuItemLoadGameData()
         {
             if (!F.IsAppInEditMode)
@@ -74,7 +74,7 @@ namespace SanAndreasUnity.Editor
             Loader.StartLoading();
         }
 
-        [MenuItem(EditorCore.MenuName + "/" + "Change path to GTA")]
+        [MenuItem(EditorCore.MenuName + "/Change path to GTA")]
         static void MenuItemChangePath()
         {
             if (!F.IsAppInEditMode)

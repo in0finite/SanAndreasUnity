@@ -144,7 +144,7 @@ namespace SanAndreasUnity.Utilities
 
 			Rect fillRect = rect;
 			fillRect.position += Vector2.one * borderWidth;
-			fillRect.size -= Vector2.one * borderWidth * 2;
+			fillRect.size -= 2 * borderWidth * Vector2.one;
 
 			// first fill with black - that will be the border
 			GUIUtils.DrawRect( rect, Color.black );
@@ -174,8 +174,8 @@ namespace SanAndreasUnity.Utilities
 //			Vector3 lowerLeft = upperLeft - camUp * worldHeight;
 //			Vector3 lowerRight = lowerLeft + camRight * worldWidth;
 
-			Vector3 leftWorld = worldPos - camRight * worldWidth * 0.5f;
-			Vector3 rightWorld = worldPos + camRight * worldWidth * 0.5f;
+			Vector3 leftWorld = worldPos - 0.5f * worldWidth * camRight;
+			Vector3 rightWorld = worldPos + 0.5f * worldWidth * camRight;
 
 			Vector3 leftScreen = cam.WorldToScreenPoint (leftWorld);
 			Vector3 rightScreen = cam.WorldToScreenPoint (rightWorld);

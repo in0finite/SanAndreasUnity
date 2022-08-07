@@ -24,10 +24,6 @@ namespace SanAndreasUnity.UI {
 
 		}
 
-		void Start () {
-			
-		}
-
 		protected override void OnWindowGUI()
 		{
 

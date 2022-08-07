@@ -8,13 +8,6 @@ namespace SanAndreasUnity.Editor
 //	[CanEditMultipleObjects]
 	public class FrameInspector : UnityEditor.Editor
 	{
-		
-
-		void OnEnable()
-		{
-			
-		}
-
 		public override void OnInspectorGUI()
 		{
 

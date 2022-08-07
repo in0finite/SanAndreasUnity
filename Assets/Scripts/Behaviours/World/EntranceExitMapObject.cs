@@ -41,7 +41,7 @@ namespace SanAndreasUnity.Behaviours.World
 
             this.Initialize(
                 Cell.Instance.GetPositionBasedOnInteriorLevel(
-                    info.EntrancePos + Vector3.up * height * 0.5f,
+                    info.EntrancePos + 0.5f * height * Vector3.up,
                     info.TargetInterior),
                 Quaternion.identity);
 
@@ -98,9 +98,7 @@ namespace SanAndreasUnity.Behaviours.World
         void OnTriggerEnter(Collider collider)
         {
             //Debug.LogFormat("OnTriggerEnter() - with {0}", collider.gameObject.name);
-
-            var ped = collider.gameObject.GetComponent<Ped>();
-            if (ped != null)
+            if (collider.gameObject.TryGetComponent<Ped>(out var ped))
                 ped.OnStartCollidingWithEnex(this);
             
         }
@@ -108,9 +106,7 @@ namespace SanAndreasUnity.Behaviours.World
         void OnTriggerExit(Collider collider)
         {
             //Debug.LogFormat("OnTriggerExit() - with {0}", collider.gameObject.name);
-
-            var ped = collider.gameObject.GetComponent<Ped>();
-            if (ped != null)
+            if (collider.gameObject.TryGetComponent<Ped>(out var ped))
                 ped.OnStopCollidingWithEnex(this);
             
         }

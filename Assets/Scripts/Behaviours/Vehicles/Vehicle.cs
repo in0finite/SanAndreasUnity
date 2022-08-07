@@ -326,7 +326,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public VehicleController StartControlling()
         {
             //SetAllCarLights();
-            return _controller ?? (_controller = gameObject.GetOrAddComponent<VehicleController>());
+            return _controller != null ? _controller : (_controller = gameObject.GetOrAddComponent<VehicleController>());
         }
 
         public void SetAllCarLights()
@@ -492,8 +492,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             foreach (var frame in frames)
             {
-                var mr = frame.GetComponent<MeshRenderer>();
-                if (mr == null) continue;
+                if (!frame.TryGetComponent<MeshRenderer>(out var mr)) continue;
 
                 // get color index from each material, and assign properties accordingly
 

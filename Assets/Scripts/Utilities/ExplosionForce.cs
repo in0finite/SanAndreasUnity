@@ -56,7 +56,7 @@ namespace SanAndreasUnity.Utilities
                     float distance = diff.magnitude;
                     float distanceFactor = Mathf.Sqrt(1.0f - Mathf.Clamp01(distance / r));
 
-                    rb.AddForceAtPosition((diff.normalized * explosionForce + Vector3.up * upwardsModifier) * multiplier * distanceFactor * massFactor / colliders.Count, closestPointOnCollider, ForceMode.Impulse);
+                    rb.AddForceAtPosition(distanceFactor * massFactor * multiplier * (diff.normalized * explosionForce + Vector3.up * upwardsModifier) / colliders.Count, closestPointOnCollider, ForceMode.Impulse);
 
                 }
 

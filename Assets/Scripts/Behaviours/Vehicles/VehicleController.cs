@@ -50,11 +50,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             ExtraData = new SyncedBag(m_syncDictionary);
         }
 
-        private void Awake()
-        {
-            //m_vehicle = GetComponent<Vehicle>();
-        }
-
         private void OnDisable()
         {
             if (m_vehicle != null)

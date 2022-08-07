@@ -27,8 +27,7 @@ namespace SanAndreasUnity.Utilities
             if (null == damageInfo.raycastHitTransform)
                 return;
 
-            var c = damageInfo.raycastHitTransform.GetComponent<Collider>();
-            if (null == c)
+            if (!damageInfo.raycastHitTransform.TryGetComponent<Collider>(out var c))
                 return;
 
             var rb = c.attachedRigidbody;
@@ -36,7 +35,7 @@ namespace SanAndreasUnity.Utilities
                 return;
 
             rb.AddForceAtPosition(
-                damageInfo.hitDirection * damageInfo.amount.SqrtOrZero() * this.forceMultiplier,
+                damageInfo.amount.SqrtOrZero() * this.forceMultiplier * damageInfo.hitDirection,
                 damageInfo.hitPoint,
                 ForceMode.Impulse);
         }

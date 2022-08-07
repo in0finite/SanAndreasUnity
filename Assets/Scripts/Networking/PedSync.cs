@@ -27,11 +27,6 @@ namespace SanAndreasUnity.Net
             Local = this;
         }
 
-        void Start()
-        {
-
-        }
-
         public void SendInput(bool isWalkOn, bool isRunOn, bool isSprintOn, Vector3 movementInput, 
             bool isJumpOn, Vector3 heading, Vector3 aimDir, Vector3 firePos, Vector3 fireDir, bool isAimOn, bool isFireOn)
         {

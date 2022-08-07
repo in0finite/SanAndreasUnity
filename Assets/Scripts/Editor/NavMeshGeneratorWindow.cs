@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Editor
             m_navMeshGenerator = new NavMeshGenerator(m_navMeshData);
         }
 
-        [MenuItem(EditorCore.MenuName + "/" + "Generate nav mesh")]
+        [MenuItem(EditorCore.MenuName + "/Generate nav mesh")]
         static void Init()
         {
             var window = GetWindow<NavMeshGeneratorWindow>();

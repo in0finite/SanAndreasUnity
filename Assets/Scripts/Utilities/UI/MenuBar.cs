@@ -19,8 +19,7 @@ namespace SanAndreasUnity.Utilities
 			{
 				for (int i = 0; i < this.buttonsContainer.transform.childCount; i++)
 				{
-					var entry = this.buttonsContainer.transform.GetChild(i).GetComponent<MenuBarEntry>();
-					if (entry != null)
+					if (this.buttonsContainer.transform.GetChild(i).TryGetComponent<MenuBarEntry>(out var entry))
 						yield return entry;
 				}
 			}

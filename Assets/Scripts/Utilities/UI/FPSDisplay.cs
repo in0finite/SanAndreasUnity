@@ -13,7 +13,7 @@ namespace SanAndreasUnity.Utilities {
 		private static readonly int s_fpsTextureHeight = 25;
 		private float m_fpsMaximum = 60.0f;
 		private Texture2D m_fpsTexture = null;
-		private Color[] m_colors = null;
+		private Color32[] m_colors = null;
 		private float[] m_fpsHistory = new float[s_fpsTextureWidth];
 		private int m_fpsIndex = 0;
 
@@ -31,7 +31,7 @@ namespace SanAndreasUnity.Utilities {
 
 			m_fpsTexture = new Texture2D(s_fpsTextureWidth, s_fpsTextureHeight, TextureFormat.RGBA32, false, true);
 
-			m_colors = new Color[m_fpsTexture.width * m_fpsTexture.height];
+			m_colors = new Color32[m_fpsTexture.width * m_fpsTexture.height];
 
 			this.fpsImage.texture = this.m_fpsTexture;
 		}
@@ -59,7 +59,7 @@ namespace SanAndreasUnity.Utilities {
 			UnityEngine.Profiling.Profiler.EndSample();
 
 			UnityEngine.Profiling.Profiler.BeginSample("Set pixels");
-			m_fpsTexture.SetPixels(m_colors);
+			m_fpsTexture.SetPixels32(m_colors);
 			UnityEngine.Profiling.Profiler.EndSample();
 
 			// Append to history storage

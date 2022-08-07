@@ -143,8 +143,7 @@ namespace SanAndreasUnity.Chat
 				return;
 			}
 
-			var chatSync = Player.Local.GetComponent<ChatSync> ();
-			if (chatSync != null) {
+			if (Player.Local.TryGetComponent<ChatSync>(out var chatSync)) {
 				chatSync.SendChatMsgToServer (msg);
 			}
 
@@ -189,8 +188,7 @@ namespace SanAndreasUnity.Chat
 
 			NetStatus.ThrowIfNotOnServer();
 
-			var chatSync = player.GetComponent<ChatSync> ();
-			if (chatSync != null) {
+			if (player.TryGetComponent<ChatSync>(out var chatSync)) {
 				chatSync.SendChatMsgToClient (player.connectionToClient, msg, sender);
 			}
 

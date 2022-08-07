@@ -319,8 +319,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     clampedTranslation = Vector3.ClampMagnitude(translation, clampedColMag);
 
                     //Shatter parts that can shatter
-                    ShatterPart shattered = curDamageMesh.GetComponent<ShatterPart>();
-                    if (shattered != null)
+                    if (curDamageMesh.TryGetComponent<ShatterPart>(out var shattered))
                     {
                         seamKeeper = shattered.seamKeeper;
                         if (Vector3.Distance(curDamageMesh.transform.position, damagePoint) < colMag * surfaceDot * 0.1f * massFactor && colMag * surfaceDot * massFactor > shattered.breakForce)
@@ -343,12 +342,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                                 if (seamKeeper == null || seamlessDeform)
                                 {
                                     vertProjection = seamlessDeform ? Vector3.zero : Vector3.Project(normalizedVel, meshVertices[i].verts[j]);
-                                    meshVertices[i].verts[j] += (clampedTranslation - vertProjection * (usePerlinNoise ? 1 + Mathf.PerlinNoise(meshVertices[i].verts[j].x * 100, meshVertices[i].verts[j].y * 100) : 1)) * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
+                                    meshVertices[i].verts[j] += massFactor * Mathf.Min(clampedColMag * 0.01f, distClamp) * surfaceDot * (clampedTranslation - vertProjection * (usePerlinNoise ? 1 + Mathf.PerlinNoise(meshVertices[i].verts[j].x * 100, meshVertices[i].verts[j].y * 100) : 1));
                                 }
                                 else
                                 {
                                     seamLocalPoint = seamKeeper.InverseTransformPoint(curDamageMesh.transform.TransformPoint(meshVertices[i].verts[j]));
-                                    meshVertices[i].verts[j] += (clampedTranslation - Vector3.Project(normalizedVel, seamLocalPoint) * (usePerlinNoise ? 1 + Mathf.PerlinNoise(seamLocalPoint.x * 100, seamLocalPoint.y * 100) : 1)) * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
+                                    meshVertices[i].verts[j] += massFactor * Mathf.Min(clampedColMag * 0.01f, distClamp) * surfaceDot * (clampedTranslation - Vector3.Project(normalizedVel, seamLocalPoint) * (usePerlinNoise ? 1 + Mathf.PerlinNoise(seamLocalPoint.x * 100, seamLocalPoint.y * 100) : 1));
                                 }
 
                                 if (damageLogger[i] == null)
@@ -421,7 +420,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                             if (distClamp > 0.001f)
                             {
                                 damagedCols[i] = true;
-                                colVertices[i].verts[j] += clampedTranslation * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
+                                colVertices[i].verts[j] += massFactor * Mathf.Min(clampedColMag * 0.01f, distClamp) * surfaceDot * clampedTranslation;
                             }
                         }
                     }
@@ -442,7 +441,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                         if (distClamp > 0.001f)
                         {
-                            curDisplacePart.position += clampedTranslation * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor;
+                            curDisplacePart.position += massFactor * Mathf.Min(clampedColMag * 0.01f, distClamp) * surfaceDot * clampedTranslation;
 
                             //Detach detachable parts
                             if (curDisplacePart.GetComponent<DetachablePart>())
@@ -478,7 +477,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                                 }
                                 else if (detachedPart.hinge)
                                 {
-                                    detachedPart.displacedAnchor += curDisplacePart.parent.InverseTransformDirection(clampedTranslation * surfaceDot * Mathf.Min(clampedColMag * 0.01f, distClamp) * massFactor);
+                                    detachedPart.displacedAnchor += curDisplacePart.parent.InverseTransformDirection(massFactor * Mathf.Min(clampedColMag * 0.01f, distClamp) * surfaceDot * clampedTranslation);
                                 }
                             }
 

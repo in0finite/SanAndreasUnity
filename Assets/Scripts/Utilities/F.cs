@@ -185,16 +185,14 @@ namespace SanAndreasUnity.Utilities
 
 		public static T GetOrAddComponent<T> (this GameObject go) where T : Component
 		{
-			T comp = go.GetComponent<T> ();
-			if (null == comp)
+			if (!go.TryGetComponent<T>(out var comp))
 				comp = go.AddComponent<T> ();
 			return comp;
 		}
 
 		public static T GetComponentOrThrow<T> (this GameObject go) where T : Component
 		{
-			T comp = go.GetComponent<T> ();
-			if (null == comp)
+			if (!go.TryGetComponent<T>(out var comp))
 				throw new MissingComponentException (string.Format ("Failed to get component of type: {0}, on game object: {1}", typeof(T), go.name));
 			return comp;
 		}
@@ -206,8 +204,7 @@ namespace SanAndreasUnity.Utilities
 
 		public static T GetComponentOrLogError<T> (this GameObject go) where T : Component
 		{
-			T comp = go.GetComponent<T> ();
-			if (null == comp)
+			if (!go.TryGetComponent<T>(out var comp))
 				Debug.LogErrorFormat ("Failed to get component of type: {0}, on game object: {1}", typeof(T), go.name);
 			return comp;
 		}
@@ -219,8 +216,7 @@ namespace SanAndreasUnity.Utilities
 
         public static void DestroyComponent<T> (this GameObject go) where T : Component
 		{
-			T comp = go.GetComponent<T> ();
-			if (comp != null)
+			if (go.TryGetComponent<T>(out var comp))
                 UnityEngine.Object.Destroy(comp);
 		}
 
@@ -405,10 +401,7 @@ namespace SanAndreasUnity.Utilities
 
         public static string FirstCharToUpper(this string str)
         {
-	        if (string.Empty == str)
-		        return str;
-	        
-	        return str[0].ToString().ToUpperInvariant() + str.Substring(1);
+            return str.Length == 0 ? str : str[0].ToString().ToUpperInvariant() + str.Substring(1);
         }
 
         public static string ToLowerIfNotLower(this string str)
@@ -828,54 +821,22 @@ namespace SanAndreasUnity.Utilities
 
         public static bool IsGreaterOrEqual(this Vector2 local, Vector2 other)
         {
-            if (local.x >= other.x && local.y >= other.y)
-                return true;
-            else
-                return false;
+            return local.x >= other.x && local.y >= other.y;
         }
 
         public static bool IsLesserOrEqual(this Vector2 local, Vector2 other)
         {
-            if (local.x <= other.x && local.y <= other.y)
-                return true;
-            else
-                return false;
+            return local.x <= other.x && local.y <= other.y;
         }
 
         public static bool IsGreater(this Vector2 local, Vector2 other, bool orOperator = false)
         {
-            if (orOperator)
-            {
-                if (local.x > other.x || local.y > other.y)
-                    return true;
-                else
-                    return false;
-            }
-            else
-            {
-                if (local.x > other.x && local.y > other.y)
-                    return true;
-                else
-                    return false;
-            }
+            return orOperator ? local.x > other.x || local.y > other.y : local.x > other.x && local.y > other.y;
         }
 
         public static bool IsLesser(this Vector2 local, Vector2 other, bool orOperator = false)
         {
-            if (orOperator)
-            {
-                if (local.x < other.x || local.y < other.y)
-                    return true;
-                else
-                    return false;
-            }
-            else
-            {
-                if (local.x < other.x && local.y < other.y)
-                    return true;
-                else
-                    return false;
-            }
+            return orOperator ? local.x < other.x || local.y < other.y : local.x < other.x && local.y < other.y;
         }
 
 		public static Vector2 ToVec2WithXAndZ( this Vector3 vec3 ) {
@@ -983,15 +944,15 @@ namespace SanAndreasUnity.Utilities
             return new Rect (xMin, yMin, xMax - xMin, yMax - yMin);
         }
 
-		public	static	Texture2D	CreateTexture (int width, int height, Color color) {
+		public	static	Texture2D	CreateTexture (int width, int height, Color32 color) {
 
-			Color[] pixels = new Color[width * height];
+			Color32[] pixels = new Color32[width * height];
 
 			for (int i = 0; i < pixels.Length; i++)
 				pixels [i] = color;
 
 			Texture2D texture = new Texture2D (width, height);
-			texture.SetPixels (pixels);
+			texture.SetPixels32(pixels);
 			texture.Apply ();
 
 			return texture;

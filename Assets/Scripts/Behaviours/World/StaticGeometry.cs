@@ -273,8 +273,7 @@ namespace SanAndreasUnity.Behaviours.World
 			while (!_isGeometryLoaded)
 				yield return null;
 
-			var mr = GetComponent<MeshRenderer>();
-			if (mr == null)
+			if (!TryGetComponent<MeshRenderer>(out var mr))
 			{
 				_isFading = false;
 				yield break;
@@ -328,21 +327,10 @@ namespace SanAndreasUnity.Behaviours.World
 
         private bool NeedsFading()
         {
-			if (F.IsAppInEditMode)
-				return false;
-
-	        if (F.IsInHeadlessMode)
-		        return false;
-
-	        // always fade, except when parent should be visible, but he is still loading
-
-	        if (LodParent == null)
-		        return true;
-
-	        if (LodParent.IsVisibleInMapSystem && !LodParent._isGeometryLoaded)
-		        return false;
-
-	        return true;
+            // always fade, except when parent should be visible, but he is still loading
+            return !F.IsAppInEditMode
+                && !F.IsInHeadlessMode
+                && (LodParent == null || !LodParent.IsVisibleInMapSystem || LodParent._isGeometryLoaded);
         }
 
         private bool ShouldReceiveShadows()

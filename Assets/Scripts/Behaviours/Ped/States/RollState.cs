@@ -20,12 +20,10 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 		public bool CanRoll()
 		{
-			if( this.IsActiveState )
-				return false;
-			return true;
-		}
+            return !this.IsActiveState;
+        }
 
-		public bool Roll(bool left)
+        public bool Roll(bool left)
 		{
 			if( !this.CanRoll() )
 				return false;

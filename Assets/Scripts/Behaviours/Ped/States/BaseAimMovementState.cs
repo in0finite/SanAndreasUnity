@@ -384,8 +384,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 				pos, dir, WeaponAttackParams.Default, out bool attackWillBeConducted, out DamageInfo damageInfo);
 			if (attackWillBeConducted && damagable != null)
 			{
-				var targetPed = damagable.GetComponent<Ped>();
-				if (targetPed != null)
+				if (damagable.TryGetComponent<Ped>(out var targetPed))
 				{
 					targetPed.OnUnderAimOfOtherPed(damageInfo);
 				}

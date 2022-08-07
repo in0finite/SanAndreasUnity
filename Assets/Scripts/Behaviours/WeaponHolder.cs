@@ -259,9 +259,7 @@ namespace SanAndreasUnity.Behaviours {
 						//	var aimOffset = CurrentWeapon.GunAimingOffset;
 						//	if (aimOffset != null)
 						//		weaponPos += rotationTr.forward * aimOffset.aimZ + rotationTr.right * aimOffset.aimX;
-
-						CurrentWeaponTransform.transform.position = weaponPos;
-						CurrentWeaponTransform.transform.rotation = rotationTr.rotation;
+						CurrentWeaponTransform.transform.SetPositionAndRotation(weaponPos, rotationTr.rotation);
 					}
 				}
 

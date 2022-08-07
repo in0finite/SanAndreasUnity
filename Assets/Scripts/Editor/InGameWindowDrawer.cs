@@ -24,7 +24,7 @@ namespace SanAndreasUnity.Editor
             this.position = new Rect(this.position.center, new Vector2(700, 500));
         }
 
-        [MenuItem(EditorCore.MenuName + "/" + "In-game window drawer")]
+        [MenuItem(EditorCore.MenuName + "/In-game window drawer")]
         static void Init()
         {
             var window = GetWindow<InGameWindowDrawer>();

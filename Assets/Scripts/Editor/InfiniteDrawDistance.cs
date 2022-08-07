@@ -11,7 +11,7 @@ namespace SanAndreasUnity.Editor
         private const string PrefabPath = "Assets/Prefabs";
 
 
-        [MenuItem(EditorCore.MenuName + "/" + "Enable infinite draw distance")]
+        [MenuItem(EditorCore.MenuName + "/Enable infinite draw distance")]
         static void Init()
         {
             if (EditorApplication.isPlaying)

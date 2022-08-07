@@ -59,8 +59,8 @@ namespace SanAndreasUnity.Utilities
 
 						// get current height on screen
 
-						Vector3 top = this.transform.position + this.transform.up * this.transform.lossyScale.y * 0.5f;
-						Vector3 bottom = this.transform.position - this.transform.up * this.transform.lossyScale.y * 0.5f;
+						Vector3 top = this.transform.position + 0.5f * this.transform.lossyScale.y * this.transform.up;
+						Vector3 bottom = this.transform.position - 0.5f * this.transform.lossyScale.y * this.transform.up;
 
 						Vector3 screenTop = cam.WorldToScreenPoint( top );
 						Vector3 screenBottom = cam.WorldToScreenPoint( bottom );

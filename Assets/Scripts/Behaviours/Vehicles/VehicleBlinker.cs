@@ -83,7 +83,7 @@ public class VehicleBlinker : MonoBehaviour
 
         obj.name = string.Format("Blinker ({0})", lightType.ToString());
         obj.transform.parent = parent;
-        obj.transform.position = parent.position + Vector3.right * (IsLeftSide ? -1 : 1) * .2f;
+        obj.transform.position = parent.position + (IsLeftSide ? -1 : 1) * .2f * Vector3.right;
         //obj.transform.localRotation = Quaternion.Euler(new Vector3(0, 30 * (IsLeftSide ? -1 : 1), 0));
         obj.transform.localScale = Vector3.one * .2f;
 
@@ -94,7 +94,7 @@ public class VehicleBlinker : MonoBehaviour
 
         blinkerSwitch = false;
 
-        InvokeRepeating("Cycle", 0, repeatInterval);
+        InvokeRepeating(nameof(Cycle), 0, repeatInterval);
     }
 
     // Update is called once per frame

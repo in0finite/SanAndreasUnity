@@ -109,12 +109,8 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
 
         public static bool ArrivedAtDestinationNode(PathMovementData pathMovementData, Transform tr)
         {
-            if (!pathMovementData.destinationNode.HasValue)
-                return false;
-            if (Vector2.Distance(tr.position.ToVec2WithXAndZ(), pathMovementData.destinationNode.Value.Position.ToVec2WithXAndZ())
-                < pathMovementData.destinationNode.Value.PathWidth / 2f)
-                return true;
-            return false;
+            return pathMovementData.destinationNode.HasValue && Vector2.Distance(tr.position.ToVec2WithXAndZ(), pathMovementData.destinationNode.Value.Position.ToVec2WithXAndZ())
+                < pathMovementData.destinationNode.Value.PathWidth / 2f;
         }
 
         public static void OnArrivedToDestinationNode(PathMovementData pathMovementData)

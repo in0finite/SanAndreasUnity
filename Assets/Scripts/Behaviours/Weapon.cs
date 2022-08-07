@@ -372,7 +372,7 @@ namespace SanAndreasUnity.Behaviours
 
 			string typeName = data.weaponType.Replace ("_", "");
 
-			var type = s_weaponTypes.Where (t => 0 == string.Compare (t.Name, typeName, true)).FirstOrDefault ();
+			var type = s_weaponTypes.FirstOrDefault(t => 0 == string.Compare (t.Name, typeName, true));
 
 			if (type != null) {
 				return (Weapon)go.AddComponent (type);
@@ -464,15 +464,9 @@ namespace SanAndreasUnity.Behaviours
 
 		public virtual bool CanSprintWithIt {
 			get {
-				if (this.HasFlag (GunFlag.AIMWITHARM))
-					return true;
-
-				if (this.SlotIndex == WeaponSlot.Heavy || this.SlotIndex == WeaponSlot.Machine || this.SlotIndex == WeaponSlot.Rifle
-				   || this.SlotIndex == WeaponSlot.Shotgun)
-					return false;
-
-				return true;
-			}
+                return this.HasFlag(GunFlag.AIMWITHARM) 
+					|| this.SlotIndex != WeaponSlot.Heavy && this.SlotIndex != WeaponSlot.Machine && this.SlotIndex != WeaponSlot.Rifle && this.SlotIndex != WeaponSlot.Shotgun;
+            }
 		}
 
 		public bool IsHeavy { get { return this.HasFlag (GunFlag.HEAVY); } }
@@ -481,10 +475,8 @@ namespace SanAndreasUnity.Behaviours
 
 		public virtual bool CanTurnInDirectionOtherThanAiming {
 			get {
-				if (this.HasFlag (GunFlag.AIMWITHARM))
-					return true;
-				return false;
-			}
+                return this.HasFlag(GunFlag.AIMWITHARM);
+            }
 		}
 
 		public virtual AnimId IdleAnim {

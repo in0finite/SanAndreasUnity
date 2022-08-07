@@ -283,7 +283,7 @@ namespace SanAndreasUnity.Behaviours.Peds
                 Vector3 transformPos = boneInfo.Transform.localPosition;
                 Vector3 moveDiff = boneInfo.Position - transformPos;
                 float sqrDistance = moveDiff.sqrMagnitude;
-                Vector3 moveDelta = moveDiff.normalized * boneInfo.CalculatedVelocityMagnitude * Time.deltaTime;
+                Vector3 moveDelta = boneInfo.CalculatedVelocityMagnitude * Time.deltaTime * moveDiff.normalized;
                 if (moveDelta.sqrMagnitude < sqrDistance && moveDelta.sqrMagnitude > float.Epsilon)
                     boneInfo.Transform.localPosition += moveDelta;
                 else

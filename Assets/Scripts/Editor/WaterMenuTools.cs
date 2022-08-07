@@ -137,8 +137,7 @@ namespace SanAndreasUnity.Editor
 
             foreach (var waterFaceInfo in waterFaceInfos)
             {
-                var focusPoint = waterFaceInfo.gameObject.GetComponent<FocusPoint>();
-                if (focusPoint != null)
+                if (waterFaceInfo.gameObject.TryGetComponent<FocusPoint>(out var focusPoint))
                     UnityEngine.Object.DestroyImmediate(focusPoint.gameObject);
                 focusPoint = waterFaceInfo.gameObject.AddComponent<FocusPoint>();
                 focusPoint.parameters = FocusPointParameters.Default;

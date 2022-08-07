@@ -97,8 +97,8 @@ namespace SanAndreasUnity.UI {
 			if (sizeMultiplier > 1)
 			{
 				// set all pixels to transparent
-				Color[] emptyColors = new Color[newWidth * newHeight];
-				tex.SetPixels(emptyColors);
+				Color32[] emptyColors = new Color32[newWidth * newHeight];
+				tex.SetPixels32(emptyColors);
 			}
 
 			// bottom left

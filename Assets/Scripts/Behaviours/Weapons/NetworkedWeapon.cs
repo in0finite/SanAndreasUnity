@@ -30,12 +30,6 @@ namespace SanAndreasUnity.Behaviours.Weapons
             // create weapon
             F.RunExceptionSafe( () => Weapon.OnWeaponCreatedByServer(this) );
         }
-
-        void Start()
-        {
-            
-        }
-
     }
 
 }

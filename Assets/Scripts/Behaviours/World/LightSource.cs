@@ -14,7 +14,7 @@ namespace SanAndreasUnity.Behaviours.World
         {
             var go = Instantiate(Cell.Instance.lightSourcePrefab, parent);
             go.transform.localPosition = lightInfo.Position;
-            go.transform.localScale = Vector3.one * lightInfo.CoronaSize * Cell.Instance.lightScaleMultiplier;
+            go.transform.localScale = Cell.Instance.lightScaleMultiplier * lightInfo.CoronaSize * Vector3.one;
 
             var lightSource = go.GetComponentOrThrow<LightSource>();
             lightSource.LightInfo = lightInfo;

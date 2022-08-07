@@ -343,10 +343,10 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
                 return true;
 
             var pedAI = ped.GetComponent<PedAI>();
-            if (pedAI != null && pedAI.CurrentState is FollowState followState && followState.LeaderPed == this.LeaderPed)
-                return true;
 
-            return false;
+            return pedAI != null 
+                && pedAI.CurrentState is FollowState followState 
+                && followState.LeaderPed == this.LeaderPed;
         }
 
         public bool IsFarAwayFromLeader()

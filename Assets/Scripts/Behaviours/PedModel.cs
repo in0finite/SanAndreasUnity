@@ -398,7 +398,7 @@ namespace SanAndreasUnity.Behaviours
 				if (c != null && c.attachedRigidbody != null)
 				{
 					c.attachedRigidbody.AddForceAtPosition(
-						damageInfo.hitDirection * damageInfo.amount.SqrtOrZero() * PedManager.Instance.ragdollDamageForce,
+						damageInfo.amount.SqrtOrZero() * PedManager.Instance.ragdollDamageForce * damageInfo.hitDirection,
 						damageInfo.hitPoint,
 						ForceMode.Impulse);
 				}
@@ -463,8 +463,7 @@ namespace SanAndreasUnity.Behaviours
 
 		public void ResetFrameState (Transform frameTransform)
 		{
-			Frame frame = frameTransform.GetComponent<Frame> ();
-			if (null == frame)
+			if (!frameTransform.TryGetComponent<Frame>(out var frame))
 				return;
 
 			var frameData = m_originalFrameDatas.FirstOrDefault( f => f.frame == frame );

@@ -17,7 +17,7 @@ namespace SanAndreasUnity.Editor
             this.position = new Rect(this.position.center, new Vector2(400, 500));
         }
 
-        [MenuItem(EditorCore.MenuName + "/" + "Asset exporter")]
+        [MenuItem(EditorCore.MenuName + "/Asset exporter")]
         static void Init()
         {
             var window = GetWindow<AssetExporterWindow>();

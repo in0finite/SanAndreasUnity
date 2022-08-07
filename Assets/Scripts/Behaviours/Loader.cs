@@ -525,12 +525,6 @@ namespace SanAndreasUnity.Behaviours
 			return Mathf.Clamp01 (estimatedTimePassed / m_totalEstimatedLoadingTime);
 		}
 
-
-        private void Update()
-        {
-			
-        }
-
         private void OnGUI()
         {
             if (HasLoaded)

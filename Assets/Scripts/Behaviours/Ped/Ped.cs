@@ -289,8 +289,7 @@ namespace SanAndreasUnity.Behaviours
 			if (this.IsInVehicle)
 				return;
 
-			this.transform.position = position;
-			this.transform.rotation = rotation;
+			this.transform.SetPositionAndRotation(position, rotation);
 			this.Heading = rotation.TransformDirection(Vector3.forward);
 
 			this.FindGround (parameters);

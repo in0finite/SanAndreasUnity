@@ -374,8 +374,8 @@ namespace SanAndreasUnity.UI {
 
 			// move focused position
 
-			this.m_focusPos += new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw("Vertical")) 
-				* 100 * Time.deltaTime / this.zoomLevel;
+			this.m_focusPos += 100 * Time.deltaTime
+				* new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw("Vertical")) / this.zoomLevel;
 
 			this.ClampFocusPos ();
 

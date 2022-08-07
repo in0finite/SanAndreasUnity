@@ -81,8 +81,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
                 var scale = front ? Definition.WheelScaleFront : Definition.WheelScaleRear;
 
-                var mf = wheel.Child.GetComponent<MeshFilter>();
-                if (mf != null)
+                if (wheel.Child.TryGetComponent<MeshFilter>(out var mf))
                 {
                     var size = mf.sharedMesh.bounds.size.y;
                     wheel.Child.localScale = Vector3.one * scale / size;

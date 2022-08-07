@@ -82,10 +82,6 @@ namespace SanAndreasUnity.Behaviours {
 			Utilities.F.SendMessageToObjectsOfType<MonoBehaviour>("OnSceneChanged", new SceneChangedMessage() {s1 = s1, s2 = s2});
 		}
 
-		void Start () {
-			
-		}
-		
 		void Update () {
 
 

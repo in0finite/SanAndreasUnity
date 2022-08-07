@@ -248,8 +248,7 @@ namespace SanAndreasUnity.Behaviours.World
                 }
                 else if (face.Vertices.Length == 3)
                 {
-                    var boxCollider = go.GetComponent<BoxCollider>();
-                    if (boxCollider != null)
+                    if (go.TryGetComponent<BoxCollider>(out var boxCollider))
                         F.DestroyEvenInEditMode(boxCollider);
 
                     meshCollider = go.GetOrAddComponent<MeshCollider>();
