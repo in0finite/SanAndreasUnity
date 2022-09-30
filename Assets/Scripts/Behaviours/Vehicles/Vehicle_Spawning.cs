@@ -544,7 +544,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             */
             
 
-            gameObject.SetLayerRecursive(Layer);
+            UGameCore.Utilities.GameObjectExtensions.SetLayerRecursive(gameObject, Layer);
 
             SetupHighDetailMesh();
 
