@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using SanAndreasUnity.Behaviours.World;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using SanAndreasUnity.Behaviours;
 using System.Linq;
 

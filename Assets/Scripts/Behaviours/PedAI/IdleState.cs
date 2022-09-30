@@ -1,5 +1,5 @@
 using SanAndreasUnity.Importing.Items.Definitions;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Behaviours.Peds.AI
 {

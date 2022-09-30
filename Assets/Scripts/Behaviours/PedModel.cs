@@ -6,7 +6,7 @@ using SanAndreasUnity.Importing.Animation;
 using UnityEngine;
 using System.Linq;
 using SanAndreasUnity.Behaviours.Peds;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Behaviours
 {

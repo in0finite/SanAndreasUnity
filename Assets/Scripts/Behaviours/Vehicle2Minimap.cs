@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using SanAndreasUnity.UI;
 using SanAndreasUnity.Behaviours.Vehicles;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Behaviours
 {

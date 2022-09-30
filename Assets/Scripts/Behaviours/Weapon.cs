@@ -2,7 +2,7 @@
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Weapons;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using SanAndreasUnity.Behaviours.Weapons;
 using UnityEngine;
 using System.Linq;

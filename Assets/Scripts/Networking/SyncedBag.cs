@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Mirror;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Net

@@ -5,7 +5,7 @@ using UnityEngine;
 using SanAndreasUnity.UI;
 using System.Linq;
 using System;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Editor
 {

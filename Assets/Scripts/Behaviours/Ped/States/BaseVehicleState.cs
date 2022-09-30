@@ -1,6 +1,6 @@
 using Mirror;
 using UnityEngine;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using SanAndreasUnity.Behaviours.Vehicles;
 
 namespace SanAndreasUnity.Behaviours.Peds.States

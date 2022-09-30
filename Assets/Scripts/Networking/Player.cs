@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using SanAndreasUnity.Behaviours;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using System.Linq;
 using System.Text;
 

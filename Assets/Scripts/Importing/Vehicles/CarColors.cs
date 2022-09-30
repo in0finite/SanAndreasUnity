@@ -2,7 +2,7 @@
 using SanAndreasUnity.Importing.Items.Definitions;
 using System.Collections.Generic;
 using System.Linq;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Importing.Vehicles

@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Linq;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.World;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.UI {
 

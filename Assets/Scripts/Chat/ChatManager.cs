@@ -2,7 +2,7 @@
 using System.Text;
 using UnityEngine;
 using SanAndreasUnity.Net;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Chat
 {

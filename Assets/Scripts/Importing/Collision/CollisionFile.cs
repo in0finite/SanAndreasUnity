@@ -1,5 +1,5 @@
 ﻿using SanAndreasUnity.Importing.Archive;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;

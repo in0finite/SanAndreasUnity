@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using SanAndreasUnity.UI;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Weapons;
 using SanAndreasUnity.Behaviours.Vehicles;

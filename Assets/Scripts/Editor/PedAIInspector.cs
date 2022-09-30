@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using SanAndreasUnity.Behaviours.Peds.AI;
 using SanAndreasUnity.Importing.Paths;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEditor;
 using UnityEngine;
 

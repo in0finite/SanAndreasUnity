@@ -6,7 +6,7 @@ using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Vehicles;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Net

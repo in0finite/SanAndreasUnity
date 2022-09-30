@@ -6,7 +6,7 @@ using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Vehicles;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.UI {
 

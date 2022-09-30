@@ -1,7 +1,7 @@
 ﻿using SanAndreasUnity.Importing.Paths;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Net;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Behaviours.Peds.AI;

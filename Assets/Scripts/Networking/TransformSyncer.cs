@@ -1,6 +1,6 @@
 using UnityEngine;
 using Mirror;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using System.Collections.Generic;
 
 namespace SanAndreasUnity.Net

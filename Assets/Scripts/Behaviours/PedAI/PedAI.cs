@@ -4,7 +4,7 @@ using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Paths;
 using UnityEngine;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours.Peds.AI

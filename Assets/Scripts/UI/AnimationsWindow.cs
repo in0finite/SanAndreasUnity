@@ -2,7 +2,7 @@
 using UnityEngine;
 using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Behaviours;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using System.Linq;
 
 namespace SanAndreasUnity.UI {

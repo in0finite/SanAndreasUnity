@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using UnityEditor;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine.AI;
 using SanAndreasUnity.Behaviours.World;
 using SanAndreasUnity.Behaviours;

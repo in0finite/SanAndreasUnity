@@ -3,7 +3,7 @@ using SanAndreasUnity.Behaviours;
 using SanAndreasUnity.Behaviours.Peds;
 using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.UI;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Settings

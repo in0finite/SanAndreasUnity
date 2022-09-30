@@ -6,7 +6,7 @@ using SanAndreasUnity.Importing.RenderWareStream;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 using Profiler = UnityEngine.Profiling.Profiler;
 

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using SanAndreasUnity.Behaviours.World;
 using System.Collections;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEditor.SceneManagement;
 using SanAndreasUnity.Behaviours;
 

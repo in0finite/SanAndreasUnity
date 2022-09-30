@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using SanAndreasUnity.Importing.Conversion;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Importing.RenderWareStream
 {

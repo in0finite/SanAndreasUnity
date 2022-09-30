@@ -2,7 +2,7 @@
 using System.Linq;
 using SanAndreasUnity.Behaviours.Audio;
 using SanAndreasUnity.Net;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.Vehicles

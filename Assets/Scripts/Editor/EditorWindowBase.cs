@@ -1,4 +1,4 @@
-﻿using SanAndreasUnity.Utilities;
+﻿using UGameCore.Utilities;
 using UnityEditor;
 
 namespace SanAndreasUnity.Editor

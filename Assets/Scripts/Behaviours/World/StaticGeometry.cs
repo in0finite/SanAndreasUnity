@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Importing.RenderWareStream;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Geometry = SanAndreasUnity.Importing.Conversion.Geometry;

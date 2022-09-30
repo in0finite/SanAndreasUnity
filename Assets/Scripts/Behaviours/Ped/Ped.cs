@@ -5,7 +5,7 @@ using System.Collections;
 using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Net;

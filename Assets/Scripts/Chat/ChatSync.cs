@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Mirror;
 using SanAndreasUnity.Net;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Chat
 {

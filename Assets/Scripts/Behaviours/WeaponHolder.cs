@@ -3,7 +3,7 @@ using UnityEngine;
 using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Importing.Weapons;
 using System.Linq;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours {

@@ -1,6 +1,6 @@
 using SanAndreasUnity.Behaviours.Peds.AI;
 using UnityEngine;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using SanAndreasUnity.Importing.Weapons;
 using SanAndreasUnity.Importing.Animation;
 using SanAndreasUnity.Behaviours.Weapons;

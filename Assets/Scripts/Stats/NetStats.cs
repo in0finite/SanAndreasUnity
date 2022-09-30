@@ -4,7 +4,7 @@ using Mirror;
 using SanAndreasUnity.Behaviours.Peds;
 using SanAndreasUnity.Net;
 using System;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Stats
 {

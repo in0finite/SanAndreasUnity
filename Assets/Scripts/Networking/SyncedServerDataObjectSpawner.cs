@@ -1,4 +1,4 @@
-﻿using SanAndreasUnity.Utilities;
+﻿using UGameCore.Utilities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

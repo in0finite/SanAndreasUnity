@@ -1,7 +1,7 @@
 using SanAndreasUnity.Behaviours.Peds.States;
 using SanAndreasUnity.Importing.Items.Definitions;
 using SanAndreasUnity.Importing.Paths;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
 

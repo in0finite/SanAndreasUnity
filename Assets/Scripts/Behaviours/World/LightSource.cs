@@ -1,5 +1,5 @@
 ﻿using SanAndreasUnity.Importing.RenderWareStream;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World

@@ -1,6 +1,6 @@
 ﻿using Mirror;
 using SanAndreasUnity.Behaviours.Vehicles;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Net

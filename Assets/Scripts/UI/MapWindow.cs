@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using SanAndreasUnity.Behaviours;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using System.Linq;
 using SanAndreasUnity.Importing.Paths;
 using UnityEngine.AI;

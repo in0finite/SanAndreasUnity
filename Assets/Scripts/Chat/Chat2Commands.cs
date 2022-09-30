@@ -1,7 +1,7 @@
 ﻿using System;
 using SanAndreasUnity.Commands;
 using SanAndreasUnity.Net;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.Chat

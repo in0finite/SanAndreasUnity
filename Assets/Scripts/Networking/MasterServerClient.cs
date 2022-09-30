@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;

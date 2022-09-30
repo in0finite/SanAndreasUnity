@@ -5,7 +5,7 @@ using SanAndreasUnity.Importing.Collision;
 using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Importing.Items;
 using SanAndreasUnity.Importing.Vehicles;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using SanAndreasUnity.Behaviours.World;
 using UnityEngine;
 using System.Collections;

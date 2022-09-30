@@ -1,5 +1,5 @@
 ﻿using SanAndreasUnity.Importing.Conversion;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;

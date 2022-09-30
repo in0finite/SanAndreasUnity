@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SanAndreasUnity.Importing.GXT;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 
 namespace SanAndreasUnity.UI

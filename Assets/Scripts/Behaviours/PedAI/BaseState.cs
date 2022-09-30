@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SanAndreasUnity.Behaviours.Vehicles;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Behaviours.Peds.AI
 {

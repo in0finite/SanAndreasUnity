@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using SanAndreasUnity.UI;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Behaviours
 {

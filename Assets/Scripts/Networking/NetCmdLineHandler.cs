@@ -2,7 +2,7 @@
 using System.Linq;
 using SanAndreasUnity.GameModes;
 using UnityEngine;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Net
 {

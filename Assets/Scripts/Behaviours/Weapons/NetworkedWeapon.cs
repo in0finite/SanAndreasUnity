@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using Mirror;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 
 namespace SanAndreasUnity.Behaviours.Weapons
 {

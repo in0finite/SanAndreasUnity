@@ -2,7 +2,7 @@
 using UnityEngine;
 using Mirror;
 using System.Linq;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using SanAndreasUnity.Net;
 
 namespace SanAndreasUnity.Behaviours

@@ -1,7 +1,7 @@
 ﻿using SanAndreasUnity.Behaviours.Vehicles;
 using SanAndreasUnity.Importing.Conversion;
 using SanAndreasUnity.Net;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using UnityEngine;
 using UnityStandardAssets.Effects;
 using Object = UnityEngine.Object;

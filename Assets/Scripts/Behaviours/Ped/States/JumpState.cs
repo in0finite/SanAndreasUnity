@@ -1,5 +1,5 @@
 using UnityEngine;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using SanAndreasUnity.Importing.Animation;
 using System.Collections;
 

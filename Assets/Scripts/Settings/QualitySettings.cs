@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using SanAndreasUnity.UI;
-using SanAndreasUnity.Utilities;
+using UGameCore.Utilities;
 using Quality = UnityEngine.QualitySettings;
 
 namespace SanAndreasUnity.Settings {
