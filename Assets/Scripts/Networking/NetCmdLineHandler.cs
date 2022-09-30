@@ -19,21 +19,17 @@ namespace SanAndreasUnity.Net
             for (int i = 0; i < this.numFramesToWait; i++)
                 yield return null;
 
-            ushort portNum = (ushort)NetManager.defaultListenPortNumber;
-            CmdLineUtils.GetUshortArgument("portNum", ref portNum);
+            ushort portNum = CmdLineUtils.GetUshortArgumentOrDefault(
+                "portNum", (ushort)NetManager.defaultListenPortNumber);
 
-            string sceneName = "Main";
-            CmdLineUtils.GetArgument("scene", ref sceneName);
+            string sceneName = CmdLineUtils.GetStringArgumentOrDefault("scene", "Main");
 
-            ushort maxNumPlayers = (ushort)NetManager.maxNumPlayers;
-            CmdLineUtils.GetUshortArgument("maxNumPlayers", ref maxNumPlayers);
+            ushort maxNumPlayers = CmdLineUtils.GetUshortArgumentOrDefault(
+                "maxNumPlayers", (ushort)NetManager.maxNumPlayers);
 
-            string serverIp = "127.0.0.1";
-            CmdLineUtils.GetArgument("serverIp", ref serverIp);
+            string serverIp = CmdLineUtils.GetStringArgumentOrDefault("serverIp", "127.0.0.1");
 
-            string gameModeName = null;
-            CmdLineUtils.GetArgument("gameMode", ref gameModeName);
-            if (!string.IsNullOrWhiteSpace(gameModeName))
+            if (CmdLineUtils.TryGetStringArgument("gameMode", out string gameModeName))
             {
                 var gameModeInfo = GameModeManager.Instance.GameModes.FirstOrDefault(gm => gm.Name == gameModeName);
                 if (gameModeInfo != null)
