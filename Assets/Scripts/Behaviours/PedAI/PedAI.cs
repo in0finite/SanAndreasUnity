@@ -131,7 +131,7 @@ namespace SanAndreasUnity.Behaviours.Peds.AI
         public static Vector3 GetMoveDestinationBasedOnTargetNode(PathNode targetNode)
         {
             Vector2 offset = Random.insideUnitCircle * targetNode.PathWidth / 2f * 0.9f;
-            return targetNode.Position + offset.ToVector3XZ();
+            return targetNode.Position + offset.ToVec3XZ();
         }
 
         public static void FindClosestWalkableNode(PathMovementData pathMovementData, Vector3 position, float radius = 200f)

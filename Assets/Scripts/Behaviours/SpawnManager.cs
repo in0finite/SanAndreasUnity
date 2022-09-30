@@ -94,7 +94,7 @@ namespace SanAndreasUnity.Behaviours
                 transformData = new TransformDataStruct(focusPos);
             else
                 transformData = new TransformDataStruct(
-                    focusPos.position + Random.insideUnitCircle.ToVector3XZ() * 15f,
+                    focusPos.position + Random.insideUnitCircle.ToVec3XZ() * 15f,
                     Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
 
             return true;
