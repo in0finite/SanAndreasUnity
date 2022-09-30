@@ -145,7 +145,7 @@ namespace SanAndreasUnity.Editor
                     yield break;
                 }
 
-                LoadingThread.Singleton.BackgroundJobRunner.EnsureBackgroundThreadStarted();
+                Importing.LoadingThread.Singleton.BackgroundJobRunner.EnsureBackgroundThreadStarted();
                 
                 if (!Loader.HasLoaded)
                 {
@@ -254,7 +254,7 @@ namespace SanAndreasUnity.Editor
                 yield return null;
                 yield return null; // let the Editor update after changing day-time, who knows what all is changed
 
-                LoadingThread.Singleton.maxTimePerFrameMs = 500;
+                Importing.LoadingThread.Singleton.maxTimePerFrameMs = 500;
             }
 
             EditorUtilityEx.MarkActiveSceneAsDirty();
@@ -366,7 +366,7 @@ namespace SanAndreasUnity.Editor
 
             for (int i = 0; i < numIterations; i++)
             {
-                long initialNumPendingJobs = LoadingThread.Singleton.BackgroundJobRunner.GetNumPendingJobs();
+                long initialNumPendingJobs = Importing.LoadingThread.Singleton.BackgroundJobRunner.GetNumPendingJobs();
                 long numPendingJobs = initialNumPendingJobs;
 
                 do
@@ -380,11 +380,11 @@ namespace SanAndreasUnity.Editor
                         yield break;
                     }
 
-                    LoadingThread.Singleton.UpdateJobs();
+                    Importing.LoadingThread.Singleton.UpdateJobs();
 
                     System.Threading.Thread.Sleep(5); // don't interact with background thread too often, and also reduce CPU usage
                     
-                    numPendingJobs = LoadingThread.Singleton.BackgroundJobRunner.GetNumPendingJobs();
+                    numPendingJobs = Importing.LoadingThread.Singleton.BackgroundJobRunner.GetNumPendingJobs();
                     initialNumPendingJobs = Math.Max(initialNumPendingJobs, numPendingJobs);
 
                 } while (numPendingJobs > 0);

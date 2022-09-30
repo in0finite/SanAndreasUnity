@@ -16,7 +16,7 @@ using SanAndreasUnity.Importing.GXT;
 namespace SanAndreasUnity.Behaviours
 {
 	
-    public class Loader : Utilities.StartupSingleton<Loader>
+    public class Loader : StartupSingleton<Loader>
     {
 
 		public static bool HasLoaded { get; private set; }

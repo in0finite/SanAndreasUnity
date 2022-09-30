@@ -77,7 +77,7 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = Utilities.GUIUtils.GetCenteredRectPerc (new Vector2 (1.0f, 1.0f));
+			this.windowRect = GUIUtils.GetCenteredRectPerc (new Vector2 (1.0f, 1.0f));
 
 		}
 
@@ -498,7 +498,7 @@ namespace SanAndreasUnity.UI {
 			Rect texCoords = new Rect(visibleMapRect.x / mapTexture.width, visibleMapRect.y / mapTexture.height,
 				visibleMapRect.width / mapTexture.width, visibleMapRect.height / mapTexture.height);
 
-			texCoords = Utilities.F.Clamp01 (texCoords);
+			texCoords = F.Clamp01 (texCoords);
 
 			// adjust display rect
 
@@ -603,7 +603,7 @@ namespace SanAndreasUnity.UI {
 			Vector3 mouseWorldPos;
 			if (this.GetWorldPosUnderMouse (out mouseWorldPos)) {
 				GUILayout.Label ("cursor world pos: " + mouseWorldPos);
-				GUILayout.Label ("Zone: " + Zone.GetZoneName (mouseWorldPos, true), GUILayout.Width(80));
+				GUILayout.Label ("Zone: " + Importing.Zone.GetZoneName (mouseWorldPos, true), GUILayout.Width(80));
 			}
 
 			GUILayout.EndHorizontal ();
@@ -655,7 +655,7 @@ namespace SanAndreasUnity.UI {
 			// draw all zones
 			if (m_drawZones) {
 				
-				foreach (var zone in Zone.AllZones) {
+				foreach (var zone in Importing.Zone.AllZones) {
 					
 					Vector2 min = MiniMap.WorldPosToMapPos (zone.vmin);
 					Vector2 max = MiniMap.WorldPosToMapPos (zone.vmax);

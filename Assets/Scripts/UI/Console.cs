@@ -48,7 +48,7 @@ namespace SanAndreasUnity.UI
 		int m_selectedLogIndex = -1;
 
 		readonly List<Log> m_logs = new List<Log>();
-		readonly Utilities.ConcurrentQueue<Log> m_queuedLogs = new Utilities.ConcurrentQueue<Log>();
+		readonly UGameCore.Utilities.ConcurrentQueue<Log> m_queuedLogs = new UGameCore.Utilities.ConcurrentQueue<Log>();
 
 		readonly Dictionary<LogType, bool> m_logTypeFilters = new Dictionary<LogType, bool>
 		{
@@ -102,7 +102,7 @@ namespace SanAndreasUnity.UI
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = Utilities.GUIUtils.GetCenteredRectPerc( new Vector2(0.9f, 0.8f) );
+			this.windowRect = UGameCore.Utilities.GUIUtils.GetCenteredRectPerc( new Vector2(0.9f, 0.8f) );
 		}
 
 		void Update()
@@ -253,7 +253,7 @@ namespace SanAndreasUnity.UI
 
 			GUILayout.BeginHorizontal ();
 
-			if (Utilities.GUIUtils.ButtonWithCalculatedSize (s_clearLabel))
+			if (UGameCore.Utilities.GUIUtils.ButtonWithCalculatedSize (s_clearLabel))
 			{
 				m_logs.Clear();
 				m_selectedLogIndex = -1;
@@ -278,10 +278,10 @@ namespace SanAndreasUnity.UI
 			DrawLogList();
 			if (this.ShowDetails)
 			{
-				Utilities.GUIUtils.DrawHorizontalLine(2f, 3f, Color.black);
+				UGameCore.Utilities.GUIUtils.DrawHorizontalLine(2f, 3f, Color.black);
 				this.DrawDetails();
 			}
-			Utilities.GUIUtils.DrawHorizontalLine(2f, 3f, Color.black);
+			UGameCore.Utilities.GUIUtils.DrawHorizontalLine(2f, 3f, Color.black);
 			DrawToolbar();
 		}
 

@@ -294,7 +294,7 @@ namespace SanAndreasUnity.UI {
 			// adjust rect
 			float windowWidth = Mathf.Max (Screen.width * 0.7f, 600);
 			float windowHeight = windowWidth * 9f / 16f;
-			this.windowRect = Utilities.GUIUtils.GetCenteredRect (new Vector2 (windowWidth, windowHeight));
+			this.windowRect = GUIUtils.GetCenteredRect (new Vector2 (windowWidth, windowHeight));
 
 			SaveDefaultValues();
 
@@ -350,19 +350,19 @@ namespace SanAndreasUnity.UI {
 		{
 			GUILayout.BeginHorizontal ();
 
-			if (Utilities.GUIUtils.ButtonWithCalculatedSize ("Reset to defaults"))
+			if (GUIUtils.ButtonWithCalculatedSize ("Reset to defaults"))
 				ResetSettingsToDefaults ();
 
 			GUILayout.FlexibleSpace ();
 
 			// display Save button
-			if (Utilities.GUIUtils.ButtonWithCalculatedSize ("Save"))
+			if (GUIUtils.ButtonWithCalculatedSize ("Save"))
 				SaveSettings ();
 
 			GUILayout.Space (5);
 
 			// display Load button
-			if (Utilities.GUIUtils.ButtonWithCalculatedSize ("Load"))
+			if (GUIUtils.ButtonWithCalculatedSize ("Load"))
 				LoadSettings ();
 
 			GUILayout.EndHorizontal ();

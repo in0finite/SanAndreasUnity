@@ -1,6 +1,6 @@
 ﻿using UGameCore.Utilities;
 
-namespace SanAndreasUnity.Behaviours
+namespace SanAndreasUnity.Importing
 {
 	public class LoadingThread : StartupSingleton<LoadingThread>
 	{

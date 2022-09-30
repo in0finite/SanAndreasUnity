@@ -63,7 +63,7 @@ namespace SanAndreasUnity.UI {
 		private	int	windowId = lastWindowId++;
 		public int WindowId { get { return this.windowId; } }
 
-		public	Rect	windowRect = Utilities.GUIUtils.GetCenteredRectPerc(new Vector2(0.5f, 0.5f));
+		public	Rect	windowRect = UGameCore.Utilities.GUIUtils.GetCenteredRectPerc(new Vector2(0.5f, 0.5f));
 		public	Vector2	WindowSize { get { return this.windowRect.size; } }
 
 		public	bool	useScrollView = false;
@@ -91,11 +91,11 @@ namespace SanAndreasUnity.UI {
 		[SerializeField]	private	float	m_spaceAfterContent = 0f;
 		public float SpaceAfterContent { get { return m_spaceAfterContent; } set { m_spaceAfterContent = value; } }
 
-		private Utilities.MenuBarEntry m_pauseMenuEntry;
+		private UGameCore.Utilities.MenuBarEntry m_pauseMenuEntry;
 
 		[SerializeField]	private	bool	m_registerInMainMenuOnStart = false;
 		[SerializeField]	private	int		m_sortPriorityForMainMenu = 0;
-		private Utilities.MenuBarEntry m_mainMenuEntry;
+		private UGameCore.Utilities.MenuBarEntry m_mainMenuEntry;
 
 		private static GameObject s_windowsContainer;
 
@@ -215,7 +215,7 @@ namespace SanAndreasUnity.UI {
 			if (m_hasExitButton) {
 				Color exitButtonColor = Color.Lerp (Color.red, Color.white, 0.0f);
 			//	exitButtonColor.a = 0.7f;
-				if (Utilities.GUIUtils.ButtonWithColor (new Rect (this.windowRect.width - buttonWidth - 2, buttonYOffset, buttonWidth, buttonHeight), 
+				if (UGameCore.Utilities.GUIUtils.ButtonWithColor (new Rect (this.windowRect.width - buttonWidth - 2, buttonYOffset, buttonWidth, buttonHeight), 
 					   "x", exitButtonColor)) {
 					this.IsOpened = false;
 				}

@@ -79,7 +79,7 @@ namespace SanAndreasUnity.Behaviours {
 
 		void OnSceneChangedInternal (Scene s1, Scene s2)
 		{
-			Utilities.F.SendMessageToObjectsOfType<MonoBehaviour>("OnSceneChanged", new SceneChangedMessage() {s1 = s1, s2 = s2});
+			UGameCore.Utilities.F.SendMessageToObjectsOfType<MonoBehaviour>("OnSceneChanged", new SceneChangedMessage() {s1 = s1, s2 = s2});
 		}
 
 		void Start () {

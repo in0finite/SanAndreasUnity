@@ -12,7 +12,7 @@ using UnityEngine.AI;
 
 namespace SanAndreasUnity.Behaviours.World
 {
-    public class Cell : Utilities.SingletonComponent<Cell>
+    public class Cell : UGameCore.Utilities.SingletonComponent<Cell>
     {
 	    private Dictionary<Instance, StaticGeometry> m_insts = new Dictionary<Instance, StaticGeometry>();
 		public IReadOnlyDictionary<Instance, StaticGeometry> StaticGeometries => m_insts;

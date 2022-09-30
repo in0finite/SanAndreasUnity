@@ -37,7 +37,7 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = Utilities.GUIUtils.GetCenteredRect( new Vector2( 500, Screen.height * 0.85f ) );
+			this.windowRect = GUIUtils.GetCenteredRect( new Vector2( 500, Screen.height * 0.85f ) );
 		}
 
 		protected override void OnLoaderFinished()

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SanAndreasUnity.Behaviours.World
 {
-    public class DayTimeManager : Utilities.SingletonComponent<DayTimeManager>
+    public class DayTimeManager : UGameCore.Utilities.SingletonComponent<DayTimeManager>
     {
         public AnimationCurve lightAngleCurve;
         public AnimationCurve lightIntensityCurve;

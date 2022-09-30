@@ -16,10 +16,10 @@ namespace SanAndreasUnity.Stats
         
         void Start()
         {
-            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry(){category = "MISC", getStatsAction = GetStats});
+            UGameCore.Utilities.Stats.RegisterStat(new UGameCore.Utilities.Stats.Entry(){category = "MISC", getStatsAction = GetStats});
         }
 
-        void GetStats(Utilities.Stats.GetStatsContext context)
+        void GetStats(UGameCore.Utilities.Stats.GetStatsContext context)
         {
 
             m_nestingLevel = 0;
@@ -140,7 +140,7 @@ namespace SanAndreasUnity.Stats
                     {
                         var clip = vehicle.RadioAudioSource.clip;
                         texts.AddRange(new string[] { "\tclip time", "\tclip length", "\tclip size" });
-                        objects.AddRange(new object[] { vehicle.RadioAudioSource.time, clip.length, (Utilities.F.GetAudioClipSizeInBytes(clip) / 1024.0f) + " KB" });
+                        objects.AddRange(new object[] { vehicle.RadioAudioSource.time, clip.length, (F.GetAudioClipSizeInBytes(clip) / 1024.0f) + " KB" });
                     }
 
 
@@ -218,8 +218,8 @@ namespace SanAndreasUnity.Stats
 
             // loading thread
             sb.Append("loading thread:\n");
-            sb.Append($"\tmax time per frame ms: {LoadingThread.Singleton.maxTimePerFrameMs}\n");
-            AppendStatsForBackgroundJobRunner(sb, LoadingThread.Singleton.BackgroundJobRunner, "\t");
+            sb.Append($"\tmax time per frame ms: {Importing.LoadingThread.Singleton.maxTimePerFrameMs}\n");
+            AppendStatsForBackgroundJobRunner(sb, Importing.LoadingThread.Singleton.BackgroundJobRunner, "\t");
             sb.AppendLine();
 
             // pathfinding manager

@@ -55,7 +55,7 @@ namespace SanAndreasUnity.Settings {
 		{
 			// apply settings
 
-			Camera cam = Utilities.F.FindMainCameraEvenIfDisabled();
+			Camera cam = UGameCore.Utilities.F.FindMainCameraEvenIfDisabled();
 			if (cam != null)
 			{
 				cam.fieldOfView = s_fieldOfView;

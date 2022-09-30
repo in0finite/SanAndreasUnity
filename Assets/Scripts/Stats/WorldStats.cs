@@ -9,10 +9,10 @@ namespace SanAndreasUnity.Stats
     {
         void Start()
         {
-            Utilities.Stats.RegisterStat(new Utilities.Stats.Entry(){ category = "WORLD", getStatsAction = GetStats });
+            UGameCore.Utilities.Stats.RegisterStat(new UGameCore.Utilities.Stats.Entry(){ category = "WORLD", getStatsAction = GetStats });
         }
 
-        void GetStats(Utilities.Stats.GetStatsContext context)
+        void GetStats(UGameCore.Utilities.Stats.GetStatsContext context)
         {
             var sb = context.stringBuilder;
 

@@ -81,7 +81,7 @@ namespace SanAndreasUnity.Behaviours.World
 
         void OnDrawGizmosSelected()
         {
-            Utilities.F.HandlesDrawText(this.transform.position, this.name, Color.yellow);
+            F.HandlesDrawText(this.transform.position, this.name, Color.yellow);
         }
 
         protected override void OnLoad()

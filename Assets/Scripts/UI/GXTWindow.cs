@@ -36,7 +36,7 @@ namespace SanAndreasUnity.UI
 		void Start()
 		{
 			this.RegisterButtonInPauseMenu();
-			this.windowRect = Utilities.GUIUtils.GetCenteredRect(new Vector2(WindowWidth, WindowHeight));
+			this.windowRect = GUIUtils.GetCenteredRect(new Vector2(WindowWidth, WindowHeight));
 			SetUpGxtTextAreaStyle();
 
 		}

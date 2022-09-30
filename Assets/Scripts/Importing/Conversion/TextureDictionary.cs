@@ -282,7 +282,7 @@ namespace SanAndreasUnity.Importing.Conversion
 			TextureDictionary loadedTxd = null;
             bool bDontLoad = DontLoadTextures;
 
-			Behaviours.LoadingThread.RegisterJob (new UGameCore.Utilities.BackgroundJobRunner.Job<RenderWareStream.TextureDictionary> () {
+			LoadingThread.RegisterJob (new UGameCore.Utilities.BackgroundJobRunner.Job<RenderWareStream.TextureDictionary> () {
                 priority = loadPriority,
 				action = () => {
 					return bDontLoad ? null : ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd");

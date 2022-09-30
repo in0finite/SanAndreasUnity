@@ -26,7 +26,7 @@ namespace SanAndreasUnity.UI {
 			// adjust rect
 			float width = 240;
 			float height = 210;
-			if (Utilities.F.ScreenHasHighDensity)
+			if (UGameCore.Utilities.F.ScreenHasHighDensity)
 			{
 				width = Screen.width * 0.375f;
 				height = Screen.height * 0.4f;
@@ -44,7 +44,7 @@ namespace SanAndreasUnity.UI {
 				GUILayout.Label ("Pos: " + Ped.InstancePos);
 			}
 
-			if (Utilities.NetUtils.IsServer)
+			if (UGameCore.Utilities.NetUtils.IsServer)
 				DisplayServerGui();
 			else if (Net.Player.Local != null)
 				DisplayClientOnlyGui();

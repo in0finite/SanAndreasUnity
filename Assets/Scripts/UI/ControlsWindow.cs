@@ -21,7 +21,7 @@ namespace SanAndreasUnity.UI {
 			this.RegisterButtonInPauseMenu ();
 
 			// adjust rect
-			this.windowRect = Utilities.GUIUtils.GetCenteredRect(new Vector2(400, 450));
+			this.windowRect = UGameCore.Utilities.GUIUtils.GetCenteredRect(new Vector2(400, 450));
 		}
 
 
@@ -54,7 +54,7 @@ namespace SanAndreasUnity.UI {
 			"Left/right while crouch aiming - Roll\n\n" +
 			"E/Q - Switch weapon\n\n" +
 			"G while aiming - Recruit peds to follow you\n\n" +
-			(Utilities.NetUtils.IsServer ?
+			(UGameCore.Utilities.NetUtils.IsServer ?
 			("T - Fly mode\n\n" +
 			"R - Fly through mode\n\n") : "") +
 			"Enter - Enter vehicles\n\n" +

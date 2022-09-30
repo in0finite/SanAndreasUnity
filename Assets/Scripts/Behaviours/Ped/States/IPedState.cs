@@ -4,7 +4,7 @@ using UnityEngine;
 namespace SanAndreasUnity.Behaviours.Peds.States
 {
 
-	public interface IPedState : Utilities.IState {
+	public interface IPedState : IState {
 
 		/// <summary> Called at the end of Update(). </summary>
 		void PostUpdateState ();

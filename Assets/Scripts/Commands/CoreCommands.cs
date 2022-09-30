@@ -96,11 +96,11 @@ namespace SanAndreasUnity.Commands
                 if (numWords > 1)
                     category = words[1].ToLowerInvariant();
 
-                var entries = Utilities.Stats.Entries;
+                var entries = UGameCore.Utilities.Stats.Entries;
                 if (category != null)
                     entries = entries.Where(_ => _.Key.ToLowerInvariant() == category);
 
-                var statsContext = new Utilities.Stats.GetStatsContext();
+                var statsContext = new UGameCore.Utilities.Stats.GetStatsContext();
 
                 foreach (var entriesWithCategory in entries)
                 {

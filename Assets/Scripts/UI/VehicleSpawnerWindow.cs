@@ -51,7 +51,7 @@ namespace SanAndreasUnity.UI {
 
 			//this.windowRect = Utilities.GUIUtils.GetCornerRect (SanAndreasUnity.Utilities.ScreenCorner.TopRight, 
 			//	new Vector2 (windowWidth, windowHeight), new Vector2 (20, 20));
-			this.windowRect = Utilities.GUIUtils.GetCenteredRectPerc( new Vector2(0.4f, 0.8f) );
+			this.windowRect = GUIUtils.GetCenteredRectPerc( new Vector2(0.4f, 0.8f) );
 
 		}
 

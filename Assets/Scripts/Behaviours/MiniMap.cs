@@ -56,7 +56,7 @@ namespace SanAndreasUnity.Behaviours
                 if (Time.timeAsDouble - _timeWhenRetrievedZoneName > 2f)
                 {
                     _timeWhenRetrievedZoneName = Time.timeAsDouble;
-                    _lastZoneName = Zone.GetZoneName(this.FocusPos);
+                    _lastZoneName = Importing.Zone.GetZoneName(this.FocusPos);
                 }
 
                 return _lastZoneName;
