@@ -1,9 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-
-namespace SanAndreasUnity.Utilities
+﻿namespace SanAndreasUnity.Importing
 {
 
     public class ZoneHelpers
@@ -392,14 +387,14 @@ namespace SanAndreasUnity.Utilities
 
     public class Zone
     {
-        public Vector3 vmin, vmax;
+        public UnityEngine.Vector3 vmin, vmax;
 
-        public Vector2 minPos2D { get { return new Vector2(this.vmin.x, this.vmin.z); } }
-        public Vector2 maxPos2D { get { return new Vector2(this.vmax.x, this.vmax.z); } }
-        public Vector3 centerPos { get { return (this.vmin + this.vmax) * 0.5f; } }
+        public UnityEngine.Vector2 minPos2D { get { return new UnityEngine.Vector2(this.vmin.x, this.vmin.z); } }
+        public UnityEngine.Vector2 maxPos2D { get { return new UnityEngine.Vector2(this.vmax.x, this.vmax.z); } }
+        public UnityEngine.Vector3 centerPos { get { return (this.vmin + this.vmax) * 0.5f; } }
 
-        public float volume { get { Vector3 size = this.vmax - this.vmin; return size.x * size.y * size.z; } }
-        public float squaredSize { get { Vector2 size = this.maxPos2D - this.minPos2D; return size.x * size.y; } }
+        public float volume { get { UnityEngine.Vector3 size = this.vmax - this.vmin; return size.x * size.y * size.z; } }
+        public float squaredSize { get { UnityEngine.Vector2 size = this.maxPos2D - this.minPos2D; return size.x * size.y; } }
 
         public string name;
 
@@ -410,12 +405,12 @@ namespace SanAndreasUnity.Utilities
 
         public Zone(int x1, int z1, int y1, int x2, int z2, int y2, string n)
         {
-            vmin = new Vector3(x1, y1, z1);
-            vmax = new Vector3(x2, y2, z2);
+            vmin = new UnityEngine.Vector3(x1, y1, z1);
+            vmax = new UnityEngine.Vector3(x2, y2, z2);
             name = n;
         }
 
-        public static string GetZoneName(Zone[] zones, Vector3 worldPos)
+        public static string GetZoneName(Zone[] zones, UnityEngine.Vector3 worldPos)
         {
             float minVolume = float.PositiveInfinity;
             Zone targetZone = null;
@@ -440,7 +435,7 @@ namespace SanAndreasUnity.Utilities
                 return defaultZoneName;
         }
 
-        public static string GetZoneName(Zone[] zones, Vector2 worldPos2D)
+        public static string GetZoneName(Zone[] zones, UnityEngine.Vector2 worldPos2D)
         {
             float minSquaredSize = float.PositiveInfinity;
             Zone targetZone = null;
@@ -465,24 +460,24 @@ namespace SanAndreasUnity.Utilities
                 return defaultZoneName;
         }
 
-        public static string GetZoneName(Vector3 worldPos, bool use2DPos = false)
+        public static string GetZoneName(UnityEngine.Vector3 worldPos, bool use2DPos = false)
         {
             if (use2DPos)
                 return GetZoneName(worldPos.ToVec2WithXAndZ());
             return GetZoneName(ZoneHelpers.zoneInfoList, worldPos);
         }
 
-        public static string GetZoneName(Vector2 worldPos2D)
+        public static string GetZoneName(UnityEngine.Vector2 worldPos2D)
         {
             return GetZoneName(ZoneHelpers.zoneInfoList, worldPos2D);
         }
 
-        public static bool IsInside(Vector3 p, Vector3 vmin, Vector3 vmax)
+        public static bool IsInside(UnityEngine.Vector3 p, UnityEngine.Vector3 vmin, UnityEngine.Vector3 vmax)
         {
             return p.x >= vmin.x && p.x <= vmax.x && p.y >= vmin.y && p.y <= vmax.y && p.z >= vmin.z && p.z <= vmax.z;
         }
 
-        public static bool IsInside(Vector2 pos, Zone zone)
+        public static bool IsInside(UnityEngine.Vector2 pos, Zone zone)
         {
             return pos.x >= zone.vmin.x && pos.x <= zone.vmax.x && pos.y >= zone.vmin.z && pos.y <= zone.vmax.z;
         }
