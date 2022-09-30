@@ -10,3 +10,6 @@
 [submodule "Assets/NetworkDiscoveryUnity"]
 	path = Assets/NetworkDiscoveryUnity
 	url = https://github.com/in0finite/NetworkDiscoveryUnity
+[submodule "Assets/UGameCoreUtilities"]
+	path = Assets/UGameCoreUtilities
+	url = https://github.com/in0finite/UGameCoreUtilities
