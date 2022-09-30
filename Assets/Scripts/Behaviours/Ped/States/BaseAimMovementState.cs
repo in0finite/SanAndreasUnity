@@ -497,7 +497,7 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 		//	Quaternion convertRot = Quaternion.Euler (WeaponsManager.Instance.AIMWITHARM_upperArmEndRotationEulers);
 
 			// head rotation
-			Vector3 clampedAimDir = F.ClampDirection (aimDir, player.transform.forward, WeaponsManager.Instance.AIMWITHARM_maxHeadRotationAngle);
+			Vector3 clampedAimDir = MathUtils.ClampDirection (aimDir, player.transform.forward, WeaponsManager.Instance.AIMWITHARM_maxHeadRotationAngle);
 			Quaternion headRot = isAimingBack ? player.transform.rotation : Quaternion.LookRotation (clampedAimDir);
 		//	headRot = Quaternion.Lerp( model.Head.rotation, headRot, 0.3f);
 

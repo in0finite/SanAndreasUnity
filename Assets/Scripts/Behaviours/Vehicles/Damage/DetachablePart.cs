@@ -50,7 +50,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 initialLocalRot = tr.localRotation;
             }
 
-            parentBody = (Rigidbody)F.GetTopmostParentComponent<Rigidbody>(tr);
+            parentBody = (Rigidbody)tr.GetTopmostParentComponent<Rigidbody>();
             initialPos = tr.localPosition;
         }
 

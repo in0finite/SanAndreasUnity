@@ -91,9 +91,20 @@ namespace SanAndreasUnity.Importing.Vehicles
 
                     _sParsers.Add(attrib.Value, (s, instance) =>
                     {
-                        set.Invoke(instance, new object[] { prop.PropertyType != typeof(string) ? Convert.ChangeType(attrib.IsHexNumber ? s.FromHex(prop.PropertyType, CultureInfo.InvariantCulture) : s, prop.PropertyType, CultureInfo.InvariantCulture) : s });
+                        set.Invoke(instance, new object[] { prop.PropertyType != typeof(string) ? Convert.ChangeType(attrib.IsHexNumber ? FromHex(s, prop.PropertyType, CultureInfo.InvariantCulture) : s, prop.PropertyType, CultureInfo.InvariantCulture) : s });
                     });
                 }
+            }
+
+            private static object FromHex(string hexString, Type type, CultureInfo info)
+            {
+                var argTypes = new[] { typeof(string), typeof(NumberStyles), typeof(IFormatProvider) };
+
+                var convert = type.GetMethod("Parse",
+                                BindingFlags.Static | BindingFlags.Public,
+                                null, argTypes, null);
+
+                return convert.Invoke(null, new object[] { hexString, NumberStyles.HexNumber, info });
             }
 
             protected Entry(string line)

@@ -498,7 +498,7 @@ namespace SanAndreasUnity.UI {
 			Rect texCoords = new Rect(visibleMapRect.x / mapTexture.width, visibleMapRect.y / mapTexture.height,
 				visibleMapRect.width / mapTexture.width, visibleMapRect.height / mapTexture.height);
 
-			texCoords = F.Clamp01 (texCoords);
+			texCoords = MathUtils.Clamp01 (texCoords);
 
 			// adjust display rect
 
@@ -690,7 +690,7 @@ namespace SanAndreasUnity.UI {
                 foreach (PathNodeId nodeId in m_pathToWaypoint)
                 {
 					Vector2 pos = MiniMap.WorldPosToMapPos(NodeReader.GetNodeById(nodeId).Position);
-					if (GetMapItemRenderRect(F.CreateRect(pos, Vector2.one * 2), out Rect renderRect))
+					if (GetMapItemRenderRect(MathUtils.CreateRect(pos, Vector2.one * 2), out Rect renderRect))
 						GUIUtils.DrawRect(renderRect, Color.yellow);
                 }
             }
@@ -701,7 +701,7 @@ namespace SanAndreasUnity.UI {
 				foreach (Vector3 worldPos in m_navMeshPathToWaypoint)
 				{
 					Vector2 pos = MiniMap.WorldPosToMapPos(worldPos);
-					if (GetMapItemRenderRect(F.CreateRect(pos, Vector2.one * 2), out Rect renderRect))
+					if (GetMapItemRenderRect(MathUtils.CreateRect(pos, Vector2.one * 2), out Rect renderRect))
 						GUIUtils.DrawRect(renderRect, Color.yellow);
 				}
 			}
@@ -782,7 +782,7 @@ namespace SanAndreasUnity.UI {
 
 		public	void	DrawItemOnMap( Texture2D itemTexture, Vector2 mapPos, int itemSize ) {
 
-			this.DrawItemOnMap (itemTexture, F.CreateRect (mapPos, Vector2.one * itemSize));
+			this.DrawItemOnMap (itemTexture, MathUtils.CreateRect (mapPos, Vector2.one * itemSize));
 
 		}
 
@@ -798,7 +798,7 @@ namespace SanAndreasUnity.UI {
 
 			Vector2 mapPos = MiniMap.WorldPosToMapPos (worldPos);
 
-			this.DrawItemOnMapRotated (itemTexture, F.CreateRect (mapPos, Vector2.one * itemSize), worldDir);
+			this.DrawItemOnMapRotated (itemTexture, MathUtils.CreateRect (mapPos, Vector2.one * itemSize), worldDir);
 
 		}
 
