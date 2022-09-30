@@ -517,7 +517,7 @@ namespace SanAndreasUnity.Importing.Conversion
         }
 
 
-		private static Utilities.AsyncLoader<string, GeometryParts> s_asyncLoader = new Utilities.AsyncLoader<string, GeometryParts> ();
+		private static AsyncLoader<string, GeometryParts> s_asyncLoader = new AsyncLoader<string, GeometryParts> ();
 
 		public static int NumGeometryPartsLoaded { get { return s_asyncLoader.GetNumObjectsLoaded (); } }
 

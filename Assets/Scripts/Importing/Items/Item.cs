@@ -9,7 +9,7 @@ namespace SanAndreasUnity.Importing.Items
 {
     public static class Item
     {
-        private static readonly List<Zone> _zones = new List<Zone>();
+        private static readonly List<Placements.Zone> _zones = new List<Placements.Zone>();
 
         private static readonly List<EntranceExit> _enexes = new List<EntranceExit>();
         public static IReadOnlyList<EntranceExit> Enexes => _enexes;
@@ -79,7 +79,7 @@ namespace SanAndreasUnity.Importing.Items
         {
             var file = new ItemFile<Placement>(ArchiveManager.GetCaseSensitiveFilePath(Path.GetFileName(path)));
             
-            foreach (var zone in file.GetSection<Zone>("zone"))
+            foreach (var zone in file.GetSection<Placements.Zone>("zone"))
             {
                 _zones.Add(zone);
             }

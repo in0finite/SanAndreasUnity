@@ -52,7 +52,7 @@ namespace SanAndreasUnity.Importing.Collision
         private static readonly Dictionary<String, CollisionFileInfo> _sModelNameDict
             = new Dictionary<string, CollisionFileInfo>(StringComparer.InvariantCultureIgnoreCase);
 
-		private static readonly Utilities.AsyncLoader<String, CollisionFile> s_asyncLoader = 
+		private static readonly AsyncLoader<String, CollisionFile> s_asyncLoader = 
 			new AsyncLoader<String, CollisionFile> (StringComparer.InvariantCultureIgnoreCase);
 
 

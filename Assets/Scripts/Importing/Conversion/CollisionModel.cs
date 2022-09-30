@@ -117,7 +117,7 @@ namespace SanAndreasUnity.Importing.Conversion
 				// collision file already loaded
 				// just call other function
 
-				Utilities.F.RunExceptionSafe( () => Load(file, destParent, forceConvex) );
+				UGameCore.Utilities.F.RunExceptionSafe( () => Load(file, destParent, forceConvex) );
 				onFinish ();
 				return;
 			}
@@ -127,7 +127,7 @@ namespace SanAndreasUnity.Importing.Conversion
 				// loading finished
 				// call other function
 				if(cf != null)
-					Utilities.F.RunExceptionSafe( () => Load( cf, destParent, forceConvex ) );
+                    UGameCore.Utilities.F.RunExceptionSafe( () => Load( cf, destParent, forceConvex ) );
 				onFinish ();
 			});
 

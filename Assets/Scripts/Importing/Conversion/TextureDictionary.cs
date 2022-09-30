@@ -237,8 +237,8 @@ namespace SanAndreasUnity.Importing.Conversion
 
         private static readonly Dictionary<string, string> _sParents = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
         
-		private static readonly Utilities.AsyncLoader<string, TextureDictionary> s_asyncLoader = 
-			new Utilities.AsyncLoader<string, TextureDictionary> (StringComparer.InvariantCultureIgnoreCase);
+		private static readonly UGameCore.Utilities.AsyncLoader<string, TextureDictionary> s_asyncLoader = 
+			new UGameCore.Utilities.AsyncLoader<string, TextureDictionary> (StringComparer.InvariantCultureIgnoreCase);
 
         public static bool DontLoadTextures { get; set; } = false;
 
@@ -246,7 +246,7 @@ namespace SanAndreasUnity.Importing.Conversion
         private static Texture2D DummyTexture {
             get {
                 if (null == s_dummyTexture)
-                    s_dummyTexture = Utilities.F.CreateTexture(32, 32, Color.gray);
+                    s_dummyTexture = UGameCore.Utilities.F.CreateTexture(32, 32, Color.gray);
                 return s_dummyTexture;
             }
         }
@@ -282,7 +282,7 @@ namespace SanAndreasUnity.Importing.Conversion
 			TextureDictionary loadedTxd = null;
             bool bDontLoad = DontLoadTextures;
 
-			Behaviours.LoadingThread.RegisterJob (new Utilities.BackgroundJobRunner.Job<RenderWareStream.TextureDictionary> () {
+			Behaviours.LoadingThread.RegisterJob (new UGameCore.Utilities.BackgroundJobRunner.Job<RenderWareStream.TextureDictionary> () {
                 priority = loadPriority,
 				action = () => {
 					return bDontLoad ? null : ArchiveManager.ReadFile<RenderWareStream.TextureDictionary>(name + ".txd");
