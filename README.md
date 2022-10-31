@@ -17,7 +17,7 @@
 
 San Andreas Unity is an open source reimplementation of GTA San Andreas game engine in Unity.
 
-This won't be a complete reimplementation, but the focus is on gameplay features, mutliplayer, and creating a framework which will allow easy game extending and unlimited modding possibilities.
+This won't be a complete reimplementation, but the focus is on gameplay features, multiplayer, and creating a framework which will allow easy game extending and unlimited modding possibilities.
 
 For more information about the project, read this [wiki page](https://github.com/GTA-ASM/SanAndreasUnity/wiki/About-project).
 
