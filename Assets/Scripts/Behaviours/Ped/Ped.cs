@@ -38,6 +38,7 @@ namespace SanAndreasUnity.Behaviours
 		public bool shouldPlayAnims = true;
 
         public CharacterController characterController { get; private set; }
+		public float Mass = 60;
 
 		public NavMeshAgent NavMeshAgent { get; private set; }
 		public MovementAgent MovementAgent { get; private set; }
@@ -568,7 +569,7 @@ namespace SanAndreasUnity.Behaviours
 			if (characterController.isGrounded)
 				newVelocity.y = 0f;
 			else
-				newVelocity.y -= (-Physics.gravity.y) * 2f * Time.deltaTime;
+				newVelocity.y -= (-Physics.gravity.y) * (Mass / (-Physics.gravity.y)) * Time.deltaTime;
 
 			Velocity = newVelocity;
 

@@ -125,7 +125,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private static readonly int CarEmissionPropertyId = Shader.PropertyToID("_CarEmission");
         private bool _colorsChanged, _isNightToggled;
 
-        public event System.Action onColorsChanged = delegate {};
+        public event System.Action onColorsChanged = delegate { };
 
         private const float constRearNightIntensity = .7f;
 
@@ -367,7 +367,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (this.Seats.Count < 1)
                 return null;
 
-            return this.Seats.Aggregate((a, b) => 
+            return this.Seats.Aggregate((a, b) =>
                 Vector3.Distance(position, a.Parent.position) < Vector3.Distance(position, b.Parent.position) ? a : b);
         }
 
@@ -435,7 +435,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
 
             int index = this.Seats.FindIndex(s => s == seat);
-            
+
             m_lastPreparedPeds[index] = null;
             seat.TimeWhenPedChanged = Time.timeAsDouble;
 
@@ -463,7 +463,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             Color32 tailLightColor = new Color32(255, 255, 255, 255);
 
             // compute car colors
-            Color32[] carColors = new []
+            Color32[] carColors = new[]
             {
                 new Color32(255, 255, 255, 255),
                 paintJobColors[0],
@@ -506,15 +506,38 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     materialPropertyBlock.SetFloat(CarEmissionPropertyId, carEmissions[carColorIndex]);
                     mr.SetPropertyBlock(materialPropertyBlock, i);
                 }
-
             }
         }
-
+        static int BreakShaderID = Shader.PropertyToID("_Break");
+        [HideInInspector] public bool BreakLight;
+        List<MeshRenderer> meshRenderers = new();
+        bool setMeshRenders;
         private void Update()
         {
-
+            if (!setMeshRenders)
+            {
+                setMeshRenders = true;
+                foreach (var frame in _frames)
+                {
+                    var mr = frame.GetComponent<MeshRenderer>();
+                    if (mr == null) continue;
+                    meshRenderers.Add(frame.GetComponent<MeshRenderer>());
+                }
+            }
+            foreach (var meshRenderer in meshRenderers)
+            {
+                var materials = meshRenderer.sharedMaterials;
+                for (int i = 0; i < materials.Length; i++)
+                {
+                    int carColorIndex = materials[i].GetInt(Importing.Conversion.Geometry.CarColorIndexId);
+                    if (carColorIndex == 7 || carColorIndex == 8)
+                    {
+                        materials[i].SetFloat(BreakShaderID, BreakLight ? 1 : 0);
+                    }
+                }
+            }
             if (Net.NetStatus.IsServer
-                || (this.IsControlledByLocalPlayer && VehicleManager.Instance.controlWheelsOnLocalPlayer && ! VehicleManager.Instance.destroyWheelCollidersOnClient))
+                || (this.IsControlledByLocalPlayer && VehicleManager.Instance.controlWheelsOnLocalPlayer && !VehicleManager.Instance.destroyWheelCollidersOnClient))
             {
                 foreach (var wheel in _wheels)
                 {
@@ -593,8 +616,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public void ApplySyncRate(float syncRate)
         {
             foreach (var comp in this.GetComponents<Mirror.NetworkBehaviour>())
-			    comp.syncInterval = 1.0f / syncRate;
-            
+                comp.syncInterval = 1.0f / syncRate;
+
             // also assign it to NetworkTransform, because it may be disabled
             if (this.NetTransform != null)
                 this.NetTransform.syncInterval = 1.0f / syncRate;
