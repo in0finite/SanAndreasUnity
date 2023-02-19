@@ -124,7 +124,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private static readonly int CarColorPropertyId = Shader.PropertyToID("_CarColor");
         private static readonly int CarEmissionPropertyId = Shader.PropertyToID("_CarEmission");
         private bool _colorsChanged, _isNightToggled;
-
+        [HideInInspector] public bool BreakLight;
+        [HideInInspector] public bool FrontLight;
         public event System.Action onColorsChanged = delegate { };
 
         private const float constRearNightIntensity = .7f;
@@ -325,7 +326,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public VehicleController StartControlling()
         {
-            //SetAllCarLights();
+            SetAllCarLights();
             return _controller ?? (_controller = gameObject.GetOrAddComponent<VehicleController>());
         }
 
@@ -461,7 +462,6 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             Color32 headLightColor = new Color32(255, 255, 255, 255);
             Color32 tailLightColor = new Color32(255, 255, 255, 255);
-
             // compute car colors
             Color32[] carColors = new[]
             {
@@ -508,34 +508,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 }
             }
         }
-        static int BreakShaderID = Shader.PropertyToID("_Break");
-        [HideInInspector] public bool BreakLight;
-        List<MeshRenderer> meshRenderers = new();
-        bool setMeshRenders;
         private void Update()
         {
-            if (!setMeshRenders)
-            {
-                setMeshRenders = true;
-                foreach (var frame in _frames)
-                {
-                    var mr = frame.GetComponent<MeshRenderer>();
-                    if (mr == null) continue;
-                    meshRenderers.Add(frame.GetComponent<MeshRenderer>());
-                }
-            }
-            foreach (var meshRenderer in meshRenderers)
-            {
-                var materials = meshRenderer.sharedMaterials;
-                for (int i = 0; i < materials.Length; i++)
-                {
-                    int carColorIndex = materials[i].GetInt(Importing.Conversion.Geometry.CarColorIndexId);
-                    if (carColorIndex == 7 || carColorIndex == 8)
-                    {
-                        materials[i].SetFloat(BreakShaderID, BreakLight ? 1 : 0);
-                    }
-                }
-            }
             if (Net.NetStatus.IsServer
                 || (this.IsControlledByLocalPlayer && VehicleManager.Instance.controlWheelsOnLocalPlayer && !VehicleManager.Instance.destroyWheelCollidersOnClient))
             {
@@ -568,6 +542,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             this.UpdateHighDetailMeshes();
 
+            this.UpdateEmissiveLights();
+
             if (Net.NetStatus.IsServer && this.transform.position.y < -2000f)
             {
                 Object.Destroy(this.gameObject);
@@ -575,6 +551,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         }
 
+
+        // Working Break Lights and Tail Lights
+        public void UpdateEmissiveLights()
+        {
+            FrontLight = DayTimeManager.Singleton.CurrentTimeHours >= 18;
+            SetLight(VehicleLight.Rear, BreakLight ? 1 : 0);
+            SetLight(VehicleLight.Front, FrontLight ? 1 : 0);
+        }
         private void FixedUpdate()
         {
             //    NetworkingFixedUpdate();

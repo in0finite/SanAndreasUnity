@@ -203,7 +203,10 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 // local player should not control input, so restore old input
                 m_vehicle.Input = oldInput;
             }
-            if (m_vehicle.DriverSeat.IsTaken)
+
+            // Set Break Light
+
+            if (m_vehicle.IsControlledByLocalPlayer)
             {
                 m_vehicle.BreakLight = m_vehicle.Input.isHandBrakeOn || m_vehicle.Input.accelerator < 0;
             }
