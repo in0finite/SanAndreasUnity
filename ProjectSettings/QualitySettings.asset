@@ -297,4 +297,6 @@ QualitySettings:
   m_TextureMipmapLimitGroupNames: []
   m_PerPlatformDefaultQuality:
     Android: 0
+    Server: 0
     Standalone: 5
+    iPhone: 0

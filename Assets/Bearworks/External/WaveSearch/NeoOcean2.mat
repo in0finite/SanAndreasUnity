@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: NeoOcean2
+  m_Shader: {fileID: 4800000, guid: 1a629c730af7ec5429ed2240e1f2c083, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _PROJECTED_ON
+  - _SSREFLECTION_ON
+  m_InvalidKeywords:
+  - MARMO_BOX_PROJECTION_OFF
+  - MARMO_SKY_BLEND_OFF
+  - NEOOCEAN_ALPHABLEND_ON
+  - NEOOCEAN_DEPTHBLEND_ON
+  - NEOOCEAN_FOAM_MASK_ON
+  - NEOOCEAN_FOAM_ON
+  - NEOOCEAN_FOG_ON
+  - NEOOCEAN_GERSTNER_OFF
+  - NEOOCEAN_PHONG_OFF
+  - NEOOCEAN_PHONG_ON
+  - NEOOCEAN_PROJECTED_OFF
+  - NEOOCEAN_REFLECTION_ON
+  - NEOOCEAN_SPHERICALPG_OFF
+  - NEOOCEAN_TRAILSCREEN_OFF
+  - NEOOCEAN_TRAIL_OFF
+  - _FOGFORCE_ON
+  - _PIXELFORCES_ON
+  - _POINTFORCES_ON
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: e08c295755c0885479ad19f518286ff2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamGradient:
+        m_Texture: {fileID: 2800000, guid: b7daec1999f9cfe4385b075d496cea07, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamMask:
+        m_Texture: {fileID: 2800000, guid: 927dfb18f58518e4fad57e1f03664774, type: 3}
+        m_Scale: {x: 4, y: 4}
+        m_Offset: {x: 3, y: 2.59}
+    - _FoamTex:
+        m_Texture: {fileID: 2800000, guid: 1da473d0f1469374fb768a9a25db0ec5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Map0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Map1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _WaveTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AboveDepth: 0.457
+    - _Depth: 1
+    - _FOGFORCE: 1
+    - _Fade: 0.03
+    - _FadeTess: 0.0193
+    - _FoamDistort: 0.5
+    - _Fresnel: 0.04
+    - _FresnelScale: 0.62
+    - _PIXELFORCES: 1
+    - _POINTFORCES: 0
+    - _PROJECTED: 1
+    - _Shadow: 0.578
+    - _ShallowDepth: 5
+    - _ShallowEdge: 2.124
+    - _Shininess: 500
+    - _SunIntensity: 0.36
+    - _TessellationUniform: 6
+    - _Transparency: 0.5
+    - _WaveBump: 0.66
+    - _WaveFreq: 3
+    - _WaveHeight: 1
+    - _WaveScale: 0.02
+    - _WaveScale2: 0.185
+    - _nSnell: 3
+    m_Colors:
+    - _BaseColor: {r: 0.07843137, g: 0.34630343, b: 0.35686275, a: 1}
+    - _DistortParams: {r: 0.02, g: 0.03, b: 0.1, a: 1}
+    - _Foam: {r: 1, g: 0.2, b: 0.25, a: 0.01}
+    - _FoamColor: {r: 0, g: 0.0038850456, b: 0.00712887, a: 1}
+    - _FoamPeak: {r: 1, g: 25, b: 14.65, a: 1.31}
+    - _HighColor: {r: 0, g: 0.75172424, b: 1, a: 0.29}
+    - _ShallowColor: {r: 0.17254902, g: 0.25874087, b: 0.5529412, a: 1}
+    - _WaveCoord: {r: 0, g: 0, b: 0, a: 0}
+    - _WaveOffset: {r: 0.5, g: -0.5, b: -0.5, a: 0.5}
+  m_BuildTextureStacks: []
+--- !u!1002 &2100001
+EditorExtensionImpl:
+  serializedVersion: 6

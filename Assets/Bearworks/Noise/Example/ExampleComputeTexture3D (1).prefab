@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1165274089822962}
+  m_IsPrefabParent: 1
+--- !u!1 &1165274089822962
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4728794588240310}
+  - component: {fileID: 114893417461465504}
+  m_Layer: 0
+  m_Name: ExampleComputeTexture3D (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4728794588240310
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1165274089822962}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114893417461465504
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1165274089822962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 712bf5277c6be9c4f9ebad06295d5041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assetName: Example/ExampleNoise13D
+  kernelName: Noise3D1Gen
+  rwTexture:
+    name: Noise3D1
+    rt: {fileID: 0}
+  squareResolution: 128
+  parameters:
+  - name: Tex3D1Res
+    value: 128
+  computeThreads:
+    x: 8
+    y: 8
+    z: 8
+  computeShader: {fileID: 7200000, guid: a838e4e5dc268774a8f088cb635657ec, type: 3}
+  texture3DSlicer: {fileID: 7200000, guid: ba07511e08796b546a18c27994f9a4eb, type: 3}

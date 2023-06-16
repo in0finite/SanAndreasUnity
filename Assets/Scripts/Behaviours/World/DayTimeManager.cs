@@ -40,6 +40,10 @@ namespace SanAndreasUnity.Behaviours.World
         public bool disableLightDuringNight = true;
 
         public Color moonColor = Color.blue;
+        [Header("Fog")]
+        public Color AlmostDayNight;
+        public Color Day;
+        public Color VeryNight;
 
         private Color m_originalLightColor;
 
@@ -49,8 +53,8 @@ namespace SanAndreasUnity.Behaviours.World
         private static int s_nightMultiplierPropertyId = -1;
         public static int NightMultiplierPropertyId => s_nightMultiplierPropertyId == -1 ? s_nightMultiplierPropertyId = Shader.PropertyToID("_NightMultiplier") : s_nightMultiplierPropertyId;
 
-        public event System.Action onTimeChanged = delegate {};
-        public event System.Action onHourChanged = delegate {};
+        public event System.Action onTimeChanged = delegate { };
+        public event System.Action onHourChanged = delegate { };
 
 
 
@@ -112,13 +116,13 @@ namespace SanAndreasUnity.Behaviours.World
                     newHours = 0;
             }
 
-            this.SetTime((byte) newHours, (byte) newMinutes, false);
+            this.SetTime((byte)newHours, (byte)newMinutes, false);
         }
 
         public void SetTime(byte hours, byte minutes, bool log)
         {
-            hours = (byte) Mathf.Clamp(hours, 0, 23);
-            minutes = (byte) Mathf.Clamp(minutes, 0, 59);
+            hours = (byte)Mathf.Clamp(hours, 0, 23);
+            minutes = (byte)Mathf.Clamp(minutes, 0, 59);
 
             byte oldHour = this.CurrentTimeHours;
 
@@ -144,7 +148,18 @@ namespace SanAndreasUnity.Behaviours.World
 
             float skyboxExposure = isNight ? 0f : m_originalSkyboxExposure * lightIntensity;
             RenderSettings.skybox.SetFloat(ExposurePropertyId, skyboxExposure);
-
+            if (hours >= 7 && hours <= 8 || hours >= 19 && hours <= 20)
+            {
+                RenderSettings.fogColor = AlmostDayNight;
+            }
+            else if (hours >= 09 && hours <= 18)
+            {
+                RenderSettings.fogColor = Day;
+            }
+            else if (hours >= 21 || hours <= 06)
+            {
+                RenderSettings.fogColor = VeryNight;
+            }
             float lightAngle = this.UpdateLightAngle(curveTime);
 
             float nightMultiplier = this.nightColorsIntensityCurve.Evaluate(curveTime) * this.nightColorsMultiplier;
@@ -171,9 +186,9 @@ namespace SanAndreasUnity.Behaviours.World
         public static void CurveTimeToHoursAndMinutes(float curveTime, out byte hours, out byte minutes)
         {
             float hoursWithMinutes = curveTime * 24f;
-            hours = (byte) Mathf.FloorToInt(hoursWithMinutes);
+            hours = (byte)Mathf.FloorToInt(hoursWithMinutes);
             float hourPerc = hoursWithMinutes - Mathf.Floor(hoursWithMinutes);
-            minutes = (byte) Mathf.RoundToInt(60 * hourPerc);
+            minutes = (byte)Mathf.RoundToInt(60 * hourPerc);
         }
 
         public static string FormatTime(byte hours, byte minutes)
