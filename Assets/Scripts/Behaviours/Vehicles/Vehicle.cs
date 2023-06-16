@@ -124,8 +124,9 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         private static readonly int CarColorPropertyId = Shader.PropertyToID("_CarColor");
         private static readonly int CarEmissionPropertyId = Shader.PropertyToID("_CarEmission");
         private bool _colorsChanged, _isNightToggled;
-
-        public event System.Action onColorsChanged = delegate {};
+        [HideInInspector] public bool BreakLight;
+        [HideInInspector] public bool FrontLight;
+        public event System.Action onColorsChanged = delegate { };
 
         private const float constRearNightIntensity = .7f;
 
@@ -325,7 +326,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         public VehicleController StartControlling()
         {
-            //SetAllCarLights();
+            SetAllCarLights();
             return _controller ?? (_controller = gameObject.GetOrAddComponent<VehicleController>());
         }
 
@@ -367,7 +368,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             if (this.Seats.Count < 1)
                 return null;
 
-            return this.Seats.Aggregate((a, b) => 
+            return this.Seats.Aggregate((a, b) =>
                 Vector3.Distance(position, a.Parent.position) < Vector3.Distance(position, b.Parent.position) ? a : b);
         }
 
@@ -435,7 +436,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
             }
 
             int index = this.Seats.FindIndex(s => s == seat);
-            
+
             m_lastPreparedPeds[index] = null;
             seat.TimeWhenPedChanged = Time.timeAsDouble;
 
@@ -461,9 +462,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         {
             Color32 headLightColor = new Color32(255, 255, 255, 255);
             Color32 tailLightColor = new Color32(255, 255, 255, 255);
-
             // compute car colors
-            Color32[] carColors = new []
+            Color32[] carColors = new[]
             {
                 new Color32(255, 255, 255, 255),
                 paintJobColors[0],
@@ -506,15 +506,12 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                     materialPropertyBlock.SetFloat(CarEmissionPropertyId, carEmissions[carColorIndex]);
                     mr.SetPropertyBlock(materialPropertyBlock, i);
                 }
-
             }
         }
-
         private void Update()
         {
-
             if (Net.NetStatus.IsServer
-                || (this.IsControlledByLocalPlayer && VehicleManager.Instance.controlWheelsOnLocalPlayer && ! VehicleManager.Instance.destroyWheelCollidersOnClient))
+                || (this.IsControlledByLocalPlayer && VehicleManager.Instance.controlWheelsOnLocalPlayer && !VehicleManager.Instance.destroyWheelCollidersOnClient))
             {
                 foreach (var wheel in _wheels)
                 {
@@ -545,6 +542,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             this.UpdateHighDetailMeshes();
 
+            this.UpdateEmissiveLights();
+
             if (Net.NetStatus.IsServer && this.transform.position.y < -2000f)
             {
                 Object.Destroy(this.gameObject);
@@ -552,6 +551,14 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
         }
 
+
+        // Working Break Lights and Tail Lights
+        public void UpdateEmissiveLights()
+        {
+            FrontLight = DayTimeManager.Singleton.CurrentTimeHours >= 18;
+            SetLight(VehicleLight.Rear, BreakLight ? 1 : 0);
+            SetLight(VehicleLight.Front, FrontLight ? 1 : 0);
+        }
         private void FixedUpdate()
         {
             //    NetworkingFixedUpdate();
@@ -593,8 +600,8 @@ namespace SanAndreasUnity.Behaviours.Vehicles
         public void ApplySyncRate(float syncRate)
         {
             foreach (var comp in this.GetComponents<Mirror.NetworkBehaviour>())
-			    comp.syncInterval = 1.0f / syncRate;
-            
+                comp.syncInterval = 1.0f / syncRate;
+
             // also assign it to NetworkTransform, because it may be disabled
             if (this.NetTransform != null)
                 this.NetTransform.syncInterval = 1.0f / syncRate;

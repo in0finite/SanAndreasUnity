@@ -22,6 +22,9 @@ namespace SanAndreasUnity.Behaviours.World
             var spriteRenderer = go.GetComponentOrThrow<SpriteRenderer>();
             spriteRenderer.color = lightInfo.Color;
 
+            //var light = go.GetComponentOrThrow<Light>();
+            //light.color = lightInfo.Color * lightInfo.ShadowColorMultiplier;
+            //light.range = lightInfo.CoronaSize * Cell.Instance.lightScaleMultiplier;
             return lightSource;
         }
     }

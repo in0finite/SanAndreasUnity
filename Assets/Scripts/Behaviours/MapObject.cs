@@ -38,7 +38,7 @@ namespace SanAndreasUnity.Behaviours
             }
             else
             {
-                _sNoiseTex.Resize(width, height);
+                _sNoiseTex.Reinitialize(width, height);
             }
 
             var rand = new System.Random(0x54e03b19);

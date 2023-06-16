@@ -26,7 +26,7 @@ namespace SanAndreasUnity.Behaviours.Vehicles
 
             //There is a bug, if the blinker is set the vehicle can't steer
             //if (blinker != null) // || testing ... QualitySettings.pixelLightCount > 2 // Not needed
-                VehicleBlinker.Init(gameObject.transform, light, vehicle); //testing ? lightObj.transform :
+                //VehicleBlinker.Init(gameObject.transform, light, vehicle); //testing ? lightObj.transform :
 
             //Debug.Log("Is Blinker Null?: "+(blinker == null));
 

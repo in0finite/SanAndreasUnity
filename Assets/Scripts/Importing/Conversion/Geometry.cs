@@ -134,30 +134,30 @@ namespace SanAndreasUnity.Importing.Conversion
 
             if (vehicle && alpha)
             {
-                return Shader.Find("SanAndreasUnity/VehicleTransparent");
+                return Shader.Find("San Andreas Unity/VehicleTransparent");
             }
 
             if (vehicle)
             {
-                return Shader.Find("SanAndreasUnity/Vehicle");
+                return Shader.Find("San Andreas Unity/Vehicle");
             }
 
             if (noBackCull && alpha)
             {
-                return Shader.Find("SanAndreasUnity/TransparentNoBackCull");
+                return Shader.Find("San Andreas Unity/TransparentNoBackCull");
             }
 
             if (noBackCull)
             {
-                return Shader.Find("SanAndreasUnity/NoBackCull");
+                return Shader.Find("San Andreas Unity/NoBackCull");
             }
 
             if (alpha)
             {
-                return Shader.Find("SanAndreasUnity/Transparent");
+                return Shader.Find("San Andreas Unity/Transparent");
             }
 
-            return Shader.Find("SanAndreasUnity/Default");
+            return Shader.Find("San Andreas Unity/Default");
         }
 
         private static Shader GetShader(MaterialFlags flags)

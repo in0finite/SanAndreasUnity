@@ -101,7 +101,6 @@ namespace SanAndreasUnity.Behaviours.World
 
             go.transform.localPosition = Vector3.zero;
             go.transform.localRotation = Quaternion.identity;
-
             go.name = "Water rendering mesh";
             mesh.name = go.name;
 

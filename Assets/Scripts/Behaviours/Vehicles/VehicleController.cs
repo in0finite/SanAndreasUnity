@@ -203,6 +203,18 @@ namespace SanAndreasUnity.Behaviours.Vehicles
                 // local player should not control input, so restore old input
                 m_vehicle.Input = oldInput;
             }
+
+            // Set Break Light
+
+            if (m_vehicle.IsControlledByLocalPlayer)
+            {
+                m_vehicle.BreakLight = m_vehicle.Input.isHandBrakeOn || m_vehicle.Input.accelerator < 0;
+            }
+            else
+            {
+                m_vehicle.BreakLight = false;
+            }
+
         }
 
         void ProcessSyncvars()

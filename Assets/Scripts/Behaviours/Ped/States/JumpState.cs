@@ -184,8 +184,8 @@ namespace SanAndreasUnity.Behaviours.Peds.States
 
 			Vector3 velocity = m_ped.transform.forward.WithXAndZ().normalized * modelVelocity.z + Vector3.up * modelVelocity.y;
 			// we won't apply gravity
-
-			m_ped.characterController.Move (velocity * Time.deltaTime);
+			velocity.y += launchVelocityMultiplier;
+            m_ped.characterController.Move (velocity * Time.deltaTime);
 		}
 
 
